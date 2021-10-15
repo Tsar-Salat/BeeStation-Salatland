@@ -196,6 +196,14 @@ CREATION_TEST_IGNORE_SELF(/obj/effect/mob_spawn)
 		H.facial_hair_style = facial_hair_style
 	else
 		H.facial_hair_style = random_facial_hair_style(H.gender)
+	//if(haircolor)
+	//	H.hair_color = haircolor
+	//else
+	//	H.hair_color = "#[random_color()]"
+	//if(facial_hair_color)
+	//	H.facial_hair_color = facial_haircolor
+	//else
+	//	H.facial_hair_color = "#[random_color()]"
 	if(skin_tone)
 		H.skin_tone = skin_tone
 	else

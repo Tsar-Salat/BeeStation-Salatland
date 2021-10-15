@@ -83,7 +83,7 @@
 		add_overlay(M)
 
 /obj/item/clothing/head/wig/attack_self(mob/user)
-	var/new_style = input(user, "Select a hair style", "Wig Styling")  as null|anything in (GLOB.hair_styles_list - "Bald")
+	var/new_style = tgui_input_list(user, "Select a hairstyle", "Wig Styling", GLOB.hair_styles_list - "Bald")
 	if(!user.canUseTopic(src, BE_CLOSE))
 		return
 	if(new_style && new_style != hair_style)

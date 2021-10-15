@@ -53,7 +53,7 @@
 	return default
 
 /// Return `color` if it is a valid hex color, otherwise `default`
-/proc/sanitize_hexcolor(color, desired_format = 3, include_crunch = FALSE, default)
+/proc/sanitize_hexcolor(color, desired_format = 6, include_crunch = TRUE, default)
 	var/crunch = include_crunch ? "#" : ""
 	if(!istext(color))
 		color = ""
