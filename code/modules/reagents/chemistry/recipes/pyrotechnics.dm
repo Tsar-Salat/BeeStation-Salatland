@@ -32,7 +32,7 @@
 			inside_msg = " inside [ADMIN_LOOKUPFLW(boom.holder.my_atom)]"
 		var/touch_msg = "N/A"
 		if(boom.lastkey)
-			var/mob/toucher = get_mob_by_ckey(lastkey)
+			var/mob/toucher = get_mob_by_ckey(boom.lastkey)
 			touch_msg = "[ADMIN_LOOKUPFLW(toucher)]"
 		if(!istype(boom.holder.my_atom, /obj/machinery/plumbing)) //excludes standard plumbing equipment from spamming admins with this shit
 			message_admins("Reagent explosion reaction occurred at [ADMIN_VERBOSEJMP(boom.turf)][inside_msg]. Last Fingerprint: [touch_msg].")

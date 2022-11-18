@@ -223,7 +223,7 @@
 	update_icon()
 
 //Called from turf.dm turf/dblclick
-/obj/item/flamethrower/proc/flame_turf(turflist), release_amount = 0.05
+/obj/item/flamethrower/proc/flame_turf(turflist, release_amount = 0.05)
 	if(operating)
 		return
 	operating = TRUE
@@ -258,7 +258,7 @@
 			attack_self(M)
 
 
-/obj/item/flamethrower/proc/project_gas(turf/target, release amount = 0.05)
+/obj/item/flamethrower/proc/project_gas(turf/target, release_amount = 0.05)
 	//Transfer 5% of current tank air contents to turf
 	var/datum/gas_mixture/air_transfer = ptank.air_contents.remove_ratio(release_amount)
 	air_transfer.set_moles(GAS_PLASMA, air_transfer.get_moles(GAS_PLASMA) * 5)
