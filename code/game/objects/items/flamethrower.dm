@@ -67,7 +67,7 @@
 		add_overlay("+lit")
 		item_state = "flamethrower_1"
 		if(beaker)
-			add_overlay("+lit")
+			add_overlay("+beaker")
 			item_state = "flamethrower_2"
 	else
 		if(beaker)
@@ -145,11 +145,12 @@
 			if(user.transferItemToLoc(W,src))
 				ptank.forceMove(get_turf(src))
 				ptank = W
-				to_chat(user, "<span class='notice'>You swap [ptank] tank in [src]!</span>")
+				to_chat(user, "<span class='notice'>You swap [ptank] in [src]!</span>")
 			return
 		if(!user.transferItemToLoc(W, src))
 			return
 		ptank = W
+		to_chat(user, "<span class='notice'>You attach [ptank] to [src]!</span>")
 		update_icon()
 		return
 
@@ -257,7 +258,6 @@
 		if((M.client && M.machine == src))
 			attack_self(M)
 
-
 /obj/item/flamethrower/proc/project_gas(turf/target, release_amount = 0.05)
 	//Transfer 5% of current tank air contents to turf
 	var/datum/gas_mixture/air_transfer = ptank.air_contents.remove_ratio(release_amount)
@@ -286,6 +286,7 @@
 			D.reagents.reaction(A, VAPOR)
 	D.reagents.reaction(target, VAPOR)
 	qdel(D)
+
 
 /obj/item/flamethrower/Initialize(mapload)
 	. = ..()
