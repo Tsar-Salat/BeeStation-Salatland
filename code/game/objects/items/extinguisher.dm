@@ -103,7 +103,7 @@
 		var/safety_save = safety
 		safety = TRUE
 		if(reagents.total_volume == reagents.maximum_volume)
-			to_chat(user, "<span class='warning'>\The [src] is already full!</span>")
+			balloon_alert(user, "already full!")
 			safety = safety_save
 			return 1
 		var/obj/structure/reagent_dispensers/W = target //will it work?
@@ -114,7 +114,7 @@
 			for(var/datum/reagent/water/R in reagents.reagent_list)
 				R.cooling_temperature = cooling_power
 		else
-			to_chat(user, "<span class='warning'>\The [W] is empty!</span>")
+			balloon_alert(user, "it's empty!")
 		safety = safety_save
 		return 1
 	else

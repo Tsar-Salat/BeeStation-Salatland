@@ -26,7 +26,6 @@
 		var/turf/T = get_turf(target)
 		var/obj/structure/holosign/H = locate(holosign_type) in T
 		if(H)
-			to_chat(user, "<span class='notice'>You use [src] to deactivate [H].</span>")
 			qdel(H)
 		else
 			if(!is_blocked_turf(T, TRUE)) //can't put holograms on a tile that has dense stuff
@@ -46,9 +45,8 @@
 						if(is_blocked_turf(T, TRUE)) //don't try to sneak dense stuff on our tile during the wait.
 							return
 					H = new holosign_type(get_turf(target), src)
-					to_chat(user, "<span class='notice'>You create \a [H] with [src].</span>")
 				else
-					to_chat(user, "<span class='notice'>[src] is projecting at max capacity!</span>")
+					balloon_alert(user, "max capacity!")
 
 /obj/item/holosign_creator/attack(mob/living/carbon/human/M, mob/user)
 	return
@@ -57,7 +55,7 @@
 	if(signs.len)
 		for(var/H in signs)
 			qdel(H)
-		to_chat(user, "<span class='notice'>You clear all active holograms.</span>")
+		balloon_alert(user, "holograms cleared")
 
 /obj/item/holosign_creator/janibarrier
 	name = "custodial holobarrier projector"
@@ -112,7 +110,7 @@
 		var/mob/living/silicon/robot/R = user
 
 		if(shock)
-			to_chat(user, "<span class='notice'>You clear all active holograms, and reset your projector to normal.</span>")
+			balloon_alert(user, "holograms cleared")
 			holosign_type = /obj/structure/holosign/barrier/cyborg
 			creation_time = 5
 			if(signs.len)
@@ -133,8 +131,8 @@
 			if(signs.len)
 				for(var/H in signs)
 					qdel(H)
-				to_chat(user, "<span class='notice'>You clear all active holograms.</span>")
+				balloon_alert(user, "holograms cleared")
 	if(signs.len)
 		for(var/H in signs)
 			qdel(H)
-		to_chat(user, "<span class='notice'>You clear all active holograms.</span>")
+		balloon_alert(user, "holograms cleared")
