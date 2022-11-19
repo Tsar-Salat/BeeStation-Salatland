@@ -545,18 +545,18 @@
 
 	if	(istype(W, /obj/item/stock_parts/cell) && opened)
 		if(cell)
-			to_chat(user, "<span class='warning'>There is a power cell already installed!</span>")
+			balloon_alert(user, "cell already installed!")
 			return
 		else
 			if (machine_stat & MAINT)
-				to_chat(user, "<span class='warning'>There is no connector for your power cell!</span>")
+				balloon_alert(user, "no connector for a cell!")
 				return
 			if(!user.transferItemToLoc(W, src))
 				return
 			cell = W
 			user.visible_message(\
-				"[user.name] has inserted the power cell to [src.name]!",\
-				"<span class='notice'>You insert the power cell.</span>")
+				"[user.name] has inserted the power cell to [src.name]!")
+				balloon_alert(user, "cell inserted")
 			chargecount = 0
 			update_appearance()
 	else if (W.GetID())
@@ -566,21 +566,23 @@
 		if(!host_turf)
 			CRASH("attackby on APC when it's not on a turf")
 		if (host_turf.intact)
-			to_chat(user, "<span class='warning'>You must remove the floor plating in front of the APC first!</span>")
+			balloon_alert(user, "remove the floor plating!")
 			return
 		else if (terminal)
-			to_chat(user, "<span class='warning'>This APC is already wired!</span>")
+			balloon_alert(user, "APC is already wired!")
 			return
 		else if (!has_electronics)
-			to_chat(user, "<span class='warning'>There is nothing to wire!</span>")
+			balloon_alert(user, "no board to wire!")
 			return
 
 		var/obj/item/stack/cable_coil/C = W
 		if(C.get_amount() < 10)
-			to_chat(user, "<span class='warning'>You need ten lengths of cable for APC!</span>")
+			balloon_alert(user, "need ten lengths of cable!")
 			return
-		user.visible_message("[user.name] adds cables to the APC frame.", \
-							"<span class='notice'>You start adding cables to the APC frame.</span>")
+
+		user.visible_message("<span class='notice'>[user.name] adds cables to the APC frame.</span>")
+		balloon_alert(user, "adding cables to the frame...")
+
 		playsound(src.loc, 'sound/items/deconstruct.ogg', 50, 1)
 		if(do_after(user, 20, target = src))
 			if (C.get_amount() < 10 || !C)
@@ -592,32 +594,35 @@
 					do_sparks(5, TRUE, src)
 					return
 				C.use(10)
-				to_chat(user, "<span class='notice'>You add cables to the APC frame.</span>")
+				balloon_alert(user, "cables added to the frame")
 				make_terminal()
 				terminal.connect_to_network()
+
 	else if (istype(W, /obj/item/electronics/apc) && opened)
 		if (has_electronics)
-			to_chat(user, "<span class='warning'>There is already a board inside the [src]!</span>")
-			return
-		else if (machine_stat & BROKEN)
-			to_chat(user, "<span class='warning'>You cannot put the board inside, the frame is damaged!</span>")
+			balloon_alert(user, "there is already a board!")
 			return
 
-		user.visible_message("[user.name] inserts the power control board into [src].", \
-							"<span class='notice'>You start to insert the power control board into the frame.</span>")
+		else if (machine_stat & BROKEN)
+			balloon_alert(user, "the frame is damaged!")
+			return
+
+		user.visible_message("[user.name] inserts the power control board into [src].")
+		balloon_alert(user, "you start to insert the board...")
 		playsound(src.loc, 'sound/items/deconstruct.ogg', 50, 1)
+
 		if(do_after(user, 10, target = src))
 			if(!has_electronics)
 				has_electronics = APC_ELECTRONICS_INSTALLED
 				locked = FALSE
 				wires.ui_update()
-				to_chat(user, "<span class='notice'>You place the power control board inside the frame.</span>")
+				balloon_alert(user, "board installed")
 				qdel(W)
 	else if(istype(W, /obj/item/electroadaptive_pseudocircuit) && opened)
 		var/obj/item/electroadaptive_pseudocircuit/P = W
 		if(!has_electronics)
 			if(machine_stat & BROKEN)
-				to_chat(user, "<span class='warning'>[src]'s frame is too damaged to support a circuit.</span>")
+				balloon_alert(user, "frame is too damaged!")
 				return
 			if(!P.adapt_circuit(user, 50))
 				return
@@ -628,7 +633,7 @@
 			wires.ui_update()
 		else if(!cell)
 			if(machine_stat & MAINT)
-				to_chat(user, "<span class='warning'>There's no connector for a power cell.</span>")
+				balloon_alert(user, "no board for a cell!")
 				return
 			if(!P.adapt_circuit(user, 500))
 				return
@@ -640,28 +645,28 @@
 			"<span class='warning'>Your [P.name] whirs with strain as you create a weak power cell and place it into [src]!</span>")
 			update_appearance()
 		else
-			to_chat(user, "<span class='warning'>[src] has both electronics and a cell.</span>")
+			balloon_alert(user, "has both board and cell!")
 			return
 	else if (istype(W, /obj/item/wallframe/apc) && opened)
 		if (!(machine_stat & BROKEN || opened==APC_COVER_REMOVED || obj_integrity < max_integrity)) // There is nothing to repair
-			to_chat(user, "<span class='warning'>You find no reason for repairing this APC.</span>")
+			balloon_alert(user, "no reason for repairs!")
 			return
 		if (!(machine_stat & BROKEN) && opened==APC_COVER_REMOVED) // Cover is the only thing broken, we do not need to remove elctronicks to replace cover
-			user.visible_message("[user.name] replaces missing APC's cover.",\
-							"<span class='notice'>You begin to replace APC's cover.</span>")
+			user.visible_message("[user.name] replaces missing APC's cover.")
+			balloon_alert(user, "replacing APC's cover...")
 			if(do_after(user, 20, target = src)) // replacing cover is quicker than replacing whole frame
-				to_chat(user, "<span class='notice'>You replace missing APC's cover.</span>")
+				balloon_alert(user, "cover replaced")
 				qdel(W)
 				opened = APC_COVER_OPENED
 				update_appearance()
 			return
 		if (has_electronics)
-			to_chat(user, "<span class='warning'>You cannot repair this APC until you remove the electronics still inside!</span>")
+			balloon_alert(user, "remove the board inside!")
 			return
-		user.visible_message("[user.name] replaces the damaged APC frame with a new one.",\
-							"<span class='notice'>You begin to replace the damaged APC frame.</span>")
+		user.visible_message("[user.name] replaces the damaged APC frame with a new one.")
+		balloon_alert(user, "replacing damaged frame...")
 		if(do_after(user, 50, target = src))
-			to_chat(user, "<span class='notice'>You replace the damaged APC frame with a new one.</span>")
+			balloon_alert(user, "APC frame replaced")
 			qdel(W)
 			set_machine_stat(machine_stat & ~BROKEN)
 			obj_integrity = max_integrity
@@ -815,23 +820,23 @@
 		var/obj/item/organ/stomach/battery/stomach = H.getorganslot(ORGAN_SLOT_STOMACH)
 		if(H.a_intent == INTENT_HARM)
 			if(!istype(stomach))
-				to_chat(H, "<span class='warning'>You can't receive charge!</span>")
+				balloon_alert(ethereal, "you cannot charge!")
 				return
 			if(H.nutrition >= NUTRITION_LEVEL_ALMOST_FULL)
-				to_chat(user, "<span class='warning'>You are already fully charged!</span>")
+				balloon_alert(ethereal, "you are fully charged!")
 				return
 			if(cell.charge <= cell.maxcharge/4) // if charge is under 25% you shouldn't drain it
-				to_chat(H, "<span class='warning'>The APC doesn't have much power, you probably shouldn't drain anymore.</span>")
+				balloon_alert(ethereal, "APC power too low!")
 				return
 
 			E.drain_time = world.time + 80
-			to_chat(H, "<span class='notice'>You start channeling some power through the APC into your body.</span>")
+			balloon_alert(ethereal, "draining power")
 			while(do_after(user, 75, target = src))
 				if(!istype(stomach))
-					to_chat(H, "<span class='warning'>You can't receive charge!</span>")
+					balloon_alert(ethereal, "you cannot charge!")
 					return
 				if(cell.charge <= cell.maxcharge/4)
-					to_chat(H, "<span class='warning'>The APC doesn't have much power, you probably shouldn't drain anymore.</span>")
+					balloon_alert(ethereal, "APC power too low!")
 					E.drain_time = 0
 					return
 				E.drain_time = world.time + 80
