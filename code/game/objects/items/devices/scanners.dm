@@ -117,7 +117,7 @@ GENE SCANNER
 		return
 
 	user.visible_message("<span class='notice'>[user] analyzes [M]'s vitals.</span>")
-						balloon_alert(user, "analyzing vitals")
+	balloon_alert(user, "analyzing vitals")
 
 	if(scanmode == 0)
 		healthscan(user, M, advanced=advanced)
