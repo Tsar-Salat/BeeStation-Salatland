@@ -475,6 +475,10 @@
 	icon_state = "supply"
 	build_path = /obj/machinery/computer/security/mining
 
+/obj/item/circuitboard/computer/bountypad
+	name = "Bounty Pad (Computer Board)"
+	build_path = /obj/machinery/computer/piratepad_control/civilian
+
 //Shuttles
 
 /obj/item/circuitboard/computer/shuttle
