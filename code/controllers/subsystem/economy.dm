@@ -17,8 +17,14 @@ SUBSYSTEM_DEF(economy)
 	///Multiplied as they go to all department accounts rather than just cargo.
 	var/bounty_modifier = 3
 
+	/// How many civilain bounties have been completed so far this shift? Affects civilian budget payout values.
+	var/civ_bounty_tracker = 0
+	/// Total value of exported materials.
+	var/export_total = 0
+	/// Total value of imported goods.
+	var/import_total = 0
 	/// Number of mail items generated.
-	var/mail_waiting
+	var/mail_waiting = 0
 	/// Mail Holiday: AKA does mail arrive today? Always blocked on Sundays, but not on bee, the mail is 24/7.
 	var/mail_blocked = FALSE
 
