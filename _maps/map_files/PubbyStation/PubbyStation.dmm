@@ -26322,6 +26322,10 @@
 	},
 /turf/open/floor/plasteel,
 /area/engine/engineering)
+"fTZ" = (
+/obj/machinery/piratepad/civilian,
+/turf/open/floor/plasteel,
+/area/quartermaster/office)
 "fUb" = (
 /obj/effect/turf_decal/stripes/line,
 /obj/effect/turf_decal/stripes/line{
@@ -45220,6 +45224,7 @@
 /obj/effect/turf_decal/tile/brown{
 	dir = 4
 	},
+/obj/machinery/computer/piratepad_control/civilian,
 /turf/open/floor/plasteel,
 /area/quartermaster/office)
 "qbq" = (
@@ -96333,7 +96338,7 @@ jSS
 lub
 aRf
 aSc
-aPY
+fTZ
 nMr
 aPY
 aWu

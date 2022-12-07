@@ -43137,10 +43137,8 @@
 /area/security/main)
 "fit" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/item/kirbyplants{
-	icon_state = "plant-21"
-	},
 /obj/effect/turf_decal/tile/brown/half/contrasted,
+/obj/machinery/piratepad/civilian,
 /turf/open/floor/plasteel,
 /area/hallway/primary/fore)
 "fiN" = (
@@ -57902,13 +57900,13 @@
 /turf/open/floor/plasteel,
 /area/quartermaster/miningoffice)
 "kAf" = (
-/obj/structure/table,
-/obj/item/paper_bin,
-/obj/item/pen,
 /obj/machinery/light{
 	dir = 4
 	},
 /obj/effect/turf_decal/tile/brown/anticorner/contrasted,
+/obj/machinery/computer/piratepad_control/civilian{
+	dir = 8
+	},
 /turf/open/floor/plasteel,
 /area/hallway/primary/fore)
 "kAh" = (
@@ -70177,14 +70175,6 @@
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
 /turf/open/floor/plasteel/dark,
 /area/chapel/main)
-"oKM" = (
-/obj/structure/table,
-/obj/item/storage/box/lights/mixed,
-/obj/effect/turf_decal/tile/brown/half/contrasted{
-	dir = 8
-	},
-/turf/open/floor/plasteel,
-/area/hallway/primary/fore)
 "oKX" = (
 /obj/structure/table/wood,
 /obj/machinery/light/small{
@@ -89119,9 +89109,6 @@
 /area/maintenance/disposal/incinerator)
 "vCO" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/structure/chair{
-	dir = 1
-	},
 /obj/effect/landmark/start/assistant,
 /obj/effect/turf_decal/tile/brown/half/contrasted{
 	dir = 8
@@ -138705,7 +138692,7 @@ ovq
 ovq
 ovq
 ovq
-oKM
+ddP
 bfk
 egd
 qHr

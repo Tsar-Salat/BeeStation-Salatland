@@ -65915,6 +65915,7 @@
 	},
 /obj/effect/turf_decal/tile/brown/half/contrasted,
 /obj/effect/turf_decal/tile/neutral,
+/obj/machinery/piratepad/civilian,
 /turf/open/floor/plasteel/dark,
 /area/hallway/primary/starboard)
 "vIj" = (
@@ -72592,6 +72593,9 @@
 	},
 /obj/effect/turf_decal/tile/brown/half/contrasted,
 /obj/effect/turf_decal/tile/neutral,
+/obj/machinery/computer/piratepad_control/civilian{
+	dir = 8
+	},
 /turf/open/floor/plasteel/dark,
 /area/hallway/primary/starboard)
 "xVh" = (

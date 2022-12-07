@@ -8964,7 +8964,9 @@
 /obj/machinery/firealarm{
 	pixel_y = 27
 	},
-/obj/item/kirbyplants/random,
+/obj/machinery/computer/piratepad_control/civilian{
+	dir = 8
+	},
 /turf/open/floor/plasteel,
 /area/quartermaster/office)
 "bnK" = (
@@ -28595,6 +28597,10 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/quartermaster/exploration_prep)
+"hin" = (
+/obj/machinery/piratepad/civilian,
+/turf/open/floor/plasteel,
+/area/quartermaster/office)
 "hix" = (
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
 /obj/effect/turf_decal/trimline/yellow/filled/line{
@@ -85904,7 +85910,7 @@ bbp
 qYd
 aZK
 bnJ
-bbR
+hin
 bbR
 nlP
 bty
