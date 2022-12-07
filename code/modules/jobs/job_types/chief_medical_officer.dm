@@ -31,6 +31,7 @@
 		ACCOUNT_COM_ID = PAYCHECK_COMMAND_NT,
 		ACCOUNT_MED_ID = PAYCHECK_COMMAND_DEPT)
 	mind_traits = list(TRAIT_MEDICAL_METABOLISM)
+	bounty_types = CIV_JOB_MED
 
 	display_order = JOB_DISPLAY_ORDER_CHIEF_MEDICAL_OFFICER
 	rpg_title = "High Cleric"

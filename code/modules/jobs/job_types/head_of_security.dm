@@ -33,6 +33,7 @@
 	payment_per_department = list(
 		ACCOUNT_COM_ID = PAYCHECK_COMMAND_NT,
 		ACCOUNT_SEC_ID = PAYCHECK_COMMAND_DEPT)
+	bounty_types = CIV_JOB_SEC
 
 	display_order = JOB_DISPLAY_ORDER_HEAD_OF_SECURITY
 	rpg_title = "Guard Leader"

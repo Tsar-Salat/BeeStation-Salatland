@@ -38,6 +38,7 @@
 	payment_per_department = list(
 		ACCOUNT_COM_ID = PAYCHECK_COMMAND_NT,
 		ACCOUNT_SRV_ID = PAYCHECK_COMMAND_DEPT)
+	bounty_types = CIV_JOB_RANDOM
 
 	display_order = JOB_DISPLAY_ORDER_HEAD_OF_PERSONNEL
 	rpg_title = "Guild Questgiver"

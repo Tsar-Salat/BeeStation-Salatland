@@ -32,6 +32,7 @@
 	payment_per_department = list(
 		ACCOUNT_COM_ID = PAYCHECK_COMMAND_NT,
 		ACCOUNT_ENG_ID = PAYCHECK_COMMAND_DEPT)
+	bounty_types = CIV_JOB_ENG
 
 
 	display_order = JOB_DISPLAY_ORDER_CHIEF_ENGINEER

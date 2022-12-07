@@ -22,6 +22,7 @@
 		ACCOUNT_SCI_ID = PAYCHECK_MEDIUM_BY_HALF   // And paid by sci for half
 	)
 	mind_traits = list(TRAIT_MEDICAL_METABOLISM)
+	bounty_types = CIV_JOB_MED
 
 	display_order = JOB_DISPLAY_ORDER_GENETICIST
 	rpg_title = "Genemancer"

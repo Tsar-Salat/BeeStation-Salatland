@@ -20,6 +20,7 @@
 	bank_account_department = ACCOUNT_MED_BITFLAG
 	payment_per_department = list(ACCOUNT_MED_ID = PAYCHECK_MEDIUM)
 	mind_traits = list(TRAIT_MEDICAL_METABOLISM)
+	bounty_types = CIV_JOB_MED
 
 	display_order = JOB_DISPLAY_ORDER_MEDICAL_DOCTOR
 	rpg_title = "Corpse Runner"
