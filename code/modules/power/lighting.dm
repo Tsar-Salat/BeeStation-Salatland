@@ -671,10 +671,11 @@
 
 // attack with hand - remove tube/bulb
 // if hands aren't protected and the light is on, burn the player
-
 /obj/machinery/light/attack_paw(mob/living/carbon/user)
 	return attack_hand(user)
 
+// attack with hand - remove tube/bulb
+// if hands aren't protected and the light is on, burn the player
 /obj/machinery/light/attack_hand(mob/living/carbon/user)
 	. = ..()
 	if(.)
