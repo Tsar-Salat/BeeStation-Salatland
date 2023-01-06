@@ -533,10 +533,29 @@
 	smoothing_groups = list(SMOOTH_GROUP_WINDOW_FULLTILE)
 	canSmoothWith = list(SMOOTH_GROUP_WINDOW_FULLTILE)
 	dir = FULLTILE_WINDOW_DIR
-	max_integrity = 500
+	max_integrity = 700
 	fulltile = TRUE
 	flags_1 = PREVENT_CLICK_UNDER_1
 	rad_insulation = RAD_FULL_INSULATION
+	glass_amount = 2
+
+/obj/structure/window/depleteduranium/fulltile/unanchored
+	anchored = FALSE
+
+/obj/structure/window/plasuranium/fulltile
+	icon = 'icons/obj/smooth_structures/windows/du_window.dmi'
+	icon_state = "plasuranium_window-0"
+	base_icon_state = "plasuranium_window"
+	smoothing_flags = SMOOTH_BITMASK
+	smoothing_groups = list(SMOOTH_GROUP_WINDOW_FULLTILE)
+	canSmoothWith = list(SMOOTH_GROUP_WINDOW_FULLTILE)
+	dir = FULLTILE_WINDOW_DIR
+	max_integrity = 5000
+	fulltile = TRUE
+	flags_1 = PREVENT_CLICK_UNDER_1
+	reinf = TRUE
+	rad_insulation = RAD_FULL_INSULATION
+	heat_resistance = 1600
 	glass_amount = 2
 
 /obj/structure/window/depleteduranium/fulltile/unanchored

@@ -190,6 +190,10 @@
 					WD = new/obj/structure/window/shuttle(drop_location())
 				else if(istype(W, /obj/item/stack/sheet/plastitaniumglass))
 					WD = new/obj/structure/window/plastitanium(drop_location())
+				else if(istype(W, /obj/item/stack/sheet/uraniumglass))
+					WD = new/obj/structure/window/depleteduranium(drop_location())
+				else if(istype(W, /obj/item/stack/sheet/plasuraniumglass))
+					WD = new/obj/structure/window/plasuranium(drop_location())
 				else
 					WD = new/obj/structure/window/fulltile(drop_location()) //normal window
 				WD.setDir(dir_to_set)

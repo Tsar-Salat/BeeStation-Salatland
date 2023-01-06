@@ -150,9 +150,6 @@ GLOBAL_LIST_INIT(uranium_recipes, list ( \
 	new/datum/stack_recipe("uranium tile", /obj/item/stack/tile/mineral/uranium, 1, 4, 20), \
 	new/datum/stack_recipe("Nuke Statue", /obj/structure/statue/uranium/nuke, 5, one_per_turf = TRUE, on_floor = TRUE), \
 	new/datum/stack_recipe("Engineer Statue", /obj/structure/statue/uranium/eng, 5, one_per_turf = TRUE, on_floor = TRUE), \
-	null, \
-	new/datum/stack_recipe("depleted uranium directional window", /obj/structure/window/depleteduranium/unanchored, 1, on_floor = TRUE, window_checks = TRUE), \
-	new/datum/stack_recipe("depleted uranium fulltile window", /obj/structure/window/depleteduranium/fulltile/unanchored, 2, on_floor = TRUE, window_checks = TRUE) \
 	))
 
 /obj/item/stack/sheet/mineral/uranium/Initialize(mapload, new_amount, merge = TRUE)

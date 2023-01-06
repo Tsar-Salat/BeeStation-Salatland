@@ -1270,6 +1270,8 @@
 		/obj/item/stack/sheet/plasmarglass=50,\
 		/obj/item/stack/sheet/titaniumglass=50,\
 		/obj/item/stack/sheet/plastitaniumglass=50,\
+		/obj/item/stack/sheet/uraniumglass=50,\
+		/obj/item/stack/sheet/plasuraniumglass=50,\
 		/obj/item/stack/sheet/plasteel=50,\
 		/obj/item/stack/sheet/mineral/plastitanium=50,\
 		/obj/item/stack/sheet/mineral/titanium=50,\

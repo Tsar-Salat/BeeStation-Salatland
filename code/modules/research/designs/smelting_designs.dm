@@ -61,6 +61,16 @@
 	departmental_flags = DEPARTMENTAL_FLAG_CARGO | DEPARTMENTAL_FLAG_SCIENCE | DEPARTMENTAL_FLAG_ENGINEERING
 	maxstack = 50
 
+/datum/design/plasuraniumglass_alloy
+	name = "Plas-uranium glass (Plasma + Uranium + Glass alloy)"
+	id = "plasuranium"
+	build_type = SMELTER | PROTOLATHE
+	materials = list(/datum/material/plasma = MINERAL_MATERIAL_AMOUNT * 0.5, /datum/material/uranium = MINERAL_MATERIAL_AMOUNT * 0.5, /datum/material/glass = MINERAL_MATERIAL_AMOUNT)
+	build_path = /obj/item/stack/sheet/plasuraniumglass
+	category = list("initial", "Stock Parts")
+	departmental_flags = DEPARTMENTAL_FLAG_CARGO | DEPARTMENTAL_FLAG_SCIENCE | DEPARTMENTAL_FLAG_ENGINEERING
+	maxstack = 50
+
 /datum/design/alienalloy
 	name = "Alien Alloy"
 	desc = "A sheet of reverse-engineered alien alloy."

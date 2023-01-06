@@ -271,7 +271,9 @@ GLOBAL_LIST_INIT(glass_sheet_types, typecacheof(list(
 	/obj/item/stack/sheet/plasmaglass,
 	/obj/item/stack/sheet/plasmarglass,
 	/obj/item/stack/sheet/titaniumglass,
-	/obj/item/stack/sheet/plastitaniumglass)))
+	/obj/item/stack/sheet/plastitaniumglass,
+	/obj/item/stack/sheet/uraniumglass,
+	/obj/item/stack/sheet/plasuraniumglass)))
 
 #define is_glass_sheet(O) (is_type_in_typecache(O, GLOB.glass_sheet_types))
 

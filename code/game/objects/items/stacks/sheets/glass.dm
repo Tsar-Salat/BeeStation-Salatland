@@ -115,6 +115,49 @@ GLOBAL_LIST_INIT(pglass_recipes, list ( \
 	else
 		return ..()
 
+GLOBAL_LIST_INIT(uglass_recipes, list ( \
+	new/datum/stack_recipe("directional window", /obj/structure/window/plasma/unanchored, on_floor = TRUE, window_checks = TRUE), \
+	new/datum/stack_recipe("fulltile window", /obj/structure/window/plasma/fulltile/unanchored, 2, on_floor = TRUE, window_checks = TRUE) \
+))
+
+/obj/item/stack/sheet/uraniumglass
+	name = "depleted uranium glass"
+	desc = "A glass sheet made out of a depleted uranium-silicate alloy. It looks extremely tough and effectively impervious to radiation."
+	singular_name = "depleted uranium glass sheet"
+	icon_state = "sheet-uraniumglass"
+	item_state = "sheet-uraniumglass"
+	materials = list(/datum/material/uranium=MINERAL_MATERIAL_AMOUNT * 0.5, /datum/material/glass=MINERAL_MATERIAL_AMOUNT)
+	armor = list("melee" = 0, "bullet" = 0, "laser" = 0, "energy" = 0, "bomb" = 0, "bio" = 0, "rad" = 95, "fire" = 95, "acid" = 100, "stamina" = 0)
+	resistance_flags = ACID_PROOF
+	merge_type = /obj/item/stack/sheet/uraniumglass
+	grind_results = list(/datum/reagent/silicon = 20, /datum/reagent/toxin/uranium = 10)
+	tableVariant = /obj/structure/table/glass/uranium
+
+/obj/item/stack/sheet/uraniumglass/fifty
+	amount = 50
+
+/obj/item/stack/sheet/uraniumglass/Initialize(mapload, new_amount, merge = TRUE)
+	recipes = GLOB.uglass_recipes
+	return ..()
+
+/obj/item/stack/sheet/uraniumglass/attackby(obj/item/W, mob/user, params)
+	add_fingerprint(user)
+
+	if(istype(W, /obj/item/stack/rods))
+		var/obj/item/stack/rods/V = W
+		if (V.get_amount() >= 1 && get_amount() >= 1)
+			var/obj/item/stack/sheet/plasuraniumglass/RG = new (get_turf(user), null, TRUE, user)
+			var/replace = user.get_inactive_held_item()==src
+			V.use(1)
+			use(1)
+			if(QDELETED(src) && replace)
+				user.put_in_hands(RG)
+		else
+			to_chat(user, "<span class='warning'>You need one rod and one sheet of uranium glass to make reinforced depleted uranium glass!</span>")
+			return
+	else
+		return ..()
+
 
 
 /*
@@ -225,6 +268,28 @@ GLOBAL_LIST_INIT(plastitaniumglass_recipes, list(
 
 /obj/item/stack/sheet/plastitaniumglass/Initialize(mapload, new_amount, merge = TRUE)
 	recipes = GLOB.plastitaniumglass_recipes
+	return ..()
+
+GLOBAL_LIST_INIT(plasuraniumglass_recipes, list ( \
+	new/datum/stack_recipe("directional reinforced window", /obj/structure/window/plasuraniumglass/unanchored, on_floor = TRUE, window_checks = TRUE), \
+	new/datum/stack_recipe("fulltile reinforced window", /obj/structure/window/plasuraniumglass/unanchored, 2, on_floor = TRUE, window_checks = TRUE) \
+))
+
+/obj/item/stack/sheet/plasuraniumglass
+	name = "plasma-uranium glass"
+	desc = "A glass sheet made out of a plasma-uranium-silicate alloy. It looks hopelessly tough, effectively fireproof, and impenetrable to radiation!"
+	singular_name = "reinforced depleted uranium glass sheet"
+	icon_state = "sheet-plasuraniumglassglass"
+	item_state = "sheet-plasuraniumglassglass"
+	materials = list(/datum/material/uranium=MINERAL_MATERIAL_AMOUNT * 0.5, /datum/material/glass=MINERAL_MATERIAL_AMOUNT, /datum/material/iron = MINERAL_MATERIAL_AMOUNT * 0.5,)
+	armor = list("melee" = 35, "bullet" = 0, "laser" = 0, "energy" = 0, "bomb" = 0, "bio" = 0, "rad" = 100, "fire" = 100, "acid" = 100, "stamina" = 0)
+	resistance_flags = ACID_PROOF && FIRE_PROOF
+	merge_type = /obj/item/stack/sheet/plasuraniumglass
+	grind_results = list(/datum/reagent/silicon = 20, /datum/reagent/uranium = 3, /datum/reagent/iron = 10)
+	point_value = 38
+
+/obj/item/stack/sheet/plasuraniumglass/Initialize(mapload, new_amount, merge = TRUE)
+	recipes = GLOB.plasuraniumglass_recipes
 	return ..()
 
 /obj/item/shard

@@ -447,3 +447,64 @@ again.
 		if(NORTHWEST)
 			spawn_list = list(/obj/structure/grille, /obj/structure/window/depleteduranium/spawner/north, /obj/structure/window/depleteduranium/spawner/west)
 	. = ..()
+
+//plasma reinforced
+
+/obj/effect/spawner/structure/window/plasuranium
+	name = "plasuranium window spawner"
+	icon_state = "plasuraniumwindow_spawner"
+	spawn_list = list(/obj/structure/grille, /obj/structure/window/plasuranium/fulltile)
+
+/obj/effect/spawner/structure/window/hollow/plasuranium
+	name = "hollow reinforced plasma window spawner"
+	icon_state = "plasuraniumwindow_spawner_full"
+	spawn_list = list(/obj/structure/grille, /obj/structure/window/plasuranium, /obj/structure/window/plasuranium/spawner/north, /obj/structure/window/plasuranium/spawner/east, /obj/structure/window/plasuranium/spawner/west)
+
+/obj/effect/spawner/structure/window/hollow/plasuranium/end
+	icon_state = "plasuraniumwindow_spawner_end"
+
+/obj/effect/spawner/structure/window/hollow/plasuranium/end/Initialize(mapload)
+	switch(dir)
+		if(NORTH)
+			spawn_list = list(/obj/structure/grille, /obj/structure/window/plasuranium/spawner/north, /obj/structure/window/plasuranium/spawner/east, /obj/structure/window/plasuranium/spawner/west)
+		if(EAST)
+			spawn_list = list(/obj/structure/grille, /obj/structure/window/plasuranium, /obj/structure/window/plasuranium/spawner/north, /obj/structure/window/plasuranium/spawner/east)
+		if(SOUTH)
+			spawn_list = list(/obj/structure/grille, /obj/structure/window/plasuranium, /obj/structure/window/plasuranium/spawner/east, /obj/structure/window/plasuranium/spawner/west)
+		if(WEST)
+			spawn_list = list(/obj/structure/grille, /obj/structure/window/plasuranium, /obj/structure/window/plasuranium/spawner/north, /obj/structure/window/plasuranium/spawner/west)
+	. = ..()
+
+/obj/effect/spawner/structure/window/hollow/plasuranium/middle
+	icon_state = "plasuraniumwindow_spawner_middle"
+
+/obj/effect/spawner/structure/window/hollow/plasuranium/middle/Initialize(mapload)
+	switch(dir)
+		if(NORTH,SOUTH)
+			spawn_list = list(/obj/structure/grille, /obj/structure/window/plasuranium, /obj/structure/window/plasuranium/spawner/north)
+		if(EAST,WEST)
+			spawn_list = list(/obj/structure/grille, /obj/structure/window/plasuranium/spawner/east, /obj/structure/window/plasuranium/spawner/west)
+	. = ..()
+
+/obj/effect/spawner/structure/window/hollow/plasuranium/directional
+	icon_state = "plasuraniumwindow_spawner_directional"
+
+/obj/effect/spawner/structure/window/hollow/plasuranium/directional/Initialize(mapload)
+	switch(dir)
+		if(NORTH)
+			spawn_list = list(/obj/structure/grille, /obj/structure/window/plasuranium/spawner/north)
+		if(NORTHEAST)
+			spawn_list = list(/obj/structure/grille, /obj/structure/window/plasuranium/spawner/north, /obj/structure/window/plasuranium/spawner/east)
+		if(EAST)
+			spawn_list = list(/obj/structure/grille, /obj/structure/window/plasuranium/spawner/east)
+		if(SOUTHEAST)
+			spawn_list = list(/obj/structure/grille, /obj/structure/window/plasuranium, /obj/structure/window/plasuranium/spawner/east)
+		if(SOUTH)
+			spawn_list = list(/obj/structure/grille, /obj/structure/window/plasuranium)
+		if(SOUTHWEST)
+			spawn_list = list(/obj/structure/grille, /obj/structure/window/plasuranium, /obj/structure/window/plasuranium/spawner/west)
+		if(WEST)
+			spawn_list = list(/obj/structure/grille, /obj/structure/window/plasuranium/spawner/west)
+		if(NORTHWEST)
+			spawn_list = list(/obj/structure/grille, /obj/structure/window/plasuranium/spawner/north, /obj/structure/window/plasuranium/spawner/west)
+	. = ..()
