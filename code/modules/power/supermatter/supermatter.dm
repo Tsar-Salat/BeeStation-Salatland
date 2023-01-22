@@ -426,11 +426,19 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 			env.merge(removed)
 			air_update_turf()
 
-	for(var/mob/living/carbon/human/l in viewers(HALLUCINATION_RANGE(power), src)) // If they can see it without mesons on.  Bad on them.
-		if(!HAS_TRAIT(l.mind, TRAIT_MADNESS_IMMUNE) && !HAS_TRAIT(l, TRAIT_MADNESS_IMMUNE))
-			var/D = sqrt(1 / max(1, get_dist(l, src)))
-			l.hallucination += power * config_hallucination_power * D
-			l.hallucination = CLAMP(0, 200, l.hallucination)
+	for(var/mob/living/carbon/human/seen_by_sm in view(src, HALLUCINATION_RANGE(power)))
+		// If they are immune to supermatter hallucinations.
+		if (HAS_TRAIT(seen_by_sm, TRAIT_MADNESS_IMMUNE) || (seen_by_sm.mind && HAS_TRAIT(seen_by_sm.mind, TRAIT_MADNESS_IMMUNE)))
+			continue
+
+		// Blind people don't get supermatter hallucinations.
+		if (seen_by_sm.is_blind())
+			continue
+
+		// Everyone else gets hallucinations.
+		var/dist = sqrt(1 / max(1, get_dist(seen_by_sm, src)))
+		seen_by_sm.hallucination += power * config_hallucination_power * dist
+		seen_by_sm.hallucination = clamp(seen_by_sm.hallucination, 0, 200)
 
 	//Transitions between one function and another, one we use for the fast inital startup, the other is used to prevent errors with fusion temperatures.
 	//Use of the second function improves the power gain imparted by using co2
