@@ -53,12 +53,6 @@
 
 	var/obj/item/firing_pin/pin = /obj/item/firing_pin //standard firing pin for most guns
 	var/no_pin_required = FALSE //whether the gun can be fired without a pin
-	var/can_flashlight = FALSE //if a flashlight can be added or removed if it already has one.
-
-	//Flashlight
-	var/obj/item/flashlight/seclite/gun_light
-	var/mutable_appearance/flashlight_overlay
-	var/datum/action/item_action/toggle_gunlight/alight
 
 	var/can_bayonet = FALSE //if a bayonet can be added or removed if it already has one.
 	var/obj/item/kitchen/knife/bayonet
@@ -69,8 +63,6 @@
 	var/ammo_x_offset = 0 //used for positioning ammo count overlay on sprite
 	var/ammo_y_offset = 0
 	var/gunlight_state = "flight"
-	var/flight_x_offset = 0
-	var/flight_y_offset = 0
 
 	//Zooming
 	var/zoomable = FALSE //whether the gun generates a Zoom action on creation
@@ -92,8 +84,8 @@
 			pin = null
 		else
 			pin = new pin(src)
-	if(gun_light)
-		alight = new(src)
+
+	add_seclight_point()
 	if(!canMouseDown) //Some things like beam rifles override this.
 		canMouseDown = automatic //Nsv13 / Bee change.
 	build_zooming()
@@ -119,8 +111,6 @@
 /obj/item/gun/Destroy()
 	if(isobj(pin)) //Can still be the initial path, then we skip
 		QDEL_NULL(pin)
-	if(gun_light)
-		QDEL_NULL(gun_light)
 	if(bayonet)
 		QDEL_NULL(bayonet)
 	if(chambered) //Not all guns are chambered (EMP'ed energy guns etc)
@@ -130,6 +120,12 @@
 	UnregisterSignal(list(COMSIG_TWOHANDED_WIELD, COMSIG_TWOHANDED_UNWIELD))
 	return ..()
 
+/// Handles adding [the seclite mount component][/datum/component/seclite_attachable] to the gun.
+/// If the gun shouldn't have a seclight mount, override this with a return.
+/// Or, if a child of a gun with a seclite mount has slightly different behavior or icons, extend this.
+/obj/item/gun/proc/add_seclight_point()
+	return
+
 /obj/item/gun/handle_atom_del(atom/A)
 	if(A == pin)
 		pin = null
@@ -138,8 +134,6 @@
 		update_icon()
 	if(A == bayonet)
 		clear_bayonet()
-	if(A == gun_light)
-		clear_gunlight()
 	return ..()
 
 /obj/item/gun/examine(mob/user)
@@ -151,13 +145,6 @@
 			. += "<span class='info'>[pin] looks like it could be removed with some <b>tools</b>.</span>"
 		else
 			. += "It doesn't have a <b>firing pin</b> installed, and won't fire."
-
-	if(gun_light)
-		. += "It has \a [gun_light] [can_flashlight ? "" : "permanently "]mounted on it."
-		if(can_flashlight) //if it has a light and this is false, the light is permanent.
-			. += "<span class='info'>[gun_light] looks like it can be <b>unscrewed</b> from [src].</span>"
-	else if(can_flashlight)
-		. += "It has a mounting point for a <b>seclite</b>."
 
 	if(bayonet)
 		. += "It has \a [bayonet] [can_bayonet ? "" : "permanently "]affixed to it."
@@ -457,19 +444,6 @@
 /obj/item/gun/attackby(obj/item/I, mob/user, params)
 	if(user.a_intent == INTENT_HARM)
 		return ..()
-	else if(istype(I, /obj/item/flashlight/seclite))
-		if(!can_flashlight)
-			return ..()
-		var/obj/item/flashlight/seclite/S = I
-		if(!gun_light)
-			if(!user.transferItemToLoc(I, src))
-				return
-			balloon_alert(user, "You attach [S] to [src].")
-			set_gun_light(S)
-			update_gunlight()
-			alight = new(src)
-			if(loc == user)
-				alight.Grant(user)
 	else if(istype(I, /obj/item/kitchen/knife))
 		var/obj/item/kitchen/knife/K = I
 		if(!can_bayonet || !K.bayonet || bayonet) //ensure the gun has an attachment point available, and that the knife is compatible with it.
@@ -495,17 +469,8 @@
 		return
 	if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
 		return
-	if((can_flashlight && gun_light) && (can_bayonet && bayonet)) //give them a choice instead of removing both
-		var/list/possible_items = list(gun_light, bayonet)
-		var/obj/item/item_to_remove = input(user, "Select an attachment to remove", "Attachment Removal") as null|obj in sortNames(possible_items)
-		if(!item_to_remove || !user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
-			return
-		return remove_gun_attachment(user, I, item_to_remove)
 
-	else if(gun_light && can_flashlight) //if it has a gun_light and can_flashlight is false, the flashlight is permanently attached.
-		return remove_gun_attachment(user, I, gun_light, "unscrewed")
-
-	else if(bayonet && can_bayonet) //if it has a bayonet, and the bayonet can be removed
+	if(bayonet && can_bayonet) //if it has a bayonet, and the bayonet can be removed
 		return remove_gun_attachment(user, I, bayonet, "unfix")
 
 	else if(pin && user.is_holding(src))
@@ -554,19 +519,15 @@
 			QDEL_NULL(pin)
 			return TRUE
 
-/obj/item/gun/proc/remove_gun_attachment(mob/living/user, obj/item/tool_item, obj/item/item_to_remove, removal_verb)
-	if(tool_item)
-		tool_item.play_tool_sound(src)
-	balloon_alert(user, "You remove [item_to_remove] from [src].")
-	item_to_remove.forceMove(drop_location())
+/obj/item/gun/proc/remove_bayonet(mob/living/user, obj/item/tool_item)
+	tool_item?.play_tool_sound(src)
+	to_chat(user, span_notice("You unfix [bayonet] from [src]."))
+	bayonet.forceMove(drop_location())
 
 	if(Adjacent(user) && !issilicon(user))
-		user.put_in_hands(item_to_remove)
+		user.put_in_hands(bayonet)
 
-	if(item_to_remove == bayonet)
-		return clear_bayonet()
-	else if(item_to_remove == gun_light)
-		return clear_gunlight()
+	return clear_bayonet()
 
 /obj/item/gun/proc/clear_bayonet()
 	if(!bayonet)
@@ -575,59 +536,8 @@
 	if(knife_overlay)
 		cut_overlay(knife_overlay)
 		knife_overlay = null
+	update_appearance()
 	return TRUE
-
-/obj/item/gun/proc/clear_gunlight()
-	if(!gun_light)
-		return
-	var/obj/item/flashlight/seclite/removed_light = gun_light
-	set_gun_light(null)
-	update_gunlight()
-	removed_light.update_brightness()
-	QDEL_NULL(alight)
-	return TRUE
-
-
-///Called when gun_light value changes.
-/obj/item/gun/proc/set_gun_light(obj/item/flashlight/seclite/new_light)
-	if(gun_light == new_light)
-		return
-	. = gun_light
-	gun_light = new_light
-	if(gun_light)
-		gun_light.set_light_flags(gun_light.light_flags | LIGHT_ATTACHED)
-		if(gun_light.loc != src)
-			gun_light.forceMove(src)
-	else if(.)
-		var/obj/item/flashlight/seclite/old_gun_light = .
-		old_gun_light.set_light_flags(old_gun_light.light_flags & ~LIGHT_ATTACHED)
-		if(old_gun_light.loc == src)
-			old_gun_light.forceMove(get_turf(src))
-
-
-/obj/item/gun/ui_action_click(mob/user, actiontype)
-	if(istype(actiontype, alight))
-		toggle_gunlight()
-	else
-		..()
-
-/obj/item/gun/proc/toggle_gunlight()
-	if(!gun_light)
-		return
-
-	var/mob/living/carbon/human/user = usr
-	gun_light.on = !gun_light.on
-	gun_light.update_brightness()
-	balloon_alert(user, "You turn the flashlight [gun_light.on ? "on" : "off"].")
-
-	playsound(user, 'sound/weapons/empty.ogg', 100, TRUE)
-	update_gunlight()
-
-/obj/item/gun/proc/update_gunlight()
-	update_icon()
-	for(var/X in actions)
-		var/datum/action/A = X
-		A.UpdateButtonIcon()
 
 /obj/item/gun/pickup(mob/user)
 	..()

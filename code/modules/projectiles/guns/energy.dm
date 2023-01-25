@@ -63,7 +63,8 @@
 	recharge_newshot(TRUE)
 	if(selfcharge)
 		START_PROCESSING(SSobj, src)
-	update_icon()
+	update_appearance()
+	AddElement(/datum/element/update_icon_updates_onmob)
 
 /obj/item/gun/energy/fire_sounds()
 	var/obj/item/ammo_casing/energy/shot = ammo_type[select]
@@ -204,7 +205,8 @@
 	if(!initial(item_state))
 		itemState = icon_state
 	if (modifystate)
-		add_overlay("[icon_state]_[shot.select_name]")
+		add_overlay("[icon_state]_[initial(shot.select_name)]"
+		overlay_icon_state += "_[initial(shot.select_name)]")
 		iconState += "_[shot.select_name]"
 		if(itemState)
 			itemState += "[shot.select_name]"
