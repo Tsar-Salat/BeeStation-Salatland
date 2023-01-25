@@ -1805,6 +1805,13 @@
 	crate_type = /obj/structure/closet/crate/secure/science
 	dangerous = TRUE
 
+/datum/supply_pack/science/monkey_helmets
+	name = "Monkey Mind Magnification Helmet crate"
+	desc = "Some research is best done with monkeys, yet sometimes they're just too dumb to complete more complicated tasks. These helmets should help."
+	cost = 1500
+	contains = list(/obj/item/clothing/head/helmet/monkey_sentience = 2)
+	crate_name = "monkey mind magnification crate"
+
 /datum/supply_pack/science/xenobio
 	name = "Xenobiology Lab Crate"
 	desc = "In case a freak accident has rendered the xenobiology lab non-functional! Contains two grey slime extracts, some plasma, and the required circuit boards to set up your xenobiology lab up and running! Requires Xenobiology access to open."
