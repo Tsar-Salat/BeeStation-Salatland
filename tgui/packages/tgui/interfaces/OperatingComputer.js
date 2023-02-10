@@ -68,7 +68,7 @@ const PatientStateView = (props, context) => {
   return (
     <>
       <Section title="Patient State">
-        {patient && (
+        {Object.keys(patient).length ? (
           <LabeledList>
             <LabeledList.Item
               label="State"
@@ -76,7 +76,7 @@ const PatientStateView = (props, context) => {
               {patient.stat}
             </LabeledList.Item>
             <LabeledList.Item label="Blood Type">
-              {patient.blood_type}
+              {patient.blood_type || 'Unable to determine blood type'}
             </LabeledList.Item>
             <LabeledList.Item label="Health">
               <ProgressBar
@@ -97,7 +97,7 @@ const PatientStateView = (props, context) => {
               </LabeledList.Item>
             ))}
           </LabeledList>
-        ) || (
+        ) : (
           'No Patient Detected'
         )}
       </Section>
@@ -121,7 +121,7 @@ const PatientStateView = (props, context) => {
                 </>
               )}
             </LabeledList.Item>
-            {!!data.alternative_step && (
+            {procedure.alternative_step && (
               <LabeledList.Item label="Alternative Step">
                 {procedure.alternative_step}
                 {procedure.alt_chems_needed && (

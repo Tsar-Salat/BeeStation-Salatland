@@ -87,26 +87,12 @@
 		data["patient"] = null
 		return data
 
-	var/mob/living/carbon/human/patient
+	data["table"] = table
+	data["patient"] = list()
+	if(!table.patient)
+		return data
+	var/mob/living/carbon/patient = table.patient
 
-	if(table)
-		data["table"] = table
-		if(!table.check_eligible_patient())
-			return data
-		data["patient"] = list()
-		patient = table.patient
-	else
-		if(sbed)
-			data["table"] = sbed
-			if(!ishuman(sbed.occupant) &&  !ismonkey(sbed.occupant))
-				return data
-			data["patient"] = list()
-			if(isliving(sbed.occupant))
-				var/mob/living/live = sbed.occupant
-				patient = live
-		else
-			data["patient"] = null
-			return data
 	switch(patient.stat)
 		if(CONSCIOUS)
 			data["patient"]["stat"] = "Conscious"
@@ -121,7 +107,7 @@
 			data["patient"]["stat"] = "Dead"
 			data["patient"]["statstate"] = "bad"
 	data["patient"]["health"] = patient.health
-	data["patient"]["blood_type"] = patient.dna.blood_type
+	data["patient"]["blood_type"] = patient.dna?.blood_type
 	data["patient"]["maxHealth"] = patient.maxHealth
 	data["patient"]["minHealth"] = HEALTH_THRESHOLD_DEAD
 	data["patient"]["bruteLoss"] = patient.getBruteLoss()
