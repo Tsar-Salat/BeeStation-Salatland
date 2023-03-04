@@ -527,6 +527,7 @@
 #include "code\datums\brain_damage\severe.dm"
 #include "code\datums\brain_damage\special.dm"
 #include "code\datums\brain_damage\split_personality.dm"
+#include "code\datums\changelog\changelog.dm"
 #include "code\datums\components\_component.dm"
 #include "code\datums\components\aiming.dm"
 #include "code\datums\components\anti_artifact.dm"
