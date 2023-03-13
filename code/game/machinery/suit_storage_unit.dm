@@ -161,7 +161,7 @@
 
 /obj/machinery/suit_storage_unit/Destroy()
 	QDEL_NULL(wires)
-	dump_contents()
+	dump_inventory_contents()
 	return ..()
 
 /obj/machinery/suit_storage_unit/update_icon()
@@ -192,7 +192,7 @@
 	. = ..()
 	if(!is_operational && state_open)
 		open_machine()
-		dump_contents()
+		dump_inventory_contents()
 	update_icon()
 
 /obj/machinery/suit_storage_unit/RefreshParts()
@@ -202,7 +202,7 @@
 	laser_strength_hacked = 15 + (5 * (calculated_laser_rating)) //20 on T1, 35 on T4
 	laser_strength = 12 - (2 * (calculated_laser_rating)) //10 on T1, 4 on T4
 
-/obj/machinery/suit_storage_unit/proc/drop_stored_items()
+/obj/machinery/suit_storage_unit/dump_inventory_contents()
 	. =..()
 	helmet = null
 	suit = null
@@ -340,7 +340,7 @@
 				qdel(contamination)
 		open_machine(FALSE)
 		if(occupant)
-			dump_contents()
+			dump_inventory_contents()
 
 /obj/machinery/suit_storage_unit/proc/shock(mob/user, prb)
 	if(!prob(prb))
@@ -357,12 +357,12 @@
 			to_chat(user, "<span class='warning'>[src]'s door won't budge!</span>")
 		return
 	open_machine()
-	dump_contents()
+	dump_inventory_contents()
 
 /obj/machinery/suit_storage_unit/container_resist(mob/living/user)
 	if(!locked)
 		open_machine()
-		dump_contents()
+		dump_inventory_contents()
 		return
 	user.changeNext_move(CLICK_CD_BREAKOUT)
 	user.last_special = world.time + CLICK_CD_BREAKOUT
@@ -375,7 +375,7 @@
 		user.visible_message("<span class='warning'>[user] successfully broke out of [src]!</span>", \
 			"<span class='notice'>You successfully break out of [src]!</span>")
 		open_machine()
-		dump_contents()
+		dump_inventory_contents()
 
 	add_fingerprint(user)
 	if(locked)
@@ -384,7 +384,7 @@
 		addtimer(CALLBACK(src, PROC_REF(resist_open), user), 300)
 	else
 		open_machine()
-		dump_contents()
+		dump_inventory_contents()
 
 /obj/machinery/suit_storage_unit/proc/resist_open(mob/user)
 	if(!state_open && occupant && (user in src) && user.stat == 0) // Check they're still here.
@@ -407,7 +407,7 @@
 		else
 			I.play_tool_sound(src, 50)
 			visible_message("<span class='notice'>[user] pulls out the contents of [src] outside!</span>", "<span class='notice'>You pull [src]'s contents outside!</span>")
-			dump_contents()
+			dump_inventory_contents()
 			update_icon()
 			return
 	if(state_open && is_operational)
@@ -456,7 +456,7 @@
 			if(default_deconstruction_crowbar(I))
 				return
 	if(default_pry_open(I))
-		dump_contents()
+		dump_inventory_contents()
 		return
 
 	return ..()
@@ -528,7 +528,7 @@
 			else
 				open_machine(0)
 				if(occupant)
-					dump_contents() // Dump out contents if someone is in there.
+					dump_inventory_contents() // Dump out contents if someone is in there.
 			. = TRUE
 		if("lock")
 			if(state_open)

@@ -177,7 +177,7 @@ Class Procs:
 	GLOB.machines.Remove(src)
 	if(datum_flags & DF_ISPROCESSING) // A sizeable portion of machines stops processing before qdel
 		end_processing()
-	drop_contents()
+	dump_inventory_contents()
 	if(length(component_parts))
 		for(var/atom/A in component_parts)
 			qdel(A)
@@ -237,18 +237,18 @@ Class Procs:
 	state_open = TRUE
 	set_density(FALSE)
 	if(drop)
-		drop_stored_items()
+		dump_inventory_contents()
 	update_icon()
 	updateUsrDialog()
 	ui_update()
 
 /**
-  * Drop every movable atom in the machine's contents list.
+  * Drop every movable atom in the machine's contents list, including any components and circuit.
   */
-/obj/machinery/proc/drop_contents()
-	// Start by calling the drop_stored_items proc. Will allow machines with special contents
+/obj/machinery/dump_contents()
+	// Start by calling the dump_inventory_contents proc. Will allow machines with special contents
 	// to handle their dropping.
-	drop_stored_items()
+	dump_inventory_contents()
 
 	// Then we can clean up and drop everything else.
 	var/turf/this_turf = get_turf(src)
@@ -264,11 +264,11 @@ Class Procs:
   * Drop every movable atom in the machine's contents list.
   *
   * Proc does not drop components and will skip over anything in the component_parts list.
-  * Call drop_contents() to drop all contents including components.
+  * Call dump_contents() to drop all contents including components.
   * Arguments:
   * * subset - If this is not null, only atoms that are also contained within the subset list will be dropped.
   */
-/obj/machinery/proc/drop_stored_items(list/subset = null)
+/obj/machinery/proc/dump_inventory_contents(list/subset = null)
 	var/turf/this_turf = get_turf(src)
 	for(var/atom/movable/movable_atom in contents)
 		if(subset && !(movable_atom in subset))
