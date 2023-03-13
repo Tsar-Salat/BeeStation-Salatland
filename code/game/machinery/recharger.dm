@@ -48,11 +48,11 @@
 	charging = new_charging
 	if (new_charging)
 		START_PROCESSING(SSmachines, src)
-		use_power = ACTIVE_POWER_USE
-		update_icon(scan = TRUE)
+		update_use_power(ACTIVE_POWER_USE)
+		update_appearance(scan = TRUE)
 	else
-		use_power = IDLE_POWER_USE
-		update_icon()
+		update_use_power(IDLE_POWER_USE)
+		update_appearance()
 
 /obj/machinery/recharger/attackby(obj/item/G, mob/user, params)
 	if(G.tool_behaviour == TOOL_WRENCH)

@@ -113,6 +113,9 @@
 	/// How hard it is to hack airlocks in this area
 	var/airlock_hack_difficulty = AIRLOCK_SECURITY_NONE
 
+	var/list/air_vent_info = list()
+	var/list/air_scrub_info = list()
+
 /**
   * A list of teleport locations
   *
@@ -625,13 +628,27 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 			power_usage[powerchannel] += value
 
 /**
-  * Clear all power usage in area
-  *
-  * Clears all power used for equipment, light and environment channels
-  */
+ * Remove a static amount of power load to an area
+ *
+ * Possible channels
+ * *AREA_USAGE_STATIC_EQUIP
+ * *AREA_USAGE_STATIC_LIGHT
+ * *AREA_USAGE_STATIC_ENVIRON
+ */
+/area/proc/removeStaticPower(value, powerchannel)
+	switch(powerchannel)
+		if(AREA_USAGE_STATIC_START to AREA_USAGE_STATIC_END)
+			power_usage[powerchannel] -= value
+
+/**
+ * Clear all non-static power usage in area
+ *
+ * Clears all power used for the dynamic equipment, light and environment channels
+ */
 /area/proc/clear_usage()
-	for(var/i in AREA_USAGE_DYNAMIC_START to AREA_USAGE_DYNAMIC_END)
-		power_usage[i] = 0
+	power_usage[AREA_USAGE_EQUIP] = 0
+	power_usage[AREA_USAGE_LIGHT] = 0
+	power_usage[AREA_USAGE_ENVIRON] = 0
 
 /**
   * Add a power value amount to the stored used_x variables

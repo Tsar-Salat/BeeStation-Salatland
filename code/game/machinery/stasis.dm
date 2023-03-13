@@ -108,12 +108,12 @@
 	playsound(src, 'sound/effects/spray.ogg', 5, TRUE, 2, frequency = freq)
 	target.SetStasis(TRUE)
 	target.ExtinguishMob()
-	use_power = ACTIVE_POWER_USE
+	update_use_power(ACTIVE_POWER_USE)
 
 /obj/machinery/stasis/proc/thaw_them(mob/living/target)
 	target.SetStasis(FALSE)
 	if(target == occupant)
-		use_power = IDLE_POWER_USE
+		update_use_power(IDLE_POWER_USE)
 
 /obj/machinery/stasis/post_buckle_mob(mob/living/L)
 	if(!can_be_occupant(L))
@@ -130,8 +130,8 @@
 	update_icon()
 
 /obj/machinery/stasis/process()
-	if( !( occupant && isliving(occupant) && check_nap_violations() ) )
-		use_power = IDLE_POWER_USE
+	if(!(occupant && isliving(occupant) && check_nap_violations()))
+		update_use_power(IDLE_POWER_USE)
 		return
 	var/mob/living/L_occupant = occupant
 	if(stasis_running())

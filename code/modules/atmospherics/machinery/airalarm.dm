@@ -1,37 +1,42 @@
 /datum/tlv
-	var/min2
-	var/min1
-	var/max1
-	var/max2
+	var/warning_min
+	var/warning_max
+	var/hazard_min
+	var/hazard_max
 
 /datum/tlv/New(min2 as num, min1 as num, max1 as num, max2 as num)
-	if(min2) src.min2 = min2
-	if(min1) src.min1 = min1
-	if(max1) src.max1 = max1
-	if(max2) src.max2 = max2
+	if(min2)
+		hazard_min = min2
+	if(min1)
+		warning_min = min1
+	if(max1)
+		warning_max = max1
+	if(max2)
+		hazard_max = max2
 
-/datum/tlv/proc/get_danger_level(val as num)
-	if(max2 != -1 && val >= max2)
-		return 2
-	if(min2 != -1 && val <= min2)
-		return 2
-	if(max1 != -1 && val >= max1)
-		return 1
-	if(min1 != -1 && val <= min1)
-		return 1
-	return 0
+/datum/tlv/proc/get_danger_level(val)
+	if(hazard_max != TLV_DONT_CHECK && val >= hazard_max)
+		return TLV_OUTSIDE_HAZARD_LIMIT
+	if(hazard_min != TLV_DONT_CHECK && val <= hazard_min)
+		return TLV_OUTSIDE_HAZARD_LIMIT
+	if(warning_max != TLV_DONT_CHECK && val >= warning_max)
+		return TLV_OUTSIDE_WARNING_LIMIT
+	if(warning_min != TLV_DONT_CHECK && val <= warning_min)
+		return TLV_OUTSIDE_WARNING_LIMIT
+
+	return TLV_NO_DANGER
 
 /datum/tlv/no_checks
-	min2 = -1
-	min1 = -1
-	max1 = -1
-	max2 = -1
+	hazard_min = TLV_DONT_CHECK
+	warning_min = TLV_DONT_CHECK
+	warning_max = TLV_DONT_CHECK
+	hazard_max = TLV_DONT_CHECK
 
 /datum/tlv/dangerous
-	min2 = -1
-	min1 = -1
-	max1 = 0.2
-	max2 = 0.5
+	hazard_min = TLV_DONT_CHECK
+	warning_min = TLV_DONT_CHECK
+	warning_max = 0.2
+	hazard_max = 0.5
 
 /obj/item/electronics/airalarm
 	name = "air alarm electronics"
