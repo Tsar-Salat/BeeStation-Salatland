@@ -202,8 +202,8 @@
 	laser_strength_hacked = 15 + (5 * (calculated_laser_rating)) //20 on T1, 35 on T4
 	laser_strength = 12 - (2 * (calculated_laser_rating)) //10 on T1, 4 on T4
 
-/obj/machinery/suit_storage_unit/proc/dump_contents()
-	dropContents()
+/obj/machinery/suit_storage_unit/proc/drop_stored_items()
+	. =..()
 	helmet = null
 	suit = null
 	mask = null
@@ -223,10 +223,12 @@
 	..()
 	to_chat(user, "<span class='warning'>You reprogram [src]'s decontamination subroutines.</span>")
 
+
+
 /obj/machinery/suit_storage_unit/deconstruct(disassembled = TRUE)
 	if(!(flags_1 & NODECONSTRUCT_1))
 		open_machine()
-		dump_contents()
+		dump_inventory_contents()
 		spawn_frame(disassembled)
 		for(var/obj/item/I in component_parts)
 			I.forceMove(loc)

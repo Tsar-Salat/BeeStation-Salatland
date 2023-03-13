@@ -9,6 +9,7 @@
 	desc = "An enclosed machine used to stabilize and heal patients."
 	icon = 'icons/obj/machines/sleeper.dmi'
 	icon_state = "sleeper"
+	base_icon_state = "sleeper"
 	density = FALSE
 	state_open = TRUE
 	circuit = /obj/item/circuitboard/machine/sleeper
@@ -37,6 +38,9 @@
 
 /obj/machinery/sleeper/Initialize(mapload)
 	. = ..()
+	if(mapload)
+		LAZYREMOVE(component_parts, circuit)
+		QDEL_NULL(circuit)
 	occupant_typecache = GLOB.typecache_living
 	update_icon()
 	//Create roundstart chems
