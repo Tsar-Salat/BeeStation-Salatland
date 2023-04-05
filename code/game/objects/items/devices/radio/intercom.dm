@@ -78,14 +78,10 @@
 
 	return GLOB.physical_state // But monkeys can't use default state, and they can already use hotkeys
 
-/obj/item/radio/intercom/can_receive(freq, level)
-	if(!on)
-		return FALSE
-	if(wires.is_cut(WIRE_RX))
-		return FALSE
-	if(!(0 in level))
+/obj/item/radio/intercom/can_receive(freq, list/levels)
+	if(levels != RADIO_NO_Z_LEVEL_RESTRICTION)
 		var/turf/position = get_turf(src)
-		if(isnull(position) || !(position.get_virtual_z_level() in level))
+		if(isnull(position) || !(position.get_virtual_z_level() in levels))
 			return FALSE
 	if(!listening)
 		return FALSE

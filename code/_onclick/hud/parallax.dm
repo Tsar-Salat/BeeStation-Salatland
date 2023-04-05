@@ -187,8 +187,8 @@
 	var/turf/posobj = get_turf(C.eye)
 	if(!posobj)
 		return
-	var/area/areaobj = posobj.loc
 
+	var/area/areaobj = posobj.loc
 	// Update the movement direction of the parallax if necessary (for shuttles)
 	set_parallax_movedir(areaobj.parallax_movedir, FALSE)
 
@@ -206,44 +206,41 @@
 
 	C.previous_turf = posobj
 
-	for(var/thing in C.parallax_layers)
-		var/atom/movable/screen/parallax_layer/L = thing
-		L.update_status(mymob)
-		if (L.view_sized != C.view)
-			L.update_o(C.view)
-
+	for(var/atom/movable/screen/parallax_layer/parallax_layer as anything in C.parallax_layers)
+		var/our_speed = parallax_layer.speed
 		var/change_x
 		var/change_y
-
-		if(L.absolute)
-			var/new_offset_x = -(posobj.x - SSparallax.planet_x_offset) * L.speed
-			var/new_offset_y = -(posobj.y - SSparallax.planet_y_offset) * L.speed
-			change_x = new_offset_x - L.offset_x
-			change_y = new_offset_y - L.offset_y
-			L.offset_x = new_offset_x
-			L.offset_y = new_offset_y
+		if(parallax_layer.absolute)
+			// We use change here so the typically large absolute objects (just lavaland for now) don't jitter so much
+			change_x = (posobj.x - SSparallax.planet_x_offset) * our_speed + parallax_layer.offset_x
+			change_y = (posobj.y - SSparallax.planet_y_offset) * our_speed + parallax_layer.offset_y
 		else
-			change_x = offset_x * L.speed
-			L.offset_x -= change_x
-			change_y = offset_y * L.speed
-			L.offset_y -= change_y
+			change_x = offset_x * our_speed
+			change_y = offset_y * our_speed
 
-			if(L.offset_x > 240)
-				L.offset_x -= 480
-			if(L.offset_x < -240)
-				L.offset_x += 480
-			if(L.offset_y > 240)
-				L.offset_y -= 480
-			if(L.offset_y < -240)
-				L.offset_y += 480
+			// This is how we tile parralax sprites
+			// It doesn't use change because we really don't want to animate this
+			if(parallax_layer.offset_x - change_x > 240)
+				parallax_layer.offset_x -= 480
+			else if(parallax_layer.offset_x - change_x < -240)
+				parallax_layer.offset_x += 480
+			if(parallax_layer.offset_y - change_y > 240)
+				parallax_layer.offset_y -= 480
+			else if(parallax_layer.offset_y - change_y < -240)
+				parallax_layer.offset_y += 480
 
-		if(L.smooth_movement && !areaobj.parallax_movedir && (offset_x || offset_y))
-			L.transform = matrix(1, 0, offset_x*L.speed, 0, 1, offset_y*L.speed)
-			animate(L, transform=matrix(), time = SSparallax.wait, flags = ANIMATION_PARALLEL)
+		// Now that we have our offsets, let's do our positioning
+		parallax_layer.offset_x -= change_x
+		parallax_layer.offset_y -= change_y
 
-		L.screen_loc = "CENTER-7:[round(L.offset_x,1)],CENTER-7:[round(L.offset_y,1)]"
+		parallax_layer.screen_loc = "CENTER-7:[round(parallax_layer.offset_x, 1)],CENTER-7:[round(parallax_layer.offset_y, 1)]"
 
-/mob/proc/update_parallax_teleport()	//used for arrivals shuttle
+/atom/movable/proc/update_parallax_contents()
+	for(var/mob/client_mob as anything in client_mobs_in_contents)
+		if(length(client_mob?.client?.parallax_layers) && client_mob.hud_used)
+			client_mob.hud_used.update_parallax()
+
+/mob/proc/update_parallax_teleport() //used for arrivals shuttle
 	if(client && client.eye && hud_used && length(client.parallax_layers))
 		var/area/areaobj = get_area(client.eye)
 		hud_used.set_parallax_movedir(areaobj.parallax_movedir, TRUE)

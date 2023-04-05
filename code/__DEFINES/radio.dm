@@ -119,6 +119,9 @@
 
 #define DEFAULT_SIGNALER_CODE 30
 
+///give this to can_receive to specify that there is no restriction on what z level this signal is sent to
+#define RADIO_NO_Z_LEVEL_RESTRICTION 0
+
 //Requests Console
 #define REQ_NO_NEW_MESSAGE 				0
 #define REQ_NORMAL_MESSAGE_PRIORITY 	1

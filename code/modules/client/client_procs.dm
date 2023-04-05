@@ -556,6 +556,12 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 	GLOB.mentors -= src
 	SSambience.remove_ambience_client(src)
 	QDEL_LIST_ASSOC_VAL(char_render_holders)
+
+	active_mousedown_item = null
+	SSambience.remove_ambience_client(null)
+	QDEL_NULL(view_size)
+	QDEL_NULL(void)
+	QDEL_NULL(tooltips)
 	Master.UpdateTickRate()
 	return ..()
 

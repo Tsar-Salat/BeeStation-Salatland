@@ -251,8 +251,6 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 //non-mob traits
 #define TRAIT_PARALYSIS			"paralysis" //Used for limb-based paralysis, where replacing the limb will fix it
 
-#define TRAIT_HEARING_SENSITIVE "hearing_sensitive"
-
 // item traits
 #define TRAIT_NODROP            "nodrop"
 #define TRAIT_NO_STORAGE_INSERT	"no_storage_insert" //cannot be inserted in a storage.
@@ -403,3 +401,11 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_SUIT_SENSORS "suit_sensors"
 ///Mob is tracked by nanites, and on glob suit sensors list
 #define TRAIT_NANITE_SENSORS "nanite_sensors"
+
+//important_recursive_contents traits
+/*
+ * Used for movables that need to be updated, via COMSIG_ENTER_AREA and COMSIG_EXIT_AREA, when transitioning areas.
+ * Use [/atom/movable/proc/become_area_sensitive(trait_source)] to properly enable it. How you remove it isn't as important.
+ */
+#define TRAIT_AREA_SENSITIVE "area-sensitive"
+#define TRAIT_HEARING_SENSITIVE "hearing_sensitive" //target is hearing sensitive. Every hearing sensitive atom has this trait

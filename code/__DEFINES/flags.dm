@@ -6,7 +6,7 @@
 
 //for convenience
 #define ENABLE_BITFIELD(variable, flag) (variable |= (flag))
-#define DISABLE_BITFIELD(variable, flag) (variable &= ~(flag))
+#define DISABLE_BITFIELD(variable, frlag) (variable &= ~(flag))
 #define CHECK_BITFIELD(variable, flag) (variable & (flag))
 #define TOGGLE_BITFIELD(variable, flag) (variable ^= (flag))
 
@@ -16,6 +16,10 @@
 
 /// Currently covers (1<<0) to (1<<22)
 GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304))
+
+/* Directions */
+///All the cardinal direction bitflags.
+#define ALL_CARDINALS (NORTH|SOUTH|EAST|WEST)
 
 // for /datum/var/datum_flags
 #define DF_USE_TAG (1<<0)

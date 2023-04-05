@@ -257,23 +257,23 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		eavesdrop_range = EAVESDROP_EXTRA_RANGE
 	var/list/listening = get_hearers_in_view(message_range+eavesdrop_range, source, SEE_INVISIBLE_MAXIMUM)
 	var/list/the_dead = list()
-	for(var/mob/M as() in GLOB.player_list)
-		if(!M)				//yogs
+	for(var/mob/player_mob as anything in GLOB.player_list)
+		if(!player_mob)				//yogs
 			continue		//yogs | null in player_list for whatever reason :shrug:
-		if(M.stat != DEAD) //not dead, not important
+		if(player_mob.stat != DEAD) //not dead, not important
 			continue
-		if(!M.client || !client) //client is so that ghosts don't have to listen to mice
-			listening -= M // remove (added by SEE_INVISIBLE_MAXIMUM)
+		if(!player_mob.client || !client) //client is so that ghosts don't have to listen to mice
+			listening -= player_mob // remove (added by SEE_INVISIBLE_MAXIMUM)
 			continue
-		if(get_dist(M, src) > 7 || M.get_virtual_z_level() != get_virtual_z_level()) //they're out of range of normal hearing
-			if(eavesdrop_range && !(M.client.prefs.chat_toggles & CHAT_GHOSTWHISPER)) //they're whispering and we have hearing whispers at any range off
-				listening -= M // remove (added by SEE_INVISIBLE_MAXIMUM)
+		if(get_dist(player_mob, src) > 7 || player_mob.get_virtual_z_level() != get_virtual_z_level()) //they're out of range of normal hearing
+			if(eavesdrop_range && !(player_mob.client.prefs.chat_toggles & CHAT_GHOSTWHISPER)) //they're whispering and we have hearing whispers at any range off
+				listening -= player_mob // remove (added by SEE_INVISIBLE_MAXIMUM)
 				continue
-			if(!(M.client.prefs.chat_toggles & CHAT_GHOSTEARS)) //they're talking normally and we have hearing at any range off
-				listening -= M // remove (added by SEE_INVISIBLE_MAXIMUM)
+			if(!(player_mob.client.prefs.chat_toggles & CHAT_GHOSTEARS)) //they're talking normally and we have hearing at any range off
+				listening -= player_mob // remove (added by SEE_INVISIBLE_MAXIMUM)
 				continue
-		listening |= M
-		the_dead[M] = TRUE
+		listening |= player_mob
+		the_dead[player_mob] = TRUE
 
 	var/eavesdropping
 	var/eavesrendered
@@ -284,19 +284,22 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	var/list/show_overhead_message_to = list()
 	var/list/show_overhead_message_to_eavesdrop = list()
 	var/rendered = compose_message(src, message_language, message, , spans, message_mods)
-	for(var/atom/movable/AM as() in listening)
-		if(eavesdrop_range && get_dist(source, AM) > message_range && !(the_dead[AM]))
-			if(ismob(AM))
-				var/mob/M = AM
+	for(var/atom/movable/listening_movable as anything in listening)
+		if(!listening_movable)
+			stack_trace("somehow theres a null returned from get_hearers_in_view() in send_speech!")
+			continue
+		if(eavesdrop_range && get_dist(source, listening_movable) > eavesdrop_range && !(the_dead[listening_movable]))
+			if(ismob(listening_movable))
+				var/mob/M = listening_movable
 				if(M.should_show_chat_message(src, message_language, FALSE, is_heard = TRUE))
 					show_overhead_message_to_eavesdrop += M
-			AM.Hear(eavesrendered, src, message_language, eavesdropping, , spans, message_mods)
+			listening_movable.Hear(eavesrendered, src, message_language, eavesdropping, , spans, message_mods)
 		else
-			if(ismob(AM))
-				var/mob/M = AM
+			if(ismob(listening_movable))
+				var/mob/M = listening_movable
 				if(M.should_show_chat_message(src, message_language, FALSE, is_heard = TRUE))
 					show_overhead_message_to += M
-			AM.Hear(rendered, src, message_language, message, , spans, message_mods)
+			listening_movable.Hear(rendered, src, message_language, message, , spans, message_mods)
 	if(length(show_overhead_message_to))
 		create_chat_message(src, message_language, show_overhead_message_to, message, spans)
 	if(length(show_overhead_message_to_eavesdrop))

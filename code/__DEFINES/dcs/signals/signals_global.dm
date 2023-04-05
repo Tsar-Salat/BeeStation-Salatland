@@ -33,3 +33,6 @@
 #define COMSIG_GLOB_NEW_RESEARCH "!remote_research_changed"
 /// Called after the round has fully setup and all jobs have been spawned
 #define COMSIG_GLOB_POST_START "!post_start"
+
+/// sent after world.maxx and/or world.maxy are expanded: (has_exapnded_world_maxx, has_expanded_world_maxy)
+#define COMSIG_GLOB_EXPANDED_WORLD_BOUNDS "!expanded_world_bounds"
