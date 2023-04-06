@@ -268,8 +268,13 @@
 /obj/machinery/syndicatebomb/self_destruct
 	name = "self-destruct device"
 	desc = "Do not taunt. Warranty invalid if exposed to high temperature. Not suitable for agents under 3 years of age."
-	payload = /obj/item/bombcore/large
+	payload = /obj/item/bombcore/megaton
 	can_unanchor = FALSE
+
+/obj/machinery/syndicatebomb/attackby(obj/item/I, mob/user, params)
+	if(I.tool_behaviour == TOOL_SCREWDRIVER)
+		say("Unauthorized tampering detected. Maintenance access denied.")
+		return
 
 ///Bomb Cores///
 
@@ -385,6 +390,13 @@
 	range_medium = 10
 	range_light = 20
 	range_flame = 20
+
+/obj/item/bombcore/megaton
+	name = "megaton bomb payload"
+	range_heavy = 10
+	range_medium = 20
+	range_light = 25
+	range_flame = 40
 
 /obj/item/bombcore/miniature
 	name = "small bomb core"
