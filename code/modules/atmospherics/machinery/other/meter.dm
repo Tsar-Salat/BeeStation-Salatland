@@ -7,11 +7,14 @@
 	power_channel = AREA_USAGE_ENVIRON
 	use_power = IDLE_POWER_USE
 	idle_power_usage = 2
-	active_power_usage = 4
+	active_power_usage = 9
 	max_integrity = 150
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 100, BOMB = 0, BIO = 100, RAD = 100, FIRE = 40, ACID = 0, STAMINA = 0)
+	///To connect to the ntnet
 	var/frequency = 0
-	var/atom/target
+	///The pipe we are attaching to
+	var/obj/machinery/atmospherics/pipe/target
+	///The piping layer of the target
 	var/target_layer = PIPING_LAYER_DEFAULT
 
 /obj/machinery/meter/atmos
@@ -33,7 +36,9 @@
 /obj/machinery/meter/Initialize(mapload, new_piping_layer)
 	if(!isnull(new_piping_layer))
 		target_layer = new_piping_layer
+
 	SSair.atmos_machinery += src
+
 	if(!target)
 		reattach_to_layer()
 	return ..()
@@ -51,33 +56,30 @@
 	target_layer = new_layer
 	PIPING_LAYER_DOUBLE_SHIFT(src, target_layer)
 
+/obj/machinery/meter/on_set_is_operational(old_value)
+	if(is_operational)
+		SSair.atmos_machinery += src//dont set icon_state here because it will be reset on next process() if it ever happens
+	else
+		icon_state = "meterX"
+		SSair.atmos_machinery -= src
+
 /obj/machinery/meter/process_atmos()
-	if(!target)
+	var/datum/gas_mixture/pipe_air = target.return_air()
+	if(!pipe_air)
 		icon_state = "meterX"
-		return 0
+		return FALSE
 
-	if(machine_stat & (BROKEN|NOPOWER))
+	var/env_pressure = pipe_air.return_pressure()
+	if(env_pressure <= 0.15 * ONE_ATMOSPHERE)
 		icon_state = "meter0"
-		return 0
-
-	use_power(5)
-
-	var/datum/gas_mixture/environment = target.return_air()
-	if(!environment)
-		icon_state = "meterX"
-		return 0
-
-	var/env_pressure = environment.return_pressure()
-	if(env_pressure <= 0.15*ONE_ATMOSPHERE)
-		icon_state = "meter0"
-	else if(env_pressure <= 1.8*ONE_ATMOSPHERE)
-		var/val = round(env_pressure/(ONE_ATMOSPHERE*0.3) + 0.5)
+	else if(env_pressure <= 1.8 * ONE_ATMOSPHERE)
+		var/val = round(env_pressure/(ONE_ATMOSPHERE * 0.3) + 0.5)
 		icon_state = "meter1_[val]"
-	else if(env_pressure <= 30*ONE_ATMOSPHERE)
-		var/val = round(env_pressure/(ONE_ATMOSPHERE*5)-0.35) + 1
+	else if(env_pressure <= 30 * ONE_ATMOSPHERE)
+		var/val = round(env_pressure/(ONE_ATMOSPHERE * 5)-0.35) + 1
 		icon_state = "meter2_[val]"
-	else if(env_pressure <= 59*ONE_ATMOSPHERE)
-		var/val = round(env_pressure/(ONE_ATMOSPHERE*5) - 6) + 1
+	else if(env_pressure <= 59 * ONE_ATMOSPHERE)
+		var/val = round(env_pressure/(ONE_ATMOSPHERE * 5) - 6) + 1
 		icon_state = "meter3_[val]"
 	else
 		icon_state = "meter4"
@@ -96,11 +98,15 @@
 		))
 		radio_connection.post_signal(src, signal)
 
+	var/env_temperature = pipe_air.temperature
+
+	var/new_greyscale = greyscale_colors
+
 /obj/machinery/meter/proc/status()
 	if (target)
-		var/datum/gas_mixture/environment = target.return_air()
-		if(environment)
-			. = "The pressure gauge reads [round(environment.return_pressure(), 0.01)] kPa; [round(environment.return_temperature(),0.01)] K ([round(environment.return_temperature()-T0C,0.01)]&deg;C)."
+		var/datum/gas_mixture/pipe_air = target.return_air()
+		if(pipe_air)
+			. = "The pressure gauge reads [round(pipe_air.return_pressure(), 0.01)] kPa; [round(environment.return_temperature(),0.01)] K ([round(pipe_air.return_temperature()-T0C,0.01)]&deg;C)."
 		else
 			. = "The sensor error light is blinking."
 	else
