@@ -86,6 +86,9 @@
 		if(summon_objective)
 			summon_objective.summoned = FALSE
 
+	if (GLOB.cult_narsie == src)
+		GLOB.cult_narsie = null
+
 	return ..()
 
 /obj/eldritch/narsie/attack_ghost(mob/user)

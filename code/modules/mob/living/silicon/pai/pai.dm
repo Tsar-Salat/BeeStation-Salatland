@@ -149,16 +149,16 @@
 	return ..()
 
 /mob/living/silicon/pai/Initialize(mapload)
-	var/obj/item/paicard/P = loc
+	var/obj/item/paicard/pai_card = loc
 	START_PROCESSING(SSfastprocess, src)
 	GLOB.pai_list += src
 	make_laws()
-	if(!istype(P)) //when manually spawning a pai, we create a card to put it into.
-		var/newcardloc = P
-		P = new /obj/item/paicard(newcardloc)
-		P.setPersonality(src)
-	forceMove(P)
-	card = P
+	if(!istype(pai_card)) //when manually spawning a pai, we create a card to put it into.
+		var/newcardloc = pai_card
+		pai_card = new /obj/item/paicard(newcardloc)
+		pai_card.setPersonality(src)
+	forceMove(pai_card)
+	card = pai_card
 	job = JOB_NAME_PAI
 	signaler = new /obj/item/assembly/signaler/internal(src)
 	hostscan = new /obj/item/healthanalyzer(src)

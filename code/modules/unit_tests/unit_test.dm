@@ -137,7 +137,7 @@ GLOBAL_VAR(test_log)
 	//To prevent this, create_and_destroy prevents the reboot from happening. However, this also prevents the reboot from ever happening naturally.
 	//Because of this, in case something does actually attempt to reboot prematurely, we need to manually initiate the reboot.
 	if(SSticker.ready_for_reboot)
-		SSticker.standard_reboot()
+		SSticker.declare_completion()
 
 /datum/map_template/unit_tests
 	name = "Unit Tests Zone"
