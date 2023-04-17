@@ -3,6 +3,10 @@
 #define OPTIMAL_TEMP_K_PLA_BURN_SCALE(PRESSURE_P,PRESSURE_O,TEMP_O)	(((PRESSURE_P) * GLOB.gas_data.specific_heats[GAS_PLASMA]) / (((PRESSURE_P) * GLOB.gas_data.specific_heats[GAS_PLASMA] + (PRESSURE_O) * GLOB.gas_data.specific_heats[GAS_O2]) / PLASMA_UPPER_TEMPERATURE - (PRESSURE_O) * GLOB.gas_data.specific_heats[GAS_O2] / CELSIUS_TO_KELVIN(TEMP_O)))
 #define OPTIMAL_TEMP_K_PLA_BURN_RATIO(PRESSURE_P,PRESSURE_O,TEMP_O)	(CELSIUS_TO_KELVIN(TEMP_O) * PLASMA_OXYGEN_FULLBURN * (PRESSURE_P) / (PRESSURE_O))
 
+/**
+ * Spawns a TTV.
+ *
+ */
 /obj/effect/spawner/newbomb
 	name = "bomb"
 	icon = 'icons/mob/screen_gen.dmi'
@@ -13,6 +17,12 @@
 	var/pressure_o = 10 * ONE_ATMOSPHERE	//tank pressures
 	var/assembly_type
 
+/**
+ * The part of code that actually spawns the bomb. Always call the parent's initialize first for subtypes of these.
+ *
+ * Arguments:
+ * * assembly - An assembly typepath to add to the ttv.
+ */
 /obj/effect/spawner/newbomb/Initialize(mapload)
 	. = ..()
 	var/obj/item/transfer_valve/V = new(src.loc)
