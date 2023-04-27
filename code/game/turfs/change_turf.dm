@@ -88,6 +88,8 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 
 	var/old_exl = explosion_level
 	var/old_exi = explosion_id
+	var/old_rcd_memory = rcd_memory
+
 	var/old_bp = blueprint_data
 	blueprint_data = null
 
@@ -126,6 +128,7 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 		W.AfterChange(flags)
 
 	W.blueprint_data = old_bp
+	W.rcd_memory = old_rcd_memory
 
 	lighting_corner_NE = old_lighting_corner_NE
 	lighting_corner_SE = old_lighting_corner_SE

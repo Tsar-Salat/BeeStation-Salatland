@@ -5,6 +5,7 @@
 	rad_flags = RAD_PROTECT_CONTENTS | RAD_NO_CONTAMINATE
 	rad_insulation = RAD_MEDIUM_INSULATION
 	pass_flags_self = PASSCLOSEDTURF
+	rcd_memory = null
 
 /turf/closed/Initialize(mapload)
 	. = ..()
