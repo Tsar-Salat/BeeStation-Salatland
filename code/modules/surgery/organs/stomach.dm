@@ -17,30 +17,40 @@
 
 	var/disgust_metabolism = 1
 
+/obj/item/organ/stomach/Initialize()
+	. = ..()
+	create_reagents(1000)
+
 /obj/item/organ/stomach/on_life()
 	. = ..()
-	var/mob/living/carbon/human/H = owner
-	var/datum/reagent/nutriment
 
-	if(istype(H))
+	//Manage species digestion
+	if(istype(owner, /mob/living/carbon/human))
+		var/mob/living/carbon/human/humi = owner
 		if(!(organ_flags & ORGAN_FAILING))
-			H.dna.species.handle_digestion(H)
-		handle_disgust(H)
+			humi.dna.species.handle_digestion(humi)
+
+	//digest food
+	var/mob/living/carbon/body = owner
+	reagents.metabolize(body, can_overdose=TRUE)
+	if(body)
+		handle_disgust(body)
 
 	if(damage < low_threshold)
 		return
 
-	nutriment = locate(/datum/reagent/consumable/nutriment) in H.reagents.reagent_list
+	var/datum/reagent/nutri = locate(/datum/reagent/consumable/nutriment) in reagents.reagent_list
+	if(!nutri)
+		return
 
-	if(nutriment)
-		if(prob((damage/40) * nutriment.volume * nutriment.volume))
-			H.vomit(damage)
-			to_chat(H, "<span class='warning'>Your stomach reels in pain as you're incapable of holding down all that food!</span>")
+	if(prob(damage * 0.025 * nutri.volume * nutri.volume))
+		body.vomit(damage)
+		to_chat(body, "<span class='warning'>Your stomach reels in pain as you're incapable of holding down all that food!</span>")
+		return
 
-	else if(nutriment && damage > high_threshold)
-		if(prob((damage/10) * nutriment.volume * nutriment.volume))
-			H.vomit(damage)
-			to_chat(H, "<span class='warning'>Your stomach reels in pain as you're incapable of holding down all that food!</span>")
+	if(damage > high_threshold && prob(damage * 0.1 * nutri.volume * nutri.volume))
+		body.vomit(damage)
+		to_chat(body, "<span class='warning'>Your stomach reels in pain as you're incapable of holding down all that food!</span>")
 
 /obj/item/organ/stomach/proc/handle_disgust(mob/living/carbon/human/H)
 	if(H.disgust)
@@ -84,15 +94,61 @@
 		SEND_SIGNAL(H, COMSIG_CLEAR_MOOD_EVENT, "disgust")
 	return ..()
 
+/obj/item/organ/stomach/bone
+	desc = "You have no idea what this strange ball of bones does."
+
+/obj/item/organ/stomach/bone/on_life()
+	var/datum/reagent/consumable/milk/milk = locate(/datum/reagent/consumable/milk) in reagents.reagent_list
+	if(milk)
+		var/mob/living/carbon/body = owner
+		if(milk.volume > 10)
+			reagents.remove_reagent(milk.type, milk.volume - 10)
+			to_chat(owner, "<span class='warning'>The excess milk is dripping off your bones!</span>")
+		body.heal_bodypart_damage(1.5,0, 0)
+		for(var/i in body.all_wounds)
+			var/datum/wound/iter_wound = i
+			iter_wound.on_xadone(2)
+		reagents.remove_reagent(milk.type, milk.metabolization_rate)
+	return ..()
+
 /obj/item/organ/stomach/fly
 	name = "insectoid stomach"
 	icon_state = "stomach-x" //xenomorph liver? It's just a black liver so it fits.
 	desc = "A mutant stomach designed to handle the unique diet of a flyperson."
 
+/obj/item/organ/stomach/fly/on_life()
+	for(var/bile in reagents.reagent_list)
+		if(!istype(bile, /datum/reagent/consumable))
+			continue
+		var/datum/reagent/consumable/chunk = bile
+		if(chunk.nutriment_factor <= 0)
+			continue
+		var/mob/living/carbon/body = owner
+		var/turf/pos = get_turf(owner)
+		body.vomit(reagents.total_volume, FALSE, FALSE, 2, TRUE)
+		playsound(pos, 'sound/effects/splat.ogg', 50, TRUE)
+		body.visible_message("<span class='danger'>[body] vomits on the floor!</span>", \
+					"<span class='userdanger'>You throw up on the floor!</span>")
+	return ..()
+
 /obj/item/organ/stomach/plasmaman
 	name = "digestive crystal"
 	icon_state = "stomach-p"
 	desc = "A strange crystal that is responsible for metabolizing the unseen energy force that feeds plasmamen."
+
+/obj/item/organ/stomach/plasmaman/on_life()
+	var/datum/reagent/consumable/milk/milk = locate(/datum/reagent/consumable/milk) in reagents.reagent_list
+	if(milk)
+		var/mob/living/carbon/body = owner
+		if(milk.volume > 10)
+			reagents.remove_reagent(milk.type, milk.volume - 10)
+			to_chat(owner, "<span class='warning'>The excess milk is dripping off your bones!</span>")
+		body.heal_bodypart_damage(1.5,0, 0)
+		for(var/i in body.all_wounds)
+			var/datum/wound/iter_wound = i
+			iter_wound.on_xadone(2)
+		reagents.remove_reagent(milk.type, milk.metabolization_rate)
+	return ..()
 
 /obj/item/organ/stomach/battery
 	name = "implantable battery"
