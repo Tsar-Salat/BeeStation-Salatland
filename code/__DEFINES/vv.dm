@@ -88,6 +88,7 @@
 #define VV_HK_ADD_EMITTER "add_emitter"
 #define VV_HK_REMOVE_EMITTER "remove_emitter"
 #define VV_HK_ADD_AI "add_ai"
+#define VV_HK_ARMOR_MOD "mod_obj_armor"
 
 // /datum/gas_mixture
 #define VV_HK_SET_MOLES "set_moles"
