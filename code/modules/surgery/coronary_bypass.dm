@@ -34,7 +34,8 @@
 			display_results(user, target, "<span class='notice'>Blood pools around the incision in [H]'s heart.</span>",
 				"Blood pools around the incision in [H]'s heart.",
 				"")
-			H.bleed_rate += 10
+			var/obj/item/bodypart/BP = H.get_bodypart(target_zone)
+			BP.generic_bleedstacks += 10
 			H.adjustBruteLoss(10)
 	return TRUE
 

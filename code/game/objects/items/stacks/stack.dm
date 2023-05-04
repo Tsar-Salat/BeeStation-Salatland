@@ -18,6 +18,7 @@
 /obj/item/stack
 	icon = 'icons/obj/stacks/minerals.dmi'
 	gender = PLURAL
+	max_integrity = 100
 	///The list recipes you can make with the stack
 	var/list/datum/stack_recipe/recipes
 	///The name of the thing when it's singular
@@ -40,6 +41,23 @@
 	var/novariants = TRUE
 	///Stores table variant to be built from this stack
 	var/obj/structure/table/tableVariant
+
+	// The following are all for medical treatment
+	// They're here instead of /stack/medical
+	// because sticky tape can be used as a makeshift bandage or splint
+
+	/// If set and this used as a splint for a broken bone wound,
+	/// This is used as a multiplier for applicable slowdowns (lower = better) (also for speeding up burn recoveries)
+	var/splint_factor
+	/// Like splint_factor but for burns instead of bone wounds. This is a multiplier used to speed up burn recoveries
+	var/burn_cleanliness_bonus
+	/// How much blood flow this stack can absorb if used as a bandage on a cut wound.
+	/// note that absorption is how much we lower the flow rate, not the raw amount of blood we suck up
+	var/absorption_capacity
+	/// How quickly we lower the blood flow on a cut wound we're bandaging.
+	/// Expected lifetime of this bandage in seconds is thus absorption_capacity/absorption_rate,
+	/// or until the cut heals, whichever comes first
+	var/absorption_rate
 
 	//NOTE: When adding grind_results, the amounts should be for an INDIVIDUAL ITEM - these amounts will be multiplied by the stack size in on_grind()
 

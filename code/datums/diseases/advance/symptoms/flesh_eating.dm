@@ -57,8 +57,8 @@ Bonus
 			Flesheat(M, A)
 
 /datum/symptom/flesh_eating/proc/Flesheat(mob/living/M, datum/disease/advance/A)
-	if(damage)
-		M.take_overall_damage(brute = rand(15,25), required_status = BODYTYPE_ORGANIC)
+	var/get_damage = rand(15,25) * power
+	M.take_overall_damage(brute = get_damage, required_bodytype = BODYTYPE_ORGANIC)
 	if(!ishuman(M))
 		return
 	var/mob/living/carbon/human/H = M
@@ -74,6 +74,8 @@ Bonus
 		H.visible_message("<span class='danger'>Blood bursts from [H]'s flesh!</span>", \
   "<span class='userdanger'>Blood spews forth from your flesh! It hurts!</span>")
 		for(var/i in 0 to geysers)
+			var/obj/item/bodypart/random_part = pick(H.bodyparts)
+			random_part.generic_bleedstacks += 5 * power
 			var/geyserdir = pick_n_take(geyserdirs)
 			var/geyserdist = rand(1, max(1,bloodsplatters))
 			bloodsplatters -= geyserdist

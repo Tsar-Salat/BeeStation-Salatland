@@ -12,6 +12,7 @@
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	generic_canpass = FALSE
 	movement_type = FLYING
+	wound_bonus = CANT_WOUND // can't wound by default
 	hitsound = 'sound/weapons/pierce.ogg'
 	var/hitsound_wall = ""
 
@@ -41,6 +42,9 @@
 	var/ignore_source_check = FALSE
 	/// We are flagged PHASING temporarily to not stop moving when we Bump something but want to keep going anyways.
 	var/temporary_unstoppable_movement = FALSE
+
+	///How much we want to drop both wound_bonus and bare_wound_bonus (to a minimum of 0 for the latter) per tile, for falloff purposes
+	var/wound_falloff_tile
 
 	/** PROJECTILE PIERCING
 	  * WARNING:
@@ -162,6 +166,9 @@
 
 /obj/item/projectile/proc/Range()
 	range--
+	if(wound_bonus != CANT_WOUND)
+		wound_bonus += wound_falloff_tile
+		bare_wound_bonus = max(0, bare_wound_bonus + wound_falloff_tile)
 	if(range <= 0 && loc)
 		on_range()
 
@@ -312,6 +319,9 @@
 	beam_segments[beam_index] = null
 
 /obj/item/projectile/Bump(atom/A)
+	if(!trajectory)
+		qdel(src)
+		return
 	SEND_SIGNAL(src, COMSIG_MOVABLE_BUMP, A)
 	if(!can_hit_target(A, A == original, TRUE, TRUE))
 		return

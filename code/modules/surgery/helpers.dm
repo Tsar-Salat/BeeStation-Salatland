@@ -88,9 +88,13 @@
 
 	if(S.status == 1)
 		M.surgeries -= S
-		user.visible_message("[user] removes [I] from [M]'s [parse_zone(selected_zone)].", \
-			"<span class='notice'>You remove [I] from [M]'s [parse_zone(selected_zone)].</span>")
+		user.visible_message(
+			"[user] removes [I] from [M]'s [parse_zone(selected_zone)].", \
+			"<span class='notice'>You remove [I] from [M]'s [parse_zone(selected_zone)].</span>"
+		)
+		
 		I.balloon_alert(user, "You remove [I] from [parse_zone(selected_zone)].")
+		
 		qdel(S)
 		return
 
@@ -105,13 +109,18 @@
 		if(iscyborg(user))
 			close_tool = locate(/obj/item/cautery) in user.held_items
 			if(!close_tool)
-				to_chat(user, "<span class='warning'>You need to equip a cautery in an inactive slot to stop [M]'s surgery!</span>")
+				patient.balloon_alert(user, "need a cautery in an inactive slot to stop the surgery!")
 				return
 		else if(close_tool?.tool_behaviour != required_tool_type)
-			to_chat(user, "<span class='warning'>You need to hold a [is_robotic ? "screwdriver" : "cautery"] in your inactive hand to stop [M]'s surgery!</span>")
+			patient.balloon_alert(user, "need a [is_robotic ? "screwdriver": "cautery"] in your inactive hand to stop the surgery!")
 			return
+	
+		if(S.operated_bodypart)
+			S.operated_bodypart.adjustBleedStacks(-5)
+
 		M.surgeries -= S
-		user.visible_message("<span class='notice'>[user] closes [M]'s [parse_zone(selected_zone)] with [close_tool] and removes [I].</span>", \
+		user.visible_message(
+			"<span class='notice'>[user] closes [M]'s [parse_zone(selected_zone)] with [close_tool] and removes [I].</span>", \
 			"<span class='notice'>You close [M]'s [parse_zone(selected_zone)] with [close_tool] and remove [I].</span>")
 		qdel(S)
 

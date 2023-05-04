@@ -18,13 +18,15 @@
 #define MOVE_INTENT_RUN  "run"
 
 //Blood levels
-#define BLOOD_VOLUME_MAXIMUM		2000
-#define BLOOD_VOLUME_SLIME_SPLIT	1120
-#define BLOOD_VOLUME_NORMAL			560
-#define BLOOD_VOLUME_SAFE			475
-#define BLOOD_VOLUME_OKAY			336
-#define BLOOD_VOLUME_BAD			224
-#define BLOOD_VOLUME_SURVIVE		122
+#define BLOOD_VOLUME_MAX_LETHAL 2150
+#define BLOOD_VOLUME_EXCESS 2100
+#define BLOOD_VOLUME_MAXIMUM 2000
+#define BLOOD_VOLUME_SLIME_SPLIT 1120
+#define BLOOD_VOLUME_NORMAL 560
+#define BLOOD_VOLUME_SAFE 475
+#define BLOOD_VOLUME_OKAY 336
+#define BLOOD_VOLUME_BAD 224
+#define BLOOD_VOLUME_SURVIVE 122
 
 //Sizes of mobs, used by mob/living/var/mob_size
 #define MOB_SIZE_TINY 0
@@ -215,13 +217,15 @@
 
 #define TRAUMA_RESILIENCE_BASIC 1      //! Curable with chems
 #define TRAUMA_RESILIENCE_SURGERY 2    //! Curable with brain recalibration
-#define TRAUMA_RESILIENCE_LOBOTOMY 3   //! Curable with lobotomy
-#define TRAUMA_RESILIENCE_MAGIC 4      //! Curable only with magic
-#define TRAUMA_RESILIENCE_ABSOLUTE 5   //! This is here to stay
+#define TRAUMA_RESILIENCE_LOBOTOMY 3   //Curable with lobotomy
+#define TRAUMA_RESILIENCE_WOUND 4    //Curable by healing the head wound
+#define TRAUMA_RESILIENCE_MAGIC 5      //Curable only with magic
+#define TRAUMA_RESILIENCE_ABSOLUTE 6   //This is here to stay
 
 //Limit of traumas for each resilience tier
 #define TRAUMA_LIMIT_BASIC 3
 #define TRAUMA_LIMIT_SURGERY 2
+#define TRAUMA_LIMIT_WOUND 2
 #define TRAUMA_LIMIT_LOBOTOMY 3
 #define TRAUMA_LIMIT_MAGIC 3
 #define TRAUMA_LIMIT_ABSOLUTE INFINITY
@@ -458,6 +462,8 @@
 #define WABBAJACK     (1<<6)
 
 #define SLEEP_CHECK_DEATH(X) sleep(X); if(QDELETED(src) || stat == DEAD) return;
+/// If you examine the same atom twice in this timeframe, we call examine_more() instead of examine()
+#define EXAMINE_MORE_TIME	1 SECONDS
 #define INTERACTING_WITH(X, Y) (Y in X.do_afters)
 
 #define SILENCE_RANGED_MESSAGE (1<<0)

@@ -11,6 +11,10 @@
 		return
 		
 	if(!has_active_hand()) //can't attack without a hand.
+		var/obj/item/bodypart/check_arm = get_active_hand()
+		if(check_arm?.bodypart_disabled)
+			to_chat(src, "<span class='warning'>Your [check_arm.name] is in no condition to be used.</span>")
+			return
 		to_chat(src, "<span class='notice'>You look at your arm and sigh.</span>")
 		return
 
@@ -22,7 +26,7 @@
 		return
 
 	var/override = 0
-
+	override = SEND_SIGNAL(src, COMSIG_HUMAN_EARLY_UNARMED_ATTACK, A) & COMPONENT_NO_ATTACK_HAND
 	for(var/datum/mutation/HM as() in dna.mutations)
 		override += HM.on_attack_hand(A, proximity)
 

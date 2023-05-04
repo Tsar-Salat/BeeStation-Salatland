@@ -134,7 +134,8 @@
 
 	I.force = max(0,I.force + quality_mod)
 	I.throwforce = max(0,I.throwforce + quality_mod)
-
 	I.armor = I.armor.modifyAllRatings(quality)
+	I.wound_bonus -= quality
+	I.bare_wound_bonus -= quality
 
 	rename()

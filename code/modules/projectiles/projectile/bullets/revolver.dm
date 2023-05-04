@@ -34,6 +34,8 @@
 	name = ".38 Bouncy Rubber bullet"
 	damage = 10
 	stamina = 30
+	wound_bonus = -20
+	bare_wound_bonus = 10
 	armour_penetration = -30
 	ricochets_max = 6
 	ricochet_incidence_leeway = 70
@@ -121,6 +123,7 @@
 /obj/item/projectile/bullet/a357
 	name = ".357 bullet"
 	damage = 60
+	wound_bonus = -70
 
 // admin only really, for ocelot memes
 /obj/item/projectile/bullet/a357/match

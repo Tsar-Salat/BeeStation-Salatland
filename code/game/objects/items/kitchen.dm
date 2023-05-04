@@ -19,7 +19,7 @@
 	name = "fork"
 	desc = "Pointy."
 	icon_state = "fork"
-	force = 5
+	force = 4
 	w_class = WEIGHT_CLASS_TINY
 	throwforce = 0
 	throw_speed = 3
@@ -29,6 +29,7 @@
 	attack_verb = list("attacked", "stabbed", "poked")
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 30, STAMINA = 0)
+	sharpness = SHARP_POINTY
 	var/datum/reagent/forkload //used to eat omelette
 
 /obj/item/kitchen/fork/suicide_act(mob/living/carbon/user)
@@ -85,10 +86,12 @@
 	throw_range = 6
 	materials = list(/datum/material/iron=12000)
 	attack_verb = list("slashed", "stabbed", "sliced", "tore", "ripped", "diced", "cut")
-	sharpness = IS_SHARP_ACCURATE
+	sharpness = SHARP_EDGED
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 50, STAMINA = 0)
 	var/bayonet = FALSE	//Can this be attached to a gun?
 	custom_price = 30
+	wound_bonus = 5
+	bare_wound_bonus = 15
 
 /obj/item/kitchen/knife/Initialize(mapload)
 	. = ..()
@@ -130,6 +133,7 @@
 	attack_verb = list("cleaved", "slashed", "stabbed", "sliced", "tore", "ripped", "diced", "cut")
 	w_class = WEIGHT_CLASS_NORMAL
 	custom_price = 60
+	wound_bonus = 15
 
 /obj/item/kitchen/knife/hunting
 	name = "hunting knife"
@@ -177,6 +181,7 @@
 	throwforce = 20
 	attack_verb = list("slashed", "stabbed", "sliced", "tore", "ripped", "cut")
 	bayonet = TRUE
+	wound_bonus = 10
 
 /obj/item/kitchen/knife/combat/survival
 	name = "survival knife"

@@ -107,7 +107,7 @@
 		var/damage_percent = (stored.maxHealth - stored.health)/stored.maxHealth;
 		var/damapply = damage_percent * shape.maxHealth;
 
-		shape.apply_damage(damapply, source.convert_damage_type, forced = TRUE);
+		shape.apply_damage(damapply, source.convert_damage_type, wound_bonus=CANT_WOUND)
 
 	slink = soullink(/datum/soullink/shapeshift, stored , shape)
 	slink.source = src

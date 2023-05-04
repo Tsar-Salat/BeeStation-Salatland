@@ -23,6 +23,8 @@
 	block_flags = BLOCKING_ACTIVE | BLOCKING_NASTY
 	force = 15
 	throwforce = 12 // unlike normal daggers, this one is curved and not designed to be thrown
+	wound_bonus = -10
+	bare_wound_bonus = 20
 	armour_penetration = 35
 
 /obj/item/melee/cultblade/dagger/Initialize(mapload)
@@ -47,13 +49,15 @@ Striking a noncultist, however, will tear their flesh."}
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
 	flags_1 = CONDUCT_1
-	sharpness = IS_SHARP
+	sharpness = SHARP_EDGED
 	w_class = WEIGHT_CLASS_BULKY
 	block_level = 1
 	block_upgrade_walk = 1
 	block_flags = BLOCKING_ACTIVE | BLOCKING_NASTY
 	force = 30
 	throwforce = 10
+	wound_bonus = -80
+	bare_wound_bonus = 30
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	attack_verb = list("attacked", "slashed", "stabbed", "sliced", "tore", "ripped", "diced", "rended")
 
@@ -98,7 +102,7 @@ Striking a noncultist, however, will tear their flesh."}
 	armour_penetration = 45
 	throw_speed = 1
 	throw_range = 3
-	sharpness = IS_SHARP
+	sharpness = SHARP_EDGED
 	light_color = "#ff0000"
 	light_system = MOVABLE_LIGHT
 	light_range = 4
@@ -651,7 +655,7 @@ Striking a noncultist, however, will tear their flesh."}
 	armour_penetration = 30
 	block_upgrade_walk = 1
 	attack_verb = list("attacked", "impaled", "stabbed", "tore", "gored")
-	sharpness = IS_SHARP
+	sharpness = SHARP_POINTY
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	var/datum/action/innate/cult/spear/spear_act
 

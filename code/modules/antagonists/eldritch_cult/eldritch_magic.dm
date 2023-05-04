@@ -56,12 +56,12 @@
 		remove_rune(target,user)
 		return FALSE
 	playsound(user, 'sound/items/welder.ogg', 75, TRUE)
-	if(ishuman(target))
-		var/mob/living/carbon/human/tar = target
-		if(tar.check_shields(src,10, "the [tar.name]"))
+	if(iscarbon(target))
+		var/mob/living/carbon/C1 = target
+		if(C1.check_shields(src,10, "the [tar.name]"))
 			return ..()
-		if(tar.anti_magic_check(magic=FALSE,holy=TRUE))
-			tar.visible_message("<span class='danger'>Spell bounces off of [target]!</span>","<span class='danger'>The spell bounces off of you!</span>")
+		if(C1.anti_magic_check())
+			C1.visible_message("<span class='danger'>The energies from [user]'s hand jump at [target], but are dispersed!</span>","<span class='danger'>Something jumps off of [user]'s hand, but it disperses on contact with you!</span>")
 			return ..()
 	var/datum/mind/M = user.mind
 	var/datum/antagonist/heretic/cultie = M.has_antag_datum(/datum/antagonist/heretic)
@@ -259,8 +259,10 @@
 			continue
 
 		target.visible_message("<span class='danger'>[target]'s veins are shredded from within as an unholy blaze erupts from their blood!</span>", \
-							"<span class='danger'>Your veins burst from within and unholy flame erupts from your blood!</span>")
-		target.bleed_rate += 10
+							"<span class='danger'>You feel your skin scald as superheated blood bursts from your veins!</span>")
+		var/obj/item/bodypart/bodypart = pick(target.bodyparts)
+		var/datum/wound/slash/critical/crit_wound = new
+		crit_wound.apply_wound(bodypart)
 		target.adjustFireLoss(20)
 		new /obj/effect/temp_visual/cleave(target.drop_location())
 

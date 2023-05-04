@@ -89,7 +89,7 @@
 	force = 20
 	armour_penetration = 75
 	block_flags = BLOCKING_ACTIVE | BLOCKING_NASTY | BLOCKING_PROJECTILE
-	sharpness = IS_SHARP
+	sharpness = SHARP_EDGED
 	max_charges = 4
 
 /obj/item/gun/magic/staff/spellblade/Initialize(mapload)

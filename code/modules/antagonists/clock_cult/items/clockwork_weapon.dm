@@ -16,7 +16,7 @@
 	materials = list(/datum/material/iron=1150, /datum/material/gold=2750)
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	attack_verb = list("attacked", "poked", "jabbed", "torn", "gored")
-	sharpness = IS_SHARP_ACCURATE
+	sharpness = SHARP_EDGED
 	max_integrity = 200
 	var/clockwork_hint = ""
 	var/obj/effect/proc_holder/spell/targeted/summon_spear/SS
@@ -82,6 +82,7 @@
 	throwforce = 36
 	force = 25
 	armour_penetration = 24
+	sharpness = SHARP_POINTY
 	clockwork_hint = "Throwing the spear will deal bonus damage while on Reebe."
 
 /obj/item/clockwork/weapon/brass_battlehammer
@@ -91,7 +92,7 @@
 	icon_state = "ratvarian_hammer"
 	throwforce = 25
 	armour_penetration = 6
-	sharpness = IS_BLUNT
+	sharpness = SHARP_NONE
 	attack_verb = list("bashed", "smitted", "hammered", "attacked")
 	clockwork_hint = "Enemies hit by this will be flung back while on Reebe."
 

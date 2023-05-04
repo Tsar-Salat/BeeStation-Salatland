@@ -32,6 +32,8 @@
 	light_range = 6
 	light_power = 1
 	light_on = FALSE
+	wound_bonus = -10
+	bare_wound_bonus = 20
 	var/twohand_force = 34
 	var/hacked = FALSE
 	var/list/possible_colors = list("red", "blue", "green", "purple")

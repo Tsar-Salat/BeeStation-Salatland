@@ -57,3 +57,15 @@
 /obj/item/ammo_box/magazine/internal/cylinder/mime/lethal
 	ammo_type = /obj/item/ammo_casing/caseless/mime/lethal
 	max_ammo = 3 //Because that's how many this is supposed to have from what I gather
+
+/obj/item/ammo_box/magazine/internal/cylinder/top_off(load_type, starting=FALSE)
+	if(starting) // nulls don't exist when we're starting off
+		return ..()
+
+	if(!load_type)
+		load_type = ammo_type
+
+	for(var/i = 1, i <= max_ammo, i++)
+		if(!give_round(new load_type(src)))
+			break
+	update_icon()

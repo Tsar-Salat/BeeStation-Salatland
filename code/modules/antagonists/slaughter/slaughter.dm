@@ -30,7 +30,10 @@
 	healable = 0
 	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
 	obj_damage = 50
-	melee_damage = 30
+	melee_damage = 15 // reduced from 30 to 15 with wounds since they get big buffs to slicing wounds
+	wound_bonus = -10
+	bare_wound_bonus = 0
+	sharpness = SHARP_EDGED
 	see_in_dark = 8
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	bloodcrawl = BLOODCRAWL_EAT

@@ -26,6 +26,7 @@
 	materials = list(/datum/material/iron=10)
 	pressure_resistance = 2
 	grind_results = list(/datum/reagent/iron = 2, /datum/reagent/iodine = 1)
+	sharpness = SHARP_POINTY
 	var/colour = "black"	//what colour the ink is!
 	var/degrees = 0
 	var/font = PEN_FONT
@@ -101,7 +102,7 @@
 	throw_speed = 4
 	colour = "crimson"
 	materials = list(/datum/material/gold = 750)
-	sharpness = IS_SHARP
+	sharpness = SHARP_POINTY
 	resistance_flags = FIRE_PROOF
 	unique_reskin_icon = list("Oak" = "pen-fountain-o",
 						"Gold" = "pen-fountain-g",
@@ -203,6 +204,7 @@
  */
 /obj/item/pen/edagger
 	attack_verb = list("slashed", "stabbed", "sliced", "tore", "ripped", "diced", "cut") //these wont show up if the pen is off
+	sharpness = SHARP_EDGED
 	var/on = FALSE
 
 /obj/item/pen/edagger/Initialize(mapload)

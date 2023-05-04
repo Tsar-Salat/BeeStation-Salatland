@@ -194,7 +194,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_EASYDISMEMBER		"easy_dismember"
 #define TRAIT_LIMBATTACHMENT 	"limb_attach"
 #define TRAIT_NOLIMBDISABLE		"no_limb_disable"
-#define TRAIT_EASYLIMBDISABLE	"easy_limb_disable"
+#define TRAIT_EASILY_WOUNDED	"easy_limb_wound"
+#define TRAIT_HARDLY_WOUNDED	"hard_limb_wound"
+#define TRAIT_NEVER_WOUNDED		"never_wounded"
 #define TRAIT_TOXINLOVER		"toxinlover"
 #define TRAIT_NOBREATH			"no_breath"
 #define TRAIT_ANTIMAGIC			"anti_magic"
@@ -262,6 +264,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_BARMASTER			"bar_master" // always can identify reagents
 #define TRAIT_HIVE_BURNT		 "hive-burnt"
 #define TRAIT_MOTH_BURNT		"moth_burnt"
+#define TRAIT_BLOODY_MESS		"bloody_mess" //from heparin, makes open bleeding wounds rapidly spill more blood
+#define TRAIT_COAGULATING		"coagulating" //from coagulant reagents, this doesn't affect the bleeding itself but does affect the bleed warning messages
 
 // You can stare into the abyss, but it does not stare back.
 // You're immune to the hallucination effect of the supermatter, either
@@ -270,9 +274,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 
 //non-mob traits
 /// Used for limb-based paralysis, where replacing the limb will fix it.
-#define TRAIT_PARALYSIS "paralysis"
+#define TRAIT_PARALYSIS				"paralysis"
 /// Used for limbs.
-/*#define TRAIT_DISABLED_BY_WOUND "disabled-by-wound"*/
+#define TRAIT_DISABLED_BY_WOUND		"disabled-by-wound"
 
 #define TRAIT_HEARING_SENSITIVE "hearing_sensitive"
 

@@ -337,6 +337,10 @@
 		return
 	else if(ticks_passed == 2)
 		to_chat(owner, "<span class=changeling>We begin to repair our tissue damage...</span>")
+	// Heals scars, obviously
+	if(iscarbon(owner))
+		var/mob/living/carbon/carbon_owner = owner
+		QDEL_LAZYLIST(carbon_owner.all_scars)
 	//Heals 2 brute per second, for a total of 60
 	owner.adjustBruteLoss(-2, FALSE, TRUE)
 	//Heals 1 fireloss per second, for a total of 30

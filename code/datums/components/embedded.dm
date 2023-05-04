@@ -131,27 +131,23 @@
 		return
 
 	var/damage = weapon.w_class * pain_mult
-	var/max_damage = weapon.w_class * max_damage_mult + weapon.throwforce
-	var/chance = DT_PROB_RATE(pain_chance / 100, delta_time) * 100
-	if(pain_stam_pct && victim.stam_paralyzed) //if it's a less-lethal embed, give them a break if they're already stamcritted
-		chance *= 0.2
+	var/pain_chance_current = DT_PROB_RATE(pain_chance / 100, delta_time) * 100
+	if(pain_stam_pct && HAS_TRAIT_FROM(victim, TRAIT_INCAPACITATED, STAMINA)) //if it's a less-lethal embed, give them a break if they're already stamcritted
+		pain_chance_current *= 0.2
 		damage *= 0.5
 	else if(victim.body_position == LYING_DOWN)
-		chance *= 0.2
+		pain_chance_current *= 0.2
 
-	if(harmful && prob(chance))
-		var/damage_left = max_damage - limb.get_damage()
-		var/damage_wanted = (1-pain_stam_pct) * damage
-		var/damage_to_deal = CLAMP(damage_wanted, 0, damage_left)
-		var/damage_as_stam = damage_wanted - damage_to_deal
-		if(!damage_to_deal)
-			to_chat(victim, "<span class='userdanger'>[weapon] embedded in your [limb.name] stings a little!</span>")
-		else
-			limb.receive_damage(brute=damage_to_deal, stamina=(pain_stam_pct * damage) + damage_as_stam)
-			to_chat(victim, "<span class='userdanger'>[weapon] embedded in your [limb.name] hurts!</span>")
+	if(harmful && prob(pain_chance_current))
+		limb.receive_damage(brute=(1-pain_stam_pct) * damage, wound_bonus = CANT_WOUND)
+		victim.adjustStaminaLoss(pain_stam_pct * damage)
+		to_chat(victim, span_userdanger("[weapon] embedded in your [limb.plaintext_zone] hurts!"))
 
-	var/fallchance_current =  DT_PROB_RATE(fall_chance / 100, delta_time) * 100
-	if(prob(fallchance_current))
+	var/fall_chance_current = DT_PROB_RATE(fall_chance / 100, delta_time) * 100
+	if(victim.body_position == LYING_DOWN)
+		fall_chance_current *= 0.2
+
+	if(prob(fall_chance_current))
 		fallOut()
 
 ////////////////////////////////////////
@@ -207,7 +203,7 @@
 
 	if(harmful)
 		var/damage = weapon.w_class * remove_pain_mult
-		limb.receive_damage(brute=(1-pain_stam_pct) * damage, stamina=pain_stam_pct * damage) //It hurts to rip it out, get surgery you dingus.
+		limb.receive_damage(brute=(1-pain_stam_pct) * damage, stamina=pain_stam_pct * damage, sharpness=SHARP_EDGED) //It hurts to rip it out, get surgery you dingus.
 		victim.emote("scream")
 
 	victim.visible_message("<span class='notice'>[victim] successfully rips [weapon] [harmful ? "out" : "off"] of [victim.p_their()] [limb.name]!</span>", "<span class='notice'>You successfully remove [weapon] from your [limb.name].</span>")
@@ -336,3 +332,13 @@
 	if(victim)
 		to_chat(victim, "<span class='userdanger'>\The [weapon] that was embedded in your [limb.name] disappears!</span>")
 	qdel(src)
+
+/mob/living/carbon/human/is_bleeding()
+	if(NOBLOOD in dna.species.species_traits || bleedsuppress)
+		return FALSE
+	return ..()
+
+/mob/living/carbon/human/get_total_bleed_rate()
+	if(NOBLOOD in dna.species.species_traits)
+		return FALSE
+	return ..()

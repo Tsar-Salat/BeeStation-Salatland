@@ -18,6 +18,7 @@
 	item_state = "sheet-glass"
 	materials = list(/datum/material/glass=MINERAL_MATERIAL_AMOUNT)
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 100, STAMINA = 0)
+	sharpness = SHARP_EDGED
 	resistance_flags = ACID_PROOF
 	merge_type = /obj/item/stack/sheet/glass
 	grind_results = list(/datum/reagent/silicon = 20)

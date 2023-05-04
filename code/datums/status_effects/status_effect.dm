@@ -77,6 +77,10 @@
 /datum/status_effect/proc/get_examine_text() //Called when the owner is examined
 	return examine_text
 
+//do_after modifier!
+/datum/status_effect/proc/interact_speed_modifier()
+	return 1
+
 //clickdelay/nextmove modifiers!
 /datum/status_effect/proc/nextmove_modifier()
 	return 1

@@ -58,3 +58,14 @@
 	icon_state = "tape_spikes"
 	prefix = "super pointy"
 	conferred_embed = EMBED_POINTY_SUPERIOR
+
+/obj/item/stack/sticky_tape/surgical
+	name = "surgical tape"
+	singular_name = "surgical tape"
+	desc = "Made for patching broken bones back together alongside bone gel, not for playing pranks."
+	//icon_state = "tape_spikes"
+	prefix = "surgical"
+	conferred_embed = list("embed_chance" = 30, "pain_mult" = 0, "jostle_pain_mult" = 0, "ignore_throwspeed_threshold" = TRUE)
+	splint_factor = 0.5
+	custom_price = PAYCHECK_CREW
+	merge_type = /obj/item/stack/sticky_tape/surgical

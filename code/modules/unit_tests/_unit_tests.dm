@@ -67,6 +67,7 @@
 #include "spawn_humans.dm"
 #include "species_whitelists.dm"
 #include "greyscale_config.dm"
+#include "medical_wounds.dm"
 #include "metabolizing.dm"
 #include "ntnetwork_tests.dm"
 #include "projectiles.dm"

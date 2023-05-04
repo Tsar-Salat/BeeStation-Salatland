@@ -21,71 +21,89 @@
 
 ///ABDUCTCOR
 /obj/item/bodypart/head/abductor
+	biological_state = BIO_INORGANIC //i have no fucking clue why these mfs get no wounds but SURE
 	limb_id = "abductor"
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/chest/abductor
+	biological_state = BIO_INORGANIC
 	limb_id = "abductor"
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/l_arm/abductor
+	biological_state = BIO_INORGANIC
 	limb_id = "abductor"
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/r_arm/abductor
+	biological_state = BIO_INORGANIC
 	limb_id = "abductor"
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/l_leg/abductor
+	biological_state = BIO_INORGANIC
 	limb_id = "abductor"
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/r_leg/abductor
+	biological_state = BIO_INORGANIC
 	limb_id = "abductor"
 	should_draw_greyscale = FALSE
 
 ///JELLY
 /obj/item/bodypart/head/jelly
+	biological_state = BIO_INORGANIC
 	limb_id = "jelly"
 	is_dimorphic = TRUE
 
 /obj/item/bodypart/chest/jelly
+	biological_state = BIO_INORGANIC
 	limb_id = "jelly"
 	is_dimorphic = TRUE
 
 /obj/item/bodypart/l_arm/jelly
+	biological_state = BIO_INORGANIC
 	limb_id = "jelly"
 
 /obj/item/bodypart/r_arm/jelly
+	biological_state = BIO_INORGANIC
 	limb_id = "jelly"
 
 /obj/item/bodypart/l_leg/jelly
+	biological_state = BIO_INORGANIC
 	limb_id = "jelly"
 
 /obj/item/bodypart/r_leg/jelly
+	biological_state = BIO_INORGANIC
 	limb_id = "jelly"
 
 ///SLIME
 /obj/item/bodypart/head/slime
+	biological_state = BIO_INORGANIC
 	limb_id = "slime"
 	is_dimorphic = FALSE
 
 /obj/item/bodypart/chest/slime
+	biological_state = BIO_INORGANIC
 	limb_id = "slime"
 	is_dimorphic = TRUE
 
 /obj/item/bodypart/l_arm/slime
+	biological_state = BIO_INORGANIC
 	limb_id = "slime"
 
 /obj/item/bodypart/r_arm/slime
+	biological_state = BIO_INORGANIC
 	limb_id = "slime"
 
 /obj/item/bodypart/l_leg/slime
+	biological_state = BIO_INORGANIC
 	limb_id = "slime"
 
 /obj/item/bodypart/r_leg/slime
+	biological_state = BIO_INORGANIC
 	limb_id = "slime"
 
 ///ZAMBONI
@@ -172,55 +190,67 @@
 
 ///SHADOW
 /obj/item/bodypart/head/shadow
+	biological_state = BIO_INORGANIC
 	limb_id = "shadow"
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/chest/shadow
+	biological_state = BIO_INORGANIC
 	limb_id = "shadow"
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/l_arm/shadow
+	biological_state = BIO_INORGANIC
 	limb_id = "shadow"
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/r_arm/shadow
+	biological_state = BIO_INORGANIC
 	limb_id = "shadow"
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/l_leg/shadow
+	biological_state = BIO_INORGANIC
 	limb_id = "shadow"
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/r_leg/shadow
+	biological_state = BIO_INORGANIC
 	limb_id = "shadow"
 	should_draw_greyscale = FALSE
 
 ///SKELETON
 /obj/item/bodypart/head/skeleton
+	biological_state = BIO_BONE
 	limb_id = "skeleton"
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/chest/skeleton
+	biological_state = BIO_BONE
 	limb_id = "skeleton"
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/l_arm/skeleton
+	biological_state = BIO_BONE
 	limb_id = "skeleton"
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/r_arm/skeleton
+	biological_state = BIO_BONE
 	limb_id = "skeleton"
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/l_leg/skeleton
+	biological_state = BIO_BONE
 	limb_id = "skeleton"
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/r_leg/skeleton
+	biological_state = BIO_BONE
 	limb_id = "skeleton"
 	should_draw_greyscale = FALSE
 
@@ -247,23 +277,29 @@
 
 ///GOLEMS (i hate xenobio)
 /obj/item/bodypart/head/golem
+	biological_state = BIO_INORGANIC
 	limb_id = "golem"
 	is_dimorphic = FALSE
 
 /obj/item/bodypart/chest/golem
+	biological_state = BIO_INORGANIC
 	limb_id = "golem"
 	is_dimorphic = FALSE
 
 /obj/item/bodypart/l_arm/golem
+	biological_state = BIO_INORGANIC
 	limb_id = "golem"
 
 /obj/item/bodypart/r_arm/golem
+	biological_state = BIO_INORGANIC
 	limb_id = "golem"
 
 /obj/item/bodypart/l_leg/golem
+	biological_state = BIO_INORGANIC
 	limb_id = "golem"
 
 /obj/item/bodypart/r_leg/golem
+	biological_state = BIO_INORGANIC
 	limb_id = "golem"
 
 ///
@@ -457,28 +493,34 @@
 
 ///
 /obj/item/bodypart/head/golem/bone
+	biological_state = BIO_BONE
 	limb_id = "b_golem"
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/chest/golem/bone
+	biological_state = BIO_BONE
 	limb_id = "b_golem"
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/l_arm/golem/bone
+	biological_state = BIO_BONE
 	limb_id = "b_golem"
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/r_arm/golem/bone
+	biological_state = BIO_BONE
 	limb_id = "b_golem"
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/l_leg/golem/bone
+	biological_state = BIO_BONE
 	limb_id = "b_golem"
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/r_leg/golem/bone
+	biological_state = BIO_BONE
 	limb_id = "b_golem"
 	should_draw_greyscale = FALSE
 

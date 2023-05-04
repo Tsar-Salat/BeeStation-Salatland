@@ -111,6 +111,12 @@ GLOBAL_LIST_INIT(slot2type, list("head" = /obj/item/clothing/head/changeling, "w
 
 	user.domutcheck()
 
+	// get rid of any scars from previous changeling-ing
+	for(var/i in user.all_scars)
+		var/datum/scar/iter_scar = i
+		if(iter_scar.fake)
+			qdel(iter_scar)
+
 	//vars hackery. not pretty, but better than the alternative.
 	for(var/slot in GLOB.slots)
 		if(istype(user.vars[slot], GLOB.slot2type[slot]) && !(chosen_prof.exists_list[slot])) //remove unnecessary flesh items
@@ -147,6 +153,11 @@ GLOBAL_LIST_INIT(slot2type, list("head" = /obj/item/clothing/head/changeling, "w
 			user.equip_to_slot_or_del(C, GLOB.slot2slot[slot])
 			if(!QDELETED(C))
 				ADD_TRAIT(C, TRAIT_NODROP, CHANGELING_TRAIT)
+
+		for(var/stored_scar_line in chosen_prof.stored_scars)
+		var/datum/scar/attempted_fake_scar = user.load_scar(stored_scar_line)
+		if(attempted_fake_scar)
+			attempted_fake_scar.fake = TRUE
 
 	user.regenerate_icons()
 

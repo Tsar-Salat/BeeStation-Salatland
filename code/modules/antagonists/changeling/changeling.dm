@@ -289,6 +289,10 @@
 			prof.id_job_name = I.assignment
 			prof.id_hud_state = I.hud_state
 
+	for(var/i in H.all_scars)
+		var/datum/scar/iter_scar = i
+		LAZYADD(prof.stored_scars, iter_scar.format())
+
 	var/list/slots = list("head", "wear_mask", "back", "wear_suit", "w_uniform", "shoes", "belt", "gloves", "glasses", "ears", "wear_id", "s_store")
 	for(var/slot in slots)
 		if(slot in H.vars)
@@ -541,6 +545,8 @@
 	var/underwear
 	var/undershirt
 	var/socks
+	/// What scars the target had when we copied them, in string form (like persistent scars)
+	var/list/stored_scars
 
 	/// ID HUD icon associated with the profile
 	var/id_job_name
@@ -548,6 +554,7 @@
 
 /datum/changelingprofile/Destroy()
 	qdel(dna)
+	LAZYCLEARLIST(stored_scars)
 	. = ..()
 
 /datum/changelingprofile/proc/copy_profile(datum/changelingprofile/newprofile)
@@ -567,6 +574,7 @@
 	newprofile.underwear = underwear
 	newprofile.undershirt = undershirt
 	newprofile.socks = socks
+	newprofile.stored_scars = stored_scars.Copy()
 	newprofile.id_job_name = id_job_name
 	newprofile.id_hud_state = id_hud_state
 

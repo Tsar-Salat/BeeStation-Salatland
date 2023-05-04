@@ -39,6 +39,12 @@
 #define PIRATE_NAMES_FILE "pirates.json"
 #define REDPILL_FILE "redpill.json"
 #define WANTED_FILE "wanted_message.json"
+/// File location for flesh wound descriptions
+#define FLESH_SCAR_FILE "wounds/flesh_scar_desc.json"
+/// File location for bone wound descriptions
+#define BONE_SCAR_FILE "wounds/bone_scar_desc.json"
+/// File location for scar wound descriptions
+#define SCAR_LOC_FILE "wounds/scar_loc.json"
 #define REVENANT_NAME_FILE "revenant_names.json"
 #define ITALIAN_TALK_FILE "italian_replacement.json"
 #define VALENTINE_FILE "valentines.json"

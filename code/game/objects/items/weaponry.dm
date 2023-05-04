@@ -679,6 +679,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	block_upgrade_walk = 1
 	attack_weight = 2
 	force = 13
+	wound_bonus = -10
 	throwforce = 6
 	attack_verb = list("beat", "smacked")
 	w_class = WEIGHT_CLASS_HUGE
@@ -717,7 +718,8 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 		homerun_ready = 0
 		return
 	else if(!target.anchored)
-		target.throw_at(throw_target, rand(1,2), 7, user, force = MOVE_FORCE_WEAK)
+		var/whack_speed = (prob(60) ? 1 : 4)
+		target.throw_at(throw_target, rand(1, 2), whack_speed, user, force = MOVE_FORCE_WEAK) // sorry friends, 7 speed batting caused wounds to absolutely delete whoever you knocked your target into (and said target)
 	user.changeNext_move(CLICK_CD_MELEE * click_delay)
 	return
 
