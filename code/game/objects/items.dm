@@ -158,7 +158,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	/// Used to define how hot it's flame will be when lit. Used it igniters, lighters, flares, candles, etc.
 	var/heat = 0
 	/// SHARP_NONE | IS_SHARP | IS_SHARP_ACCURATE Used to define whether the item is sharp or blunt. IS_SHARP is used if the item is supposed to be able to cut open things. See _DEFINES/combat.dm
-	var/sharpness = SHARP_NONE
+	var/sharpness = NONE
 	//this multiplies an attacks force for secondary effects like attacking blocking implements, dismemberment, and knocking a target silly
 	var/attack_weight = 1
 
@@ -1160,17 +1160,21 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	return 0
 
 /obj/item/doMove(atom/destination)
-	if (ismob(loc))
-		var/mob/M = loc
-		var/hand_index = M.get_held_index_of_item(src)
-		if(hand_index)
-			M.held_items[hand_index] = null
-			M.update_inv_hands()
-			if(M.client)
-				M.client.screen -= src
-			layer = initial(layer)
-			plane = initial(plane)
-			dropped(M, FALSE)
+	if (!ismob(loc))
+		return ..()
+
+	var/mob/M = loc
+	var/hand_index = M.get_held_index_of_item(src)
+	if(!hand_index)
+		return ..()
+
+	M.held_items[hand_index] = null
+	M.update_inv_hands()
+	if(M.client)
+		M.client.screen -= src
+	layer = initial(layer)
+	plane = initial(plane)
+	dropped(M, FALSE)
 	return ..()
 
 /obj/item/proc/embedded(atom/embedded_target)
@@ -1209,13 +1213,12 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 ///Does the current embedding var meet the criteria for being harmless? Namely, does it have a pain multiplier and jostle pain mult of 0? If so, return true.
 /obj/item/proc/isEmbedHarmless()
 	if(embedding)
-		return (!embedding["pain_mult"] && !embedding["jostle_pain_mult"])
+		return !isnull(embedding["pain_mult"]) && !isnull(embedding["jostle_pain_mult"]) && embedding["pain_mult"] == 0 && embedding["jostle_pain_mult"] == 0
 
 ///In case we want to do something special (like self delete) upon failing to embed in something, return true
 /obj/item/proc/failedEmbed()
-	if(item_flags & DROPDEL)
-		QDEL_NULL(src)
-		return TRUE
+	if(item_flags & DROPDEL && !QDELETED(src))
+		qdel(src)
 
 /**
   * tryEmbed() is for when you want to try embedding something without dealing with the damage + hit messages of calling hitby() on the item while targetting the target.
@@ -1226,14 +1229,14 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
   * * target- Either a body part or a carbon. What are we hitting?
   * * forced- Do we want this to go through 100%?
   */
-/obj/item/proc/tryEmbed(atom/target, forced=FALSE, silent=FALSE)
+/obj/item/proc/tryEmbed(atom/target, forced=FALSE)
 	if(!isbodypart(target) && !iscarbon(target))
 		return
 	if(!forced && !LAZYLEN(embedding))
 		return
 
-	if(SEND_SIGNAL(src, COMSIG_EMBED_TRY_FORCE, target, forced, silent))
-		return TRUE
+	if(SEND_SIGNAL(src, COMSIG_EMBED_TRY_FORCE, target = target, forced = forced))
+		return COMPONENT_EMBED_SUCCESS
 	failedEmbed()
 
 ///For when you want to disable an item's embedding capabilities (like transforming weapons and such), this proc will detach any active embed elements from it.
@@ -1243,7 +1246,11 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 
 ///For when you want to add/update the embedding on an item. Uses the vars in [/obj/item/embedding], and defaults to config values for values that aren't set. Will automatically detach previous embed elements on this item.
 /obj/item/proc/updateEmbedding()
-	if(!islist(embedding) || !LAZYLEN(embedding))
+	SHOULD_CALL_PARENT(TRUE)
+
+	SEND_SIGNAL(src, COMSIG_ITEM_EMBEDDING_UPDATE)
+	if(!LAZYLEN(embedding))
+		disableEmbedding()
 		return
 
 	AddElement(/datum/element/embed,\

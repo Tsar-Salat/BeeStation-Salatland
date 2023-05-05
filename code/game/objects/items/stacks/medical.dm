@@ -33,7 +33,7 @@
 	. = ..()
 	try_heal(M, user)
 
-/obj/item/stack/medical/proc/try_heal(mob/living/patient, mob/user, silent = FALSE)
+/obj/item/stack/medical/proc/try_heal(mob/living/M, mob/user, silent = FALSE)
 	if(!M || !user || (isliving(M) && !M.can_inject(user, TRUE))) //If no mob, user and if we can't inject the mob just return
 		return
 

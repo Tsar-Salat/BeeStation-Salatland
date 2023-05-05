@@ -212,22 +212,9 @@
 	AddComponent(/datum/component/butchering, 40 * toolspeed, 100, 5, 'sound/weapons/circsawhit.ogg') //saws are very accurate and fast at butchering
 
 /obj/item/circular_saw/augment
-	name = "circular saw"
 	desc = "A small but very fast spinning saw. Edges dulled to prevent accidental cutting inside of the surgeon."
-	icon = 'icons/obj/surgery.dmi'
-	icon_state = "saw"
-	hitsound = 'sound/weapons/circsawhit.ogg'
-	throwhitsound =  'sound/weapons/pierce.ogg'
-	flags_1 = CONDUCT_1
-	force = 10
 	w_class = WEIGHT_CLASS_SMALL
-	throwforce = 9
-	throw_speed = 2
-	throw_range = 5
-	materials = list(/datum/material/iron=10000, /datum/material/glass=6000)
 	toolspeed = 0.5
-	attack_verb = list("attacked", "slashed", "sawed", "cut")
-	sharpness = SHARP_EDGED
 
 /obj/item/bonesetter
 	name = "bonesetter"
@@ -236,12 +223,13 @@
 	icon_state = "bone setter"
 	lefthand_file = 'icons/mob/inhands/equipment/medical_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/medical_righthand.dmi'
-	custom_materials = list(/datum/material/iron=5000, /datum/material/glass=2500)
+	custom_materials = list(/datum/material/iron = 5000,  /datum/material/glass = 2500, /datum/material/silver = 2500)
 	flags_1 = CONDUCT_1
 	item_flags = SURGICAL_TOOL
-	tool_behaviour = TOOL_BONESET
 	w_class = WEIGHT_CLASS_SMALL
 	attack_verb = list("corrected", "properly set")
+	tool_behaviour = TOOL_BONESET
+	toolspeed = 1
 
 /obj/item/surgical_drapes
 	name = "surgical drapes"

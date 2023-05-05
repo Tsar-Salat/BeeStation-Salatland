@@ -713,8 +713,182 @@
 			aux.color = "#[draw_color]"
 
 /obj/item/bodypart/deconstruct(disassembled = TRUE)
+	SHOULD_CALL_PARENT(TRUE)
+
 	drop_organs()
 	qdel(src)
+
+/// INTERNAL PROC, DO NOT USE
+/// Properly sets us up to manage an inserted embeded object
+/obj/item/bodypart/proc/_embed_object(obj/item/embed)
+	if(embed in embedded_objects) // go away
+		return
+	// We don't need to do anything with projectile embedding, because it will never reach this point
+	RegisterSignal(embed, COMSIG_ITEM_EMBEDDING_UPDATE, PROC_REF(embedded_object_changed))
+	embedded_objects += embed
+	refresh_bleed_rate()
+
+/// INTERNAL PROC, DO NOT USE
+/// Cleans up any attachment we have to the embedded object, removes it from our list
+/obj/item/bodypart/proc/_unembed_object(obj/item/unembed)
+	UnregisterSignal(unembed, COMSIG_ITEM_EMBEDDING_UPDATE)
+	embedded_objects -= unembed
+	refresh_bleed_rate()
+
+/obj/item/bodypart/proc/embedded_object_changed(obj/item/embedded_source)
+	SIGNAL_HANDLER
+	/// Embedded objects effect bleed rate, gotta refresh lads
+	refresh_bleed_rate()
+
+/// Sets our generic bleedstacks
+/obj/item/bodypart/proc/setBleedStacks(set_to)
+	SHOULD_CALL_PARENT(TRUE)
+	adjustBleedStacks(set_to - generic_bleedstacks)
+
+/// Modifies our generic bleedstacks. You must use this to change the variable
+/// Takes the amount to adjust by, and the lowest amount we're allowed to have post adjust
+/obj/item/bodypart/proc/adjustBleedStacks(adjust_by, minimum = -INFINITY)
+	if(!adjust_by)
+		return
+	var/old_bleedstacks = generic_bleedstacks
+	generic_bleedstacks = max(generic_bleedstacks + adjust_by, minimum)
+
+	// If we've started or stopped bleeding, we need to refresh our bleed rate
+	if((old_bleedstacks <= 0 && generic_bleedstacks > 0) \
+		|| old_bleedstacks > 0 && generic_bleedstacks <= 0)
+		refresh_bleed_rate()
+
+/obj/item/bodypart/proc/on_owner_nobleed_loss(datum/source)
+	SIGNAL_HANDLER
+	refresh_bleed_rate()
+
+/obj/item/bodypart/proc/on_owner_nobleed_gain(datum/source)
+	SIGNAL_HANDLER
+	refresh_bleed_rate()
+
+/// Refresh the cache of our rate of bleeding sans any modifiers
+/// ANYTHING ADDED TO THIS PROC NEEDS TO CALL IT WHEN IT'S EFFECT CHANGES
+/obj/item/bodypart/proc/refresh_bleed_rate()
+	SHOULD_NOT_OVERRIDE(TRUE)
+
+	var/old_bleed_rate = cached_bleed_rate
+	cached_bleed_rate = 0
+	if(!owner)
+		return
+
+	if(HAS_TRAIT(owner, TRAIT_NOBLOOD) || !IS_ORGANIC_LIMB(src))
+		if(cached_bleed_rate != old_bleed_rate)
+			update_part_wound_overlay()
+		return
+
+	if(generic_bleedstacks > 0)
+		cached_bleed_rate += 0.5
+
+	for(var/obj/item/embeddies in embedded_objects)
+		if(!embeddies.isEmbedHarmless())
+			cached_bleed_rate += 0.25
+
+	for(var/datum/wound/iter_wound as anything in wounds)
+		cached_bleed_rate += iter_wound.blood_flow
+
+	if(!cached_bleed_rate)
+		QDEL_NULL(grasped_by)
+
+	// Our bleed overlay is based directly off bleed_rate, so go aheead and update that would you?
+	if(cached_bleed_rate != old_bleed_rate)
+		update_part_wound_overlay()
+
+	return cached_bleed_rate
+
+/// Returns our bleed rate, taking into account laying down and grabbing the limb
+/obj/item/bodypart/proc/get_modified_bleed_rate()
+	var/bleed_rate = cached_bleed_rate
+	if(owner.body_position == LYING_DOWN)
+		bleed_rate *= 0.75
+	if(grasped_by)
+		bleed_rate *= 0.7
+	return bleed_rate
+
+// how much blood the limb needs to be losing per tick (not counting laying down/self grasping modifiers) to get the different bleed icons
+#define BLEED_OVERLAY_LOW 0.5
+#define BLEED_OVERLAY_MED 1.5
+#define BLEED_OVERLAY_GUSH 3.25
+
+/obj/item/bodypart/proc/update_part_wound_overlay()
+	if(!owner)
+		return FALSE
+	if(HAS_TRAIT(owner, TRAIT_NOBLOOD) || !IS_ORGANIC_LIMB(src))
+		if(bleed_overlay_icon)
+			bleed_overlay_icon = null
+			owner.update_wound_overlays()
+		return FALSE
+
+	var/bleed_rate = cached_bleed_rate
+	var/new_bleed_icon = null
+
+	switch(bleed_rate)
+		if(-INFINITY to BLEED_OVERLAY_LOW)
+			new_bleed_icon = null
+		if(BLEED_OVERLAY_LOW to BLEED_OVERLAY_MED)
+			new_bleed_icon = "[body_zone]_1"
+		if(BLEED_OVERLAY_MED to BLEED_OVERLAY_GUSH)
+			if(owner.body_position == LYING_DOWN || IS_IN_STASIS(owner) || owner.stat == DEAD)
+				new_bleed_icon = "[body_zone]_2s"
+			else
+				new_bleed_icon = "[body_zone]_2"
+		if(BLEED_OVERLAY_GUSH to INFINITY)
+			if(IS_IN_STASIS(owner) || owner.stat == DEAD)
+				new_bleed_icon = "[body_zone]_2s"
+			else
+				new_bleed_icon = "[body_zone]_3"
+
+	if(new_bleed_icon != bleed_overlay_icon)
+		bleed_overlay_icon = new_bleed_icon
+		owner.update_wound_overlays()
+
+#undef BLEED_OVERLAY_LOW
+#undef BLEED_OVERLAY_MED
+#undef BLEED_OVERLAY_GUSH
+
+/**
+ * apply_gauze() is used to- well, apply gauze to a bodypart
+ *
+ * As of the Wounds 2 PR, all bleeding is now bodypart based rather than the old bleedstacks system, and 90% of standard bleeding comes from flesh wounds (the exception is embedded weapons).
+ * The same way bleeding is totaled up by bodyparts, gauze now applies to all wounds on the same part. Thus, having a slash wound, a pierce wound, and a broken bone wound would have the gauze
+ * applying blood staunching to the first two wounds, while also acting as a sling for the third one. Once enough blood has been absorbed or all wounds with the ACCEPTS_GAUZE flag have been cleared,
+ * the gauze falls off.
+ *
+ * Arguments:
+ * * gauze- Just the gauze stack we're taking a sheet from to apply here
+ */
+/obj/item/bodypart/proc/apply_gauze(obj/item/stack/gauze)
+	if(!istype(gauze) || !gauze.absorption_capacity)
+		return
+	var/newly_gauzed = FALSE
+	if(!current_gauze)
+		newly_gauzed = TRUE
+	QDEL_NULL(current_gauze)
+	current_gauze = new gauze.type(src, 1)
+	gauze.use(1)
+	if(newly_gauzed)
+		SEND_SIGNAL(src, COMSIG_BODYPART_GAUZED, gauze)
+
+/**
+ * seep_gauze() is for when a gauze wrapping absorbs blood or pus from wounds, lowering its absorption capacity.
+ *
+ * The passed amount of seepage is deducted from the bandage's absorption capacity, and if we reach a negative absorption capacity, the bandages falls off and we're left with nothing.
+ *
+ * Arguments:
+ * * seep_amt - How much absorption capacity we're removing from our current bandages (think, how much blood or pus are we soaking up this tick?)
+ */
+/obj/item/bodypart/proc/seep_gauze(seep_amt = 0)
+	if(!current_gauze)
+		return
+	current_gauze.absorption_capacity -= seep_amt
+	if(current_gauze.absorption_capacity <= 0)
+		owner.visible_message(span_danger("\The [current_gauze.name] on [owner]'s [name] falls away in rags."), span_warning("\The [current_gauze.name] on your [name] falls away in rags."), vision_distance=COMBAT_MESSAGE_RANGE)
+		QDEL_NULL(current_gauze)
+		SEND_SIGNAL(src, COMSIG_BODYPART_GAUZE_DESTROYED)
 
 /obj/item/bodypart/chest
 	name = BODY_ZONE_CHEST

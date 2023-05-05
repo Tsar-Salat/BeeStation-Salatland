@@ -41,6 +41,8 @@
 	var/organ_to_manipulate
 	// The patient can perform this surgery upon themselves
 	var/self_operable = FALSE
+	// Most patients need to be in bed to have surgery performed on them. This is for stuff like robots who dont need to be
+	var/lying_required = TRUE
 
 /datum/surgery/New(surgery_target, surgery_location, surgery_bodypart)
 	..()

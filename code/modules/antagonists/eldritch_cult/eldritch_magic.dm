@@ -158,11 +158,15 @@
 		if(tar.anti_magic_check(magic=FALSE,holy=TRUE))
 			tar.visible_message("<span class='danger'>Spell bounces off of [target]!</span>","<span class='danger'>The spell bounces off of you!</span>")
 			return ..()
+			
 	var/mob/living/carbon/human/C2 = user
 	if(isliving(target))
 		var/mob/living/L = target
 		L.adjustBruteLoss(20)
 		C2.adjustBruteLoss(-20)
+
+	if(!C2.blood_volume)
+		return
 
 	if(ishuman(target))
 		var/mob/living/carbon/human/C1 = target

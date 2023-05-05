@@ -258,7 +258,7 @@
 	user.visible_message("<span class='suicide'>[user] is slitting [user.p_their()] own throat with [src]! It looks like [user.p_theyre()] trying to commit suicide!</span>")
 	return (BRUTELOSS)
 
-/obj/item/razor/attack(mob/M, mob/user)
+/obj/item/razor/attack(mob/M, mob/living/user)
 	. = ..()
 	if(ishuman(M) && extended == 1 && (user.a_intent == INTENT_HARM))
 		var/mob/living/carbon/human/H = M

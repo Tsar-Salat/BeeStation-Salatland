@@ -137,7 +137,7 @@
 		span_notice("[user] successfully melds some of the split blood vessels in [target]'s [parse_zone(target_zone)] with [tool]!"),
 		span_notice("[user] successfully melds some of the split blood vessels in [target]'s [parse_zone(target_zone)]!"),
 	)
-	log_combat(user, target, "dressed burns in", addition="COMBAT MODE: [uppertext(user.combat_mode)]")
+	log_combat(user, target, "dressed burns in", addition="COMBAT MODE: [uppertext(user.!a_intent == INTENT_HELP)]")
 	pierce_wound.adjust_blood_flow(-0.5)
 	if(pierce_wound.blood_flow > 0)
 		surgery.status = REALIGN_INNARDS

@@ -8,7 +8,7 @@
 	Returns
 	standard 0 if fail
 */
-/mob/living/proc/apply_damage(damage = 0,damagetype = BRUTE, def_zone = null, blocked = FALSE, wound_bonus = 0, bare_wound_bonus = 0, sharpness = SHARP_NONE)
+/mob/living/proc/apply_damage(damage = 0, damagetype = BRUTE, def_zone = null, blocked = FALSE, forced= FALSE, wound_bonus = 0, bare_wound_bonus = 0, sharpness = NONE,  attack_direction = null)
 	SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMGE, damage, damagetype, def_zone)
 	var/hit_percent = (100-blocked)/100
 	if(!damage || (!forced && hit_percent <= 0))
@@ -27,9 +27,10 @@
 			adjustCloneLoss(damage_amount, forced = forced)
 		if(STAMINA)
 			adjustStaminaLoss(damage_amount, forced = forced)
-	return 1
+	return TRUE
 
-/mob/living/proc/apply_damage_type(damage = 0, damagetype = BRUTE) //like apply damage except it always uses the damage procs
+///like [apply_damage][/mob/living/proc/apply_damage] except it always uses the damage procs
+/mob/living/proc/apply_damage_type(damage = 0, damagetype = BRUTE)
 	switch(damagetype)
 		if(BRUTE)
 			return adjustBruteLoss(damage)
@@ -44,6 +45,7 @@
 		if(STAMINA)
 			return adjustStaminaLoss(damage)
 
+/// return the damage amount for the type given
 /mob/living/proc/get_damage_amount(damagetype = BRUTE)
 	switch(damagetype)
 		if(BRUTE)
@@ -59,7 +61,7 @@
 		if(STAMINA)
 			return getStaminaLoss()
 
-
+/// applies multiple damages at once via [/mob/living/proc/apply_damage]
 /mob/living/proc/apply_damages(brute = 0, burn = 0, tox = 0, oxy = 0, clone = 0, def_zone = null, blocked = FALSE, stamina = 0, brain = 0)
 	if(blocked >= 100)
 		return 0
