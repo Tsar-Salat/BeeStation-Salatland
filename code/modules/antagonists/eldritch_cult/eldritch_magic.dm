@@ -58,7 +58,7 @@
 	playsound(user, 'sound/items/welder.ogg', 75, TRUE)
 	if(iscarbon(target))
 		var/mob/living/carbon/C1 = target
-		if(C1.check_shields(src,10, "the [tar.name]"))
+		if(C1.check_shields(src,10, "the [C1.name]"))
 			return ..()
 		if(C1.anti_magic_check())
 			C1.visible_message("<span class='danger'>The energies from [user]'s hand jump at [target], but are dispersed!</span>","<span class='danger'>Something jumps off of [user]'s hand, but it disperses on contact with you!</span>")
@@ -150,31 +150,35 @@
 	catchphrase = "R'BRTH"
 
 /obj/item/melee/touch_attack/blood_siphon/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
+	if(!isliving(user))
+		return
+	
 	if(!proximity_flag)
 		return
-	playsound(user, 'sound/magic/demon_attack1.ogg', 75, TRUE)
-	if(ishuman(target))
-		var/mob/living/carbon/human/tar = target
-		if(tar.anti_magic_check(magic=FALSE,holy=TRUE))
-			tar.visible_message("<span class='danger'>Spell bounces off of [target]!</span>","<span class='danger'>The spell bounces off of you!</span>")
-			return ..()
-			
-	var/mob/living/carbon/human/C2 = user
-	if(isliving(target))
-		var/mob/living/L = target
-		L.adjustBruteLoss(20)
-		C2.adjustBruteLoss(-20)
 
-	if(!C2.blood_volume)
+	var/mob/living/real_target = target
+	var/mob/living/living_user = user
+	playsound(user, 'sound/magic/demon_attack1.ogg', 75, TRUE)
+	if(real_target.anti_magic_check(magic=FALSE,holy=TRUE))
+		real_target.visible_message(
+			"<span class='danger'>Spell bounces off of [real_target]!</span>",
+			"<span class='danger'>The spell bounces off of you!</span>"
+		)
+		return ..()
+			
+	real_target.adjustBruteLoss(20)
+	living_user.adjustBruteLoss(-20)
+
+	if(!living_user.blood_volume)
 		return
 
-	if(ishuman(target))
-		var/mob/living/carbon/human/C1 = target
-		C1.bleed_rate -= 5
-		C2.bleed_rate += 5
-		C1.blood_volume -= 20
-		if(C2.blood_volume < BLOOD_VOLUME_MAXIMUM) //we dont want to explode after all
-			C2.blood_volume += 20
+	real_target.blood_volume -= 20
+	if(living_user.blood_volume < BLOOD_VOLUME_MAXIMUM) // we dont want to explode from casting
+		living_user.blood_volume += 20
+
+	if(!iscarbon(real_target))
+		return
+
 		return ..()
 
 /obj/effect/proc_holder/spell/targeted/projectile/dumbfire/rust_wave

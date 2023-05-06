@@ -75,7 +75,7 @@
 		if(operations.self_operable || user != src)
 			continue
 		if(operations.next_step(user,user.a_intent))
-				return TRUE
+			return TRUE
 
 	if(!all_wounds || !(user.a_intent == INTENT_HELP || user == src))
 		return ..()
@@ -1101,7 +1101,7 @@
 /mob/living/carbon/proc/is_bleeding()
 	for(var/i in bodyparts)
 		var/obj/item/bodypart/BP = i
-		if(BP.get_bleed_rate())
+		if(BP.get_modified_bleed_rate())
 			return TRUE
 
 /// get our total bleedrate
@@ -1109,7 +1109,7 @@
 	var/total_bleed_rate = 0
 	for(var/i in bodyparts)
 		var/obj/item/bodypart/BP = i
-		total_bleed_rate += BP.get_bleed_rate()
+		total_bleed_rate += BP.get_modified_bleed_rate()
 
 	return total_bleed_rate
 

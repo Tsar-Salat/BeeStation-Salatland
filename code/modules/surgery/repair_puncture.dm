@@ -61,15 +61,15 @@
 	display_results(
 		user,
 		target,
-		"<span class='notice'>You begin to realign the torn blood vessels in [target]'s [parse_zone(user.zone_selected)]..."),
-		"<span class='notice'>[user] begins to realign the torn blood vessels in [target]'s [parse_zone(user.zone_selected)] with [tool]."),
-		"<span class='notice'>[user] begins to realign the torn blood vessels in [target]'s [parse_zone(user.zone_selected)].</span>"),
+		"<span class='notice'>You begin to realign the torn blood vessels in [target]'s [parse_zone(user.zone_selected)]...",
+		"<span class='notice'>[user] begins to realign the torn blood vessels in [target]'s [parse_zone(user.zone_selected)] with [tool].",
+		"<span class='notice'>[user] begins to realign the torn blood vessels in [target]'s [parse_zone(user.zone_selected)].</span>",
 	)
 
 /datum/surgery_step/repair_innards/success(mob/living/user, mob/living/carbon/target, target_zone, obj/item/tool, datum/surgery/surgery, default_display_results = FALSE)
 	var/datum/wound/pierce/pierce_wound = surgery.operated_wound
 	if(!pierce_wound)
-		to_chat(user, span_warning("[target] has no puncture wound there!"))
+		to_chat(user, "<span class='warning'>[target] has no puncture wound there!</span>")
 		return ..()
 
 	display_results(

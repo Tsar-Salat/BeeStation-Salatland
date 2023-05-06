@@ -158,7 +158,7 @@
 			ContactContractDisease(D)
 
 	for(var/datum/surgery/operations as anything in surgeries)
-		if(if(user.a_intent == INTENT_HELP || user.a_intent == INTENT_DISARM))
+		if(user.a_intent == INTENT_HELP || user.a_intent == INTENT_DISARM)
 			break
 		if(body_position != LYING_DOWN && (operations.surgery_flags & SURGERY_REQUIRE_RESTING))
 			continue
@@ -471,7 +471,7 @@
 		return ..()
 
 	var/obj/item/bodypart/grasped_part = get_bodypart(zone_selected)
-	if(!grasped_part?.get_bleed_rate())
+	if(!grasped_part?.get_modified_bleed_rate())
 		return
 	var/starting_hand_index = active_hand_index
 	if(starting_hand_index == grasped_part.held_index)

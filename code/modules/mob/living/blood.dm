@@ -31,20 +31,20 @@
 		adjust_nutrition(-nutrition_ratio * HUNGER_FACTOR * delta_time)
 		blood_volume = min(blood_volume + (BLOOD_REGEN_FACTOR * nutrition_ratio * delta_time), BLOOD_VOLUME_NORMAL)
 
-		//Effects of bloodloss
+	//Effects of bloodloss
 	var/word = pick("dizzy","woozy","faint")
 	switch(blood_volume)
 		if(BLOOD_VOLUME_EXCESS to BLOOD_VOLUME_MAX_LETHAL)
 			if(DT_PROB(7.5, delta_time))
-				to_chat(src, span_userdanger("Blood starts to tear your skin apart. You're going to burst!"))
-				investigate_log("has been gibbed by having too much blood.", INVESTIGATE_DEATHS)
+				to_chat(src, "span class='userdanger'>Blood starts to tear your skin apart. You're going to burst!</span>")
+				investigate_log("has been gibbed by having too much blood.")
 				inflate_gib()
 		if(BLOOD_VOLUME_MAXIMUM to BLOOD_VOLUME_EXCESS)
 			if(DT_PROB(5, delta_time))
-				to_chat(src, span_warning("You feel terribly bloated."))
+				to_chat(src, "span class='warning'>You feel terribly bloated.</span>")
 		if(BLOOD_VOLUME_OKAY to BLOOD_VOLUME_SAFE)
 			if(DT_PROB(2.5, delta_time))
-				to_chat(src, span_warning("You feel [word]."))
+				to_chat(src, "span class='warning'>You feel [word].</span>")
 			adjustOxyLoss(round(0.005 * (BLOOD_VOLUME_NORMAL - blood_volume) * delta_time, 1))
 		if(BLOOD_VOLUME_BAD to BLOOD_VOLUME_OKAY)
 			adjustOxyLoss(round(0.01 * (BLOOD_VOLUME_NORMAL - blood_volume) * delta_time, 1))
@@ -55,7 +55,7 @@
 			adjustOxyLoss(2.5 * delta_time)
 			if(DT_PROB(7.5, delta_time))
 				Unconscious(rand(20,60))
-				to_chat(src, span_warning("You feel extremely [word]."))
+				to_chat(src, "span class='warning'>You feel extremely [word].</span>")
 		if(-INFINITY to BLOOD_VOLUME_SURVIVE)
 			if(!HAS_TRAIT(src, TRAIT_NODEATH))
 				investigate_log("has died of bloodloss.", INVESTIGATE_DEATHS)
@@ -87,7 +87,7 @@
 
 /mob/living/carbon/human/bleed(amt)
 	amt *= physiology.bleed_mod
-	if(!HAS_TRAIT(src, TRAIT_NOBLOOD))
+	if(!(NOBLOOD in dna.species.species_traits))
 		..()
 
 /// A helper to see how much blood we're losing per tick
@@ -97,7 +97,7 @@
 	var/bleed_amt = 0
 	for(var/X in bodyparts)
 		var/obj/item/bodypart/iter_bodypart = X
-		bleed_amt += iter_bodypart.get_bleed_rate()
+		bleed_amt += iter_bodypart.get_modified_bleed_rate()
 	return bleed_amt
 
 /mob/living/carbon/human/get_bleed_rate()

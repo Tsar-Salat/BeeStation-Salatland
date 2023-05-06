@@ -36,7 +36,6 @@
 /obj/item/stack/medical/proc/try_heal(mob/living/M, mob/user, silent = FALSE)
 	if(!M || !user || (isliving(M) && !M.can_inject(user, TRUE))) //If no mob, user and if we can't inject the mob just return
 		return
-
 	if(patient == user)
 		if(!silent)
 
@@ -146,7 +145,7 @@
 	other_delay = 2 SECONDS
 	max_amount = 12
 	amount = 6
-	custom_price = PAYCHECK_CREW * 2
+	custom_price = PAYCHECK_MEDIUM * 2
 	absorption_rate = 0.125
 	absorption_capacity = 5
 	splint_factor = 0.7
@@ -172,7 +171,7 @@
 	if(!gauzeable_wound)
 		to_chat(user, "<span class='notice'>There's no wounds that require bandaging on [user==M ? "your" : "[M]'s"] [limb.name]!</span>") // good problem to have imo
 		return
-	
+
 	if(limb.current_gauze && (limb.current_gauze.absorption_capacity * 0.8 > absorption_capacity)) // ignore if our new wrap is < 20% better than the current one, so someone doesn't bandage it 5 times in a row
 		to_chat(user, "<span class='warning'>The bandage currently on [user==M ? "your" : "[M]'s"] [limb.name] is still in good condition!</span>")
 		return
@@ -200,7 +199,7 @@
 				"<span class='italics'>You hear cutting.</span>")
 		else //telekinesis
 			visible_message(span_notice("[I] cuts [src] into pieces of cloth."), \
-				blind_message = span_hear("You hear cutting."))		
+				blind_message = span_hear("You hear cutting."))
 		use(2)
 	else
 		return ..()

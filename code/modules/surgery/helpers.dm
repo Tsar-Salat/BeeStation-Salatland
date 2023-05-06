@@ -24,15 +24,15 @@
 			if(!S.possible_locs.Find(selected_zone))
 				continue
 			if(affecting)
-				if(!S.requires_bodypart)
-					continue
+				if(!(S.surgery_flags & SURGERY_REQUIRE_LIMB))
+				continue
 				if(S.requires_bodypart_type && !(affecting.bodytype & S.requires_bodypart_type))
 					continue
-				if(S.requires_real_bodypart && affecting.is_pseudopart)
+				if((S.surgery_flags & SURGERY_REQUIRES_REAL_LIMB) && (affecting.bodypart_flags & BODYPART_PSEUDOPART))
 					continue
-			else if(C && S.requires_bodypart) //mob with no limb in surgery zone when we need a limb
+			else if(C && (S.surgery_flags & SURGERY_REQUIRE_LIMB)) //mob with no limb in surgery zone when we need a limb
 				continue
-			if(S.lying_required && (M.mobility_flags & MOBILITY_STAND))
+			if((S.surgery_flags & SURGERY_REQUIRE_RESTING) && target.body_position != LYING_DOWN)
 				continue
 			if(!S.can_start(user, M))
 				continue
@@ -56,11 +56,11 @@
 			if(C)
 				affecting = C.get_bodypart(check_zone(selected_zone))
 			if(affecting)
-				if(!S.requires_bodypart)
+				if(!(S.surgery_flags & SURGERY_REQUIRE_LIMB))
 					return
 				if(S.requires_bodypart_type && !(affecting.bodytype & S.requires_bodypart_type))
 					return
-			else if(C && S.requires_bodypart)
+			else if(C && (S.surgery_flags & SURGERY_REQUIRE_LIMB))
 				return
 			if(S.lying_required && (M.mobility_flags & MOBILITY_STAND))
 				return
@@ -92,9 +92,9 @@
 			"[user] removes [I] from [M]'s [parse_zone(selected_zone)].", \
 			"<span class='notice'>You remove [I] from [M]'s [parse_zone(selected_zone)].</span>"
 		)
-		
+
 		I.balloon_alert(user, "You remove [I] from [parse_zone(selected_zone)].")
-		
+
 		qdel(S)
 		return
 
@@ -114,7 +114,7 @@
 		else if(close_tool?.tool_behaviour != required_tool_type)
 			patient.balloon_alert(user, "need a [is_robotic ? "screwdriver": "cautery"] in your inactive hand to stop the surgery!")
 			return
-	
+
 		if(S.operated_bodypart)
 			S.operated_bodypart.adjustBleedStacks(-5)
 
@@ -144,43 +144,43 @@
 	switch(location)
 		if(BODY_ZONE_HEAD)
 			if(covered_locations & HEAD)
-				return 0
+				return FALSE
 		if(BODY_ZONE_PRECISE_EYES)
 			if(covered_locations & HEAD || face_covered & HIDEEYES || eyesmouth_covered & GLASSESCOVERSEYES)
-				return 0
+				return FALSE
 		if(BODY_ZONE_PRECISE_MOUTH)
 			if(covered_locations & HEAD || face_covered & HIDEFACE || eyesmouth_covered & MASKCOVERSMOUTH || eyesmouth_covered & HEADCOVERSMOUTH)
-				return 0
+				return FALSE
 		if(BODY_ZONE_CHEST)
 			if(covered_locations & CHEST)
-				return 0
+				return FALSE
 		if(BODY_ZONE_PRECISE_GROIN)
 			if(covered_locations & GROIN)
-				return 0
+				return FALSE
 		if(BODY_ZONE_L_ARM)
 			if(covered_locations & ARM_LEFT)
-				return 0
+				return FALSE
 		if(BODY_ZONE_R_ARM)
 			if(covered_locations & ARM_RIGHT)
-				return 0
+				return FALSE
 		if(BODY_ZONE_L_LEG)
 			if(covered_locations & LEG_LEFT)
-				return 0
+				return FALSE
 		if(BODY_ZONE_R_LEG)
 			if(covered_locations & LEG_RIGHT)
-				return 0
+				return FALSE
 		if(BODY_ZONE_PRECISE_L_HAND)
 			if(covered_locations & HAND_LEFT)
-				return 0
+				return FALSE
 		if(BODY_ZONE_PRECISE_R_HAND)
 			if(covered_locations & HAND_RIGHT)
-				return 0
+				return FALSE
 		if(BODY_ZONE_PRECISE_L_FOOT)
 			if(covered_locations & FOOT_LEFT)
-				return 0
+				return FALSE
 		if(BODY_ZONE_PRECISE_R_FOOT)
 			if(covered_locations & FOOT_RIGHT)
-				return 0
+				return FALSE
 
-	return 1
+	return TRUE
 
