@@ -65,7 +65,7 @@
 			amount_max = max(amount_max - amount_food, 0)
 
 		// Transfer the amount of reagents based on volume with a min amount of 1u
-		var/amount = min(round(metabolism_efficiency * bit.volume, 0.1) + amount_min, amount_max)
+		var/amount = min(round(metabolism_efficiency * amount_max, 0.05) + delta_time, amount_max)
 
 		if(!(amount > 0))
 			continue
