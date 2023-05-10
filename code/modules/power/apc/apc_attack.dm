@@ -145,79 +145,51 @@
 	if(.)
 		return
 
-	if(isethereal(user))
-		var/mob/living/carbon/human/H = user
-		var/datum/species/ethereal/E = H.dna.species
-		if(E.drain_time > world.time)
-			return
-		var/obj/item/organ/stomach/battery/stomach = H.getorganslot(ORGAN_SLOT_STOMACH)
-		if(H.a_intent == INTENT_HARM)
-			if(!istype(stomach))
-				to_chat(H, "<span class='warning'>You can't receive charge!</span>")
-				return
-			if(H.nutrition >= NUTRITION_LEVEL_ALMOST_FULL)
-				to_chat(user, "<span class='warning'>You are already fully charged!</span>")
-				return
-			if(cell.charge <= cell.maxcharge/4) // if charge is under 25% you shouldn't drain it
-				to_chat(H, "<span class='warning'>The APC doesn't have much power, you probably shouldn't drain anymore.</span>")
-				return
+	if(ishuman(user))
+		return
 
-			E.drain_time = world.time + 80
-			to_chat(H, "<span class='notice'>You start channeling some power through the APC into your body.</span>")
-			while(do_after(user, 75, target = src))
-				if(!istype(stomach))
-					to_chat(H, "<span class='warning'>You can't receive charge!</span>")
+	var/mob/living/carbon/human/H = user
+	var/obj/item/organ/stomach/maybe_stomach = H.getorganslot(ORGAN_SLOT_STOMACH)
+
+	if(istype(maybe_stomach, /obj/item/organ/stomach/ethereal))
+		var/charge_limit = ETHEREAL_CHARGE_DANGEROUS - APC_POWER_GAIN
+		var/obj/item/organ/stomach/battery/ethereal/stomach = maybe_stomach
+		if(H.a_intent == INTENT_HARM)
+			if(cell.charge <= (cell.maxcharge / 2)) // ethereals can't drain APCs under half charge, this is so that they are forced to look to alternative power sources if the station is running low
+						to_chat(H, span_warning("The APC's syphon safeties prevent you from draining power!"))
+						return
+					if(stomach.crystal_charge > charge_limit)
+						to_chat(H, span_warning("Your charge is full!"))
+						return
+					stomach.drain_time = world.time + APC_DRAIN_TIME
+					to_chat(H, span_notice("You start channeling some power through the APC into your body."))
+					if(do_after(user, APC_DRAIN_TIME, target = src))
+						if(cell.charge <= (cell.maxcharge / 2) || (stomach.crystal_charge > charge_limit))
+							return
+						to_chat(H, span_notice("You receive some charge from the APC."))
+						stomach.adjust_charge(APC_POWER_GAIN)
+						cell.charge -= APC_POWER_GAIN
 					return
-				if(cell.charge <= cell.maxcharge/4)
-					to_chat(H, "<span class='warning'>The APC doesn't have much power, you probably shouldn't drain anymore.</span>")
-					E.drain_time = 0
-					return
-				E.drain_time = world.time + 80
-				if(cell.charge > cell.maxcharge/4 + 250)
-					stomach.adjust_charge(250)
-					cell.charge -= 250
-					to_chat(H, "<span class='notice'>You receive some charge from the APC.</span>")
 				else
-					stomach.adjust_charge(cell.charge - cell.maxcharge/4)
-					cell.charge = cell.maxcharge/4
-					to_chat(H, "<span class='warning'>The APC doesn't have much power, you probably shouldn't drain anymore.</span>")
-					E.drain_time = 0
+					if(cell.charge >= cell.maxcharge - APC_POWER_GAIN)
+						to_chat(H, span_warning("The APC can't receive anymore power!"))
+						return
+					if(stomach.crystal_charge < APC_POWER_GAIN)
+						to_chat(H, span_warning("Your charge is too low!"))
+						return
+					stomach.drain_time = world.time + APC_DRAIN_TIME
+					to_chat(H, span_notice("You start channeling power through your body into the APC."))
+					if(do_after(user, APC_DRAIN_TIME, target = src))
+						if((cell.charge >= (cell.maxcharge - APC_POWER_GAIN)) || (stomach.crystal_charge < APC_POWER_GAIN))
+							to_chat(H, span_warning("You can't transfer power to the APC!"))
+							return
+						if(istype(stomach))
+							to_chat(H, span_notice("You transfer some power to the APC."))
+							stomach.adjust_charge(-APC_POWER_GAIN)
+							cell.charge += APC_POWER_GAIN
+						else
+							to_chat(H, span_warning("You can't transfer power to the APC!"))
 					return
-				if(stomach.charge >= stomach.max_charge)
-					to_chat(H, "<span class='notice'>You are now fully charged.</span>")
-					E.drain_time = 0
-					return
-			to_chat(H, "<span class='warning'>You fail to receive charge from the APC!</span>")
-			E.drain_time = 0
-			return
-		else if(H.a_intent == INTENT_GRAB)
-			if(!istype(stomach))
-				to_chat(H, "<span class='warning'>You can't transfer charge!</span>")
-				return
-			E.drain_time = world.time + 80
-			to_chat(H, "<span class='notice'>You start channeling power through your body into the APC.</span>")
-			while(do_after(user, 75, target = src))
-				if(!istype(stomach))
-					to_chat(H, "<span class='warning'>You can't transfer charge!</span>")
-					return
-				E.drain_time = world.time + 80
-				if(stomach.charge > 250)
-					to_chat(H, "<span class='notice'>You transfer some power to the APC.</span>")
-					stomach.adjust_charge(-250)
-					cell.charge = min(cell.charge + 250, cell.maxcharge)
-				else
-					to_chat(H, "<span class='notice'>You transfer the last of your charge to the APC.</span>")
-					cell.charge = min(cell.charge + stomach.charge, cell.maxcharge)
-					stomach.set_charge(0)
-					E.drain_time = 0
-					return
-				if(cell.charge >= cell.maxcharge)
-					to_chat(H, "<span class='notice'>The APC is now fully recharged.</span>")
-					E.drain_time = 0
-					return
-			to_chat(H, "<span class='warning'>You fail to transfer power to the APC!</span>")
-			E.drain_time = 0
-			return
 
 	if(opened && (!issilicon(user)))
 		if(cell)

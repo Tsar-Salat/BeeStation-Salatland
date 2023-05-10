@@ -161,44 +161,35 @@
 					corrupt()
 
 /obj/item/stock_parts/cell/attack_self(mob/user)
-	if(isethereal(user))
+	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
-		var/datum/species/ethereal/E = H.dna.species
-		if(E.drain_time > world.time)
-			return
-		var/obj/item/organ/stomach/battery/stomach = H.getorganslot(ORGAN_SLOT_STOMACH)
-		if(!istype(stomach))
-			to_chat(H, "<span class='warning'>You can't receive charge!</span>")
-			return
-		if(H.nutrition >= NUTRITION_LEVEL_ALMOST_FULL)
-			to_chat(user, "<span class='warning'>You are already fully charged!</span>")
+		var/obj/item/organ/stomach/maybe_stomach = H.getorganslot(ORGAN_SLOT_STOMACH)
+
+		if(istype(maybe_stomach, /obj/item/organ/stomach/ethereal))
+
+			var/charge_limit = ETHEREAL_CHARGE_DANGEROUS - CELL_POWER_GAIN
+			var/obj/item/organ/stomach/battery/ethereal/stomach = maybe_stomach
+			if((stomach.drain_time > world.time) || !stomach)
+				return
+			if(charge < CELL_POWER_DRAIN)
+				to_chat(H, "<span class='warning'[src] doesn't have enough power!</span>")
+				return
+			if(stomach.crystal_charge > charge_limit)
+				to_chat(H, span_warning("Your charge is full!"))
+				return
+			to_chat(H, span_notice("You begin clumsily channeling power from [src] into your body."))
+			stomach.drain_time = world.time + CELL_DRAIN_TIME
+			if(do_after(user, CELL_DRAIN_TIME, target = src))
+				if((charge < CELL_POWER_DRAIN) || (stomach.crystal_charge > charge_limit))
+					return
+				if(istype(stomach))
+					to_chat(H, span_notice("You receive some charge from [src], wasting some in the process."))
+					stomach.adjust_charge(CELL_POWER_GAIN)
+					charge -= CELL_POWER_DRAIN //you waste way more than you receive, so that ethereals cant just steal one cell and forget about hunger
+				else
+					to_chat(H, span_warning("You can't receive charge from [src]!"))
 			return
 
-		to_chat(H, "<span class='notice'>You clumsily channel power through the [src] and into your body, wasting some in the process.</span>")
-		E.drain_time = world.time + 25
-		while(do_after(user, 20, target = src))
-			if(!istype(stomach))
-				to_chat(H, "<span class='warning'>You can't receive charge!</span>")
-				return
-			E.drain_time = world.time + 25
-			if(charge > 300)
-				stomach.adjust_charge(75)
-				charge -= 300 //you waste way more than you receive, so that ethereals cant just steal one cell and forget about hunger
-				to_chat(H, "<span class='notice'>You receive some charge from the [src].</span>")
-			else
-				stomach.adjust_charge(charge/4)
-				charge = 0
-				to_chat(H, "<span class='notice'>You drain the [src].</span>")
-				E.drain_time = 0
-				return
-
-			if(stomach.charge >= stomach.max_charge)
-				to_chat(H, "<span class='notice'>You are now fully charged.</span>")
-				E.drain_time = 0
-				return
-		to_chat(H, "<span class='warning'>You fail to receive charge from the [src]!</span>")
-		E.drain_time = 0
-	return
 
 /obj/item/stock_parts/cell/blob_act(obj/structure/blob/B)
 	SSexplosions.high_mov_atom += src
