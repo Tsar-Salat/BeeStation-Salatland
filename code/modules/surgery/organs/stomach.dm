@@ -27,6 +27,11 @@
 	///The rate that the stomach will transfer reagents to the body
 	var/metabolism_efficiency = 0.1 // the lowest we should go is 0.05
 
+/obj/item/organ/stomach/Initialize()
+	. = ..()
+	//Non-edible organs do not get a reagent holder by default
+	if(!reagents)
+		create_reagents(reagent_vol)
 
 /obj/item/organ/stomach/on_life()
 	. = ..()
@@ -134,7 +139,7 @@
 		var/mob/living/carbon/human/human_owner = owner
 		human_owner.clear_alert("disgust")
 		SEND_SIGNAL(human_owner, COMSIG_CLEAR_MOOD_EVENT, "disgust")
-		
+
 	return ..()
 
 /obj/item/organ/stomach/bone
