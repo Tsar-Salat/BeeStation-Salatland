@@ -29,11 +29,14 @@
 #define APC_ELECTRONICS_INSTALLED 1 // Installed but not secured
 #define APC_ELECTRONICS_SECURED 2 // Installed and secured
 
+// APC cover status:
+/// The APCs cover is closed.
 #define APC_COVER_CLOSED 0
 /// The APCs cover is open.
 #define APC_COVER_OPENED 1
 /// The APCs cover is missing.
 #define APC_COVER_REMOVED 2
+
 // APC charging status:
 /// The APC is not charging.
 #define APC_NOT_CHARGING 0
@@ -41,3 +44,9 @@
 #define APC_CHARGING 1
 /// The APC is fully charged.
 #define APC_FULLY_CHARGED 2
+
+// Ethereals:
+/// How long it takes an ethereal to drain or charge APCs. Also used as a spam limiter.
+#define APC_DRAIN_TIME (7.5 SECONDS)
+/// How much power ethereals gain/drain from APCs.
+#define APC_POWER_GAIN 200

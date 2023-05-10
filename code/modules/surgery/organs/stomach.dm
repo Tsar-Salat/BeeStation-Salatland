@@ -88,14 +88,24 @@
 	if(!nutri)
 		return
 
+	// remove the food reagent amount
+	var/nutri_vol = nutri.volume
+	var/amount_food = food_reagents[nutri.type]
+	if(amount_food)
+		nutri_vol = max(nutri_vol - amount_food, 0)
+
+	// found nutriment was stomach food reagent
+	if(!(nutri_vol > 0))
+		return
+
 	//The stomach is damage has nutriment but low on theshhold, lo prob of vomit
-	if(prob(damage * 0.025 * nutri.volume * nutri.volume))
+	if(prob(0.0125 * damage * nutri_vol * nutri_vol, delta_time))
 		body.vomit(damage)
 		to_chat(body, "<span class='warning'>Your stomach reels in pain as you're incapable of holding down all that food!</span>")
 		return
 
 	// the change of vomit is now high
-	if(damage > high_threshold && prob(damage * 0.1 * nutri.volume * nutri.volume))
+	if(damage > high_threshold && prob(damage * 0.05 * nutri_vol * nutri_vol, delta_time))
 		body.vomit(damage)
 		to_chat(body, "<span class='warning'>Your stomach reels in pain as you're incapable of holding down all that food!</span>")
 
@@ -182,44 +192,52 @@
 /obj/item/organ/stomach/proc/handle_hunger_slowdown(mob/living/carbon/human/human)
 	var/hungry = (500 - human.nutrition) / 5 //So overeat would be 100 and default level would be 80
 	if(hungry >= 70)
-		human.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/hunger, multiplicative_slowdown = (hungry / 50))
+		human.add_movespeed_modifier(/datum/movespeed_modifier/hunger, multiplicative_slowdown = (hungry / 50))
 	else
 		human.remove_movespeed_modifier(/datum/movespeed_modifier/hunger)
 
-/obj/item/organ/stomach/proc/handle_disgust(mob/living/carbon/human/H)
-	if(H.disgust)
-		var/pukeprob = 5 + 0.05 * H.disgust
-		if(H.disgust >= DISGUST_LEVEL_GROSS)
-			if(prob(10))
-				H.stuttering += 1
-				H.confused += 2
-			if(prob(10) && !H.stat)
-				to_chat(H, "<span class='warning'>You feel kind of iffy...</span>")
-			H.jitteriness = max(H.jitteriness - 3, 0)
-		if(H.disgust >= DISGUST_LEVEL_VERYGROSS)
-			if(prob(pukeprob)) //iT hAndLeS mOrE ThaN PukInG
-				H.confused += 2.5
-				H.stuttering += 1
-				H.vomit(10, 0, 1, 0, 1, 0)
-			H.Dizzy(5)
-		if(H.disgust >= DISGUST_LEVEL_DISGUSTED)
-			if(prob(25))
-				H.blur_eyes(3) //We need to add more shit down here
+/obj/item/organ/stomach/proc/handle_disgust(mob/living/carbon/human/disgusted, delta_time, times_fired)
+	var/old_disgust = disgusted.old_disgust
+	var/disgust = disgusted.disgust
+	
+	if(disgust)
+		var/pukeprob = 2.5 + (0.025 * disgust)
+		if(disgust >= DISGUST_LEVEL_GROSS)
+			if(prob(5, delta_time))
+				disgusted.stuttering += 2
+				disgusted.confused += 2
+			if(prob(5, delta_time) && !disgusted.stat)
+				to_chat(disgusted, "<span class='warning'>You feel kind of iffy...</span>")
+			disgusted.jitteriness = max(disgusted.jitteriness - 3, 0)
+		if(disgust >= DISGUST_LEVEL_VERYGROSS)
+			if(prob(pukeprob, delta_time)) //iT hAndLeS mOrE ThaN PukInG
+				disgusted.confused += 2.5
+				disgusted.stuttering += 1
+				disgusted.vomit(10, 0, 1, 0, 1, 0)
+			disgusted.Dizzy(5)
+		if(disgust >= DISGUST_LEVEL_DISGUSTED)
+			if(prob(13, delta_time))
+				disgusted.blur_eyes(3) //We need to add more shit down here
 
-		H.adjust_disgust(-0.5 * disgust_metabolism)
-	switch(H.disgust)
+		disgusted.adjust_disgust(-0.25 * disgust_metabolism * delta_time)
+
+	if(old_disgust == disgust)
+		return
+	
+	disgusted.old_disgust = disgust
+	switch(disgusted.disgust)
 		if(0 to DISGUST_LEVEL_GROSS)
-			H.clear_alert("disgust")
-			SEND_SIGNAL(H, COMSIG_CLEAR_MOOD_EVENT, "disgust")
+			disgusted.clear_alert("disgust")
+			SEND_SIGNAL(disgusted, COMSIG_CLEAR_MOOD_EVENT, "disgust")
 		if(DISGUST_LEVEL_GROSS to DISGUST_LEVEL_VERYGROSS)
-			H.throw_alert("disgust", /atom/movable/screen/alert/gross)
-			SEND_SIGNAL(H, COMSIG_ADD_MOOD_EVENT, "disgust", /datum/mood_event/gross)
+			disgusted.throw_alert("disgust", /atom/movable/screen/alert/gross)
+			SEND_SIGNAL(disgusted, COMSIG_ADD_MOOD_EVENT, "disgust", /datum/mood_event/gross)
 		if(DISGUST_LEVEL_VERYGROSS to DISGUST_LEVEL_DISGUSTED)
-			H.throw_alert("disgust", /atom/movable/screen/alert/verygross)
-			SEND_SIGNAL(H, COMSIG_ADD_MOOD_EVENT, "disgust", /datum/mood_event/verygross)
+			disgusted.throw_alert("disgust", /atom/movable/screen/alert/verygross)
+			SEND_SIGNAL(disgusted, COMSIG_ADD_MOOD_EVENT, "disgust", /datum/mood_event/verygross)
 		if(DISGUST_LEVEL_DISGUSTED to INFINITY)
-			H.throw_alert("disgust", /atom/movable/screen/alert/disgusted)
-			SEND_SIGNAL(H, COMSIG_ADD_MOOD_EVENT, "disgust", /datum/mood_event/disgusted)
+			disgusted.throw_alert("disgust", /atom/movable/screen/alert/disgusted)
+			SEND_SIGNAL(disgusted, COMSIG_ADD_MOOD_EVENT, "disgust", /datum/mood_event/disgusted)
 
 /obj/item/organ/stomach/Remove(mob/living/carbon/stomach_owner, special = 0)
 	if(ishuman(stomach_owner))
@@ -232,7 +250,7 @@
 
 /obj/item/organ/stomach/bone
 	desc = "You have no idea what this strange ball of bones does."
-	metabolism_efficiency = 0.05 //very bad
+	metabolism_efficiency = 0.025 //very bad
 
 /obj/item/organ/stomach/bone/on_life()
 	var/datum/reagent/consumable/milk/milk = locate(/datum/reagent/consumable/milk) in reagents.reagent_list

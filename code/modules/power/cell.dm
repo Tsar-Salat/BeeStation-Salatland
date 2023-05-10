@@ -1,3 +1,7 @@
+#define CELL_DRAIN_TIME 35
+#define CELL_POWER_GAIN 60
+#define CELL_POWER_DRAIN 750
+
 /obj/item/stock_parts/cell
 	name = "power cell"
 	desc = "A rechargeable electrochemical power cell."
@@ -165,10 +169,10 @@
 		var/mob/living/carbon/human/H = user
 		var/obj/item/organ/stomach/maybe_stomach = H.getorganslot(ORGAN_SLOT_STOMACH)
 
-		if(istype(maybe_stomach, /obj/item/organ/stomach/ethereal))
+		if(istype(maybe_stomach, /obj/item/organ/stomach/battery))
 
 			var/charge_limit = ETHEREAL_CHARGE_DANGEROUS - CELL_POWER_GAIN
-			var/obj/item/organ/stomach/battery/ethereal/stomach = maybe_stomach
+			var/obj/item/organ/stomach/battery/stomach = maybe_stomach
 			if((stomach.drain_time > world.time) || !stomach)
 				return
 			if(charge < CELL_POWER_DRAIN)
@@ -403,3 +407,7 @@
 	var/area/A = get_area(src)
 	if(!A.lightswitch || !A.light_power)
 		charge = 0 //For naturally depowered areas, we start with no power
+
+#undef CELL_DRAIN_TIME
+#undef CELL_POWER_GAIN
+#undef CELL_POWER_DRAIN

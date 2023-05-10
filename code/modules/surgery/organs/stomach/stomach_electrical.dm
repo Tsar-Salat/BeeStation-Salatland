@@ -35,19 +35,9 @@
 /obj/item/organ/stomach/battery/ethereal/proc/adjust_charge(amount)
 	crystal_charge = clamp(crystal_charge + amount, ETHEREAL_CHARGE_NONE, ETHEREAL_CHARGE_DANGEROUS)
 
-/obj/item/organ/stomach/battery/proc/adjust_charge_scaled(amount)
-	adjust_charge(amount*max_charge/NUTRITION_LEVEL_FULL)
-
 /obj/item/organ/stomach/battery/proc/set_charge(amount)
 	charge = clamp(amount*(1-(damage/maxHealth)), 0, max_charge)
 	update_nutrition()
-
-/obj/item/organ/stomach/battery/proc/set_charge_scaled(amount)
-	set_charge(amount*max_charge/NUTRITION_LEVEL_FULL)
-
-/obj/item/organ/stomach/battery/proc/update_nutrition()
-	if(!HAS_TRAIT(owner, TRAIT_NOHUNGER) && HAS_TRAIT(owner, TRAIT_POWERHUNGRY))
-		owner.nutrition = (charge/max_charge)*NUTRITION_LEVEL_FULL
 
 /obj/item/organ/stomach/battery/emp_act(severity)
 	switch(severity)
@@ -66,8 +56,6 @@
 	desc = "A micro-cell, for IPC use. Do not swallow."
 	status = ORGAN_ROBOTIC
 	organ_flags = ORGAN_SYNTHETIC
-	max_charge = 2750 //50 nutrition from 250 charge
-	charge = 2750
 
 /obj/item/organ/stomach/battery/ipc/emp_act(severity)
 	. = ..()
@@ -81,10 +69,6 @@
 	name = "biological battery"
 	icon_state = "stomach-p" //Welp. At least it's more unique in functionaliy.
 	desc = "A crystal-like organ that stores the electric charge of ethereals."
-	///basically satiety but electrical
-	var/crystal_charge = ETHEREAL_CHARGE_FULL
-	///used to keep ethereals from spam draining power sources
-	var/drain_time = 0
 
 /obj/item/organ/stomach/battery/ethereal/handle_hunger_slowdown(mob/living/carbon/human/human)
 	human.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/hunger, multiplicative_slowdown = (1.5 * (1 - crystal_charge / 100)))
@@ -115,12 +99,15 @@
 		if(ETHEREAL_CHARGE_OVERLOAD to ETHEREAL_CHARGE_DANGEROUS)
 			carbon.throw_alert("ethereal_overcharge", /atom/movable/screen/alert/ethereal_overcharge, 2)
 			carbon.apply_damage(0.325 * delta_time, TOX, null, null, carbon)
+			/*
 			if(DT_PROB(5, delta_time)) // 5% each seacond for ethereals to explosively release excess energy if it reaches dangerous levels
 				discharge_process(carbon)
+			*/
 		else
 			carbon.clear_alert("ethereal_charge")
 			carbon.clear_alert("ethereal_overcharge")
 
+/*
 /obj/item/organ/stomach/battery/ethereal/proc/discharge_process(mob/living/carbon/carbon)
 	to_chat(carbon, span_warning("You begin to lose control over your charge!"))
 	carbon.visible_message(span_danger("[carbon] begins to spark violently!"))
@@ -150,3 +137,5 @@
 			carbon.playsound_local(carbon, 'sound/effects/singlebeat.ogg', 100, 0)
 
 		carbon.Paralyze(100)
+
+*/
