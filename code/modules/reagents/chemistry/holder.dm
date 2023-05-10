@@ -224,10 +224,10 @@
 				trans_data = copy_data(T)
 			R.add_reagent(T.type, transfer_amount * multiplier, trans_data, chem_temp, no_react = 1) //we only handle reaction after every reagent has been transfered.
 			if(method)
-				if(istype(target_atom, /obj/item/organ/stomach))
-					R.react_single(T, target, method, part, show_message)
+				if(istype(target_atom, /obj/item/organ))
+					R.react_single(T, target, method, transfer_amount, show_message)
 				else
-					R.react_single(T, target_atom, method, part, show_message)
+					R.react_single(T, target_atom, method, transfer_amount, show_message)
 				T.on_transfer(target_atom, method, transfer_amount * multiplier)
 			remove_reagent(T.type, transfer_amount)
 			transfer_log[T.type] = transfer_amount
@@ -247,7 +247,7 @@
 			R.add_reagent(T.type, transfer_amount * multiplier, trans_data, chem_temp, no_react = 1)
 			to_transfer = max(to_transfer - transfer_amount , 0)
 			if(method)
-				if(istype(target_atom, /obj/item/organ/stomach))
+				if(istype(target_atom, /obj/item/organ))
 					R.react_single(T, target, method, transfer_amount, show_message)
 				else
 					R.react_single(T, target_atom, method, transfer_amount, show_message)
@@ -556,19 +556,11 @@
 	for(var/_reagent in cached_reagents)
 		var/datum/reagent/R = _reagent
 		if(R.type == reagent)
-			var/mob/living/mob_consumer
-
-			if (isliving(my_atom))
-				mob_consumer = my_atom
-			else if (istype(my_atom, /obj/item/organ))
-				var/obj/item/organ/organ = my_atom
-				mob_consumer = organ.owner
-
-			if (mob_consumer)
+			if(isliving(my_atom))
 				if(R.metabolizing)
 					R.metabolizing = FALSE
-					R.on_mob_end_metabolize(mob_consumer)
-				R.on_mob_delete(mob_consumer)
+					R.on_mob_end_metabolize(my_atom)
+				R.on_mob_delete(my_atom)
 			qdel(R)
 			reagent_list -= R
 			update_total()
@@ -581,7 +573,7 @@
 	total_volume = 0
 	for(var/reagent in cached_reagents)
 		var/datum/reagent/R = reagent
-		if(R.volume < 0.1)
+		if(R.volume < 0.05)
 			del_reagent(R.type)
 		else
 			total_volume += R.volume
@@ -719,11 +711,8 @@
 		R.on_new(data)
 
 	if(isliving(my_atom))
-		R.on_mob_add(my_atom) //Must occur before it could possibly run on_mob_delete
-	else if(istype(my_atom, /obj/item/organ/stomach))
-		var/obj/item/organ/stomach/belly = my_atom
-		var/mob/living/carbon/body = belly.owner
-		R.on_mob_add(body)
+		R.on_mob_add(my_atom) //Must occur before it could posibly run on_mob_delete
+
 	update_total()
 	if(my_atom)
 		my_atom.on_reagent_change(ADD_REAGENT)

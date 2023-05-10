@@ -589,28 +589,6 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 		return FALSE
 	return belly.reagents.has_reagent(reagent, amount, needs_metabolizing)
 
-/mob/living/carbon/remove_reagent(reagent, custom_amount, safety)
-	if(!custom_amount)
-		custom_amount = get_reagent_amount(reagent)
-	var/amount_body = reagents.get_reagent_amount(reagent)
-	if(custom_amount <= amount_body)
-		reagents.remove_reagent(reagent, custom_amount, safety)
-		return	TRUE
-	reagents.remove_reagent(reagent, amount_body, safety)
-	custom_amount -= amount_body
-	var/obj/item/organ/stomach/belly = getorganslot(ORGAN_SLOT_STOMACH)
-	if(!belly)
-		return FALSE
-	belly.reagents.remove_reagent(reagent, custom_amount, safety)
-	return TRUE
-
-/mob/living/carbon/get_reagent_amount(reagent)
-	. = ..()
-	var/obj/item/organ/stomach/belly = getorganslot(ORGAN_SLOT_STOMACH)
-	if(!belly)
-		return
-	. += belly.reagents.get_reagent_amount(reagent)
-
 /////////
 //LIVER//
 /////////
@@ -636,19 +614,6 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 	adjustToxLoss(4, TRUE,  TRUE)
 	if(prob(30))
 		to_chat(src, "<span class='warning'>You feel a stabbing pain in your abdomen!</span>")
-
-/**
- * Ends metabolization on the mob
- *
- * This stop all reagents in the body and organs from metabolizing
- * Vars:
- * * keep_liverless (bool)(optional)(default:TRUE) Will keep working without a liver
- */
-/mob/living/carbon/proc/end_metabolization(keep_liverless = TRUE)
-	reagents.end_metabolization(src, keep_liverless = keep_liverless)
-	var/obj/item/organ/stomach/belly = getorganslot(ORGAN_SLOT_STOMACH)
-	if(belly)
-		belly.reagents.end_metabolization(src, keep_liverless = keep_liverless)
 
 /////////////////////////////////////
 //MONKEYS WITH TOO MUCH CHOLESTEROL//
