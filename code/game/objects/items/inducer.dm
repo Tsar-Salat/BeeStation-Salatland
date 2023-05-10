@@ -110,14 +110,7 @@
 		return FALSE
 	if(istype(A, /obj))
 		O = A
-	if(iscarbon(A))
-		var/mob/living/carbon/human_target = A
-		if(HAS_TRAIT(human_target, TRAIT_POWERHUNGRY))
-			battery = human_target.getorganslot(ORGAN_SLOT_STOMACH)
-			if(!istype(battery))
-				return
 
-	var/maxcharge = battery?.max_charge || C?.maxcharge
 	if(C || battery)
 		var/done_any = FALSE
 		if((battery?.charge || C.charge) >= maxcharge)
@@ -125,7 +118,7 @@
 			recharging = FALSE
 			return TRUE
 		user.visible_message("[user] starts recharging [A] with [src].","<span class='notice'>You start recharging [A] with [src].</span>")
-		while((battery?.charge || C.charge) < maxcharge)
+		while(C.charge < maxcharge)
 			if(do_after(user, 10, target = user) && cell.charge)
 				done_any = TRUE
 				if(battery)
@@ -134,7 +127,7 @@
 					induce(C, coefficient)
 				do_sparks(1, FALSE, A)
 				if(O)
-					O.update_icon()
+					O.update_appearance()
 			else
 				break
 		if(done_any) // Only show a message if we succeeded at least once

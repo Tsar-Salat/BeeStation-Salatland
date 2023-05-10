@@ -203,20 +203,20 @@
 	if(disgust)
 		var/pukeprob = 2.5 + (0.025 * disgust)
 		if(disgust >= DISGUST_LEVEL_GROSS)
-			if(prob(5, delta_time))
+			if(DT_PROB(5, delta_time))
 				disgusted.stuttering += 2
 				disgusted.confused += 2
-			if(prob(5, delta_time) && !disgusted.stat)
+			if(DT_PROB(5, delta_time) && !disgusted.stat)
 				to_chat(disgusted, "<span class='warning'>You feel kind of iffy...</span>")
 			disgusted.jitteriness = max(disgusted.jitteriness - 3, 0)
 		if(disgust >= DISGUST_LEVEL_VERYGROSS)
-			if(prob(pukeprob, delta_time)) //iT hAndLeS mOrE ThaN PukInG
+			if(DT_PROB(pukeprob, delta_time)) //iT hAndLeS mOrE ThaN PukInG
 				disgusted.confused += 2.5
 				disgusted.stuttering += 1
 				disgusted.vomit(10, 0, 1, 0, 1, 0)
 			disgusted.Dizzy(5)
 		if(disgust >= DISGUST_LEVEL_DISGUSTED)
-			if(prob(13, delta_time))
+			if(DT_PROB(13, delta_time))
 				disgusted.blur_eyes(3) //We need to add more shit down here
 
 		disgusted.adjust_disgust(-0.25 * disgust_metabolism * delta_time)
