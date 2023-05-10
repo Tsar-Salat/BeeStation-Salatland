@@ -16,7 +16,9 @@
 	throw_range = 5
 	w_class = WEIGHT_CLASS_SMALL
 	/// note %age conveted to actual charge in New
+	///Current charge in cell units
 	var/charge = 0
+	///Maximum charge in cell units
 	var/maxcharge = 1000
 	materials = list(/datum/material/iron=700, /datum/material/glass=50)
 	grind_results = list(/datum/reagent/lithium = 15, /datum/reagent/iron = 5, /datum/reagent/silicon = 5)
@@ -176,22 +178,22 @@
 			if((stomach.drain_time > world.time) || !stomach)
 				return
 			if(charge < CELL_POWER_DRAIN)
-				to_chat(H, "<span class='warning'[src] doesn't have enough power!</span>")
+				to_chat(H, "<span class='warning'>[src] doesn't have enough power!</span>")
 				return
 			if(stomach.crystal_charge > charge_limit)
-				to_chat(H, span_warning("Your charge is full!"))
+				to_chat(H, "<span class='warning'>Your charge is full!</span>")
 				return
-			to_chat(H, span_notice("You begin clumsily channeling power from [src] into your body."))
+			to_chat(H, "<span class='notice'>You begin clumsily channeling power from [src] into your body.</span>")
 			stomach.drain_time = world.time + CELL_DRAIN_TIME
 			if(do_after(user, CELL_DRAIN_TIME, target = src))
 				if((charge < CELL_POWER_DRAIN) || (stomach.crystal_charge > charge_limit))
 					return
 				if(istype(stomach))
-					to_chat(H, span_notice("You receive some charge from [src], wasting some in the process."))
+					to_chat(H, "<span class='notice'>You receive some charge from [src], wasting some in the process.</span>")
 					stomach.adjust_charge(CELL_POWER_GAIN)
 					charge -= CELL_POWER_DRAIN //you waste way more than you receive, so that ethereals cant just steal one cell and forget about hunger
 				else
-					to_chat(H, span_warning("You can't receive charge from [src]!"))
+					to_chat(H, "<span class='warning'>You can't receive charge from [src]!")
 			return
 
 

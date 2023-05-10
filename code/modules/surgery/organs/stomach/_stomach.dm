@@ -99,13 +99,13 @@
 		return
 
 	//The stomach is damage has nutriment but low on theshhold, lo prob of vomit
-	if(prob(0.0125 * damage * nutri_vol * nutri_vol, delta_time))
+	if(DT_PROB(0.0125 * damage * nutri_vol * nutri_vol, delta_time))
 		body.vomit(damage)
 		to_chat(body, "<span class='warning'>Your stomach reels in pain as you're incapable of holding down all that food!</span>")
 		return
 
 	// the change of vomit is now high
-	if(damage > high_threshold && prob(damage * 0.05 * nutri_vol * nutri_vol, delta_time))
+	if(damage > high_threshold && DT_PROB(0.05 * damage * nutri_vol * nutri_vol, delta_time))
 		body.vomit(damage)
 		to_chat(body, "<span class='warning'>Your stomach reels in pain as you're incapable of holding down all that food!</span>")
 
@@ -116,16 +116,16 @@
 	//The fucking TRAIT_FAT mutation is the dumbest shit ever. It makes the code so difficult to work with
 	if(HAS_TRAIT_FROM(human, TRAIT_FAT, OBESITY))//I share your pain, past coder.
 		if(human.overeatduration < (200 SECONDS))
-			to_chat(human, span_notice("You feel fit again!"))
+			to_chat(human, "<span class='notice'>You feel fit again!</span>")
 			REMOVE_TRAIT(human, TRAIT_FAT, OBESITY)
-			human.remove_movespeed_modifier(/datum/movespeed_modifier/obesity)
+			human.remove_movespeed_modifier(MOVESPEED_ID_FAT)
 			human.update_inv_w_uniform()
 			human.update_inv_wear_suit()
 	else
 		if(human.overeatduration >= (200 SECONDS))
-			to_chat(human, span_danger("You suddenly feel blubbery!"))
+			to_chat(human, "<span class='danger'>You suddenly feel blubbery!</span>")
 			ADD_TRAIT(human, TRAIT_FAT, OBESITY)
-			human.add_movespeed_modifier(/datum/movespeed_modifier/obesity)
+			human.add_movespeed_modifier(MOVESPEED_ID_FAT)
 			human.update_inv_w_uniform()
 			human.update_inv_wear_suit()
 
@@ -163,15 +163,15 @@
 		human.metabolism_efficiency = 1
 	else if(human.nutrition > NUTRITION_LEVEL_FED && human.satiety > 80)
 		if(human.metabolism_efficiency != 1.25)
-			to_chat(human, span_notice("You feel vigorous."))
+			to_chat(human, "<span class='notice'>You feel vigorous.</span>")
 			human.metabolism_efficiency = 1.25
 	else if(human.nutrition < NUTRITION_LEVEL_STARVING + 50)
 		if(human.metabolism_efficiency != 0.8)
-			to_chat(human, span_notice("You feel sluggish."))
+			to_chat(human, "<span class='notice'>You feel sluggish.</span>")
 		human.metabolism_efficiency = 0.8
 	else
 		if(human.metabolism_efficiency == 1.25)
-			to_chat(human, span_notice("You no longer feel vigorous."))
+			to_chat(human, "<span class='notice'>You no longer feel vigorous.</span>")
 		human.metabolism_efficiency = 1
 
 	//Hunger slowdown for if mood isn't enabled
@@ -192,14 +192,14 @@
 /obj/item/organ/stomach/proc/handle_hunger_slowdown(mob/living/carbon/human/human)
 	var/hungry = (500 - human.nutrition) / 5 //So overeat would be 100 and default level would be 80
 	if(hungry >= 70)
-		human.add_movespeed_modifier(/datum/movespeed_modifier/hunger, multiplicative_slowdown = (hungry / 50))
+		human.add_movespeed_modifier(MOVESPEED_ID_HUNGRY, multiplicative_slowdown = (hungry / 50))
 	else
-		human.remove_movespeed_modifier(/datum/movespeed_modifier/hunger)
+		human.remove_movespeed_modifier(MOVESPEED_ID_HUNGRY)
 
 /obj/item/organ/stomach/proc/handle_disgust(mob/living/carbon/human/disgusted, delta_time, times_fired)
 	var/old_disgust = disgusted.old_disgust
 	var/disgust = disgusted.disgust
-	
+
 	if(disgust)
 		var/pukeprob = 2.5 + (0.025 * disgust)
 		if(disgust >= DISGUST_LEVEL_GROSS)
@@ -223,7 +223,7 @@
 
 	if(old_disgust == disgust)
 		return
-	
+
 	disgusted.old_disgust = disgust
 	switch(disgusted.disgust)
 		if(0 to DISGUST_LEVEL_GROSS)

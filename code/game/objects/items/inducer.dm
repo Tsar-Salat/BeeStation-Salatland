@@ -110,15 +110,14 @@
 		return FALSE
 	if(istype(A, /obj))
 		O = A
-
-	if(C || battery)
+	if(battery || C)
 		var/done_any = FALSE
-		if((battery?.charge || C.charge) >= maxcharge)
-			to_chat(user, "<span class='notice'>[A] is fully charged!</span>")
+		if((battery?.crystal_charge >= ETHEREAL_CHARGE_FULL) || (C.charge >= C.maxcharge))
+			balloon_alert(user, "[A] is fully charged!")
 			recharging = FALSE
 			return TRUE
 		user.visible_message("[user] starts recharging [A] with [src].","<span class='notice'>You start recharging [A] with [src].</span>")
-		while(C.charge < maxcharge)
+		while(C.charge < C.maxcharge)
 			if(do_after(user, 10, target = user) && cell.charge)
 				done_any = TRUE
 				if(battery)

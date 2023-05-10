@@ -70,14 +70,32 @@
 					O.organ_flags = ORGAN_SYNTHETIC
 					return TRUE
 				if(ORGAN_SLOT_STOMACH)
-					if(HAS_TRAIT(H, TRAIT_POWERHUNGRY))
-						var/obj/item/organ/stomach/battery/clockwork/organ = new()
-						if(robustbits)
-							organ.max_charge = 15000
-						organ.Insert(H, TRUE, FALSE)
-					else
-						var/obj/item/organ/stomach/clockwork/organ = new()
-						organ.Insert(H, TRUE, FALSE)
+					var/obj/item/organ/stomach/battery/clockwork/organ = new()
+					organ.Insert(H, TRUE, FALSE)
+					if(prob(40))
+						to_chat(H, "<span class='userdanger'>You feel a stabbing pain in your abdomen!</span>")
+						H.emote("scream")
+					return TRUE
+				if(ORGAN_SLOT_EARS)
+					var/obj/item/organ/ears/robot/clockwork/organ = new()
+					if(robustbits)
+						organ.damage_multiplier = 0.5
+					organ.Insert(H, TRUE, FALSE)
+					to_chat(H, "<span class='warning'>Your ears pop.</span>")
+					return TRUE
+				if(ORGAN_SLOT_EYES)
+					var/obj/item/organ/eyes/robotic/clockwork/organ = new()
+					if(robustbits)
+						organ.flash_protect = 1
+					organ.Insert(H, TRUE, FALSE)
+					if(prob(40))
+						to_chat(H, "<span class='userdanger'>You feel a stabbing pain in your eyeballs!</span>")
+						H.emote("scream")
+						H.grab_ghost()
+						return TRUE
+				if(ORGAN_SLOT_STOMACH)
+					var/obj/item/organ/stomach/clockwork/organ = new()
+					organ.Insert(H, TRUE, FALSE)
 					if(prob(40))
 						to_chat(H, "<span class='userdanger'>You feel a stabbing pain in your abdomen!</span>")
 						H.emote("scream")
@@ -263,8 +281,7 @@
 	icon_state = "stomach-clock"
 	status = ORGAN_ROBOTIC
 	organ_flags = ORGAN_SYNTHETIC
-	max_charge = 7500
-	charge = 7500
+	// basically just ethereal organ but synthetic
 
 /obj/item/organ/tongue/robot/clockwork
 	name = "dynamic micro-phonograph"

@@ -152,20 +152,20 @@
 	var/obj/item/organ/stomach/battery/stomach = maybe_stomach
 	if(ethereal.a_intent == INTENT_HARM)
 		if(cell.charge <= (cell.maxcharge / 2)) // ethereals can't drain APCs under half charge, this is so that they are forced to look to alternative power sources if the station is running low
-		addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, balloon_alert), ethereal, "safeties prevent draining!"), alert_timer_duration)
-		return
-	if(stomach.crystal_charge > charge_limit)
-		addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, balloon_alert), ethereal, "charge is full!"), alert_timer_duration)
-		return
-	stomach.drain_time = world.time + APC_DRAIN_TIME
-	addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, balloon_alert), ethereal, "draining power"), alert_timer_duration)
-	if(do_after(user, APC_DRAIN_TIME, target = src))
-		if(cell.charge <= (cell.maxcharge / 2) || (stomach.crystal_charge > charge_limit))
+			addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, balloon_alert), ethereal, "safeties prevent draining!"), alert_timer_duration)
 			return
-		balloon_alert(ethereal, "received charge")
-		stomach.adjust_charge(APC_POWER_GAIN)
-		cell.use(APC_POWER_GAIN)
-	return
+		if(stomach.crystal_charge > charge_limit)
+			addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, balloon_alert), ethereal, "charge is full!"), alert_timer_duration)
+			return
+		stomach.drain_time = world.time + APC_DRAIN_TIME
+		addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, balloon_alert), ethereal, "draining power"), alert_timer_duration)
+		if(do_after(user, APC_DRAIN_TIME, target = src))
+			if(cell.charge <= (cell.maxcharge / 2) || (stomach.crystal_charge > charge_limit))
+				return
+			balloon_alert(ethereal, "received charge")
+			stomach.adjust_charge(APC_POWER_GAIN)
+			cell.use(APC_POWER_GAIN)
+		return
 
 	if(cell.charge >= cell.maxcharge - APC_POWER_GAIN)
 		addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, balloon_alert), ethereal, "APC can't receive more power!"), alert_timer_duration)

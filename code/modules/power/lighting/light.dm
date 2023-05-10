@@ -479,14 +479,15 @@
 
 	// make it burn hands unless you're wearing heat insulated gloves or have the RESISTHEAT/RESISTHEATHANDS traits
 	if(!on)
-		to_chat(user, span_notice("You remove the light [fitting]."))
+		to_chat(user, "span class='notice'>You remove the light [fitting].</span>")
 		// create a light tube/bulb item and put it in the user's hand
 		drop_light_tube(user)
 		return
 	var/protection_amount = 0
+
 	if(istype(user))
 		var/obj/item/organ/stomach/maybe_stomach = user.getorganslot(ORGAN_SLOT_STOMACH)
-		if(istype(maybe_stomach, /obj/item/organ/stomach/ethereal))
+		if(istype(maybe_stomach, /obj/item/organ/stomach/battery/ethereal))
 			var/obj/item/organ/stomach/battery/ethereal/stomach = maybe_stomach
 			if(stomach.drain_time > world.time)
 				return
@@ -498,17 +499,9 @@
 					to_chat(user, "<span class='notice'>You receive some charge from the [fitting].</span>")
 					stomach.adjust_charge(50)
 				else
-					to_chat(user, "<span class='warning'>You can't receive charge!</span>")
+					to_chat(user, "<span class='warning'>You can't receive charge from the [fitting]!</span>")
 			return
 
-				use_power(50)
-				if(stomach.charge >= stomach.max_charge)
-					to_chat(user, "<span class='notice'>You are now fully charged.</span>")
-					stomach.drain_time = 0
-					return
-			to_chat(user, "<span class='warning'>You fail to receive charge from the [fitting]!</span>")
-			stomach.drain_time = 0
-			return
 
 		if(user.gloves)
 			var/obj/item/clothing/gloves/G = user.gloves
@@ -524,9 +517,9 @@
 	else
 		var/obj/item/bodypart/affecting = user.get_bodypart("[(user.active_hand_index % 2 == 0) ? "r" : "l" ]_arm")
 		if(affecting?.receive_damage( 0, 5 )) // 5 burn damage
+			to_chat(user, "<span class='warning'>You try to remove the light [fitting], but you burn your hand on it!</span>")
 			user.update_damage_overlays()
-	else
-		to_chat(user, "<span class='warning'>You try to remove the light [fitting], but you burn your hand on it!</span>")
+
 		return
 	// create a light tube/bulb item and put it in the user's hand
 	drop_light_tube(user)

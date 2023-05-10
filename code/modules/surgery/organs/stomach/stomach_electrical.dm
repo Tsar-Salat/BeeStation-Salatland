@@ -12,76 +12,26 @@
 	adjust_charge(-ETHEREAL_CHARGE_FACTOR * delta_time)
 	handle_charge(owner, delta_time, times_fired)
 
-/obj/item/organ/stomach/battery/Insert(mob/living/carbon/M, special = 0)
+/obj/item/organ/stomach/battery/Insert(mob/living/carbon/carbon, special = 0)
 	. = ..()
 	RegisterSignal(owner, COMSIG_PROCESS_BORGCHARGER_OCCUPANT, PROC_REF(charge))
-	RegisterSignal(owner, COMSIG_LIVING_ELECTROCUTE_ACT, PROC_REF(on_electrocute))
-	ADD_TRAIT(owner, TRAIT_NOHUNGER, src)
 
-/obj/item/organ/stomach/battery/Remove(mob/living/carbon/M, special = 0)
-	UnregisterSignal(owner, COMSIG_LIVING_ELECTROCUTE_ACT)
-	UnregisterSignal(owner, COMSIG_LIVING_ELECTROCUTE_ACT)
-	REMOVE_TRAIT(owner, TRAIT_NOHUNGER, src)
+/obj/item/organ/stomach/battery/Remove(mob/living/carbon/carbon, special = 0)
+	UnregisterSignal(owner, COMSIG_PROCESS_BORGCHARGER_OCCUPANT)
 
 	carbon.clear_alert("ethereal_charge")
 	carbon.clear_alert("ethereal_overcharge")
 
 	return ..()
 
-/obj/item/organ/stomach/battery/ethereal/proc/charge(datum/source, amount, repairs)
+/obj/item/organ/stomach/battery/proc/charge(datum/source, amount, repairs)
 	SIGNAL_HANDLER
 	adjust_charge(amount / 3.5)
 
-/obj/item/organ/stomach/battery/ethereal/proc/adjust_charge(amount)
+/obj/item/organ/stomach/battery/proc/adjust_charge(amount)
 	crystal_charge = clamp(crystal_charge + amount, ETHEREAL_CHARGE_NONE, ETHEREAL_CHARGE_DANGEROUS)
 
-/obj/item/organ/stomach/battery/proc/set_charge(amount)
-	charge = clamp(amount*(1-(damage/maxHealth)), 0, max_charge)
-	update_nutrition()
-
-/obj/item/organ/stomach/battery/emp_act(severity)
-	switch(severity)
-		if(1)
-			adjust_charge(-0.5 * max_charge)
-			applyOrganDamage(30)
-		if(2)
-			adjust_charge(-0.25 * max_charge)
-			applyOrganDamage(15)
-
-/obj/item/organ/stomach/battery/ipc
-	name = "micro-cell"
-	icon_state = "microcell"
-	w_class = WEIGHT_CLASS_NORMAL
-	attack_verb = list("assault and battery'd")
-	desc = "A micro-cell, for IPC use. Do not swallow."
-	status = ORGAN_ROBOTIC
-	organ_flags = ORGAN_SYNTHETIC
-
-/obj/item/organ/stomach/battery/ipc/emp_act(severity)
-	. = ..()
-	switch(severity)
-		if(1)
-			to_chat(owner, "<span class='warning'>Alert: Heavy EMP Detected. Rebooting power cell to prevent damage.</span>")
-		if(2)
-			to_chat(owner, "<span class='warning'>Alert: EMP Detected. Cycling battery.</span>")
-
-/obj/item/organ/stomach/battery/ethereal
-	name = "biological battery"
-	icon_state = "stomach-p" //Welp. At least it's more unique in functionaliy.
-	desc = "A crystal-like organ that stores the electric charge of ethereals."
-
-/obj/item/organ/stomach/battery/ethereal/handle_hunger_slowdown(mob/living/carbon/human/human)
-	human.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/hunger, multiplicative_slowdown = (1.5 * (1 - crystal_charge / 100)))
-
-/obj/item/organ/stomach/battery/ethereal/proc/on_electrocute(datum/source, shock_damage, shock_source, siemens_coeff = 1, safety = 0, tesla_shock = 0, illusion = 0, stun = TRUE)
-	SIGNAL_HANDLER
-
-	if(illusion)
-		return
-	adjust_charge(shock_damage * siemens_coeff * 2)
-	to_chat(owner, "<span class='notice'>You absorb some of the shock into your body!</span>")
-
-/obj/item/organ/stomach/battery/ethereal/proc/handle_charge(mob/living/carbon/carbon, delta_time, times_fired)
+/obj/item/organ/stomach/battery/proc/handle_charge(mob/living/carbon/carbon, delta_time, times_fired)
 	switch(crystal_charge)
 		if(-INFINITY to ETHEREAL_CHARGE_NONE)
 			carbon.throw_alert("ethereal_charge", /atom/movable/screen/alert/emptycell/ethereal)
@@ -106,6 +56,63 @@
 		else
 			carbon.clear_alert("ethereal_charge")
 			carbon.clear_alert("ethereal_overcharge")
+
+/obj/item/organ/stomach/battery/emp_act(severity)
+	switch(severity)
+		if(1)
+			adjust_charge(-0.5 * ETHEREAL_CHARGE_FULL)
+			applyOrganDamage(30)
+		if(2)
+			adjust_charge(-0.25 * ETHEREAL_CHARGE_FULL)
+			applyOrganDamage(15)
+
+// IPCs
+/obj/item/organ/stomach/battery/ipc
+	name = "micro-cell"
+	icon_state = "microcell"
+	w_class = WEIGHT_CLASS_NORMAL
+	attack_verb = list("assault and battery'd")
+	desc = "A micro-cell, for IPC use. Do not swallow."
+	status = ORGAN_ROBOTIC
+	organ_flags = ORGAN_SYNTHETIC
+
+/obj/item/organ/stomach/battery/ipc/emp_act(severity)
+	. = ..()
+	switch(severity)
+		if(1)
+			to_chat(owner, "<span class='warning'>Alert: Heavy EMP Detected. Rebooting power cell to prevent damage.</span>")
+		if(2)
+			to_chat(owner, "<span class='warning'>Alert: EMP Detected. Cycling battery.</span>")
+
+// Ethereals
+/obj/item/organ/stomach/battery/ethereal
+	name = "biological battery"
+	icon_state = "stomach-p" //Welp. At least it's more unique in functionaliy.
+	desc = "A crystal-like organ that stores the electric charge of ethereals."
+
+/obj/item/organ/stomach/battery/Insert(mob/living/carbon/carbon, special = 0)
+	. = ..()
+	RegisterSignal(owner, COMSIG_PROCESS_BORGCHARGER_OCCUPANT, PROC_REF(charge))
+	// Only ethereals should have a unique on_electrecute behavior. IPCs just get fucked.
+
+/obj/item/organ/stomach/battery/Remove(mob/living/carbon/carbon, special = 0)
+	UnregisterSignal(owner, COMSIG_PROCESS_BORGCHARGER_OCCUPANT)
+
+	carbon.clear_alert("ethereal_charge")
+	carbon.clear_alert("ethereal_overcharge")
+
+	return ..()
+
+/obj/item/organ/stomach/battery/ethereal/handle_hunger_slowdown(mob/living/carbon/human/human)
+	human.add_movespeed_modifier(MOVESPEED_ID_HUNGRY, multiplicative_slowdown = (1.5 * (1 - crystal_charge / 100)))
+
+/obj/item/organ/stomach/battery/ethereal/proc/on_electrocute(datum/source, shock_damage, shock_source, siemens_coeff = 1, safety = 0, tesla_shock = 0, illusion = 0, stun = TRUE)
+	SIGNAL_HANDLER
+
+	if(illusion)
+		return
+	adjust_charge(shock_damage * siemens_coeff * 2)
+	to_chat(owner, "<span class='notice'>You absorb some of the shock into your body!</span>")
 
 /*
 /obj/item/organ/stomach/battery/ethereal/proc/discharge_process(mob/living/carbon/carbon)
