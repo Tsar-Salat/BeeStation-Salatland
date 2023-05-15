@@ -184,9 +184,6 @@
 				A.cell.charge = A.cell.maxcharge/4
 				to_chat(H, "<span class='notice'>You siphon off as much as the [A] can spare.</span>")
 				break
-			if(battery.charge >= battery.max_charge)
-				to_chat(H, "<span class='notice'>You are now fully charged.</span>")
-				break
 	else
 		var/obj/item/organ/stomach/battery/A = target
 		if(!istype(A))
@@ -199,13 +196,13 @@
 			if(loc != H)
 				to_chat(H, "<span class='warning'>You must keep your connector out while charging!</span>")
 				break
-			if(A.charge == 0)
+			if(A.crystal_charge == 0)
 				to_chat(H, "<span class='warning'>[A] is completely drained!</span>")
 				break
-			charge_amt = A.charge <= 50 ? A.charge : 50
+			charge_amt = A.crystal_charge <= 50 ? A.crystal_charge : 50
 			A.adjust_charge(-1 * charge_amt)
 			battery.adjust_charge(charge_amt)
-			if(battery.charge >= battery.max_charge)
+			if(battery.crystal_charge >= ETHEREAL_CHARGE_FULL)
 				to_chat(H, "<span class='notice'>You are now fully charged.</span>")
 				break
 

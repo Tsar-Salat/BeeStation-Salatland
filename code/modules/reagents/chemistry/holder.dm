@@ -163,9 +163,23 @@
 
 	return master
 
-/datum/reagents/proc/trans_to(obj/target, amount = 1, multiplier = 1, preserve_data = TRUE, no_react = FALSE, mob/transfered_by, remove_blacklisted = FALSE, method = null, show_message = TRUE, round_robin = FALSE)
-	//if preserve_data=0, the reagents data will be lost. Usefull if you use data for some strange stuff and don't want it to be transferred.
-	//if round_robin=TRUE, so transfer 5 from 15 water, 15 sugar and 15 plasma becomes 10, 15, 15 instead of 13.3333, 13.3333 13.3333. Good if you hate floating point errors
+/**
+  * Transfer some stuff from this holder to a target object
+  *
+  * Arguments:
+  * * obj/target - Target to attempt transfer to
+  * * amount - amount of reagent volume to transfer
+  * * multiplier - multiplies amount of each reagent by this number
+  * * preserve_data - if preserve_data=0, the reagents data will be lost. Usefull if you use data for some strange stuff and don't want it to be transferred.
+  * * no_react - passed through to [/datum/reagents/proc/add_reagent]
+  * * mob/transfered_by - used for logging
+  * * remove_blacklisted - skips transferring of reagents with can_synth = FALSE
+  * * methods - passed through to [/datum/reagents/proc/react_single] and [/datum/reagent/proc/on_transfer]
+  * * show_message - passed through to [/datum/reagents/proc/react_single]
+  * * round_robin - if round_robin=TRUE, so transfer 5 from 15 water, 15 sugar and 15 plasma becomes 10, 15, 15 instead of 13.3333, 13.3333 13.3333. Good if you hate floating point errors
+  * * ignore_stomach - when using methods INGEST will not use the stomach as the target
+  */
+/datum/reagents/proc/trans_to(obj/target, amount = 1, multiplier = 1, preserve_data = TRUE, no_react = FALSE, mob/transfered_by, remove_blacklisted = FALSE, method = null, show_message = TRUE, round_robin = FALSE, ignore_stomach = FALSE)
 	var/list/cached_reagents = reagent_list
 	if(!target || !total_volume)
 		return
@@ -178,10 +192,19 @@
 		R = target
 		target_atom = R.my_atom
 	else
-		if(!target.reagents)
+		if(!ignore_stomach && (method & INGEST) && istype(target, /mob/living/carbon))
+			var/mob/living/carbon/eater = target
+			var/obj/item/organ/stomach/belly = eater.getorganslot(ORGAN_SLOT_STOMACH)
+			if(!belly)
+				eater.expel_ingested(my_atom, amount)
+				return
+			R = belly.reagents
+			target_atom = belly
+		else if(!target.reagents)
 			return
-		R = target.reagents
-		target_atom = target
+		else
+			R = target.reagents
+			target_atom = target
 
 	if(transfered_by && target_atom)
 		target_atom.add_hiddenprint(transfered_by) //log prints so admins can figure out who touched it last.
@@ -201,7 +224,10 @@
 				trans_data = copy_data(T)
 			R.add_reagent(T.type, transfer_amount * multiplier, trans_data, chem_temp, no_react = 1) //we only handle reaction after every reagent has been transfered.
 			if(method)
-				R.react_single(T, target_atom, method, part, show_message)
+				if(istype(target_atom, /obj/item/organ))
+					R.react_single(T, target, method, transfer_amount, show_message)
+				else
+					R.react_single(T, target_atom, method, transfer_amount, show_message)
 				T.on_transfer(target_atom, method, transfer_amount * multiplier)
 			remove_reagent(T.type, transfer_amount)
 			transfer_log[T.type] = transfer_amount
@@ -221,7 +247,10 @@
 			R.add_reagent(T.type, transfer_amount * multiplier, trans_data, chem_temp, no_react = 1)
 			to_transfer = max(to_transfer - transfer_amount , 0)
 			if(method)
-				R.react_single(T, target_atom, method, transfer_amount, show_message)
+				if(istype(target_atom, /obj/item/organ))
+					R.react_single(T, target, method, transfer_amount, show_message)
+				else
+					R.react_single(T, target_atom, method, transfer_amount, show_message)
 				T.on_transfer(target_atom, method, transfer_amount * multiplier)
 			remove_reagent(T.type, transfer_amount)
 			transfer_log[T.type] = transfer_amount
@@ -527,19 +556,11 @@
 	for(var/_reagent in cached_reagents)
 		var/datum/reagent/R = _reagent
 		if(R.type == reagent)
-			var/mob/living/mob_consumer
-
-			if (isliving(my_atom))
-				mob_consumer = my_atom
-			else if (istype(my_atom, /obj/item/organ))
-				var/obj/item/organ/organ = my_atom
-				mob_consumer = organ.owner
-
-			if (mob_consumer)
+			if(isliving(my_atom))
 				if(R.metabolizing)
 					R.metabolizing = FALSE
-					R.on_mob_end_metabolize(mob_consumer)
-				R.on_mob_delete(mob_consumer)
+					R.on_mob_end_metabolize(my_atom)
+				R.on_mob_delete(my_atom)
 			qdel(R)
 			reagent_list -= R
 			update_total()
@@ -552,7 +573,7 @@
 	total_volume = 0
 	for(var/reagent in cached_reagents)
 		var/datum/reagent/R = reagent
-		if(R.volume < 0.1)
+		if(R.volume < 0.05)
 			del_reagent(R.type)
 		else
 			total_volume += R.volume
@@ -690,7 +711,8 @@
 		R.on_new(data)
 
 	if(isliving(my_atom))
-		R.on_mob_add(my_atom) //Must occur befor it could posibly run on_mob_delete
+		R.on_mob_add(my_atom) //Must occur before it could posibly run on_mob_delete
+
 	update_total()
 	if(my_atom)
 		my_atom.on_reagent_change(ADD_REAGENT)

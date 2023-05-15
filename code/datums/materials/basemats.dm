@@ -141,6 +141,11 @@
 	categories = list(MAT_CATEGORY_ORE = TRUE, MAT_CATEGORY_RIGID = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/titanium
 
+/datum/material/plastic/on_accidental_mat_consumption(mob/living/carbon/eater, obj/item/food)
+	eater.reagents.add_reagent(/datum/reagent/plastic_polymers, rand(6, 8))
+	food?.reagents?.add_reagent(/datum/reagent/plastic_polymers, food.reagents.total_volume*(2/5))
+	return TRUE
+
 ///Force decrease
 /datum/material/plastic
 	name = "plastic"

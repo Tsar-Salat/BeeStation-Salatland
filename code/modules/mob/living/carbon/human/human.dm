@@ -748,7 +748,7 @@
 		override = dna.species.override_float
 	..()
 
-/mob/living/carbon/human/vomit(lost_nutrition = 10, blood = 0, stun = 1, distance = 0, message = 1, toxic = 0)
+/mob/living/carbon/human/vomit(lost_nutrition = 10, blood = FALSE, stun = TRUE, distance = 1, message = TRUE, toxic = FALSE, harm = TRUE, force = FALSE, purge = FALSE)
 	if(blood && (NOBLOOD in dna.species.species_traits))
 		if(message)
 			visible_message("<span class='warning'>[src] dry heaves!</span>", \
@@ -1075,20 +1075,10 @@
 /mob/living/carbon/human/adjust_nutrition(var/change) //Honestly FUCK the oldcoders for putting nutrition on /mob someone else can move it up because holy hell I'd have to fix SO many typechecks
 	if(HAS_TRAIT(src, TRAIT_NOHUNGER))
 		return FALSE
-	if(HAS_TRAIT(src, TRAIT_POWERHUNGRY))
-		var/obj/item/organ/stomach/battery/battery = getorganslot(ORGAN_SLOT_STOMACH)
-		if(istype(battery))
-			battery.adjust_charge_scaled(change)
-		return FALSE
 	return ..()
 
-/mob/living/carbon/human/set_nutrition(var/change) //Seriously fuck you oldcoders.
+/mob/living/carbon/human/set_nutrition(change) //Seriously fuck you oldcoders.
 	if(HAS_TRAIT(src, TRAIT_NOHUNGER))
-		return FALSE
-	if(HAS_TRAIT(src, TRAIT_POWERHUNGRY))
-		var/obj/item/organ/stomach/battery/battery = getorganslot(ORGAN_SLOT_STOMACH)
-		if(istype(battery))
-			battery.set_charge_scaled(change)
 		return FALSE
 	return ..()
 

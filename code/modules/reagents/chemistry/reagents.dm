@@ -26,9 +26,10 @@ GLOBAL_LIST_INIT(name2reagent, build_name2reagent())
 	var/shot_glass_icon_state = null
 	var/datum/reagents/holder = null
 	var/reagent_state = LIQUID
+	/// Special data associated with the reagent that will be passed on upon transfer to a new holder.
 	var/list/data
 	var/current_cycle = 0
-	var/volume = 0									//pretend this is moles
+	var/volume = 0 //pretend this is moles
 	var/color = "#000000" // rgb: 0, 0, 0
 	var/chem_flags = CHEMICAL_NOT_DEFINED   // default = I am not sure this shit + CHEMICAL_NOT_SYNTH
 	var/metabolization_rate = REAGENTS_METABOLISM //how fast the reagent is metabolized by the mob

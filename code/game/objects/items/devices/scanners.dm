@@ -421,13 +421,33 @@ GENE SCANNER
 	if(!istype(M))
 		return
 	var/message = list()
+
+	//Blood Reagents
 	if(M.reagents)
 		if(M.reagents.reagent_list.len)
-			message += "<span class='notice'>Subject contains the following reagents:</span>"
+			message += "<span class='notice'>Subject contains the following reagents in their blood:</span>"
 			for(var/datum/reagent/R in M.reagents.reagent_list)
 				message += "<span class='notice'>[round(R.volume, 0.001)] units of [R.name][R.overdosed == 1 ? "</span> - <span class='boldannounce'>OVERDOSING</span>" : ".</span>"]"
 		else
-			message += "<span class='notice'>Subject contains no reagents.</span>"
+			message += "<span class='notice ml-1'>Subject contains no reagents in their blood.</span>\n"
+
+		// Stomach Reagents
+		var/obj/item/organ/stomach/belly = M.getorganslot(ORGAN_SLOT_STOMACH)
+		if(belly)
+			if(belly.reagents.reagent_list.len)
+				message += "<span class='notice ml-1'>Subject contains the following reagents in their stomach:</span>\n"
+				for(var/bile in belly.reagents.reagent_list)
+					var/datum/reagent/bit = bile
+					if(!belly.food_reagents[bit.type])
+						message += "<span class='notice ml-2'>[round(bit.volume, 0.001)] units of [bit.name][bit.overdosed ? "</span> - <span class='boldannounce'>OVERDOSING</span>" : ".</span>"]\n"
+					else
+						var/bit_vol = bit.volume - belly.food_reagents[bit.type]
+						if(bit_vol > 0)
+							message += "<span class='notice ml-2'>[round(bit_vol, 0.001)] units of [bit.name][bit.overdosed ? "</span> - <span class='boldannounce'>OVERDOSING</span>" : ".</span>"]\n"
+			else
+				message += "<span class='notice ml-1'>Subject contains no reagents in their stomach.</span>\n"
+
+		// Addictions
 		if(M.reagents.addiction_list.len)
 			message += "<span class='boldannounce'>Subject is addicted to the following reagents:</span>"
 			for(var/datum/reagent/R in M.reagents.addiction_list)

@@ -478,82 +478,72 @@
 		return
 
 	// make it burn hands unless you're wearing heat insulated gloves or have the RESISTHEAT/RESISTHEATHANDS traits
-	if(on)
-		var/prot = 0
-		if(istype(user))
-			if(isethereal(user))
-				var/datum/species/ethereal/E = user.dna.species
-				if(E.drain_time > world.time)
-					return
-				var/obj/item/organ/stomach/battery/stomach = user.getorganslot(ORGAN_SLOT_STOMACH)
-				if(!istype(stomach))
-					to_chat(user, "<span class='warning'>You can't receive charge!</span>")
-					return
-				if(user.nutrition >= NUTRITION_LEVEL_ALMOST_FULL)
-					to_chat(user, "<span class='warning'>You are already fully charged!</span>")
-					return
+	if(!on)
+		to_chat(user, "span class='notice'>You remove the light [fitting].</span>")
+		// create a light tube/bulb item and put it in the user's hand
+		drop_light_tube(user)
+		return
+	var/protection_amount = 0
 
-				to_chat(user, "<span class='notice'>You start channeling some power through the [fitting] into your body.</span>")
-				E.drain_time = world.time + 35
-				while(do_after(user, 30, target = src))
-					E.drain_time = world.time + 35
-					if(!istype(stomach))
-						to_chat(user, "<span class='warning'>You can't receive charge!</span>")
-						return
+	if(istype(user))
+		var/obj/item/organ/stomach/maybe_stomach = user.getorganslot(ORGAN_SLOT_STOMACH)
+		if(istype(maybe_stomach, /obj/item/organ/stomach/battery/ethereal))
+			var/obj/item/organ/stomach/battery/ethereal/stomach = maybe_stomach
+			if(stomach.drain_time > world.time)
+				return
+			to_chat(user, "<span class='notice'>You start channeling some power through the [fitting] into your body.</span>")
+			stomach.drain_time = world.time + 35
+			while(do_after(user, 30, target = src))
+				stomach.drain_time = world.time + 35
+				if(istype(stomach))
 					to_chat(user, "<span class='notice'>You receive some charge from the [fitting].</span>")
 					stomach.adjust_charge(50)
-					use_power(50)
-					if(stomach.charge >= stomach.max_charge)
-						to_chat(user, "<span class='notice'>You are now fully charged.</span>")
-						E.drain_time = 0
-						return
-				to_chat(user, "<span class='warning'>You fail to receive charge from the [fitting]!</span>")
-				E.drain_time = 0
-				return
+				else
+					to_chat(user, "<span class='warning'>You can't receive charge from the [fitting]!</span>")
+			return
 
-			if(user.gloves)
-				var/obj/item/clothing/gloves/G = user.gloves
-				if(G.max_heat_protection_temperature)
-					prot = (G.max_heat_protection_temperature > 360)
-		else
-			prot = 1
 
-		if(prot > 0 || HAS_TRAIT(user, TRAIT_RESISTHEAT) || HAS_TRAIT(user, TRAIT_RESISTHEATHANDS))
-			to_chat(user, "<span class='notice'>You remove the light [fitting].</span>")
-		else if(user.has_dna() && user.dna.check_mutation(TK))
-			to_chat(user, "<span class='notice'>You telekinetically remove the light [fitting].</span>")
-		else
-			to_chat(user, "<span class='warning'>You try to remove the light [fitting], but you burn your hand on it!</span>")
-
-			var/obj/item/bodypart/affecting = user.get_bodypart("[(user.active_hand_index % 2 == 0) ? "r" : "l" ]_arm")
-			if(affecting && affecting.receive_damage( 0, 5 ))		// 5 burn damage
-				user.update_damage_overlays()
-			return				// if burned, don't remove the light
+		if(user.gloves)
+			var/obj/item/clothing/gloves/G = user.gloves
+			if(G.max_heat_protection_temperature)
+				protection_amount = (G.max_heat_protection_temperature > 360)
 	else
+		protection_amount = 1
+
+	if(protection_amount > 0 || HAS_TRAIT(user, TRAIT_RESISTHEAT) || HAS_TRAIT(user, TRAIT_RESISTHEATHANDS))
 		to_chat(user, "<span class='notice'>You remove the light [fitting].</span>")
+	else if(user.has_dna() && user.dna.check_mutation(TK))
+		to_chat(user, "<span class='notice'>You telekinetically remove the light [fitting].</span>")
+	else
+		var/obj/item/bodypart/affecting = user.get_bodypart("[(user.active_hand_index % 2 == 0) ? "r" : "l" ]_arm")
+		if(affecting?.receive_damage( 0, 5 )) // 5 burn damage
+			to_chat(user, "<span class='warning'>You try to remove the light [fitting], but you burn your hand on it!</span>")
+			user.update_damage_overlays()
+
+		return
 	// create a light tube/bulb item and put it in the user's hand
 	drop_light_tube(user)
 
 /obj/machinery/light/proc/drop_light_tube(mob/user)
-	var/obj/item/light/L = new light_type()
-	L.status = status
-	L.rigged = rigged
-	L.brightness = brightness
+	var/obj/item/light/light_object = new light_type()
+	light_object.status = status
+	light_object.rigged = rigged
+	light_object.brightness = brightness
 
 	// light item inherits the switchcount, then zero it
-	L.switchcount = switchcount
+	light_object.switchcount = switchcount
 	switchcount = 0
 
-	L.update()
-	L.forceMove(loc)
+	light_object.update()
+	light_object.forceMove(loc)
 
 	if(user) //puts it in our active hand
-		L.add_fingerprint(user)
-		user.put_in_active_hand(L)
+		light_object.add_fingerprint(user)
+		user.put_in_active_hand(light_object)
 
 	status = LIGHT_EMPTY
 	update()
-	return L
+	return light_object
 
 /obj/machinery/light/attack_tk(mob/user)
 	if(status == LIGHT_EMPTY)

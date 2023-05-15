@@ -138,86 +138,61 @@
 	else
 		return ..()
 
+/obj/machinery/power/apc/proc/ethereal_interact(mob/living/user, list/modifiers)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/ethereal = user
+	var/obj/item/organ/stomach/maybe_stomach = ethereal.getorganslot(ORGAN_SLOT_STOMACH)
+	// how long we wanna wait before we show the balloon alert. don't want it to be very long in case the ethereal wants to opt-out of doing that action, just long enough to where it doesn't collide with previously queued balloon alerts.
+	var/alert_timer_duration = 0.75 SECONDS
+
+	if(!istype(maybe_stomach, /obj/item/organ/stomach/battery))
+		return
+	var/charge_limit = ETHEREAL_CHARGE_DANGEROUS - APC_POWER_GAIN
+	var/obj/item/organ/stomach/battery/stomach = maybe_stomach
+	if(ethereal.a_intent == INTENT_HARM)
+		if(cell.charge <= (cell.maxcharge / 2)) // ethereals can't drain APCs under half charge, this is so that they are forced to look to alternative power sources if the station is running low
+			addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, balloon_alert), ethereal, "safeties prevent draining!"), alert_timer_duration)
+			return
+		if(stomach.crystal_charge > charge_limit)
+			addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, balloon_alert), ethereal, "charge is full!"), alert_timer_duration)
+			return
+		stomach.drain_time = world.time + APC_DRAIN_TIME
+		addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, balloon_alert), ethereal, "draining power"), alert_timer_duration)
+		if(do_after(user, APC_DRAIN_TIME, target = src))
+			if(cell.charge <= (cell.maxcharge / 2) || (stomach.crystal_charge > charge_limit))
+				return
+			balloon_alert(ethereal, "received charge")
+			stomach.adjust_charge(APC_POWER_GAIN)
+			cell.use(APC_POWER_GAIN)
+		return
+
+	if(cell.charge >= cell.maxcharge - APC_POWER_GAIN)
+		addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, balloon_alert), ethereal, "APC can't receive more power!"), alert_timer_duration)
+		return
+	if(stomach.crystal_charge < APC_POWER_GAIN)
+		addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, balloon_alert), ethereal, "charge is too low!"), alert_timer_duration)
+		return
+	stomach.drain_time = world.time + APC_DRAIN_TIME
+	addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, balloon_alert), ethereal, "transfering power"), alert_timer_duration)
+	if(!do_after(user, APC_DRAIN_TIME, target = src))
+		return
+	if((cell.charge >= (cell.maxcharge - APC_POWER_GAIN)) || (stomach.crystal_charge < APC_POWER_GAIN))
+		balloon_alert(ethereal, "can't transfer power!")
+		return
+	if(istype(stomach))
+		balloon_alert(ethereal, "transfered power")
+		stomach.adjust_charge(-APC_POWER_GAIN)
+		cell.give(APC_POWER_GAIN)
+	else
+		balloon_alert(ethereal, "can't transfer power!")
+
 // attack with hand - remove cell (if cover open) or interact with the APC
 
 /obj/machinery/power/apc/attack_hand(mob/user)
 	. = ..()
 	if(.)
 		return
-
-	if(isethereal(user))
-		var/mob/living/carbon/human/H = user
-		var/datum/species/ethereal/E = H.dna.species
-		if(E.drain_time > world.time)
-			return
-		var/obj/item/organ/stomach/battery/stomach = H.getorganslot(ORGAN_SLOT_STOMACH)
-		if(H.a_intent == INTENT_HARM)
-			if(!istype(stomach))
-				to_chat(H, "<span class='warning'>You can't receive charge!</span>")
-				return
-			if(H.nutrition >= NUTRITION_LEVEL_ALMOST_FULL)
-				to_chat(user, "<span class='warning'>You are already fully charged!</span>")
-				return
-			if(cell.charge <= cell.maxcharge/4) // if charge is under 25% you shouldn't drain it
-				to_chat(H, "<span class='warning'>The APC doesn't have much power, you probably shouldn't drain anymore.</span>")
-				return
-
-			E.drain_time = world.time + 80
-			to_chat(H, "<span class='notice'>You start channeling some power through the APC into your body.</span>")
-			while(do_after(user, 75, target = src))
-				if(!istype(stomach))
-					to_chat(H, "<span class='warning'>You can't receive charge!</span>")
-					return
-				if(cell.charge <= cell.maxcharge/4)
-					to_chat(H, "<span class='warning'>The APC doesn't have much power, you probably shouldn't drain anymore.</span>")
-					E.drain_time = 0
-					return
-				E.drain_time = world.time + 80
-				if(cell.charge > cell.maxcharge/4 + 250)
-					stomach.adjust_charge(250)
-					cell.charge -= 250
-					to_chat(H, "<span class='notice'>You receive some charge from the APC.</span>")
-				else
-					stomach.adjust_charge(cell.charge - cell.maxcharge/4)
-					cell.charge = cell.maxcharge/4
-					to_chat(H, "<span class='warning'>The APC doesn't have much power, you probably shouldn't drain anymore.</span>")
-					E.drain_time = 0
-					return
-				if(stomach.charge >= stomach.max_charge)
-					to_chat(H, "<span class='notice'>You are now fully charged.</span>")
-					E.drain_time = 0
-					return
-			to_chat(H, "<span class='warning'>You fail to receive charge from the APC!</span>")
-			E.drain_time = 0
-			return
-		else if(H.a_intent == INTENT_GRAB)
-			if(!istype(stomach))
-				to_chat(H, "<span class='warning'>You can't transfer charge!</span>")
-				return
-			E.drain_time = world.time + 80
-			to_chat(H, "<span class='notice'>You start channeling power through your body into the APC.</span>")
-			while(do_after(user, 75, target = src))
-				if(!istype(stomach))
-					to_chat(H, "<span class='warning'>You can't transfer charge!</span>")
-					return
-				E.drain_time = world.time + 80
-				if(stomach.charge > 250)
-					to_chat(H, "<span class='notice'>You transfer some power to the APC.</span>")
-					stomach.adjust_charge(-250)
-					cell.charge = min(cell.charge + 250, cell.maxcharge)
-				else
-					to_chat(H, "<span class='notice'>You transfer the last of your charge to the APC.</span>")
-					cell.charge = min(cell.charge + stomach.charge, cell.maxcharge)
-					stomach.set_charge(0)
-					E.drain_time = 0
-					return
-				if(cell.charge >= cell.maxcharge)
-					to_chat(H, "<span class='notice'>The APC is now fully recharged.</span>")
-					E.drain_time = 0
-					return
-			to_chat(H, "<span class='warning'>You fail to transfer power to the APC!</span>")
-			E.drain_time = 0
-			return
 
 	if(opened && (!issilicon(user)))
 		if(cell)

@@ -38,8 +38,6 @@
 	var/static/r2 = 237
 	var/static/g2 = 164
 	var/static/b2 = 149
-	//this is shit but how do i fix it? no clue.
-	var/drain_time = 0 //used to keep ethereals from spam draining power sources
 	inert_mutation = OVERLOAD
 	var/obj/effect/dummy/lighting_obj/ethereal_light
 
@@ -148,27 +146,6 @@
 	emageffect = FALSE
 	spec_updatehealth(H)
 	H.visible_message("<span class='danger'>[H] stops flickering and goes back to their normal state!</span>")
-
-/datum/species/ethereal/handle_charge(mob/living/carbon/human/H)
-	brutemod = 1.25
-	if(HAS_TRAIT(H, TRAIT_NOHUNGER))
-		return
-	switch(H.nutrition)
-		if(NUTRITION_LEVEL_FED to INFINITY)
-			H.clear_alert("nutrition")
-		if(NUTRITION_LEVEL_STARVING to NUTRITION_LEVEL_FED)
-			H.throw_alert("nutrition", /atom/movable/screen/alert/etherealcharge, 1)
-			brutemod = 1.5
-		if(1 to NUTRITION_LEVEL_STARVING)
-			H.throw_alert("nutrition", /atom/movable/screen/alert/etherealcharge, 2)
-			if(H.health > 10.5)
-				apply_damage(0.65, TOX, null, null, H)
-			brutemod = 1.75
-		else
-			H.throw_alert("nutrition", /atom/movable/screen/alert/etherealcharge, 3)
-			if(H.health > 10.5)
-				apply_damage(1, TOX, null, null, H)
-			brutemod = 2
 
 /datum/species/ethereal/get_cough_sound(mob/living/carbon/user)
 	return SPECIES_DEFAULT_COUGH_SOUND(user)

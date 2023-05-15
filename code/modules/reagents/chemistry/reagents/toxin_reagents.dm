@@ -163,7 +163,7 @@
 
 /datum/reagent/toxin/zombiepowder/on_mob_end_metabolize(mob/living/L)
 	L.cure_fakedeath(type)
-	..()
+	return ..()
 
 /datum/reagent/toxin/ghoulpowder
 	name = "Ghoul Powder"
