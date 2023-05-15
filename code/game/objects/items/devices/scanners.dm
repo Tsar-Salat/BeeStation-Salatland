@@ -421,6 +421,8 @@ GENE SCANNER
 	if(!istype(M))
 		return
 	var/message = list()
+
+	//Blood Reagents
 	if(M.reagents)
 		if(M.reagents.reagent_list.len)
 			message += "<span class='notice'>Subject contains the following reagents in their blood:</span>"
@@ -428,6 +430,8 @@ GENE SCANNER
 				message += "<span class='notice'>[round(R.volume, 0.001)] units of [R.name][R.overdosed == 1 ? "</span> - <span class='boldannounce'>OVERDOSING</span>" : ".</span>"]"
 		else
 			message += "<span class='notice ml-1'>Subject contains no reagents in their blood.</span>\n"
+
+		// Stomach Reagents
 		var/obj/item/organ/stomach/belly = M.getorganslot(ORGAN_SLOT_STOMACH)
 		if(belly)
 			if(belly.reagents.reagent_list.len)
@@ -442,6 +446,8 @@ GENE SCANNER
 							message += "<span class='notice ml-2'>[round(bit_vol, 0.001)] units of [bit.name][bit.overdosed ? "</span> - <span class='boldannounce'>OVERDOSING</span>" : ".</span>"]\n"
 			else
 				message += "<span class='notice ml-1'>Subject contains no reagents in their stomach.</span>\n"
+
+		// Addictions
 		if(M.reagents.addiction_list.len)
 			message += "<span class='boldannounce'>Subject is addicted to the following reagents:</span>"
 			for(var/datum/reagent/R in M.reagents.addiction_list)

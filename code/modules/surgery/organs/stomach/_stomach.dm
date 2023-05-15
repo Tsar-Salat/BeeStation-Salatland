@@ -38,7 +38,7 @@
 
 	//Manage species digestion
 	if(istype(owner))
-		var/mob/living/carbon/human/humi = owner
+		var/mob/living/carbon/humi = owner
 		if(!(organ_flags & ORGAN_FAILING))
 			handle_hunger(humi, delta_time, times_fired)
 
@@ -109,7 +109,7 @@
 		body.vomit(damage)
 		to_chat(body, "<span class='warning'>Your stomach reels in pain as you're incapable of holding down all that food!</span>")
 
-/obj/item/organ/stomach/proc/handle_hunger(mob/living/carbon/human/human, delta_time, times_fired)
+/obj/item/organ/stomach/proc/handle_hunger(mob/living/carbon/human, delta_time, times_fired)
 	if(HAS_TRAIT(human, TRAIT_NOHUNGER))
 		return //hunger is for BABIES
 
@@ -148,7 +148,7 @@
 			if(DT_PROB(round(-human.satiety/77), delta_time))
 				human.Jitter(5)
 			hunger_rate = 3 * HUNGER_FACTOR
-		hunger_rate *= human.physiology.hunger_mod
+		//hunger_rate *= human.physiology.hunger_mod //physiology isnt on monkeys, so we need to figure something else out
 		human.adjust_nutrition(-hunger_rate * delta_time)
 
 	if(human.nutrition > NUTRITION_LEVEL_FULL)
@@ -189,14 +189,14 @@
 			human.throw_alert("nutrition", /atom/movable/screen/alert/starving)
 
 ///for when mood is disabled and hunger should handle slowdowns
-/obj/item/organ/stomach/proc/handle_hunger_slowdown(mob/living/carbon/human/human)
+/obj/item/organ/stomach/proc/handle_hunger_slowdown(mob/living/carbon/human)
 	var/hungry = (500 - human.nutrition) / 5 //So overeat would be 100 and default level would be 80
 	if(hungry >= 70)
 		human.add_movespeed_modifier(MOVESPEED_ID_HUNGRY, multiplicative_slowdown = (hungry / 50))
 	else
 		human.remove_movespeed_modifier(MOVESPEED_ID_HUNGRY)
 
-/obj/item/organ/stomach/proc/handle_disgust(mob/living/carbon/human/disgusted, delta_time, times_fired)
+/obj/item/organ/stomach/proc/handle_disgust(mob/living/carbon/disgusted, delta_time, times_fired)
 	var/old_disgust = disgusted.old_disgust
 	var/disgust = disgusted.disgust
 
