@@ -27,18 +27,30 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define DF_ISPROCESSING (1<<2)
 
 //! ## FLAGS BITMASK
-#define CONDUCT_1					(1<<5)		//!  conducts electricity (iron etc.)
-#define NODECONSTRUCT_1				(1<<7)		//!  For machines and structures that should not break into parts, eg, holodeck stuff
-#define OVERLAY_QUEUED_1			(1<<8)		//!  atom queued to SSoverlay
-#define ON_BORDER_1					(1<<9)		//!  item has priority to check when entering or leaving
-#define PREVENT_CLICK_UNDER_1		(1<<11)		//! Prevent clicking things below it on the same turf eg. doors/ fulltile windows
+
+//!  conducts electricity (iron etc.)
+#define CONDUCT_1					(1<<5)
+//!  For machines and structures that should not break into parts, eg, holodeck stuff
+#define NODECONSTRUCT_1				(1<<7)
+//!  atom queued to SSoverlay
+#define OVERLAY_QUEUED_1			(1<<8)
+//!  item has priority to check when entering or leaving
+#define ON_BORDER_1					(1<<9)
+//! Prevent clicking things below it on the same turf eg. doors/ fulltile windows
+#define PREVENT_CLICK_UNDER_1		(1<<11)
 #define HOLOGRAM_1					(1<<12)
-#define TESLA_IGNORE_1				(1<<13) 	//! TESLA_IGNORE grants immunity from being targeted by tesla-style electricity
-#define INITIALIZED_1				(1<<14)  	//! Whether /atom/Initialize(mapload) has already run for the object
-#define ADMIN_SPAWNED_1				(1<<15) 		//! was this spawned by an admin? used for stat tracking stuff.
+//! TESLA_IGNORE grants immunity from being targeted by tesla-style electricity
+#define TESLA_IGNORE_1				(1<<13)
+//! Whether /atom/Initialize(mapload) has already run for the object
+#define INITIALIZED_1				(1<<14)
+//! was this spawned by an admin? used for stat tracking stuff.
+#define ADMIN_SPAWNED_1				(1<<15)
 #define PREVENT_CONTENTS_EXPLOSION_1 (1<<16)
 #define UNPAINTABLE_1 				(1<<17)
-#define HTML_USE_INITAL_ICON_1		(1<<18) 			//! Should we use the initial icon for display? Mostly used by overlay only objects
+//! Should we use the initial icon for display? Mostly used by overlay only objects
+#define HTML_USE_INITAL_ICON_1		(1<<18)
+// Whether or not this atom is storing contents for a disassociated storage object
+#define HAS_DISASSOCIATED_STORAGE_1 (1<<23)
 
 /// If the thing can reflect light (lasers/energy)
 #define RICOCHET_SHINY			(1<<0)

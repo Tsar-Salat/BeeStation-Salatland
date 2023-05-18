@@ -1,29 +1,33 @@
-/datum/component/storage/concrete/pockets
-	max_items = 2
-	max_w_class = WEIGHT_CLASS_SMALL
-	max_combined_w_class = 50
+/datum/storage/pockets
+	max_slots = 2
+	max_specific_storage = WEIGHT_CLASS_NORMAL
+	max_total_storage = 50
 	rustle_sound = FALSE
 
-/datum/component/storage/concrete/pockets/handle_item_insertion(obj/item/I, prevent_warning, mob/user)
+/datum/storage/pockets/attempt_insert(datum/source, obj/item/to_insert, mob/user, override, force)
 	. = ..()
-	if(. && silent && !prevent_warning)
+
+	var/obj/item/resolve_parent = parent?.resolve()
+	if(!resolve_parent)
+		return
+
+	if(. && silent && !override)
 		if(quickdraw)
-			to_chat(user, "<span class='notice'>You discreetly slip [I] into [parent]. Alt-click [parent] to remove it.</span>")
+			to_chat(user, "<span class='notice'>You discreetly slip [to_insert] into [resolve_parent]. Alt-click [resolve_parent] to remove it.</span>")
 		else
-			to_chat(user, "<span class='notice'>You discreetly slip [I] into [parent].</span>")
+			to_chat(user, "<span class='notice'>You discreetly slip [to_insert] into [resolve_parent].</span>")
 
-/datum/component/storage/concrete/pockets
-	max_w_class = WEIGHT_CLASS_NORMAL
-
-/datum/component/storage/concrete/pockets/small
-	max_items = 1
+/datum/storage/pockets/small
+	max_slots = 1
+	max_specific_storage = WEIGHT_CLASS_SMALL
 	attack_hand_interact = FALSE
 
-/datum/component/storage/concrete/pockets/tiny
-	max_items = 1
-	max_w_class = WEIGHT_CLASS_TINY
+/datum/storage/pockets/tiny
+	max_slots = 1
+	max_specific_storage = WEIGHT_CLASS_TINY
 	attack_hand_interact = FALSE
 
+/*
 /datum/component/storage/concrete/pockets/exo
 	max_items = 2
 	max_w_class = WEIGHT_CLASS_SMALL
@@ -38,7 +42,9 @@
 /datum/component/storage/concrete/pockets/exo/large
 	max_items = 3
 
-/datum/component/storage/concrete/pockets/small/detective
+*/
+
+/datum/storage/pockets/small/detective
 	attack_hand_interact = TRUE // so the detectives would discover pockets in their hats
 
 /datum/component/storage/concrete/pockets/shoes
