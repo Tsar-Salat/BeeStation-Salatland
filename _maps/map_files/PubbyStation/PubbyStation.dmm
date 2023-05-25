@@ -16819,7 +16819,7 @@
 /area/chapel/main/monastery)
 "cdD" = (
 /obj/structure/table,
-/obj/item/trash/plate,
+/obj/item/plate,
 /obj/item/kitchen/fork,
 /turf/open/floor/plating/asteroid,
 /area/chapel/asteroid/monastery)
@@ -19036,7 +19036,7 @@
 /area/chapel/main/monastery)
 "cuw" = (
 /obj/structure/table/wood,
-/obj/item/trash/plate,
+/obj/item/plate,
 /obj/item/kitchen/fork,
 /turf/open/floor/plasteel/dark,
 /area/chapel/main/monastery)
@@ -39912,7 +39912,7 @@
 /area/maintenance/department/security/brig)
 "nyY" = (
 /obj/structure/table,
-/obj/item/trash/plate,
+/obj/item/plate,
 /obj/item/storage/fancy/rollingpapers,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1

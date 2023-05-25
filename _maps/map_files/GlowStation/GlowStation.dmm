@@ -110879,7 +110879,7 @@
 /area/ai_monitored/turret_protected/aisat_interior)
 "xif" = (
 /obj/structure/table/wood,
-/obj/item/trash/plate,
+/obj/item/plate,
 /obj/item/kitchen/fork,
 /turf/open/floor/plasteel/dark,
 /area/chapel/main/monastery)

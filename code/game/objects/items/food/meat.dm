@@ -602,7 +602,6 @@
 		/datum/reagent/consumable/nutriment/protein = 8,
 		/datum/reagent/consumable/nutriment/vitamin = 1
 	)
-	trash_type = /obj/item/trash/plate
 	tastes = list("meat" = 1)
 	foodtypes = MEAT
 

@@ -15872,7 +15872,7 @@
 /turf/open/floor/plasteel/white,
 /area/crew_quarters/heads/cmo)
 "fgn" = (
-/obj/item/trash/plate,
+/obj/item/plate,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/cigbutt,
 /obj/effect/landmark/blobstart,
