@@ -50,6 +50,7 @@
 	)
 	tastes = list("pie" = 1)
 	foodtypes = GRAIN | DAIRY | SUGAR
+	burns_in_oven = TRUE
 	var/stunning = TRUE
 
 /obj/item/food/pie/cream/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)

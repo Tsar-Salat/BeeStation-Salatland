@@ -1065,6 +1065,13 @@
 	req_components = list(/obj/item/stock_parts/micro_laser = 1)
 	needs_anchored = FALSE
 
+/obj/item/circuitboard/machine/oven
+	name = "circuit board (Oven)"
+	greyscale_colors = CIRCUIT_COLOR_SERVICE
+	build_path = /obj/machinery/oven
+	req_components = list(/obj/item/stock_parts/micro_laser = 1)
+	needs_anchored = FALSE
+
 /obj/item/circuitboard/machine/dish_drive
 	name = "dish drive (Machine Board)"
 	icon_state = "service"

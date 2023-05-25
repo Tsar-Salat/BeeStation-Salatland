@@ -93,7 +93,7 @@
 /datum/crafting_recipe/food/lasagna
 	name = "Lasagna"
 	reqs = list(
-		/obj/item/food/spaghetti = 1,
+		/obj/item/food/spaghetti/raw = 1,
 		/obj/item/food/meatball = 1,
 		/obj/item/food/grown/tomato = 1,
 		/obj/item/food/cheese/wedge = 1

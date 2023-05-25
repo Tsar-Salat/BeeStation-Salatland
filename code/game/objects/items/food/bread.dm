@@ -43,6 +43,7 @@
 	tastes = list("bread" = 10)
 	foodtypes = GRAIN
 	w_class = WEIGHT_CLASS_SMALL
+	burns_in_oven = TRUE
 	slice_type = /obj/item/food/breadslice/plain
 
 /obj/item/food/bread/plain/Initialize(mapload)

@@ -28,7 +28,7 @@
 ///called on item when created through microwaving (): (obj/machinery/microwave/M, cooking_efficiency)
 #define COMSIG_ITEM_MICROWAVE_COOKED "microwave_cooked"
 
-/*
+
 // Grilling foods (griddle, grill, and bonfire)
 ///Called when an object is placed onto a griddle
 #define COMSIG_ITEM_GRILL_PLACED_ON "item_placed_on_griddle"
@@ -52,7 +52,7 @@
 	#define COMPONENT_BAKING_BAD_RESULT (1<<2)
 ///Called when an object is turned into another item through baking in an oven
 #define COMSIG_ITEM_BAKED "item_bake_completed"
-*/
+
 
 //Customizable
 
