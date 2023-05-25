@@ -76,6 +76,11 @@
 		var/obj/item/stack/stack_parent = original_object
 		grilled_result = new cook_result(original_object.loc, stack_parent.amount)
 
+	else
+		grilled_result = new cook_result(original_object.loc)
+		if(original_object.custom_materials)
+			grilled_result.set_custom_materials(original_object.custom_materials)
+
 	//if(IS_EDIBLE(grilled_result))
 		//BLACKBOX_LOG_FOOD_MADE(grilled_result.type)
 

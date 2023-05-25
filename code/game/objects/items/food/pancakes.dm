@@ -2,7 +2,7 @@
 	name = "pancake"
 	desc = "A fluffy pancake. The softer, superior relative of the waffle."
 	icon_state = "pancakes_1"
-	item_state = "pancakes"
+	item_state = null
 	food_reagents = list(
 		/datum/reagent/consumable/nutriment = 4,
 		/datum/reagent/consumable/nutriment/vitamin = 2
@@ -18,12 +18,12 @@
 	name = "goopy pancake"
 	desc = "A barely cooked mess that some may mistake for a pancake. It longs for the griddle."
 	icon_state = "rawpancakes_1"
-	inhand_icon_state = "rawpancakes"
 	food_reagents = list(/datum/reagent/consumable/nutriment = 1, /datum/reagent/consumable/nutriment/vitamin = 1)
 	tastes = list("milky batter" = 1)
 	burns_on_grill = FALSE
+	stack_name = "rawpancakes"
 
-/obj/item/food/pancakes/raw/MakeGrillable()
+/obj/item/food/pancakes/raw/make_grillable()
 	AddComponent(/datum/component/grillable,\
 				cook_result = /obj/item/food/pancakes,\
 				required_cook_time = rand(30 SECONDS, 40 SECONDS),\
@@ -36,12 +36,12 @@
 		newresult = /obj/item/food/pancakes/blueberry
 		name = "raw blueberry pancake"
 		icon_state = "rawbbpancakes_1"
-		inhand_icon_state = "rawbbpancakes"
+		stack_name = "rawbbpancakes"
 	else if(istype(garnish, /obj/item/food/chocolatebar))
 		newresult = /obj/item/food/pancakes/chocolatechip
 		name = "raw chocolate chip pancake"
 		icon_state = "rawccpancakes_1"
-		inhand_icon_state = "rawccpancakes"
+		stack_name = "rawccpancakes"
 	else
 		return ..()
 	if(newresult)

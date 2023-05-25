@@ -27,8 +27,6 @@
 	grill_loop = new(list(src), FALSE)
 	if(isnum(variant))
 		variant = rand(1,3)
-	RegisterSignal(src, COMSIG_ATOM_EXPOSE_REAGENT, PROC_REF(on_expose_reagent))
-	RegisterSignal(src, COMSIG_STORAGE_DUMP_CONTENT, PROC_REF(on_storage_dump))
 
 /obj/machinery/griddle/Destroy()
 	QDEL_NULL(grill_loop)
@@ -52,11 +50,7 @@
 
 /obj/machinery/griddle/crowbar_act(mob/living/user, obj/item/I)
 	. = ..()
-	if(flags_1 & NODECONSTRUCT_1)
-		return
-	if(default_deconstruction_crowbar(I, ignore_panel = TRUE))
-		return
-	variant = rand(1,3)
+	return default_deconstruction_crowbar(I, ignore_panel = TRUE)
 
 /obj/machinery/griddle/attackby(obj/item/I, mob/user, params)
 	if(griddled_objects.len >= max_items)
@@ -72,7 +66,6 @@
 		I.pixel_y = clamp(text2num(click_params["icon-y"]) - 16, -(world.icon_size/2), world.icon_size/2)
 		to_chat(user, "<span class='notice'>You place [I] on [src].</span>")
 		AddToGrill(I, user)
-		update_icon()
 	else
 		return ..()
 
@@ -83,9 +76,8 @@
 		begin_processing()
 	else
 		end_processing()
-	update_icon()
+	update_appearance()
 	update_grill_audio()
-
 
 /obj/machinery/griddle/proc/AddToGrill(obj/item/item_to_grill, mob/user)
 	vis_contents += item_to_grill
@@ -123,15 +115,19 @@
 	else
 		grill_loop.stop()
 
+/obj/machinery/griddle/wrench_act(mob/living/user, obj/item/tool)
+	. = ..()
+	default_unfasten_wrench(user, tool, time = 2 SECONDS)
+	return TOOL_ACT_TOOLTYPE_SUCCESS
+
 ///Override to prevent storage dumping onto the griddle until I figure out how to navigate the mess that is storage code to allow me to nicely move the dumped objects onto the griddle.
 /obj/machinery/griddle/get_dumping_location(obj/item/storage/source, mob/user)
 	return
 
 /obj/machinery/griddle/process(delta_time)
 	..()
-	for(var/i in griddled_objects)
-		var/obj/item/griddled_item = i
-		if(SEND_SIGNAL(griddled_item, COMSIG_ITEM_GRILLED, src, delta_time) & COMPONENT_HANDLED_GRILLING)
+	for(var/obj/item/griddled_item as anything in griddled_objects)
+		if(SEND_SIGNAL(griddled_item, COMSIG_ITEM_GRILL_PROCESS, src, delta_time) & COMPONENT_HANDLED_GRILLING)
 			continue
 		griddled_item.fire_act(1000) //Hot hot hot!
 		if(prob(10))
