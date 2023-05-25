@@ -36,6 +36,12 @@
   #define COMPONENT_BLOCK_SHARPEN_BLOCKED 2
   #define COMPONENT_BLOCK_SHARPEN_ALREADY 4
   #define COMPONENT_BLOCK_SHARPEN_MAXED 8
+///Called when an object is grilled ontop of a griddle
+#define COMSIG_ITEM_GRILLED "item_griddled"
+	#define COMPONENT_HANDLED_GRILLING (1<<0)
+///Called when an object is turned into another item through grilling ontop of a griddle
+#define COMSIG_GRILL_COMPLETED "item_grill_completed"
+
 #define COMSIG_ITEM_CHECK_WIELDED "item_check_wielded"  //! used to check if the item is wielded for special effects
   #define COMPONENT_IS_WIELDED 1
 #define COMSIG_ITEM_DISABLE_EMBED "item_disable_embed"			///from [/obj/item/proc/disableEmbedding]:

@@ -157,19 +157,158 @@
 	foodtypes = MEAT | ALCOHOL
 	w_class = WEIGHT_CLASS_SMALL
 
+/obj/item/food/raw_meatball
+	name = "raw meatball"
+	desc = "A great meal all round. Not a cord of wood. Kinda raw"
+	icon_state = "raw_meatball"
+	food_reagents = list(/datum/reagent/consumable/nutriment/protein = 2)
+	tastes = list("meat" = 1)
+	foodtypes = MEAT | RAW
+	w_class = WEIGHT_CLASS_SMALL
+	var/meatball_type = /obj/item/food/meatball
+	var/patty_type = /obj/item/food/raw_patty
+
+/obj/item/food/raw_meatball/MakeGrillable()
+	AddComponent(/datum/component/grillable, meatball_type, rand(30 SECONDS, 40 SECONDS), TRUE)
+
+/obj/item/food/raw_meatball/MakeProcessable()
+	AddElement(/datum/element/processable, TOOL_ROLLINGPIN, patty_type, 1, 20)
+/obj/item/food/raw_meatball/human
+	name = "strange raw meatball"
+	meatball_type = /obj/item/food/meatball/human
+	patty_type = /obj/item/food/raw_patty/human
+
+/obj/item/food/raw_meatball/corgi
+	name = "raw corgi meatball"
+	meatball_type = /obj/item/food/meatball/corgi
+	patty_type = /obj/item/food/raw_patty/corgi
+
+/obj/item/food/raw_meatball/xeno
+	name = "raw xeno meatball"
+	meatball_type = /obj/item/food/meatball/xeno
+	patty_type = /obj/item/food/raw_patty/xeno
+
+/obj/item/food/raw_meatball/bear
+	name = "raw bear meatball"
+	meatball_type = /obj/item/food/meatball/bear
+	patty_type = /obj/item/food/raw_patty/bear
+
+/obj/item/food/raw_meatball/chicken
+	name = "raw chicken meatball"
+	meatball_type = /obj/item/food/meatball/chicken
+	patty_type = /obj/item/food/raw_patty/chicken
+
 /obj/item/food/meatball
 	name = "meatball"
 	desc = "A great meal all round. Not a cord of wood."
 	icon = 'icons/obj/food/meat.dmi'
 	icon_state = "meatball"
-	food_reagents = list(
-		/datum/reagent/consumable/nutriment/protein = 2,
-		/datum/reagent/consumable/nutriment = 3,
-	)
+	food_reagents = list(/datum/reagent/consumable/nutriment/protein = 2)
 	tastes = list("meat" = 1)
 	foodtypes = MEAT
 	food_flags = FOOD_FINGER_FOOD
 	w_class = WEIGHT_CLASS_SMALL
+	burns_on_grill = TRUE
+
+/obj/item/food/meatball/human
+	name = "strange meatball"
+
+/obj/item/food/meatball/corgi
+	name = "corgi meatball"
+
+/obj/item/food/meatball/bear
+	name = "bear meatball"
+	tastes = list("meat" = 1, "salmon" = 1)
+
+/obj/item/food/meatball/xeno
+	name = "xenomorph meatball"
+	tastes = list("meat" = 1, "acid" = 1)
+
+/obj/item/food/meatball/chicken
+	name = "chicken meatball"
+	tastes = list("chicken" = 1)
+	icon_state = "chicken_meatball"
+
+/obj/item/food/raw_patty
+	name = "raw patty"
+	desc = "I'm.....NOT REAAADDYY."
+	icon_state = "raw_patty"
+	food_reagents = list(/datum/reagent/consumable/nutriment/protein = 2)
+	tastes = list("meat" = 1)
+	foodtypes = MEAT | RAW
+	w_class = WEIGHT_CLASS_SMALL
+	var/patty_type = /obj/item/food/patty/plain
+
+/obj/item/food/raw_patty/MakeGrillable()
+	AddComponent(/datum/component/grillable, patty_type, rand(30 SECONDS, 40 SECONDS), TRUE)
+
+/obj/item/food/raw_patty/human
+	name = "strange raw patty"
+	patty_type = /obj/item/food/patty/human
+
+/obj/item/food/raw_patty/corgi
+	name = "raw corgi patty"
+	patty_type = /obj/item/food/patty/corgi
+
+/obj/item/food/raw_patty/bear
+	name = "raw bear patty"
+	tastes = list("meat" = 1, "salmon" = 1)
+	patty_type = /obj/item/food/patty/bear
+
+/obj/item/food/raw_patty/xeno
+	name = "raw xenomorph patty"
+	tastes = list("meat" = 1, "acid" = 1)
+	patty_type = /obj/item/food/patty/xeno
+
+/obj/item/food/raw_patty/chicken
+	name = "raw chicken patty"
+	tastes = list("chicken" = 1)
+	patty_type = /obj/item/food/patty/chicken
+
+/obj/item/food/patty
+	name = "patty"
+	desc = "The nanotrasen patty is the patty for you and me!"
+	icon_state = "patty"
+	food_reagents = list(/datum/reagent/consumable/nutriment/protein = 2)
+	tastes = list("meat" = 1)
+	foodtypes = MEAT
+	w_class = WEIGHT_CLASS_SMALL
+	burns_on_grill = TRUE
+
+///Exists purely for the crafting recipe (because itll take subtypes)
+/obj/item/food/patty/plain
+
+/obj/item/food/patty/human
+	name = "strange patty"
+
+/obj/item/food/patty/corgi
+	name = "corgi patty"
+
+/obj/item/food/patty/bear
+	name = "bear patty"
+	tastes = list("meat" = 1, "salmon" = 1)
+
+/obj/item/food/patty/xeno
+	name = "xenomorph patty"
+	tastes = list("meat" = 1, "acid" = 1)
+
+/obj/item/food/patty/chicken
+	name = "chicken patty"
+	tastes = list("chicken" = 1)
+	icon_state = "chicken_patty"
+
+/obj/item/food/raw_sausage
+	name = "raw sausage"
+	desc = "A piece of mixed, long meat, but then raw"
+	icon_state = "raw_sausage"
+	food_reagents = list(/datum/reagent/consumable/nutriment/protein = 5, /datum/reagent/consumable/nutriment/vitamin = 2)
+	tastes = list("meat" = 1)
+	foodtypes = MEAT | RAW
+	eatverbs = list("bite","chew","nibble","deep throat","gobble","chomp")
+	w_class = WEIGHT_CLASS_SMALL
+
+/obj/item/food/raw_sausage/MakeGrillable()
+	AddComponent(/datum/component/grillable, /obj/item/food/sausage, rand(60 SECONDS, 75 SECONDS), TRUE)
 
 /obj/item/food/sausage
 	name = "sausage"
@@ -185,7 +324,17 @@
 	food_flags = FOOD_FINGER_FOOD
 	eatverbs = list("bite", "chew", "nibble", "deep throat", "gobble", "chomp")
 	w_class = WEIGHT_CLASS_SMALL
+	burns_on_grill = TRUE
 	var/roasted = FALSE
+
+/obj/item/food/sausage/MakeProcessable()
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/salami, 6, 30)
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/american_sausage, 1, 30)
+
+/obj/item/food/american_sausage
+	name = "american sausage"
+	desc = "Snip."
+	icon_state = "american_sausage"
 
 /obj/item/food/rawkhinkali
 	name = "raw khinkali"
@@ -202,6 +351,9 @@
 	foodtypes = MEAT | RAW
 	w_class = WEIGHT_CLASS_SMALL
 
+/obj/item/food/rawkhinkali/MakeGrillable()
+	AddComponent(/datum/component/grillable, /obj/item/food/khinkali, rand(50 SECONDS, 60 SECONDS), TRUE)
+
 /obj/item/food/khinkali
 	name = "khinkali"
 	desc = "One hundred khinkalis? Do I look like a pig?"
@@ -217,6 +369,7 @@
 	tastes = list("meat" = 1, "onions" = 1, "garlic" = 1)
 	foodtypes = MEAT
 	w_class = WEIGHT_CLASS_SMALL
+	burns_on_grill = TRUE
 
 /obj/item/food/meatbun
 	name = "meat bun"
@@ -258,6 +411,10 @@
 	tastes = list("hot peppers" = 1, "cobwebs" = 1)
 	foodtypes = MEAT
 	w_class = WEIGHT_CLASS_SMALL
+	burns_on_grill = TRUE
+
+/obj/item/food/spiderleg/MakeGrillable()
+	AddComponent(/datum/component/grillable, /obj/item/food/boiledspiderleg, rand(50 SECONDS, 60 SECONDS), TRUE, TRUE)
 
 /obj/item/food/spidereggsham
 	name = "green eggs and ham"
@@ -556,14 +713,14 @@
 	icon_state = "rawcutlet"
 	bite_consumption = 2
 	food_reagents = list(
-		/datum/reagent/consumable/nutriment/protein = 1
+		/datum/reagent/consumable/nutriment/protein = 2
 	)
 	tastes = list("meat" = 1)
 	foodtypes = MEAT | RAW
 	var/meat_type = "meat"
 
-/obj/item/food/meat/rawcutlet/make_microwaveable()
-	AddElement(/datum/element/microwavable, /obj/item/food/meat/cutlet/plain)
+/obj/item/food/meat/rawcutlet/MakeGrillable()
+	AddComponent(/datum/component/grillable, /obj/item/food/meat/cutlet/plain, rand(35 SECONDS, 50 SECONDS), TRUE, TRUE)
 
 /obj/item/food/meat/rawcutlet/OnCreatedFromProcessing(mob/living/user, obj/item/work_tool, list/chosen_option, atom/original_atom)
 	. = ..()
@@ -576,14 +733,14 @@
 		meat_type = original_atom.name
 
 /obj/item/food/meat/rawcutlet/plain
-    foodtypes = MEAT
+	foodtypes = MEAT
 
 /obj/item/food/meat/rawcutlet/plain/human
 	tastes = list("tender meat" = 1)
 	foodtypes = MEAT | RAW | GORE
 
-/obj/item/food/meat/rawcutlet/plain/human/make_microwaveable()
-	AddElement(/datum/element/microwavable, /obj/item/food/meat/cutlet/plain/human)
+obj/item/food/meat/rawcutlet/plain/human/MakeGrillable()
+	AddComponent(/datum/component/grillable, /obj/item/food/meat/cutlet/plain/human, rand(35 SECONDS, 50 SECONDS), TRUE, TRUE)
 
 /obj/item/food/meat/rawcutlet/plain/human/OnCreatedFromProcessing(mob/living/user, obj/item/I, list/chosen_option, atom/original_atom)
 	. = ..()
@@ -601,50 +758,50 @@
 	tastes = list("tomato" = 1)
 	foodtypes = FRUIT
 
-/obj/item/food/meat/rawcutlet/killertomato/make_microwaveable()
-	AddElement(/datum/element/microwavable, /obj/item/food/meat/cutlet/killertomato)
+/obj/item/food/meat/rawcutlet/killertomato/MakeGrillable()
+	AddComponent(/datum/component/grillable, /obj/item/food/meat/cutlet/killertomato, rand(35 SECONDS, 50 SECONDS), TRUE, TRUE)
 
 /obj/item/food/meat/rawcutlet/bear
 	name = "raw bear cutlet"
 	tastes = list("meat" = 1, "salmon" = 1)
 
-/obj/item/food/meat/rawcutlet/bear/make_microwaveable()
-	AddElement(/datum/element/microwavable, /obj/item/food/meat/cutlet/bear)
+/obj/item/food/meat/rawcutlet/bear/MakeGrillable()
+	AddComponent(/datum/component/grillable, /obj/item/food/meat/cutlet/bear, rand(35 SECONDS, 50 SECONDS), TRUE, TRUE)
 
 /obj/item/food/meat/rawcutlet/xeno
 	name = "raw xeno cutlet"
 	tastes = list("meat" = 1, "acid" = 1)
 
-/obj/item/food/meat/rawcutlet/xeno/make_microwaveable()
-	AddElement(/datum/element/microwavable, /obj/item/food/meat/cutlet/xeno)
+/obj/item/food/meat/rawcutlet/xeno/MakeGrillable()
+	AddComponent(/datum/component/grillable, /obj/item/food/meat/cutlet/xeno, rand(35 SECONDS, 50 SECONDS), TRUE, TRUE)
 
 /obj/item/food/meat/rawcutlet/spider
 	name = "raw spider cutlet"
 	tastes = list("cobwebs" = 1)
 
-/obj/item/food/meat/rawcutlet/spider/make_microwaveable()
-	AddElement(/datum/element/microwavable, /obj/item/food/meat/cutlet/spider)
+/obj/item/food/meat/rawcutlet/spider/MakeGrillable()
+	AddComponent(/datum/component/grillable, /obj/item/food/meat/cutlet/spider, rand(35 SECONDS, 50 SECONDS), TRUE, TRUE)
 
 /obj/item/food/meat/rawcutlet/gondola
 	name = "raw gondola cutlet"
 	tastes = list("meat" = 1, "tranquility" = 1)
 
-/obj/item/food/meat/rawcutlet/gondola/make_microwaveable()
-	AddElement(/datum/element/microwavable, /obj/item/food/meat/cutlet/gondola)
+/obj/item/food/meat/rawcutlet/gondola/MakeGrillable()
+	AddComponent(/datum/component/grillable, /obj/item/food/meat/cutlet/gondola, rand(35 SECONDS, 50 SECONDS), TRUE, TRUE)
 
 /obj/item/food/meat/rawcutlet/penguin
 	name = "raw penguin cutlet"
 	tastes = list("beef" = 1, "cod fish" = 1)
 
-/obj/item/food/meat/rawcutlet/penguin/make_microwaveable()
-	AddElement(/datum/element/microwavable, /obj/item/food/meat/cutlet/penguin)
+/obj/item/food/meat/rawcutlet/penguin/MakeGrillable()
+	AddComponent(/datum/component/grillable, /obj/item/food/meat/cutlet/penguin, rand(35 SECONDS, 50 SECONDS), TRUE, TRUE)
 
 /obj/item/food/meat/rawcutlet/chicken
 	name = "raw chicken cutlet"
 	tastes = list("chicken" = 1)
 
-/obj/item/food/meat/rawcutlet/chicken/make_microwaveable()
-	AddElement(/datum/element/microwavable, /obj/item/food/meat/cutlet/chicken)
+/obj/item/food/meat/rawcutlet/chicken/MakeGrillable()
+	AddComponent(/datum/component/grillable, /obj/item/food/meat/cutlet/chicken, rand(35 SECONDS, 50 SECONDS), TRUE, TRUE)
 
 /obj/item/food/meat/rawcutlet/grub //grub meat is small, so its in cutlets
 	name = "redgrub cutlet"
@@ -659,8 +816,8 @@
 	tastes = list("slime" = 1, "grub" = 1)
 	foodtypes = RAW | MEAT | TOXIC
 
-/obj/item/food/meat/rawcutlet/grub/make_microwaveable()
-	AddElement(/datum/element/microwavable, /obj/item/food/meat/cutlet/grub)
+/obj/item/food/meat/rawcutlet/grub/make_grillable()
+	AddComponent(/datum/component/grillable, /obj/item/food/meat/cutlet/grub, rand(35 SECONDS, 50 SECONDS), TRUE, TRUE)
 
 //Cooked cutlets
 
@@ -674,8 +831,9 @@
 	)
 	tastes = list("meat" = 1)
 	foodtypes = MEAT
+	burns_on_grill = TRUE
 
-/obj/item/food/meat/cutlet/Initialize()
+/obj/item/food/meat/cutlet/Initialize(mapload)
 	. = ..()
 	RegisterSignal(src, COMSIG_ITEM_MICROWAVE_COOKED, PROC_REF(on_microwave_cooked))
 

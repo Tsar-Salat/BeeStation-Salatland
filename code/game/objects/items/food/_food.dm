@@ -30,6 +30,8 @@
 	var/trash_type
 	///How much junkiness this food has? God I should remove junkiness soon
 	var/junkiness
+	///Will this food turn into badrecipe on a grill? Don't use this for everything; preferably mostly for food that is made on a grill to begin with so it burns after some time
+	var/burns_on_grill = FALSE
 
 /obj/item/food/Initialize()
 	. = ..()
@@ -42,6 +44,7 @@
 	make_edible()
 	make_processable()
 	make_leave_trash()
+	Make_grillable()
 	make_microwaveable()
 
 ///This proc adds the edible component, overwrite this if you for some reason want to change some specific args like callbacks.
@@ -61,6 +64,12 @@
 
 ///This proc handles processable elements, overwrite this if you want to add behavior such as slicing, forking, spooning, whatever, to turn the item into something else
 /obj/item/food/proc/make_processable()
+	return
+
+///This proc handles grillable components, overwrite if you want different grill results etc.
+/obj/item/food/proc/make_grillable()
+	if(burns_on_grill)
+		AddComponent(/datum/component/grillable, /obj/item/food/badrecipe, rand(20 SECONDS, 30 SECONDS), FALSE)
 	return
 
 /// This proc handles the microwave component. Overwrite if you want special microwave results.
