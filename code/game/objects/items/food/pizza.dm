@@ -21,7 +21,7 @@
 	burns_in_oven = FALSE
 	slice_type = null
 
-/obj/item/food/pizza/raw/MakeBakeable()
+/obj/item/food/pizza/raw/make_bakeable()
 	AddComponent(/datum/component/bakeable, /obj/item/food/pizza, rand(70 SECONDS, 80 SECONDS), TRUE, TRUE)
 
 /obj/item/food/pizza/make_processable()
@@ -61,7 +61,7 @@
 	burns_in_oven = FALSE
 	slice_type = null
 
-/obj/item/food/pizza/margherita/raw/MakeBakeable()
+/obj/item/food/pizza/margherita/raw/make_bakeable()
 	AddComponent(/datum/component/bakeable, /obj/item/food/pizza/margherita, rand(70 SECONDS, 80 SECONDS), TRUE, TRUE)
 
 /obj/item/food/pizza/margherita/robo
@@ -104,7 +104,7 @@
 	burns_in_oven = FALSE
 	slice_type = null
 
-/obj/item/food/pizza/meat/raw/MakeBakeable()
+/obj/item/food/pizza/meat/raw/make_bakeable()
 	AddComponent(/datum/component/bakeable, /obj/item/food/pizza/meat, rand(70 SECONDS, 80 SECONDS), TRUE, TRUE)
 
 /obj/item/food/pizzaslice/meat
@@ -134,7 +134,7 @@
 	burns_in_oven = FALSE
 	slice_type = null
 
-/obj/item/food/pizza/mushroom/raw/MakeBakeable()
+/obj/item/food/pizza/mushroom/raw/make_bakeable()
 	AddComponent(/datum/component/bakeable, /obj/item/food/pizza/mushroom, rand(70 SECONDS, 80 SECONDS), TRUE, TRUE)
 
 /obj/item/food/pizzaslice/mushroom
@@ -165,7 +165,7 @@
 	burns_in_oven = FALSE
 	slice_type = null
 
-/obj/item/food/pizza/vegetable/raw/MakeBakeable()
+/obj/item/food/pizza/vegetable/raw/make_bakeable()
 	AddComponent(/datum/component/bakeable, /obj/item/food/pizza/vegetable, rand(70 SECONDS, 80 SECONDS), TRUE, TRUE)
 
 /obj/item/food/pizzaslice/vegetable
@@ -197,7 +197,7 @@
 	burns_in_oven = FALSE
 	slice_type = null
 
-/obj/item/food/pizza/donkpocket/raw/MakeBakeable()
+/obj/item/food/pizza/donkpocket/raw/make_bakeable()
 	AddComponent(/datum/component/bakeable, /obj/item/food/pizza/donkpocket, rand(70 SECONDS, 80 SECONDS), TRUE, TRUE)
 
 /obj/item/food/pizzaslice/donkpocket
@@ -228,7 +228,7 @@
 	burns_in_oven = FALSE
 	slice_type = null
 
-/obj/item/food/pizza/dank/raw/MakeBakeable()
+/obj/item/food/pizza/dank/raw/make_bakeable()
 	AddComponent(/datum/component/bakeable, /obj/item/food/pizza/dank, rand(70 SECONDS, 80 SECONDS), TRUE, TRUE)
 
 /obj/item/food/pizzaslice/dank
@@ -259,7 +259,7 @@
 	burns_in_oven = FALSE
 	slice_type = null
 
-/obj/item/food/pizza/sassysage/raw/MakeBakeable()
+/obj/item/food/pizza/sassysage/raw/make_bakeable()
 	AddComponent(/datum/component/bakeable, /obj/item/food/pizza/sassysage, rand(70 SECONDS, 80 SECONDS), TRUE, TRUE)
 
 /obj/item/food/pizzaslice/sassysage
@@ -291,7 +291,7 @@
 	burns_in_oven = FALSE
 	slice_type = null
 
-/obj/item/food/pizza/pineapple/raw/MakeBakeable()
+/obj/item/food/pizza/pineapple/raw/make_bakeable()
 	AddComponent(/datum/component/bakeable, /obj/item/food/pizza/pineapple, rand(70 SECONDS, 80 SECONDS), TRUE, TRUE)
 
 /obj/item/food/pizzaslice/pineapple
@@ -322,7 +322,7 @@
 	burns_in_oven = FALSE
 	slice_type = null
 
-/obj/item/food/pizza/arnold/raw/MakeBakeable()
+/obj/item/food/pizza/arnold/raw/make_bakeable()
 	AddComponent(/datum/component/bakeable, /obj/item/food/pizza/arnold, rand(70 SECONDS, 80 SECONDS), TRUE, TRUE)
 
 /obj/item/food/proc/try_break_off(mob/living/M, mob/living/user) //maybe i give you a pizza maybe i break off your arm

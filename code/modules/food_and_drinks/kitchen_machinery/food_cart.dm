@@ -13,6 +13,7 @@
 	var/obj/machinery/smartfridge/food/cart_smartfridge
 	var/obj/structure/table/reinforced/cart_table
 	var/obj/effect/food_cart_stand/cart_tent
+	var/list/packed_things
 
 /obj/machinery/food_cart/Initialize(mapload)
 	. = ..()
@@ -21,9 +22,10 @@
 	cart_table = new(src)
 	cart_tent = new(src)
 	packed_things = list(cart_table, cart_smartfridge, cart_tent, cart_griddle) //middle, left, left, right
-	RegisterSignal(cart_griddle, COMSIG_PARENT_QDELETING, .proc/lost_part)
-	RegisterSignal(cart_smartfridge, COMSIG_PARENT_QDELETING, .proc/lost_part)
-	RegisterSignal(cart_table, COMSIG_PARENT_QDELETING, .proc/lost_part)
+	RegisterSignal(cart_griddle, COMSIG_PARENT_QDELETING, PROC_REF(lost_part))
+	RegisterSignal(cart_smartfridge, COMSIG_PARENT_QDELETING, PROC_REF(lost_part))
+	RegisterSignal(cart_table, COMSIG_PARENT_QDELETING, PROC_REF(lost_part))
+	RegisterSignal(cart_tent, COMSIG_PARENT_QDELETING, PROC_REF(lost_part))
 
 /obj/machinery/food_cart/Destroy()
 	if(cart_griddle)
@@ -32,7 +34,9 @@
 		QDEL_NULL(cart_smartfridge)
 	if(cart_table)
 		QDEL_NULL(cart_table)
-	QDEL_NULL(cart_tent)
+	if(cart_tent)
+		QDEL_NULL(cart_tent)
+	packed_things.Cut()
 	return ..()
 
 /obj/machinery/food_cart/examine(mob/user)
@@ -111,19 +115,20 @@
 	UnregisterSignal(cart_griddle, list(COMSIG_PARENT_QDELETING, COMSIG_MOVABLE_MOVED))
 	UnregisterSignal(cart_smartfridge, list(COMSIG_PARENT_QDELETING, COMSIG_MOVABLE_MOVED))
 	UnregisterSignal(cart_table, list(COMSIG_PARENT_QDELETING, COMSIG_MOVABLE_MOVED))
-	UnregisterSignal(cart_tent, COMSIG_MOVABLE_MOVED)
+	UnregisterSignal(cart_tent, list(COMSIG_PARENT_QDELETING, COMSIG_MOVABLE_MOVED))
 	obj_break()
 
 /obj/machinery/food_cart/obj_break(damage_flag)
 	. = ..()
 	pack_up()
-	if(cart_griddle)
+	if(!QDELETED(cart_griddle))
 		QDEL_NULL(cart_griddle)
-	if(cart_smartfridge)
+	if(!QDELETED(cart_smartfridge))
 		QDEL_NULL(cart_smartfridge)
-	if(cart_table)
+	if(!QDELETED(cart_table))
 		QDEL_NULL(cart_table)
-	QDEL_NULL(cart_tent)
+	if(!QDELETED(cart_tent))
+		QDEL_NULL(cart_tent)
 
 /obj/effect/food_cart_stand
 	name = "food cart tent"

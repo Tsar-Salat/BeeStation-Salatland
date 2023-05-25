@@ -4,11 +4,24 @@ SUBSYSTEM_DEF(supply)
 	wait = 2 MINUTES
 	flags = SS_KEEP_TIMING
 	runlevels = RUNLEVEL_GAME
+
+	/// All of the possible supply packs that can be purchased by cargo.
 	var/list/supply_packs = list()
+
+	/// Queued supplies to be purchased for the chef.
+	var/list/chef_groceries = list()
+
+	/// Queued supply packs to be purchased.
 	var/list/shoppinglist = list()
+
+	/// Wishlist items made by crew for cargo to purchase at their leisure.
 	var/list/requestlist = list()
+
+	/// A listing of previously delivered supply packs.
 	var/list/orderhistory = list()
-	var/ordernum = 1					//order number given to next order
+
+	/// order number given to next order
+	var/ordernum = 1
 
 /datum/controller/subsystem/supply/Initialize(timeofday)
 	ordernum = rand(1, 9000)

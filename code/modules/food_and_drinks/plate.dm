@@ -63,6 +63,7 @@
 #define PLATE_SHARD_PIECES 5
 
 /obj/item/plate/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+	. = ..()
 	if(.)
 		return
 	var/generator/scatter_gen = generator("circle", 0, 48, NORMAL_RAND)
@@ -104,6 +105,13 @@
 	icon = 'icons/obj/kitchen.dmi'
 	icon_state = "plate_shard1"
 	base_icon_state = "plate_shard"
+	w_class = WEIGHT_CLASS_TINY
 	force = 5
 	throwforce = 5
-	sharpness = SHARP_EDGED
+	sharpness = IS_SHARP
+
+/obj/item/plate_shard/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/caltrop, min_damage = force) //ouche my footsies
+
+#undef PLATE_SHARD_PIECES

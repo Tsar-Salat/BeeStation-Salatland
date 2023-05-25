@@ -46,8 +46,8 @@
 	make_edible()
 	make_processable()
 	make_leave_trash()
-	Make_grillable()
-	Make_bakeable()
+	make_grillable()
+	make_bakeable()
 	make_microwaveable()
 
 ///This proc adds the edible component, overwrite this if you for some reason want to change some specific args like callbacks.

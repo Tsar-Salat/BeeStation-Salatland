@@ -34,7 +34,7 @@
 
 /datum/component/bakeable/RegisterWithParent()
 	RegisterSignal(parent, COMSIG_ITEM_BAKED, .proc/OnBake)
-	RegisterSignal(parent, COMSIG_PARENT_EXAMINE, .proc/OnExamine)
+	RegisterSignal(parent, COMSIG_PARENT_EXAMINE, .proc/on_examine)
 
 /datum/component/bakeable/UnregisterFromParent()
 	. = ..()
@@ -50,16 +50,17 @@
 
 	current_bake_time += delta_time * 10 //turn it into ds
 	if(current_bake_time >= required_bake_time)
-		FinishBaking(used_oven)
+		finish_baking(used_oven)
 
 ///Ran when an object finished baking
-/datum/component/bakeable/proc/FinishBaking(atom/used_oven)
-
+/datum/component/bakeable/proc/finish_baking(atom/used_oven)
 	var/atom/original_object = parent
 	var/obj/item/plate/oven_tray/used_tray = original_object.loc
 	var/atom/baked_result = new bake_result(used_tray)
-
-
+	/*
+	if(who_baked_us)
+		ADD_TRAIT(baked_result, TRAIT_FOOD_CHEF_MADE, who_baked_us)
+	*/
 	if(original_object.custom_materials)
 		baked_result.set_custom_materials(original_object.custom_materials, 1)
 
@@ -68,25 +69,29 @@
 	used_tray.AddToPlate(baked_result)
 
 	if(positive_result)
-		used_oven.visible_message(span_warning("You smell something great coming from [used_oven]"))
+		used_oven.visible_message("span class='warning'>You smell something great coming from [used_oven]</span>")
+		//BLACKBOX_LOG_FOOD_MADE(baked_result.type)
 	else
-		used_oven.visible_message(span_warning("You smell a burnt smell coming from [used_oven]"))
-	SEND_SIGNAL(parent, COMSIG_BAKE_COMPLETED, baked_result)
+		used_oven.visible_message("span class='warning'>You smell a burnt smell coming from [used_oven]</span>")
+	SEND_SIGNAL(parent, COMSIG_ITEM_BAKED, baked_result)
 	qdel(parent)
 
 ///Gives info about the items baking status so you can see if its almost done
-/datum/component/bakeable/proc/OnExamine(atom/A, mob/user, list/examine_list)
+/datum/component/bakeable/proc/on_examine(atom/A, mob/user, list/examine_list)
 	SIGNAL_HANDLER
 
 	if(!current_bake_time) //Not baked yet
 		if(positive_result)
-			examine_list += span_notice("[parent] can be <b>baked</b> into \a [initial(bake_result.name)].")
+			if(initial(bake_result.gender) == PLURAL)
+				examine_list += "span class='notice'>[parent] can be ["span class='bold'>baked</span>"] into some [initial(bake_result.name)].</span>"
+			else
+				examine_list += "span class='notice'>[parent] can be ["span class='bold'>baked</span>"] into \a [initial(bake_result.name)].</span>"
 		return
 
 	if(positive_result)
 		if(current_bake_time <= required_bake_time * 0.75)
-			examine_list += span_notice("[parent] probably needs to be baked a bit longer!")
+			examine_list += "span class='notice'>[parent] probably needs to be baked a bit longer!</span>"
 		else if(current_bake_time <= required_bake_time)
-			examine_list += span_notice("[parent] seems to be almost finished baking!")
+			examine_list += "span class='notice'>[parent] seems to be almost finished baking!</span>"
 	else
-		examine_list += span_danger("[parent] should probably not be baked for much longer!")
+		examine_list += "span class='danger'>[parent] should probably not be baked for much longer!</span>"

@@ -90,10 +90,10 @@
 			radio.talk_into(src, message, radio_channel)
 			COOLDOWN_START(src, order_cooldown, 60 SECONDS)
 			for(var/datum/orderable_item/ordered_item in grocery_list)
-				if(ordered_item in SSshuttle.chef_groceries)
-					SSshuttle.chef_groceries[ordered_item] += grocery_list[ordered_item]
+				if(ordered_item in SSsupply.chef_groceries)
+					SSsupply.chef_groceries[ordered_item] += grocery_list[ordered_item]
 				else
-					SSshuttle.chef_groceries[ordered_item] = grocery_list[ordered_item]
+					SSsupply.chef_groceries[ordered_item] = grocery_list[ordered_item]
 			grocery_list.Cut()
 			update_static_data(chef)
 		if("express")

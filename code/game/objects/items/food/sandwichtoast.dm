@@ -28,7 +28,7 @@
 	foodtypes = GRAIN
 	food_flags = FOOD_FINGER_FOOD
 	w_class = WEIGHT_CLASS_SMALL
-	make_grillable = TRUE
+	burns_on_grill = TRUE
 
 /obj/item/food/cheese_sandwich
 	name = "cheese sandwich"
@@ -45,7 +45,7 @@
 	food_flags = FOOD_FINGER_FOOD
 	w_class = WEIGHT_CLASS_SMALL
 
-/obj/item/food/cheese_sandwich/MakeGrillable()
+/obj/item/food/cheese_sandwich/make_grillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/grilled_cheese_sandwich, rand(30 SECONDS, 60 SECONDS), TRUE)
 
 /obj/item/food/jellysandwich

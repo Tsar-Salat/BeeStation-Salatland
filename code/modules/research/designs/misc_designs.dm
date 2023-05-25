@@ -505,7 +505,7 @@
 	name = "Oven Tray"
 	desc = "Gotta shove something in!"
 	id = "oven_tray"
-	build_type = AUTOLATHE | PROTOLATHE | AWAY_LATHE
+	build_type = AUTOLATHE | PROTOLATHE
 	materials = list(/datum/material/iron = 500)
 	build_path = /obj/item/plate/oven_tray
 	category = list("initial","Equipment")

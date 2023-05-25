@@ -20,7 +20,7 @@
 	///Legacy code, handles the coloring of the overlay of the cutlets made from this.
 	var/slab_color = "#FF0000"
 
-/obj/item/food/meat/slab/MakeGrillable()
+/obj/item/food/meat/slab/make_grillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/plain, rand(30 SECONDS, 90 SECONDS), TRUE, TRUE) //Add medium rare later maybe?
 
 /obj/item/food/meat/slab/make_processable()
@@ -33,7 +33,7 @@
 	tastes = list("tender meat" = 1)
 	foodtypes = MEAT | RAW | GORE
 
-/obj/item/food/meat/slab/human/MakeGrillable()
+/obj/item/food/meat/slab/human/make_grillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/plain/human, rand(30 SECONDS, 90 SECONDS), TRUE, TRUE) //Add medium rare later maybe?
 
 /obj/item/food/meat/slab/human/make_processable()
@@ -139,7 +139,7 @@
 	desc = "A synthetic slab of... ethical* meat?"
 	foodtypes = RAW | MEAT // If it looks like a duck, quacks like a duck, its probably...
 
-/obj/item/food/meat/slab/synthmeat/MakeGrillable()
+/obj/item/food/meat/slab/synthmeat/make_grillable()
 	AddComponent(/datum/component/grillable,/obj/item/food/meat/steak/plain/synth, rand(30 SECONDS, 90 SECONDS), TRUE, TRUE)
 
 /obj/item/food/meat/slab/meatproduct
@@ -149,7 +149,7 @@
 	tastes = list("meat flavoring" = 2, "modified starches" = 2, "natural & artificial dyes" = 1, "butyric acid" = 1) // its supposed to be various processed chemicals seen in very processed food. Butyric acid is a reference to how a certain North American Candymaker puts a chemical commonly seen in vomit into chocolate
 	foodtypes = RAW | MEAT
 
-/obj/item/food/meat/slab/meatproduct/MakeGrillable()
+/obj/item/food/meat/slab/meatproduct/make_grillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/meatproduct, rand(30 SECONDS, 90 SECONDS), TRUE, TRUE)
 
 /obj/item/food/meat/slab/monkey
@@ -186,7 +186,7 @@
 	tastes = list("tomato" = 1)
 	foodtypes = FRUIT // Yeah, tomatoes are FRUIT. Bite me.
 
-/obj/item/food/meat/slab/killertomato/MakeGrillable()
+/obj/item/food/meat/slab/killertomato/make_grillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/killertomato, rand(70 SECONDS, 85 SECONDS), TRUE, TRUE)
 
 /obj/item/food/meat/slab/killertomato/make_processable()
@@ -205,7 +205,7 @@
 	tastes = list("meat" = 1, "salmon" = 1)
 	foodtypes = RAW | MEAT
 
-/obj/item/food/meat/slab/bear/MakeGrillable()
+/obj/item/food/meat/slab/bear/make_grillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/bear, rand(40 SECONDS, 70 SECONDS), TRUE, TRUE)
 
 /obj/item/food/meat/slab/bear/make_processable()
@@ -223,7 +223,7 @@
 	tastes = list("meat" = 1, "acid" = 1)
 	foodtypes = RAW | MEAT
 
-/obj/item/food/meat/slab/xeno/MakeGrillable()
+/obj/item/food/meat/slab/xeno/make_grillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/xeno, rand(40 SECONDS, 70 SECONDS), TRUE, TRUE)
 
 /obj/item/food/meat/slab/xeno/make_processable()
@@ -241,7 +241,7 @@
 	tastes = list("cobwebs" = 1)
 	foodtypes = RAW | MEAT | TOXIC
 
-/obj/item/food/meat/slab/spider/MakeGrillable()
+/obj/item/food/meat/slab/spider/make_grillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/spider, rand(40 SECONDS, 70 SECONDS), TRUE, TRUE)
 
 /obj/item/food/meat/slab/spider/make_processable()
@@ -299,7 +299,7 @@
 	tastes = list("bacon" = 1)
 	foodtypes = RAW | MEAT
 
-/obj/item/food/meat/rawbacon/MakeGrillable()
+/obj/item/food/meat/rawbacon/make_grillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/bacon, rand(25 SECONDS, 45 SECONDS), TRUE, TRUE)
 
 /obj/item/food/meat/bacon
@@ -326,7 +326,7 @@
 	tastes = list("meat" = 4, "tranquility" = 1)
 	foodtypes = RAW | MEAT
 
-/obj/item/food/meat/slab/gondola/MakeGrillable()
+/obj/item/food/meat/slab/gondola/make_grillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/gondola, rand(30 SECONDS, 90 SECONDS), TRUE, TRUE) //Add medium rare later maybe?
 
 /obj/item/food/meat/slab/gondola/make_processable()
@@ -342,7 +342,7 @@
 	)
 	tastes = list("beef" = 1, "cod fish" = 1)
 
-/obj/item/food/meat/slab/penguin/MakeGrillable()
+/obj/item/food/meat/slab/penguin/make_grillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/penguin, rand(30 SECONDS, 90 SECONDS), TRUE, TRUE) //Add medium rare later maybe?
 
 /obj/item/food/meat/slab/penguin/make_processable()
@@ -361,7 +361,7 @@
 	tastes = list("raw crab" = 1)
 	foodtypes = RAW | MEAT
 
-/obj/item/food/meat/slab/rawcrab/MakeGrillable()
+/obj/item/food/meat/slab/rawcrab/make_grillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/crab, rand(30 SECONDS, 90 SECONDS), TRUE, TRUE) //Add medium rare later maybe?
 
 /obj/item/food/meat/crab
@@ -386,7 +386,7 @@
 	) //low fat
 	tastes = list("chicken" = 1)
 
-/obj/item/food/meat/slab/chicken/MakeGrillable()
+/obj/item/food/meat/slab/chicken/make_grillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/chicken, rand(30 SECONDS, 90 SECONDS), TRUE, TRUE) //Add medium rare later maybe? (no this is chicken)
 
 /obj/item/food/meat/slab/chicken/make_processable()
