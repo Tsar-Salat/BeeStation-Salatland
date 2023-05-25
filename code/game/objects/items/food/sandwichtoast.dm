@@ -13,19 +13,6 @@
 	food_flags = FOOD_FINGER_FOOD
 	w_class = WEIGHT_CLASS_SMALL
 
-/obj/item/food/toastedsandwich
-	name = "toasted sandwich"
-	desc = "Now if you only had a pepper bar."
-	icon = 'icons/obj/food/burgerbread.dmi'
-	icon_state = "toastedsandwich"
-	trash_type = /obj/item/trash/plate
-	food_reagents = list(
-		/datum/reagent/consumable/nutriment = 6,
-		/datum/reagent/carbon = 2
-	)
-	tastes = list("toast" = 1)
-	foodtypes = GRAIN
-
 /obj/item/food/grilled_cheese_sandwich
 	name = "grilled cheese sandwich"
 	desc = "A warm, melty sandwich that goes perfectly with tomato soup."
@@ -41,6 +28,7 @@
 	foodtypes = GRAIN
 	food_flags = FOOD_FINGER_FOOD
 	w_class = WEIGHT_CLASS_SMALL
+	make_grillable = TRUE
 
 /obj/item/food/cheese_sandwich
 	name = "cheese sandwich"
@@ -56,6 +44,9 @@
 	foodtypes = GRAIN | DAIRY
 	food_flags = FOOD_FINGER_FOOD
 	w_class = WEIGHT_CLASS_SMALL
+
+/obj/item/food/cheese_sandwich/MakeGrillable()
+	AddComponent(/datum/component/grillable, /obj/item/food/grilled_cheese_sandwich, rand(30 SECONDS, 60 SECONDS), TRUE)
 
 /obj/item/food/jellysandwich
 	name = "jelly sandwich"
