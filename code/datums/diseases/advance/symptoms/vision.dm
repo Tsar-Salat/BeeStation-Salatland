@@ -31,9 +31,11 @@ Bonus
 	prefixes = list("Eye ")
 	bodies = list("Blind")
 	suffixes = list(" Blindness")
-	var/remove_eyes = FALSE
 	threshold_desc = "<b>Resistance 12:</b> Weakens extraocular muscles, eventually leading to complete detachment of the eyes.<br>\
 					  <b>Stealth 4:</b> The symptom remains hidden until active."
+
+	/// At max stage: If FALSE, cause blindness. If TRUE, cause their eyes to fall out.
+	var/remove_eyes = FALSE
 
 /datum/symptom/visionloss/severityset(datum/disease/advance/A)
 	. = ..()
@@ -48,33 +50,45 @@ Bonus
 	if(A.resistance >= 12) //goodbye eyes
 		remove_eyes = TRUE
 
-/datum/symptom/visionloss/Activate(datum/disease/advance/A)
-	if(!..())
+/datum/symptom/visionloss/Activate(datum/disease/advance/source_disease)
+	. = ..()
+	if(!.)
 		return
-	var/mob/living/carbon/M = A.affected_mob
-	var/obj/item/organ/eyes/eyes = M.getorganslot(ORGAN_SLOT_EYES)
-	if(eyes)
-		switch(A.stage)
-			if(1, 2)
-				if(prob(base_message_chance) && !suppress_warning)
-					to_chat(M, "<span class='warning'>Your eyes itch.</span>")
-			if(3, 4)
-				to_chat(M, "<span class='warning'><b>Your eyes burn!</b></span>")
-				M.blur_eyes(10)
-				eyes.applyOrganDamage(1)
+	var/mob/living/carbon/ill_mob = source_disease.affected_mob
+	var/obj/item/organ/eyes/eyes = ill_mob.getorganslot(ORGAN_SLOT_EYES)
+	if(!eyes)
+		return
+
+	switch(source_disease.stage)
+		if(1, 2)
+			if(prob(base_message_chance) && !suppress_warning)
+				to_chat(ill_mob, "<span class='warning'>Your eyes itch.</span>")
+
+		if(3, 4)
+			to_chat(ill_mob, "<span class='warning'><b>Your eyes burn!</b></span>")
+			ill_mob.set_eye_blur_if_lower(20 SECONDS)
+			eyes.applyOrganDamage(1)
+
+		else
+			ill_mob.set_eye_blur_if_lower(40 SECONDS)
+			eyes.applyOrganDamage(5)
+
+			// Applies nearsighted at minimum
+			if(!ill_mob.is_nearsighted_from(EYE_DAMAGE) && eyes.damage <= eyes.low_threshold)
+				eyes.setOrganDamage(eyes.low_threshold)
+
+			if(prob(eyes.damage - eyes.low_threshold + 1))
+				if(remove_eyes)
+					ill_mob.visible_message(
+						"<span class='warning'>[ill_mob]'s eyes fall out of their sockets!</span>",
+						"<span class='userdanger'>Your eyes fall out of their sockets!</span>"
+					)
+					eyes.Remove(ill_mob)
+					eyes.forceMove(get_turf(ill_mob))
+
+				else if(!ill_mob.is_blind_from(EYE_DAMAGE))
+					to_chat(M, "<span class='userdanger'>You go blind!</span>")
+					eyes.applyOrganDamage(eyes.maxHealth)
+
 			else
-				M.blur_eyes(20)
-				eyes.applyOrganDamage(5)
-				if(eyes.damage >= 10)
-					M.become_nearsighted(EYE_DAMAGE)
-				if(prob(eyes.damage - 10 + 1))
-					if(!remove_eyes)
-						if(!M.is_blind())
-							to_chat(M, "<span class='userdanger'>You go blind!</span>")
-							eyes.applyOrganDamage(eyes.maxHealth)
-					else
-						M.visible_message("<span class='warning'>[M]'s eyes fall out of their sockets!</span>", "<span class='userdanger'>Your eyes fall out of their sockets!</span>")
-						eyes.Remove(M)
-						eyes.forceMove(get_turf(M))
-				else
-					to_chat(M, "<span class='userdanger'>Your eyes burn horrifically!</span>")
+				to_chat(ill_mob, "<span class='userdanger'>Your eyes burn horrifically!</span>")

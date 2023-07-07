@@ -77,35 +77,37 @@
 	symptom_delay_min = 1
 	symptom_delay_max = 1
 
-/datum/symptom/sensory_restoration/Activate(datum/disease/advance/A)
-	if(!..())
+/datum/symptom/sensory_restoration/Activate(datum/disease/advance/source_disease)
+	. = ..()
+	if(!.)
 		return
-	var/mob/living/M = A.affected_mob
-	var/obj/item/organ/eyes/eyes = M.getorganslot(ORGAN_SLOT_EYES)
-	if (!eyes)
-		return
-	switch(A.stage)
+	var/mob/living/ill_mob = source_disease.affected_mob
+	switch(source_disease.stage)
 		if(4, 5)
-			M.restoreEars()
+			var/obj/item/organ/ears/ears = ill_mob.getorganslot(ORGAN_SLOT_EARS)
+			if(ears)
+				ears.restoreEars()
 
-			if(HAS_TRAIT_FROM(M, TRAIT_BLIND, EYE_DAMAGE))
-				if(prob(20))
-					to_chat(M, "<span class='notice'>Your vision slowly returns...</span>")
-					M.cure_blind(EYE_DAMAGE)
-					M.cure_nearsighted(EYE_DAMAGE)
-					M.blur_eyes(35)
-			else if(HAS_TRAIT_FROM(M, TRAIT_NEARSIGHT, EYE_DAMAGE))
-				to_chat(M, "<span class='notice'>You can finally focus your eyes on distant objects.</span>")
-				M.cure_nearsighted(EYE_DAMAGE)
-				M.blur_eyes(10)
-			else if(M.is_blind() || M.eye_blurry)
-				M.set_blindness(0)
-				M.set_blurriness(0)
-			else if(eyes.damage > 0)
-				eyes.applyOrganDamage(-1)
+			ill_mob.adjust_temp_blindness(-4 SECONDS)
+			ill_mob.adjust_eye_blur(-4 SECONDS)
+
+			var/obj/item/organ/eyes/eyes = M.getorganslot(ORGAN_SLOT_EYES)
+			if (!eyes)
+				return
+
+			eyes.applyOrganDamage(-2)
+			if(prob(20))
+				if(ill_mob.is_blind_from(EYE_DAMAGE))
+					to_chat(ill_mob, "<span class='notice'>Your vision slowly returns...</span>")
+					ill_mob.adjust_eye_blur(20 SECONDS)
+
+			else if(ill_mob.is_nearsighted_from(EYE_DAMAGE))
+				to_chat(ill_mob, "<span class='notice'>The blackness in your peripheral vision begins to fade.</span>")
+				ill_mob.adjust_eye_blur(5 SECONDS)
+
 		else
 			if(prob(base_message_chance))
-				to_chat(M, "<span class='notice'>[pick("Your eyes feel great.","You feel like your eyes can focus more clearly.", "You don't feel the need to blink.","Your ears feel great.","Your healing feels more acute.")]</span>")
+				to_chat(ill_mob, "<span class='notice'>[pick("Your eyes feel great.","You feel like your eyes can focus more clearly.", "You don't feel the need to blink.","Your ears feel great.","Your healing feels more acute.")]</span>")
 
 
 /datum/symptom/organ_restoration //heals damage to other internal organs that get damaged far less often

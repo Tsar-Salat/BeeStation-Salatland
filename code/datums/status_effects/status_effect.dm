@@ -133,6 +133,17 @@
 			if(initial(S1.id) == S.id)
 				return S
 
+/**
+ * Returns a list of all status effects that share the passed effect type's ID
+ *
+ * checked_effect - TYPEPATH of a status effect to check for. Checks for its ID, not it's typepath
+ *
+ * Returns a list
+ */
+/mob/proc/has_status_effect_list(datum/status_effect/checked_effect)
+	// See [/mob/proc/has_status_effect] for reason behind having this on the mob level
+	return null
+
 /mob/living/proc/has_status_effect_list(effect) //returns a list of effects with matching IDs that the mod owns; use for effects there can be multiple of
 	. = list()
 	if(status_effects)
