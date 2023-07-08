@@ -92,8 +92,12 @@
 					observers = null
 					break
 
+/**
+ * Unequips the active held item, if there is one.
+ */
 /mob/living/silicon/robot/proc/uneq_active()
-	uneq_module(module_active)
+	if(module_active)
+		uneq_module(module_active)
 
 /mob/living/silicon/robot/proc/uneq_all()
 	for(var/obj/item/I in held_items)
