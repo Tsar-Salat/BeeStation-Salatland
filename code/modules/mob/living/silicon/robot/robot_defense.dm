@@ -1,14 +1,249 @@
-/mob/living/silicon/robot/attackby(obj/item/I, mob/living/user)
-	if(I.slot_flags & ITEM_SLOT_HEAD && hat_offset != INFINITY && user.a_intent == INTENT_HELP && !is_type_in_typecache(I, blacklisted_hats))
-		to_chat(user, "<span class='notice'>You begin to place [I] on [src]'s head...</span>")
-		to_chat(src, "<span class='notice'>[user] is placing [I] on your head...</span>")
-		if(do_after(user, 30, target = src))
-			if (user.temporarilyRemoveItemFromInventory(I, TRUE))
-				place_on_head(I)
+/mob/living/silicon/robot/attackby(obj/item/W, mob/user, params)
+	if(length(user.progressbars))
+		if(W.tool_behaviour == TOOL_WELDER || istype(W, /obj/item/stack/cable_coil))
+			user.changeNext_move(CLICK_CD_MELEE)
+			to_chat(user, "<span class='notice'>You are already busy!</span>")
+			return
+	if(W.tool_behaviour == TOOL_WELDER && (user.a_intent != INTENT_HARM))
+		user.changeNext_move(CLICK_CD_MELEE)
+		if(user == src)
+			to_chat(user, "<span class='warning'>You are unable to maneuver [W] properly to repair yourself, seek assistance!</span>")
+			return
+		if (!getBruteLoss())
+			to_chat(user, "<span class='warning'>[src] is already in good condition!</span>")
+			return
+		//repeatedly repairs until the cyborg is fully repaired
+		while(getBruteLoss() && W.tool_start_check(user, amount=0) && W.use_tool(src, user, 3 SECONDS))
+			W.use(1) //use one fuel for each repair step
+			adjustBruteLoss(-10)
+			updatehealth()
+			add_fingerprint(user)
+			user.visible_message("[user] fixes some of the dents on [src].", "<span class='notice'>You fix some of the dents on [src].</span>")
+			return
+		return TRUE
+
+	if(istype(W, /obj/item/stack/cable_coil) && wiresexposed)
+		user.changeNext_move(CLICK_CD_MELEE)
+		var/obj/item/stack/cable_coil/coil = W
+		if (getFireLoss() > 0 || getToxLoss() > 0)
+			//if(do_after(user, 30, target = src))
+			if(coil.use(1))
+				adjustFireLoss(-20)
+				adjustToxLoss(-20)
+				updatehealth()
+				add_fingerprint(user)
+				user.visible_message("[user] fixes some of the burnt wires on [src].", "<span class='notice'>You fix some of the burnt wires on [src].</span>")
+			else
+				to_chat(user, "<span class='warning'>You need more cable to repair [src]!</span>")
+		else
+			to_chat(user, "The wires seem fine, there's no need to fix them.")
 		return
-	if(I.force && I.damtype != STAMINA && stat != DEAD) //only sparks if real damage is dealt.
+
+	if(W.tool_behaviour == TOOL_CROWBAR)	// crowbar means open or close the cover
+		if(opened)
+			to_chat(user, "<span class='notice'>You close the cover.</span>")
+			opened = 0
+			update_icons()
+		else
+			if(locked)
+				to_chat(user, "<span class='warning'>The cover is locked and cannot be opened!</span>")
+			else
+				to_chat(user, "<span class='notice'>You open the cover.</span>")
+				if(IsParalyzed() && (last_flashed + 5 SECONDS >= world.time)) //second half of this prevents someone from stunlocking via open/close spam
+					Paralyze(5 SECONDS)
+				opened = 1
+				update_icons()
+		return
+
+	if(istype(W, /obj/item/stock_parts/cell) && opened)	// trying to put a cell inside
+		if(wiresexposed)
+			to_chat(user, "<span class='warning'>Close the cover first!</span>")
+		else if(cell)
+			to_chat(user, "<span class='warning'>There is a power cell already installed!</span>")
+		else
+			if(!user.transferItemToLoc(W, src))
+				return
+			cell = W
+			to_chat(user, "<span class='notice'>You insert the power cell.</span>")
+		update_icons()
+		diag_hud_set_borgcell()
+		return
+
+	if(is_wire_tool(W))
+		if (wiresexposed)
+			wires.interact(user)
+		else
+			to_chat(user, "<span class='warning'>You can't reach the wiring!</span>")
+		return
+
+	if(W.tool_behaviour == TOOL_SCREWDRIVER && opened)	// wire hacking or radio management
+		if(!cell) //haxing
+			wiresexposed = !wiresexposed
+			to_chat(user, "<span class='notice'>The wires have been [wiresexposed ? "exposed" : "unexposed"].</span>")
+		else //radio
+			if(shell)
+				to_chat(user, "<span class='warning'>You cannot seem to open the radio compartment!</span>")	//Prevent AI radio key theft
+			else if(radio)
+				radio.attackby(W,user)//Push it to the radio to let it handle everything
+			else
+				to_chat(user, "<span class='warning'>Unable to locate a radio!</span>")
+		update_icons()
+		return
+
+	if(W.tool_behaviour == TOOL_WRENCH && opened && !cell) //Deconstruction. The flashes break from the fall, to prevent this from being a ghetto reset module.
+		if(!lockcharge)
+			to_chat(user, "<span class='warning'>[src]'s bolts spark! Maybe you should lock them down first!</span>")
+			spark_system.start()
+			return
+		to_chat(user, "<span class='notice'>You start to unfasten [src]'s securing bolts...</span>")
+		if(W.use_tool(src, user, 50, volume=50) && !cell)
+			user.visible_message("<span class='notice'>[user] deconstructs [src]!</span>", "<span class='notice'>You unfasten the securing bolts, and [src] falls to pieces!</span>")
+			log_attack("[key_name(user)] deconstructed [name] at [AREACOORD(src)].")
+			deconstruct()
+		return
+
+	if(W.slot_flags & ITEM_SLOT_HEAD && hat_offset != INFINITY && user.a_intent == INTENT_HELP && !is_type_in_typecache(W, GLOB.blacklisted_borg_hats))
+		to_chat(user, "<span class='notice'>You begin to place [W] on [src]'s head...</span>")
+		to_chat(src, "<span class='notice'>[user] is placing [W] on your head...</span>")
+		if(do_after(user, 30, target = src))
+			if (user.temporarilyRemoveItemFromInventory(W, TRUE))
+				place_on_head(W)
+		return
+	if(istype(W, /obj/item/defibrillator) && user.a_intent == "help")
+		if(!opened)
+			to_chat(user, "<span class='warning'>You must access the cyborg's internals!</span>")
+			return
+		if(!istype(module, /obj/item/robot_module/medical))
+			to_chat(user, "<span class='warning'>[src] does not have correct mounting points for a defibrillator!</span>")
+			return
+		var/obj/item/defibrillator/D = W
+		if(D.slot_flags != ITEM_SLOT_BACK) //belt defibs need not apply
+			to_chat(user, "<span class='warning'>This defibrillator unit doesn't seem to fit correctly!</span>")
+			return
+		if(D.cell)
+			to_chat(user, "<span class='warning'>You cannot connect the defibrillator to the cyborg power supply with the defibrillator's cell in the way!</span>")
+			return
+		if(locate(/obj/item/borg/upgrade/defib) in src || locate(/obj/item/borg/upgrade/defib/backpack) in src)
+			to_chat(user, "<span class='warning'>[src] already has a defibrillator!</span>")
+			return
+		var/obj/item/borg/upgrade/defib/backpack/B = new /obj/item/borg/upgrade/defib/backpack(src)
+		B.action(src, user)
+		to_chat(user, "<span class='notice'>You apply the upgrade to [src].</span>")
+		to_chat(src, "----------------\nNew hardware detected...Identified as \"<b>[D]</b>\"...Setup complete.\n----------------")
+		upgrades += B
+		qdel(D)
+		return
+
+	if(istype(W, /obj/item/aiModule))
+		var/obj/item/aiModule/MOD = W
+		if(!opened)
+			to_chat(user, "<span class='warning'>You need access to the robot's insides to do that!</span>")
+			return
+		if(wiresexposed)
+			to_chat(user, "<span class='warning'>You need to close the wire panel to do that!</span>")
+			return
+		if(!cell)
+			to_chat(user, "<span class='warning'>You need to install a power cell to do that!</span>")
+			return
+		if(shell) //AI shells always have the laws of the AI
+			to_chat(user, "<span class='warning'>[src] is controlled remotely! You cannot upload new laws this way!</span>")
+			return
+		if(emagged || (connected_ai && lawupdate)) //Can't be sure which, metagamers
+			emote("buzz-[user.name]")
+			return
+		if(!mind) //A player mind is required for law procs to run antag checks.
+			to_chat(user, "<span class='warning'>[src] is entirely unresponsive!</span>")
+			return
+		MOD.install(laws, user) //Proc includes a success mesage so we don't need another one
+		return
+
+	if(istype(W, /obj/item/encryptionkey/) && opened)
+		if(radio)//sanityyyyyy
+			radio.attackby(W,user)//GTFO, you have your own procs
+		else
+			to_chat(user, "<span class='warning'>Unable to locate a radio!</span>")
+		return
+
+	if(istype(W, /obj/item/card/id)||istype(W, /obj/item/modular_computer/tablet/pda))			// trying to unlock the interface with an ID card
+		togglelock(user)
+		return
+
+	if(istype(W, /obj/item/borg/upgrade/))
+		var/obj/item/borg/upgrade/U = W
+		if(!opened)
+			to_chat(user, "<span class='warning'>You must access the borg's internals!</span>")
+		else if(!src.module && U.require_module)
+			to_chat(user, "<span class='warning'>The borg must choose a module before it can be upgraded!</span>")
+		else if(U.locked)
+			to_chat(user, "<span class='warning'>The upgrade is locked and cannot be used yet!</span>")
+		else
+			if(!user.temporarilyRemoveItemFromInventory(U))
+				return
+			if(U.action(src))
+				to_chat(user, "<span class='notice'>You apply the upgrade to [src].</span>")
+				to_chat(src, "----------------\nNew hardware detected...Identified as \"<b>[U]</b>\"...Setup complete.\n----------------")
+				if(U.one_use)
+					qdel(U)
+					logevent("Firmware [U] run successfully.")
+				else
+					U.forceMove(src)
+					upgrades += U
+					logevent("Hardware [U] installed successfully.")
+			else
+				to_chat(user, "<span class='danger'>Upgrade error.</span>")
+				U.forceMove(drop_location())
+		return
+
+	if(istype(W, /obj/item/toner))
+		if(toner >= tonermax)
+			to_chat(user, "<span class='warning'>The toner level of [src] is at its highest level possible!</span>")
+		else
+			if(!user.temporarilyRemoveItemFromInventory(W))
+				return
+			toner = tonermax
+			qdel(W)
+			to_chat(user, "<span class='notice'>You fill the toner level of [src] to its max capacity.</span>")
+		return
+
+	if(istype(W, /obj/item/flashlight))
+		if(!opened)
+			to_chat(user, "<span class='warning'>You need to open the panel to repair the headlamp!</span>")
+		else if(lamp_functional)
+			to_chat(user, "<span class='warning'>The headlamp is already functional!</span>")
+			return
+		if(!user.temporarilyRemoveItemFromInventory(W))
+			to_chat(user, "<span class='warning'>[W] seems to be stuck to your hand. You'll have to find a different light.</span>")
+			return
+		lamp_functional = TRUE
+		qdel(W)
+		to_chat(user, "<span class='notice'>You replace the headlamp bulbs.</span>")
+		return
+
+	if(istype(W, /obj/item/computer_hardware/hard_drive/portable)) //Allows borgs to install new programs with human help
+		if(!modularInterface)
+			stack_trace("Cyborg [src] ( [type] ) was somehow missing their integrated tablet. Please make a bug report.")
+			create_modularInterface()
+		var/obj/item/computer_hardware/hard_drive/portable/floppy = W
+		if(modularInterface.install_component(floppy, user))
+			return
+
+	if(W.force && W.damtype != STAMINA && stat != DEAD) //only sparks if real damage is dealt.
 		spark_system.start()
 	return ..()
+
+/mob/living/silicon/robot/proc/togglelock(mob/user)
+	if(opened)
+		to_chat(user, "<span class='warning'>You must close the cover to swipe an ID card!</span>")
+	else
+		if(allowed(usr))
+			locked = !locked
+			to_chat(user, "<span class='notice'>You [ locked ? "lock" : "unlock"] [src]'s cover.</span>")
+			update_icons()
+			if(emagged)
+				to_chat(user, "<span class='notice'>The cover interface glitches out for a split second.</span>")
+			logevent("[emagged ? "ChÃ¥vÃis" : "Chassis"] cover lock has been [locked ? "engaged" : "released"]") //ChÃ¥vÃis: see above line
+		else
+			to_chat(user, "<span class='danger'>Access denied.</span>")
 
 /mob/living/silicon/robot/attack_alien(mob/living/carbon/alien/humanoid/M)
 	if (M.a_intent == INTENT_DISARM)
@@ -72,6 +307,24 @@
 				step_away(src,user,15)
 				sleep(3)
 				step_away(src,user,15)
+
+/*
+/mob/living/silicon/robot/crowbar_act(mob/living/user, obj/item/tool)
+	else if(W.tool_behaviour == TOOL_CROWBAR)	// crowbar means open or close the cover
+		if(opened)
+			to_chat(user, "<span class='notice'>You close the cover.</span>")
+			opened = 0
+			update_icons()
+		else
+			if(locked)
+				to_chat(user, "<span class='warning'>The cover is locked and cannot be opened!</span>")
+			else
+				to_chat(user, "<span class='notice'>You open the cover.</span>")
+				if(IsParalyzed() && (last_flashed + 5 SECONDS >= world.time)) //second half of this prevents someone from stunlocking via open/close spam
+					Paralyze(5 SECONDS)
+				opened = 1
+				update_icons()
+*/
 
 /mob/living/silicon/robot/fire_act()
 	if(!on_fire) //Silicons don't gain stacks from hotspots, but hotspots can ignite them
