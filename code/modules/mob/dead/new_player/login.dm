@@ -1,13 +1,31 @@
 /mob/dead/new_player/Login()
+	if(!client)
+		return
+
 	if(CONFIG_GET(flag/use_exp_tracking))
 		client.set_exp_from_db()
 		client.set_db_player_flags()
+		if(!client)
+			// client disconnected during one of the db queries
+			return FALSE
+
 	if(!mind)
 		mind = new /datum/mind(key)
 		mind.active = TRUE
 		mind.set_current(src)
 
-	..()
+	// Check if user should be added to interview queue
+	if (!client.holder && CONFIG_GET(flag/panic_bunker) && CONFIG_GET(flag/panic_bunker_interview) && !(client.ckey in GLOB.interviews.approved_ckeys))
+		var/required_living_minutes = CONFIG_GET(number/panic_bunker_living)
+		var/living_minutes = client.get_exp_living(TRUE)
+		if (required_living_minutes > living_minutes)
+			client.interviewee = TRUE
+			register_for_interview()
+			return
+
+	. = ..()
+	if(!. || !client)
+		return FALSE
 
 	var/motd = global.config.motd
 	if(motd)
@@ -24,14 +42,12 @@
 
 	client.playtitlemusic()
 
-	// Check if user should be added to interview queue
-	if (!client.holder && CONFIG_GET(flag/panic_bunker) && CONFIG_GET(flag/panic_bunker_interview) && !(client.ckey in GLOB.interviews.approved_ckeys))
-		var/required_living_minutes = CONFIG_GET(number/panic_bunker_living)
-		var/living_minutes = client.get_exp_living(TRUE)
-		if (required_living_minutes > living_minutes)
-			client.interviewee = TRUE
-			register_for_interview()
-			return
+	/*
+	var/datum/asset/asset_datum = get_asset_datum(/datum/asset/simple/lobby)
+	asset_datum.send(client)
+	if(!client) // client disconnected during asset transit
+		return FALSE
+	*/
 
 	new_player_panel()
 	if(SSticker.current_state < GAME_STATE_SETTING_UP)
