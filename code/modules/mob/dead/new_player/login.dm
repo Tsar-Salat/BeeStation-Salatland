@@ -33,13 +33,6 @@
 
 	client.playtitlemusic()
 
-	/*
-	var/datum/asset/asset_datum = get_asset_datum(/datum/asset/simple/lobby)
-	asset_datum.send(client)
-	if(!client) // client disconnected during asset transit
-		return FALSE
-	*/
-
 	// Check if user should be added to interview queue
 	if (!client.holder && CONFIG_GET(flag/panic_bunker) && CONFIG_GET(flag/panic_bunker_interview) && !(client.ckey in GLOB.interviews.approved_ckeys))
 		var/required_living_minutes = CONFIG_GET(number/panic_bunker_living)
@@ -48,6 +41,13 @@
 			client.interviewee = TRUE
 			register_for_interview()
 			return
+
+	/*
+	var/datum/asset/asset_datum = get_asset_datum(/datum/asset/simple/lobby)
+	asset_datum.send(client)
+	if(!client) // client disconnected during asset transit
+		return FALSE
+	*/
 
 	new_player_panel()
 	if(SSticker.current_state < GAME_STATE_SETTING_UP)
