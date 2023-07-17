@@ -442,8 +442,7 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 		drowsyness = max(drowsyness - adjusted_restingpwr, 0)
 		blur_eyes(2)
 		if(DT_PROB(5, delta_time))
-			AdjustSleeping(20)
-			Unconscious(100)
+			AdjustSleeping(100)
 
 	//Jitteriness
 	if(jitteriness)
