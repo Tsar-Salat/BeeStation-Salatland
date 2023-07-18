@@ -439,10 +439,8 @@
 				to_chat(M, "<span class='notice'>The light makes you feel oddly relaxed...</span>")
 				M.confused += min(M.confused + 10, 20)
 				M.dizziness += min(M.dizziness + 10, 20)
-				M.drowsyness += min(M.drowsyness + 10, 20)
+				M.adjust_drowsyness(min(M.drowsyness+10, 20))
 				M.apply_status_effect(STATUS_EFFECT_PACIFY, 100)
-
-
 
 		else if(user)
 			user.visible_message("<span class='disarm'>[user] fails to blind [M] with the flash!</span>", "<span class='warning'>You fail to hypno-flash [M]!</span>")
@@ -453,7 +451,7 @@
 		to_chat(M, "<span class='notice'>Such a pretty light...</span>")
 		M.confused += min(M.confused + 4, 20)
 		M.dizziness += min(M.dizziness + 4, 20)
-		M.drowsyness += min(M.drowsyness + 4, 20)
+		M.adjust_drowsyness(min(M.drowsyness+4, 20))
 		M.apply_status_effect(STATUS_EFFECT_PACIFY, 40)
 
 #undef FLASH_USE

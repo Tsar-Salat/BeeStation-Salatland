@@ -138,7 +138,7 @@
 		owner.Sleeping(60)
 	else if(!owner.drowsyness && prob(sleep_chance * 2))
 		to_chat(owner, "<span class='warning'>You feel tired...</span>")
-		owner.drowsyness += 10
+		owner.adjust_drowsyness(10)
 
 /datum/brain_trauma/severe/monophobia
 	name = "Monophobia"
