@@ -66,7 +66,8 @@
 		for(var/obj/item/reagent_containers/food/snacks/S in T.contents)
 			var/datum/food_processor_process/P = select_recipe(S)
 			if(P)
-				if(SEND_SIGNAL(T, COMSIG_TRY_STORAGE_TAKE, S, src))
+				if(T.atom_storage.attempt_remove(S, src))
+					//LAZYADD(processor_contents, S)
 					loaded++
 
 		if(loaded)
