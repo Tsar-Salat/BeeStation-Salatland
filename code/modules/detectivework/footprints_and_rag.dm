@@ -36,7 +36,7 @@
 			C.visible_message("<span class='danger'>[user] has smothered \the [C] with \the [src]!</span>", "<span class='userdanger'>[user] has smothered you with \the [src]!</span>", "<span class='italics'>You hear some struggling and muffled cries of surprise.</span>")
 			log_combat(user, C, "smothered", src, log_object)
 		else
-			reagents.expose(C, TOUCH)
+			reagents.reaction(C, TOUCH)
 			reagents.clear_reagents()
 			C.visible_message("<span class='notice'>[user] has touched \the [C] with \the [src].</span>")
 			log_combat(user, C, "touched", src, log_object)

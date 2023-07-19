@@ -1,5 +1,5 @@
 /datum/team/xeno
-	name = "Aliens"
+	name = "Xenomorphs"
 
 //Simply lists them.
 /datum/team/xeno/roundend_report()
@@ -17,6 +17,7 @@
 	show_in_antagpanel = FALSE
 	prevent_roundtype_conversion = FALSE
 	show_to_ghosts = TRUE
+	// TODO: ui_name = "AntagInfoXeno"
 	var/datum/team/xeno/xeno_team
 
 /datum/antagonist/xeno/create_team(datum/team/xeno/new_team)
@@ -37,7 +38,7 @@
 
 /datum/antagonist/xeno/apply_innate_effects(mob/living/mob_override)
 	. = ..()
-	//Give traitor appearence on hud (If they are not an antag already)
+	//Give traitor appearance on hud (If they are not an antag already)
 	var/datum/atom_hud/antag/traitorhud = GLOB.huds[ANTAG_HUD_XENOMORPH]
 	traitorhud.join_hud(owner.current)
 	if(!owner.antag_hud_icon_state)

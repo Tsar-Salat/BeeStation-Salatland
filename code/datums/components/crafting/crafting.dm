@@ -1,6 +1,6 @@
 /datum/component/personal_crafting/Initialize()
 	if(ismob(parent))
-		RegisterSignal(parent, COMSIG_MOB_CLIENT_LOGIN, .proc/create_mob_button)
+		RegisterSignal(parent, COMSIG_MOB_CLIENT_LOGIN, PROC_REF(create_mob_button))
 
 /datum/component/personal_crafting/proc/create_mob_button(mob/user, client/CL)
 	var/datum/hud/H = user.hud_used
@@ -8,7 +8,7 @@
 	C.icon = H.ui_style
 	H.static_inventory += C
 	CL.screen += C
-	RegisterSignal(C, COMSIG_CLICK, .proc/component_ui_interact)
+	RegisterSignal(C, COMSIG_CLICK, PROC_REF(component_ui_interact))
 
 /datum/component/personal_crafting
 	var/busy
@@ -135,6 +135,11 @@
 					for(var/datum/reagent/A in RC.reagents.reagent_list)
 						.["other"][A.type] += A.volume
 			.["other"][I.type] += 1
+
+/datum/component/personal_crafting/ui_assets(mob/user)
+	return list(
+		get_asset_datum(/datum/asset/spritesheet/crafting),
+	)
 
 /datum/component/personal_crafting/proc/check_tools(atom/a, datum/crafting_recipe/R, list/contents)
 	if(!R.tools.len)
@@ -324,13 +329,21 @@
 	while(Deletion.len)
 		var/DL = Deletion[Deletion.len]
 		Deletion.Cut(Deletion.len)
+		// Snowflake handling of reagent containers and storage atoms.
+		// If we consumed them in our crafting, we should dump their contents out before qdeling them.
+		if(istype(DL, /obj/item/reagent_containers))
+			var/obj/item/reagent_containers/container = DL
+			container.reagents.reaction(container.loc, TOUCH)
+		else if(istype(DL, /obj/item/storage))
+			var/obj/item/storage/container = DL
+			container.emptyStorage()
 		qdel(DL)
 
 /datum/component/personal_crafting/proc/component_ui_interact(atom/movable/screen/craft/image, location, control, params, user)
 	SIGNAL_HANDLER
 
 	if(user == parent)
-		INVOKE_ASYNC(src, .proc/ui_interact, user)
+		INVOKE_ASYNC(src, PROC_REF(ui_interact), user)
 
 /datum/component/personal_crafting/ui_state(mob/user)
 	return GLOB.not_incapacitated_turf_state
@@ -412,7 +425,7 @@
 				return
 			busy = TRUE
 			. = TRUE
-			INVOKE_ASYNC(src, .proc/construct_item_ui, user, TR)
+			INVOKE_ASYNC(src, PROC_REF(construct_item_ui), user, TR)
 		if("toggle_recipes")
 			display_craftable_only = !display_craftable_only
 			. = TRUE
@@ -431,6 +444,9 @@
 	var/req_text = ""
 	var/tool_text = ""
 	var/catalyst_text = ""
+
+	// get icon
+	data["path"] = replacetext(copytext("[R.result]", 2), "/", "-")
 
 	for(var/a in R.reqs)
 		//We just need the name, so cheat-typecast to /atom for speed (even tho Reagents are /datum they DO have a "name" var)

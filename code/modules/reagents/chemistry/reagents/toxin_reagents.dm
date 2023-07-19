@@ -34,12 +34,12 @@
 	taste_description = "slime"
 	taste_mult = 0.9
 
-/datum/reagent/toxin/mutagen/expose_mob(mob/living/carbon/M, methods=TOUCH, reac_volume)
+/datum/reagent/toxin/mutagen/reaction_mob(mob/living/carbon/M, method=TOUCH, reac_volume)
 	if(!..())
 		return
 	if(!M.has_dna())
 		return  //No robots, AIs, aliens, Ians or other mobs should be affected by this.
-	if(((methods & VAPOR) && prob(min(33, reac_volume))) || (methods & (INGEST|PATCH|INJECT)))
+	if((method==VAPOR && prob(min(33, reac_volume))) || method==INGEST || method==PATCH || method==INJECT)
 		M.randmuti()
 		if(prob(98))
 			M.easy_randmut(NEGATIVE+MINOR_NEGATIVE)
@@ -81,29 +81,9 @@
 	C.adjustPlasma(20)
 	return ..()
 
-/// Handles plasma boiling.
-/datum/reagent/toxin/plasma/proc/on_temp_change(datum/reagents/_holder, old_temp)
-	SIGNAL_HANDLER
-	if(holder.chem_temp < LIQUID_PLASMA_BP)
-		return
-	if(!holder.my_atom)
-		return
-
-	var/atom/A = holder.my_atom
-	A.atmos_spawn_air("plasma=[volume];TEMP=[holder.chem_temp]")
-	holder.del_reagent(type)
-
-/datum/reagent/toxin/plasma/expose_turf(turf/open/exposed_turf, reac_volume)
-	if(!istype(exposed_turf))
-		return
-	var/temp = holder ? holder.chem_temp : T20C
-	exposed_turf.atmos_spawn_air("plasma=[reac_volume];TEMP=[temp]")
-	return ..()
-
-/datum/reagent/toxin/plasma/expose_mob(mob/living/exposed_mob, methods=TOUCH, reac_volume)//Splashing people with plasma is stronger than fuel!
-	. = ..()
-	if(methods & (TOUCH|VAPOR))
-		exposed_mob.adjust_fire_stacks(reac_volume / 5)
+/datum/reagent/toxin/plasma/reaction_mob(mob/living/M, method=TOUCH, reac_volume)//Splashing people with plasma is stronger than fuel!
+	if(method == TOUCH || method == VAPOR)
+		M.adjust_fire_stacks(reac_volume / 5)
 		return
 
 /datum/reagent/toxin/lexorin
@@ -129,7 +109,7 @@
 
 /datum/reagent/toxin/slimejelly
 	name = "Slime Jelly"
-	description = "A gooey semi-liquid produced from one of the deadliest lifeforms in existence. SO REAL."
+	description = "A gooey semi-liquid produced from Oozelings"
 	color = "#801E28" // rgb: 128, 30, 40
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
 	toxpwr = 0
@@ -137,25 +117,6 @@
 	taste_mult = 1.3
 
 /datum/reagent/toxin/slimejelly/on_mob_life(mob/living/carbon/M)
-	if(prob(10))
-		to_chat(M, "<span class='danger'>Your insides are burning!</span>")
-		M.adjustToxLoss(rand(20,60)*REM, 0)
-		. = 1
-	else if(prob(40))
-		M.heal_bodypart_damage(5*REM)
-		. = 1
-	..()
-
-/datum/reagent/toxin/slimeooze
-	name = "Slime Ooze"
-	description = "A gooey semi-liquid produced from Oozelings"
-	color = "#611e80"
-	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
-	toxpwr = 0
-	taste_description = "slime"
-	taste_mult = 1.5
-
-/datum/reagent/toxin/slimeooze/on_mob_life(mob/living/carbon/M)
 	if(prob(10))
 		to_chat(M, "<span class='danger'>Your insides are burning!</span>")
 		M.adjustToxLoss(rand(1,10)*REM, 0)
@@ -348,7 +309,7 @@
 	..()
 
 /datum/reagent/toxin/fakebeer	//disguised as normal beer for use by emagged brobots
-	name = "Beer"
+	name = "Strong Beer"
 	description = "A specially-engineered sedative disguised as beer. It induces instant sleep in its target."
 	color = "#664300" // rgb: 102, 67, 0
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
@@ -506,13 +467,20 @@
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
 	toxpwr = 0.5
 
+/datum/reagent/toxin/spidervenom/on_mob_metabolize(mob/living/L)
+	if(SEND_SIGNAL(L, COMSIG_HAS_NANITES))
+		for(var/datum/component/nanites/N in L.datum_components)
+			for(var/X in N.programs)
+				var/datum/nanite_program/NP = X
+				NP.software_error(1) //all programs are destroyed, nullifying all nanites
+
 /datum/reagent/toxin/spidervenom/on_mob_life(mob/living/carbon/M)
-	if(M.getStaminaLoss() <= 70)				//Should not stamcrit under most conditions, but will greatly slow down given some time.
-		M.adjustStaminaLoss((volume * 0.75) * REM, 0)
-	if(current_cycle > 10 && prob(current_cycle + (volume * 0.3))) 	//The longer it is in your system and the more of it you have the more frequently you drop
+	if(M.getStaminaLoss() <= 70)				//Will never stamcrit
+		M.adjustStaminaLoss(min(volume * 1.5, 15) * REM, 0)
+	if(current_cycle >= 4 && prob(current_cycle + (volume * 0.3))) 	//The longer it is in your system and the more of it you have the more frequently you drop
 		M.Paralyze(3 SECONDS, 0)
 		toxpwr += 0.1							//The venom gets stronger until completely purged.
-	if(holder.has_reagent(/datum/reagent/medicine/calomel) || holder.has_reagent(/datum/reagent/medicine/pen_acid) || holder.has_reagent(/datum/reagent/medicine/charcoal))
+	if(holder.has_reagent(/datum/reagent/medicine/calomel) || holder.has_reagent(/datum/reagent/medicine/pen_acid) || holder.has_reagent(/datum/reagent/medicine/charcoal) || holder.has_reagent(/datum/reagent/medicine/carthatoline))
 		current_cycle += 5						// Prevents using purgatives while in combat
 	..()
 
@@ -833,7 +801,7 @@
 
 
 /datum/reagent/toxin/acid
-	name = "Sulphuric Acid"
+	name = "Sulfuric Acid"
 	description = "A strong mineral acid with the molecular formula H2SO4."
 	color = "#00FF32"
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY

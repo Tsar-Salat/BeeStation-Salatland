@@ -54,7 +54,7 @@
 #define BLASTDOOR_LAYER 2.65
 #define OPEN_DOOR_LAYER 2.7
 #define DOOR_HELPER_LAYER 2.71 //keep this above OPEN_DOOR_LAYER
-#define PROJECTILE_HIT_THRESHHOLD_LAYER 2.75 //projectiles won't hit objects at or below this layer if possible
+#define PROJECTILE_HIT_THRESHOLD_LAYER 2.75 //projectiles won't hit objects at or below this layer if possible
 #define TABLE_LAYER 2.8
 #define BELOW_OBJ_LAYER 2.9
 #define LOW_ITEM_LAYER 2.95
@@ -88,6 +88,9 @@
 //#define FLY_LAYER 5 //For easy recordkeeping; this is a byond define
 #define GASFIRE_LAYER 5.05
 #define RIPPLE_LAYER 5.1
+
+#define TEXT_EFFECT_UI_LAYER 5.90 // text effects shouldn't be displayed behind.
+	// maybe it should be custom layer category like 'UI_LAYER 6'
 
 #define BLACKNESS_PLANE 0 //To keep from conflicts with SEE_BLACKNESS internals
 
@@ -162,7 +165,7 @@
 #define RADIAL_LAYER 1000
 
 #define RADIAL_BACKGROUND_LAYER 0
-#define RADIAL_CONTENT_LAYER 1
+#define RADIAL_CONTENT_LAYER 1000
 
 ///Plane of the "splash" icon used that shows on the lobby screen. Nothing should ever be above this.
 #define SPLASHSCREEN_PLANE 9999
