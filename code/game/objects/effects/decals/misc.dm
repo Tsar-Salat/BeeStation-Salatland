@@ -48,9 +48,13 @@
 			continue
 
 		if(!stream)
+			reagents.expose(turf_atom, VAPOR)
+			log_combat(user, turf_atom, "sprayed", sprayer, addition="which had [puff_reagents_string]")
 			if(ismob(turf_atom))
 				lifetime--
-		else if(isliving(turf_atom))
+			continue
+
+		if(isliving(turf_atom))
 			var/mob/living/turf_mob = turf_atom
 
 			if(!turf_mob.can_inject())
@@ -58,18 +62,24 @@
 			if(!(turf_mob.mobility_flags & MOBILITY_STAND) && !travelled_max_distance)
 				continue
 
-			lifetime--
-		else if(travelled_max_distance)
-			lifetime--
-		reagents?.reaction(turf_atom, VAPOR)
-		if(user)
+			reagents.expose(turf_atom, VAPOR)
 			log_combat(user, turf_atom, "sprayed", sprayer, addition="which had [puff_reagents_string]")
+			lifetime--
+
+		else if(travelled_max_distance)
+			reagents.expose(turf_atom, VAPOR)
+			log_combat(user, turf_atom, "sprayed", sprayer, addition="which had [puff_reagents_string]")
+			lifetime--
+
 
 	if(lifetime >= 0 && (!stream || travelled_max_distance))
-		reagents?.reaction(our_turf, VAPOR)
+		reagents.expose(our_turf, VAPOR)
+		log_combat(user, our_turf, "sprayed", sprayer, addition="which had [puff_reagents_string]")
 		lifetime--
-		if(user)
-			log_combat(user, our_turf, "sprayed", sprayer, addition="which had [puff_reagents_string]")
+
+	// Did we use up all the puff early?
+	if(lifetime < 0)
+		qdel(src)
 
 /obj/effect/decal/fakelattice
 	name = "lattice"

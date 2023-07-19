@@ -1,7 +1,7 @@
 #define REM REAGENTS_EFFECT_MULTIPLIER
 #define METABOLITE_RATE     0.5 // How much of a reagent is converted metabolites if one is defined
 #define MAX_METABOLITES		15  // The maximum amount of a given metabolite someone can have at a time
-#define METABOLITE_PENALTY(path) clamp(M.reagents.get_reagent_amount(path)/2.5, 1, 5) //Ranges from 1 to 5 depending on level of metabolites. 
+#define METABOLITE_PENALTY(path) clamp(M.reagents.get_reagent_amount(path)/2.5, 1, 5) //Ranges from 1 to 5 depending on level of metabolites.
 
 GLOBAL_LIST_INIT(name2reagent, build_name2reagent())
 
@@ -85,11 +85,15 @@ GLOBAL_LIST_INIT(name2reagent, build_name2reagent())
 	. |= SEND_SIGNAL(src, COMSIG_REAGENT_EXPOSE_ATOM, exposed_atom, reac_volume)
 	. |= SEND_SIGNAL(exposed_atom, COMSIG_ATOM_EXPOSE_REAGENT, src, reac_volume)
 
-/datum/reagent/proc/expose_obj(obj/O, volume)
-	return
+/// Applies this reagent to a [/mob/living]
+/datum/reagent/proc/expose_mob(mob/living/exposed_mob, methods=TOUCH, reac_volume, show_message = TRUE, touch_protection = 0)
+	SHOULD_CALL_PARENT(TRUE)
 
-/datum/reagent/proc/expose_turf(turf/T, volume)
-	return
+	. = SEND_SIGNAL(src, COMSIG_REAGENT_EXPOSE_MOB, exposed_mob, methods, reac_volume, show_message, touch_protection)
+	if((methods & penetrates_skin) && exposed_mob.reagents) //smoke, foam, spray
+		var/amount = round(reac_volume*clamp((1 - touch_protection), 0, 1), 0.1)
+		if(amount >= 0.5)
+			exposed_mob.reagents.add_reagent(type, amount)
 
 /// Applies this reagent to an [/obj]
 /datum/reagent/proc/expose_obj(obj/exposed_obj, reac_volume)

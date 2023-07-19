@@ -302,6 +302,13 @@
 	user.visible_message("<span class='suicide'>[user] scratches a grid on [user.p_their()] wrist with the paper! It looks like [user.p_theyre()] trying to commit sudoku...</span>")
 	return (BRUTELOSS)
 
+/obj/item/paper/proc/clearpaper()
+	info = ""
+	stamps = null
+	LAZYCLEARLIST(stamped)
+	cut_overlays()
+	update_icon_state()
+
 /obj/item/paper/examine(mob/user)
 	. = ..()
 	if(!in_range(user, src) && !isobserver(user))
