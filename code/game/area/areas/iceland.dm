@@ -1,7 +1,6 @@
 /area/iceland
 	name = "iceland plains"
 	icon_state = "iceland"
-	dynamic_lighting = DYNAMIC_LIGHTING_IFSTARLIGHT
 	always_unpowered = TRUE
 	requires_power = TRUE
 	power_environ = FALSE
@@ -14,7 +13,7 @@
 	has_gravity = STANDARD_GRAVITY
 	ambience_index = AMBIENCE_SPOOKY
 	sound_environment = SOUND_AREA_LARGE_SOFTFLOOR
-	area_flags = UNIQUE_AREA | FLORA_ALLOWED
+	area_flags = UNIQUE_AREA | FLORA_ALLOWED | AREA_USES_STARLIGHT
 	lighting_overlay_colour = "#93c3cf"
 	lighting_overlay_opacity = 60
 

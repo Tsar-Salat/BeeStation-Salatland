@@ -104,6 +104,11 @@
 #define DATA_HUD_PLANE 15
 
 //---------- LIGHTING -------------
+
+#define LIGHTING_PRIMARY_LAYER 15	//The layer for the main lights of the station
+#define LIGHTING_PRIMARY_DIMMER_LAYER 15.1	//The layer that dims the main lights of the station
+#define LIGHTING_SECONDARY_LAYER 16	//The colourful, usually small lights that go on top
+
 ///Normal 1 per turf dynamic lighting objects
 #define LIGHTING_PLANE 100
 

@@ -47,6 +47,9 @@ GLOBAL_LIST_EMPTY(created_baseturf_lists)
 	///Lumcount added by sources other than lighting datum objects, such as the overlay lighting component.
 	var/dynamic_lumcount = 0
 
+	///Bool, whether this turf will always be illuminated no matter what area it is in
+	var/always_lit = FALSE
+
 	/// Should we used the smooth tiled dirt decal or not
 	var/tiled_dirt = FALSE
 
@@ -88,8 +91,7 @@ GLOBAL_LIST_EMPTY(created_baseturf_lists)
 	for(var/atom/movable/content as anything in src)
 		Entered(content, null)
 
-	var/area/A = loc
-	if(!IS_DYNAMIC_LIGHTING(src) && IS_DYNAMIC_LIGHTING(A))
+	if(always_lit)
 		add_overlay(GLOB.fullbright_overlay)
 
 	if(requires_activation)

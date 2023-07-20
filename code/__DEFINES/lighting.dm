@@ -77,14 +77,6 @@
 #define LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE 128 //! For lighting alpha, small amounts lead to big changes. even at 128 its hard to figure out what is dark and what is light, at 64 you almost can't even tell.
 #define LIGHTING_PLANE_ALPHA_INVISIBLE 0
 
-//lighting area defines
-#define DYNAMIC_LIGHTING_DISABLED 0 //! dynamic lighting disabled (area stays at full brightness)
-#define DYNAMIC_LIGHTING_ENABLED 1 //! dynamic lighting enabled
-#define DYNAMIC_LIGHTING_FORCED 2 //! dynamic lighting enabled even if the area doesn't require power
-#define DYNAMIC_LIGHTING_IFSTARLIGHT 3 //! dynamic lighting enabled only if starlight is.
-#define IS_DYNAMIC_LIGHTING(A) A.dynamic_lighting
-
-
 //code assumes higher numbers override lower numbers.
 #define LIGHTING_NO_UPDATE 0
 #define LIGHTING_VIS_UPDATE 1
@@ -137,10 +129,3 @@ do { \
 		source.lum_b = 1; \
 	}; \
 } while (FALSE)
-
-GLOBAL_DATUM_INIT(fullbright_overlay, /image, create_fullbright_overlay())
-
-/proc/create_fullbright_overlay()
-	var/image/lighting_effect = new()
-	lighting_effect.appearance = /obj/effect/fullbright
-	return lighting_effect
