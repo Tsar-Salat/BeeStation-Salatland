@@ -27,6 +27,11 @@
 		if("base_lighting_alpha")
 			set_base_lighting(new_alpha = var_value)
 			return TRUE
+		if("static_lighting")
+			if(!static_lighting)
+				create_area_lighting_objects()
+			else
+				remove_area_lighting_objects()
 		if("lighting_overlay_colour")
 			..()
 			if(lighting_overlay)
