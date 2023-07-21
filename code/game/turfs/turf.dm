@@ -65,7 +65,13 @@ GLOBAL_LIST_EMPTY(created_baseturf_lists)
 		return FALSE
 	. = ..()
 
+/**
+  * Turf Initialize
+  *
+  * Doesn't call parent, see [/atom/proc/Initialize]
+  */
 /turf/Initialize(mapload)
+	SHOULD_CALL_PARENT(FALSE)
 	if(flags_1 & INITIALIZED_1)
 		stack_trace("Warning: [src]([type]) initialized multiple times!")
 	flags_1 |= INITIALIZED_1
@@ -91,7 +97,8 @@ GLOBAL_LIST_EMPTY(created_baseturf_lists)
 	for(var/atom/movable/content as anything in src)
 		Entered(content, null)
 
-	if(always_lit)
+	var/area/our_area = loc
+	if(our_area.area_has_base_lighting && always_lit) //Only provide your own lighting if the area doesn't for you
 		add_overlay(GLOB.fullbright_overlay)
 
 	if(requires_activation)

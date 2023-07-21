@@ -45,6 +45,7 @@
  * intentionally ommitted from this implementation.
  */
 /turf/open/space/Initialize(mapload)
+	SHOULD_CALL_PARENT(FALSE)
 	icon_state = SPACE_ICON_STATE
 	if(!space_gas)
 		space_gas = new
@@ -54,6 +55,10 @@
 	if(flags_1 & INITIALIZED_1)
 		stack_trace("Warning: [src]([type]) initialized multiple times!")
 	flags_1 |= INITIALIZED_1
+
+	var/area/our_area = loc
+	if(our_area.area_has_base_lighting && always_lit) //Only provide your own lighting if the area doesn't for you
+		add_overlay(GLOB.fullbright_overlay)
 
 	return INITIALIZE_HINT_NORMAL
 
