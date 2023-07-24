@@ -21,6 +21,7 @@
 	. = ..()
 	if(use_ion_trail)
 		ion_trail = new
+		ion_trail.auto_process = FALSE
 		ion_trail.set_up(src)
 
 /obj/item/tank/jetpack/Destroy()
@@ -78,6 +79,7 @@
 
 /obj/item/tank/jetpack/proc/on_user_add()
 	RegisterSignal(known_user, COMSIG_MOVABLE_MOVED, PROC_REF(move_react))
+	RegisterSignal(known_user, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(pre_move_react))
 	RegisterSignal(known_user, COMSIG_PARENT_QDELETING, PROC_REF(lose_known_user))
 
 /obj/item/tank/jetpack/proc/lose_known_user()
@@ -89,9 +91,12 @@
 /obj/item/tank/jetpack/proc/on_user_loss()
 	known_user.remove_movespeed_modifier(MOVESPEED_ID_JETPACK)
 	UnregisterSignal(known_user, COMSIG_MOVABLE_MOVED)
+	UnregisterSignal(known_user, COMSIG_MOVABLE_PRE_MOVE)
 	UnregisterSignal(known_user, COMSIG_PARENT_QDELETING)
 
 /obj/item/tank/jetpack/proc/turn_on(mob/user)
+	if(!allow_thrust(0.01, user))
+		return
 	if(!known_user)
 		return
 	on = TRUE
@@ -114,13 +119,29 @@
 
 /obj/item/tank/jetpack/proc/move_react(mob/user)
 	SIGNAL_HANDLER
-	if(on)
+	if(!on)//If jet dont work, it dont work
+		return
+	if(!user)//Don't allow jet self using
+		return
+	if(!isturf(user.loc))//You can't use jet in nowhere or from mecha/closet
+		return
+	if(!(user.movement_type & FLOATING) || user.buckled)//You don't want use jet in gravity or while buckled.
+		return
+	if(user.pulledby)//You don't must use jet if someone pull you
+		return
+	if(user.throwing)//You don't must use jet if you thrown
+		return
+	if(length(user.client.keys_held & user.client.movement_keys))//You use jet when press keys. yes.
 		allow_thrust(THRUST_REQUIREMENT_SPACEMOVE, user)
 		// Update speed according to pressure
 		JETPACK_SPEED_CHECK(known_user, MOVESPEED_ID_JETPACK, -1, full_speed)
 
+/obj/item/tank/jetpack/proc/pre_move_react(mob/user)
+	SIGNAL_HANDLER
+	ion_trail.oldposition = get_turf(src)
+
 /obj/item/tank/jetpack/proc/allow_thrust(num, mob/living/user, use_fuel = TRUE)
-	if(!on || !known_user)
+	if(!known_user)
 		return
 	if((num < 0.005 || num > THRUST_REQUIREMENT_GRAVITY * 0.5 || air_contents.total_moles() < num))
 		turn_off(user)
@@ -128,6 +149,7 @@
 
 	if(use_fuel)
 		assume_air_moles(air_contents, num)
+		ion_trail.generate_effect()
 
 	return TRUE
 
@@ -162,6 +184,7 @@
 
 	if(use_fuel)
 		assume_air_moles(air_contents, num)
+		ion_trail.generate_effect()
 
 	return TRUE
 
