@@ -303,7 +303,8 @@
   *
   * You can move in space if you have a spacewalk ability
   */
-/mob/Process_Spacemove(movement_dir = 0, continuous_move = FALSE)
+/mob/Process_Spacemove(movement_dir = 0)
+	. = ..()
 	if(spacewalk || ..())
 		return TRUE
 
@@ -337,16 +338,20 @@
 			continue
 		if(isturf(pushover))
 			var/turf/turf = pushover
-			if(!turf.density)
+			if(isspaceturf(turf))
+				continue
+			if(!turf.density && !mob_negates_gravity())
 				continue
 			return pushover
+
 		var/atom/movable/rebound = pushover
 		if(rebound == buckled)
 			continue
 		if(ismob(rebound))
-			var/mob/M = rebound
-			if(M.buckled)
+			var/mob/lover = rebound
+			if(lover.buckled)
 				continue
+
 		var/pass_allowed = rebound.CanPass(src, get_dir(rebound, src))
 		if(!rebound.density && pass_allowed)
 			continue
@@ -372,6 +377,14 @@
   */
 /mob/proc/mob_negates_gravity()
 	return FALSE
+
+/mob/newtonian_move(direction, instant = FALSE)
+	. = ..()
+	if(!.) //Only do this if we're actually going somewhere
+		return
+	if(!client)
+		return
+	client.visual_delay = MOVEMENT_ADJUSTED_GLIDE_SIZE(inertia_move_delay, SSspacedrift.visual_delay) //Make sure moving into a space move looks like a space move
 
 /// Called when this mob slips over, override as needed
 /mob/proc/slip(knockdown, paralyze, forcedrop, w_amount, obj/O, lube)
