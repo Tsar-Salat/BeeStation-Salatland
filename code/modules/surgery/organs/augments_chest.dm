@@ -154,8 +154,18 @@
 	toggle()
 
 /obj/item/organ/cyberimp/chest/thrusters/proc/toggle(silent = FALSE)
-	if(on)
-		deactivate()
+	if(!on)
+		if((organ_flags & ORGAN_FAILING))
+			if(!silent)
+				to_chat(owner, "<span class='warning'>Your thrusters set seems to be broken!</span>")
+			return 0
+		on = TRUE
+		if(allow_thrust(THRUST_REQUIREMENT_SPACEMOVE))
+			ion_trail.start()
+			RegisterSignal(owner, COMSIG_MOVABLE_MOVED, PROC_REF(move_react))
+			JETPACK_SPEED_CHECK(owner, MOVESPEED_ID_CYBER_THRUSTER, -1, TRUE)
+			if(!silent)
+				to_chat(owner, "<span class='notice'>You turn your thrusters set on.</span>")
 	else
 		activate()
 

@@ -157,7 +157,7 @@ SUBSYSTEM_DEF(ticker)
 			for(var/client/C in GLOB.clients)
 				window_flash(C, ignorepref = TRUE) //let them know lobby has opened up.
 			to_chat(world, "<span class='boldnotice'>Welcome to [station_name()]!</span>")
-			send2chat("New round starting on [SSmapping.config.map_name]!", CONFIG_GET(string/chat_announce_new_game))
+			send2chat(new /datum/tgs_message_content("New round starting on [SSmapping.config.map_name]!"), CONFIG_GET(string/chat_announce_new_game))
 			current_state = GAME_STATE_PREGAME
 			//Everyone who wants to be an observer is now spawned
 			create_observers()
@@ -360,6 +360,23 @@ SUBSYSTEM_DEF(ticker)
 	PostSetup()
 	SSstat.clear_global_alert()
 
+//Toggle lightswitches on in occupied departments
+	var/discrete_areas = list()
+	for(var/mob/living/carbon/human/H in GLOB.player_list)
+		var/area/A = get_area(H)
+		if(!(A in discrete_areas)) //We've already added their department
+			discrete_areas += get_department_areas(H)
+	for(var/area/area in discrete_areas)
+		if(area.lights_always_start_on)
+			continue
+		area.lightswitch = TRUE
+		area.update_appearance()
+
+		for(var/obj/machinery/light_switch/L in area)
+			L.update_appearance()
+
+		area.power_change()
+
 	return TRUE
 
 /datum/controller/subsystem/ticker/proc/PostSetup()
@@ -380,7 +397,6 @@ SUBSYSTEM_DEF(ticker)
 			S.after_round_start()
 		else
 			stack_trace("[S] [S.type] found in start landmarks list, which isn't a start landmark!")
-
 
 //These callbacks will fire after roundstart key transfer
 /datum/controller/subsystem/ticker/proc/OnRoundstart(datum/callback/cb)
@@ -447,7 +463,7 @@ SUBSYSTEM_DEF(ticker)
 			if(player.mind.assigned_role != player.mind.special_role)
 				SSjob.EquipRank(N, player.mind.assigned_role, FALSE)
 			if(CONFIG_GET(flag/roundstart_traits) && ishuman(N.new_character))
-				SSquirks.AssignQuirks(N.new_character, N.client, TRUE)
+				SSquirks.AssignQuirks(player.mind, N.client, TRUE)
 		CHECK_TICK
 	if(length(spare_id_candidates))			//No captain, time to choose acting captain
 		if(!enforce_coc)
@@ -662,10 +678,6 @@ SUBSYSTEM_DEF(ticker)
 		GLOB.master_mode = "extended"
 	log_game("Master mode is '[GLOB.master_mode]'")
 	log_config("Master mode is '[GLOB.master_mode]'")
-
-/// Returns if either the master mode or the forced secret ruleset matches the mode name.
-/datum/controller/subsystem/ticker/proc/is_mode(mode_name)
-	return GLOB.master_mode == mode_name || GLOB.secret_force_mode == mode_name
 
 /datum/controller/subsystem/ticker/proc/SetRoundEndSound(the_sound)
 	set waitfor = FALSE

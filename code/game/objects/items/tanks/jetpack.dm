@@ -107,8 +107,12 @@
 		return
 	on = TRUE
 	icon_state = "[initial(icon_state)]-on"
+	if(ion_trail)
+		ion_trail.start()
 	if(full_speed)
 		known_user.add_movespeed_modifier(MOVESPEED_ID_JETPACK, priority=100, multiplicative_slowdown=-2, movetypes=FLOATING, conflict=MOVE_CONFLICT_JETPACK)
+
+	JETPACK_SPEED_CHECK(known_user, MOVESPEED_ID_JETPACK, -1, full_speed)
 
 /obj/item/tank/jetpack/proc/turn_off(mob/user)
 	if(!known_user)
@@ -120,7 +124,14 @@
 
 	known_user.remove_movespeed_modifier(MOVESPEED_ID_JETPACK)
 
-/obj/item/tank/jetpack/proc/allow_thrust(num, use_fuel = TRUE)
+/obj/item/tank/jetpack/proc/move_react(mob/user)
+	SIGNAL_HANDLER
+	if(on)
+		allow_thrust(THRUST_REQUIREMENT_SPACEMOVE, user)
+		// Update speed according to pressure
+		JETPACK_SPEED_CHECK(known_user, MOVESPEED_ID_JETPACK, -1, full_speed)
+
+/obj/item/tank/jetpack/proc/allow_thrust(num, mob/living/user, use_fuel = TRUE)
 	if(!on || !known_user)
 		return
 	if((num < 0.005 || num > THRUST_REQUIREMENT_GRAVITY * 0.5 || air_contents.total_moles() < num))
