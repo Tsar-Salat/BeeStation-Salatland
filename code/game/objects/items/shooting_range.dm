@@ -20,7 +20,7 @@
 /obj/item/target/proc/removeOverlays()
 	cut_overlays()
 
-/obj/item/target/Move()
+/obj/item/target/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	. = ..()
 	if(pinnedLoc)
 		pinnedLoc.forceMove(loc)

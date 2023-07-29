@@ -333,7 +333,7 @@
 	return ..()
 
 
-/obj/structure/window/Move()
+/obj/structure/window/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	var/turf/T = loc
 	. = ..()
 	move_update_air(T)

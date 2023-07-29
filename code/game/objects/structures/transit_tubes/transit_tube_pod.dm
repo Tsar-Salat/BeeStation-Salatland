@@ -136,7 +136,7 @@
 	if(!current_tube)
 		setDir(next_dir)
 				// Allow collisions when leaving the tubes.
-		Move(get_step(loc, dir), dir)
+		Move(get_step(loc, dir), dir, DELAY_TO_GLIDE_SIZE(exit_delay))
 		qdel(src)
 		return
 
@@ -147,7 +147,7 @@
 /obj/structure/transit_tube_pod/proc/engine_finish()
 	SIGNAL_HANDLER
 	set_density(TRUE)
-	moving = 0
+	moving = FALSE
 
 	var/obj/structure/transit_tube/TT = locate(/obj/structure/transit_tube) in loc
 	if(!TT || (!(dir in TT.tube_dirs) && !(turn(dir,180) in TT.tube_dirs)))	//landed on a turf without transit tube or not in our direction

@@ -38,7 +38,7 @@
 /mob/living/simple_animal/hostile/guardian/charger/proc/charging_end()
 	charging = 0
 
-/mob/living/simple_animal/hostile/guardian/charger/Move()
+/mob/living/simple_animal/hostile/guardian/charger/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	if(charging)
 		new /obj/effect/temp_visual/decoy/fading(loc,src)
 	. = ..()

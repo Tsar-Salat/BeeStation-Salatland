@@ -17,7 +17,7 @@
 	setDir(pick(GLOB.cardinals))
 	air_update_turf(1)
 
-/obj/structure/emergency_shield/Move()
+/obj/structure/emergency_shield/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	var/turf/T = loc
 	. = ..()
 	move_update_air(T)

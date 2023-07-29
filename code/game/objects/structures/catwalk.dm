@@ -21,7 +21,7 @@
 /obj/structure/lattice/catwalk/ratvar_act()
 	new /obj/structure/lattice/catwalk/clockwork(loc)
 
-/obj/structure/lattice/catwalk/Move()
+/obj/structure/lattice/catwalk/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	var/turf/T = loc
 	for(var/obj/structure/cable/C in T)
 		C.deconstruct()

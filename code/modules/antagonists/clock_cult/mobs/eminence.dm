@@ -119,7 +119,7 @@
 /mob/living/simple_animal/eminence/say(message, bubble_type, list/spans, sanitize, datum/language/language, ignore_spam, forced)
 	return FALSE
 
-/mob/living/simple_animal/eminence/Move(atom/newloc, direct)
+/mob/living/simple_animal/eminence/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	if(istype(get_area(newloc), /area/chapel))
 		to_chat(usr, "<span class='warning'>You cannot move on to holy grounds!</span>")
 		return

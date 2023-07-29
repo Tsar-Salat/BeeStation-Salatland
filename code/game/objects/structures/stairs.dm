@@ -35,7 +35,7 @@
 	listeningTo = null
 	return ..()
 
-/obj/structure/stairs/Move()			//Look this should never happen but...
+/obj/structure/stairs/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)	//Look this should never happen but...
 	. = ..()
 	if(force_open_above)
 		build_signal_listener()

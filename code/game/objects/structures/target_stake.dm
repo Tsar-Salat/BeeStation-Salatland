@@ -32,7 +32,7 @@
 /obj/structure/target_stake/proc/nullPinnedTarget()
 	pinned_target = null
 
-/obj/structure/target_stake/Move()
+/obj/structure/target_stake/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	. = ..()
 	if(pinned_target)
 		pinned_target.forceMove(loc)

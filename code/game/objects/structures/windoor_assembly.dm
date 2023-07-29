@@ -48,7 +48,7 @@
 	air_update_turf(1)
 	return ..()
 
-/obj/structure/windoor_assembly/Move()
+/obj/structure/windoor_assembly/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	var/turf/T = loc
 	. = ..()
 	move_update_air(T)

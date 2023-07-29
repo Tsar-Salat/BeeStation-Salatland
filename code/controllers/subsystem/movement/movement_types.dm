@@ -23,6 +23,8 @@
 	///Used primarially as a hint to be reasoned about by our [controller], and as the id of our bucket
 	///Should not be modified directly outside of [start_loop]
 	var/timer = 0
+	///Is this loop running or not
+	var/running = FALSE
 
 /datum/move_loop/New(datum/movement_packet/owner, datum/controller/subsystem/movement/controller, atom/moving, priority, flags, datum/extra_info)
 	src.owner = owner
@@ -42,15 +44,17 @@
 	src.lifetime = timeout
 	return TRUE
 
-///proc that exists so we can check if this exact moveloop datum already exists (in terms of vars) and so we can stop it from needlessly create a new one to overwrite the old one
+///check if this exact moveloop datum already exists (in terms of vars) so we can avoid creating a new one to overwrite the old duplicate
 /datum/move_loop/proc/compare_loops(datum/move_loop/loop_type, priority, flags, extra_info, delay = 1, timeout = INFINITY)
 	SHOULD_CALL_PARENT(TRUE)
 	if(loop_type == type && priority == src.priority && flags == src.flags && delay == src.delay && timeout == lifetime)
 		return TRUE
+	return FALSE
 
 /datum/move_loop/proc/start_loop()
 	SHOULD_CALL_PARENT(TRUE)
 	SEND_SIGNAL(src, COMSIG_MOVELOOP_START)
+	running = TRUE
 	//If this is our first time starting to move with this loop
 	//And we're meant to start instantly
 	if(!timer && flags & MOVEMENT_LOOP_START_FAST)
@@ -60,6 +64,7 @@
 
 /datum/move_loop/proc/stop_loop()
 	SHOULD_CALL_PARENT(TRUE)
+	running = FALSE
 	SEND_SIGNAL(src, COMSIG_MOVELOOP_STOP)
 
 /datum/move_loop/proc/info_deleted(datum/source)
@@ -78,6 +83,20 @@
 ///Exists as a helper so outside code can modify delay in a sane way
 /datum/move_loop/proc/set_delay(new_delay)
 	delay =  max(new_delay, world.tick_lag)
+
+/* https://github.com/tgstation/tgstation/pull/66628
+///Pauses the move loop for some passed in period
+///This functionally means shifting its timer up, and clearing it from its current bucket
+/datum/move_loop/proc/pause_for(time)
+	if(!controller || !running) //No controller or not running? go away
+		return
+	//Dequeue us from our current bucket
+	controller.dequeue_loop(src)
+	//Offset our timer
+	timer = world.time + time
+	//Now requeue us with our new target start time
+	controller.queue_loop(src)
+*/
 
 /datum/move_loop/process()
 	var/old_delay = delay //The signal can sometimes change delay
@@ -98,6 +117,11 @@
 
 	if(QDELETED(src) || !success) //Can happen
 		return
+
+	if(flags & MOVEMENT_LOOP_IGNORE_GLIDE)
+		return
+
+	moving.set_glide_size(MOVEMENT_ADJUSTED_GLIDE_SIZE(delay, visual_delay))
 
 ///Handles the actual move, overriden by children
 ///Returns FALSE if nothing happen, TRUE otherwise
@@ -142,11 +166,13 @@
 /datum/move_loop/move/compare_loops(datum/move_loop/loop_type, priority, flags, extra_info, delay, timeout, dir)
 	if(..() && direction == dir)
 		return TRUE
+	return FALSE
 
 /datum/move_loop/move/move()
 	var/atom/old_loc = moving.loc
 	moving.Move(get_step(moving, direction), direction)
 	// We cannot rely on the return value of Move(), we care about teleports and it doesn't
+	// Moving also can be null on occasion, if the move deleted it and therefor us
 	return old_loc != moving?.loc
 
 /**
@@ -221,6 +247,7 @@
 /datum/move_loop/has_target/compare_loops(datum/move_loop/loop_type, priority, flags, extra_info, delay, timeout, atom/chasing)
 	if(..() && chasing == target)
 		return TRUE
+	return FALSE
 
 /datum/move_loop/has_target/Destroy()
 	target = null
@@ -351,6 +378,7 @@
 /datum/move_loop/has_target/jps/compare_loops(datum/move_loop/loop_type, priority, flags, extra_info, delay, timeout, atom/chasing, repath_delay, max_path_length, minimum_distance, obj/item/card/id/id, simulated_only, turf/avoid, skip_first)
 	if(..() && repath_delay == src.repath_delay && max_path_length == src.max_path_length && minimum_distance == src.minimum_distance && id == src.id && simulated_only == src.simulated_only && avoid == src.avoid)
 		return TRUE
+	return FALSE
 
 /datum/move_loop/has_target/jps/start_loop()
 	. = ..()
@@ -526,6 +554,7 @@
 /datum/move_loop/has_target/dist_bound/compare_loops(datum/move_loop/loop_type, priority, flags, extra_info, delay, timeout, atom/chasing, dist = 0)
 	if(..() && distance == dist)
 		return TRUE
+	return FALSE
 
 ///Returns FALSE if the movement should pause, TRUE otherwise
 /datum/move_loop/has_target/dist_bound/proc/check_dist()
@@ -671,6 +700,11 @@
 		RegisterSignal(moving, COMSIG_MOVABLE_MOVED, PROC_REF(handle_move))
 	update_slope()
 
+/datum/move_loop/has_target/move_towards/compare_loops(datum/move_loop/loop_type, priority, flags, extra_info, delay, timeout, atom/chasing, home = FALSE)
+	if(..() && home == src.home)
+		return TRUE
+	return FALSE
+
 /datum/move_loop/has_target/move_towards/Destroy()
 	if(home)
 		if(ismovable(target))
@@ -678,10 +712,6 @@
 		if(moving)
 			UnregisterSignal(moving, COMSIG_MOVABLE_MOVED)
 	return ..()
-
-/datum/move_loop/has_target/move_towards/compare_loops(datum/move_loop/loop_type, priority, flags, extra_info, delay, timeout, atom/chasing, home = FALSE)
-	if(..() && home == src.home)
-		return TRUE
 
 /datum/move_loop/has_target/move_towards/move()
 	//Move our tickers forward a step, we're guaranteed at least one step forward because of how the code is written
@@ -824,8 +854,9 @@
 	potential_directions = directions
 
 /datum/move_loop/move_rand/compare_loops(datum/move_loop/loop_type, priority, flags, extra_info, delay, timeout, list/directions)
-	if(..() && (length(potential_directions | directions) == length(potential_directions))) //i guess this could be usefull if actually it really has yet to move
+	if(..() && (length(potential_directions | directions) == length(potential_directions))) //i guess this could be useful if actually it really has yet to move
 		return TRUE
+	return FALSE
 
 /datum/move_loop/move_rand/move()
 	var/list/potential_dirs = potential_directions.Copy()

@@ -205,7 +205,7 @@ GLOBAL_LIST_EMPTY(parasites) //all currently existing/living guardians
 		tab_data["Manifest/Recall Cooldown Remaining"] = GENERATE_STAT_TEXT("[DisplayTimeText(cooldown - world.time)]")
 	return tab_data
 
-/mob/living/simple_animal/hostile/guardian/Move() //Returns to summoner if they move out of range
+/mob/living/simple_animal/hostile/guardian/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0) //Returns to summoner if they move out of range
 	. = ..()
 	snapback()
 

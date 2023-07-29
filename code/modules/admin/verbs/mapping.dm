@@ -68,7 +68,7 @@ GLOBAL_PROTECT(admin_verbs_debug_mapping)
 	icon = 'icons/turf/areas.dmi'
 	icon_state = "yellow"
 
-/obj/effect/debugging/marker/Move()
+/obj/effect/debugging/marker/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	return 0
 
 /client/proc/camera_view()

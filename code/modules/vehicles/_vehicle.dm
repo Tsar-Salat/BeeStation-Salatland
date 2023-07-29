@@ -172,7 +172,7 @@
 			for(var/m in occupants)
 				M.Bumped(m)
 
-/obj/vehicle/Move(newloc, dir)
+/obj/vehicle/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	. = ..()
 	if(trailer && .)
 		var/dir_to_move = get_dir(trailer.loc, newloc)

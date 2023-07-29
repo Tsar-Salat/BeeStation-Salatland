@@ -144,7 +144,7 @@
 	desc = "A very large bluespace engine used to propel very large ships."
 	bound_width = 64
 	bound_height = 64
-	appearance_flags = 0
+	appearance_flags = LONG_GLIDE
 
 /obj/structure/shuttle/engine/huge
 	name = "engine"
@@ -154,7 +154,7 @@
 	desc = "An extremely large bluespace engine used to propel extremely large ships."
 	bound_width = 96
 	bound_height = 96
-	appearance_flags = 0
+	appearance_flags = LONG_GLIDE
 
 /obj/structure/shuttle/engine/hugeionengine
 	name = "Nanotrasen MkIII BPDT engine"
@@ -163,7 +163,7 @@
 	desc = "An extremely large bluespace-plasmadynamic ion engine used to propel objects reaching the size of stations."
 	bound_width = 128
 	bound_height = 224
-	appearance_flags = NONE
+	appearance_flags = LONG_GLIDE
 
 /obj/structure/shuttle/engine/hugeionafterburn
 	name = "Nanotrasen MkIII BPDT engine afterburner"
@@ -173,7 +173,7 @@
 	desc = "Quite hot, don't get too close to the glowing end!"
 	bound_width = 128
 	bound_height = 224
-	appearance_flags = NONE
+	appearance_flags = LONG_GLIDE
 
 #undef ENGINE_UNWRENCHED
 #undef ENGINE_WRENCHED

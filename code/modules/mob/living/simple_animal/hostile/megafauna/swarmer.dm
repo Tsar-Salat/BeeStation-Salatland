@@ -130,7 +130,7 @@ GLOBAL_LIST_INIT(AISwarmerCapsByType, list(/mob/living/simple_animal/hostile/swa
 				return
 
 
-/mob/living/simple_animal/hostile/swarmer/ai/Move(atom/newloc)
+/mob/living/simple_animal/hostile/swarmer/ai/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	if(newloc)
 		if(newloc.get_virtual_z_level() == get_virtual_z_level()) //so these actions are Z-specific
 			if(islava(newloc))

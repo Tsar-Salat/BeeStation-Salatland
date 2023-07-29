@@ -9,7 +9,7 @@
 		M.adjust_fire_stacks(fire_stacks)
 		M.IgniteMob()
 
-/obj/item/projectile/bullet/incendiary/Move()
+/obj/item/projectile/bullet/incendiary/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	. = ..()
 	var/turf/location = get_turf(src)
 	if(location)

@@ -41,7 +41,7 @@
 		T.hotspot_expose(1000,100)
 	return ..()
 
-/obj/effect/particle_effect/sparks/Move()
+/obj/effect/particle_effect/sparks/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	..()
 	var/turf/T = loc
 	if(isturf(T))

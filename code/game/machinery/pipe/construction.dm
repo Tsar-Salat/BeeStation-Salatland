@@ -104,7 +104,7 @@ Buildable meters
 	setDir(turn(dir, flipped ? 45 : -45))
 	flipped = !flipped
 
-/obj/item/pipe/Move()
+/obj/item/pipe/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	var/old_dir = dir
 	..()
 	setDir(old_dir) //pipes changing direction when moved is just annoying and buggy

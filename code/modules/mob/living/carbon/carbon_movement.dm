@@ -17,7 +17,7 @@
 	if(has_jetpack_power(movement_dir))
 		return TRUE
 
-/mob/living/carbon/Move(NewLoc, direct)
+/mob/living/carbon/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	. = ..()
 	if(. && !(movement_type & FLOATING)) //floating is easy
 		if(HAS_TRAIT(src, TRAIT_NOHUNGER))

@@ -388,7 +388,7 @@ GLOBAL_LIST_INIT(meteorsC, list(/obj/effect/meteor/dust)) //for space dust event
 	meteordrop = list(/obj/item/stack/ore/plasma)
 	threat = 50
 
-/obj/effect/meteor/tunguska/Move()
+/obj/effect/meteor/tunguska/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	. = ..()
 	if(.)
 		new /obj/effect/temp_visual/revenant(get_turf(src))

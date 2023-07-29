@@ -30,7 +30,7 @@
 	. = ..()
 	air_update_turf(TRUE)
 
-/obj/structure/mineral_door/Move()
+/obj/structure/mineral_door/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	var/turf/T = loc
 	. = ..()
 	move_update_air(T)

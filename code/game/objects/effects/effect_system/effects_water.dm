@@ -11,7 +11,7 @@
 	. = ..()
 	QDEL_IN(src, 70)
 
-/obj/effect/particle_effect/water/Move(turf/newloc)
+/obj/effect/particle_effect/water/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	if (--src.life < 1)
 		qdel(src)
 		return 0
@@ -27,7 +27,7 @@
 ///Extinguisher snowflake
 /obj/effect/particle_effect/water/extinguisher
 
-/obj/effect/particle_effect/water/extinguisher/Move()
+/obj/effect/particle_effect/water/extinguisher/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	. = ..()
 	if(!reagents)
 		return

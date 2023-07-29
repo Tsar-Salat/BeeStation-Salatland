@@ -74,7 +74,7 @@
 	status = LIGHT_BROKEN
 	icon_state = "bulb-broken"
 
-/obj/machinery/light/Move()
+/obj/machinery/light/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	if(status != LIGHT_BROKEN)
 		break_light_tube(1)
 	return ..()

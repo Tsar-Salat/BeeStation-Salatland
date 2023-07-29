@@ -276,18 +276,18 @@ GLOBAL_LIST_EMPTY(blob_nodes)
 /mob/camera/blob/canZMove(direction, turf/source, turf/target, pre_move = TRUE)
 	return !placed
 
-/mob/camera/blob/Move(NewLoc, Dir = 0)
+/mob/camera/blob/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	if(placed)
-		var/obj/structure/blob/B = locate() in range("3x3", NewLoc)
+		var/obj/structure/blob/B = locate() in range("3x3", newloc)
 		if(B)
-			forceMove(NewLoc)
+			forceMove(newloc)
 		else
 			return FALSE
 	else
-		var/turf/T = get_turf(NewLoc)
+		var/turf/T = get_turf(newloc)
 		if(!is_valid_turf(T)) //if unplaced, can't go out of placeable area
 			return FALSE
-		forceMove(NewLoc)
+		forceMove(newloc)
 		return TRUE
 
 /mob/camera/blob/mind_initialize()

@@ -281,9 +281,9 @@
 	..()
 
 
-/mob/living/simple_animal/hostile/syndicate/mecha_pilot/Move(NewLoc,Dir=0,step_x=0,step_y=0)
+/mob/living/simple_animal/hostile/syndicate/mecha_pilot/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	if(mecha && loc == mecha)
-		return mecha.relaymove(src, Dir)
+		return mecha.relaymove(src, direct)
 	return ..()
 
 

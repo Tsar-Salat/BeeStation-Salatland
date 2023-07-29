@@ -264,7 +264,7 @@ GLOBAL_LIST_EMPTY(parasites) //all currently existing/living guardians
 		tab_data += stats.ability.Stat()
 	return tab_data
 
-/mob/living/simple_animal/hostile/guardian/Move() //Returns to summoner if they move out of range
+/mob/living/simple_animal/hostile/guardian/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0) //Returns to summoner if they move out of range
 	pixel_x = initial(pixel_x)
 	pixel_y = initial(pixel_y)
 	layer = initial(layer)

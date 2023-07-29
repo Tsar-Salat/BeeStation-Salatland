@@ -27,7 +27,7 @@
 
 
 //Stick to the easel like glue
-/obj/structure/easel/Move()
+/obj/structure/easel/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	var/turf/T = get_turf(src)
 	. = ..()
 	if(painting && painting.loc == T) //Only move if it's near us.

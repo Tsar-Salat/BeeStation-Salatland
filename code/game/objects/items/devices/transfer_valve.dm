@@ -66,7 +66,7 @@
 	return
 
 //Attached device memes
-/obj/item/transfer_valve/Move()
+/obj/item/transfer_valve/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	. = ..()
 	if(attached_device)
 		attached_device.holder_movement()

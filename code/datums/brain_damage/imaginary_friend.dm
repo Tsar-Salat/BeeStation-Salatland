@@ -210,14 +210,14 @@
 		var/link = FOLLOW_LINK(M, owner)
 		to_chat(M, "[link] [dead_rendered]")
 
-/mob/camera/imaginary_friend/Move(NewLoc, Dir = 0)
+/mob/camera/imaginary_friend/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	if(world.time < move_delay)
 		return FALSE
 	if(get_dist(src, owner) > 9)
 		recall()
 		move_delay = world.time + 10
 		return FALSE
-	abstract_move(NewLoc)
+	abstract_move(newloc)
 	move_delay = world.time + 1
 
 /mob/camera/imaginary_friend/abstract_move(atom/destination)

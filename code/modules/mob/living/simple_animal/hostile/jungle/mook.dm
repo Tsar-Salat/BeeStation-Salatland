@@ -58,7 +58,7 @@
 		return
 	return ..()
 
-/mob/living/simple_animal/hostile/jungle/mook/Move()
+/mob/living/simple_animal/hostile/jungle/mook/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	if(attack_state == MOOK_ATTACK_WARMUP || attack_state == MOOK_ATTACK_RECOVERY)
 		return
 	return ..()

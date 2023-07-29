@@ -22,7 +22,7 @@
 	enter_delay = 10 //can enter in a quarter of the time of other mechs
 	exit_delay = 10
 
-/obj/mecha/working/ripley/Move()
+/obj/mecha/working/ripley/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	. = ..()
 	if(.)
 		collect_ore()

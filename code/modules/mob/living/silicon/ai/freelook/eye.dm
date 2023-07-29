@@ -117,7 +117,7 @@
 /mob/camera/ai_eye/canZMove(direction, turf/source, turf/target, pre_move = TRUE) //cameras do not respect these FLOORS you speak so much of
 	return TRUE
 
-/mob/camera/ai_eye/Move()
+/mob/camera/ai_eye/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	return 0
 
 /mob/camera/ai_eye/proc/GetViewerClient()

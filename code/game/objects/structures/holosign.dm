@@ -114,7 +114,7 @@
 	REMOVE_TRAIT(local, TRAIT_FIREDOOR_STOP, TRAIT_GENERIC)
 	return ..()
 
-/obj/structure/holosign/barrier/atmos/Move(atom/newloc, direct)
+/obj/structure/holosign/barrier/atmos/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	var/turf/local = get_turf(loc)
 	REMOVE_TRAIT(local, TRAIT_FIREDOOR_STOP, TRAIT_GENERIC)
 	return ..()
