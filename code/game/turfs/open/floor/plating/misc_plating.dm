@@ -12,6 +12,9 @@
 	icon_state = "alienpod1"
 	tiled_dirt = FALSE
 
+/turf/open/floor/plating/abductor/setup_broken_states()
+	return list("alienpod1")
+
 /turf/open/floor/plating/abductor/Initialize(mapload)
 	. = ..()
 	icon_state = "alienpod[rand(1,9)]"
@@ -124,16 +127,25 @@
 	icon_state = "sand"
 	baseturfs = /turf/open/floor/plating/beach/sand
 
+/turf/open/floor/plating/beach/sand/setup_broken_states()
+	return list("sand")
+
 /turf/open/floor/plating/beach/coastline_t
 	name = "coastline"
 	desc = "Tide's high tonight. Charge your batons."
 	icon_state = "sandwater_t"
 	baseturfs = /turf/open/floor/plating/beach/coastline_t
 
+/turf/open/floor/plating/beach/sand/coastline_t/setup_broken_states()
+	return list("sandwater_t")
+
 /turf/open/floor/plating/beach/coastline_b
 	name = "coastline"
 	icon_state = "sandwater_b"
 	baseturfs = /turf/open/floor/plating/beach/coastline_b
+
+/turf/open/floor/plating/beach/sand/coastline_b/setup_broken_states()
+	return list("sandwater_b")
 
 /turf/open/floor/plating/beach/water
 	gender = PLURAL
@@ -142,9 +154,15 @@
 	icon_state = "water"
 	baseturfs = /turf/open/floor/plating/beach/water
 
+/turf/open/floor/plating/beach/water/setup_broken_states()
+	return list("water")
+
 /turf/open/floor/plating/beach/coastline_t/sandwater_inner
 	icon_state = "sandwater_inner"
 	baseturfs = /turf/open/floor/plating/beach/coastline_t/sandwater_inner
+
+/turf/open/floor/plating/beach/water/coastline_t/sandwater_inner/setup_broken_states()
+	return list("sandwater_inner")
 
 /turf/open/floor/plating/ironsand
 	gender = PLURAL
@@ -154,6 +172,9 @@
 	barefootstep = FOOTSTEP_SAND
 	clawfootstep = FOOTSTEP_SAND
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
+
+/turf/open/floor/plating/ironsand/setup_broken_states()
+	return list("ironsand1")
 
 /turf/open/floor/plating/ironsand/Initialize(mapload)
 	. = ..()

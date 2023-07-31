@@ -20,6 +20,9 @@
 	var/obj/item/stack/digResult = /obj/item/stack/ore/glass/basalt
 	var/dug
 
+/turf/open/floor/plating/asteroid/setup_broken_states()
+	return list("asteroid_dug")
+
 /turf/open/floor/plating/asteroid/Initialize(mapload)
 	var/proper_name = name
 	. = ..()
@@ -93,6 +96,9 @@
 	floor_variance = 15
 	digResult = /obj/item/stack/ore/glass/basalt
 
+/turf/open/floor/plating/asteroid/basalt/setup_broken_states()
+	return list("basalt_dug")
+
 /turf/open/floor/plating/asteroid/basalt/lava //lava underneath
 	baseturfs = /turf/open/lava/smooth
 
@@ -151,6 +157,9 @@
 	bullet_sizzle = TRUE
 	bullet_bounce_sound = null
 	digResult = /obj/item/stack/sheet/snow
+
+/turf/open/floor/plating/asteroid/snow/setup_broken_states()
+	return list("snow_dug")
 
 /turf/open/floor/plating/asteroid/snow/burn_tile()
 	if(!burnt)

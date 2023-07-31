@@ -37,6 +37,9 @@
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
 	tiled_dirt = FALSE
 
+/turf/open/floor/wood/setup_broken_states()
+	return list("wood-broken", "wood-broken2", "wood-broken3", "wood-broken4", "wood-broken5", "wood-broken6", "wood-broken7")
+
 /turf/open/floor/wood/examine(mob/user)
 	. = ..()
 	. += "<span class='notice'>There's a few <b>screws</b> and a <b>small crack</b> visible.</span>"
@@ -91,7 +94,6 @@
 	desc = "You can't tell if this is real grass or just cheap plastic imitation."
 	icon_state = "grass"
 	floor_tile = /obj/item/stack/tile/grass
-	broken_states = list("sand")
 	flags_1 = NONE
 	bullet_bounce_sound = null
 	footstep = FOOTSTEP_GRASS
@@ -101,6 +103,9 @@
 	var/ore_type = /obj/item/stack/ore/glass
 	var/turfverb = "uproot"
 	tiled_dirt = FALSE
+
+/turf/open/floor/grass/setup_broken_states()
+	return list("sand")
 
 /turf/open/floor/grass/Initialize(mapload)
 	. = ..()
@@ -186,7 +191,6 @@
 	desc = "Looks cold."
 	icon_state = "snow"
 	ore_type = /obj/item/stack/sheet/snow
-
 	planetary_atmos = TRUE
 	floor_tile = null
 	initial_gas_mix = FROZEN_ATMOS
@@ -196,6 +200,9 @@
 	barefootstep = FOOTSTEP_SAND
 	clawfootstep = FOOTSTEP_SAND
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
+
+/turf/open/floor/grass/snow/setup_broken_states()
+	return list("snow_dug")
 
 /turf/open/floor/grass/snow/try_replace_tile(obj/item/stack/tile/T, mob/user, params)
 	return
@@ -261,6 +268,9 @@
 	clawfootstep = FOOTSTEP_CARPET_BAREFOOT
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
 	tiled_dirt = FALSE
+
+/turf/open/floor/carpet/setup_broken_states()
+	return list("damaged")
 
 /turf/open/floor/carpet/examine(mob/user)
 	. = ..()
@@ -368,7 +378,9 @@
 	desc = "This one takes you back."
 	icon_state = "eighties"
 	floor_tile = /obj/item/stack/tile/eighties
-	broken_states = list("damaged")
+
+/turf/open/floor/eighties/setup_broken_states()
+	return list("eighties_damaged")
 
 /turf/open/floor/carpet/narsie_act(force, ignore_mobs, probability = 20)
 	. = (prob(probability) || force)
@@ -410,9 +422,11 @@
 	icon = 'icons/turf/space.dmi'
 	icon_state = "0"
 	floor_tile = /obj/item/stack/tile/fakespace
-	broken_states = list("damaged")
 	plane = PLANE_SPACE
 	tiled_dirt = FALSE
+
+/turf/open/floor/fakespace/setup_broken_states()
+	return list("damaged")
 
 /turf/open/floor/fakespace/Initialize(mapload)
 	. = ..()

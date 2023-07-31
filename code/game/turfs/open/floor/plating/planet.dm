@@ -14,6 +14,9 @@
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
 	tiled_dirt = FALSE
 
+/turf/open/floor/plating/dirt/setup_broken_states()
+	return list("dirt")
+
 /turf/open/floor/plating/dirt/dark
 	icon_state = "greenerdirt"
 
@@ -35,6 +38,9 @@
 	slowdown = 1
 	var/floor_variance = 15
 
+/turf/open/floor/plating/dirt/jungle/wasteland/setup_broken_states()
+	return list("[initial(icon_state)]0")
+
 /turf/open/floor/plating/dirt/jungle/wasteland/Initialize(mapload)
 	.=..()
 	if(prob(floor_variance))
@@ -47,6 +53,9 @@
 	desc = "Greener on the other side."
 	icon = 'icons/turf/floors.dmi'
 	icon_state = "junglegrass"
+
+/turf/open/floor/plating/grass/jungle/setup_broken_states()
+	return list("junglegrass")
 
 /turf/open/floor/plating/grass/jungle/Initialize(mapload)
 	.=..()
