@@ -49,9 +49,6 @@
 	var/bulb_vacuum_brightness = 8
 	var/static/list/lighting_overlays	// dictionary for lighting overlays
 
-	///So we don't have a lot of stress on startup.
-	var/mapload = FALSE
-
 	///More stress stuff.
 	var/turning_on = FALSE
 
@@ -111,7 +108,7 @@
 		cell = null
 
 // create a new lighting fixture
-/obj/machinery/light/Initialize(mapload = TRUE)
+/obj/machinery/light/Initialize(mapload)
 	. = ..()
 
 	//Setup area colours -pb
@@ -131,8 +128,6 @@
 	if(!mapload) //sync up nightshift lighting for player made lights
 		var/obj/machinery/power/apc/temp_apc = A.apc
 		nightshift_enabled = temp_apc?.nightshift_lights
-	else
-		mapload = TRUE
 	if(start_with_cell && !no_emergency)
 		store_cell(new/obj/item/stock_parts/cell/emergency_light(src))
 	spawn(2)
@@ -145,8 +140,20 @@
 				brightness = A.lighting_brightness_bulb
 				if(prob(5))
 					break_light_tube(1)
-		spawn(1)
-			update(FALSE, TRUE)
+		if(!mapload)
+			spawn(1)
+				update(FALSE, FALSE, FALSE)
+	if(mapload)
+		return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/light/LateInitialize()
+	. = ..()
+	var/area/A = get_area(src)
+	if(A.apc)
+		var/obj/machinery/power/apc/temp_apc = A.apc
+		nightshift_enabled = temp_apc?.nightshift_lights
+		if(nightshift_enabled)
+			update(FALSE, TRUE, TRUE)
 
 /obj/machinery/light/Destroy()
 	var/area/A = get_area(src)
@@ -199,10 +206,7 @@
 			on = FALSE
 	emergency_mode = FALSE
 	if(on)
-		if(mapload)
-			turn_on(trigger, TRUE)
-			mapload = FALSE
-		else if(instant)
+		if(instant)
 			turn_on(trigger, quiet)
 		else if(!turning_on)
 			turning_on = TRUE
@@ -262,7 +266,7 @@
 			use_power = ACTIVE_POWER_USE
 			set_light(BR, PO, CO)
 			if(!quiet)
-				playsound(src.loc, 'sound/effects/light_on.ogg', 65)
+				playsound(src.loc, 'sound/effects/light_on.ogg', 50)
 	update_icon()
 	return TRUE
 
@@ -300,7 +304,7 @@
 // will not switch on if broken/burned/empty
 /obj/machinery/light/proc/seton(s)
 	on = (s && status == LIGHT_OK)
-	update(FALSE, TRUE, TRUE)
+	update(FALSE)
 
 /obj/machinery/light/get_cell()
 	return cell
