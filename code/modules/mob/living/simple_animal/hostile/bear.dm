@@ -22,8 +22,7 @@
 	response_harm   = "hits"
 	maxHealth = 60
 	health = 60
-	spacewalk = TRUE
-	var/armored = FALSE
+
 
 	obj_damage = 60
 	melee_damage = 25
@@ -41,6 +40,12 @@
 	gold_core_spawnable = HOSTILE_SPAWN
 
 	do_footstep = TRUE
+
+	var/armored = FALSE
+
+/mob/living/simple_animal/hostile/bear/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_SPACEWALK, INNATE_TRAIT)
 
 //SPACE BEARS! SQUEEEEEEEE~     OW! FUCK! IT BIT MY HAND OFF!!
 /mob/living/simple_animal/hostile/bear/Hudson

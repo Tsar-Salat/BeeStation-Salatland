@@ -1,19 +1,26 @@
 /datum/component/riding
-	var/last_vehicle_move = 0 //used for move delays
+	//used for move delays
+	var/last_vehicle_move = 0
 	var/last_move_diagonal = FALSE
-	var/vehicle_move_delay = 2 //tick delay between movements, lower = faster, higher = slower
+	//tick delay between movements, lower = faster, higher = slower
+	var/vehicle_move_delay = 2
 	var/keytype
 	var/vehicle_move_multiplier = 1
 
 	var/slowed = FALSE
 	var/slowvalue = 1
 
-	var/list/riding_offsets = list()	//position_of_user = list(dir = list(px, py)), or RIDING_OFFSET_ALL for a generic one.
-	var/list/directional_vehicle_layers = list()	//["[DIRECTION]"] = layer. Don't set it for a direction for default, set a direction to null for no change.
-	var/list/directional_vehicle_offsets = list()	//same as above but instead of layer you have a list(px, py)
+	//position_of_user = list(dir = list(px, py)), or RIDING_OFFSET_ALL for a generic one.
+	var/list/riding_offsets = list()
+	//["[DIRECTION]"] = layer. Don't set it for a direction for default, set a direction to null for no change.
+	var/list/directional_vehicle_layers = list()
+	//same as above but instead of layer you have a list(px, py)
+	var/list/directional_vehicle_offsets = list()
+	//allow typecache for only certain turfs, forbid to allow all but those. allow only certain turfs will take precedence.
 	var/list/allowed_turf_typecache
-	var/list/forbid_turf_typecache					//allow typecache for only certain turfs, forbid to allow all but those. allow only certain turfs will take precedence.
-	var/allow_one_away_from_valid_turf = TRUE		//allow moving one tile away from a valid turf but not more.
+	var/list/forbid_turf_typecache
+	//allow moving one tile away from a valid turf but not more.
+	var/allow_one_away_from_valid_turf = TRUE
 	var/override_allow_spacemove = FALSE
 	var/drive_verb = "drive"
 	var/ride_check_rider_incapacitated = FALSE
@@ -391,7 +398,10 @@
 	. = ..()
 	if(istype(parent, /mob/living/simple_animal))
 		var/mob/living/simple_animal/S = parent
-		override_allow_spacemove = S.spacewalk
+		if(override_allow_spacemove == TRUE)
+			ADD_TRAIT(S, TRAIT_SPACEWALK, TRAIT_GENERIC)
+		else
+			REMOVE_TRAIT(S, TRAIT_SPACEWALK, TRAIT_GENERIC)
 		RegisterSignal(parent, COMSIG_MOB_DEATH, PROC_REF(handle_mortality))
 
 /datum/component/riding/tamed/proc/handle_mortality()
@@ -400,12 +410,16 @@
 /datum/component/riding/tamed/vehicle_mob_buckle(datum/source, mob/living/M, force = FALSE)
 	if(istype(parent, /mob/living/simple_animal))
 		var/mob/living/simple_animal/S = parent
-		M.spacewalk = S.spacewalk
+		if(HAS_TRAIT(M, TRAIT_SPACEWALK))
+			ADD_TRAIT(S, TRAIT_SPACEWALK, TRAIT_GENERIC)
+		else
+			REMOVE_TRAIT(M, TRAIT_SPACEWALK, TRAIT_GENERIC)
 		S.toggle_ai(AI_OFF)
 	..()
 
 /datum/component/riding/tamed/vehicle_mob_unbuckle(datum/source, mob/living/M, force = FALSE)
-	M.spacewalk = FALSE
+	if(HAS_TRAIT(M, TRAIT_SPACEWALK))
+		REMOVE_TRAIT(M, TRAIT_SPACEWALK, TRAIT_GENERIC)
 	if(istype(parent, /mob/living/simple_animal))
 		var/mob/living/simple_animal/S = parent
 		S.toggle_ai(AI_ON)

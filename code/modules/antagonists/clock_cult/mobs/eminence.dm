@@ -10,7 +10,6 @@
 	maxHealth = INFINITY
 	plane = GHOST_PLANE
 	healable = FALSE
-	spacewalk = TRUE
 	sight = SEE_SELF
 	throwforce = 0
 
@@ -74,6 +73,7 @@
 
 /mob/living/simple_animal/eminence/Initialize(mapload)
 	. = ..()
+	ADD_TRAIT(src, TRAIT_SPACEWALK, INNATE_TRAIT)
 	GLOB.clockcult_eminence = src
 	//Add spells
 	spell_reebe = new

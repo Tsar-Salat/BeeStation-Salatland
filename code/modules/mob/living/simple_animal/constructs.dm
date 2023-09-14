@@ -11,7 +11,6 @@
 	speak_chance = 1
 	icon = 'icons/mob/mob.dmi'
 	speed = 0
-	spacewalk = TRUE
 	a_intent = INTENT_HARM
 	stop_automated_movement = 1
 	status_flags = CANPUSH
@@ -55,6 +54,7 @@
 
 /mob/living/simple_animal/hostile/construct/Initialize(mapload)
 	. = ..()
+	ADD_TRAIT(src, TRAIT_SPACEWALK, INNATE_TRAIT)
 	update_health_hud()
 	var/spellnum = 1
 	for(var/spell in construct_spells)

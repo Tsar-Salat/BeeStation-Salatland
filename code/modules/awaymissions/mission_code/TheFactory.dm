@@ -708,7 +708,6 @@
 	ranged_cooldown_time = 30
 	check_friendly_fire = 1
 	turns_per_move = 2
-	spacewalk = TRUE
 	rapid_melee = 0
 	lose_patience_timeout = 400
 	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
@@ -718,6 +717,10 @@
 	var/cooldown = 0
 	loot = list(/obj/item/gun/ballistic/shotgun/lever_action,
 				/obj/effect/mob_spawn/human/corpse/facboss)
+
+/mob/living/simple_animal/hostile/syndicate/factory/boss/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_SPACEWALK, INNATE_TRAIT)
 
 /mob/living/simple_animal/hostile/syndicate/factory/boss/Shoot()
 	var/static/list/allowed_projectile_types = list(/obj/item/ammo_casing/shotgun/beanbag,

@@ -16,7 +16,6 @@
 	speed = 0
 	maxHealth = 80
 	health = 80
-	spacewalk = TRUE
 	stat_attack = UNCONSCIOUS
 	robust_searching = 1
 
@@ -34,3 +33,7 @@
 
 	do_footstep = TRUE
 	hardattacks = TRUE
+
+/mob/living/simple_animal/hostile/faithless/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_SPACEWALK, INNATE_TRAIT)
