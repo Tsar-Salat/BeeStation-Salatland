@@ -12,7 +12,7 @@
 
 /obj/structure/statue/Initialize()
 	. = ..()
-	addtimer(CALLBACK(src, /datum.proc/AddComponent, /datum/component/beauty, impressiveness *  75), 0)
+	AddElement(/datum/element/beauty, /*impressiveness * */ 75)
 
 /obj/structure/statue/attackby(obj/item/W, mob/living/user, params)
 	add_fingerprint(user)

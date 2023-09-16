@@ -184,6 +184,10 @@ Class Procs:
 	var/datum/controller/subsystem/processing/subsystem = locate(subsystem_type) in Master.subsystems
 	STOP_PROCESSING(subsystem, src)
 
+/obj/machinery/LateInitialize()
+	. = ..()
+	become_area_sensitive(ROUNDSTART_TRAIT)
+
 /obj/machinery/Destroy()
 	GLOB.machines.Remove(src)
 	if(datum_flags & DF_ISPROCESSING) // A sizeable portion of machines stops processing before qdel

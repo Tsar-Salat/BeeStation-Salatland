@@ -612,8 +612,8 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	attack_verb = list("busted")
 
 /obj/item/statuebust/Initialize(mapload)
-	addtimer(CALLBACK(src, /datum.proc/AddComponent, /datum/component/beauty, 1000), 0)
 	. = ..()
+	AddElement(/datum/element/beauty, 1000)
 
 /obj/item/statuebust/hippocratic
 	name = "hippocrates bust"

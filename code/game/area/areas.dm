@@ -588,14 +588,16 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 /**
   * Call back when an atom enters an area
   *
-  * Sends signals COMSIG_AREA_ENTERED and COMSIG_MOVABLE_ENTERED_AREA (to the atom)
+  * Sends signals COMSIG_AREA_ENTERED and COMSIG_ENTER_AREA (to a list of atoms)
   *
   * If the area has ambience, then it plays some ambience music to the ambience channel
   */
 /area/Entered(atom/movable/arrived, area/old_area)
 	set waitfor = FALSE
 	SEND_SIGNAL(src, COMSIG_AREA_ENTERED, arrived, old_area)
-	SEND_SIGNAL(arrived, COMSIG_MOVABLE_ENTERED_AREA, src) //The atom that enters the area
+
+	for(var/atom/movable/recipient as anything in arrived.area_sensitive_contents)
+		SEND_SIGNAL(recipient, COMSIG_MOVABLE_ENTERED_AREA, src) //The atom that enters the area
 
 /**
   * Called when an atom exits an area
@@ -604,7 +606,8 @@ GLOBAL_LIST_EMPTY(teleportlocs)
   */
 /area/Exited(atom/movable/gone, direction)
 	SEND_SIGNAL(src, COMSIG_AREA_EXITED, gone, direction)
-	SEND_SIGNAL(gone, COMSIG_MOVABLE_EXITTED_AREA, src) //The atom that exits the area
+	for(var/atom/movable/recipient as anything in gone.area_sensitive_contents)
+		SEND_SIGNAL(recipient, COMSIG_MOVABLE_EXITTED_AREA, src) //The atom that exits the area
 
 /**
   * Setup an area (with the given name)

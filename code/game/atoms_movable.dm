@@ -29,7 +29,10 @@
 	/// If false makes CanPass call CanPassThrough on this type instead of using default behaviour
 	var/generic_canpass = TRUE
 	var/moving_diagonally = 0 //0: not doing a diagonal move. 1 and 2: doing the first/second step of the diagonal move
-	var/atom/movable/moving_from_pull		//attempt to resume grab after moving instead of before.
+	//attempt to resume grab after moving instead of before.
+	var/atom/movable/moving_from_pull
+	// A (nested) list of contents that need to be sent signals to when moving between areas. Can include src.
+	var/list/area_sensitive_contents
 	///Holds information about any movement loops currently running/waiting to run on the movable. Lazy, will be null if nothing's going on
 	var/datum/movement_packet/move_packet
 	var/list/acted_explosions	//for explosion dodging
@@ -562,6 +565,33 @@
 		if(QDELETED(A))
 			return
 	A.Bumped(src)
+
+/atom/movable/Exited(atom/movable/AM, atom/newLoc)
+	. = ..()
+	if(AM.area_sensitive_contents)
+		for(var/atom/movable/location as anything in get_nested_locs(src) + src)
+			LAZYREMOVE(location.area_sensitive_contents, AM.area_sensitive_contents)
+
+/atom/movable/Entered(atom/movable/AM, atom/oldLoc)
+	. = ..()
+	if(AM.area_sensitive_contents)
+		for(var/atom/movable/location as anything in get_nested_locs(src) + src)
+			LAZYADD(location.area_sensitive_contents, AM.area_sensitive_contents)
+
+/// See traits.dm. Use this in place of ADD_TRAIT.
+/atom/movable/proc/become_area_sensitive(trait_source = TRAIT_GENERIC)
+	if(!HAS_TRAIT(src, TRAIT_AREA_SENSITIVE))
+		RegisterSignal(src, SIGNAL_REMOVETRAIT(TRAIT_AREA_SENSITIVE), .proc/on_area_sensitive_trait_loss)
+		for(var/atom/movable/location as anything in get_nested_locs(src) + src)
+			LAZYADD(location.area_sensitive_contents, src)
+	ADD_TRAIT(src, TRAIT_AREA_SENSITIVE, trait_source)
+
+/atom/movable/proc/on_area_sensitive_trait_loss()
+	SIGNAL_HANDLER
+
+	UnregisterSignal(src, SIGNAL_REMOVETRAIT(TRAIT_AREA_SENSITIVE))
+	for(var/atom/movable/location as anything in get_nested_locs(src) + src)
+		LAZYREMOVE(location.area_sensitive_contents, src)
 
 /atom/movable/proc/forceMove(atom/destination)
 	. = FALSE
