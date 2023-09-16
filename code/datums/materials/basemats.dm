@@ -8,6 +8,7 @@
 	categories = list(MAT_CATEGORY_ORE = TRUE, MAT_CATEGORY_RIGID = TRUE)
 	sheet_type = /obj/item/stack/sheet/iron
 	value_per_unit = 0.0025
+	beauty_modifier = 0.05
 
 ///Breaks extremely easily but is transparent.
 /datum/material/glass
@@ -32,7 +33,8 @@
 	greyscale_colors = "#bdbebf"
 	categories = list(MAT_CATEGORY_ORE = TRUE, MAT_CATEGORY_RIGID = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/silver
-	value_per_unit = 0.025
+	value_per_unit = 0.25
+	beauty_modifier = 0.075
 
 ///Slight force increase
 /datum/material/gold
@@ -45,6 +47,7 @@
 	categories = list(MAT_CATEGORY_ORE = TRUE, MAT_CATEGORY_RIGID = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/gold
 	value_per_unit = 0.0625
+	beauty_modifier = 0.15
 
 ///Has no special properties
 /datum/material/diamond
@@ -56,6 +59,7 @@
 	categories = list(MAT_CATEGORY_ORE = TRUE, MAT_CATEGORY_RIGID = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/diamond
 	value_per_unit = 0.25
+	beauty_modifier = 0.3
 
 ///Is slightly radioactive
 /datum/material/uranium
@@ -67,6 +71,7 @@
 	categories = list(MAT_CATEGORY_ORE = TRUE, MAT_CATEGORY_RIGID = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/uranium
 	value_per_unit = 0.05
+	beauty_modifier = 0.3 //It shines so beautiful
 
 /datum/material/uranium/on_applied(atom/source, amount, material_flags)
 	. = ..()
@@ -87,6 +92,7 @@
 	categories = list(MAT_CATEGORY_ORE = TRUE, MAT_CATEGORY_RIGID = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/plasma
 	value_per_unit = 0.1
+	beauty_modifier = 0.15
 
 /datum/material/plasma/on_applied(atom/source, amount, material_flags)
 	. = ..()
@@ -109,6 +115,7 @@
 	categories = list(MAT_CATEGORY_ORE = TRUE)
 	sheet_type = /obj/item/stack/ore/bluespace_crystal/refined
 	value_per_unit = 0.15
+	beauty_modifier = 0.5
 
 ///Honks and slips
 /datum/material/bananium
@@ -120,6 +127,7 @@
 	categories = list(MAT_CATEGORY_ORE = TRUE, MAT_CATEGORY_RIGID = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/bananium
 	value_per_unit = 0.5
+	beauty_modifier = 0.5
 
 /datum/material/bananium/on_applied(atom/source, amount, material_flags)
 	. = ..()
@@ -143,6 +151,7 @@
 	categories = list(MAT_CATEGORY_ORE = TRUE, MAT_CATEGORY_RIGID = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/titanium
 	value_per_unit = 0.0625
+	beauty_modifier = 0.05
 
 ///Force decrease
 /datum/material/plastic
@@ -154,6 +163,7 @@
 	strength_modifier = 0.85
 	sheet_type = /obj/item/stack/sheet/plastic
 	value_per_unit = 0.0125
+	beauty_modifier = -0.01
 
 ///Force decrease and mushy sound effect. (Not yet implemented)
 /datum/material/biomass
@@ -164,6 +174,7 @@
 	greyscale_colors = "#735b4d"
 	strength_modifier = 0.8
 	value_per_unit = 0.025
+	beauty_modifier = -0.05 //Ewww compost looks gross!
 
 ///Stronk force increase
 /datum/material/adamantine
@@ -175,7 +186,36 @@
 	categories = list(MAT_CATEGORY_RIGID = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/adamantine
 	value_per_unit = 0.25
+	beauty_modifier = 0.4
 
+/*
+///RPG Magic.
+/datum/material/mythril
+	name = "mythril"
+	desc = "How this even exists is byond me"
+	color = "#f2d5d7"
+	greyscale_colors = "#f2d5d7"
+	categories = list(MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_BASE_RECIPES = TRUE, MAT_CATEGORY_ITEM_MATERIAL=TRUE)
+	sheet_type = /obj/item/stack/sheet/mineral/mythril
+	value_per_unit = 0.75
+	strength_modifier = 1.2
+	armor_modifiers = list(MELEE = 1.5, BULLET = 1.5, LASER = 1.5, ENERGY = 1.5, BOMB = 1.5, BIO = 1.5, FIRE = 1.5, ACID = 1.5)
+	beauty_modifier = 0.5
+
+/datum/material/mythril/on_applied_obj(atom/source, amount, material_flags)
+	. = ..()
+	if(istype(source, /obj/item))
+		source.AddComponent(/datum/component/fantasy)
+
+/datum/material/mythril/on_removed_obj(atom/source, amount, material_flags)
+	. = ..()
+	if(istype(source, /obj/item))
+		qdel(source.GetComponent(/datum/component/fantasy))
+
+/datum/material/mythril/on_accidental_mat_consumption(mob/living/carbon/victim, obj/item/source_item)
+	victim.apply_damage(20, BRUTE, BODY_ZONE_HEAD, wound_bonus = 10)
+	return TRUE
+*/
 
 /datum/material/copper
 	name = "copper"

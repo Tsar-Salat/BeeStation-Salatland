@@ -27,6 +27,12 @@ Simple datum which is instanced once per type and is used for every object of sa
 	var/integrity_modifier = 1
 	///This is the amount of value per 1 unit of the material
 	var/value_per_unit = 0
+	/*
+	///Armor modifiers, multiplies an items normal armor vars by these amounts.
+	var/armor_modifiers = list("melee" = 1, "bullet" = 1, "laser" = 1, "energy" = 1, "bomb" = 1, "bio" = 1, "rad" = 1, "fire" = 1, "acid" = 1)
+	*/
+	///How beautiful is this material per unit?
+	var/beauty_modifier = 0
 
 ///This proc is called when the material is added to an object.
 /datum/material/proc/on_applied(atom/source, amount, material_flags)
@@ -42,6 +48,9 @@ Simple datum which is instanced once per type and is used for every object of sa
 
 	if(material_flags & MATERIAL_ADD_PREFIX)
 		source.name = "[name] [source.name]"
+
+	if(beauty_modifier)
+		addtimer(CALLBACK(source, /datum.proc/AddComponent, /datum/component/beauty, beauty_modifier * amount), 0)
 
 	if(istype(source, /obj)) //objs
 		on_applied_obj(source, amount, material_flags)

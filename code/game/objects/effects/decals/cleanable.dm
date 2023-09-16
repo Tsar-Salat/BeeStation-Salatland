@@ -3,8 +3,11 @@
 	layer = ABOVE_NORMAL_TURF_LAYER
 	var/list/random_icon_states = null
 	var/blood_state = "" //I'm sorry but cleanable/blood code is ass, and so is blood_DNA
-	var/bloodiness = 0 //0-100, amount of blood in this decal, used for making footprints and affecting the alpha of bloody footprints
-	var/mergeable_decal = TRUE //when two of these are on a same tile or do we need to merge them into just one?
+	//0-100, amount of blood in this decal, used for making footprints and affecting the alpha of bloody footprints
+	var/bloodiness = 0
+	//when two of these are on a same tile or do we need to merge them into just one?
+	var/mergeable_decal = TRUE
+	var/beauty = 0
 
 /obj/effect/decal/cleanable/Initialize(mapload, list/datum/disease/diseases)
 	. = ..()
@@ -24,6 +27,8 @@
 				diseases_to_add += D
 		if(LAZYLEN(diseases_to_add))
 			AddComponent(/datum/component/infective, diseases_to_add)
+
+	addtimer(CALLBACK(src, /datum.proc/AddComponent, /datum/component/beauty, beauty), 0)
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = PROC_REF(on_entered),
 		COMSIG_ATOM_EXITED = PROC_REF(on_uncrossed),

@@ -611,6 +611,10 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	throw_range = 2
 	attack_verb = list("busted")
 
+/obj/item/statuebust/Initialize(mapload)
+	addtimer(CALLBACK(src, /datum.proc/AddComponent, /datum/component/beauty, 1000), 0)
+	. = ..()
+
 /obj/item/statuebust/hippocratic
 	name = "hippocrates bust"
 	desc = "A bust of the famous Greek physician Hippocrates of Kos, often referred to as the father of western medicine."
