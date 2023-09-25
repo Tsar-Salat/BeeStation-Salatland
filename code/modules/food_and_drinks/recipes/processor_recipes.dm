@@ -33,7 +33,7 @@
 	output = /obj/item/reagent_containers/food/snacks/soydope
 
 /datum/food_processor_process/spaghetti
-	input = /obj/item/food/doughslice
+	input = /obj/item/reagent_containers/food/snacks/doughslice
 	output = /obj/item/food/spaghetti/raw
 
 /datum/food_processor_process/corn
