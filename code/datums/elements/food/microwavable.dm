@@ -3,7 +3,7 @@
 	element_flags = ELEMENT_BESPOKE
 	id_arg_index = 2
 	/// The typepath we default to if we were passed no microwave result
-	var/atom/default_typepath = /obj/item/food/badrecipe
+	var/atom/default_typepath = /obj/item/reagent_containers/food/snacks/badrecipe
 	/// Resulting atom typepath on a completed microwave.
 	var/atom/result_typepath
 
@@ -14,10 +14,10 @@
 
 	result_typepath = microwave_type || default_typepath
 
-	RegisterSignal(target, COMSIG_ITEM_MICROWAVE_ACT, .proc/on_microwaved)
+	RegisterSignal(target, COMSIG_ITEM_MICROWAVE_ACT, PROC_REF(on_microwaved))
 
 	if(!ispath(result_typepath, default_typepath))
-		RegisterSignal(target, COMSIG_PARENT_EXAMINE, .proc/on_examine)
+		RegisterSignal(target, COMSIG_PARENT_EXAMINE, PROC_REF(on_examine))
 
 /datum/element/microwavable/Detach(datum/source)
 	UnregisterSignal(source, list(COMSIG_ITEM_MICROWAVE_ACT, COMSIG_PARENT_EXAMINE))
@@ -43,8 +43,10 @@
 	SEND_SIGNAL(result, COMSIG_ITEM_MICROWAVE_COOKED, source, efficiency)
 
 	if(IS_EDIBLE(result))
+		/*
 		if(microwaver)
 			ADD_TRAIT(result, TRAIT_FOOD_CHEF_MADE, REF(microwaver))
+		*/
 
 		result.reagents?.multiply_reagents(efficiency * CRAFTED_FOOD_BASE_REAGENT_MODIFIER)
 		source.reagents?.trans_to(result, source.reagents.total_volume)
@@ -66,4 +68,4 @@
 /datum/element/microwavable/proc/on_examine(atom/source, mob/user, list/examine_list)
 	SIGNAL_HANDLER
 
-	examine_list += span_notice("[source] could be <b>microwaved</b> into \a [initial(result_typepath.name)].")
+	examine_list += "<span class='notice'>[source] could be <b>microwaved</b> into \a [initial(result_typepath.name)].</span>"

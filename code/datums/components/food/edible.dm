@@ -39,10 +39,12 @@ Behavior that's still missing from this component that original food items had t
 	var/datum/callback/after_eat
 	///Callback to be ran for when you finish eating something
 	var/datum/callback/on_consume
+	///Callback to be ran for when the code check if the food is liked, allowing for unique overrides for special foods like donuts with cops.
+	var/datum/callback/check_liked
 	///Last time we checked for food likes
 	var/last_check_time
 	///The initial volume of the foods reagents
-	var/volume
+	var/volume = 50
 	///The flavortext for taste
 	var/list/tastes
 
@@ -58,7 +60,8 @@ Behavior that's still missing from this component that original food items had t
 	datum/callback/pre_eat,
 	datum/callback/on_compost,
 	datum/callback/after_eat,
-	datum/callback/on_consume
+	datum/callback/on_consume,
+	datum/callback/check_liked,
 )
 	if(!isatom(parent))
 		return COMPONENT_INCOMPATIBLE
@@ -70,6 +73,8 @@ Behavior that's still missing from this component that original food items had t
 	src.eat_time = eat_time
 	src.eatverbs = string_list(eatverbs)
 	src.junkiness = junkiness
+	src.pre_eat = pre_eat
+	src.on_compost = on_compost
 	src.after_eat = after_eat
 	src.on_consume = on_consume
 	src.tastes = string_assoc_list(tastes)
@@ -83,17 +88,21 @@ Behavior that's still missing from this component that original food items had t
 	RegisterSignal(parent, COMSIG_ATOM_ATTACK_ANIMAL, PROC_REF(use_by_animal))
 	RegisterSignal(parent, COMSIG_ATOM_CHECKPARTS, PROC_REF(on_craft))
 	RegisterSignal(parent, COMSIG_ATOM_CREATEDBY_PROCESSING, PROC_REF(on_processed))
+	//RegisterSignal(parent, COMSIG_FOOD_INGREDIENT_ADDED, PROC_REF(edible_ingredient_added))
 	RegisterSignal(parent, COMSIG_EDIBLE_ON_COMPOST, PROC_REF(compost))
 
+	/*
 	if(isturf(parent))
 		RegisterSignal(parent, COMSIG_ATOM_ENTERED, .proc/on_entered)
 	else
 		var/static/list/loc_connections = list(COMSIG_ATOM_ENTERED = .proc/on_entered)
 		AddComponent(/datum/component/connect_loc_behalf, parent, loc_connections)
+	*/
 
 	if(isitem(parent))
 		RegisterSignal(parent, COMSIG_ITEM_ATTACK, PROC_REF(use_from_hand))
 		RegisterSignal(parent, COMSIG_ITEM_FRIED, PROC_REF(on_fried))
+		//RegisterSignal(parent, COMSIG_ITEM_USED_AS_INGREDIENT, PROC_REF(used_to_customize))
 
 		var/obj/item/item = parent
 		if(!item.grind_results)
@@ -106,11 +115,10 @@ Behavior that's still missing from this component that original food items had t
 		COMSIG_ATOM_CHECKPARTS,
 		COMSIG_ATOM_CREATEDBY_PROCESSING,
 		COMSIG_ATOM_ENTERED,
-		COMSIG_FOOD_INGREDIENT_ADDED,
+		//COMSIG_FOOD_INGREDIENT_ADDED,
 		COMSIG_ITEM_ATTACK,
 		COMSIG_ITEM_FRIED,
-		COMSIG_ITEM_USED_AS_INGREDIENT,
-		COMSIG_OOZE_EAT_ATOM,
+		//COMSIG_ITEM_USED_AS_INGREDIENT,
 		COMSIG_PARENT_EXAMINE,
 	))
 
@@ -131,8 +139,9 @@ Behavior that's still missing from this component that original food items had t
 	datum/callback/pre_eat,
 	datum/callback/on_compost,
 	datum/callback/after_eat,
-	datum/callback/on_consume
-	)
+	datum/callback/on_consume,
+	datum/callback/check_liked,
+)
 
 	// If we got passed an old comp, take only the values that will not override our current ones
 	if(old_comp)
@@ -195,6 +204,7 @@ Behavior that's still missing from this component that original food items had t
 	QDEL_NULL(on_compost)
 	QDEL_NULL(after_eat)
 	QDEL_NULL(on_consume)
+	QDEL_NULL(check_liked)
 	return ..()
 
 /// Sets up the initial reagents of the food.
@@ -225,24 +235,25 @@ Behavior that's still missing from this component that original food items had t
 	*/
 
 	if(!(food_flags & FOOD_IN_CONTAINER))
-		switch (bitecount)
-			if (0)
-				return
+		switch(bitecount)
+			if(0)
+				// pass
 			if(1)
-				examine_list += "[parent] was bitten by someone!"
-			if(2,3)
-				examine_list += "[parent] was bitten [bitecount] times!"
+				examine_list += "<span class='notice'>[parent] was bitten by someone!</span>"
+			if(2, 3)
+				examine_list += "<span class='notice'>[parent] was bitten [bitecount] times!</span>"
 			else
-				examine_list += "[parent] was bitten multiple times!"
+				examine_list += "<span class='notice'>[parent] was bitten multiple times!</span>"
 
 /datum/component/edible/proc/use_from_hand(obj/item/source, mob/living/M, mob/living/user)
 	SIGNAL_HANDLER
 
 	return TryToEat(M, user)
 
-/datum/component/edible/proc/on_fried(fry_object)
+/datum/component/edible/proc/on_fried(datum/source, atom/fry_object)
 	SIGNAL_HANDLER
 	var/atom/our_atom = parent
+	fry_object.reagents.maximum_volume = our_atom.reagents.maximum_volume
 	our_atom.reagents.trans_to(fry_object, our_atom.reagents.total_volume)
 	qdel(our_atom)
 	return COMSIG_FRYING_HANDLED
@@ -255,11 +266,12 @@ Behavior that's still missing from this component that original food items had t
 		return
 
 	var/atom/this_food = parent
-	var/reagents_for_slice = chosen_processing_option[TOOL_PROCESSING_AMOUNT]
 
-	this_food.create_reagents(volume) //Make sure we have a reagent container
+	//Make sure we have a reagent container large enough to fit the original atom's reagents.
+	volume = max(volume, ROUND_UP(original_atom.reagents.maximum_volume / chosen_processing_option[TOOL_PROCESSING_AMOUNT]))
 
-	original_atom.reagents.trans_to(this_food, reagents_for_slice)
+	this_food.create_reagents(volume)
+	original_atom.reagents.copy_to(this_food, original_atom.reagents.total_volume, 1 / chosen_processing_option[TOOL_PROCESSING_AMOUNT])
 
 	if(original_atom.name != initial(original_atom.name))
 		this_food.name = "slice of [original_atom.name]"
@@ -272,28 +284,17 @@ Behavior that's still missing from this component that original food items had t
 
 	var/atom/this_food = parent
 
-	this_food.reagents.clear_reagents()
+	this_food.reagents.multiply_reagents(CRAFTED_FOOD_BASE_REAGENT_MODIFIER)
+	this_food.reagents.maximum_volume *= CRAFTED_FOOD_BASE_REAGENT_MODIFIER
 
-	for(var/obj/item/crafted_part in this_food.contents)
-		crafted_part.reagents?.trans_to(this_food.reagents, crafted_part.reagents.maximum_volume, CRAFTED_FOOD_INGREDIENT_REAGENT_MODIFIER)
+	for(var/obj/item/food/crafted_part in parts_list)
+		if(!crafted_part.reagents)
+			continue
 
-	var/list/objects_to_delete = list()
+		this_food.reagents.maximum_volume += crafted_part.reagents.maximum_volume * CRAFTED_FOOD_INGREDIENT_REAGENT_MODIFIER
+		crafted_part.reagents.trans_to(this_food.reagents, crafted_part.reagents.maximum_volume, CRAFTED_FOOD_INGREDIENT_REAGENT_MODIFIER)
 
-	// Remove all non recipe objects from the contents
-	for(var/content_object in this_food.contents)
-		for(var/recipe_object in recipe.real_parts)
-			if(istype(content_object, recipe_object))
-				continue
-		objects_to_delete += content_object
-
-	QDEL_LIST(objects_to_delete)
-
-	for(var/r_id in initial_reagents)
-		var/amount = initial_reagents[r_id] * CRAFTED_FOOD_BASE_REAGENT_MODIFIER
-		if(r_id == /datum/reagent/consumable/nutriment || r_id == /datum/reagent/consumable/nutriment/vitamin)
-			this_food.reagents.add_reagent(r_id, amount, tastes)
-		else
-			this_food.reagents.add_reagent(r_id, amount)
+	this_food.reagents.maximum_volume = ROUND_UP(this_food.reagents.maximum_volume) // Just because I like whole numbers for this.
 
 	SSblackbox.record_feedback("tally", "food_made", 1, type)
 
@@ -403,6 +404,7 @@ Behavior that's still missing from this component that original food items had t
 	var/atom/owner = parent
 
 	if(!owner?.reagents)
+		stack_trace("[eater] failed to bite [owner], because [owner] had no reagents.")
 		return FALSE
 	if(eater.satiety > -200)
 		eater.satiety -= junkiness
@@ -432,8 +434,6 @@ Behavior that's still missing from this component that original food items had t
 ///Checks whether or not the eater can actually consume the food
 /datum/component/edible/proc/CanConsume(mob/living/eater, mob/living/feeder)
 	if(!iscarbon(eater))
-		return FALSE
-	if(pre_eat && !pre_eat.Invoke(eater, feeder))
 		return FALSE
 	var/mob/living/carbon/C = eater
 	var/covered = ""
@@ -482,6 +482,7 @@ Behavior that's still missing from this component that original food items had t
 
 	on_consume?.Invoke(eater, feeder)
 
+	to_chat(feeder, "<span class='warning'>There is nothing left of [parent], oh no!</span>")
 	if(isturf(parent))
 		var/turf/T = parent
 		T.ScrapeAway(1, CHANGETURF_INHERIT_AIR)
@@ -505,3 +506,22 @@ Behavior that's still missing from this component that original food items had t
 		var/satisfaction_text = pick("burps from enjoyment.", "yaps for more!", "woofs twice.", "looks at the area where \the [parent] was.")
 		L.manual_emote(satisfaction_text)
 		qdel(parent)
+
+/*
+///Ability to feed food to puppers
+/datum/component/edible/proc/on_entered(datum/source, atom/movable/arrived, atom/old_loc, list/atom/old_locs)
+	SIGNAL_HANDLER
+	SEND_SIGNAL(parent, COMSIG_FOOD_CROSSED, arrived, bitecount)
+
+///Response to being used to customize something
+/datum/component/edible/proc/used_to_customize(datum/source, atom/customized)
+	SIGNAL_HANDLER
+
+	SEND_SIGNAL(customized, COMSIG_FOOD_INGREDIENT_ADDED, src)
+*/
+
+///Response to an edible ingredient being added to parent.
+/datum/component/edible/proc/edible_ingredient_added(datum/source, datum/component/edible/ingredient)
+	SIGNAL_HANDLER
+
+	InheritComponent(ingredient, TRUE)

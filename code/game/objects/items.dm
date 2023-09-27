@@ -996,8 +996,6 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 /obj/item/proc/microwave_act(obj/machinery/microwave/microwave_source, mob/microwaver)
 	SHOULD_CALL_PARENT(TRUE)
 
-	return SEND_SIGNAL(src, COMSIG_ITEM_MICROWAVE_ACT, microwave_source, microwaver)
-
 	var/obj/item/stock_parts/cell/battery = get_cell()
 	if(battery && battery.charge < battery.maxcharge * 0.4)
 		battery.give(battery.maxcharge * 0.4 - battery.charge)
@@ -1008,6 +1006,8 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 				battery.explode()
 			else
 				explosion(src, 0, 0, 3, 4)
+
+	return SEND_SIGNAL(src, COMSIG_ITEM_MICROWAVE_ACT, microwave_source, microwaver)
 
 /obj/item/proc/on_mob_death(mob/living/L, gibbed)
 

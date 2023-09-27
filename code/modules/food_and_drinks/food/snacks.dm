@@ -311,6 +311,7 @@ All foods are distributed among various categories. Use common sense.
 			reagents.trans_to(non_snackyfood, reagents.total_volume)
 
 /obj/item/reagent_containers/food/snacks/microwave_act(obj/machinery/microwave/M)
+	SHOULD_CALL_PARENT(FALSE)
 	var/turf/T = get_turf(src)
 	var/obj/item/result
 
