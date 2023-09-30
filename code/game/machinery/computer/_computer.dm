@@ -14,6 +14,7 @@
 	light_range = 1
 	light_power = 0.5
 	light_on = TRUE
+	zmm_flags = ZMM_MANGLE_PLANES
 	var/icon_keyboard = "generic_key"
 	var/icon_screen = "generic"
 	var/clockwork = FALSE
@@ -78,13 +79,13 @@
 	. += emissive_appearance(icon, icon_screen)
 
 /obj/machinery/computer/power_change()
-	..()
+	. = ..()
+	if(!.)
+		return // reduce unneeded light changes
 	if(machine_stat & NOPOWER)
 		set_light(FALSE)
 	else
 		set_light(TRUE)
-	update_appearance()
-	return
 
 /obj/machinery/computer/screwdriver_act(mob/living/user, obj/item/I)
 	if(..())

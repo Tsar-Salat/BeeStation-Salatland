@@ -58,7 +58,7 @@ field_generator power level display
 	cut_overlays()
 	if(warming_up)
 		add_overlay("+a[warming_up]")
-	if(fields.len)
+	if(LAZYLEN(fields))
 		add_overlay("+on")
 	if(power_level)
 		add_overlay("+p[power_level]")
@@ -157,7 +157,7 @@ field_generator power level display
 	else
 		..()
 
-/obj/machinery/field/generator/bullet_act(obj/item/projectile/Proj)
+/obj/machinery/field/generator/bullet_act(obj/projectile/Proj)
 	if(Proj.armor_flag != BULLET)
 		power = min(power + Proj.damage, field_generator_max_power)
 		check_power_level()

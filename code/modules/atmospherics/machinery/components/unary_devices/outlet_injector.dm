@@ -57,12 +57,6 @@
 	else
 		icon_state = "inje_on"
 
-/obj/machinery/atmospherics/components/unary/outlet_injector/power_change()
-	var/old_stat = machine_stat
-	..()
-	if(old_stat != machine_stat)
-		update_icon()
-
 /obj/machinery/atmospherics/components/unary/outlet_injector/process_atmos()
 	..()
 
@@ -227,9 +221,9 @@
 /obj/machinery/atmospherics/components/unary/outlet_injector/atmos/engine_waste
 	name = "engine outlet injector"
 	id = ATMOS_GAS_MONITOR_WASTE_ENGINE
-/obj/machinery/atmospherics/components/unary/outlet_injector/atmos/toxin_input
+/obj/machinery/atmospherics/components/unary/outlet_injector/atmos/plasma_input
 	name = "plasma tank input injector"
-	id = ATMOS_GAS_MONITOR_INPUT_TOX
+	id = ATMOS_GAS_MONITOR_INPUT_PLASMA
 /obj/machinery/atmospherics/components/unary/outlet_injector/atmos/oxygen_input
 	name = "oxygen tank input injector"
 	id = ATMOS_GAS_MONITOR_INPUT_O2

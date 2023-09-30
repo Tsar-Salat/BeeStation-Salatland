@@ -105,17 +105,30 @@
 /obj/machinery/proc/removeStaticPower(value, powerchannel)
 	addStaticPower(-value, powerchannel)
 
-// called whenever the power settings of the containing area change
-// by default, check equipment channel & set flag
-// can override if needed
+/**
+  * Called whenever the power settings of the containing area change
+  *
+  * by default, check equipment channel & set flag, can override if needed
+  *
+  * Returns TRUE if the NOPOWER flag was toggled
+  */
 /obj/machinery/proc/power_change()
 	SIGNAL_HANDLER
+	SHOULD_CALL_PARENT(TRUE)
 
+	if(machine_stat & BROKEN)
+		return
 	if(powered(power_channel))
-		machine_stat &= ~NOPOWER
+		if(machine_stat & NOPOWER)
+			SEND_SIGNAL(src, COMSIG_MACHINERY_POWER_RESTORED)
+			. = TRUE
+		set_machine_stat(machine_stat & ~NOPOWER)
 	else
-		machine_stat |= NOPOWER
-	return
+		if(!(machine_stat & NOPOWER))
+			SEND_SIGNAL(src, COMSIG_MACHINERY_POWER_LOST)
+			. = TRUE
+		set_machine_stat(machine_stat | NOPOWER)
+	update_appearance()
 
 // connect the machine to a powernet if a node cable is present on the turf
 /obj/machinery/power/proc/connect_to_network()
@@ -322,7 +335,7 @@
 	var/area/source_area
 	if(istype(power_source, /area))
 		source_area = power_source
-		power_source = source_area.get_apc()
+		power_source = source_area.apc
 	if(istype(power_source, /obj/structure/cable))
 		var/obj/structure/cable/Cable = power_source
 		power_source = Cable.powernet
@@ -387,8 +400,3 @@
 		if(C.d1 == 0)
 			return C
 	return null
-
-/area/proc/get_apc()
-	for(var/obj/machinery/power/apc/APC in GLOB.apcs_list)
-		if(APC.area == src)
-			return APC

@@ -74,10 +74,6 @@ GLOBAL_LIST_EMPTY(req_console_ckey_departments)
 	light_color = LIGHT_COLOR_GREEN
 	light_power = 1.5
 
-/obj/machinery/requests_console/power_change()
-	..()
-	update_icon()
-
 /obj/machinery/requests_console/update_icon()
 	if(machine_stat & NOPOWER)
 		set_light(0)
@@ -445,7 +441,7 @@ GLOBAL_LIST_EMPTY(req_console_ckey_departments)
 			msgVerified = "<font color='green'><b>Verified by [ID.registered_name] ([ID.assignment])</b></font>"
 			updateUsrDialog()
 		if(screen == REQ_SCREEN_ANNOUNCE)
-			if (ACCESS_RC_ANNOUNCE in ID.access)
+			if(ACCESS_RC_ANNOUNCE in ID.access)
 				announceAuth = TRUE
 			else
 				announceAuth = FALSE

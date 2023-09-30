@@ -26,6 +26,7 @@
 	power_channel = AREA_USAGE_ENVIRON
 	resistance_flags = FIRE_PROOF
 	layer = ABOVE_WINDOW_LAYER
+	zmm_flags = ZMM_MANGLE_PLANES
 
 	light_power = 0
 	light_range = 7
@@ -75,10 +76,6 @@
 	myarea.firereset(src)
 	LAZYREMOVE(myarea.firealarms, src)
 	return ..()
-
-/obj/machinery/firealarm/power_change()
-	..()
-	update_appearance()
 
 /obj/machinery/firealarm/update_overlays()
 	. = ..()
