@@ -28,9 +28,10 @@
 	return BRUTELOSS
 
 /obj/item/aicard/pre_attack(atom/target, mob/living/user, params)
-	var/our_ai = AI
-	target.transfer_ai(AI_TRANS_FROM_CARD, user, AI, src)
-		if(AI) //AI is on the card, implies user wants to upload it.
+	if(AI) //AI is on the card, implies user wants to upload it.
+		var/our_ai = AI
+		target.transfer_ai(AI_TRANS_FROM_CARD, user, AI, src)
+		if(!AI)
 			log_combat(user, AI, "uploaded", src, "to [target].")
 			return TRUE
 	else //No AI on the card, therefore the user wants to download one.
