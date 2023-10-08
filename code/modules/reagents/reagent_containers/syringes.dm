@@ -14,8 +14,6 @@
 	possible_transfer_amounts = list()
 	volume = 15
 	var/mode = SYRINGE_DRAW
-	var/busy = FALSE		// needed for delayed drawing of blood
-	var/proj_piercing = 0 //does it pierce through thick clothes when shot with syringe gun
 	materials = list(/datum/material/iron=10, /datum/material/glass=20)
 	reagent_flags = TRANSPARENT
 	var/list/datum/disease/syringe_diseases = list()
@@ -23,6 +21,8 @@
 	var/initial_inject = 5
 	fill_icon_state = "syringe"
 	fill_icon_thresholds = list(1, 5, 10, 15)
+	/// Flags used by the injection
+	var/inject_flags = NONE
 
 /obj/item/reagent_containers/syringe/Initialize(mapload)
 	. = ..()
@@ -72,8 +72,6 @@
 
 /obj/item/reagent_containers/syringe/afterattack(atom/target, mob/user , proximity)
 	. = ..()
-	if(busy)
-		return
 	if(!proximity)
 		return
 	if(!target.reagents)
@@ -352,7 +350,7 @@
 	icon_state = "piercing_0"
 	base_icon_state = "piercing"
 	volume = 10
-	proj_piercing = 1
+	inject_flags = INJECT_CHECK_PENETRATE_THICK
 	units_per_tick = 1
 	initial_inject = 3
 

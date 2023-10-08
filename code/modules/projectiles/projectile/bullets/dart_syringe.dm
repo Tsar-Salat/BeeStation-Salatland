@@ -2,7 +2,7 @@
 	name = "dart"
 	icon_state = "cbbolt"
 	damage = 6
-	var/piercing = FALSE
+	var/inject_flags = null
 	var/obj/item/reagent_containers/syringe/syringe = null
 
 /obj/projectile/bullet/dart/c38

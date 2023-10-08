@@ -350,7 +350,7 @@
 	outfit = /datum/outfit/job/engineer/gloved
 
 /obj/effect/mob_spawn/human/engineer/rig
-	outfit = /datum/outfit/job/engineer/gloved/rig
+	outfit = /datum/outfit/job/engineer/mod
 
 /obj/effect/mob_spawn/human/clown
 	name = JOB_NAME_CLOWN

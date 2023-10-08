@@ -88,6 +88,3 @@
 	if(ismob(loc))
 		var/mob/M = loc
 		M.update_inv_shoes()
-
-/obj/item/proc/negates_gravity()
-	return FALSE

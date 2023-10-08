@@ -15,6 +15,7 @@
 	var/obj/item/clothing/suit/space/suit = null
 	var/obj/item/clothing/head/helmet/space/helmet = null
 	var/obj/item/clothing/mask/mask = null
+	var/obj/item/mod/control/mod = null
 	var/obj/item/storage = null
 	// if you add more storage slots, update cook() to clear their radiation too.
 
@@ -186,7 +187,7 @@
 			add_overlay("broken")
 		else
 			add_overlay("open")
-			if(suit)
+			if(suit || mod)
 				add_overlay("suit")
 			if(helmet)
 				add_overlay("helm")
@@ -214,6 +215,7 @@
 	helmet = null
 	suit = null
 	mask = null
+	mod = null
 	storage = null
 	set_occupant(null)
 
@@ -332,6 +334,9 @@
 		if(mask)
 			things_to_clear += mask
 			things_to_clear += mask.GetAllContents()
+		if(mod)
+			things_to_clear += mod
+			things_to_clear += mod.GetAllContents()
 		if(storage)
 			things_to_clear += storage
 			things_to_clear += storage.GetAllContents()
@@ -426,6 +431,13 @@
 			if(!user.transferItemToLoc(I, src))
 				return
 			mask = I
+		else if(istype(I, /obj/item/mod/control))
+			if(mod)
+				to_chat(user, "<span class='warning'>The unit already contains a MOD!</span>")
+				return
+			if(!user.transferItemToLoc(I, src))
+				return
+			mod = I
 		else
 			if(storage)
 				to_chat(user, "<span class='warning'>The auxiliary storage compartment is full!</span>")

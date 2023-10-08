@@ -24,7 +24,6 @@
 	var/moduleselect_icon = "nomod"
 
 	var/can_be_pushed = TRUE
-	var/magpulsing = FALSE
 	var/clean_on_move = FALSE
 
 	var/did_feedback = FALSE
@@ -365,7 +364,6 @@
 		/obj/item/stack/sheet/brass/cyborg)
 	cyborg_base_icon = "engineer"
 	moduleselect_icon = "engineer"
-	magpulsing = TRUE
 	hat_offset = -4
 
 /obj/item/robot_module/deathsquad
@@ -750,7 +748,6 @@
 	cyborg_base_icon = "synd_engi"
 	moduleselect_icon = "malf"
 	can_be_pushed = FALSE
-	magpulsing = TRUE
 	hat_offset = -4
 	canDispose = TRUE
 

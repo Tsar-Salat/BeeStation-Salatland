@@ -117,7 +117,6 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	var/holder_var_amount = 20 //same. The amount adjusted with the mob's var when the spell is used
 
 	var/clothes_req = TRUE //see if it requires clothes
-	var/cult_req = FALSE //SPECIAL SNOWFLAKE clothes required for cult only spells
 	var/human_req = FALSE //spell can only be cast by humans
 	var/nonabstract_req = FALSE //spell can only be cast by mobs that are physical entities
 	var/stat_allowed = FALSE //see if it requires being conscious/alive, need to set to 1 for ghostpells
@@ -217,18 +216,16 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 			return FALSE
 
 		if(clothes_req) //clothes check
-			if(!is_type_in_typecache(H.wear_suit, casting_clothes))
+			var/passes_req = FALSE
+			if(istype(H.back, /obj/item/mod/control))
+				var/obj/item/mod/control/mod = H.back
+				if(istype(mod.theme, /datum/mod_theme/enchanted))
+					passes_req = TRUE
+			if(!passes_req && !is_type_in_typecache(H.wear_suit, casting_clothes))
 				to_chat(H, "<span class='notice'>I don't feel strong enough without my robe.</span>")
 				return FALSE
-			if(!is_type_in_typecache(H.head, casting_clothes))
+			if(!passes_req && !is_type_in_typecache(H.head, casting_clothes))
 				to_chat(H, "<span class='notice'>I don't feel strong enough without my hat.</span>")
-				return FALSE
-		if(cult_req) //CULT_REQ CLOTHES CHECK
-			if(!istype(H.wear_suit, /obj/item/clothing/suit/magusred) && !istype(H.wear_suit, /obj/item/clothing/suit/space/hardsuit/cult))
-				to_chat(H, "<span class='notice'>I don't feel strong enough without my armor.</span>")
-				return FALSE
-			if(!istype(H.head, /obj/item/clothing/head/magus) && !istype(H.head, /obj/item/clothing/head/helmet/space/hardsuit/cult))
-				to_chat(H, "<span class='notice'>I don't feel strong enough without my helmet.</span>")
 				return FALSE
 	else
 		if(clothes_req || human_req)
@@ -287,12 +284,10 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	. = ..()
 
 	if(!casting_clothes_base)
-		casting_clothes_base = typecacheof(list(/obj/item/clothing/suit/wizrobe,
-			/obj/item/clothing/suit/space/hardsuit/wizard,
+		casting_clothes_base = typecacheof(list(
+			/obj/item/clothing/suit/wizrobe,
 			/obj/item/clothing/head/wizard,
-			/obj/item/clothing/head/helmet/space/hardsuit/wizard,
-			/obj/item/clothing/suit/space/hardsuit/shielded/wizard,
-			/obj/item/clothing/head/helmet/space/hardsuit/shielded/wizard))
+		))
 
 	casting_clothes = casting_clothes_base
 

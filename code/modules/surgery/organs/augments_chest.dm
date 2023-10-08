@@ -154,12 +154,16 @@
 		if(allow_thrust(THRUST_REQUIREMENT_SPACEMOVE))
 			ion_trail.start()
 			RegisterSignal(owner, COMSIG_MOVABLE_MOVED, PROC_REF(move_react))
+			RegisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(pre_move_react))
+			RegisterSignal(owner, COMSIG_MOVABLE_SPACEMOVE, PROC_REF(spacemove_react))
 			JETPACK_SPEED_CHECK(owner, MOVESPEED_ID_CYBER_THRUSTER, -1, TRUE)
 			if(!silent)
 				to_chat(owner, "<span class='notice'>You turn your thrusters set on.</span>")
 	else
 		ion_trail.stop()
 		UnregisterSignal(owner, COMSIG_MOVABLE_MOVED)
+		UnregisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE)
+		UnregisterSignal(owner, COMSIG_MOVABLE_SPACEMOVE)
 		owner.remove_movespeed_modifier(MOVESPEED_ID_CYBER_THRUSTER)
 		if(!silent)
 			to_chat(owner, "<span class='notice'>You turn your thrusters set off.</span>")
@@ -179,6 +183,12 @@
 	SIGNAL_HANDLER
 
 	allow_thrust(THRUST_REQUIREMENT_SPACEMOVE)
+
+/obj/item/organ/cyberimp/chest/thrusters/proc/spacemove_react(mob/user, movement_dir)
+	SIGNAL_HANDLER
+
+	if(on && movement_dir)
+		return COMSIG_MOVABLE_STOP_SPACEMOVE
 
 /obj/item/organ/cyberimp/chest/thrusters/proc/allow_thrust(num, use_fuel = TRUE)
 	if(!on || !owner)

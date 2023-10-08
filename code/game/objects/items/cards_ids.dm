@@ -1312,3 +1312,7 @@ update_label("John Doe", "Clowny")
 		to_chat(user, "You upgrade your [idcard] with the [name].")
 		log_id("[key_name(user)] added access to '[idcard]' using [src] at [AREACOORD(user)].")
 		qdel(src)
+
+/obj/item/card/id/simple_bot
+	name = "simple bot ID card"
+	desc = "An internal ID card used by the station's non-sentient bots. You should report this to a coder if you're holding it."

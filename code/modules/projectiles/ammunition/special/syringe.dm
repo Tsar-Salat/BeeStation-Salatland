@@ -15,7 +15,7 @@
 		var/obj/item/reagent_containers/syringe/S = SG.syringes[1]
 		BB.name = S.name
 		var/obj/projectile/bullet/dart/D = BB
-		D.piercing = S.proj_piercing
+		D.inject_flags = S.inject_flags
 		SG.syringes.Remove(S)
 		S.forceMove(BB)
 		D.syringe = S

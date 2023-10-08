@@ -599,6 +599,8 @@
 		return TRUE
 	else if(HAS_TRAIT(src, TRAIT_BARMASTER)) // If they're a bar master, they know what reagents are at a glance
 		return TRUE
+	else if(HAS_TRAIT(src, TRAIT_REAGENT_SCANNER))
+		return TRUE
 
 /mob/proc/can_see_boozepower() // same rule above
 	. = FALSE

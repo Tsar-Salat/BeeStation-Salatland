@@ -46,24 +46,21 @@
 	icon_state = "singularity_hammer0"
 
 /obj/item/singularityhammer/proc/vortex(turf/pull, mob/wielder)
-	for(var/atom/movable/A as mob|obj in orange(5,pull))
-		if(A == wielder)
-			continue
-		if(A && !A.anchored && !ishuman(A))
-			step_towards(A,pull)
-			step_towards(A,pull)
-			step_towards(A,pull)
-		else if(ishuman(A))
-			var/mob/living/carbon/human/H = A
-			if(istype(H.shoes, /obj/item/clothing/shoes/magboots))
-				var/obj/item/clothing/shoes/magboots/M = H.shoes
-				if(M.magpulse)
+	for(var/atom/movable/X as mob|obj in orange(5,pull))
+		if(ismovable(X))
+			var/atom/movable/A = X
+			if(A == wielder)
+				continue
+			if(isliving(A))
+				var/mob/living/vortexed_mob = A
+				if(vortexed_mob.mob_negates_gravity())
 					continue
-			H.apply_effect(20, EFFECT_PARALYZE, 0)
-			step_towards(H,pull)
-			step_towards(H,pull)
-			step_towards(H,pull)
-	return
+				else
+					vortexed_mob.Paralyze(2 SECONDS)
+			if(!A.anchored && !isobserver(A))
+				step_towards(A,pull)
+				step_towards(A,pull)
+				step_towards(A,pull)
 
 /obj/item/singularityhammer/afterattack(atom/A as mob|obj|turf|area, mob/user, proximity)
 	. = ..()

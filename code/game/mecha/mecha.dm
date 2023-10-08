@@ -783,7 +783,7 @@
 			silicon_pilot = FALSE
 			AI.forceMove(card)
 			card.AI = AI
-			AI.controlled_mech = null
+			AI.controlled_equipment = null
 			AI.remote_control = null
 			icon_state = "[base_icon_state]-open"
 			to_chat(AI, "You have been downloaded to a mobile storage device. Wireless connection offline.")
@@ -829,7 +829,7 @@
 	if(!internal_damage)
 		SEND_SOUND(occupant, sound('sound/mecha/nominal.ogg',volume=50))
 	AI.cancel_camera()
-	AI.controlled_mech = src
+	AI.controlled_equipment = src
 	AI.remote_control = src
 	AI.mobility_flags = ALL //Much easier than adding AI checks! Be sure to set this back to 0 if you decide to allow an AI to leave a mech somehow.
 	AI.can_shunt = 0 //ONE AI ENTERS. NO AI LEAVES.
@@ -1065,7 +1065,7 @@
 				AI.linked_core = null
 				return
 			to_chat(AI, "<span class='notice'>Returning to core...</span>")
-			AI.controlled_mech = null
+			AI.controlled_equipment = null
 			AI.remote_control = null
 			RemoveActions(occupant, 1)
 			mob_container = AI
