@@ -406,17 +406,22 @@
 /mob/living/carbon/human/proc/canUseHUD()
 	return (mobility_flags & MOBILITY_USE)
 
-/mob/living/carbon/human/can_inject(mob/user, error_msg, target_zone, penetrate_thick = FALSE)
-	if(HAS_TRAIT(src, TRAIT_PIERCEIMMUNE))
-		return FALSE
-	if(penetrate_thick)
-		return TRUE
+/mob/living/carbon/human/can_inject(mob/user, error_msg, target_zone, injection_flags)
+	. = TRUE // Default to returning true.
 
 	if(!target_zone)
 		if(user)
 			target_zone = user.zone_selected
 		else
 			target_zone = BODY_ZONE_CHEST
+
+	// we may choose to ignore species trait pierce immunity in case we still want to check skeletons or golems for thick clothing without insta failing them
+	if(injection_flags & INJECT_CHECK_IGNORE_SPECIES)
+		if(HAS_TRAIT_NOT_FROM(src, TRAIT_PIERCEIMMUNE, SPECIES_TRAIT))
+			. = FALSE
+	else if(HAS_TRAIT(src, TRAIT_PIERCEIMMUNE))
+		. = FALSE
+
 	// If targeting the head, see if the head item is thin enough.
 	// If targeting anything else, see if the wear suit is thin enough.
 	if(above_neck(target_zone))

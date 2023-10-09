@@ -30,6 +30,23 @@
 		mode = SYRINGE_INJECT
 		update_icon()
 
+/obj/item/reagent_containers/syringe/proc/try_syringe(atom/target, mob/user, proximity)
+	if(busy)
+		return FALSE
+	if(!proximity)
+		return FALSE
+	if(!target.reagents)
+		return FALSE
+
+	if(isliving(target))
+		var/mob/living/living_target = target
+		if(!living_target.try_inject(user, injection_flags = INJECT_TRY_SHOW_ERROR_MESSAGE))
+			return FALSE
+
+	// chance of monkey retaliation
+	SEND_SIGNAL(target, COMSIG_LIVING_TRY_SYRINGE, user)
+	return TRUE
+
 /obj/item/reagent_containers/syringe/on_reagent_change(changetype)
 	update_icon()
 
@@ -70,52 +87,43 @@
 			continue
 		syringe_diseases += D
 
-/obj/item/reagent_containers/syringe/afterattack(atom/target, mob/user , proximity)
+/obj/item/reagent_containers/syringe/afterattack(atom/target, mob/user, proximity)
 	. = ..()
-	if(busy)
-		return
-	if(!proximity)
-		return
-	if(!target.reagents)
-		return
 
-	var/mob/living/L
+	var/mob/living/carbon/human/L = target
 	if(isliving(target))
-		L = target
-		if(ishuman(L))
-			var/mob/living/carbon/human/H = L
-			if(!H.can_inject(user, TRUE, penetrate_thick = proj_piercing))
-				return
-		else if(!L.can_inject(user, TRUE))
+		if(!L.try_inject(user, injection_flags = proj_piercing ? INJECT_CHECK_PENETRATE_THICK : null))
 			return
-
-	SEND_SIGNAL(target, COMSIG_LIVING_TRY_SYRINGE, user)
 
 	switch(mode)
 		if(SYRINGE_DRAW)
+
+			if (!try_syringe(target, user, proximity))
+				return
 
 			if(reagents.total_volume >= reagents.maximum_volume)
 				balloon_alert(user, "The [src] is full!")
 				return
 
-			if(L) //living mob
+			if(isliving(target))
+				var/mob/living/living_target = target
 				var/drawn_amount = reagents.maximum_volume - reagents.total_volume
 				if(target != user)
 					target.visible_message("<span class='danger'>[user] is trying to take a blood sample from [target]!</span>", \
 									"<span class='userdanger'>[user] is trying to take a blood sample from you!</span>")
 					busy = TRUE
-					if(!do_after(user, target = target, extra_checks=CALLBACK(L, TYPE_PROC_REF(/mob/living, can_inject), user, TRUE)))
+					if(!do_after(user, target = target, extra_checks=CALLBACK(L, TYPE_PROC_REF(/mob/living, try_inject), user, null, INJECT_TRY_SHOW_ERROR_MESSAGE)))
 						busy = FALSE
 						return
 					if(reagents.total_volume >= reagents.maximum_volume)
 						return
 				busy = FALSE
-				if(L.transfer_blood_to(src, drawn_amount))
-					user.visible_message("[user] takes a blood sample from [L].")
+				if(living_target.transfer_blood_to(src, drawn_amount))
+					user.visible_message("[user] takes a blood sample from [living_target].")
 				else
-					to_chat(user, "<span class='warning'>You are unable to draw any blood from [L]!</span>")
-					balloon_alert(user, "You are unable to draw any blood from [L]!")
-				transfer_diseases(L)
+					to_chat(user, "<span class='warning'>You are unable to draw any blood from [living_target]!</span>")
+					balloon_alert(user, "You are unable to draw any blood from [living_target]!")
+				transfer_diseases(living_target)
 
 			else //if not mob
 				if(!target.reagents.total_volume)
@@ -123,18 +131,23 @@
 					return
 
 				if(!target.is_drawable(user))
-					balloon_alert(user, "You can't seem to draw reagents from this..")
+					balloon_alert(user, "You can't seem to draw any reagents from this..")
 					return
 
 				var/trans = target.reagents.trans_to(src, amount_per_transfer_from_this, transfered_by = user) // transfer from, transfer to - who cares?
 
 				to_chat(user, "<span class='notice'>You fill [src] with [trans] units of the solution. It now contains [reagents.total_volume] units.</span>")
 				balloon_alert(user, "You fill [src] with [trans]u.")
+
 			if (reagents.total_volume >= reagents.maximum_volume)
 				mode=!mode
 				update_icon()
 
 		if(SYRINGE_INJECT)
+
+			if (!try_syringe(target, user, proximity))
+				return
+
 			// Always log attemped injections for admins
 			var/contained = reagents.log_list()
 			log_combat(user, target, "attempted to inject", src, addition="which had [contained]")
@@ -151,41 +164,38 @@
 				balloon_alert(user, "[target] is full.")
 				return
 
-			if(L) //living mob
-				if(ishuman(L))
-					var/mob/living/carbon/human/H = L
-					if(!H.can_inject(user, TRUE, penetrate_thick = proj_piercing))
-						return
-				else if(!L.can_inject(user, TRUE))
+			if(isliving(target))
+				var/mob/living/living_target = target
+				if(!living_target.can_inject(user, injection_flags = INJECT_TRY_SHOW_ERROR_MESSAGE))
 					return
-				if(user.a_intent == INTENT_HARM && iscarbon(L) && iscarbon(user))
-					L.visible_message("<span class='danger'>[user] lines a syringe up to [L]!", \
+				if(user.a_intent == INTENT_HARM && iscarbon(living_target) && iscarbon(user))
+					living_target.visible_message("<span class='danger'>[user] lines a syringe up to [living_target]!", \
 							"<span class='userdanger'>[user] rears their arm back, ready to stab you with [src]</span>")
-					if(do_after(user, 1 SECONDS, L))
-						var/mob/living/carbon/C = L
+					if(do_after(user, 1 SECONDS, living_target))
+						var/mob/living/carbon/C = living_target
 						embed(C, 0.5)
 						log_combat(user, C, "injected (embedding)", src, addition="which had [contained]")
-						L.visible_message("<span class='danger'>[user] stabs [L] with the syringe!", \
+						living_target.visible_message("<span class='danger'>[user] stabs [living_target] with the syringe!", \
 							"<span class='userdanger'>[user] shoves the syringe into your flesh, and it sticks!</span>")
 						return
 					return
-				if(L != user)
-					L.visible_message("<span class='danger'>[user] is trying to inject [L]!</span>", \
+				if(living_target != user)
+					living_target.visible_message("<span class='danger'>[user] is trying to inject [living_target]!</span>", \
 											"<span class='userdanger'>[user] is trying to inject you!</span>")
-					if(!do_after(user, target = L, extra_checks=CALLBACK(L, TYPE_PROC_REF(/mob/living, can_inject), user, TRUE)))
+					if(!do_after(user, target = living_target, extra_checks=CALLBACK(living_target, TYPE_PROC_REF(/mob/living, try_inject), user, null, INJECT_TRY_SHOW_ERROR_MESSAGE)))
 						return
 					if(!reagents.total_volume)
 						return
-					if(L.reagents.total_volume >= L.reagents.maximum_volume)
+					if(living_target.reagents.total_volume >= living_target.reagents.maximum_volume)
 						return
-					L.visible_message("<span class='danger'>[user] injects [L] with the syringe!", \
+					living_target.visible_message("<span class='danger'>[user] injects [living_target] with the syringe!", \
 									"<span class='userdanger'>[user] injects you with the syringe!</span>")
 
-				if(L != user)
-					log_combat(user, L, "injected", src, addition="which had [contained]")
+				if(living_target != user)
+					log_combat(user, living_target, "injected", src, addition="which had [contained]")
 				else
-					L.log_message("injected themselves ([contained]) with [src.name]", LOG_ATTACK, color="orange")
-				transfer_diseases(L)
+					living_target.log_message("injected themselves ([contained]) with [src.name]", LOG_ATTACK, color="orange")
+				transfer_diseases(living_target)
 			var/fraction = min(amount_per_transfer_from_this/reagents.total_volume, 1)
 			reagents.reaction(L, INJECT, fraction)
 			reagents.trans_to(target, amount_per_transfer_from_this, transfered_by = user)

@@ -143,7 +143,7 @@
 /**
  * Holoparasites are NOT physically soft like flesh.
  */
-/mob/living/simple_animal/hostile/holoparasite/can_inject()
+/mob/living/simple_animal/hostile/holoparasite/can_inject(mob/user, target_zone, injection_flags)
 	return FALSE
 
 /mob/living/simple_animal/hostile/holoparasite/ex_act(severity, target)

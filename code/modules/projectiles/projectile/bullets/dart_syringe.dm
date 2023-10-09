@@ -22,7 +22,7 @@
 	if(iscarbon(target))
 		var/mob/living/carbon/M = target
 		if(blocked != 100) // not completely blocked
-			if(M.can_inject(firer, FALSE, def_zone, piercing)) // Pass the hit zone to see if it can inject by whether it hit the head or the body.
+			if(M.can_inject(target_zone = def_zone, injection_flags = piercing ? INJECT_CHECK_PENETRATE_THICK : null)) // Pass the hit zone to see if it can inject by whether it hit the head or the body.
 				..()
 				if(syringe)
 					syringe.embed(M)
@@ -49,7 +49,6 @@
 	reagents.add_reagent(/datum/reagent/foaming_agent, 5)
 	reagents.add_reagent(/datum/reagent/toxin/acid/fluacid, 5)
 
-
 /obj/projectile/bullet/dart/syringe
 	name = "syringe"
 	icon_state = "syringeproj"
@@ -65,7 +64,7 @@
 	if(iscarbon(target))
 		var/mob/living/carbon/M = target
 		if(blocked != 100) // not completely blocked
-			if(M.can_inject(null, FALSE, def_zone) && !HAS_TRAIT(M, TRAIT_BEEFRIEND))
+			if(M.can_inject(target_zone = def_zone, injection_flags = piercing ? INJECT_CHECK_PENETRATE_THICK : null) && !HAS_TRAIT(M, TRAIT_BEEFRIEND))
 				var/mob/living/simple_animal/hostile/poison/bees/B = new(src.loc)
 				for(var/datum/reagent/R in reagents.reagent_list)
 					B.assign_reagent(GLOB.chemical_reagents_list[R.type])
