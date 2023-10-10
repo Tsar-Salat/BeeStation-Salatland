@@ -610,7 +610,7 @@ GLOBAL_DATUM(blackbox, /obj/machinery/smartfridge/black_box)
 	observer_desc = "This crystal generates a projectile when activated."
 	activation_method = ACTIVATE_TOUCH
 	cooldown_add = 50
-	var/obj/projectile/generated_projectile = /obj/projectile/beam/emitter
+	var/obj/projectile/generated_projectile = /obj/projectile/beam/emitter/hitscan
 
 /obj/machinery/anomalous_crystal/emitter/Initialize(mapload)
 	. = ..()

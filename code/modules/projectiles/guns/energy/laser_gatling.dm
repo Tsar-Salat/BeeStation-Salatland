@@ -166,7 +166,7 @@
 			to_chat(user, "<span class='warning'>[src] is not ready to fire again yet!</span>")
 	else
 		to_chat(user, "<span class='warning'>There is no power supply for [src]</span>")
-		return //don't process firing the gun if it's on cooldown or doesn't have an ammo pack somehow. 
+		return //don't process firing the gun if it's on cooldown or doesn't have an ammo pack somehow.
 
 /obj/item/gun/energy/minigun/proc/stop_firing()
 	if(current_heat) //Don't play the sound or apply cooldown unless it has actually fired at least once
@@ -193,3 +193,4 @@
 /obj/item/gun/energy/minigun/dropped(mob/living/user)
 	..()
 	ammo_pack.attach_gun(user)
+

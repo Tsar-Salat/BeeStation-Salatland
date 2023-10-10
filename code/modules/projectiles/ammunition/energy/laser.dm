@@ -1,7 +1,7 @@
 /obj/item/ammo_casing/energy/laser
 	projectile_type = /obj/projectile/beam/laser
 	select_name = "kill"
-
+	
 /obj/item/ammo_casing/energy/laser/gatlinggun
 	e_cost = 1
 
@@ -74,3 +74,7 @@
 	projectile_type = /obj/projectile/beam/mindflayer
 	select_name = "MINDFUCK"
 	fire_sound = 'sound/weapons/laser.ogg'
+
+/obj/item/ammo_casing/energy/hitscan
+	projectile_type = /obj/projectile/beam/emitter/hitscan
+	select_name = "kill"
