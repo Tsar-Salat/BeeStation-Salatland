@@ -194,9 +194,9 @@
 		return "missing tool."
 	return "missing component."
 
-/datum/component/personal_crafting/proc/construct_item_ui(mob/user, datum/crafting_recipe/TR)
-	var/atom/movable/result = construct_item(user, TR)
-	log_crafting(user, TR.name, result, TR.dangerous_craft)
+/datum/component/personal_crafting/proc/construct_item_ui(mob/user, datum/crafting_recipe/crafting_recipe)
+	var/atom/movable/result = construct_item(user, crafting_recipe)
+	log_crafting(user, crafting_recipe.name, result, crafting_recipe.dangerous_craft)
 	if(!istext(result)) //We made an item and didn't get a fail message
 		if(ismob(user) && isitem(result)) //In case the user is actually possessing a non mob like a machine
 			if(!user.put_in_hands(result))
@@ -208,7 +208,9 @@
 						result.pixel_y = rand(-4, 4)
 		else
 			result.forceMove(user.drop_location())
-		to_chat(user, "<span class='notice'>[TR.name] constructed.</span>")
+		to_chat(user, "<span class='notice'>[crafting_recipe.name] constructed.</span>")
+		user.investigate_log("[key_name(user)] crafted [crafting_recipe]", INVESTIGATE_CRAFTING)
+		//crafting_recipe.on_craft_completion(user, result)
 	else
 		to_chat(user, "<span class='warning'>Construction failed[result]</span>")
 	busy = FALSE
@@ -426,12 +428,12 @@
 			if(busy) // Prevent potentially crafting multiple things at once
 				return
 			var/mob/user = usr
-			var/datum/crafting_recipe/TR = locate(params["recipe"]) in GLOB.crafting_recipes
-			if(!TR)
+			var/datum/crafting_recipe/crafting_recipe = locate(params["recipe"]) in GLOB.crafting_recipes
+			if(!crafting_recipe)
 				return
 			busy = TRUE
 			. = TRUE
-			INVOKE_ASYNC(src, PROC_REF(construct_item_ui), user, TR)
+			INVOKE_ASYNC(src, PROC_REF(construct_item_ui), user, crafting_recipe)
 		if("toggle_recipes")
 			display_craftable_only = !display_craftable_only
 			. = TRUE
