@@ -29,7 +29,7 @@
 	investigate_flags = ADMIN_INVESTIGATE_TARGET
 
 /obj/item/organ/brain/Insert(mob/living/carbon/C, special = 0,no_id_transfer = FALSE, pref_load = FALSE)
-	..()
+	. = ..()
 
 	name = "brain"
 

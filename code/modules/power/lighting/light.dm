@@ -143,6 +143,7 @@
 		if(!mapload)
 			spawn(1)
 				update(FALSE, FALSE, FALSE)
+	RegisterSignal(src, COMSIG_LIGHT_EATER_ACT, PROC_REF(on_light_eater))
 	if(mapload)
 		return INITIALIZE_HINT_LATELOAD
 

@@ -932,16 +932,6 @@
 	SEND_SIGNAL(src, COMSIG_ATOM_RATVAR_ACT)
 
 /**
-  * Called when lighteater is called on this.
-  */
-/atom/proc/lighteater_act(obj/item/light_eater/light_eater, atom/parent)
-	SHOULD_CALL_PARENT(TRUE)
-	SEND_SIGNAL(src,COMSIG_ATOM_LIGHTEATER_ACT)
-	for(var/datum/light_source/light_source in light_sources)
-		if(light_source.source_atom != src)
-			light_source.source_atom.lighteater_act(light_eater, src)
-
-/**
   * Respond to the eminence clicking on our atom
   *
   * Default behaviour is to send COMSIG_ATOM_EMINENCE_ACT and return

@@ -91,11 +91,11 @@
 /datum/component/overlay_lighting/RegisterWithParent()
 	. = ..()
 	RegisterSignal(parent, COMSIG_MOVABLE_MOVED, PROC_REF(on_parent_moved))
-	RegisterSignal(parent, COMSIG_ATOM_SET_LIGHT_RANGE, PROC_REF(set_range))
-	RegisterSignal(parent, COMSIG_ATOM_SET_LIGHT_POWER, PROC_REF(set_power))
-	RegisterSignal(parent, COMSIG_ATOM_SET_LIGHT_COLOR, PROC_REF(set_color))
-	RegisterSignal(parent, COMSIG_ATOM_SET_LIGHT_ON, PROC_REF(on_toggle))
-	RegisterSignal(parent, COMSIG_ATOM_SET_LIGHT_FLAGS, PROC_REF(on_light_flags_change))
+	RegisterSignal(parent, COMSIG_ATOM_UPDATE_LIGHT_RANGE, PROC_REF(set_range))
+	RegisterSignal(parent, COMSIG_ATOM_UPDATE_LIGHT_POWER, PROC_REF(set_power))
+	RegisterSignal(parent, COMSIG_ATOM_UPDATE_LIGHT_COLOR, PROC_REF(set_color))
+	RegisterSignal(parent, COMSIG_ATOM_UPDATE_LIGHT_ON, PROC_REF(on_toggle))
+	RegisterSignal(parent, COMSIG_ATOM_UPDATE_LIGHT_FLAGS, PROC_REF(on_light_flags_change))
 	var/atom/movable/movable_parent = parent
 	if(movable_parent.light_flags & LIGHT_ATTACHED)
 		overlay_lighting_flags |= LIGHTING_ATTACHED
@@ -115,11 +115,13 @@
 	clean_old_turfs()
 	UnregisterSignal(parent, list(
 		COMSIG_MOVABLE_MOVED,
-		COMSIG_ATOM_SET_LIGHT_RANGE,
-		COMSIG_ATOM_SET_LIGHT_POWER,
-		COMSIG_ATOM_SET_LIGHT_COLOR,
-		COMSIG_ATOM_SET_LIGHT_ON,
-		COMSIG_ATOM_SET_LIGHT_FLAGS,
+			COMSIG_ATOM_UPDATE_LIGHT_RANGE,
+		COMSIG_ATOM_UPDATE_LIGHT_POWER,
+		COMSIG_ATOM_UPDATE_LIGHT_COLOR,
+		COMSIG_ATOM_UPDATE_LIGHT_ON,
+		COMSIG_ATOM_UPDATE_LIGHT_FLAGS,
+		//COMSIG_ATOM_USED_IN_CRAFT,
+		COMSIG_LIGHT_EATER_QUEUE,
 		))
 	if(overlay_lighting_flags & LIGHTING_ON)
 		turn_off()
@@ -270,7 +272,9 @@
 
 
 ///Changes the range which the light reaches. 0 means no light, 6 is the maximum value.
-/datum/component/overlay_lighting/proc/set_range(atom/source, new_range)
+/datum/component/overlay_lighting/proc/set_range(atom/source, old_range)
+	SIGNAL_HANDLER
+	var/new_range = source.light_range
 	if(range == new_range)
 		return
 	if(range == 0)
@@ -294,7 +298,9 @@
 
 
 ///Changes the intensity/brightness of the light by altering the visual object's alpha.
-/datum/component/overlay_lighting/proc/set_power(atom/source, new_power)
+/datum/component/overlay_lighting/proc/set_power(atom/source, old_power)
+	SIGNAL_HANDLER
+	var/new_power = source.light_power
 	set_lum_power(new_power >= 0 ? 0.5 : -0.5)
 	set_alpha = min(230, (abs(new_power) * 120) + 30)
 	// We need to do this in order to trigger byond to update the overlay
@@ -306,7 +312,9 @@
 
 
 ///Changes the light's color, pretty straightforward.
-/datum/component/overlay_lighting/proc/set_color(atom/source, new_color)
+/datum/component/overlay_lighting/proc/set_color(atom/source, old_color)
+	SIGNAL_HANDLER
+	var/new_color = source.light_color
 	// We need to do this in order to trigger byond to update the overlay
 	if(overlay_lighting_flags & LIGHTING_ON)
 		current_holder?.underlays -= visible_mask
@@ -315,7 +323,9 @@
 		current_holder?.underlays += visible_mask
 
 ///Toggles the light on and off.
-/datum/component/overlay_lighting/proc/on_toggle(atom/source, new_value)
+/datum/component/overlay_lighting/proc/on_toggle(atom/source, old_value)
+	SIGNAL_HANDLER
+	var/new_value = source.light_on
 	if(new_value) //Truthy value input, turn on.
 		turn_on()
 		return
@@ -323,18 +333,22 @@
 
 
 ///Triggered right before the parent light flags change.
-/datum/component/overlay_lighting/proc/on_light_flags_change(atom/source, new_value)
+/datum/component/overlay_lighting/proc/on_light_flags_change(atom/source, old_flags)
+	SIGNAL_HANDLER
+	var/new_flags = source.light_flags
 	var/atom/movable/movable_parent = parent
-	if(new_value & LIGHT_ATTACHED)
-		if(!(movable_parent.light_flags & LIGHT_ATTACHED)) //Gained the LIGHT_ATTACHED property.
-			overlay_lighting_flags |= LIGHTING_ATTACHED
-			if(ismovable(movable_parent.loc))
-				set_parent_attached_to(movable_parent.loc)
-	else if(movable_parent.light_flags & LIGHT_ATTACHED) //Lost the LIGHT_ATTACHED property.
+	if(!((new_flags ^ old_flags) & LIGHT_ATTACHED))
+		return
+
+	if(new_flags & LIGHT_ATTACHED) // Gained the [LIGHT_ATTACHED] property
+		overlay_lighting_flags |= LIGHTING_ATTACHED
+		if(ismovable(movable_parent.loc))
+			set_parent_attached_to(movable_parent.loc)
+	else // Lost the [LIGHT_ATTACHED] property
 		overlay_lighting_flags &= ~LIGHTING_ATTACHED
 		set_parent_attached_to(null)
 
-	if(new_value & LIGHT_NO_LUMCOUNT)
+	if(new_flags & LIGHT_NO_LUMCOUNT)
 		if(!(movable_parent.light_flags & LIGHT_NO_LUMCOUNT)) //Gained the NO_LUMCOUNT property
 			overlay_lighting_flags |= LIGHT_NO_LUMCOUNT
 			//Recalculate affecting
@@ -390,6 +404,11 @@
 		var/turf/lit_turf = t
 		lit_turf.dynamic_lumcount -= difference
 
+/// Handles putting the source for overlay lights into the light eater queue since we aren't tracked by [/atom/var/light_sources]
+/datum/component/overlay_lighting/proc/on_light_eater(datum/source, list/light_queue, datum/light_eater)
+	SIGNAL_HANDLER
+	light_queue += parent
+	return NONE
 
 #undef LIGHTING_ON
 #undef LIGHTING_ATTACHED

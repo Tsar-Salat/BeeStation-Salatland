@@ -397,6 +397,8 @@
 	install_component(new /obj/item/computer_hardware/identifier)
 	install_component(new /obj/item/computer_hardware/sensorpackage)
 
+	RegisterSignal(src, COMSIG_LIGHT_EATER_ACT, PROC_REF(on_light_eater))
+
 	if(default_disk)
 		var/obj/item/computer_hardware/hard_drive/portable/disk = new default_disk(src)
 		install_component(disk)
@@ -405,3 +407,12 @@
 		inserted_item = new insert_type(src)
 		// show the inserted item
 		update_icon()
+
+/// Special light eater handling
+/obj/item/modular_computer/tablet/pda/proc/on_light_eater(obj/item/pda/source, datum/light_eater)
+	SIGNAL_HANDLER
+	set_light_on(FALSE)
+	set_light_range(0) //We won't be turning on again.
+	update_icon()
+	visible_message("<span class='danger'>The light in [src] shorts out!</span>")
+	return COMPONENT_BLOCK_LIGHT_EATER

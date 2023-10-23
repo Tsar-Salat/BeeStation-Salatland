@@ -64,7 +64,8 @@
 	RegisterSignal(ethereal, COMSIG_ATOM_SHOULD_EMAG, PROC_REF(should_emag))
 	RegisterSignal(ethereal, COMSIG_ATOM_ON_EMAG, PROC_REF(on_emag))
 	RegisterSignal(ethereal, COMSIG_ATOM_EMP_ACT, PROC_REF(on_emp_act))
-
+	RegisterSignal(ethereal, COMSIG_LIGHT_EATER_ACT, .proc/on_light_eater)
+	ethereal_light = ethereal.mob_light()
 	spec_updatehealth(ethereal)
 
 
@@ -78,6 +79,7 @@
 	UnregisterSignal(C, COMSIG_ATOM_SHOULD_EMAG)
 	UnregisterSignal(C, COMSIG_ATOM_ON_EMAG)
 	UnregisterSignal(C, COMSIG_ATOM_EMP_ACT)
+	UnregisterSignal(C, COMSIG_LIGHT_EATER_ACT)
 	QDEL_NULL(ethereal_light)
 	return ..()
 
@@ -156,6 +158,12 @@
 	emageffect = FALSE
 	spec_updatehealth(H)
 	H.visible_message("<span class='danger'>[H] stops flickering and goes back to their normal state!</span>")
+
+/// Special handling for getting hit with a light eater
+/datum/species/ethereal/proc/on_light_eater(mob/living/carbon/human/source, datum/light_eater)
+	SIGNAL_HANDLER
+	source.emp_act(EMP_LIGHT)
+	return COMPONENT_BLOCK_LIGHT_EATER
 
 /datum/species/ethereal/handle_charge(mob/living/carbon/human/H)
 	brutemod = 1.25

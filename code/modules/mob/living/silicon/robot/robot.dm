@@ -122,6 +122,7 @@
 	wires = new /datum/wires/robot(src)
 	AddElement(/datum/element/empprotection, EMP_PROTECT_WIRES)
 	RegisterSignal(src, COMSIG_PROCESS_BORGCHARGER_OCCUPANT, PROC_REF(charge))
+	RegisterSignal(src, COMSIG_LIGHT_EATER_ACT, PROC_REF(on_light_eater))
 
 	robot_modules_background = new()
 	robot_modules_background.icon_state = "block"
@@ -735,6 +736,13 @@
 	else
 		qdel(internal_clock_slab)
 		clear_alert("ratvar")
+
+/// Special handling for getting hit with a light eater
+/mob/living/silicon/robot/proc/on_light_eater(mob/living/silicon/robot/source, datum/light_eater)
+	SIGNAL_HANDLER
+	if(lamp_enabled)
+		smash_headlamp()
+	return COMPONENT_BLOCK_LIGHT_EATER
 
 /**
   * Handles headlamp smashing
