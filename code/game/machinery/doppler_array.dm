@@ -23,8 +23,6 @@
 	RegisterSignal(SSdcs, COMSIG_GLOB_EXPLOSION, PROC_REF(sense_explosion))
 	printer_ready = world.time + PRINTER_TIMEOUT
 
-/obj/machinery/doppler_array/ComponentInitialize()
-	. = ..()
 	AddComponent(/datum/component/simple_rotation,ROTATION_ALTCLICK | ROTATION_CLOCKWISE,null,null,CALLBACK(src,PROC_REF(rot_message)))
 
 /datum/data/tachyon_record

@@ -76,7 +76,7 @@
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	clothing_flags = THICKMATERIAL
 
-/obj/item/clothing/suit/wizrobe/ComponentInitialize()
+/obj/item/clothing/suit/wizrobe/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/anti_artifact, INFINITY, FALSE, 100)
 

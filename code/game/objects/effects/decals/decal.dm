@@ -42,6 +42,13 @@
 // Basically rather then creating and deleting ourselves, why not just do the bare minimum?
 /obj/effect/turf_decal/Initialize(mapload)
 	SHOULD_CALL_PARENT(FALSE)
+	if(flags_1 & INITIALIZED_1)
+		stack_trace("Warning: [src]([type]) initialized multiple times!")
+	flags_1 |= INITIALIZED_1
+
+	var/turf/T = loc
+	if(!istype(T)) //you know this will happen somehow
+		CRASH("Turf decal initialized in an object/nullspace")
 	loc.AddElement(/datum/element/decal, icon, icon_state, dir, FALSE, color, TURF_LAYER + (layer - TURF_DECAL_LOWEST_LAYER), null, alpha, FALSE)
 	return INITIALIZE_HINT_QDEL
 

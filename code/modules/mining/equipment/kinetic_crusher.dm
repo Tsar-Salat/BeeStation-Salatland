@@ -29,7 +29,7 @@
 	var/detonation_damage = 25
 	var/backstab_bonus = 15
 
-/obj/item/kinetic_crusher/ComponentInitialize()
+/obj/item/kinetic_crusher/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/butchering, 60, 110) //technically it's huge and bulky, but this provides an incentive to use it
 	AddComponent(/datum/component/two_handed, force_unwielded=0, force_wielded=14)

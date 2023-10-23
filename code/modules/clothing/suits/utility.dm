@@ -146,6 +146,6 @@
 	flags_inv = HIDEJUMPSUIT
 	rad_flags = RAD_PROTECT_CONTENTS
 
-/obj/item/clothing/suit/radiation/ComponentInitialize()
+/obj/item/clothing/suit/radiation/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/anti_artifact, INFINITY, FALSE, 100)

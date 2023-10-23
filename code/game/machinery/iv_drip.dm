@@ -259,12 +259,9 @@
 	can_convert = FALSE
 
 /obj/machinery/iv_drip/saline/Initialize(mapload)
+	AddElement(/datum/element/update_icon_blocker)
 	. = ..()
 	beaker = new /obj/item/reagent_containers/glass/saline(src)
-
-/obj/machinery/iv_drip/saline/ComponentInitialize()
-	. = ..()
-	AddElement(/datum/element/update_icon_blocker)
 
 /obj/machinery/iv_drip/saline/eject_beaker()
 	return

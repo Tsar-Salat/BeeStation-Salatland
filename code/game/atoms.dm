@@ -226,7 +226,6 @@
 		custom_materials = null //Null the list to prepare for applying the materials properly
 		set_custom_materials(temp_list)
 
-	ComponentInitialize()
 	InitializeAIController()
 
 	if(length(smoothing_groups))
@@ -258,10 +257,6 @@
   */
 /atom/proc/LateInitialize()
 	set waitfor = FALSE
-
-/// Put your AddComponent() calls here
-/atom/proc/ComponentInitialize()
-	return
 
 /**
   * Top level of the destroy chain for most atoms

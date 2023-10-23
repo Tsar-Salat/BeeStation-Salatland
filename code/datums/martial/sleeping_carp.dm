@@ -179,9 +179,9 @@
 	block_upgrade_walk = 1
 	block_power = 25
 
-/obj/item/staff/bostaff/ComponentInitialize()
+/obj/item/staff/bostaff/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/two_handed, force_unwielded=10, force_wielded=24, block_power_unwielded=25, block_power_wielded=50, icon_wielded="bostaff1")
+	AddComponent(/datum/component/two_handed, force_unwielded = 10, force_wielded = 24, block_power_unwielded = 25, block_power_wielded = 50, icon_wielded="bostaff1")
 
 /obj/item/staff/bostaff/update_icon_state()
 	icon_state = "bostaff0"

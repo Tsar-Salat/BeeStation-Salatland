@@ -39,20 +39,15 @@ field_generator power level display
 	var/power = 20  // Current amount of power
 	var/state = FG_UNSECURED
 	var/warming_up = 0
-	var/list/obj/machinery/field/containment/fields
-	var/list/obj/machinery/field/generator/connected_gens
+	var/list/obj/machinery/field/containment/fields = list()
+	var/list/obj/machinery/field/generator/connected_gens = list()
 	var/clean_up = 0
 	COOLDOWN_STATIC_DECLARE(loose_message_cooldown)
 
 /obj/machinery/field/generator/Initialize(mapload)
 	. = ..()
-	fields = list()
-	connected_gens = list()
-	RegisterSignal(src, COMSIG_ATOM_SINGULARITY_TRY_MOVE, PROC_REF(block_singularity_if_active))
-
-/obj/machinery/field/generator/ComponentInitialize()
-	. = ..()
 	AddElement(/datum/element/empprotection, EMP_PROTECT_SELF | EMP_PROTECT_WIRES)
+	RegisterSignal(src, COMSIG_ATOM_SINGULARITY_TRY_MOVE, PROC_REF(block_singularity_if_active))
 
 /obj/machinery/field/generator/update_icon()
 	cut_overlays()

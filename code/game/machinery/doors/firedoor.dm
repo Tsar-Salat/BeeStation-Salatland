@@ -750,7 +750,7 @@
 	density = FALSE
 	firelock_type = /obj/machinery/door/firedoor/border_only
 
-/obj/structure/firelock_frame/border/ComponentInitialize()
+/obj/structure/firelock_frame/border/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/simple_rotation, ROTATION_ALTCLICK | ROTATION_CLOCKWISE | ROTATION_COUNTERCLOCKWISE | ROTATION_VERBS, null, CALLBACK(src, PROC_REF(can_be_rotated)))
 

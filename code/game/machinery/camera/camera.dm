@@ -71,6 +71,9 @@
 	for(var/i in network)
 		network -= i
 		network += lowertext(i)
+	AddComponent(/datum/component/jam_receiver, JAMMER_PROTECTION_CAMERAS)
+	RegisterSignal(src, COMSIG_ATOM_JAMMED, PROC_REF(update_jammed))
+	RegisterSignal(src, COMSIG_ATOM_UNJAMMED, PROC_REF(update_jammed))
 	var/obj/structure/camera_assembly/assembly
 	if(CA)
 		assembly = CA
@@ -100,12 +103,6 @@
 		update_appearance()
 
 	alarm_manager = new(src)
-
-/obj/machinery/camera/ComponentInitialize()
-	. = ..()
-	AddComponent(/datum/component/jam_receiver, JAMMER_PROTECTION_CAMERAS)
-	RegisterSignal(src, COMSIG_ATOM_JAMMED, PROC_REF(update_jammed))
-	RegisterSignal(src, COMSIG_ATOM_UNJAMMED, PROC_REF(update_jammed))
 
 /obj/machinery/camera/proc/update_jammed(datum/source)
 	SIGNAL_HANDLER
