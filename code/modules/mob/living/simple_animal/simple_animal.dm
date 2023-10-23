@@ -31,9 +31,14 @@
 	var/response_harm   = "hits"
 	var/force_threshold = 0 //Minimum force required to deal any damage
 
-	//Temperature effect
+	///Minimal body temperature without receiving damage
 	var/minbodytemp = 250
+	///Maximal body temperature without receiving damage
 	var/maxbodytemp = 350
+	///This damage is taken when the body temp is too cold.
+	var/unsuitable_cold_damage
+	///This damage is taken when the body temp is too hot.
+	var/unsuitable_heat_damage
 
 	//Healable by medical stacks? Defaults to yes.
 	var/healable = 1
@@ -108,6 +113,11 @@
 	if(!loc)
 		stack_trace("Simple animal being instantiated in nullspace")
 	update_simplemob_varspeed()
+
+	if(isnull(unsuitable_cold_damage))
+		unsuitable_cold_damage = unsuitable_atmos_damage
+	if(isnull(unsuitable_heat_damage))
+		unsuitable_heat_damage = unsuitable_atmos_damage
 
 /mob/living/simple_animal/ComponentInitialize()
 	. = ..()
@@ -282,8 +292,8 @@
 
 /mob/living/simple_animal/proc/handle_temperature_damage()
 	if(bodytemperature < minbodytemp)
-		adjustHealth(unsuitable_atmos_damage)
-		switch(unsuitable_atmos_damage)
+		adjustHealth(unsuitable_cold_damage)
+		switch(unsuitable_cold_damage)
 			if(1 to 5)
 				throw_alert("temp", /atom/movable/screen/alert/cold, 1)
 			if(5 to 10)
@@ -291,8 +301,8 @@
 			if(10 to INFINITY)
 				throw_alert("temp", /atom/movable/screen/alert/cold, 3)
 	else if(bodytemperature > maxbodytemp)
-		adjustHealth(unsuitable_atmos_damage)
-		switch(unsuitable_atmos_damage)
+		adjustHealth(unsuitable_heat_damage)
+		switch(unsuitable_heat_damage)
 			if(1 to 5)
 				throw_alert("temp", /atom/movable/screen/alert/hot, 1)
 			if(5 to 10)

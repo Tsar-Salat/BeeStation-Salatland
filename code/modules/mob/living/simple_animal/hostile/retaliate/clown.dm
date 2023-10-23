@@ -33,21 +33,12 @@
 	minbodytemp = 270
 	maxbodytemp = 370
 	unsuitable_atmos_damage = 10
+	unsuitable_heat_damage = 15
 	do_footstep = TRUE
 	hardattacks = TRUE
 	var/banana_time = 0 // If there's no time set it won't spawn.
 	var/banana_type = /obj/item/grown/bananapeel
 	var/attack_reagent
-
-/mob/living/simple_animal/hostile/retaliate/clown/handle_temperature_damage()
-	if(bodytemperature < minbodytemp)
-		adjustBruteLoss(10)
-		throw_alert("temp", /atom/movable/screen/alert/cold, 2)
-	else if(bodytemperature > maxbodytemp)
-		adjustBruteLoss(15)
-		throw_alert("temp", /atom/movable/screen/alert/hot, 3)
-	else
-		clear_alert("temp")
 
 /mob/living/simple_animal/hostile/retaliate/clown/attack_hand(mob/living/carbon/human/M)
 	..()

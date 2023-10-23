@@ -37,6 +37,8 @@
 	initial_language_holder = /datum/language_holder/spider // Speaks buzzwords, understands buzzwords and common
 	maxHealth = 85
 	health = 85
+	unsuitable_cold_damage = 10
+	unsuitable_heat_damage = 10
 	obj_damage = 25
 	melee_damage = 15
 	poison_per_bite = 3
@@ -741,18 +743,6 @@
 		var/link = FOLLOW_LINK(M, user)
 		to_chat(M, "[link] [my_message]")
 	usr.log_talk(message, LOG_SAY, tag="spider command")
-
-// Temperature damage
-// Flat 10 brute if they're out of safe temperature, making them vulnerable to fire or spacing
-/mob/living/simple_animal/hostile/poison/giant_spider/handle_temperature_damage()
-	if(bodytemperature < minbodytemp)
-		adjustBruteLoss(10)
-		throw_alert("temp", /atom/movable/screen/alert/cold, 3)
-	else if(bodytemperature > maxbodytemp)
-		adjustBruteLoss(10)
-		throw_alert("temp", /atom/movable/screen/alert/hot, 3)
-	else
-		clear_alert("temp")
 
 #undef SPIDER_IDLE
 #undef SPINNING_WEB
