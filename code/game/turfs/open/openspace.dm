@@ -141,7 +141,7 @@
 /turf/open/openspace/rust_heretic_act()
 	return FALSE
 
-/turf/open/openspace/CanAStarPass(obj/item/card/id/ID, to_dir, atom/movable/caller)
+/turf/open/openspace/CanAStarPass(obj/item/card/id/ID, to_dir, atom/movable/caller, no_id = FALSE)
 	if(caller && !caller.can_zFall(null, null, DOWN)) //If we can't fall here (flying/lattice), it's fine to path through
 		return TRUE
 	return FALSE

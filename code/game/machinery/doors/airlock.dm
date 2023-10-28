@@ -1321,9 +1321,9 @@
 	rebuild_parts()
 	update_icon()
 
-/obj/machinery/door/airlock/CanAStarPass(obj/item/card/id/ID, to_dir, atom/movable/caller)
+/obj/machinery/door/airlock/CanAStarPass(obj/item/card/id/ID, to_dir, atom/movable/caller, no_id = FALSE)
 //Airlock is passable if it is open (!density), bot has access, and is not bolted shut or powered off)
-	return !density || (check_access(ID) && !locked && hasPower())
+	return !density || (check_access(ID) && !locked && hasPower() && !no_id)
 
 ///This does not call parent because airlocks should be possible to emag multiple times. We only care that the door is closed, not protected and has power.
 /obj/machinery/door/airlock/should_emag(mob/user)
