@@ -60,7 +60,6 @@
 	..()
 	ignore_list = list() //Allows the bot to clean targets it previously ignored due to being unreachable.
 	target = null
-	oldloc = null
 
 /mob/living/simple_animal/bot/cleanbot/set_custom_texts()
 	text_hack = "You corrupt [name]'s cleaning software."
@@ -91,7 +90,7 @@
 /mob/living/simple_animal/bot/cleanbot/process_scan(atom/scan_target)
 	if(iscarbon(scan_target))
 		var/mob/living/carbon/scan_carbon = scan_target
-		if(scan_carbon.stat != DEAD && !(C.mobility_flags & MOBILITY_STAND))
+		if(scan_carbon.stat != DEAD && !(scan_carbon.mobility_flags & MOBILITY_STAND))
 			return scan_carbon
 	else if(is_type_in_typecache(scan_target, target_types))
 		return scan_target
@@ -133,7 +132,7 @@
 		if(trash)
 			scan_targets += list(
 				/obj/item/trash,
-				/obj/item/food/deadmouse,
+				//obj/item/food/deadmouse,
 			)
 		scan_targets += list(
 			/obj/effect/decal/cleanable,
@@ -154,7 +153,7 @@
 			mode = BOT_IDLE
 			return
 
-		iif(loc == get_turf(target))
+		if(loc == get_turf(target))
 			if(!(check_bot(target)))
 				UnarmedAttack(target)	//Rather than check at every step of the way, let's check before we do an action, so we can rescan before the other bot.
 				if(QDELETED(target)) //We done here.
@@ -212,7 +211,7 @@
 	if(trash)
 		target_types += list(
 			/obj/item/trash,
-			/obj/item/food/deadmouse,
+			//obj/item/food/deadmouse,
 		)
 
 	target_types = typecacheof(target_types)
