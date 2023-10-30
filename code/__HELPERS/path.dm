@@ -25,11 +25,11 @@
 	// We're guarenteed that list will be the first list in pathfinding_finished's argset because of how callback handles the arguments list
 	var/datum/callback/await = CALLBACK(GLOBAL_PROC, /proc/pathfinding_finished, path)
 	if(!SSpathfinder.pathfind(caller, end, max_distance, mintargetdist, id, simulated_only, exclude, skip_first, diagonal_safety, await))
-		return null
+		return list()
 
 	UNTIL(length(path))
-	if(length(path) == 1 && path[1] == null) // It's trash, just hand back null to make it easy
-		return null
+	if(length(path) == 1 && path[1] == null || (QDELETED(caller) || QDELETED(end))) // It's trash, just hand back null to make it easy
+		return list()
 	return path
 
 /// Uses funny pass by reference bullshit to take the path created by pathfinding, and insert it into a return list
@@ -415,7 +415,7 @@
 	if(destination_turf.x != x && destination_turf.y != y) //diagonal
 		var/in_dir = get_dir(destination_turf,src) // eg. northwest (1+8) = 9 (00001001)
 		var/first_step_direction_a = in_dir & 3 // eg. north   (1+8)&3 (0000 0011) = 1 (0000 0001)
-		var/first_step_direction_b = in_dir & 12  // eg. west   (1+8)&12 (0000 1100) = 8 (0000 1000)
+		var/first_step_direction_b = in_dir & 12 // eg. west   (1+8)&12 (0000 1100) = 8 (0000 1000)
 
 		for(var/first_step_direction in list(first_step_direction_a,first_step_direction_b))
 			var/turf/midstep_turf = get_step(destination_turf,first_step_direction)

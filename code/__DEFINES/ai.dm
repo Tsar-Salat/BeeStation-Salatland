@@ -4,7 +4,6 @@
 #define AI_STATUS_ON 1
 #define AI_STATUS_OFF 2
 
-
 ///Monkey checks
 #define SHOULD_RESIST(source) (source.on_fire || source.buckled || source.restrained() || (source.pulledby && source.pulledby.grab_state > GRAB_PASSIVE))
 #define IS_DEAD_OR_INCAP(source) (source.incapacitated() || source.stat)
@@ -14,7 +13,7 @@
 
 ///Cooldown on planning if planning failed last time
 
-#define AI_FAILED_PLANNING_COOLDOWN 1.5 SECONDS
+#define AI_FAILED_PLANNING_COOLDOWN (1.5 SECONDS)
 
 ///Flags for ai_behavior new()
 #define AI_CONTROLLER_INCOMPATIBLE (1<<0)
@@ -34,6 +33,8 @@
 
 //Generic BB keys
 #define BB_CURRENT_MIN_MOVE_DISTANCE "min_move_distance"
+///Path we should use next time we use the JPS movement datum
+#define BB_PATH_TO_USE "BB_path_to_use"
 
 // Monkey AI controller blackboard keys
 

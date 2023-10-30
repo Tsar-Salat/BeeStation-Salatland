@@ -92,3 +92,8 @@
 
 /// Generic position of user offset for /datum/component/riding
 #define RIDING_OFFSET_ALL "ALL"
+
+///Return values for moveloop Move()
+#define MOVELOOP_FAILURE 0
+#define MOVELOOP_SUCCESS 1
+#define MOVELOOP_NOT_READY 2
