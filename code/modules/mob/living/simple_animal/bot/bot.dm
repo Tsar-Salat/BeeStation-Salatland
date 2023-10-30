@@ -812,6 +812,8 @@ Pass a positive integer as an argument to override a bot's default speed.
 // given an optional turf to avoid
 /mob/living/simple_animal/bot/proc/calc_path(turf/avoid)
 	check_bot_access()
+	if(!isturf(src.loc))
+		return
 	if(!is_reserved_level(z))
 		if(patrol_target != null)
 			if(z > patrol_target.z)
@@ -862,15 +864,17 @@ Pass a positive integer as an argument to override a bot's default speed.
 
 		var/moved = bot_move(summon_target, 3)	// Move attempt
 		if(!moved)
-			spawn(2)
-				calc_summon_path()
-				tries = 0
+			addtimer(CALLBACK(src, PROC_REF(summon_step_not_moved)), 2)
 
 	else	// no path, so calculate new one
 		if(summon_target != null)
 			if(z != summon_target.z)
 				last_summon = summon_target
 		calc_summon_path()
+
+/mob/living/simple_animal/bot/proc/summon_step_not_moved()
+	calc_summon_path()
+	tries = 0
 
 /mob/living/simple_animal/bot/Bump(M as mob|obj) //Leave no door unopened!
 	. = ..()
