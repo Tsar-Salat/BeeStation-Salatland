@@ -456,13 +456,7 @@
  * scan_range - how far away from [src] will be scanned, if nothing is found directly adjacent.
  */
 /mob/living/simple_animal/bot/proc/scan(list/scan_types, old_target, scan_range = DEFAULT_SCAN_RANGE)
-	var/turf/current_turf = get_turf(src)
-	if(!current_turf)
-		return
-	var/list/adjacent = current_turf.get_atmos_adjacent_turfs(1)
-	if(shuffle) //If we were on the same tile as another bot, let's randomize our choices so we dont both go the same way
-		adjacent = shuffle(adjacent)
-		shuffle = FALSE
+	var/list/adjacent = shuffle(view(1, src))
 
 	for(var/turf/scan as anything in adjacent) //Let's see if there's something right next to us first!
 		if(check_bot(scan)) //Is there another bot there? Then let's just skip it
@@ -471,7 +465,7 @@
 		if(final_result)
 			return final_result
 
-	for(var/turf/scanned_turfs as anything in shuffle(view(scan_range, src)) - adjacent) //Search for something in range, minus what we already checked.
+	for(var/turf/scanned_turfs as anything in view(scan_range, src) - adjacent) //Search for something in range, minus what we already checked.
 		if(check_bot(scanned_turfs)) //Is there another bot there? Then let's just skip it
 			continue
 		var/final_result = checkscan(scanned_turfs, scan_types, old_target)
@@ -577,7 +571,7 @@ Pass a positive integer as an argument to override a bot's default speed.
 			return
 
 
-	set_path(get_path_to(src, waypoint, 200, id=all_access))
+	set_path(get_path_to(src, waypoint, max_distance = 200, id = all_access))
 
 	if(path && path.len) //Ensures that a valid path is calculated!
 		var/end_area = get_area_name(waypoint)
@@ -809,23 +803,25 @@ Pass a positive integer as an argument to override a bot's default speed.
 			if(z < patrol_target.z)
 				go_up_or_down(UP)
 				return
-	set_path(get_path_to(src, patrol_target, 120, id=access_card, exclude=avoid))
+	set_path(get_path_to(src, patrol_target, max_distance = 120, id = access_card, exclude=avoid))
 
 /mob/living/simple_animal/bot/proc/calc_summon_path(turf/avoid)
 	check_bot_access()
-	spawn()
-		if(!is_reserved_level(z))
-			if(summon_target != null)
-				if(z > summon_target.z)
-					summon_up_or_down(DOWN)
-					return
-				if(z < summon_target.z)
-					summon_up_or_down(UP)
-					return
-		set_path(get_path_to(src, summon_target, 150, id=access_card, exclude=avoid))
-		if(!path.len) //Cannot reach target. Give up and announce the issue.
-			speak("Summon command failed, destination unreachable.",radio_channel)
-			bot_reset()
+	INVOKE_ASYNC(src, PROC_REF(do_calc_summon_path), avoid)
+
+/mob/living/simple_animal/bot/proc/do_calc_summon_path(turf/avoid)
+	if(!is_reserved_level(z))
+		if(summon_target != null)
+			if(z > summon_target.z)
+				summon_up_or_down(DOWN)
+				return
+			if(z < summon_target.z)
+				summon_up_or_down(UP)
+				return
+	set_path(get_path_to(src, summon_target, max_distance = 150, id=access_card, exclude=avoid))
+	if(!path.len) //Cannot reach target. Give up and announce the issue.
+		speak("Summon command failed, destination unreachable.",radio_channel)
+		bot_reset()
 
 /mob/living/simple_animal/bot/proc/summon_step()
 
@@ -1263,7 +1259,7 @@ Pass a positive integer as an argument to override a bot's default speed.
 
 		destination = get_turf(new_target)
 
-	set_path(get_path_to(src, destination, 200, id=all_access))
+	set_path(get_path_to(src, destination, max_distance = 200, id=all_access))
 	ai_waypoint = destination
 
 	if(path && path.len) //Ensures that a valid path is calculated!
@@ -1296,7 +1292,7 @@ Pass a positive integer as an argument to override a bot's default speed.
 		if(!new_target)
 			return
 		patrol_target = get_turf(new_target)
-		set_path(get_path_to(src, patrol_target, 200, id=all_access))
+		set_path(get_path_to(src, patrol_target, max_distance = 200, id=all_access))
 
 /mob/living/simple_animal/bot/proc/summon_up_or_down(direction)
 	bot_z_mode = BOT_Z_MODE_SUMMONED
@@ -1310,4 +1306,4 @@ Pass a positive integer as an argument to override a bot's default speed.
 		target = get_turf(new_target)
 		last_summon = summon_target
 		summon_target = target
-		set_path(get_path_to(src, summon_target, 200, id=access_card))
+		set_path(get_path_to(src, summon_target, max_distance = 200, id=access_card))
