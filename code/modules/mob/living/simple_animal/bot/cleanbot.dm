@@ -154,7 +154,7 @@
 			return
 
 		if(get_dist(src, target) <= 1)
-			UnarmedAttack(target, proximity_flag = TRUE) //Rather than check at every step of the way, let's check before we do an action, so we can rescan before the other bot.
+			UnarmedAttack(target) //Rather than check at every step of the way, let's check before we do an action, so we can rescan before the other bot.
 			if(QDELETED(target)) //We done here.
 				target = null
 				mode = BOT_IDLE
@@ -188,9 +188,7 @@
 		/obj/effect/decal/cleanable/generic,
 		/obj/effect/decal/cleanable/shreds,
 		/obj/effect/decal/cleanable/glass,
-		/obj/effect/decal/cleanable/wrapping,
 		/obj/effect/decal/cleanable/glitter,
-		/obj/effect/decal/cleanable/confetti,
 		/obj/effect/decal/remains
 		)
 
