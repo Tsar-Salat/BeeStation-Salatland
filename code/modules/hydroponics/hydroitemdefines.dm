@@ -112,11 +112,13 @@
 	slot_flags = ITEM_SLOT_BACK
 	attack_verb = list("chopped", "sliced", "cut", "reaped")
 	hitsound = 'sound/weapons/bladeslice.ogg'
+	sharpness = IS_SHARP
 	var/swiping = FALSE
 
 /obj/item/scythe/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/butchering, 90, 105)
+	AddElement(/datum/element/bane, mob_biotypes = MOB_PLANT, damage_multiplier = 0.5, requires_harm_intent = FALSE)
 
 /obj/item/scythe/suicide_act(mob/living/user)
 	user.visible_message("<span class='suicide'>[user] is beheading [user.p_them()]self with [src]! It looks like [user.p_theyre()] trying to commit suicide!</span>")
@@ -128,20 +130,25 @@
 			playsound(src,pick('sound/misc/desecration-01.ogg','sound/misc/desecration-02.ogg','sound/misc/desecration-01.ogg') ,50, 1, -1)
 	return BRUTELOSS
 
-/obj/item/scythe/pre_attack(atom/A, mob/living/user, params)
-	if(swiping || !istype(A, /obj/structure/spacevine) || get_turf(A) == get_turf(user))
+/obj/item/scythe/pre_attack(atom/target, mob/living/user, params)
+	if(!istype(target, /obj/structure/alien/resin/flower_bud) && !istype(target, /obj/structure/spacevine))
 		return ..()
-	else
-		var/turf/user_turf = get_turf(user)
-		var/dir_to_target = get_dir(user_turf, get_turf(A))
-		swiping = TRUE
-		var/static/list/scythe_slash_angles = list(0, 45, 90, -45, -90)
-		for(var/i in scythe_slash_angles)
-			var/turf/T = get_step(user_turf, turn(dir_to_target, i))
-			for(var/obj/structure/spacevine/V in T)
-				if(user.Adjacent(V))
-					melee_attack_chain(user, V)
-		swiping = FALSE
+	if(swiping || get_turf(target) == get_turf(user))
+		return ..()
+	var/turf/user_turf = get_turf(user)
+	var/dir_to_target = get_dir(user_turf, get_turf(target))
+	swiping = TRUE
+	var/static/list/scythe_slash_angles = list(0, 45, 90, -45, -90)
+	for(var/i in scythe_slash_angles)
+		var/turf/adjacent_turf = get_step(user_turf, turn(dir_to_target, i))
+		for(var/obj/structure/spacevine/vine in adjacent_turf)
+			if(user.Adjacent(vine))
+				melee_attack_chain(user, vine)
+		for(var/obj/structure/alien/resin/flower_bud/flower in adjacent_turf)
+			if(user.Adjacent(flower))
+				melee_attack_chain(user, flower)
+	swiping = FALSE
+	return TRUE
 
 // *************************************
 // Nutrient defines for hydroponics

@@ -19,6 +19,7 @@
 	opacity = FALSE
 	canSmoothWith = null
 	smoothing_flags = NONE
+	density = FALSE
 	/// The amount of time it takes to create a venus human trap
 	var/growth_time = 120 SECONDS
 	var/growth_icon = 0
@@ -47,8 +48,18 @@
 	addtimer(CALLBACK(src, PROC_REF(progress_growth)), growth_time/4)
 	countdown.start()
 
+/obj/structure/alien/resin/flower_bud/attacked_by(obj/item/item, mob/living/user)
+	var/damage_dealt = item.force
+	if(item.damtype == BURN)
+		damage_dealt *= 4
+	if(item.get_sharpness())
+		damage_dealt *= 16 // alien resin applies 75% reduction to brute damage so this actually x4 damage
+
+	take_damage(damage_dealt, item.damtype, MELEE, 1)
+
 /obj/structure/alien/resin/flower_bud/Destroy()
 	QDEL_LIST(vines)
+	QDEL_NULL(countdown)
 	return ..()
 
 /**

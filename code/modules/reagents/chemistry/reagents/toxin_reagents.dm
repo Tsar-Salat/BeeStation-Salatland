@@ -211,7 +211,10 @@
 /datum/reagent/toxin/plantbgone/reaction_obj(obj/O, reac_volume)
 	if(istype(O, /obj/structure/alien/weeds))
 		var/obj/structure/alien/weeds/alien_weeds = O
-		alien_weeds.take_damage(rand(15,35), BRUTE, 0) // Kills alien weeds pretty fast
+		alien_weeds.take_damage(rand(15, 35), BRUTE, 0) // Kills alien weeds pretty fast
+	if(istype(O, /obj/structure/alien/resin/flower_bud))
+		var/obj/structure/alien/resin/flower_bud/flower = O
+		flower.take_damage(rand(30, 50), BRUTE, 0)
 	else if(istype(O, /obj/structure/glowshroom)) //even a small amount is enough to kill it
 		qdel(O)
 	else if(istype(O, /obj/structure/spacevine))
@@ -221,9 +224,13 @@
 /datum/reagent/toxin/plantbgone/reaction_mob(mob/living/M, method = TOUCH, reac_volume)
 	var/damage = min(round(0.4 * reac_volume, 0.1), 10)
 	if(M.mob_biotypes & MOB_PLANT)
-		M.adjustToxLoss(damage)
+		// spray bottle emits 5u so it's dealing ~15 dmg per spray
+		M.adjustToxLoss(damage * 20, required_biotype = affected_biotype)
+		return
+
 	if(!(method == VAPOR) || !iscarbon(M))
 		return
+
 	var/mob/living/carbon/C = M
 	if(!C.wear_mask) // If not wearing a mask
 		C.adjustToxLoss(damage)

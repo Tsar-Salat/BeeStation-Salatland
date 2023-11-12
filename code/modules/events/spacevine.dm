@@ -163,7 +163,7 @@
 		var/obj/item/bodypart/limb = pick(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG, BODY_ZONE_HEAD, BODY_ZONE_CHEST) //Picks a random bodypart. Does not runtime even if it's missing.
 		var/armor = C.run_armor_check(limb, MELEE, null, null) //armor = the armor value of that randomly chosen bodypart. Nulls to not print a message, because it would still print on pierce.
 		var/datum/spacevine_mutation/thorns/T = locate() in S.mutations //Searches for the thorns mutation in the "mutations"-list inside obj/structure/spacevine, and defines T if it finds it.
-		if(T && (prob(40))) //If we found the thorns mutation there is now a chance to get stung instead of lashed or smashed.
+		if(T && prob(40) && !HAS_TRAIT(C, TRAIT_PIERCEIMMUNE)) //If we found the thorns mutation there is now a chance to get stung instead of lashed or smashed.
 			C.apply_damage(50, BRUTE, def_zone = limb) //This one gets a bit lower damage because it ignores armor.
 			C.Stun(1 SECONDS) //Stopped in place for a moment.
 			playsound(M, 'sound/weapons/pierce.ogg', 50, TRUE, -1)
@@ -171,7 +171,7 @@
 			"<span class='userdanger'>You are nailed by a sharp thorn!</span>")
 			log_combat(S, M, "aggressively pierced") //"Aggressively" for easy ctrl+F'ing in the attack logs.
 		else
-			if(prob(80))
+			if(prob(80) && !HAS_TRAIT(C, TRAIT_PIERCEIMMUNE))
 				C.apply_damage(60, BRUTE, def_zone = limb, blocked = armor)
 				C.Knockdown(2 SECONDS)
 				playsound(M, 'sound/weapons/whip.ogg', 50, TRUE, -1)
@@ -258,17 +258,30 @@
 	quality = NEGATIVE
 
 /datum/spacevine_mutation/thorns/on_cross(obj/structure/spacevine/holder, mob/living/crosser)
+	if(istype(crosser) && HAS_TRAIT(crosser, TRAIT_PIERCEIMMUNE))
+		return
+
 	if(prob(severity) && istype(crosser) && !isvineimmune(crosser))
 		var/mob/living/M = crosser
 		M.adjustBruteLoss(5)
 		to_chat(M, "<span class='alert'>You cut yourself on the thorny vines.</span>")
 
 /datum/spacevine_mutation/thorns/on_hit(obj/structure/spacevine/holder, mob/living/hitter, obj/item/I, expected_damage)
+	if(iscarbon(hitter))
+		var/mob/living/carbon/carbon_victim = hitter
+		for(var/obj/item/clothing/worn_item in carbon_victim.get_equipped_items())
+			if((worn_item.body_parts_covered & HANDS) && (worn_item.clothing_flags & THICKMATERIAL))
+				return expected_damage
+
+	if(HAS_TRAIT(hitter, TRAIT_PIERCEIMMUNE) || HAS_TRAIT(hitter, TRAIT_PLANT_SAFE))
+		return expected_damage
+
 	if(prob(severity) && istype(hitter) && !isvineimmune(hitter))
 		var/mob/living/M = hitter
 		M.adjustBruteLoss(5)
 		to_chat(M, "<span class='alert'>You cut yourself on the thorny vines.</span>")
-	. =	expected_damage
+
+	return expected_damage
 
 /datum/spacevine_mutation/woodening
 	name = "hardened"
@@ -354,7 +367,7 @@
 	for(var/datum/spacevine_mutation/SM in mutations)
 		override += SM.on_chem(src, R)
 	if(!override && istype(R, /datum/reagent/toxin/plantbgone))
-		if(prob(50))
+		if(prob(75))
 			qdel(src)
 
 /obj/structure/spacevine/proc/eat(mob/eater)
@@ -546,6 +559,9 @@
 /obj/structure/spacevine/proc/spread()
 	var/direction = pick(GLOB.cardinals)
 	var/turf/stepturf = get_step(src,direction)
+	if(!istype(stepturf))
+		return
+
 	if(locate(/obj/structure, stepturf) || locate(/obj/machinery, stepturf))//if we can't grow into a turf, we'll start digging into it
 		for(var/obj/structure/S in stepturf)
 			if(S.density && !istype(S, /obj/structure/alien/resin/flower_bud) && !istype(S, /obj/structure/reagent_dispensers/fueltank)) //don't breach the station!

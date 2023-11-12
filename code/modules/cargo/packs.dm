@@ -330,10 +330,13 @@
 	cost = 800
 	max_supply = 3
 	access = ACCESS_HYDROPONICS
-	contains = list(/obj/item/scythe,
-					/obj/item/clothing/mask/gas,
-					/obj/item/grenade/chem_grenade/antiweed,
-					/obj/item/grenade/chem_grenade/antiweed)
+	contains = list(
+		/obj/item/scythe,
+		/obj/item/clothing/gloves/botanic_leather,
+		/obj/item/clothing/mask/gas,
+		/obj/item/grenade/chem_grenade/antiweed,
+		/obj/item/grenade/chem_grenade/antiweed
+	)
 	crate_name = "weed control crate"
 	crate_type = /obj/structure/closet/crate/secure/hydroponics
 
