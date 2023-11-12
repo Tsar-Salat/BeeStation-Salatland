@@ -79,6 +79,7 @@
 	AddSpell(new /obj/effect/proc_holder/spell/aoe_turf/revenant/blight(null))
 	AddSpell(new /obj/effect/proc_holder/spell/aoe_turf/revenant/malfunction(null))
 	check_rev_teleport() // they're spawned in non-station for some reason...
+	RegisterSignal(src, COMSIG_LIVING_BANED, .proc/on_baned)
 	random_revenant_name()
 	AddComponent(/datum/component/tracking_beacon, "ghost", null, null, TRUE, "#9e4d91", TRUE, TRUE, "#490066")
 	grant_all_languages(TRUE, FALSE, FALSE, LANGUAGE_REVENANT) // rev can understand every langauge
@@ -224,15 +225,14 @@
 	return
 
 //damage, gibbing, and dying
-/mob/living/simple_animal/revenant/attackby(obj/item/W, mob/living/user, params)
-	. = ..()
-	if(istype(W, /obj/item/nullrod))
-		visible_message("<span class='warning'>[src] violently flinches!</span>", \
-						"<span class='revendanger'>As \the [W] passes through you, you feel your essence draining away!</span>")
-		adjustBruteLoss(25) //hella effective
-		inhibited = TRUE
-		update_action_buttons_icon()
-		addtimer(CALLBACK(src, PROC_REF(reset_inhibit)), 30)
+/mob/living/simple_animal/revenant/proc/on_baned(obj/item/weapon, mob/living/user)
+	SIGNAL_HANDLER
+	visible_message("<span class='warning'>[src] violently flinches!</span>", \
+					"<span class='revendanger'>As [weapon] passes through you, you feel your essence draining away!</span>")
+	adjustBruteLoss(25) //hella effective
+	inhibited = TRUE
+	update_action_buttons_icon()
+	addtimer(CALLBACK(src, PROC_REF(reset_inhibit)), 30)
 
 /mob/living/simple_animal/revenant/proc/reset_inhibit()
 	inhibited = FALSE

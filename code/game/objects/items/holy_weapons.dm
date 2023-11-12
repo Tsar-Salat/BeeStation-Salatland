@@ -292,6 +292,7 @@
 /obj/item/nullrod/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/anti_magic, TRUE, TRUE, null, FALSE)
+	AddElement(/datum/element/bane, /mob/living/simple_animal/revenant, 0, 25, FALSE)
 	AddComponent(/datum/component/effect_remover, \
 	success_feedback = "You disrupt the magic of %THEEFFECT with %THEWEAPON.", \
 	success_forcesay = "BEGONE FOUL MAGIKS!!", \

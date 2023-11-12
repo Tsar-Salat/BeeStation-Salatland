@@ -18,6 +18,10 @@
 #define COMSIG_LIVING_MINOR_SHOCK "living_minor_shock"			//! sent by stuff like stunbatons and tasers: ()
 #define COMSIG_PROCESS_BORGCHARGER_OCCUPANT "living_charge"		//! sent from borg recharge stations: (amount, repairs)
 #define COMSIG_LIVING_TRY_SYRINGE "living_try_syringe"			///From post-can inject check of syringe after attack (mob/user)
+
+///from base of element/bane/activate(): (item/weapon, mob/user)
+#define COMSIG_LIVING_BANED "living_baned"
+
 #define COMSIG_LIVING_START_PULL "living_start_pull"			///called on /living when someone starts pulling (atom/movable/pulled, state, force)
 /// from base of mob/living/Life() (seconds, times_fired)
 #define COMSIG_LIVING_LIFE "living_life"
