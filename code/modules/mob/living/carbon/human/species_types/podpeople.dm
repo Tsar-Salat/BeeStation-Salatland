@@ -6,6 +6,7 @@
 	default_color = "59CE00"
 	species_traits = list(MUTCOLORS,EYECOLOR)
 	inherent_traits = list(TRAIT_ALWAYS_CLEAN, TRAIT_BEEFRIEND, TRAIT_NONECRODISEASE)
+	inherent_biotypes = list(MOB_ORGANIC | MOB_HUMANOID | MOB_PLANT)
 	inherent_factions = list("plants", "vines")
 	fixed_mut_color = "59CE00"
 	attack_verb = "slash"
@@ -49,22 +50,3 @@
 		H.reagents.remove_reagent(chem.type, chem.metabolization_rate)
 		return TRUE
 	return ..()
-
-/datum/species/pod/on_hit(obj/projectile/P, mob/living/carbon/human/H)
-	switch(P.type)
-		if(/obj/projectile/energy/floramut)
-			if(prob(15))
-				H.rad_act(rand(30,80))
-				H.Paralyze(100)
-				H.visible_message("<span class='warning'>[H] writhes in pain as [H.p_their()] vacuoles boil.</span>", "<span class='userdanger'>You writhe in pain as your vacuoles boil!</span>", "<span class='italics'>You hear the crunching of leaves.</span>")
-				if(prob(80))
-					H.easy_randmut(NEGATIVE+MINOR_NEGATIVE)
-				else
-					H.easy_randmut(POSITIVE)
-				H.randmuti()
-				H.domutcheck()
-			else
-				H.adjustFireLoss(rand(5,15))
-				H.show_message("<span class='userdanger'>The radiation beam singes you!</span>")
-		if(/obj/projectile/energy/florayield)
-			H.set_nutrition(min(H.nutrition+30, NUTRITION_LEVEL_FULL))

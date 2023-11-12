@@ -218,13 +218,15 @@
 		var/obj/structure/spacevine/SV = O
 		SV.on_chem_effect(src)
 
-/datum/reagent/toxin/plantbgone/reaction_mob(mob/living/M, method=TOUCH, reac_volume)
-	if(method == VAPOR)
-		if(iscarbon(M))
-			var/mob/living/carbon/C = M
-			if(!C.wear_mask) // If not wearing a mask
-				var/damage = min(round(0.4*reac_volume, 0.1),10)
-				C.adjustToxLoss(damage)
+/datum/reagent/toxin/plantbgone/reaction_mob(mob/living/M, method = TOUCH, reac_volume)
+	var/damage = min(round(0.4 * reac_volume, 0.1), 10)
+	if(M.mob_biotypes & MOB_PLANT)
+		M.adjustToxLoss(damage)
+	if(!(method == VAPOR) || !iscarbon(M))
+		return
+	var/mob/living/carbon/C = M
+	if(!C.wear_mask) // If not wearing a mask
+		C.adjustToxLoss(damage)
 
 /datum/reagent/toxin/plantbgone/weedkiller
 	name = "Weed Killer"

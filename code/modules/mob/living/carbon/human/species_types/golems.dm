@@ -317,6 +317,7 @@
 	meat = /obj/item/stack/sheet/wood
 	//Can burn and take damage from heat
 	inherent_traits = list(TRAIT_NOBREATH, TRAIT_RESISTCOLD,TRAIT_RESISTHIGHPRESSURE,TRAIT_RESISTLOWPRESSURE,TRAIT_NOGUNS,TRAIT_RADIMMUNE,TRAIT_PIERCEIMMUNE,TRAIT_NODISMEMBER)
+	inherent_biotypes = list(MOB_ORGANIC | MOB_HUMANOID | MOB_PLANT)
 	armor = 30
 	burnmod = 1.25
 	heatmod = 1.5
