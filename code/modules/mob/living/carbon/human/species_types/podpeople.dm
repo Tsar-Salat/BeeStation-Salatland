@@ -6,7 +6,7 @@
 	default_color = "59CE00"
 	species_traits = list(MUTCOLORS,EYECOLOR)
 	inherent_traits = list(TRAIT_ALWAYS_CLEAN, TRAIT_BEEFRIEND, TRAIT_NONECRODISEASE)
-	inherent_biotypes = list(MOB_ORGANIC | MOB_HUMANOID | MOB_PLANT)
+	inherent_biotypes = list(MOB_ORGANIC, MOB_HUMANOID, MOB_PLANT)
 	inherent_factions = list("plants", "vines")
 	fixed_mut_color = "59CE00"
 	attack_verb = "slash"

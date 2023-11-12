@@ -8,25 +8,25 @@
 	var/damage_multiplier
 	/// Added after the above.
 	var/added_damage
-	/// If it requires combat mode on to deal the extra damage or not.
-	var/requires_combat_mode
+	/// If it requires harm intent to deal the extra damage or not.
+	var/requires_harm_intent
 
-/datum/element/bane/Attach(datum/target, target_type, damage_multiplier=1, added_damage = 0, requires_combat_mode = TRUE)
+/datum/element/bane/Attach(datum/target, target_type, damage_multiplier=1, added_damage = 0, requires_harm_intent = TRUE)
 	. = ..()
 	if(!isitem(target))
 		return ELEMENT_INCOMPATIBLE
 
 	if(ispath(target_type, /mob/living))
-		RegisterSignal(target, COMSIG_ITEM_AFTERATTACK, .proc/mob_check)
+		RegisterSignal(target, COMSIG_ITEM_AFTERATTACK, PROC_REF(mob_check))
 	else if(ispath(target_type, /datum/species))
-		RegisterSignal(target, COMSIG_ITEM_AFTERATTACK, .proc/species_check)
+		RegisterSignal(target, COMSIG_ITEM_AFTERATTACK, PROC_REF(species_check))
 	else
 		return ELEMENT_INCOMPATIBLE
 
 	src.target_type = target_type
 	src.damage_multiplier = damage_multiplier
 	src.added_damage = added_damage
-	src.requires_combat_mode = requires_combat_mode
+	src.requires_harm_intent = requires_harm_intent
 
 /datum/element/bane/Detach(datum/source)
 	UnregisterSignal(source, COMSIG_ITEM_AFTERATTACK)
@@ -47,7 +47,7 @@
 	activate(source, target, user)
 
 /datum/element/bane/proc/activate(obj/item/source, mob/living/target, mob/living/attacker)
-	if(requires_combat_mode && !attacker.combat_mode)
+	if(requires_harm_intent && !attacker.a_intent == INTENT_HARM)
 		return
 
 	var/extra_damage = max(0, (source.force * damage_multiplier) + added_damage)
