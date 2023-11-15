@@ -113,8 +113,8 @@
 		edible_bodypart = pick(plant_man.bodyparts)
 		edible_bodypart.dismember()
 
-	plant_target.visible_message("<span class='warning'>[src] takes a big chomp out of [H]!</span>", \
-								  "<span class='userdanger'>[src] takes a big chomp out of your [NB]!</span>")
+	plant_target.visible_message("<span class='warning'>[src] takes a big chomp out of [plant_target]!</span>", \
+								  "<span class='userdanger'>[src] takes a big chomp out of your [edible_bodypart]!</span>")
 
 //cow
 /mob/living/simple_animal/cow

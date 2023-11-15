@@ -38,7 +38,7 @@
 	UnregisterSignal(source, COMSIG_ITEM_AFTERATTACK)
 	return ..()
 
-/datum/element/bane/proc/species_check(obj/item/source, mob/living/target,, mob/user, proximity_flag, click_parameters)
+/datum/element/bane/proc/species_check(obj/item/source, mob/living/target, mob/user, proximity_flag, click_parameters)
 	SIGNAL_HANDLER
 
 	if(!proximity_flag || !istype(target) || !is_species(target, target_type))

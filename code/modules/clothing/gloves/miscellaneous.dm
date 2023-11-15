@@ -27,6 +27,15 @@
 	resistance_flags = NONE
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 70, ACID = 30, STAMINA = 0)
 
+/obj/item/clothing/gloves/botanic_leather/equipped(mob/user, slot)
+	. = ..()
+	if(ishuman(user) && slot == ITEM_SLOT_GLOVES)
+		ADD_TRAIT(user, TRAIT_PLANT_SAFE, CLOTHING_TRAIT)
+
+/obj/item/clothing/gloves/botanic_leather/dropped(mob/user)
+	. = ..()
+	REMOVE_TRAIT(user, TRAIT_PLANT_SAFE, CLOTHING_TRAIT)
+
 /obj/item/clothing/gloves/combat
 	name = "combat gloves"
 	desc = "These tactical gloves are fireproof and shock resistant."

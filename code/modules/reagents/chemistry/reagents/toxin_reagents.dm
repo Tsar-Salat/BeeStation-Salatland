@@ -225,7 +225,7 @@
 	var/damage = min(round(0.4 * reac_volume, 0.1), 10)
 	if(M.mob_biotypes & MOB_PLANT)
 		// spray bottle emits 5u so it's dealing ~15 dmg per spray
-		M.adjustToxLoss(damage * 20, required_biotype = affected_biotype)
+		M.adjustToxLoss(damage * 20)
 		return
 
 	if(!(method == VAPOR) || !iscarbon(M))
