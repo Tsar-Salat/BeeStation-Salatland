@@ -15,7 +15,8 @@
 	var/short_desc = "The mapper forgot to set this!"
 	var/flavour_text = ""
 	var/important_info = ""
-	var/faction = null
+	/// Lazy string list of factions that the spawned mob will be in upon spawn
+	var/list/faction
 	var/permanent = FALSE	//If true, the spawner will not disappear upon running out of uses.
 	var/random = FALSE		//Don't set a name or gender, just go random
 	var/antagonist_type
@@ -30,6 +31,10 @@
 	var/show_flavour = TRUE
 	var/banType
 	var/ghost_usable = TRUE
+	// If the spawner is ready to function at the moment
+	var/ready = TRUE
+	/// If the spawner uses radials
+	var/radial_based = FALSE
 	var/use_cooldown = FALSE
 	/// If this should ignore admins disabling ghost roles (like lavaland roles), since it's actually an antagonist.
 	var/is_antagonist = FALSE
@@ -47,14 +52,17 @@
 		return
 	if(QDELETED(src) || QDELETED(user))
 		return
-	var/ghost_role = alert("Become [mob_name]? (Warning, You can no longer be cloned!)",,"Yes","No")
-	if(ghost_role != "Yes" || !loc)
-		return
+	if(!radial_based)
+		var/ghost_role = tgui_alert(usr, "Become [mob_name]? (Warning, You can no longer be revived!)",, list("Yes", "No"))
+		if(ghost_role == "No" || !loc || QDELETED(user))
+			return
 	log_game("[key_name(user)] became [mob_name]")
-	create(ckey = user.ckey)
+	create(user)
 
 /obj/effect/mob_spawn/Initialize(mapload)
 	. = ..()
+	if(faction)
+		faction = string_list(faction)
 	if(instant || (roundstart && (mapload || (SSticker && SSticker.current_state > GAME_STATE_SETTING_UP))))
 		create()
 	else if(ghost_usable)
@@ -76,7 +84,7 @@
 /obj/effect/mob_spawn/proc/equip(mob/M)
 	return
 
-/obj/effect/mob_spawn/proc/create(ckey, name)
+/obj/effect/mob_spawn/proc/create(mob/user, name)
 	var/mob/living/M = new mob_type(get_turf(src)) //living mobs only
 	if(!random)
 		M.real_name = mob_name ? mob_name : M.name
@@ -84,7 +92,7 @@
 			mob_gender = pick(MALE, FEMALE)
 		M.gender = mob_gender
 	if(faction)
-		M.faction = list(faction)
+		M.faction = faction
 	if(disease)
 		M.ForceContractDisease(new disease)
 	if(death)
@@ -96,8 +104,8 @@
 	M.color = mob_color
 	equip(M)
 
-	if(ckey)
-		M.ckey = ckey
+	if(user?.ckey)
+		M.ckey = user.ckey
 		if(show_flavour)
 			var/output_message = "<span class='big bold'>[short_desc]</span>"
 			if(flavour_text != "")
@@ -252,7 +260,7 @@
 
 //Non-human spawners
 
-/obj/effect/mob_spawn/AICorpse/create(ckey) //Creates a corrupted AI
+/obj/effect/mob_spawn/AICorpse/create(mob/user) //Creates a corrupted AI
 	var/A = locate(/mob/living/silicon/ai) in loc
 	if(A)
 		return
@@ -272,7 +280,7 @@
 /obj/effect/mob_spawn/slime/equip(mob/living/simple_animal/slime/S)
 	S.colour = mobcolour
 
-/obj/effect/mob_spawn/facehugger/create(ckey) //Creates a squashed facehugger
+/obj/effect/mob_spawn/facehugger/create(mob/user) //Creates a squashed facehugger
 	var/obj/item/clothing/mask/facehugger/O = new(src.loc) //variable O is a new facehugger at the location of the landmark
 	O.name = src.name
 	O.Die() //call the facehugger's death proc
