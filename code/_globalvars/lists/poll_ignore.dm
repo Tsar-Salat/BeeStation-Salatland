@@ -17,6 +17,7 @@
 #define POLL_IGNORE_MRAT "mrat"
 #define POLL_IGNORE_WIZARD_HELPER "wizard_helper"
 #define POLL_IGNORE_MONKEY_HELMET "monkey_helmet"
+#define POLL_IGNORE_VENUSHUMANTRAP "venus_human_trap"
 
 GLOBAL_LIST_INIT(poll_ignore_list, list(
 	POLL_IGNORE_ALIEN_LARVA,
@@ -36,6 +37,7 @@ GLOBAL_LIST_INIT(poll_ignore_list, list(
 	POLL_IGNORE_MRAT,
 	POLL_IGNORE_WIZARD_HELPER,
 	POLL_IGNORE_MONKEY_HELMET,
+	POLL_IGNORE_VENUSHUMANTRAP,
 ))
 GLOBAL_LIST_INIT(poll_ignore, init_poll_ignore())
 
