@@ -924,7 +924,7 @@
 	malf_picker = new /datum/module_picker
 
 
-/mob/living/silicon/ai/reset_perspective(atom/A)
+/mob/living/silicon/ai/reset_perspective(atom/new_eye)
 	if(camera_light_on)
 		light_cameras()
 	if(client)

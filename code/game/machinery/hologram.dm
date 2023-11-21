@@ -19,6 +19,10 @@ Possible to do for anyone motivated enough:
 	Itegrate EMP effect to disable the unit.
 */
 
+#define CAN_HEAR_MASTERS (1<<0)
+#define CAN_HEAR_ACTIVE_HOLOCALLS (1<<1)
+#define CAN_HEAR_RECORD_MODE (1<<2)
+#define CAN_HEAR_ALL_FLAGS (CAN_HEAR_MASTERS|CAN_HEAR_ACTIVE_HOLOCALLS|CAN_HEAR_RECORD_MODE)
 
 /*
  * Holopad
@@ -39,13 +43,19 @@ Possible to do for anyone motivated enough:
 	max_integrity = 300
 	armor = list(MELEE = 50,  BULLET = 20, LASER = 20, ENERGY = 20, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 0, STAMINA = 0)
 	circuit = /obj/item/circuitboard/machine/holopad
-	var/list/masters //List of living mobs that use the holopad
-	var/list/holorays //Holoray-mob link.
+	/// associative lazylist of the form: list(mob calling us = hologram representing that mob).
+	/// this is only populated for holopads answering calls from another holopad
+	var/list/masters
+	//Holoray-mob link.
+	var/list/holorays
 	var/last_request = 0 //to prevent request spam. ~Carn
 	var/holo_range = 5 // Change to change how far the AI can move away from the holopad before deactivating.
 	var/temp = ""
-	var/list/holo_calls	//array of /datum/holocalls
-	var/datum/holocall/outgoing_call	//do not modify the datums only check and call the public procs
+	/// Array of /datum/holocalls that are calling US. this is only filled for holopads answering calls from another holopad
+	var/list/holo_calls
+	/// Currently outgoing holocall, cannot call any other holopads unless this is null.
+	/// creating a new holocall from us to another holopad sets this var to that holocall datum
+	var/datum/holocall/outgoing_call
 	var/obj/item/disk/holodisk/disk //Record disk
 	var/replay_mode = FALSE //currently replaying a recording
 	var/loop_mode = FALSE //currently looping a recording
@@ -59,10 +69,8 @@ Possible to do for anyone motivated enough:
 	var/ringing = FALSE
 	var/offset = FALSE
 	var/on_network = TRUE
-
-/obj/machinery/holopad/Initialize(mapload)
-	. = ..()
-	become_hearing_sensitive()
+	///bitfield. used to turn on and off hearing sensitivity depending on if we can act on Hear() at all - meant for lowering the number of unessesary hearable atoms
+	var/can_hear_flags = NONE
 
 /obj/machinery/holopad/tutorial
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
@@ -105,9 +113,8 @@ Possible to do for anyone motivated enough:
 	if(outgoing_call)
 		outgoing_call.ConnectionFailure(src)
 
-	for(var/I in holo_calls)
-		var/datum/holocall/HC = I
-		HC.ConnectionFailure(src)
+	for(var/datum/holocall/holocall_to_disconnect as anything in holo_calls)
+		holocall_to_disconnect.ConnectionFailure(src)
 
 	for (var/I in masters)
 		clear_holo(I)
@@ -228,11 +235,55 @@ Possible to do for anyone motivated enough:
 	popup.set_content(dat)
 	popup.open()
 
+//setters
+/**
+ * setter for can_hear_flags. handles adding or removing the given flag on can_hear_flags and then adding hearing sensitivity or removing it depending on the final state
+ * this is necessary because holopads are a significant fraction of the hearable atoms on station which increases the cost of procs that iterate through hearables
+ * so we need holopads to not be hearable until it is needed
+ *
+ * * flag - one of the can_hear_flags flag defines
+ * * set_flag - boolean, if TRUE sets can_hear_flags to that flag and might add hearing sensitivity if can_hear_flags was NONE before,
+ * if FALSE unsets the flag and possibly removes hearing sensitivity
+ */
+/obj/machinery/holopad/proc/set_can_hear_flags(flag, set_flag = TRUE)
+	if(!(flag & CAN_HEAR_ALL_FLAGS))
+		return FALSE //the given flag doesnt exist
+
+	if(set_flag)
+		if(can_hear_flags == NONE)//we couldnt hear before, so become hearing sensitive
+			become_hearing_sensitive()
+
+		can_hear_flags |= flag
+		return TRUE
+
+	else
+		can_hear_flags &= ~flag
+		if(can_hear_flags == NONE)
+			lose_hearing_sensitivity()
+
+		return TRUE
+
+///setter for adding/removing holocalls to this holopad. used to update the holo_calls list and can_hear_flags
+///adds the given holocall if add_holocall is TRUE, removes if FALSE
+/obj/machinery/holopad/proc/set_holocall(datum/holocall/holocall_to_update, add_holocall = TRUE)
+	if(!istype(holocall_to_update))
+		return FALSE
+
+	if(add_holocall)
+		set_can_hear_flags(CAN_HEAR_ACTIVE_HOLOCALLS)
+		LAZYADD(holo_calls, holocall_to_update)
+
+	else
+		LAZYREMOVE(holo_calls, holocall_to_update)
+		if(!LAZYLEN(holo_calls))
+			set_can_hear_flags(CAN_HEAR_ACTIVE_HOLOCALLS, FALSE)
+
+	return TRUE
+
 //Stop ringing the AI!!
 /obj/machinery/holopad/proc/hangup_all_calls()
-	for(var/I in holo_calls)
-		var/datum/holocall/HC = I
-		HC.Disconnect(src)
+	for(var/datum/holocall/holocall_to_disconnect as anything in holo_calls)
+		holocall_to_disconnect.Disconnect(src)
 
 /obj/machinery/holopad/Topic(href, href_list)
 	if(..() || isAI(usr))
@@ -340,6 +391,8 @@ Possible to do for anyone motivated enough:
 	else//If there is a hologram, remove it.
 		clear_holo(user)
 
+//this really should not be processing by default with how common holopads are
+//everything in here can start processing if need be once first set and stop processing after being unset
 /obj/machinery/holopad/process()
 	if(LAZYLEN(masters))
 		for(var/I in masters)

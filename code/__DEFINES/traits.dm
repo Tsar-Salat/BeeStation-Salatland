@@ -276,6 +276,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 //non-mob traits
 #define TRAIT_PARALYSIS			"paralysis" //Used for limb-based paralysis, where replacing the limb will fix it
 
+///every hearing sensitive atom has this trait
 #define TRAIT_HEARING_SENSITIVE "hearing_sensitive"
 
 // item traits

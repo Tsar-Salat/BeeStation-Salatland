@@ -14,6 +14,8 @@
 			var/datum/callback/CB = foo
 			CB.Invoke()
 
+		clear_important_client_contents(client)
+
 	for (var/datum/component/comp in GetComponents(/datum/component/moved_relay))
 		comp.RemoveComponent()
 

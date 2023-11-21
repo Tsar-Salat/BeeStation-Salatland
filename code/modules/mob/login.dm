@@ -41,14 +41,16 @@
 
 	..()
 
+	enable_client_mobs_in_contents(client)
+
+	SEND_SIGNAL(src, COMSIG_MOB_LOGIN)
+
 	if (client && key != client.key)
 		key = client.key
 	reset_perspective(loc)
 
 	if(loc)
 		loc.on_log(TRUE)
-
-	SEND_SIGNAL(src, COMSIG_MOB_LOGIN)
 
 	//readd this mob's HUDs (antag, med, etc)
 	reload_huds()
