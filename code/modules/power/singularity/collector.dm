@@ -45,6 +45,9 @@
 	QDEL_NULL(radio)
 	return ..()
 
+/obj/machinery/power/rad_collector/should_have_node()
+	return anchored
+
 /obj/machinery/power/rad_collector/process(delta_time)
 	if(!loaded_tank)
 		return

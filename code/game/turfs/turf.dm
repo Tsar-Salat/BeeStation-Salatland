@@ -239,7 +239,7 @@ GLOBAL_LIST_EMPTY(created_baseturf_lists)
 
 /turf/proc/handleRCL(obj/item/rcl/C, mob/user)
 	if(C.loaded)
-		for(var/obj/structure/cable/LC in src)
+		for(var/obj/structure/pipe_cleaner/LC in src)
 			if(!LC.d1 || !LC.d2)
 				LC.handlecable(C, user)
 				return

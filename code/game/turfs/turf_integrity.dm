@@ -218,6 +218,12 @@
 	if(can_lay_cable() && istype(W, /obj/item/stack/cable_coil))
 		var/obj/item/stack/cable_coil/coil = W
 		for(var/obj/structure/cable/LC in src)
+			return
+		coil.place_turf(src, user)
+		return TRUE
+	else if(can_have_cabling() && istype(W, /obj/item/stack/pipe_cleaner_coil))
+		var/obj/item/stack/pipe_cleaner_coil/coil = W
+		for(var/obj/structure/pipe_cleaner/LC in src)
 			if(!LC.d1 || !LC.d2)
 				LC.attackby(W,user)
 				return

@@ -205,7 +205,7 @@
 	if(replicator)
 		new replicator(src)
 	else
-		new /obj/item/stack/cable_coil/orange(src)
+		new /obj/item/stack/cable_coil(src)
 	new /obj/item/screwdriver/brass(src)
 	new /obj/item/wirecutters/brass(src)
 	new /obj/item/wrench/brass(src)
@@ -557,7 +557,7 @@
 	new /obj/item/crowbar/abductor(src)
 	new /obj/item/wirecutters/abductor(src)
 	new /obj/item/multitool/abductor(src)
-	new /obj/item/stack/cable_coil/white(src)
+	new /obj/item/stack/cable_coil(src)
 
 /obj/item/storage/belt/military/army
 	name = "army belt"

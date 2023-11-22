@@ -133,6 +133,9 @@
 	to_chat(user, "<span class='warning'>It is fastened to the floor!</span>")
 	return FALSE
 
+/obj/machinery/power/emitter/should_have_node()
+	return welded
+
 /obj/machinery/power/emitter/Destroy()
 	if(SSticker.IsRoundInProgress())
 		var/turf/T = get_turf(src)
@@ -284,7 +287,7 @@
 		welded = FALSE
 		to_chat(user, "<span class='notice'>You cut [src] free from the floor.</span>")
 		disconnect_from_network()
-		//update_cable_icons_on_turf(get_turf(src))
+		update_cable_icons_on_turf(get_turf(src))
 		return TRUE
 
 	if(!anchored)
@@ -300,7 +303,7 @@
 	welded = TRUE
 	to_chat(user, "<span class='notice'>You weld [src] to the floor.</span>")
 	connect_to_network()
-	//update_cable_icons_on_turf(get_turf(src))
+	update_cable_icons_on_turf(get_turf(src))
 	return TRUE
 
 /obj/machinery/power/emitter/crowbar_act(mob/living/user, obj/item/item)

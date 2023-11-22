@@ -22,6 +22,9 @@
 		master = null
 	return ..()
 
+/obj/machinery/power/terminal/should_have_node()
+	return TRUE
+
 /obj/machinery/power/proc/can_terminal_dismantle()
 	. = FALSE
 
