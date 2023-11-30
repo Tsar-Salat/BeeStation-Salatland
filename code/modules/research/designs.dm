@@ -61,7 +61,7 @@ other types of metals and chemistry for reagents).
 			temp_list[i] = amount
 	materials = temp_list
 	for(var/i in materials)
-		to_chat("[i] [materials[i]]")
+		to_chat("[i] [materials[i]]") //This fails often, not generating a to_chat properly due to nulls. This is refactored & fixed in Basemats port
 
 /datum/design/proc/icon_html(client/user)
 	var/datum/asset/spritesheet/sheet = get_asset_datum(/datum/asset/spritesheet/research_designs)

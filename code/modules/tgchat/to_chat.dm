@@ -8,17 +8,27 @@
  * to the recipient (target) as soon as possible.
  */
 /proc/to_chat_immediate(target, html,
-		type = null,
-		text = null,
-		avoid_highlighting = FALSE,
-		allow_linkify = FALSE,
-		// FIXME: These flags are now pointless and have no effect
-		handle_whitespace = TRUE,
-		trailing_newline = TRUE)
-	if(!target || (!html && !text))
+	type = null,
+	text = null,
+
+	avoid_highlighting = FALSE,
+	allow_linkify = FALSE,
+	// FIXME: These flags are now pointless and have no effect
+	handle_whitespace = TRUE,
+	trailing_newline = TRUE
+)
+
+	// Useful where the integer 0 is the entire message. Use case is enabling to_chat(target, some_boolean) while preventing to_chat(target, "")
+	html = "[html]"
+	text = "[text]"
+
+	if(!target)
 		return
+	if(!html && !text)
+		CRASH("Empty or null string in to_chat proc call.")
 	if(target == world)
 		target = GLOB.clients
+
 	// Build a message
 	var/message = list()
 	if(type) message["type"] = type
@@ -52,21 +62,33 @@
  *     type = MESSAGE_TYPE_INFO,
  *     html = "You have found <strong>[object]</strong>")
  */
-/proc/to_chat(target, html,
-		type = null,
-		text = null,
-		avoid_highlighting = FALSE,
-		allow_linkify = FALSE,
-		// FIXME: These flags are now pointless and have no effect
-		handle_whitespace = TRUE,
-		trailing_newline = TRUE)
+/proc/to_chat(
+	target, html,
+	type = null,
+	text = null,
+
+	avoid_highlighting = FALSE,
+	allow_linkify = FALSE,
+	// FIXME: These flags are now pointless and have no effect
+	handle_whitespace = TRUE,
+	trailing_newline = TRUE
+)
+
 	if(isnull(Master) || Master.current_runlevel == RUNLEVEL_INIT || !SSchat?.initialized)
 		to_chat_immediate(target, html, type, text)
 		return
-	if(!target || (!html && !text))
+
+	// Useful where the integer 0 is the entire message. Use case is enabling to_chat(target, some_boolean) while preventing to_chat(target, "")
+	html = "[html]"
+	text = "[text]"
+
+	if(!target)
 		return
+	if(!html && !text)
+		CRASH("Empty or null string in to_chat proc call.")
 	if(target == world)
 		target = GLOB.clients
+
 	// Build a message
 	var/message = list()
 	if(type) message["type"] = type
