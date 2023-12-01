@@ -200,7 +200,11 @@ export const ChemDispenser = (_props, context) => {
               {(recording && 'Virtual beaker') ||
                 (data.isBeakerLoaded && (
                   <>
-                    <AnimatedNumber initial={0} value={data.beakerCurrentVolume} />/{data.beakerMaxVolume} units
+                    <AnimatedNumber
+                      initial={0}
+                      value={data.beakerCurrentVolume}
+                    />
+                    /{data.beakerMaxVolume} units
                   </>
                 )) ||
                 'No beaker'}
