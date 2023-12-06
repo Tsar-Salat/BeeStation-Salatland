@@ -1,6 +1,5 @@
 /obj/item/gun/ballistic/automatic
 	w_class = WEIGHT_CLASS_LARGE
-	var/select = 1
 	can_suppress = TRUE
 	actions_types = list(/datum/action/item_action/toggle_firemode)
 	semi_auto = TRUE
@@ -9,17 +8,22 @@
 	automatic = 1
 	rack_sound = "sound/weapons/smgrack.ogg"
 	weapon_weight = WEAPON_MEDIUM
+	var/select = 1 ///fire selector position. 1 = semi, 2 = burst. anything past that can vary between guns.
+	var/selector_switch_icon = FALSE ///if it has an icon for a selector switch indicating current firemode.
 
 /obj/item/gun/ballistic/automatic/proto
 	name = "\improper Nanotrasen Saber SMG"
 	desc = "A prototype three-round burst 9mm submachine gun, designated 'SABR'. Has a threaded barrel for suppressors."
 	icon_state = "saber"
+	selector_switch_icon = TRUE
+	mag_display = TRUE
+	empty_indicator = TRUE
 	mag_type = /obj/item/ammo_box/magazine/smgm9mm
 	pin = null
 	fire_rate = 5
 	fire_delay = 2
 	bolt_type = BOLT_TYPE_LOCKING
-	mag_display = TRUE
+	show_bolt_icon = FALSE
 	weapon_weight = WEAPON_LIGHT
 	burst_size = 3
 
@@ -28,6 +32,8 @@
 
 /obj/item/gun/ballistic/automatic/update_overlays()
 	. = ..()
+	if(!selector_switch_icon)
+		return
 	if(!select)
 		. += "[initial(icon_state)]_semi"
 	if(select == 1)
@@ -49,7 +55,7 @@
 	else
 		burst_size = initial(burst_size)
 		fire_delay = initial(fire_delay)
-		to_chat(user, "<span class='notice'>You switch to [burst_size]-rnd burst.</span>")
+		to_chat(user, "<span class='notice'>You switch to [burst_size]-round burst.</span>")
 
 	playsound(user, 'sound/weapons/empty.ogg', 100, 1)
 	update_icon()
@@ -58,9 +64,10 @@
 
 /obj/item/gun/ballistic/automatic/c20r
 	name = "\improper C-20r SMG"
-	desc = "A bullpup two-round burst .45 SMG, designated 'C-20r'. Has a 'Scarborough Arms - Per falcis, per pravitas' buttstamp."
+	desc = "A bullpup three-round burst .45 SMG, designated 'C-20r'. Has a 'Scarborough Arms - Per falcis, per pravitas' buttstamp."
 	icon_state = "c20r"
 	item_state = "c20r"
+	selector_switch_icon = TRUE
 	mag_type = /obj/item/ammo_box/magazine/smgm45
 	fire_delay = 2
 	burst_size = 2
@@ -73,6 +80,11 @@
 	mag_display_ammo = TRUE
 	empty_indicator = TRUE
 	full_auto = TRUE
+
+/obj/item/gun/ballistic/automatic/c20r/update_overlays()
+	. = ..()
+	if(!chambered && empty_indicator) //this is duplicated due to a layering issue with the select fire icon.
+		. += "[icon_state]_empty"
 
 /obj/item/gun/ballistic/automatic/c20r/unrestricted
 	pin = /obj/item/firing_pin
@@ -109,6 +121,7 @@
 	icon_state = "miniuzi"
 	mag_type = /obj/item/ammo_box/magazine/uzim9mm
 	bolt_type = BOLT_TYPE_OPEN
+	show_bolt_icon = FALSE
 	mag_display = TRUE
 	fire_rate = 4
 	rack_sound = "sound/weapons/pistollock.ogg"
@@ -118,6 +131,7 @@
 	desc = "A three-round burst 5.56 toploading carbine, designated 'M-90gl'. Has an attached underbarrel grenade launcher which can be toggled on and off."
 	icon_state = "m90"
 	item_state = "m90"
+	selector_switch_icon = TRUE
 	mag_type = /obj/item/ammo_box/magazine/m556
 	fire_sound = 'sound/weapons/gunshot_smg.ogg'
 	can_suppress = FALSE
@@ -191,6 +205,7 @@
 	desc = "Based on the classic 'Chicago Typewriter'."
 	icon_state = "tommygun"
 	item_state = "shotgun"
+	selector_switch_icon = TRUE
 	w_class = WEIGHT_CLASS_HUGE
 	slot_flags = 0
 	mag_type = /obj/item/ammo_box/magazine/tommygunm45
@@ -198,6 +213,8 @@
 	fire_rate = 5
 	can_suppress = FALSE
 	bolt_type = BOLT_TYPE_OPEN
+	empty_indicator = TRUE
+	show_bolt_icon = FALSE
 
 /obj/item/gun/ballistic/automatic/ar
 	name = "\improper NT-ARG 'Boarder'"
@@ -228,6 +245,7 @@
 	spread = 7
 	pin = /obj/item/firing_pin/implant/pindicate
 	bolt_type = BOLT_TYPE_OPEN
+	show_bolt_icon = FALSE
 	mag_display = TRUE
 	mag_display_ammo = TRUE
 	tac_reloads = FALSE
@@ -314,6 +332,7 @@
 	icon_state = "oldrifle"
 	item_state = "arg"
 	mag_type = /obj/item/ammo_box/magazine/recharge
+	mag_display_ammo = TRUE
 	can_suppress = FALSE
 	actions_types = list()
 	fire_sound = 'sound/weapons/laser.ogg'

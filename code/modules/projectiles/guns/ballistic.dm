@@ -27,9 +27,12 @@
 
 	var/spawnwithmagazine = TRUE
 	var/mag_type = /obj/item/ammo_box/magazine/m10mm //Removes the need for max_ammo and caliber info
-	var/mag_display = FALSE //Whether the sprite has a visible magazine or not
-	var/mag_display_ammo = FALSE //Whether the sprite has a visible ammo display or not
-	var/empty_indicator = FALSE //Whether the sprite has an indicator for being empty or not.
+	///Whether the sprite has a visible magazine or not
+	var/mag_display = TRUE
+	///Whether the sprite has a visible ammo display or not
+	var/mag_display_ammo = FALSE
+	///Whether the sprite has a visible indicator for being empty or not.
+	var/empty_indicator = FALSE
 	var/empty_alarm = FALSE //Whether the gun alarms when empty or not.
 	var/special_mags = FALSE //Whether the gun supports multiple special mag types
 	var/alarmed = FALSE
@@ -43,7 +46,9 @@
 	//BOLT_TYPE_LOCKING: Gun has a bolt, it locks back when empty. It can be released to chamber a round if a magazine is in.
 	//Example: Pistols with a slide lock, some SMGs
 	var/bolt_type = BOLT_TYPE_STANDARD
-	var/bolt_locked = FALSE //Used for locking bolt and open bolt guns. Set a bit differently for the two but prevents firing when true for both.
+	///Used for locking bolt and open bolt guns. Set a bit differently for the two but prevents firing when true for both.
+	var/bolt_locked = FALSE
+	var/show_bolt_icon = TRUE ///Hides the bolt icon.
 	var/bolt_wording = "bolt" //bolt, slide, etc.
 	var/semi_auto = TRUE //Whether the gun has to be racked each shot or not.
 	var/obj/item/ammo_box/magazine/magazine
@@ -54,6 +59,8 @@
 	var/rack_delay = 5
 	var/recent_rack = 0
 	var/tac_reloads = TRUE //Snowflake mechanic no more.
+	var/suppressor_x_offset ///pixel offset for the suppressor overlay on the x axis.
+	var/suppressor_y_offset ///pixel offset for the suppressor overlay on the y axis.
 
 /obj/item/gun/ballistic/Initialize(mapload)
 	. = ..()
@@ -63,8 +70,13 @@
 		return
 	if (!magazine)
 		magazine = new mag_type(src)
-	chamber_round()
+	chamber_round(replace_new_round = TRUE)
 	update_appearance()
+
+/obj/item/gun/ballistic/vv_edit_var(vname, vval)
+	. = ..()
+	if(vname in list(NAMEOF(src, suppressor_x_offset), NAMEOF(src, suppressor_y_offset), NAMEOF(src, internal_magazine), NAMEOF(src, magazine), NAMEOF(src, chambered), NAMEOF(src, empty_indicator), NAMEOF(src, sawn_off), NAMEOF(src, bolt_locked), NAMEOF(src, bolt_type)))
+		update_icon()
 
 /obj/item/gun/ballistic/fire_sounds()
 	var/frequency_to_use
@@ -94,21 +106,33 @@
 
 /obj/item/gun/ballistic/update_overlays()
 	. = ..()
-	if (bolt_type == BOLT_TYPE_LOCKING)
-		. += "[icon_state]_bolt[bolt_locked ? "_locked" : ""]"
-	if (bolt_type == BOLT_TYPE_OPEN && bolt_locked)
-		. += "[icon_state]_bolt"
+	if(show_bolt_icon)
+		if (bolt_type == BOLT_TYPE_LOCKING)
+			. += "[icon_state]_bolt[bolt_locked ? "_locked" : ""]"
+		if (bolt_type == BOLT_TYPE_OPEN && bolt_locked)
+			. += "[icon_state]_bolt"
+
 	if (suppressed)
-		. += "[icon_state]_suppressor"
-	if(!chambered && empty_indicator)
+		var/mutable_appearance/MA = mutable_appearance(icon, "[icon_state]_suppressor")
+		if(suppressor_x_offset)
+			MA.pixel_x = suppressor_x_offset
+		if(suppressor_y_offset)
+			MA.pixel_y = suppressor_y_offset
+		. += MA
+
+	if(!chambered && empty_indicator) //this is duplicated in c20's update_overlayss due to a layering issue with the select fire icon.
 		. += "[icon_state]_empty"
-	if (magazine)
+
+	if (magazine && !internal_magazine)
 		if (special_mags)
 			. += "[icon_state]_mag_[initial(magazine.icon_state)]"
-			if (!magazine.ammo_count())
+			if (mag_display_ammo && !magazine.ammo_count())
 				. += "[icon_state]_mag_empty"
 		else
 			. += "[icon_state]_mag"
+			if(!mag_display_ammo)
+				return
+				
 			var/capacity_number = 0
 			switch(get_ammo() / magazine.max_ammo)
 				if(0.2 to 0.39)
@@ -142,13 +166,15 @@
 	if (chamber_next_round && (magazine?.max_ammo > 1))
 		chamber_round()
 
-/obj/item/gun/ballistic/proc/chamber_round(keep_bullet = FALSE)
+/obj/item/gun/ballistic/proc/chamber_round(keep_bullet = FALSE, spin_cylinder, replace_new_round)
 	if (chambered || !magazine)
 		return
 	if (magazine.ammo_count())
 		chambered = magazine.get_round(keep_bullet || bolt_type == BOLT_TYPE_NO_BOLT)
 		if (bolt_type != BOLT_TYPE_OPEN)
 			chambered.forceMove(src)
+		if(replace_new_round)
+			magazine.give_round(new chambered.type)
 
 /obj/item/gun/ballistic/proc/rack(mob/user = null)
 	switch(bolt_type)
@@ -284,6 +310,14 @@
 	weight_class_up() //so pistols do not fit in pockets when suppressed
 	update_icon()
 
+/obj/item/gun/ballistic/clear_suppressor()
+	if(!can_unsuppress)
+		return
+	if(isitem(suppressed))
+		var/obj/item/I = suppressed
+		w_class -= I.w_class
+	return ..()
+
 /obj/item/gun/ballistic/AltClick(mob/user)
 	if (unique_reskin_icon && !current_skin && user.canUseTopic(src, BE_CLOSE, NO_DEXTERITY))
 		reskin_obj(user)
@@ -292,12 +326,9 @@
 		if(suppressed && can_unsuppress)
 			if(!user.is_holding(src))
 				return
-			to_chat(user, "<span class='notice'>You unscrew \the [suppressed] from \the [src].</span>")
-			user.put_in_hands(suppressed)
-			weight_class_down()
-			suppressed = null
-			update_icon()
-			return
+			to_chat(user, "<span class='notice'>You unscrew \the [S] from \the [src].</span>")
+			user.put_in_hands(S)
+			clear_suppressor()
 
 /obj/item/gun/ballistic/proc/prefire_empty_checks()
 	if (!chambered && !get_ammo())

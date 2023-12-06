@@ -166,6 +166,7 @@
 	empty_indicator = TRUE
 	empty_alarm = TRUE
 	special_mags = TRUE
+	mag_display_ammo = TRUE
 	internal_magazine = FALSE
 	tac_reloads = TRUE
 	fire_rate = 2
