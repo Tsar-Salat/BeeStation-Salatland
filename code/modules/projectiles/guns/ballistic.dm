@@ -79,7 +79,7 @@
 /obj/item/gun/ballistic/vv_edit_var(vname, vval)
 	. = ..()
 	if(vname in list(NAMEOF(src, suppressor_x_offset), NAMEOF(src, suppressor_y_offset), NAMEOF(src, internal_magazine), NAMEOF(src, magazine), NAMEOF(src, chambered), NAMEOF(src, empty_indicator), NAMEOF(src, sawn_off), NAMEOF(src, bolt_locked), NAMEOF(src, bolt_type)))
-		update_icon()
+		update_appearance()
 
 /obj/item/gun/ballistic/fire_sounds()
 	var/frequency_to_use
@@ -103,9 +103,10 @@
 
 /obj/item/gun/ballistic/update_icon_state()
 	if(current_skin)
-		icon_state = "[unique_reskin_icon[current_skin]][sawn_off ? "_sawn" : ""]"
+		icon_state = "[unique_reskin[current_skin]][sawn_off ? "_sawn" : ""]"
 	else
-		icon_state = "[initial(icon_state)][sawn_off ? "_sawn" : ""]"
+		icon_state = "[base_icon_state || initial(icon_state)][sawn_off ? "_sawn" : ""]"
+	return ..()
 
 /obj/item/gun/ballistic/update_overlays()
 	. = ..()
@@ -126,30 +127,33 @@
 	if(!chambered && empty_indicator) //this is duplicated in c20's update_overlayss due to a layering issue with the select fire icon.
 		. += "[icon_state]_empty"
 
-	if (magazine && !internal_magazine)
-		if (special_mags)
-			. += "[icon_state]_mag_[initial(magazine.icon_state)]"
-			if (mag_display_ammo && !magazine.ammo_count())
-				. += "[icon_state]_mag_empty"
-		else
-			. += "[icon_state]_mag"
-			if(!mag_display_ammo)
-				return
+	if(!magazine || internal_magazine)
+		return
 
-			var/capacity_number = 0
-			switch(get_ammo() / magazine.max_ammo)
-				if(0.2 to 0.39)
-					capacity_number = 20
-				if(0.4 to 0.59)
-					capacity_number = 40
-				if(0.6 to 0.79)
-					capacity_number = 60
-				if(0.8 to 0.99)
-					capacity_number = 80
-				if(1.0)
-					capacity_number = 100
-			if (capacity_number)
-				. += "[icon_state]_mag_[capacity_number]"
+	if(special_mags)
+		. += "[icon_state]_mag_[initial(magazine.icon_state)]"
+		if(mag_display_ammo && !magazine.ammo_count())
+			. += "[icon_state]_mag_empty"
+		return
+
+	. += "[icon_state]_mag"
+	if(!mag_display_ammo)
+		return
+
+	var/capacity_number
+	switch(get_ammo() / magazine.max_ammo)
+		if(1 to INFINITY) //cause we can have one in the chamber.
+			capacity_number = 100
+		if(0.8 to 1)
+			capacity_number = 80
+		if(0.6 to 0.8)
+			capacity_number = 60
+		if(0.4 to 0.6)
+			capacity_number = 40
+		if(0.2 to 0.4)
+			capacity_number = 20
+	if(capacity_number)
+		. += "[icon_state]_mag_[capacity_number]"
 
 
 /obj/item/gun/ballistic/process_chamber(empty_chamber = TRUE, from_firing = TRUE, chamber_next_round = TRUE)
@@ -201,7 +205,7 @@
 		playsound(src, lock_back_sound, lock_back_sound_volume, lock_back_sound_vary)
 	else
 		playsound(src, rack_sound, rack_sound_volume, rack_sound_vary)
-	update_icon()
+	update_appearance()
 
 /obj/item/gun/ballistic/proc/drop_bolt(mob/user = null)
 	playsound(src, bolt_drop_sound, bolt_drop_sound_volume, FALSE)
@@ -209,7 +213,7 @@
 		to_chat(user, "<span class='notice'>You drop the [bolt_wording] of \the [src].</span>")
 	chamber_round()
 	bolt_locked = FALSE
-	update_icon()
+	update_appearance()
 
 /obj/item/gun/ballistic/proc/insert_magazine(mob/user, obj/item/ammo_box/magazine/AM, display_message = TRUE)
 	if(!istype(AM, mag_type))
@@ -222,7 +226,7 @@
 		playsound(src, load_empty_sound, load_sound_volume, load_sound_vary)
 		if (bolt_type == BOLT_TYPE_OPEN && !bolt_locked)
 			chamber_round(TRUE)
-		update_icon()
+		update_appearance()
 		return TRUE
 	else
 		to_chat(user, "<span class='warning'>You cannot seem to get \the [src] out of your hands!</span>")
@@ -246,10 +250,10 @@
 	else
 		magazine = null
 	user.put_in_hands(old_mag)
-	old_mag.update_icon()
+	old_mag.update_appearance()
 	if (display_message)
 		to_chat(user, "<span class='notice'>You pull the [magazine_wording] out of \the [src].</span>")
-	update_icon()
+	update_appearance()
 
 /obj/item/gun/ballistic/can_shoot()
 	return chambered
@@ -279,8 +283,8 @@
 				playsound(src, load_sound, load_sound_volume, load_sound_vary)
 				if (chambered == null && bolt_type == BOLT_TYPE_NO_BOLT)
 					chamber_round()
-				A.update_icon()
-				update_icon()
+				A.update_appearance()
+				update_appearance()
 			return
 	if(istype(A, /obj/item/suppressor))
 		var/obj/item/suppressor/S = A
@@ -311,7 +315,7 @@
 	// this proc assumes that the suppressor is already inside src
 	suppressed = S
 	weight_class_up() //so pistols do not fit in pockets when suppressed
-	update_icon()
+	update_appearance()
 
 /obj/item/gun/ballistic/clear_suppressor()
 	if(!can_unsuppress)
@@ -338,7 +342,7 @@
 		if (bolt_type == BOLT_TYPE_OPEN && !bolt_locked)
 			bolt_locked = TRUE
 			playsound(src, bolt_drop_sound, bolt_drop_sound_volume)
-			update_icon()
+			update_appearance()
 
 
 /obj/item/gun/ballistic/proc/postfire_empty_checks()
@@ -346,10 +350,10 @@
 		if (!alarmed && empty_alarm)
 			playsound(src, empty_alarm_sound, empty_alarm_volume, empty_alarm_vary)
 			alarmed = TRUE
-			update_icon()
+			update_appearance()
 		if (bolt_type == BOLT_TYPE_LOCKING)
 			bolt_locked = TRUE
-			update_icon()
+			update_appearance()
 
 /obj/item/gun/ballistic/afterattack()
 	prefire_empty_checks()
@@ -378,7 +382,7 @@
 		if (num_unloaded)
 			to_chat(user, "<span class='notice'>You unload [num_unloaded] [cartridge_wording]\s from [src].</span>")
 			playsound(user, eject_sound, eject_sound_volume, eject_sound_vary)
-			update_icon()
+			update_appearance()
 		else
 			to_chat(user, "<span class='warning'>[src] is empty!</span>")
 		return
@@ -492,7 +496,7 @@
 		can_suppress = FALSE			//ditto for the threaded barrel
 		sawn_off = TRUE
 		spread_multiplier = 1.6
-		update_icon()
+		update_appearance()
 		return TRUE
 
 // Sawing guns related proc

@@ -34,10 +34,12 @@
 	. = ..()
 	if(!selector_switch_icon)
 		return
-	if(!select)
-		. += "[initial(icon_state)]_semi"
-	if(select == 1)
-		. += "[initial(icon_state)]_burst"
+
+	switch(select)
+		if(0)
+			. += "[initial(icon_state)]_semi"
+		if(1)
+			. += "[initial(icon_state)]_burst"
 
 /obj/item/gun/ballistic/automatic/ui_action_click(mob/user, actiontype)
 	if(istype(actiontype, /datum/action/item_action/toggle_firemode))
@@ -58,7 +60,7 @@
 		to_chat(user, "<span class='notice'>You switch to [burst_size]-round burst.</span>")
 
 	playsound(user, 'sound/weapons/empty.ogg', 100, 1)
-	update_icon()
+	update_appearance()
 	update_action_buttons()
 	autofire_target = null
 
@@ -91,7 +93,7 @@
 
 /obj/item/gun/ballistic/automatic/c20r/Initialize(mapload)
 	. = ..()
-	update_icon()
+	update_appearance()
 
 /obj/item/gun/ballistic/automatic/wt550
 	name = "security auto rifle"
@@ -146,7 +148,7 @@
 /obj/item/gun/ballistic/automatic/m90/Initialize(mapload)
 	. = ..()
 	underbarrel = new /obj/item/gun/ballistic/revolver/grenadelauncher(src)
-	update_icon()
+	update_appearance()
 
 /obj/item/gun/ballistic/automatic/m90/unrestricted
 	pin = /obj/item/firing_pin
@@ -154,7 +156,7 @@
 /obj/item/gun/ballistic/automatic/m90/unrestricted/Initialize(mapload)
 	. = ..()
 	underbarrel = new /obj/item/gun/ballistic/revolver/grenadelauncher/unrestricted(src)
-	update_icon()
+	update_appearance()
 
 /obj/item/gun/ballistic/automatic/m90/afterattack(atom/target, mob/living/user, flag, params)
 	if(select == 2)
@@ -197,7 +199,7 @@
 			fire_delay = 0
 			to_chat(user, "<span class='notice'>You switch to semi-auto.</span>")
 	playsound(user, 'sound/weapons/empty.ogg', 100, 1)
-	update_icon()
+	update_appearance()
 	return
 
 /obj/item/gun/ballistic/automatic/tommygun
@@ -235,6 +237,7 @@
 	desc = "A heavily modified 7.12x82mm light machine gun, designated 'L6 SAW'. Has 'Aussec Armoury - 2531' engraved on the receiver below the designation."
 	icon_state = "l6"
 	item_state = "l6closedmag"
+	base_icon_state = "l6"
 	w_class = WEIGHT_CLASS_HUGE
 	slot_flags = 0
 	mag_type = /obj/item/ammo_box/magazine/mm712x82
@@ -273,8 +276,11 @@
 		playsound(user, 'sound/weapons/sawopen.ogg', 60, 1)
 	else
 		playsound(user, 'sound/weapons/sawopen.ogg', 60, 1)
-	update_icon()
+	update_appearance()
 
+/obj/item/gun/ballistic/automatic/l6_saw/update_icon_state()
+	. = ..()
+	inhand_icon_state = "[base_icon_state][cover_open ? "open" : "closed"][magazine ? "mag":"nomag"]"
 
 /obj/item/gun/ballistic/automatic/l6_saw/update_overlays()
 	. = ..()
@@ -287,7 +293,7 @@
 		return
 	else
 		. = ..()
-		update_icon()
+		update_appearance()
 
 //ATTACK HAND IGNORING PARENT RETURN VALUE
 /obj/item/gun/ballistic/automatic/l6_saw/attack_hand(mob/user)
