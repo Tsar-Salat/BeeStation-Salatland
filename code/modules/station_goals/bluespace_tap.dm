@@ -94,7 +94,7 @@
 		/obj/item/toy/syndicateballoon = 15,
 		/obj/item/lighter/greyscale = 5,
 		/obj/item/lighter = 5,
-		/obj/item/gun/ballistic/automatic/toy/pistol = 1,
+		/obj/item/gun/ballistic/automatic/pistol/toy = 1,
 		/obj/item/gun/ballistic/automatic/c20r/toy = 1,
 		/obj/item/gun/ballistic/automatic/l6_saw/toy = 1,
 		/obj/item/gun/ballistic/shotgun/toy = 1,

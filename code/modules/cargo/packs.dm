@@ -2802,8 +2802,8 @@
 	contraband = TRUE
 	cost = 4000
 	max_supply = 1
-	contains = list(/obj/item/gun/ballistic/automatic/toy/pistol,
-					/obj/item/gun/ballistic/automatic/toy/pistol,
+	contains = list(/obj/item/gun/ballistic/automatic/pistol/toy,
+					/obj/item/gun/ballistic/automatic/pistol/toy,
 					/obj/item/ammo_box/magazine/toy/pistol,
 					/obj/item/ammo_box/magazine/toy/pistol)
 	crate_name = "foam force crate"

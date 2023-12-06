@@ -82,7 +82,7 @@
 /area/template_noop)
 "G" = (
 /obj/structure/table/wood,
-/obj/item/gun/ballistic/automatic/toy/pistol/unrestricted,
+/obj/item/gun/ballistic/automatic/pistol/toy,
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
 /turf/open/floor/plasteel/dark,
 /area/template_noop)

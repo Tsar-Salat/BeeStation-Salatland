@@ -802,7 +802,7 @@
 /area/ruin/space/has_grav/powered/macspace)
 "da" = (
 /obj/item/toy/figure/syndie,
-/obj/item/gun/ballistic/automatic/toy/pistol,
+/obj/item/gun/ballistic/automatic/pistol/toy,
 /obj/item/toy/syndicateballoon,
 /obj/item/toy/sword,
 /obj/effect/decal/cleanable/food/tomato_smudge,
