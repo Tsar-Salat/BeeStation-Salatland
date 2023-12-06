@@ -70,7 +70,10 @@
 		return
 	if (!magazine)
 		magazine = new mag_type(src)
-	chamber_round(replace_new_round = TRUE)
+	if(bolt_type == BOLT_TYPE_STANDARD)
+		chamber_round()
+	else
+		chamber_round(replace_new_round = TRUE)
 	update_appearance()
 
 /obj/item/gun/ballistic/vv_edit_var(vname, vval)
@@ -132,7 +135,7 @@
 			. += "[icon_state]_mag"
 			if(!mag_display_ammo)
 				return
-				
+
 			var/capacity_number = 0
 			switch(get_ammo() / magazine.max_ammo)
 				if(0.2 to 0.39)
