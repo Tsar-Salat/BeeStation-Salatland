@@ -69,7 +69,7 @@
 				M.putItemFromInventoryInHandIfPossible(src, H.held_index)
 
 
-/obj/item/minigunpack/update_icon()
+/obj/item/minigunpack/update_icon_state()
 	if(armed)
 		icon_state = "notholstered"
 	else
@@ -166,7 +166,7 @@
 			to_chat(user, "<span class='warning'>[src] is not ready to fire again yet!</span>")
 	else
 		to_chat(user, "<span class='warning'>There is no power supply for [src]</span>")
-		return //don't process firing the gun if it's on cooldown or doesn't have an ammo pack somehow. 
+		return //don't process firing the gun if it's on cooldown or doesn't have an ammo pack somehow.
 
 /obj/item/gun/energy/minigun/proc/stop_firing()
 	if(current_heat) //Don't play the sound or apply cooldown unless it has actually fired at least once
