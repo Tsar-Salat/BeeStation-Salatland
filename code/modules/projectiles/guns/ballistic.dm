@@ -127,7 +127,7 @@
 	if(!chambered && empty_indicator) //this is duplicated in c20's update_overlayss due to a layering issue with the select fire icon.
 		. += "[icon_state]_empty"
 
-	if(!magazine || internal_magazine)
+	if(!magazine || internal_magazine || !mag_display)
 		return
 
 	if(special_mags)
