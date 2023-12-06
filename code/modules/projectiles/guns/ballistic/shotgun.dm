@@ -262,6 +262,7 @@
 
 /obj/item/gun/ballistic/shotgun/doublebarrel/improvised/update_icon_state()
 	item_state = "ishotgunsling"
+	. = ..()
 
 /obj/item/gun/ballistic/shotgun/doublebarrel/improvised/update_overlays()
 	. = ..()

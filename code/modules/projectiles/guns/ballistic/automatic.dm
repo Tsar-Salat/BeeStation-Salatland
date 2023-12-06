@@ -280,7 +280,7 @@
 
 /obj/item/gun/ballistic/automatic/l6_saw/update_icon_state()
 	. = ..()
-	inhand_icon_state = "[base_icon_state][cover_open ? "open" : "closed"][magazine ? "mag":"nomag"]"
+	item_state = "[base_icon_state][cover_open ? "open" : "closed"][magazine ? "mag":"nomag"]"
 
 /obj/item/gun/ballistic/automatic/l6_saw/update_overlays()
 	. = ..()

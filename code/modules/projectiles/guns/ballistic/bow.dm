@@ -17,11 +17,19 @@
 	no_pin_required = TRUE
 	trigger_guard = TRIGGER_GUARD_ALLOW_ALL //so ashwalkers can use it
 
+/obj/item/gun/ballistic/bow/update_icon()
+	icon_state = "[initial(icon_state)]_[get_ammo() ? (chambered ? "firing" : "loaded") : "unloaded"]"
+
+
 /obj/item/gun/ballistic/bow/shoot_with_empty_chamber()
 	return
 
 /obj/item/gun/ballistic/bow/chamber_round()
-	chambered = magazine.get_round(1)
+	if(chambered || !magazine)
+		return
+	if(magazine.ammo_count())
+		chambered = magazine.get_round(TRUE)
+		chambered.forceMove(src)
 
 /obj/item/gun/ballistic/bow/process_chamber()
 	chambered = null
@@ -46,9 +54,6 @@
 	if (magazine.attackby(I, user, params, 1))
 		to_chat(user, "<span class='notice'>You notch the arrow.</span>")
 		update_icon()
-
-/obj/item/gun/ballistic/bow/update_icon()
-	icon_state = "[initial(icon_state)]_[get_ammo() ? (chambered ? "firing" : "loaded") : "unloaded"]"
 
 /obj/item/gun/ballistic/bow/can_shoot()
 	return chambered
