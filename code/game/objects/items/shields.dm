@@ -6,11 +6,12 @@
 	block_flags = BLOCKING_PROJECTILE
 	block_power = 50
 	max_integrity =  75
+	item_flags = ISWEAPON
 	var/transparent = FALSE	// makes beam projectiles pass through the shield
 	var/durability = TRUE //the shield uses durability instead of stamina
 
 /obj/item/shield/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
-	if(transparent && (hitby.pass_flags & PASSGLASS))
+	if(transparent && (hitby.pass_flags & PASSTRANSPARENT))
 		return FALSE
 	return ..()
 
@@ -19,7 +20,7 @@
 	if(durability)
 		var/attackforce = 0
 		if(isprojectile(hitby))
-			var/obj/item/projectile/P = hitby
+			var/obj/projectile/P = hitby
 			if(P.damage_type != STAMINA)// disablers dont do shit to shields
 				attackforce = (P.damage / 2)
 		else if(isitem(hitby))
@@ -192,6 +193,10 @@
 	. = ..()
 	embedded_flash = new(src)
 
+/obj/item/shield/riot/flash/ComponentInitialize()
+	. = .. ()
+	AddElement(/datum/element/update_icon_updates_onmob)
+
 /obj/item/shield/riot/flash/attack(mob/living/M, mob/user)
 	. =  embedded_flash.attack(M, user)
 	update_icon()
@@ -231,13 +236,14 @@
 	embedded_flash.emp_act(severity)
 	update_icon()
 
-/obj/item/shield/riot/flash/update_icon()
+/obj/item/shield/riot/flash/update_icon_state()
 	if(!embedded_flash || embedded_flash.burnt_out)
 		icon_state = "riot"
 		item_state = "riot"
 	else
 		icon_state = "flashshield"
 		item_state = "flashshield"
+	return ..()
 
 /obj/item/shield/riot/flash/examine(mob/user)
 	. = ..()
@@ -272,7 +278,7 @@
 	src.attack_self(owner)
 	to_chat(owner, "<span class='warning'>The [src] overheats!.</span>")
 	cooldown_timer = world.time + cooldown_duration
-	addtimer(CALLBACK(src, .proc/recharged, owner), cooldown_duration)
+	addtimer(CALLBACK(src, PROC_REF(recharged), owner), cooldown_duration)
 
 /obj/item/shield/energy/proc/recharged(mob/living/carbon/human/owner)//ree. i hate addtimer. ree.
 	playsound(owner, 'sound/effects/beepskyspinsabre.ogg', 35, 1)
@@ -285,7 +291,7 @@
 /obj/item/shield/energy/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
 	if(active)
 		if(isprojectile(hitby))
-			var/obj/item/projectile/P = hitby
+			var/obj/projectile/P = hitby
 			if(P.reflectable)
 				P.firer = src
 				P.setAngle(get_dir(owner, hitby))
