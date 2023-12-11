@@ -35,18 +35,17 @@
 	tool_behaviour = TOOL_SCREWDRIVER
 	usesound = 'sound/items/drill_use.ogg'
 
-/obj/item/powertool/jaws_of_life/Initialize(mapload)
-	. = ..()
-	AddElement(/datum/element/eyestab)
 
 /obj/item/powertool/hand_drill/toggle_mode(mob/user)
 	playsound(get_turf(user), 'sound/items/change_drill.ogg', 50, 1)
 	if(tool_behaviour == TOOL_SCREWDRIVER)
 		balloon_alert(user, "You attach the bolt driver bit.")
 		become_wrench()
+		RemoveElement(/datum/element/eyestab)
 	else
 		balloon_alert(user, "You attach the screw driver bit.")
 		become_screwdriver()
+		AddElement(/datum/element/eyestab)
 
 /obj/item/powertool/hand_drill/proc/become_wrench()
 	icon_state = "drill_bolt"

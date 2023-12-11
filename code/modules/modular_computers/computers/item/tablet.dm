@@ -78,6 +78,7 @@
 
 	if(is_type_in_list(attacking_item, contained_item))
 		if(attacking_item.w_class >= WEIGHT_CLASS_SMALL) // Prevent putting spray cans, pipes, etc (subtypes of pens/crayons)
+			user.balloon_alert(user, "too big!")
 			return
 		if(inserted_item)
 			to_chat(user, "<span class='warning'>There is already \a [inserted_item] in \the [src]!</span>")

@@ -279,16 +279,13 @@
  */
 
 /obj/item/pen/screwdriver
-	var/extended = FALSE
 	desc = "A pen with an extendable screwdriver tip. This one has a yellow cap."
 	icon_state = "pendriver"
-	toolspeed = 1.20  // gotta have some downside
+	toolspeed = 1.2  // gotta have some downside
+	/// whether the pen is extended
+	var/extended = FALSE
 
-/obj/item/pen/screwdriver/Initialize(mapload)
-	. = ..()
-	AddElement(/datum/element/eyestab)
-
-/obj/item/pen/screwdriver/attack_self(mob/living/user)
+/obj/item/pen/screwdriver/attack_self(mob/living/user) //This code makes me cry
 	if(extended)
 		extended = FALSE
 		w_class = initial(w_class)
@@ -298,6 +295,7 @@
 		throw_speed = initial(throw_speed)
 		throw_range = initial(throw_range)
 		to_chat(user, "You retract the screwdriver.")
+		RemoveElement(/datum/element/eyestab)
 
 	else
 		extended = TRUE
@@ -308,6 +306,8 @@
 		throw_speed = 3
 		throw_range = 5
 		to_chat(user, "You extend the screwdriver.")
+		AddElement(/datum/element/eyestab)
+
 	playsound(src, 'sound/machines/pda_button2.ogg', 50, TRUE) // click
 	update_icon()
 

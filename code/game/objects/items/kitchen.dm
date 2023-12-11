@@ -31,6 +31,10 @@
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 30, STAMINA = 0)
 	var/datum/reagent/forkload //used to eat omelette
 
+/obj/item/kitchen/fork/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/eyestab)
+
 /obj/item/kitchen/fork/suicide_act(mob/living/carbon/user)
 	user.visible_message("<span class='suicide'>[user] stabs \the [src] into [user.p_their()] chest! It looks like [user.p_theyre()] trying to take a bite out of [user.p_them()]self!</span>")
 	playsound(src, 'sound/items/eatfood.ogg', 50, 1)
