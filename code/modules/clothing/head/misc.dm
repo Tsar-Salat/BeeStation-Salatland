@@ -422,6 +422,15 @@
 	icon_state = "intern_hat"
 	item_state = "intern_hat"
 
+/obj/item/clothing/head/hats/centcom_cap
+	name = "\improper CentCom commander cap"
+	icon_state = "centcom_cap"
+	desc = "Worn by the finest of CentCom commanders. Inside the lining of the cap, lies two faint initials."
+	item_state = "that"
+	flags_inv = 0
+	armor = list(MELEE = 30, BULLET = 15, LASER = 30, ENERGY = 40, BOMB = 25, BIO = 0, FIRE = 50, ACID = 50)
+	strip_delay = (8 SECONDS)
+
 /obj/item/clothing/head/flowercrown
 	name = "generic flower crown"
 	desc = "You should not be seeing this"

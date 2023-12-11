@@ -119,11 +119,18 @@
 	desc = "A sinister looking vest of advanced armor worn over a black and red fireproof jacket. The gold collar and shoulders denote that this belongs to a high ranking syndicate officer."
 	icon_state = "syndievest"
 
-/obj/item/clothing/suit/armor/vest/capcarapace/alt
+/obj/item/clothing/suit/toggle/captains_parade
 	name = "captain's parade jacket"
 	desc = "For when an armoured vest isn't fashionable enough."
 	icon_state = "capformal"
 	item_state = "capspacesuit"
+	body_parts_covered = CHEST|GROIN|ARMS
+	armor = list(MELEE = 50, BULLET = 40, LASER = 50, ENERGY = 50, BOMB = 25, BIO = 0, RAD = 0, FIRE = 100, ACID = 90, STAMINA = 40)
+	togglename = "buttons"
+
+/obj/item/clothing/suit/toggle/captains_parade/Initialize()
+	. = ..()
+	allowed = GLOB.security_wintercoat_allowed
 
 /obj/item/clothing/suit/armor/vest/capcarapace/jacket
 	name = "captain's jacket"
@@ -311,3 +318,42 @@
 	cold_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	min_cold_protection_temperature = SPACE_SUIT_MIN_TEMP_PROTECT
 	armor = list(MELEE = 25,  BULLET = 20, LASER = 20, ENERGY = 30, BOMB = 20, BIO = 50, RAD = 20, FIRE = -10, ACID = 50, STAMINA = 30)
+
+/* One day, Hydrogen, one day...
+/obj/item/clothing/suit/armor/elder_atmosian
+	name = "\improper Elder Atmosian Armor"
+	desc = "A superb armor made with the toughest and rarest materials available to man."
+	icon_state = "h2armor"
+	inhand_icon_state = null
+	material_flags = MATERIAL_EFFECTS | MATERIAL_COLOR | MATERIAL_AFFECT_STATISTICS//Can change color and add prefix
+	armor_type = /datum/armor/armor_elder_atmosian
+	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
+	cold_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
+	heat_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
+*/
+
+/obj/item/clothing/suit/toggle/armor/vest/centcom_formal
+	name = "\improper CentCom formal coat"
+	desc = "A stylish coat given to CentCom Commanders. Perfect for sending ERTs to suicide missions with style!"
+	icon_state = "centcom_formal"
+	item_state = "centcom"
+	body_parts_covered = CHEST|GROIN|ARMS
+	armor = list(MELEE = 35, BULLET = 40, LASER = 40, ENERGY = 50, BOMB = 35, BIO = 10, RAD = 10, FIRE = 10, ACID = 60)
+	togglename = "buttons"
+
+/obj/item/clothing/suit/toggle/armor/vest/centcom_formal/Initialize()
+	. = ..()
+	allowed = GLOB.security_wintercoat_allowed
+
+/obj/item/clothing/suit/toggle/armor/hos/hos_formal
+	name = "\improper Head of Security's parade jacket"
+	desc = "For when an armoured vest isn't fashionable enough."
+	icon_state = "hosformal"
+	item_state = "hostrench"
+	body_parts_covered = CHEST|GROIN|ARMS
+	armor = list(MELEE = 30, BULLET = 30, LASER = 30, ENERGY = 40, BOMB = 25, BIO = 0, RAD = 0, FIRE = 70, ACID = 90, WOUND = 10)
+	togglename = "buttons"
+
+/obj/item/clothing/suit/toggle/armor/hos/hos_formal/Initialize()
+	. = ..()
+	allowed = GLOB.security_wintercoat_allowed

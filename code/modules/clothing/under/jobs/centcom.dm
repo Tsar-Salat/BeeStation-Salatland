@@ -1,3 +1,7 @@
+/obj/item/clothing/under/rank/centcom
+	icon = 'icons/obj/clothing/centcom.dmi'
+	worn_icon = 'icons/mob/clothing/centcom.dmi'
+
 /obj/item/clothing/under/rank/centcom/officer
 	name = "\improper CentCom officer's jumpsuit"
 	desc = "It's a jumpsuit worn by CentCom Officers."

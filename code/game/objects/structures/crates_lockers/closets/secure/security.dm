@@ -15,7 +15,7 @@
 	new /obj/item/storage/backpack/duffelbag/captain(src)
 	new	/obj/item/clothing/suit/armor/vest/capcarapace/jacket(src)
 	new /obj/item/clothing/suit/armor/vest/capcarapace(src)
-	new /obj/item/clothing/suit/armor/vest/capcarapace/alt(src)
+	new /obj/item/clothing/suit/toggle/captains_parade(src)
 	new /obj/item/clothing/suit/hooded/wintercoat/captain(src)
 	new /obj/item/clothing/suit/captunic(src)
 	new /obj/item/clothing/gloves/color/captain(src)
@@ -158,6 +158,7 @@
 
 	// prioritized items
 	new /obj/item/clothing/neck/cloak/hos(src)
+	new /obj/item/clothing/suit/toggle/armor/hos/hos_formal(src)
 	new /obj/item/clothing/suit/armor/hos(src)
 	new /obj/item/clothing/suit/armor/hos/trenchcoat(src)
 	new /obj/item/shield/riot/tele(src)
