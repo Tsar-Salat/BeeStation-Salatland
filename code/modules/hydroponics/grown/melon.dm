@@ -14,7 +14,7 @@
 	mutatelist = list(/obj/item/seeds/watermelon/holy, /obj/item/seeds/watermelon/ballolon)
 	reagents_add = list(/datum/reagent/water = 0.2, /datum/reagent/consumable/nutriment/vitamin = 0.04, /datum/reagent/consumable/nutriment = 0.2)
 
-/obj/item/seeds/watermelon/suicide_act(mob/user)
+/obj/item/seeds/watermelon/suicide_act(mob/living/user)
 	user.visible_message("<span class='suicide'>[user] is swallowing [src]! It looks like [user.p_theyre()] trying to commit suicide!</span>")
 	user.gib()
 	new product(drop_location())
@@ -65,7 +65,7 @@
 	var/uses = 1
 	if(seed)
 		uses = round(seed.potency / 20)
-	AddComponent(/datum/component/anti_magic, TRUE, TRUE, uses, TRUE, CALLBACK(src, .proc/block_magic), CALLBACK(src, .proc/expire)) //deliver us from evil o melon god
+	AddComponent(/datum/component/anti_magic, TRUE, TRUE, uses, TRUE, CALLBACK(src, PROC_REF(block_magic)), CALLBACK(src, PROC_REF(expire))) //deliver us from evil o melon god
 
 /obj/item/reagent_containers/food/snacks/grown/holymelon/proc/block_magic(mob/user, major)
 	if(major)

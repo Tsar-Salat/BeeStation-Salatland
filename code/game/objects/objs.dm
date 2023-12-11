@@ -112,13 +112,6 @@
 	SEND_SIGNAL(src, COMSIG_OBJ_SETANCHORED, anchorvalue)
 	anchored = anchorvalue
 
-/obj/throw_at(atom/target, range, speed, mob/thrower, spin=1, diagonals_first = 0, datum/callback/callback, force, quickstart = TRUE)
-	..()
-	if(obj_flags & FROZEN)
-		visible_message("<span class='danger'>[src] shatters into a million pieces!</span>")
-		qdel(src)
-
-
 /obj/assume_air(datum/gas_mixture/giver)
 	if(loc)
 		return loc.assume_air(giver)
@@ -195,7 +188,7 @@
 
 		// check for TK users
 
-		if(usr.has_dna())
+		if(usr?.has_dna())
 			var/mob/living/carbon/C = usr
 			if(!(usr in nearby))
 				if(usr.client && usr.machine==src)
@@ -248,7 +241,7 @@
 	if(machine)
 		unset_machine()
 	machine = O
-	RegisterSignal(O, COMSIG_PARENT_QDELETING, .proc/unset_machine)
+	RegisterSignal(O, COMSIG_PARENT_QDELETING, PROC_REF(unset_machine))
 	if(istype(O))
 		O.obj_flags |= IN_USE
 
@@ -309,15 +302,15 @@
 		if (islist(result))
 			if (result["button"] != 2) // If the user pressed the cancel button
 				// text2num conveniently returns a null on invalid values
-				armor = armor.setRating(melee = text2num(result["values"]["melee"]),\
-			                  bullet = text2num(result["values"]["bullet"]),\
-			                  laser = text2num(result["values"]["laser"]),\
-			                  energy = text2num(result["values"]["energy"]),\
-			                  bomb = text2num(result["values"]["bomb"]),\
-			                  bio = text2num(result["values"]["bio"]),\
-			                  rad = text2num(result["values"]["rad"]),\
-			                  fire = text2num(result["values"]["fire"]),\
-			                  acid = text2num(result["values"]["acid"]))
+				armor = armor.setRating(melee = text2num(result["values"][MELEE]),\
+			                  bullet = text2num(result["values"][BULLET]),\
+			                  laser = text2num(result["values"][LASER]),\
+			                  energy = text2num(result["values"][ENERGY]),\
+			                  bomb = text2num(result["values"][BOMB]),\
+			                  bio = text2num(result["values"][BIO]),\
+			                  rad = text2num(result["values"][RAD]),\
+			                  fire = text2num(result["values"][FIRE]),\
+			                  acid = text2num(result["values"][ACID]))
 				log_admin("[key_name(usr)] modified the armor on [src] ([type]) to melee: [armor.melee], bullet: [armor.bullet], laser: [armor.laser], energy: [armor.energy], bomb: [armor.bomb], bio: [armor.bio], rad: [armor.rad], fire: [armor.fire], acid: [armor.acid]")
 				message_admins("<span class='notice'>[key_name_admin(usr)] modified the armor on [src] ([type]) to melee: [armor.melee], bullet: [armor.bullet], laser: [armor.laser], energy: [armor.energy], bomb: [armor.bomb], bio: [armor.bio], rad: [armor.rad], fire: [armor.fire], acid: [armor.acid]</span>")
 	if(href_list[VV_HK_MASS_DEL_TYPE])
@@ -368,7 +361,7 @@
 
 /obj/AltClick(mob/user)
 	. = ..()
-	if(unique_reskin_icon && !current_skin && user.canUseTopic(src, BE_CLOSE, NO_DEXTERY))
+	if(unique_reskin_icon && !current_skin && user.canUseTopic(src, BE_CLOSE, NO_DEXTERITY))
 		reskin_obj(user)
 
 /obj/proc/reskin_obj(mob/M)
@@ -426,10 +419,14 @@
 /obj/proc/on_object_saved(var/depth = 0)
 	return ""
 
-/obj/handle_ricochet(obj/item/projectile/P)
+// Should move all contained objects to it's location.
+/obj/proc/dump_contents()
+	CRASH("Unimplemented.")
+
+/obj/handle_ricochet(obj/projectile/P)
 	. = ..()
 	if(. && ricochet_damage_mod)
-		take_damage(P.damage * ricochet_damage_mod, P.damage_type, P.flag, 0, turn(P.dir, 180), P.armour_penetration) // pass along ricochet_damage_mod damage to the structure for the ricochet
+		take_damage(P.damage * ricochet_damage_mod, P.damage_type, P.armor_flag, 0, turn(P.dir, 180), P.armour_penetration) // pass along ricochet_damage_mod damage to the structure for the ricochet
 
 /obj/update_overlays()
 	. = ..()
@@ -438,10 +435,33 @@
 	if(resistance_flags & ON_FIRE)
 		. += GLOB.fire_overlay
 
-/obj/use_emag(mob/user)
+///attempt to freeze this obj if possible. returns TRUE if it succeeded, FALSE otherwise.
+/obj/proc/freeze()
+	if(HAS_TRAIT(src, TRAIT_FROZEN))
+		return FALSE
+	if(resistance_flags & FREEZE_PROOF)
+		return FALSE
+
+	AddElement(/datum/element/frozen)
+	return TRUE
+
+///unfreezes this obj if its frozen
+/obj/proc/unfreeze()
+	SEND_SIGNAL(src, COMSIG_OBJ_UNFREEZE)
+
+/obj/use_emag(mob/user, obj/item/card/emag/hacker)
 	if(should_emag(user) && !SEND_SIGNAL(src, COMSIG_ATOM_SHOULD_EMAG, user))
-		SEND_SIGNAL(src, COMSIG_ATOM_ON_EMAG, user)
-		on_emag(user)
+		if(hacker)
+			if(hacker.charges > 0)
+				SEND_SIGNAL(src, COMSIG_ATOM_ON_EMAG, user)
+				hacker.use_charge()
+				on_emag(user)
+			else
+				to_chat(user, "<span class='warning'>[hacker] is out of charges and needs some time to restore them!</span>")
+				user.balloon_alert(user, "out of charges!")
+		else
+			SEND_SIGNAL(src, COMSIG_ATOM_ON_EMAG, user)
+			on_emag(user)
 
 /// Unlike COMSIG_ATOM_SHOULD_EMAG, this is not inverted. If this is true, on_emag is called.
 /obj/proc/should_emag(mob/user)
@@ -454,3 +474,12 @@
 		obj_flags ^= EMAGGED
 	else
 		obj_flags |= EMAGGED
+
+/// shows mobs in its contents to ghosts. can be used to update
+/obj/proc/update_mob_alpha()
+	if(!length(contents))
+		SSvis_overlays.remove_mob_alpha(src)
+	var/list/exception_mobs = list()
+	for(var/mob/each_mob in contents)
+		exception_mobs += SSvis_overlays.add_mob_alpha(src, each_mob)
+	SSvis_overlays.remove_mob_alpha(src, exception_mobs)

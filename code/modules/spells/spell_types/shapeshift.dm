@@ -36,7 +36,7 @@
 			for(var/path in possible_shapes)
 				var/mob/living/simple_animal/A = path
 				animal_list[initial(A.name)] = path
-			var/new_shapeshift_type = input(M, "Choose Your Animal Form!", "It's Morphing Time!", null) as null|anything in sortList(animal_list)
+			var/new_shapeshift_type = input(M, "Choose Your Animal Form!", "It's Morphing Time!", null) as null|anything in sort_list(animal_list)
 			if(shapeshift_type)
 				return
 			shapeshift_type = new_shapeshift_type
@@ -138,6 +138,7 @@
 	if(source.revert_on_death)
 		restore(death=TRUE)
 	else
+		shape.investigate_log("has been killed whilst shapeshifted.", INVESTIGATE_DEATHS)
 		shape.death()
 
 /obj/shapeshift_holder/proc/shapeDeath(death=TRUE)

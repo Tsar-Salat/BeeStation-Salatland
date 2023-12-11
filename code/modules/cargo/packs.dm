@@ -22,7 +22,7 @@
 
 /datum/supply_pack/New()
 	. = ..()
-	//Randomise the starting supply to promote variation in purchases. Higher tendancy to have lower roundstart supply as it builds up over time.
+	//Randomise the starting supply to promote variation in purchases. Higher tendency to have lower roundstart supply as it builds up over time.
 	current_supply = rand(0, rand(1, max_supply))
 
 /datum/supply_pack/proc/generate(atom/A, datum/bank_account/paying_account)
@@ -302,7 +302,7 @@
 	desc = "(*!&@#OPERATIVE THIS LITTLE ORDER WILL MAKE YOU STYLISH SYNDICATE STYLE. CONTAINS A COLLECTION OF THREE TACTICAL TURTLENECKS, THREE COMBAT BOOTS, THREE COMBAT GLOVES, THREE BALACLAVAS, THREE SYNDICATE BERETS AND THREE ARMOR VESTS!#@*$"
 	hidden = TRUE
 	cost = 3000
-	max_supply = 1
+	max_supply = 3
 	contains = list(/obj/item/clothing/under/syndicate,
 					/obj/item/clothing/under/syndicate,
 					/obj/item/clothing/under/syndicate,
@@ -372,13 +372,13 @@
 
 /datum/supply_pack/security/forensics
 	name = "Forensics Crate"
-	desc = "Stay hot on the criminal's heels with Nanotrasen's Detective Essentials(tm). Contains a forensics scanner, six evidence bags, camera, tape recorder, white crayon, and of course, a fedora. Requires Security access to open."
+	desc = "Stay hot on the criminal's heels with Nanotrasen's Detective Essentials(tm). Contains a forensics scanner, six evidence bags, detective's camera, tape recorder, white crayon, and of course, a fedora. Requires Security access to open."
 	cost = 1700
 	max_supply = 1
 	access_budget = ACCESS_MORGUE
 	contains = list(/obj/item/detective_scanner,
 					/obj/item/storage/box/evidence,
-					/obj/item/camera,
+					/obj/item/camera/detective,
 					/obj/item/taperecorder,
 					/obj/item/toy/crayon/white,
 					/obj/item/clothing/head/fedora/det_hat)
@@ -407,15 +407,19 @@
 	crate_name = ".38 match crate"
 
 /datum/supply_pack/security/securitybarriers
-	name = "Security Barrier Grenades"
-	desc = "Stem the tide with four Security Barrier grenades. Requires Security access to open."
+	name = "Security Barricades"
+	desc = "Stem the tide with eight security barricades. Requires Security access to open."
 	cost = 1500
 	max_supply = 2
 	access_budget = ACCESS_BRIG
-	contains = list(/obj/item/grenade/barrier,
-					/obj/item/grenade/barrier,
-					/obj/item/grenade/barrier,
-					/obj/item/grenade/barrier)
+	contains = list(/obj/item/security_barricade,
+					/obj/item/security_barricade,
+					/obj/item/security_barricade,
+					/obj/item/security_barricade,
+					/obj/item/security_barricade,
+					/obj/item/security_barricade,
+					/obj/item/security_barricade,
+					/obj/item/security_barricade)
 	crate_name = "security barriers crate"
 
 /datum/supply_pack/security/securityclothes
@@ -469,7 +473,7 @@
 
 /datum/supply_pack/security/vending/security
 	name = "SecTech Supply Crate"
-	desc = "Officer Paul bought all the donuts? Then refill the security vendor with ths crate."
+	desc = "Officer Paul bought all the handcuffs? Then refill the security vendor with ths crate."
 	cost = 1200
 	max_supply = 3
 	contains = list(/obj/item/vending_refill/security)
@@ -589,16 +593,16 @@
 	cost = 700 // 300 credits per 1 knife
 	small_item = TRUE
 	max_supply = 2
-	contains = list(/obj/item/kitchen/knife/combat)
+	contains = list(/obj/item/knife/combat)
 
 /datum/supply_pack/security/armory/combatknives
 	name = "Combat Knives Crate"
 	desc = "Contains three sharpened combat knives. Each knife guaranteed to fit snugly inside any Nanotrasen-standard boot. Requires Armory access to open."
 	cost = 1120 //20% discount
 	max_supply = 1
-	contains = list(/obj/item/kitchen/knife/combat,
-					/obj/item/kitchen/knife/combat,
-					/obj/item/kitchen/knife/combat)
+	contains = list(/obj/item/knife/combat,
+					/obj/item/knife/combat,
+					/obj/item/knife/combat)
 	crate_name = "combat knife crate"
 
 /datum/supply_pack/security/armory/ballistic_single
@@ -1108,14 +1112,18 @@
 
 /datum/supply_pack/engineering/shield_sat
 	name = "Shield Generator Satellite"
-	desc = "Protect the very existence of this station with these Anti-Meteor defenses. Contains three Shield Generator Satellites."
-	cost = 3000
-	max_supply = 5
+	desc = "Protect the very existence of this station with these Anti-Meteor defenses. Contains seven bluespace capsules which a single unit of Shield Generator Satellite is compressed within each."
+	cost = 7000
+	max_supply = 2
 	access_budget = ACCESS_HEADS
 	contains = list(
-					/obj/machinery/satellite/meteor_shield,
-					/obj/machinery/satellite/meteor_shield,
-					/obj/machinery/satellite/meteor_shield
+					/obj/item/meteor_shield,
+					/obj/item/meteor_shield,
+					/obj/item/meteor_shield,
+					/obj/item/meteor_shield,
+					/obj/item/meteor_shield,
+					/obj/item/meteor_shield,
+					/obj/item/meteor_shield,
 					)
 	crate_name= "shield sat crate"
 
@@ -1146,7 +1154,7 @@
 	cost = 5000
 	max_supply = 2
 	contains = list(
-		/obj/machinery/portable_atmospherics/canister/toxins,
+		/obj/machinery/portable_atmospherics/canister/plasma,
 		/obj/item/construction/rcd/loaded,
 		/obj/item/rcd_ammo/large,
 		/obj/item/rcd_ammo/large,
@@ -1195,40 +1203,6 @@
 	group = "Engine Construction"
 	crate_type = /obj/structure/closet/crate/engineering
 	access_budget = ACCESS_ENGINE
-
-/datum/supply_pack/engine/am_jar
-	name = "Antimatter Containment Jar Crate"
-	desc = "Two Antimatter containment jars stuffed into a single crate."
-	cost = 1700
-	max_supply = 4
-	contains = list(/obj/item/am_containment,
-					/obj/item/am_containment)
-	crate_name = "antimatter jar crate"
-
-/datum/supply_pack/engine/am_core
-	name = "Antimatter Control Crate"
-	desc = "The brains of the Antimatter engine, this device is sure to teach the station's powergrid the true meaning of real power."
-	cost = 4700
-	max_supply = 2
-	contains = list(/obj/machinery/power/am_control_unit)
-	crate_name = "antimatter control crate"
-
-/datum/supply_pack/engine/am_shielding
-	name = "Antimatter Shielding Crate"
-	desc = "Contains ten Antimatter shields, somehow crammed into a crate."
-	cost = 1700
-	max_supply = 4
-	contains = list(/obj/item/am_shielding_container,
-					/obj/item/am_shielding_container,
-					/obj/item/am_shielding_container,
-					/obj/item/am_shielding_container,
-					/obj/item/am_shielding_container,
-					/obj/item/am_shielding_container,
-					/obj/item/am_shielding_container,
-					/obj/item/am_shielding_container,
-					/obj/item/am_shielding_container,
-					/obj/item/am_shielding_container) //10 shields: 3x3 containment and a core
-	crate_name = "antimatter shielding crate"
 
 /datum/supply_pack/engine/emitter
 	name = "Emitter Crate"
@@ -1756,7 +1730,7 @@
 	max_supply = 4
 	contains = list(/obj/item/storage/backpack/duffelbag/med/surgery,
 					/obj/item/reagent_containers/medspray/sterilizine,
-					/obj/item/roller)
+					/obj/item/rollerbed)
 	crate_name = "surgical supplies crate"
 
 /datum/supply_pack/medical/salglucanister
@@ -1954,6 +1928,15 @@
 	max_supply = 4
 	contains = list(/obj/item/vending_refill/modularpc)
 	crate_name = "computer supply crate"
+
+/datum/supply_pack/science/monkey_helmets
+	name = "Monkey Mind Magnification Helmet Crate"
+	desc = "Some research is best done with monkeys, yet sometimes they're just too dumb to complete more complicated tasks. These helmets should help."
+	cost = 1500
+	max_supply = 1
+	contains = list(/obj/item/clothing/head/monkey_sentience_helmet,
+					/obj/item/clothing/head/monkey_sentience_helmet)
+	crate_name = "monkey mind magnification crate"
 
 /datum/supply_pack/science/transfer_valves
 	name = "Tank Transfer Valves Crate"
@@ -2330,8 +2313,8 @@
 					/obj/item/seeds/banana,
 					/obj/item/seeds/bamboo,
 					/obj/item/seeds/eggplant/eggy,
-					/obj/item/seeds/rainbow_bunch,
-					/obj/item/seeds/rainbow_bunch,
+					/obj/item/seeds/flower/rainbow_bunch,
+					/obj/item/seeds/flower/rainbow_bunch,
 					/obj/item/seeds/random,
 					/obj/item/seeds/random)
 	crate_name = "exotic seeds crate"
@@ -2436,7 +2419,7 @@
 				anomalous_box_provided = TRUE
 				log_game("An anomalous pizza box was provided in a pizza crate at during cargo delivery")
 				if(prob(50))
-					addtimer(CALLBACK(src, .proc/anomalous_pizza_report), rand(300, 1800))
+					addtimer(CALLBACK(src, PROC_REF(anomalous_pizza_report)), rand(300, 1800))
 				else
 					message_admins("An anomalous pizza box was silently created with no command report in a pizza crate delivery.")
 				break
@@ -2540,16 +2523,16 @@
 	max_supply = 3
 	contraband = TRUE
 	crate_type = /obj/structure/closet/crate
-	contains = list(/obj/item/reagent_containers/food/snacks/canned/beefbroth,
-					/obj/item/reagent_containers/food/snacks/canned/beefbroth,
-					/obj/item/reagent_containers/food/snacks/canned/beefbroth,
-					/obj/item/reagent_containers/food/snacks/canned/beefbroth,
-					/obj/item/reagent_containers/food/snacks/canned/beefbroth,
-					/obj/item/reagent_containers/food/snacks/canned/beefbroth,
-					/obj/item/reagent_containers/food/snacks/canned/beefbroth,
-					/obj/item/reagent_containers/food/snacks/canned/beefbroth,
-					/obj/item/reagent_containers/food/snacks/canned/beefbroth,
-					/obj/item/reagent_containers/food/snacks/canned/beefbroth
+	contains = list(/obj/item/food/canned/beefbroth,
+					/obj/item/food/canned/beefbroth,
+					/obj/item/food/canned/beefbroth,
+					/obj/item/food/canned/beefbroth,
+					/obj/item/food/canned/beefbroth,
+					/obj/item/food/canned/beefbroth,
+					/obj/item/food/canned/beefbroth,
+					/obj/item/food/canned/beefbroth,
+					/obj/item/food/canned/beefbroth,
+					/obj/item/food/canned/beefbroth
 					)
 	crate_name = "Beef Broth Care"
 //////////////////////////////////////////////////////////////////////////////
@@ -2696,7 +2679,7 @@
 	name = "Mothroach Crate"
 	desc = "Put the mothroach on your head and find out what true cuteness looks like."
 	cost = 5000
-	contains = list(/mob/living/simple_animal/mothroach)
+	contains = list(/mob/living/basic/mothroach)
 	crate_name = "mothroach crate"
 
 /datum/supply_pack/critter/monkey
@@ -2960,7 +2943,7 @@
 	var/the_toy
 	for(var/i in 1 to num_contained)
 		if(prob(50))
-			the_toy = pickweight(GLOB.arcade_prize_pool)
+			the_toy = pick_weight(GLOB.arcade_prize_pool)
 		else
 			the_toy = pick(subtypesof(/obj/item/toy/plush))
 		new the_toy(C)
@@ -3265,6 +3248,18 @@
 					/obj/item/laser_pointer/purple)
 	crate_name = "bureaucracy crate"
 
+/datum/supply_pack/misc/bulk_paper
+	name = "Bulk Paper Tray Crate"
+	desc = "Plenty of paper for all your papercraft needs."
+	cost = 500
+	max_supply = 5
+	contains = list(/obj/item/paper_bin,
+					/obj/item/paper_bin,
+					/obj/item/paper_bin,
+					/obj/item/paper_bin,
+					/obj/item/paper_bin)
+	crate_name = "bulk paper tray crate"
+
 /datum/supply_pack/misc/fountainpens
 	name = "Calligraphy Crate"
 	desc = "Sign death warrants in style with these seven executive fountain pens."
@@ -3291,8 +3286,8 @@
 	max_supply = 4
 	access_budget = ACCESS_CHAPEL_OFFICE
 	contains = list(/obj/item/clothing/under/misc/burial,
-					/obj/item/reagent_containers/food/snacks/grown/harebell,
-					/obj/item/reagent_containers/food/snacks/grown/poppy/geranium)
+					/obj/item/reagent_containers/food/snacks/grown/flower/harebell,
+					/obj/item/reagent_containers/food/snacks/grown/flower/geranium)
 	crate_name = "coffin"
 	crate_type = /obj/structure/closet/crate/coffin
 

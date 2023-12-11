@@ -7,9 +7,9 @@
 	var/use_overlays = TRUE
 	///Whether our tile is covered and we should hide our ducts
 	var/tile_covered = FALSE
-	///directions in wich we act as a supplier
+	///directions in which we act as a supplier
 	var/supply_connects
-	///direction in wich we act as a demander
+	///direction in which we act as a demander
 	var/demand_connects
 	///FALSE to pretty much just not exist in the plumbing world so we can be moved, TRUE to go plumbo mode
 	var/active = FALSE
@@ -20,21 +20,22 @@
 	if(!ismovable(parent))
 		return COMPONENT_INCOMPATIBLE
 
-	var/atom/movable/AM = parent
-	if(!AM.reagents)
+	var/atom/movable/parent_movable = parent
+	if(!parent_movable.reagents)
 		return COMPONENT_INCOMPATIBLE
-	reagents = AM.reagents
+
+	reagents = parent_movable.reagents
 	turn_connects = _turn_connects
 
-	RegisterSignal(parent, list(COMSIG_MOVABLE_MOVED,COMSIG_PARENT_PREQDELETED), .proc/disable)
-	RegisterSignal(parent, list(COMSIG_OBJ_DEFAULT_UNFASTEN_WRENCH), .proc/toggle_active)
-	RegisterSignal(parent, list(COMSIG_OBJ_HIDE), .proc/hide)
-	RegisterSignal(parent, list(COMSIG_ATOM_UPDATE_OVERLAYS), .proc/create_overlays) //create overlays also gets called after init (no idea by what it just happens)
+	RegisterSignal(parent, list(COMSIG_MOVABLE_MOVED,COMSIG_PARENT_PREQDELETED), PROC_REF(disable))
+	RegisterSignal(parent, list(COMSIG_OBJ_DEFAULT_UNFASTEN_WRENCH), PROC_REF(toggle_active))
+	RegisterSignal(parent, list(COMSIG_OBJ_HIDE), PROC_REF(hide))
+	RegisterSignal(parent, list(COMSIG_ATOM_UPDATE_OVERLAYS), PROC_REF(create_overlays)) //create overlays also gets called after init (no idea by what it just happens)
 
 	if(start)
 		//timer 0 so it can finish returning initialize, after which we're added to the parent.
 		//Only then can we tell the duct next to us they can connect, because only then is the component really added. this was a fun one
-		addtimer(CALLBACK(src, .proc/enable), 0)
+		addtimer(CALLBACK(src, PROC_REF(enable)), 0)
 
 /datum/component/plumbing/process()
 	if(!demand_connects || !reagents)		// This actually shouldn't happen, but better safe than sorry
@@ -113,20 +114,24 @@
 			continue
 
 		var/image/I
+
+		switch(D)
+			if(NORTH)
+				direction = "north"
+			if(SOUTH)
+				direction = "south"
+			if(EAST)
+				direction = "east"
+			if(WEST)
+				direction = "west"
+
 		if(turn_connects)
-			switch(D)
-				if(NORTH)
-					direction = "north"
-				if(SOUTH)
-					direction = "south"
-				if(EAST)
-					direction = "east"
-				if(WEST)
-					direction = "west"
 			I = image('icons/obj/plumbing/plumbers.dmi', "[direction]-[color]", layer = AM.layer - 1)
+
 		else
-			I = image('icons/obj/plumbing/plumbers.dmi', color, layer = AM.layer - 1) //color is not color as in the var, it's just the name
+			I = image('icons/obj/plumbing/plumbers.dmi', "[direction]-[color]-s", layer = AM.layer - 1) //color is not color as in the var, it's just the name
 			I.dir = D
+
 		overlays += I
 
 ///we stop acting like a plumbing thing and disconnect if we are, so we can safely be moved and stuff
@@ -214,7 +219,7 @@
 		demand_connects = new_demand_connects
 		supply_connects = new_supply_connects
 
-///Give the direction of a pipe, and it'll return wich direction it originally was when it's object pointed SOUTH
+///Give the direction of a pipe, and it'll return which direction it originally was when it's object pointed SOUTH
 /datum/component/plumbing/proc/get_original_direction(dir)
 	var/atom/movable/AM = parent
 	return turn(dir, dir2angle(AM.dir) - 180)
@@ -229,10 +234,12 @@
 		net.add_plumber(src, dir)
 		net.add_plumber(P, opposite_dir)
 
-/datum/component/plumbing/proc/hide(atom/movable/AM, intact)
+/datum/component/plumbing/proc/hide(atom/movable/AM, should_hide)
+	SIGNAL_HANDLER
 
-	tile_covered = intact
+	tile_covered = should_hide
 	AM.update_appearance()
+
 
 ///has one pipe input that only takes, example is manual output pipe
 /datum/component/plumbing/simple_demand
