@@ -57,6 +57,8 @@
 
 #define RADIO_CHANNEL_CTF_RED "Red Team"
 #define RADIO_CHANNEL_CTF_BLUE "Blue Team"
+#define RADIO_CHANNEL_CTF_GREEN "Green Team"
+#define RADIO_CHANNEL_CTF_YELLOW "Yellow Team"
 
 #define RADIO_CHANNEL_UPLINK "Uplink"
 #define RADIO_KEY_UPLINK "d"
