@@ -653,3 +653,51 @@
 	name = "Blessing of Dusk and Dawn"
 	desc = "Many things hide beyond the horizon. With Owl's help I managed to slip past Sun's guard and Moon's watch."
 	icon_state = "duskndawn"
+
+/datum/status_effect/lightningorb
+	id = "Lightning Orb"
+	duration = 30 SECONDS
+	alert_type = /atom/movable/screen/alert/status_effect/lightningorb
+
+/datum/status_effect/lightningorb/on_apply()
+	. = ..()
+	owner.add_movespeed_modifier(MOVESPEED_ID_YELLOW_ORB)
+	to_chat(owner, "<span class='notice'>You feel fast!</span>")
+
+/datum/status_effect/lightningorb/on_remove()
+	. = ..()
+	owner.remove_movespeed_modifier(MOVESPEED_ID_YELLOW_ORB)
+	to_chat(owner, "<span class='notice'>You slow down.</span>")
+
+/atom/movable/screen/alert/status_effect/lightningorb
+	name = "Lightning Orb"
+	desc = "The speed surges through you!"
+	icon_state = "lightningorb"
+
+/datum/status_effect/mayhem
+	id = "Mayhem"
+	duration = 2 MINUTES
+	/// The chainsaw spawned by the status effect
+	var/obj/item/chainsaw/doomslayer/chainsaw
+
+/datum/status_effect/mayhem/on_apply()
+	. = ..()
+	to_chat(owner, "<span class='reallybig redtext'>RIP AND TEAR</span>")
+	SEND_SOUND(owner, sound('sound/hallucinations/veryfar_noise.ogg'))
+	new /datum/hallucination/delusion(owner, forced = TRUE, force_kind = "demon", duration = duration, skip_nearby = FALSE)
+	chainsaw = new(get_turf(owner))
+	owner.log_message("entered a blood frenzy", LOG_ATTACK)
+	ADD_TRAIT(chainsaw, TRAIT_NODROP, CHAINSAW_FRENZY_TRAIT)
+	owner.drop_all_held_items()
+	owner.put_in_hands(chainsaw, forced = TRUE)
+	chainsaw.attack_self(owner)
+	owner.reagents.add_reagent(/datum/reagent/medicine/adminordrazine,25)
+	to_chat(owner, "<span class='warning'>KILL, KILL, KILL! YOU HAVE NO ALLIES ANYMORE, KILL THEM ALL!</span>")
+	var/datum/client_colour/colour = owner.add_client_colour(/datum/client_colour/bloodlust)
+	QDEL_IN(colour, 1.1 SECONDS)
+
+/datum/status_effect/mayhem/on_remove()
+	. = ..()
+	to_chat(owner, "<span class='notice'>Your bloodlust seeps back into the bog of your subconscious and you regain self control.</span>")
+	owner.log_message("exited a blood frenzy", LOG_ATTACK)
+	QDEL_NULL(chainsaw)

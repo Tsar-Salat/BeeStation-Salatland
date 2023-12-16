@@ -65,6 +65,7 @@
 		magazine = new mag_type(src)
 	chamber_round()
 	update_icon()
+	RegisterSignal(src, COMSIG_ITEM_RECHARGED, PROC_REF(instant_reload))
 
 /obj/item/gun/ballistic/fire_sounds()
 	var/frequency_to_use
@@ -470,6 +471,15 @@
 			process_fire(user, user, FALSE)
 			. = TRUE
 
+/obj/item/gun/ballistic/proc/instant_reload()
+	if(magazine)
+		magazine.top_off()
+	else
+		if(!mag_type)
+			return
+		magazine = new mag_type(src)
+	chamber_round()
+	update_icon()
 
 /obj/item/suppressor
 	name = "suppressor"

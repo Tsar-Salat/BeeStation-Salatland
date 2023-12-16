@@ -25,10 +25,14 @@
   #define COMPONENT_BLOCK_SHARPEN_BLOCKED 2
   #define COMPONENT_BLOCK_SHARPEN_ALREADY 4
   #define COMPONENT_BLOCK_SHARPEN_MAXED 8
+
+
 #define COMSIG_ITEM_CHECK_WIELDED "item_check_wielded"  //! used to check if the item is wielded for special effects
   #define COMPONENT_IS_WIELDED 1
 #define COMSIG_ITEM_DISABLE_EMBED "item_disable_embed"			///from [/obj/item/proc/disableEmbedding]:
 
+///Called when an item gets recharged by the ammo powerup
+#define COMSIG_ITEM_RECHARGED "item_recharged"
 ///Called when an item is being offered, from [/obj/item/proc/on_offered(mob/living/carbon/offerer)]
 #define COMSIG_ITEM_OFFERING "item_offering"
 	///Interrupts the offer proc
