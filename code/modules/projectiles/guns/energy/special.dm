@@ -354,41 +354,6 @@
 	pin = /obj/item/firing_pin
 	w_class = WEIGHT_CLASS_BULKY
 
-/obj/item/gun/energy/laser/instakill
-	name = "instakill rifle"
-	icon_state = "instagib"
-	item_state = "instagib"
-	desc = "A specialized ASMD laser-rifle, capable of flat-out disintegrating most targets in a single hit."
-	ammo_type = list(/obj/item/ammo_casing/energy/instakill)
-	force = 60
-
-/obj/item/gun/energy/laser/instakill/red
-	desc = "A specialized ASMD laser-rifle, capable of flat-out disintegrating most targets in a single hit. This one has a red design."
-	icon_state = "instagibred"
-	item_state = "instagibred"
-	ammo_type = list(/obj/item/ammo_casing/energy/instakill/red)
-
-/obj/item/gun/energy/laser/instakill/blue
-	desc = "A specialized ASMD laser-rifle, capable of flat-out disintegrating most targets in a single hit. This one has a blue design."
-	icon_state = "instagibblue"
-	item_state = "instagibblue"
-	ammo_type = list(/obj/item/ammo_casing/energy/instakill/blue)
-
-/obj/item/gun/energy/laser/instakill/green
-	desc = "A specialized ASMD laser-rifle, capable of flat-out disintegrating most targets in a single hit. This one has a green design."
-	icon_state = "instagibgreen"
-	item_state = "instagibgreen"
-	ammo_type = list(/obj/item/ammo_casing/energy/instakill/green)
-
-/obj/item/gun/energy/laser/instakill/yellow
-	desc = "A specialized ASMD laser-rifle, capable of flat-out disintegrating most targets in a single hit. This one has a yellow design."
-	icon_state = "instagibyellow"
-	item_state = "instagibyellow"
-	ammo_type = list(/obj/item/ammo_casing/energy/instakill/yellow)
-
-/obj/item/gun/energy/laser/instakill/emp_act() //implying you could stop the instagib
-	return
-
 /obj/item/gun/energy/gravity_gun
 	name = "one-point bluespace-gravitational manipulator"
 	desc = "An experimental, multi-mode device that fires bolts of Zero-Point Energy, causing local distortions in gravity."

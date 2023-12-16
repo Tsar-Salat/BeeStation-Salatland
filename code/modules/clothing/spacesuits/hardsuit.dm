@@ -854,6 +854,10 @@
 	var/recharge_delay = 20 SECONDS
 	/// How quickly the shield recharges each charge once it starts charging
 	var/recharge_rate = 1 SECONDS
+	/// How many charges are recovered on each recharge
+	var/recharge_amount = 1
+	/// Should the shield lose charges equal to the damage dealt by a hit?
+	var/lose_multiple_charges = FALSE
 	/// The icon for the shield
 	var/shield_icon = "shield-old"
 
@@ -864,88 +868,10 @@
 
 /obj/item/clothing/suit/space/hardsuit/shielded/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/shielded, max_charges = max_charges, recharge_start_delay = recharge_delay, charge_increment_delay = recharge_rate, shield_icon = shield_icon)
+	AddComponent(/datum/component/shielded, max_charges = max_charges, recharge_start_delay = recharge_delay, charge_increment_delay = recharge_rate, charge_recovery = recharge_amount, lose_multiple_charges = lose_multiple_charges, shield_icon = shield_icon)
 
 /obj/item/clothing/head/helmet/space/hardsuit/shielded
 	resistance_flags = FIRE_PROOF | ACID_PROOF
-
-///////////////Capture the Flag////////////////////
-
-/obj/item/clothing/suit/space/hardsuit/shielded/ctf
-	name = "white shielded hardsuit"
-	desc = "Standard issue hardsuit for playing capture the flag."
-	icon_state = "ert_medical"
-	item_state = "ert_medical"
-	hardsuit_type = "ert_medical"
-	// Adding TRAIT_NODROP is done when the CTF spawner equips people
-	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/shielded/ctf
-	armor = list(MELEE = 0,  BULLET = 30, LASER = 30, ENERGY = 30, BOMB = 50, BIO = 100, RAD = 100, FIRE = 95, ACID = 95, STAMINA = 0)
-	slowdown = 0
-	max_charges = 5
-
-/obj/item/clothing/suit/space/hardsuit/shielded/ctf/red
-	name = "red shielded hardsuit"
-	icon_state = "ert_security"
-	item_state = "ert_security"
-	hardsuit_type = "ert_security"
-	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/shielded/ctf/red
-	shield_icon = "shield-red"
-
-/obj/item/clothing/suit/space/hardsuit/shielded/ctf/blue
-	name = "blue shielded hardsuit"
-	desc = "Standard issue hardsuit for playing capture the flag."
-	icon_state = "ert_command"
-	item_state = "ert_command"
-	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/shielded/ctf/blue
-
-/obj/item/clothing/suit/space/hardsuit/shielded/ctf/green
-	name = "green shielded hardsuit"
-	icon_state = "ert_green"
-	item_state = "ert_green"
-	hardsuit_type = "ert_green"
-	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/shielded/ctf/green
-	shield_state = "shield-green"
-	shield_on = "shield-green"
-
-/obj/item/clothing/suit/space/hardsuit/shielded/ctf/yellow
-	name = "yellow shielded hardsuit"
-	icon_state = "ert_engineer"
-	item_state = "ert_engineer"
-	hardsuit_type = "ert_engineer"
-	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/shielded/ctf/yellow
-	shield_state = "shield-yellow"
-	shield_on = "shield-yellow"
-
-/obj/item/clothing/head/helmet/space/hardsuit/shielded/ctf
-	name = "shielded hardsuit helmet"
-	desc = "Standard issue hardsuit helmet for playing capture the flag."
-	icon_state = "hardsuit0-ert_medical"
-	item_state = "hardsuit0-ert_medical"
-	hardsuit_type = "ert_medical"
-	armor = list(MELEE = 0,  BULLET = 30, LASER = 30, ENERGY = 40, BOMB = 50, BIO = 100, RAD = 100, FIRE = 95, ACID = 95, STAMINA = 0)
-
-
-/obj/item/clothing/head/helmet/space/hardsuit/shielded/ctf/red
-	icon_state = "hardsuit0-ert_security"
-	item_state = "hardsuit0-ert_security"
-	hardsuit_type = "ert_security"
-
-/obj/item/clothing/head/helmet/space/hardsuit/shielded/ctf/blue
-	name = "shielded hardsuit helmet"
-	desc = "Standard issue hardsuit helmet for playing capture the flag."
-	icon_state = "hardsuit0-ert_commander"
-	item_state = "hardsuit0-ert_commander"
-	hardsuit_type = "ert_commander"
-
-/obj/item/clothing/head/helmet/space/hardsuit/shielded/ctf/green
-	icon_state = "hardsuit0-ert_green"
-	item_state = "hardsuit0-ert_green"
-	hardsuit_type = "ert_green"
-
-/obj/item/clothing/head/helmet/space/hardsuit/shielded/ctf/yellow
-	icon_state = "hardsuit0-ert_engineer"
-	item_state = "hardsuit0-ert_engineer"
-	hardsuit_type = "ert_engineer"
 
 
 //////Syndicate Version

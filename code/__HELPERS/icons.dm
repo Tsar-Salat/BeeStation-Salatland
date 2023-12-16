@@ -217,6 +217,7 @@ world
 
 //Dummy mob reserve slots
 #define DUMMY_HUMAN_SLOT_ADMIN "admintools"
+#define DUMMY_HUMAN_SLOT_CTF "dummy_ctf_preview_generation"
 
 	// Multiply all alpha values by this float
 /icon/proc/ChangeOpacity(opacity = 1)

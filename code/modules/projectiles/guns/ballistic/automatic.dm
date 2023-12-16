@@ -315,6 +315,7 @@
 	icon_state = "oldrifle"
 	item_state = "arg"
 	mag_type = /obj/item/ammo_box/magazine/recharge
+	empty_indicator = TRUE
 	can_suppress = FALSE
 	actions_types = list()
 	fire_sound = 'sound/weapons/laser.ogg'
