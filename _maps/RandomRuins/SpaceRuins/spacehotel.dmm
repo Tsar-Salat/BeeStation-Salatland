@@ -1819,33 +1819,6 @@
 "fQ" = (
 /turf/open/floor/plasteel/freezer,
 /area/ruin/space/has_grav/hotel/bar)
-"fR" = (
-/obj/structure/closet/crate/freezer,
-/obj/item/reagent_containers/food/snacks/grown/wheat,
-/obj/item/reagent_containers/food/snacks/grown/wheat,
-/obj/item/reagent_containers/food/snacks/grown/wheat,
-/obj/item/reagent_containers/food/snacks/grown/wheat,
-/obj/item/reagent_containers/food/snacks/grown/wheat,
-/obj/item/reagent_containers/food/snacks/grown/wheat,
-/obj/item/reagent_containers/food/snacks/grown/wheat,
-/obj/item/reagent_containers/food/snacks/grown/potato,
-/obj/item/reagent_containers/food/snacks/grown/potato,
-/obj/item/reagent_containers/food/snacks/grown/potato,
-/obj/item/reagent_containers/food/snacks/grown/potato,
-/obj/item/reagent_containers/food/snacks/grown/potato,
-/obj/item/reagent_containers/food/snacks/grown/carrot,
-/obj/item/reagent_containers/food/snacks/grown/carrot,
-/obj/item/reagent_containers/food/snacks/grown/carrot,
-/obj/item/reagent_containers/food/snacks/grown/carrot,
-/obj/item/reagent_containers/food/snacks/grown/carrot,
-/obj/item/reagent_containers/food/snacks/grown/carrot,
-/obj/item/reagent_containers/food/snacks/grown/tomato,
-/obj/item/reagent_containers/food/snacks/grown/tomato,
-/obj/item/reagent_containers/food/snacks/grown/tomato,
-/obj/item/reagent_containers/food/snacks/grown/tomato,
-/obj/item/reagent_containers/food/snacks/grown/tomato,
-/turf/open/floor/plasteel/freezer,
-/area/ruin/space/has_grav/hotel/bar)
 "fS" = (
 /obj/machinery/chem_master/condimaster{
 	name = "CondiMaster Neo"
@@ -2303,43 +2276,6 @@
 /obj/structure/table,
 /obj/item/storage/box/monkeycubes,
 /obj/item/storage/box/monkeycubes,
-/turf/open/floor/plasteel/freezer,
-/area/ruin/space/has_grav/hotel/bar)
-"hu" = (
-/obj/structure/closet/crate/freezer,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/corgi,
-/obj/item/food/meat/slab/corgi,
-/obj/item/food/meat/slab/monkey,
-/obj/item/food/meat/slab/monkey,
-/obj/item/food/meat/slab/pug,
-/obj/item/food/meat/slab/pug,
-/obj/item/food/meat/slab/xeno,
-/obj/item/food/meat/slab/xeno,
-/obj/item/food/meat/slab/human/mutant/lizard,
-/obj/item/food/meat/slab/human/mutant/lizard,
-/obj/item/food/meat/slab/human/mutant/plant,
-/obj/item/food/meat/slab/human/mutant/plant,
-/turf/open/floor/plasteel/freezer,
-/area/ruin/space/has_grav/hotel/bar)
-"hv" = (
-/obj/structure/closet/crate/freezer,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/corgi,
-/obj/item/food/meat/slab/corgi,
-/obj/item/food/meat/slab/monkey,
-/obj/item/food/meat/slab/monkey,
-/obj/item/food/meat/slab/pug,
-/obj/item/food/meat/slab/pug,
-/obj/item/food/meat/slab/xeno,
-/obj/item/food/meat/slab/xeno,
-/obj/item/food/meat/slab/human/mutant/lizard,
-/obj/item/food/meat/slab/human/mutant/lizard,
-/obj/item/food/meat/slab/human/mutant/plant,
-/obj/item/food/meat/slab/human/mutant/plant,
 /turf/open/floor/plasteel/freezer,
 /area/ruin/space/has_grav/hotel/bar)
 "hw" = (
@@ -3642,6 +3578,24 @@
 /obj/effect/baseturf_helper/space,
 /turf/closed/wall,
 /area/ruin/space/has_grav/hotel/pool)
+"nH" = (
+/obj/structure/closet/crate/freezer,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/corgi,
+/obj/item/food/meat/slab/corgi,
+/obj/item/food/meat/slab/monkey,
+/obj/item/food/meat/slab/monkey,
+/obj/item/food/meat/slab/pug,
+/obj/item/food/meat/slab/pug,
+/obj/item/food/meat/slab/xeno,
+/obj/item/food/meat/slab/xeno,
+/obj/item/food/meat/slab/human/mutant/lizard,
+/obj/item/food/meat/slab/human/mutant/lizard,
+/obj/item/food/meat/slab/human/mutant/plant,
+/obj/item/food/meat/slab/human/mutant/plant,
+/turf/open/floor/plasteel/freezer,
+/area/ruin/space/has_grav/hotel/bar)
 "nT" = (
 /obj/structure/table,
 /obj/item/storage/toolbox/mechanical,
@@ -3832,6 +3786,25 @@
 	},
 /turf/open/floor/plating/airless,
 /area/ruin/unpowered/no_grav)
+"vo" = (
+/obj/structure/closet/crate/freezer,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/corgi,
+/obj/item/food/meat/slab/corgi,
+/obj/item/food/meat/slab/monkey,
+/obj/item/food/meat/slab/monkey,
+/obj/item/food/meat/slab/pug,
+/obj/item/food/meat/slab/pug,
+/obj/item/food/meat/slab/xeno,
+/obj/item/food/meat/slab/xeno,
+/obj/item/food/meat/slab/human/mutant/lizard,
+/obj/item/food/meat/slab/human/mutant/lizard,
+/obj/item/food/meat/slab/human/mutant/plant,
+/obj/item/food/meat/slab/human/mutant/plant,
+/turf/open/floor/plasteel/freezer,
+/area/ruin/space/has_grav/hotel/bar)
 "vD" = (
 /obj/machinery/atmospherics/pipe/simple/scrubbers/hidden{
 	dir = 4
@@ -3845,6 +3818,33 @@
 /obj/effect/turf_decal/tile/yellow/fourcorners/contrasted,
 /turf/open/floor/plasteel/dark,
 /area/ruin/space/has_grav/hotel/security)
+"vR" = (
+/obj/structure/closet/crate/freezer,
+/obj/item/food/grown/wheat,
+/obj/item/food/grown/wheat,
+/obj/item/food/grown/wheat,
+/obj/item/food/grown/wheat,
+/obj/item/food/grown/wheat,
+/obj/item/food/grown/wheat,
+/obj/item/food/grown/wheat,
+/obj/item/food/grown/potato,
+/obj/item/food/grown/potato,
+/obj/item/food/grown/potato,
+/obj/item/food/grown/potato,
+/obj/item/food/grown/potato,
+/obj/item/food/grown/carrot,
+/obj/item/food/grown/carrot,
+/obj/item/food/grown/carrot,
+/obj/item/food/grown/carrot,
+/obj/item/food/grown/carrot,
+/obj/item/food/grown/carrot,
+/obj/item/food/grown/tomato,
+/obj/item/food/grown/tomato,
+/obj/item/food/grown/tomato,
+/obj/item/food/grown/tomato,
+/obj/item/food/grown/tomato,
+/turf/open/floor/plasteel/freezer,
+/area/ruin/space/has_grav/hotel/bar)
 "wf" = (
 /obj/effect/turf_decal/tile/red/fourcorners/contrasted,
 /turf/open/floor/plasteel/dark,
@@ -5408,13 +5408,13 @@ cZ
 eJ
 ck
 fi
-fR
+vR
 fQ
 gm
 gA
 fQ
 hj
-hu
+nH
 fi
 cJ
 ic
@@ -5478,13 +5478,13 @@ cZ
 eJ
 ff
 fi
-fR
+vR
 fQ
 gn
 gB
 fQ
 hk
-hv
+vo
 fi
 cJ
 ic

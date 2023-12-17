@@ -161,27 +161,6 @@
 /obj/effect/turf_decal/tile/bar/opposingcorners,
 /turf/open/floor/plasteel,
 /area/syndicate_mothership/control)
-"aD" = (
-/obj/structure/closet/secure_closet/freezer/fridge/open,
-/obj/item/reagent_containers/food/snacks/grown/potato,
-/obj/item/reagent_containers/food/snacks/grown/potato,
-/obj/item/reagent_containers/food/snacks/grown/whitebeet,
-/obj/item/reagent_containers/food/snacks/grown/whitebeet,
-/obj/item/reagent_containers/food/snacks/grown/tomato,
-/obj/item/reagent_containers/food/snacks/grown/tomato,
-/obj/item/reagent_containers/food/snacks/grown/rice,
-/obj/item/reagent_containers/food/snacks/grown/rice,
-/obj/item/reagent_containers/food/snacks/grown/icepepper,
-/obj/item/reagent_containers/food/snacks/grown/icepepper,
-/obj/item/reagent_containers/food/snacks/grown/citrus/lemon,
-/obj/item/reagent_containers/food/snacks/grown/citrus/lime,
-/obj/item/reagent_containers/food/snacks/grown/citrus/orange,
-/obj/item/reagent_containers/food/snacks/grown/cherries,
-/obj/item/reagent_containers/food/snacks/grown/apple,
-/obj/item/reagent_containers/food/snacks/grown/ambrosia/deus,
-/obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
-/turf/open/floor/plasteel/dark,
-/area/tdome/tdomeobserve)
 "aF" = (
 /obj/effect/turf_decal/tile/green/anticorner/contrasted{
 	dir = 8
@@ -220,6 +199,10 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/centcom/control)
+"aL" = (
+/obj/item/food/meat/slab/corgi,
+/turf/open/floor/grass,
+/area/wizard_station)
 "aM" = (
 /obj/machinery/computer/operating{
 	dir = 1
@@ -429,6 +412,15 @@
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
 /turf/open/floor/plasteel/dark,
 /area/centcom/control)
+"bK" = (
+/obj/structure/table/reinforced,
+/obj/item/food/mint,
+/obj/item/reagent_containers/food/condiment/enzyme{
+	pixel_y = 5
+	},
+/obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
+/turf/open/floor/plasteel/dark,
+/area/tdome/tdomeobserve)
 "bL" = (
 /obj/structure/table/reinforced,
 /obj/item/storage/firstaid/regular,
@@ -769,10 +761,6 @@
 /obj/effect/turf_decal/tile/blue/half/contrasted,
 /turf/open/floor/plasteel,
 /area/centcom/evac)
-"di" = (
-/obj/item/food/meat/slab/human/mutant/lizard,
-/turf/open/floor/grass,
-/area/wizard_station)
 "dk" = (
 /obj/structure/trap/ctf/blue,
 /obj/effect/turf_decal/tile/blue/fourcorners/contrasted,
@@ -857,11 +845,6 @@
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
 /turf/open/floor/plasteel/dark,
 /area/centcom/evac)
-"dE" = (
-/obj/structure/table/wood,
-/obj/item/food/sashimi,
-/turf/open/floor/wood,
-/area/centcom/holding)
 "dH" = (
 /obj/structure/table/wood,
 /obj/item/storage/box/drinkingglasses,
@@ -938,6 +921,15 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/tdome/tdomeobserve)
+"dU" = (
+/obj/structure/closet/secure_closet/freezer/meat/open,
+/obj/item/food/fishmeat/carp,
+/obj/item/food/fishmeat/carp,
+/obj/item/food/fishmeat/carp,
+/obj/item/food/fishmeat/carp,
+/obj/item/food/fishmeat/carp,
+/turf/open/floor/plasteel/cafeteria,
+/area/centcom/holding)
 "dV" = (
 /obj/machinery/door/window/westleft,
 /turf/open/floor/mineral/titanium/blue,
@@ -1171,32 +1163,6 @@
 /obj/effect/turf_decal/tile/green/fourcorners/contrasted,
 /turf/open/floor/plasteel/white,
 /area/centcom/holding)
-"eI" = (
-/obj/structure/closet/secure_closet/freezer/meat/open,
-/obj/item/food/meat/rawbacon,
-/obj/item/food/meat/rawbacon,
-/obj/item/food/meat/rawbacon,
-/obj/item/food/meat/rawbacon,
-/obj/item/food/meat/slab/killertomato,
-/obj/item/food/meat/slab/killertomato,
-/obj/item/food/meat/slab/killertomato,
-/obj/item/food/meat/slab/killertomato,
-/obj/item/food/meat/slab/human/mutant/lizard,
-/obj/item/food/meat/slab/human/mutant/lizard,
-/obj/item/food/meat/slab/human/mutant/lizard,
-/obj/item/food/meat/slab/human/mutant/lizard,
-/obj/item/food/sausage,
-/obj/item/food/sausage,
-/obj/item/food/meat/rawcutlet,
-/obj/item/food/meat/rawcutlet,
-/obj/item/food/meat/rawcutlet,
-/obj/item/food/fishmeat/carp,
-/obj/item/food/fishmeat/carp,
-/obj/item/food/fishmeat/carp,
-/obj/item/food/fishmeat/carp,
-/obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
-/turf/open/floor/plasteel/dark,
-/area/tdome/tdomeobserve)
 "eJ" = (
 /obj/effect/turf_decal/tile/red/opposingcorners,
 /turf/open/floor/plasteel/dark,
@@ -3424,10 +3390,6 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/centcom/ferry)
-"nE" = (
-/obj/item/food/meat/slab/human/mutant/slime,
-/turf/open/floor/grass,
-/area/wizard_station)
 "nF" = (
 /obj/machinery/newscaster{
 	pixel_y = -32
@@ -4211,10 +4173,6 @@
 	},
 /turf/open/floor/plasteel/freezer,
 /area/syndicate_mothership/control)
-"rl" = (
-/obj/item/food/meat/slab/xeno,
-/turf/open/floor/grass,
-/area/wizard_station)
 "rm" = (
 /obj/machinery/computer/shuttle_flight/labor,
 /obj/effect/turf_decal/stripes/line{
@@ -5119,10 +5077,6 @@
 	},
 /turf/open/floor/plating/airless,
 /area/syndicate_mothership/control)
-"uk" = (
-/obj/item/food/meat/slab/corgi,
-/turf/open/floor/grass,
-/area/wizard_station)
 "ul" = (
 /obj/machinery/computer/emergency_shuttle{
 	dir = 1
@@ -5321,15 +5275,6 @@
 /obj/effect/turf_decal/tile/blue,
 /turf/open/floor/plasteel,
 /area/centcom/evac)
-"vf" = (
-/obj/structure/closet/secure_closet/freezer/meat/open,
-/obj/item/food/fishmeat/carp,
-/obj/item/food/fishmeat/carp,
-/obj/item/food/fishmeat/carp,
-/obj/item/food/fishmeat/carp,
-/obj/item/food/fishmeat/carp,
-/turf/open/floor/plasteel/cafeteria,
-/area/centcom/holding)
 "vg" = (
 /obj/effect/turf_decal/tile/blue{
 	dir = 8
@@ -6798,6 +6743,28 @@
 /obj/machinery/light,
 /turf/open/floor/engine/cult,
 /area/wizard_station)
+"Bj" = (
+/obj/structure/closet/secure_closet/freezer/meat/open,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/bear,
+/obj/item/food/meat/slab/goliath,
+/obj/item/food/meat/slab/goliath,
+/obj/item/food/meat/slab/goliath,
+/obj/item/food/meat/slab/goliath,
+/obj/item/food/meat/slab/xeno,
+/obj/item/food/meat/slab/xeno,
+/obj/item/food/meat/slab/xeno,
+/obj/item/food/meat/slab/xeno,
+/obj/item/food/spaghetti/raw,
+/obj/item/food/spaghetti/raw,
+/obj/item/food/meat/rawcutlet,
+/obj/item/food/meat/rawcutlet,
+/obj/item/food/meat/rawcutlet,
+/obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
+/turf/open/floor/plasteel/dark,
+/area/tdome/tdomeobserve)
 "Bk" = (
 /obj/machinery/firealarm{
 	dir = 1;
@@ -7084,6 +7051,32 @@
 	},
 /turf/open/floor/plasteel,
 /area/centcom/ferry)
+"CI" = (
+/obj/structure/closet/secure_closet/freezer/meat/open,
+/obj/item/food/meat/rawbacon,
+/obj/item/food/meat/rawbacon,
+/obj/item/food/meat/rawbacon,
+/obj/item/food/meat/rawbacon,
+/obj/item/food/meat/slab/killertomato,
+/obj/item/food/meat/slab/killertomato,
+/obj/item/food/meat/slab/killertomato,
+/obj/item/food/meat/slab/killertomato,
+/obj/item/food/meat/slab/human/mutant/lizard,
+/obj/item/food/meat/slab/human/mutant/lizard,
+/obj/item/food/meat/slab/human/mutant/lizard,
+/obj/item/food/meat/slab/human/mutant/lizard,
+/obj/item/food/sausage,
+/obj/item/food/sausage,
+/obj/item/food/meat/rawcutlet,
+/obj/item/food/meat/rawcutlet,
+/obj/item/food/meat/rawcutlet,
+/obj/item/food/fishmeat/carp,
+/obj/item/food/fishmeat/carp,
+/obj/item/food/fishmeat/carp,
+/obj/item/food/fishmeat/carp,
+/obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
+/turf/open/floor/plasteel/dark,
+/area/tdome/tdomeobserve)
 "CJ" = (
 /obj/structure/chair,
 /obj/effect/turf_decal/tile/green{
@@ -7441,6 +7434,30 @@
 /obj/machinery/vending/snack,
 /obj/effect/turf_decal/delivery,
 /turf/open/floor/plasteel,
+/area/tdome/tdomeobserve)
+"Eu" = (
+/obj/structure/closet/secure_closet/freezer/kitchen,
+/obj/item/food/grown/banana,
+/obj/item/food/grown/banana,
+/obj/item/food/grown/wheat,
+/obj/item/food/grown/wheat,
+/obj/item/food/grown/vanillapod,
+/obj/item/food/grown/vanillapod,
+/obj/item/food/grown/sugarcane,
+/obj/item/food/grown/sugarcane,
+/obj/item/food/grown/oat,
+/obj/item/food/grown/oat,
+/obj/item/food/grown/grapes,
+/obj/item/food/grown/grapes,
+/obj/item/food/grown/corn,
+/obj/item/food/grown/corn,
+/obj/item/food/grown/chili,
+/obj/item/food/grown/chili,
+/obj/item/food/grown/carrot,
+/obj/item/food/grown/apple,
+/obj/item/food/grown/ambrosia/vulgaris,
+/obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
+/turf/open/floor/plasteel/dark,
 /area/tdome/tdomeobserve)
 "Ev" = (
 /obj/effect/spawner/structure/window/reinforced,
@@ -8749,15 +8766,6 @@
 /obj/effect/turf_decal/tile/green/fourcorners/contrasted,
 /turf/open/floor/plasteel/white,
 /area/centcom/holding)
-"Kq" = (
-/obj/structure/table/reinforced,
-/obj/item/food/mint,
-/obj/item/reagent_containers/food/condiment/enzyme{
-	pixel_y = 5
-	},
-/obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
-/turf/open/floor/plasteel/dark,
-/area/tdome/tdomeobserve)
 "KA" = (
 /obj/structure/flora/ausbushes/lavendergrass,
 /obj/structure/flora/ausbushes/sparsegrass,
@@ -9437,6 +9445,11 @@
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
 /turf/open/floor/plasteel/dark,
 /area/centcom/ferry)
+"MO" = (
+/obj/structure/table/wood,
+/obj/item/food/sashimi,
+/turf/open/floor/wood,
+/area/centcom/holding)
 "MQ" = (
 /obj/item/kirbyplants{
 	icon_state = "plant-21"
@@ -9590,28 +9603,6 @@
 /obj/structure/table/optable,
 /turf/open/floor/mineral/titanium/blue,
 /area/centcom/evac)
-"NB" = (
-/obj/structure/closet/secure_closet/freezer/meat/open,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/bear,
-/obj/item/food/meat/slab/goliath,
-/obj/item/food/meat/slab/goliath,
-/obj/item/food/meat/slab/goliath,
-/obj/item/food/meat/slab/goliath,
-/obj/item/food/meat/slab/xeno,
-/obj/item/food/meat/slab/xeno,
-/obj/item/food/meat/slab/xeno,
-/obj/item/food/meat/slab/xeno,
-/obj/item/food/spaghetti/raw,
-/obj/item/food/spaghetti/raw,
-/obj/item/food/meat/rawcutlet,
-/obj/item/food/meat/rawcutlet,
-/obj/item/food/meat/rawcutlet,
-/obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
-/turf/open/floor/plasteel/dark,
-/area/tdome/tdomeobserve)
 "ND" = (
 /obj/structure/table/reinforced,
 /obj/item/paper_bin,
@@ -9970,30 +9961,6 @@
 /obj/item/clothing/under/costume/roman,
 /turf/open/floor/wood,
 /area/centcom/holding)
-"OV" = (
-/obj/structure/closet/secure_closet/freezer/kitchen,
-/obj/item/reagent_containers/food/snacks/grown/banana,
-/obj/item/reagent_containers/food/snacks/grown/banana,
-/obj/item/reagent_containers/food/snacks/grown/wheat,
-/obj/item/reagent_containers/food/snacks/grown/wheat,
-/obj/item/reagent_containers/food/snacks/grown/vanillapod,
-/obj/item/reagent_containers/food/snacks/grown/vanillapod,
-/obj/item/reagent_containers/food/snacks/grown/sugarcane,
-/obj/item/reagent_containers/food/snacks/grown/sugarcane,
-/obj/item/reagent_containers/food/snacks/grown/oat,
-/obj/item/reagent_containers/food/snacks/grown/oat,
-/obj/item/reagent_containers/food/snacks/grown/grapes,
-/obj/item/reagent_containers/food/snacks/grown/grapes,
-/obj/item/reagent_containers/food/snacks/grown/corn,
-/obj/item/reagent_containers/food/snacks/grown/corn,
-/obj/item/reagent_containers/food/snacks/grown/chili,
-/obj/item/reagent_containers/food/snacks/grown/chili,
-/obj/item/reagent_containers/food/snacks/grown/carrot,
-/obj/item/reagent_containers/food/snacks/grown/apple,
-/obj/item/reagent_containers/food/snacks/grown/ambrosia/vulgaris,
-/obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
-/turf/open/floor/plasteel/dark,
-/area/tdome/tdomeobserve)
 "OW" = (
 /obj/machinery/firealarm{
 	dir = 1;
@@ -10554,6 +10521,31 @@
 /obj/structure/fans/tiny,
 /turf/open/floor/plasteel,
 /area/centcom/evac)
+"RH" = (
+/obj/structure/closet/secure_closet/freezer/fridge/open,
+/obj/item/food/grown/potato,
+/obj/item/food/grown/potato,
+/obj/item/food/grown/whitebeet,
+/obj/item/food/grown/whitebeet,
+/obj/item/food/grown/tomato,
+/obj/item/food/grown/tomato,
+/obj/item/food/grown/rice,
+/obj/item/food/grown/rice,
+/obj/item/food/grown/icepepper,
+/obj/item/food/grown/icepepper,
+/obj/item/food/grown/citrus/lemon,
+/obj/item/food/grown/citrus/lime,
+/obj/item/food/grown/citrus/orange,
+/obj/item/food/grown/cherries,
+/obj/item/food/grown/apple,
+/obj/item/food/grown/ambrosia/deus,
+/obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
+/turf/open/floor/plasteel/dark,
+/area/tdome/tdomeobserve)
+"RI" = (
+/obj/item/food/meat/slab/human/mutant/slime,
+/turf/open/floor/grass,
+/area/wizard_station)
 "RK" = (
 /obj/structure/table/reinforced,
 /obj/item/reagent_containers/glass/bottle/charcoal{
@@ -10642,6 +10634,10 @@
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
 /turf/open/floor/plasteel,
 /area/tdome/arena)
+"Sa" = (
+/obj/item/food/meat/slab/xeno,
+/turf/open/floor/grass,
+/area/wizard_station)
 "Sc" = (
 /obj/effect/turf_decal/tile/brown/half/contrasted{
 	dir = 8
@@ -11192,6 +11188,10 @@
 /obj/effect/turf_decal/tile/red/half/contrasted,
 /turf/open/floor/plasteel/dark,
 /area/ctf)
+"Ut" = (
+/obj/item/food/meat/slab/human/mutant/lizard,
+/turf/open/floor/grass,
+/area/wizard_station)
 "Uu" = (
 /obj/structure/bed,
 /obj/item/bedsheet/black,
@@ -20728,7 +20728,7 @@ uE
 vl
 uE
 Ax
-di
+Ut
 yK
 zQ
 Az
@@ -20988,7 +20988,7 @@ Ax
 yI
 zq
 yI
-nE
+RI
 yI
 Ax
 qZ
@@ -21243,7 +21243,7 @@ vn
 uE
 Ax
 yJ
-uk
+aL
 yK
 zq
 yK
@@ -21503,7 +21503,7 @@ yK
 zq
 yI
 AB
-rl
+Sa
 qE
 Ax
 Ax
@@ -38730,7 +38730,7 @@ YN
 Nd
 Vm
 Fh
-vf
+dU
 Nd
 Nd
 Fa
@@ -40789,7 +40789,7 @@ Fh
 Fh
 BV
 Xk
-dE
+MO
 UE
 Xk
 Xk
@@ -53128,10 +53128,10 @@ Ev
 ai
 ZL
 Ep
-eI
+CI
 VN
 Ti
-Kq
+bK
 NR
 hg
 gJ
@@ -53385,7 +53385,7 @@ Ev
 as
 cL
 EK
-aD
+RH
 Gc
 Uk
 Gc
@@ -53899,7 +53899,7 @@ MW
 Th
 Zn
 EK
-OV
+Eu
 Gc
 QK
 Gy
@@ -54156,7 +54156,7 @@ dP
 VD
 Gh
 Ep
-NB
+Bj
 Uk
 Hq
 Gx
