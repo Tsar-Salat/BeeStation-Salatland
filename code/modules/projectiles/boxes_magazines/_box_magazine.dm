@@ -104,29 +104,34 @@
 				num_loaded++
 			if(!did_load || !multiload)
 				break
+		if(num_loaded)
+			AM.update_ammo_count()
 	if(istype(A, /obj/item/ammo_casing))
 		var/obj/item/ammo_casing/AC = A
 		if(give_round(AC, replace_spent))
 			user.transferItemToLoc(AC, src, TRUE)
 			num_loaded++
+			AC.update_appearance()
 
 	if(num_loaded)
 		if(!silent)
 			to_chat(user, "<span class='notice'>You load [num_loaded] shell\s into \the [src]!</span>")
 			playsound(src, 'sound/weapons/bulletinsert.ogg', 60, TRUE)
-		A.update_icon()
-		update_icon()
+		update_ammo_count()
+
 	return num_loaded
 
 /obj/item/ammo_box/attack_self(mob/user)
 	var/obj/item/ammo_casing/A = get_round()
-	if(A)
-		A.forceMove(drop_location())
-		if(!user.is_holding(src) || !user.put_in_hands(A))	//incase they're using TK
-			A.bounce_away(FALSE, NONE)
-		playsound(src, 'sound/weapons/bulletinsert.ogg', 60, TRUE)
-		to_chat(user, "<span class='notice'>You remove a round from [src]!</span>")
-		update_icon()
+	if(!A)
+		return
+
+	A.forceMove(drop_location())
+	if(!user.is_holding(src) || !user.put_in_hands(A))	//incase they're using TK
+		A.bounce_away(FALSE, NONE)
+	playsound(src, 'sound/weapons/bulletinsert.ogg', 60, TRUE)
+	to_chat(user, "<span class='notice'>You remove a round from [src]!</span>")
+	update_ammo_count()
 
 /obj/item/ammo_box/update_icon()
 	var/shells_left = stored_ammo.len
