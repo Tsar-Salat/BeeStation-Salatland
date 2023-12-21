@@ -14,10 +14,12 @@
 	if(!isitem(O))
 		return 0
 	var/obj/item/I = O
-	if(!(SSmaterials.GetMaterialRef(material_id) in I.custom_materials))
+	var/list/mat_comp = I.get_material_composition(BREAKDOWN_FLAGS_EXPORT)
+	var/datum/material/mat_ref = ispath(material_id) ? locate(material_id) in mat_comp : GET_MATERIAL_REF(material_id)
+	if(isnull(mat_comp[mat_ref]))
 		return 0
 
-	var/amount = I.custom_materials[SSmaterials.GetMaterialRef(material_id)]
+	var/amount = mat_comp[mat_ref]
 
 	if(istype(I, /obj/item/stack))
 		var/obj/item/stack/S = I

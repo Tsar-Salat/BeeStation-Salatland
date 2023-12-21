@@ -6,10 +6,13 @@ Simple datum which is instanced once per type and is used for every object of sa
 
 
 /datum/material
+	/// What the material is referred to as IC.
 	var/name = "material"
+	/// A short description of the material. Not used anywhere, yet...
 	var/desc = "its..stuff."
-	///Var that's mostly used by science machines to identify specific materials, should most likely be phased out at some point
-	var/id = "mat"
+	/// What the material is indexed by in the SSmaterials.materials list. Defaults to the type of the material.
+	var/id
+	
 	///Base color of the material, is used for greyscale. Item isn't changed in color if this is null.
 	///Deprecated, use greyscale_color instead.
 	var/color
@@ -46,8 +49,17 @@ Simple datum which is instanced once per type and is used for every object of sa
 	///What type of shard the material turns into
 	var/obj/item/shard_type
 
-/datum/material/New()
-	. = ..()
+/** Handles initializing the material.
+ *
+ * Arugments:
+ * - _id: The ID the material should use. Overrides the existing ID.
+ */
+/datum/material/proc/Initialize(_id, ...)
+	if(_id)
+		id = _id
+	else if(isnull(id))
+		id = type
+
 	if(texture_layer_icon_state)
 		var/texture_icon = icon('icons/materials/composite.dmi', texture_layer_icon_state)
 		cached_texture_filter = filter(type="layer", icon=texture_icon, blend_mode = BLEND_INSET_OVERLAY)
