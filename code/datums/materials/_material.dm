@@ -72,6 +72,12 @@ Simple datum which is instanced once per type and is used for every object of sa
 	if(istype(source, /turf)) //turfs
 		on_applied_turf(source, amount, material_flags)
 
+	source.mat_update_desc(src)
+
+///This proc is called when a material updates an object's description
+/atom/proc/mat_update_desc(/datum/material/mat)
+	return
+
 ///This proc is called when the material is added to an object specifically.
 /datum/material/proc/on_applied_obj(obj/o, amount, material_flags)
 	if(material_flags & MATERIAL_AFFECT_STATISTICS)
@@ -115,6 +121,16 @@ Simple datum which is instanced once per type and is used for every object of sa
 	item.pickup_sound = item_sound_override
 	item.drop_sound = item_sound_override
 
+/datum/material/proc/on_applied_turf(var/turf/T, amount, material_flags)
+	if(isopenturf(T))
+		if(!turf_sound_override)
+			return
+		var/turf/open/O = T
+		O.footstep = turf_sound_override
+		O.barefootstep = turf_sound_override
+		O.clawfootstep = turf_sound_override
+		O.heavyfootstep = turf_sound_override
+	return
 
 ///This proc is called when the material is removed from an object.
 /datum/material/proc/on_removed(atom/source, material_flags)
