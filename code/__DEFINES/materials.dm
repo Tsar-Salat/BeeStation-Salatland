@@ -21,6 +21,7 @@
 #define MATCONTAINER_ANY_INTENT (1<<2)
 ///if the user won't receive a warning when attacking the container with an unallowed item.
 #define MATCONTAINER_SILENT (1<<3)
+
 // The following flags are for decomposing alloys. Should be expanded upon and diversified once someone gets around to reworking recycling.
 /// Can reduce an alloy into its component materials.
 #define BREAKDOWN_ALLOYS (1<<4)
@@ -36,6 +37,8 @@
 #define BREAKDOWN_FLAGS_ORE_PROCESSOR (BREAKDOWN_ALLOYS)
 /// Breakdown flags used by the drone dispenser.
 #define BREAKDOWN_FLAGS_DRONE_DISPENSER (BREAKDOWN_ALLOYS)
+/// Breakdown flags used when exporting materials.
+#define BREAKDOWN_FLAGS_EXPORT (NONE)
 
 /// Whether a material's mechanical effects should apply to the atom. This is necessary for other flags to work.
 #define MATERIAL_EFFECTS (1<<0)

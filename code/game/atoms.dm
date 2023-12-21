@@ -1678,11 +1678,10 @@
 
 ///Sets the custom materials for an item.
 /atom/proc/set_custom_materials(var/list/materials, multiplier = 1)
-
 	if(custom_materials) //Only runs if custom materials existed at first. Should usually be the case but check anyways
 		for(var/i in custom_materials)
 			var/datum/material/custom_material = GET_MATERIAL_REF(i)
-			custom_material.on_removed(src, custom_materials[i], material_flags) //Remove the current materials
+			custom_material.on_removed(src, custom_materials[i] * material_modifier, material_flags) //Remove the current materials
 
 	if(!length(materials))
 		custom_materials = null
@@ -1708,8 +1707,6 @@
  */
 /atom/proc/get_material_composition(breakdown_flags=NONE)
 	. = list()
-	if(!(breakdown_flags & BREAKDOWN_INCLUDE_ALCHEMY) && HAS_TRAIT(src, TRAIT_MAT_TRANSMUTED))
-		return
 
 	var/list/cached_materials = custom_materials
 	for(var/mat in cached_materials)

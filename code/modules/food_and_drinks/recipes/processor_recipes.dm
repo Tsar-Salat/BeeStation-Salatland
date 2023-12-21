@@ -7,6 +7,8 @@
 	var/time = 40
 	/// The machine required to do this recipe
 	var/required_machine = /obj/machinery/processor
+	/// The number of products this recipe creates.
+	var/multiplier = 1 //This multiplies the number of products produced per object processed.
 	/// Whether to copy the materials from the input to the output
 	var/preserve_materials = TRUE
 
