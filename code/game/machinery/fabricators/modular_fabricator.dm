@@ -67,9 +67,9 @@
 
 /obj/machinery/modular_fabricator/Initialize(mapload)
 	if(remote_materials)
-		AddComponent(/datum/component/remote_materials, "modfab", mapload, TRUE, auto_link, breakdown_flags=BREAKDOWN_FLAGS_LATHE)
+		AddComponent(/datum/component/remote_materials, "modfab", mapload, TRUE, auto_link, mat_container_flags=BREAKDOWN_FLAGS_LATHE)
 	else
-		AddComponent(/datum/component/material_container, SSmaterials.materialtypes_by_category[MAT_CATEGORY_RIGID], 0, TRUE, null, null, CALLBACK(src, .proc/AfterMaterialInsert))
+		AddComponent(/datum/component/material_container, SSmaterials.materialtypes_by_category[MAT_CATEGORY_RIGID], 0, MATCONTAINER_EXAMINE, null, null, CALLBACK(src, .proc/AfterMaterialInsert))
 	. = ..()
 	stored_research = new stored_research_type
 
