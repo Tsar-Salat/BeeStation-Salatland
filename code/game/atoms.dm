@@ -1677,20 +1677,20 @@
 	filters = null
 
 ///Sets the custom materials for an item.
-/atom/proc/set_custom_materials(var/list/materials, multiplier = 1)
-	if(custom_materials) //Only runs if custom materials existed at first. Should usually be the case but check anyways
-		for(var/i in custom_materials)
-			var/datum/material/custom_material = GET_MATERIAL_REF(i)
-			custom_material.on_removed(src, custom_materials[i] * material_modifier, material_flags) //Remove the current materials
+/atom/proc/set_custom_materials(list/materials, multiplier = 1)
+	if(custom_materials && material_flags & MATERIAL_EFFECTS) //Only runs if custom materials existed at first and affected src.
+		for(var/current_material in custom_materials)
+			var/datum/material/custom_material = GET_MATERIAL_REF(current_material)
+			custom_material.on_removed(src, custom_materials[current_material] * material_modifier, material_flags) //Remove the current materials
 
 	if(!length(materials))
 		custom_materials = null
 		return
 
 	if(material_flags & MATERIAL_EFFECTS)
-		for(var/x in materials)
-			var/datum/material/custom_material = GET_MATERIAL_REF(x)
-			custom_material.on_applied(src, materials[x] * multiplier * material_modifier, material_flags)
+		for(var/current_material in materials)
+			var/datum/material/custom_material = GET_MATERIAL_REF(current_material)
+			custom_material.on_applied(src, materials[current_material] * multiplier * material_modifier, material_flags)
 
 	custom_materials = SSmaterials.FindOrCreateMaterialCombo(materials, multiplier)
 
@@ -1716,7 +1716,7 @@
 			.[comp_mat] += material_comp[comp_mat]
 
 /**
- * Fetches a list of all of the materials this object has of the desired type
+ * Fetches a list of all of the materials this object has of the desired type. Returns null if there is no valid materials of the type
  *
  * Arguments:
  * - [mat_type][/datum/material]: The type of material we are checking for
@@ -1728,14 +1728,16 @@
 	if(!length(cached_materials))
 		return null
 
-	. = list()
-	for(var/m in cached_materials)
-		if(cached_materials[m] < mat_amount)
+	var/materials_of_type
+	for(var/current_material in cached_materials)
+		if(cached_materials[current_material] < mat_amount)
 			continue
-		var/datum/material/material = GET_MATERIAL_REF(m)
-		if(exact ? material.type != m : !istype(material, mat_type))
+		var/datum/material/material = GET_MATERIAL_REF(current_material)
+		if(exact ? material.type != current_material : !istype(material, mat_type))
 			continue
-		.[material] = cached_materials[m]
+		LAZYSET(materials_of_type, material, cached_materials[current_material])
+
+	return materials_of_type
 
 /**
  * Fetches a list of all of the materials this object has with the desired material category.
@@ -1752,11 +1754,11 @@
 	if(!length(cached_materials))
 		return null
 
-	. = list()
-	for(var/m in cached_materials)
-		if(cached_materials[m] < mat_amount)
+	var/materials_of_category
+	for(var/current_material in cached_materials)
+		if(cached_materials[current_material] < mat_amount)
 			continue
-		var/datum/material/material = GET_MATERIAL_REF(m)
+		var/datum/material/material = GET_MATERIAL_REF(current_material)
 		var/category_flags = material?.categories[category]
 		if(isnull(category_flags))
 			continue
@@ -1766,7 +1768,8 @@
 			continue
 		if(no_flags && (category_flags & no_flags))
 			continue
-		.[material] = cached_materials[m]
+		LAZYSET(materials_of_category, material, cached_materials[current_material])
+	return materials_of_category
 
 /**
  * Gets the most common material in the object.
@@ -1778,10 +1781,10 @@
 
 	var/most_common_material = null
 	var/max_amount = 0
-	for(var/m in cached_materials)
-		if(cached_materials[m] > max_amount)
-			most_common_material = m
-			max_amount = cached_materials[m]
+	for(var/material in cached_materials)
+		if(cached_materials[material] > max_amount)
+			most_common_material = material
+			max_amount = cached_materials[material]
 
 	if(most_common_material)
 		return GET_MATERIAL_REF(most_common_material)

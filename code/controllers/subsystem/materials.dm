@@ -92,8 +92,8 @@ SUBSYSTEM_DEF(materials)
 			WARNING("Attempted to fetch material ref with invalid text id '[key]'")
 		return
 
-	if(!ispath(key, /datum/material))
-		CRASH("Attempted to fetch material ref with invalid key [key]")
+	//if(!ispath(key, /datum/material))
+	//	CRASH("Attempted to fetch material ref with invalid key [key]")
 
 	if(!(initial(key.init_flags) & MATERIAL_INIT_BESPOKE))
 		. = materials[key]

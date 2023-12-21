@@ -6,11 +6,11 @@
 	density = TRUE
 	anchored = FALSE
 	max_integrity = 100
-	var/oreAmount = 5
-	var/material_drop_type = /obj/item/stack/sheet/iron
 	CanAtmosPass = ATMOS_PASS_DENSITY
 	material_modifier = 0.5
 	material_flags = MATERIAL_EFFECTS | MATERIAL_AFFECT_STATISTICS
+	var/oreAmount = 5
+	var/material_drop_type = /obj/item/stack/sheet/iron
 
 /obj/structure/statue/attackby(obj/item/W, mob/living/user, params)
 	add_fingerprint(user)

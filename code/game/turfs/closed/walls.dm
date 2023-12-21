@@ -11,6 +11,7 @@
 	canSmoothWith = list(SMOOTH_GROUP_WALLS)
 		//note consider "canSmoothWith = list(SMOOTH_GROUP_WALLS, SMOOTH_GROUP_WINDOW_FULLTILE, SMOOTH_GROUP_AIRLOCK)" if the artstyle permits it!
 	explosion_block = 1
+	material_flags = MATERIAL_EFFECTS
 
 	thermal_conductivity = WALL_HEAT_TRANSFER_COEFFICIENT
 	heat_capacity = 312500 //a little over 5 cm thick , 312500 for 1 m by 2.5 m by 0.25 m plasteel wall

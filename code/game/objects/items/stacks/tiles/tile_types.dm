@@ -12,6 +12,7 @@
 	throw_range = 7
 	max_amount = 60
 	novariants = TRUE
+	material_flags = MATERIAL_EFFECTS
 	/// What type of turf does this tile produce.
 	var/turf_type = null
 	/// Determines certain welder interactions.
