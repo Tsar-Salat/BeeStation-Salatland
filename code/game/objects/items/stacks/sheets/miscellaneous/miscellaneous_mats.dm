@@ -142,7 +142,7 @@ GLOBAL_LIST_INIT(sandbag_recipes, list ( \
 	merge_type = /obj/item/stack/sheet/stalinium
 
 /obj/item/stack/sheet/meat
-	name = "meat sheet"
+	name = "meat sheets"
 	desc = "Something's bloody meat compressed into a nice solid sheet"
 	singular_name = "meat sheet"
 	icon_state = "sheet-meat"

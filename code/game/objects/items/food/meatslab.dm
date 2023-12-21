@@ -631,14 +631,15 @@
 
 /obj/item/food/meat/rawcutlet/plain/human/OnCreatedFromProcessing(mob/living/user, obj/item/I, list/chosen_option, atom/original_atom)
 	. = ..()
-	if(istype(original_atom, /obj/item/food/meat))
-		var/obj/item/food/meat/origin_meat = original_atom
-		subjectname = origin_meat.subjectname
-		subjectjob = origin_meat.subjectjob
-		if(subjectname)
-			name = "raw [origin_meat.subjectname] cutlet"
-		else if(subjectjob)
-			name = "raw [origin_meat.subjectjob] cutlet"
+	if(!istype(original_atom, /obj/item/food/meat))
+		return
+	var/obj/item/food/meat/origin_meat = original_atom
+	subjectname = origin_meat.subjectname
+	subjectjob = origin_meat.subjectjob
+	if(subjectname)
+		name = "raw [origin_meat.subjectname] cutlet"
+	else if(subjectjob)
+		name = "raw [origin_meat.subjectjob] cutlet"
 
 /obj/item/food/meat/rawcutlet/killertomato
 	name = "raw killer tomato cutlet"

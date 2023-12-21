@@ -151,6 +151,9 @@
 			spawn_tile()
 	return make_plating()
 
+/turf/open/floor/proc/has_tile()
+	return floor_tile
+
 /turf/open/floor/proc/spawn_tile()
 	new floor_tile(src)
 
@@ -301,15 +304,19 @@
 			var/atom/new_furnish = new the_rcd.furnish_type(src)
 			new_furnish.setDir(user.dir)
 			return TRUE
-
 	return FALSE
 
 /turf/open/floor/material
 	name = "floor"
 	icon_state = "materialfloor"
-	material_flags = MATERIAL_ADD_PREFIX | MATERIAL_COLOR | MATERIAL_AFFECT_STATISTICS
+	material_flags = MATERIAL_EFFECTS | MATERIAL_ADD_PREFIX | MATERIAL_COLOR | MATERIAL_AFFECT_STATISTICS
+	floor_tile = /obj/item/stack/tile/material
+
+/turf/open/floor/material/has_tile()
+	return LAZYLEN(custom_materials)
 
 /turf/open/floor/material/spawn_tile()
-	for(var/i in custom_materials)
-		var/datum/material/M = i
-		new M.sheet_type(src, FLOOR(custom_materials[M] / MINERAL_MATERIAL_AMOUNT, 1))
+	. = ..()
+	if(.)
+		var/obj/item/stack/tile = .
+		tile.set_mats_per_unit(custom_materials, 1)
