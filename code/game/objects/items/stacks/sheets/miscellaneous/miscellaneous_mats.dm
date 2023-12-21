@@ -75,6 +75,7 @@ GLOBAL_LIST_INIT(sandbag_recipes, list ( \
 	throwforce = 2
 	grind_results = list(/datum/reagent/consumable/ice = 20)
 	merge_type = /obj/item/stack/sheet/snow
+	walltype = /turf/closed/wall/mineral/snow
 
 /obj/item/stack/sheet/snow/get_main_recipes()
 	. = ..()
