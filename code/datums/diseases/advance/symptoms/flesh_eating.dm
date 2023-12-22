@@ -62,7 +62,8 @@ Bonus
 	if(!ishuman(M))
 		return
 	var/mob/living/carbon/human/H = M
-	H.bleed_rate += 2 * power //bleeding is quite strong. this is more than enough
+	var/obj/item/bodypart/random_part = pick(H.bodyparts)
+	random_part.generic_bleedstacks += 2 * power
 	H.bleed(max(10*power, H.bleed_rate))//having power actually up the bleed rate on this puts it into a pretty dangerous territory. this should be more managable
 	H.add_splatter_floor(H.loc)
 	if(bleed) // this is really, really messy

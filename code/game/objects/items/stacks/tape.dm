@@ -7,9 +7,14 @@
 	icon = 'icons/obj/tapes.dmi'
 	icon_state = "tape_w"
 	var/prefix = "sticky"
+	w_class = WEIGHT_CLASS_TINY
+	full_w_class = WEIGHT_CLASS_TINY
 	item_flags = NOBLUDGEON
 	amount = 5
 	max_amount = 5
+	resistance_flags = FLAMMABLE
+	resistance_flags = FLAMMABLE
+
 
 	var/list/conferred_embed = EMBED_HARMLESS
 	var/overwrite_existing = FALSE
@@ -58,3 +63,13 @@
 	icon_state = "tape_spikes"
 	prefix = "super pointy"
 	conferred_embed = EMBED_POINTY_SUPERIOR
+
+/obj/item/stack/sticky_tape/surgical
+	name = "surgical tape"
+	singular_name = "surgical tape"
+	desc = "Made for patching broken bones back together alongside bone gel, not for playing pranks."
+	//icon_state = "tape_spikes"
+	prefix = "surgical"
+	conferred_embed = list("embed_chance" = 30, "pain_mult" = 0, "jostle_pain_mult" = 0, "ignore_throwspeed_threshold" = TRUE)
+	splint_factor = 0.4
+	custom_price = 500

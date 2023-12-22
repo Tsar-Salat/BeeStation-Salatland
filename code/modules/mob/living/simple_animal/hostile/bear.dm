@@ -106,6 +106,7 @@
 		A.health += 60
 		A.armour_penetration += 20
 		A.melee_damage += 5
+		A.wound_bonus += 5
 		A.update_icons()
 		to_chat(user, "<span class='info'>You strap the armor plating to [A] and sharpen [A.p_their()] claws with the nail filer. This was a great idea.</span>")
 		qdel(src)

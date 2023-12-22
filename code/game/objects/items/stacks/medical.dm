@@ -22,6 +22,16 @@
 	var/stop_bleeding = 0
 	///How long does it take to apply on yourself?
 	var/self_delay = 2 SECONDS
+	/// How much brute we heal per application
+	var/heal_brute
+	/// How much burn we heal per application
+	var/heal_burn
+	/// How much we reduce bleeding per application on cut wounds
+	var/stop_bleeding
+	/// How much sanitization to apply to burns on application
+	var/sanitization
+	/// How much we add to flesh_healing for burn wounds on application
+	var/flesh_regeneration
 
 /obj/item/stack/medical/Initialize(mapload, new_amount, merge, mob/user)
 	. = ..()
@@ -40,7 +50,7 @@
 	if(!iscarbon(M) && !isanimal(M))
 		to_chat(user, "<span class='danger'>You don't know how to apply \the [src] to [M]!</span>")
 		return
-	
+
 	if(M in user.do_afters) //One at a time, please.
 		return
 
@@ -140,6 +150,8 @@
 	lefthand_file = 'icons/mob/inhands/equipment/medical_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/medical_righthand.dmi'
 	heal_brute = TRUE
+	self_delay = 40
+	other_delay = 20
 	reagent = list(/datum/reagent/medicine/styptic_powder = REAGENT_AMOUNT_PER_ITEM)
 	grind_results = list(/datum/reagent/medicine/styptic_powder = REAGENT_AMOUNT_PER_ITEM)
 

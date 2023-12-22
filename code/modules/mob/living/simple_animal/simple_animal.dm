@@ -90,6 +90,14 @@
 	var/my_z // I don't want to confuse this with client registered_z
 
 	var/do_footstep = FALSE
+
+	///How much wounding power it has
+	var/wound_bonus = CANT_WOUND
+	///How much bare wounding power it has
+	var/bare_wound_bonus = 0
+	///If the attacks from this are sharp
+	var/sharpness = FALSE
+
 	///Generic flags
 	var/simple_mob_flags = NONE
 

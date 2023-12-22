@@ -250,6 +250,7 @@
 		/obj/item/surgical_drapes, //for true paramedics
 		/obj/item/scalpel,
 		/obj/item/circular_saw,
+		/obj/item/bonesetter,
 		/obj/item/surgicaldrill,
 		/obj/item/retractor,
 		/obj/item/cautery,
@@ -274,7 +275,8 @@
 		/obj/item/pipe_dispenser/plumbing,
 		/obj/item/construction/plumbing,
 		/obj/item/plunger,
-		/obj/item/extrapolator
+		/obj/item/extrapolator,
+		/obj/item/stack/sticky_tape //surgical tape
 		))
 	STR.can_hold = can_hold
 

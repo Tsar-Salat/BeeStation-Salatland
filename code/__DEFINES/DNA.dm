@@ -124,13 +124,16 @@
 #define NOFLASH			13
 #define DYNCOLORS		14 //! Use this if you want to change the race's color without the player being able to pick their own color. AKA special color shifting TRANSLATION: AWFUL.
 #define AGENDER			15
-#define NOEYESPRITES	16 //! Do not draw eyes or eyeless overlay
-#define NOREAGENTS     17 //! DO NOT PROCESS REAGENTS
-#define REVIVESBYHEALING 18 // Will revive on heal when healing and total HP > 0.
-#define NOHUSK			19 // Can't be husked.
-#define NOMOUTH			20
-#define NOSOCKS       21 // You cannot wear socks.
-#define ENVIROSUIT		22 //! spawns with an envirosuit
+/// Do not draw eyes or eyeless overlay
+#define NOEYESPRITES 16
+/// If this species can be scarred (fleshy)
+#define CAN_SCAR 18
+#define NOREAGENTS 19 //! DO NOT PROCESS REAGENTS
+#define REVIVESBYHEALING 20 // Will revive on heal when healing and total HP > 0.
+#define NOHUSK 21 // Can't be husked.
+#define NOMOUTH 22
+#define NOSOCKS 23 // You cannot wear socks.
+#define ENVIROSUIT 24 //! spawns with an envirosuit
 
 /// Used for determining which wounds are applicable to this species.
 /// if we have flesh (can suffer slash/piercing/burn wounds, requires they don't have NOBLOOD)

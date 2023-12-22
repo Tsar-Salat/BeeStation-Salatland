@@ -23,6 +23,8 @@
 	block_flags = BLOCKING_ACTIVE | BLOCKING_NASTY
 	force = 15
 	throwforce = 12 // unlike normal daggers, this one is curved and not designed to be thrown
+	wound_bonus = -30
+	bare_wound_bonus = 30
 	armour_penetration = 35
 
 /obj/item/melee/cultblade/dagger/Initialize(mapload)
@@ -54,6 +56,8 @@ Striking a noncultist, however, will tear their flesh."}
 	block_flags = BLOCKING_ACTIVE | BLOCKING_NASTY
 	force = 30
 	throwforce = 10
+	wound_bonus = -80
+	bare_wound_bonus = 30
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	attack_verb = list("attacked", "slashed", "stabbed", "sliced", "tore", "ripped", "diced", "rended")
 

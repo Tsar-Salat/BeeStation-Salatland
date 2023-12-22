@@ -79,7 +79,7 @@
 	send_item_attack_message(I, user, parse_zone(affecting.body_zone))
 	if(I.force)
 		var/armour_block = run_armor_check(affecting, MELEE, armour_penetration = I.armour_penetration)
-		apply_damage(I.force, I.damtype, affecting, armour_block)
+		apply_damage(I.force, I.damtype, affecting, wound_bonus = I.wound_bonus, bare_wound_bonus = I.bare_wound_bonus, sharpness = I.get_sharpness())
 		if(I.damtype == BRUTE && (IS_ORGANIC_LIMB(affecting)))
 			if(I.is_sharp() || I.force >= 10)
 				I.add_mob_blood(src)
@@ -136,6 +136,11 @@
 			if(user.a_intent == INTENT_HELP || user.a_intent == INTENT_DISARM)
 				if(S.next_step(user, user.a_intent))
 					return 1
+
+	for(var/datum/wound/W in all_wounds)
+		if(W.try_handling(user))
+			return 1
+
 	return 0
 
 
@@ -464,6 +469,10 @@
 	else if(getOxyLoss() <= 50)
 		REMOVE_TRAIT(src, TRAIT_KNOCKEDOUT, OXYLOSS_TRAIT)
 
+/mob/living/carbon/proc/get_interaction_efficiency(zone)
+	var/obj/item/bodypart/limb = get_bodypart(zone)
+	if(!limb)
+		return
 
 /mob/living/carbon/setOxyLoss(amount, updating_health = TRUE, forced = FALSE)
 	. = ..()

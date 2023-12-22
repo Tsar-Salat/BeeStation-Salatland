@@ -3,11 +3,12 @@
 
 /mob/living/carbon/get_bodypart(zone)
 	RETURN_TYPE(/obj/item/bodypart)
+
 	if(!zone)
 		zone = BODY_ZONE_CHEST
-	for(var/obj/item/bodypart/L as() in bodyparts)
-		if(L.body_zone == zone)
-			return L
+	for(var/obj/item/bodypart/bodypart as anything in bodyparts)
+		if(bodypart.body_zone == zone)
+			return bodypart
 
 /mob/living/carbon/has_hand_for_held_index(i)
 	if(i)
@@ -16,8 +17,15 @@
 			return L
 	return FALSE
 
+///Get the bodypart for whatever hand we have active, Only relevant for carbons
+/mob/proc/get_active_hand()
+	return FALSE
 
-
+/mob/living/carbon/get_active_hand()
+	var/which_hand = BODY_ZONE_PRECISE_L_HAND
+	if(!(active_hand_index % 2))
+		which_hand = BODY_ZONE_PRECISE_R_HAND
+	return get_bodypart(check_zone(which_hand))
 
 /mob/proc/has_left_hand(check_disabled = TRUE)
 	return TRUE
@@ -150,16 +158,6 @@
 			if(!include_harmless && I.isEmbedHarmless())
 				continue
 			return TRUE
-
-///Get the bodypart for whatever hand we have active, Only relevant for carbons
-/mob/proc/get_active_hand()
-	return FALSE
-
-/mob/living/carbon/get_active_hand()
-	var/which_hand = BODY_ZONE_PRECISE_L_HAND
-	if(!(active_hand_index % 2))
-		which_hand = BODY_ZONE_PRECISE_R_HAND
-	return get_bodypart(check_zone(which_hand))
 
 //Helper for quickly creating a new limb - used by augment code in species.dm spec_attacked_by
 //

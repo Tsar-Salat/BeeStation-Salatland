@@ -146,10 +146,15 @@
 		sound_file_use = preop_sound
 	playsound(get_turf(target), sound_file_use, 75, TRUE, falloff_exponent = 12, falloff_distance = 1)
 
-/datum/surgery_step/proc/success(mob/user, mob/living/target, obj/item/tool, datum/surgery/surgery, default_display_results = TRUE)
-	display_results(user, target, "<span class='notice'>You succeed.</span>",
-		"<span class='notice'>[user] succeeds.</span>",
-		"<span class='notice'>[user] finishes.</span>")
+/datum/surgery_step/proc/success(mob/user, mob/living/target, target_zone, obj/item/tool, datum/surgery/surgery, default_display_results = TRUE)
+	f(default_display_results)
+		display_results(
+			user,
+			target,
+			"<span class='notice'>You succeed.</span>",
+			"<span class='notice'>[user] succeeds.</span>",
+			"<span class='notice'>[user] finishes.</span>"
+		)
 	return TRUE
 
 /datum/surgery_step/proc/play_success_sound(mob/user, mob/living/carbon/target, obj/item/tool, datum/surgery/surgery)

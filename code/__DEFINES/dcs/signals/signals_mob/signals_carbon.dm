@@ -11,6 +11,12 @@
 #define COMSIG_CARBON_EMBED_REMOVAL "item_embed_remove_safe"		// called when removing a given item from a mob, from mob/living/carbon/remove_embedded_object(mob/living/carbon/target, /obj/item)
 #define COMSIG_CARBON_CUFF_ATTEMPTED "carbon_attempt_cuff"			///Called when someone attempts to cuff a carbon
 
+// /mob/living/carbon physiology signals
+//from /datum/wound/proc/apply_wound() (/mob/living/carbon/C, /datum/wound/W, /obj/item/bodypart/L)
+#define COMSIG_CARBON_GAIN_WOUND "carbon_gain_wound"
+//from /datum/wound/proc/remove_wound() (/mob/living/carbon/C, /datum/wound/W, /obj/item/bodypart/L)
+#define COMSIG_CARBON_LOSE_WOUND "carbon_lose_wound"
+///from base of /obj/item/bodypart/proc/attach_limb(): (new_limb, special) allows you to fail limb attachment
 ///from base of /obj/item/bodypart/proc/try_attach_limb(): (new_limb, special)
 #define COMSIG_CARBON_ATTACH_LIMB "carbon_attach_limb"
 /// Called from bodypart being attached /obj/item/bodypart/proc/try_attach_limb(mob/living/carbon/new_owner, special)

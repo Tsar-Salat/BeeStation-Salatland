@@ -1715,6 +1715,8 @@
 					/obj/item/reagent_containers/blood/OMinus,
 					/obj/item/storage/pill_bottle/mining,
 					/obj/item/reagent_containers/pill/neurine,
+					/obj/item/stack/medical/bone_gel,
+					/obj/item/stack/medical/bone_gel,
 					/obj/item/vending_refill/medical)
 	crate_name = "medical supplies crate"
 

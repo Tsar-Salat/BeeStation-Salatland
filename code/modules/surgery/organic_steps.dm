@@ -23,10 +23,16 @@
 	if ishuman(target)
 		var/mob/living/carbon/human/H = target
 		if (!(NOBLOOD in H.dna.species.species_traits))
-			display_results(user, target, "<span class='notice'>Blood pools around the incision in [H]'s [parse_zone(surgery.location)].</span>",
+			display_results(
+				user,
+				target,
+				"<span class='notice'>Blood pools around the incision in [H]'s [parse_zone(surgery.location)].</span>",
 				"Blood pools around the incision in [H]'s [parse_zone(surgery.location)].",
-				"")
-			H.bleed_rate += 3
+				""
+			)
+			var/obj/item/bodypart/target_bodypart = target.get_bodypart(target_zone)
+			if(target_bodypart)
+				target_bodypart.generic_bleedstacks += 10
 	return TRUE
 
 /datum/surgery_step/incise/nobleed //silly friendly!
@@ -121,7 +127,7 @@
 		"[user] begins to saw through the bone in [target]'s [parse_zone(surgery.location)].")
 
 /datum/surgery_step/saw/success(mob/user, mob/living/carbon/target, obj/item/tool, datum/surgery/surgery)
-	target.apply_damage(50, BRUTE, "[surgery.location]")
+	target.apply_damage(50, BRUTE, "[surgery.location]", wound_bonus=CANT_WOUND)
 	display_results(user, target, "<span class='notice'>You saw [target]'s [parse_zone(surgery.location)] open.</span>",
 		"[user] saws [target]'s [parse_zone(surgery.location)] open!",
 		"[user] saws [target]'s [parse_zone(surgery.location)] open!")

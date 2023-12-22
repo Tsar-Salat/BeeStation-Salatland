@@ -155,6 +155,9 @@
 		M.adjustFireLoss(-power, 0)
 		M.adjustToxLoss(-power, 0, TRUE) //heals TOXINLOVERs
 		M.adjustCloneLoss(-power, 0)
+		for(var/i in M.all_wounds)
+			var/datum/wound/W = i
+			W.on_xadone(power)
 		REMOVE_TRAIT(M, TRAIT_DISFIGURED, TRAIT_GENERIC) //fixes common causes for disfiguration
 		. = 1
 	metabolization_rate = REAGENTS_METABOLISM * (0.00001 * (M.bodytemperature ** 2) + 0.5)//Metabolism rate is reduced in colder body temps making it more effective
@@ -202,6 +205,9 @@
 		M.adjustFireLoss(-1.5 * power, 0)
 		M.adjustToxLoss(-power, 0, TRUE)
 		M.adjustCloneLoss(-power, 0)
+		for(var/i in M.all_wounds)
+			var/datum/wound/W = i
+			W.on_xadone(power)
 		REMOVE_TRAIT(M, TRAIT_DISFIGURED, TRAIT_GENERIC)
 		. = 1
 	else //If not the right temperature for pyroxadone to work
@@ -241,7 +247,7 @@
 
 /datum/reagent/medicine/spaceacillin
 	name = "Spaceacillin"
-	description = "Spaceacillin will prevent a patient from conventionally spreading any diseases they are currently infected with."
+	description = "Spaceacillin will prevent a patient from conventionally spreading any diseases they are currently infected with. Also reduces infection in serious burns."
 	color = "#E1F2E6"
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY | CHEMICAL_GOAL_CHEMIST_USEFUL_MEDICINE
 	metabolization_rate = 0.1 * REAGENTS_METABOLISM
@@ -386,7 +392,7 @@
 
 /datum/reagent/medicine/mine_salve
 	name = "Miner's Salve"
-	description = "A powerful painkiller. Restores bruising and burns in addition to making the patient believe they are fully healed."
+	description = "A powerful painkiller. Restores bruising and burns in addition to making the patient believe they are fully healed. Also great for treating severe burn wounds in a pinch."
 	reagent_state = LIQUID
 	color = "#6D6374"
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
@@ -413,7 +419,7 @@
 				// +10% surgery speed on each step, useful while operating in less-than-perfect conditions
 
 			if(show_message)
-				to_chat(M, "<span class='danger'>You feel your wounds fade away to nothing!</span>" )
+				to_chat(M, "<span class='danger'>You feel your injuries fade away to nothing!</span>" )
 	..()
 
 /datum/reagent/medicine/mine_salve/on_mob_end_metabolize(mob/living/M)
@@ -439,6 +445,8 @@
 			if(affecting.heal_damage(reac_volume, reac_volume))
 				M.update_damage_overlays()
 			M.adjustStaminaLoss(reac_volume*2)
+			for(var/datum/wound/burn/burn_wound in carbies.all_wounds)
+				burn_wound.regenerate_flesh(reac_volume)
 			if(show_message)
 				to_chat(M, "<span class='danger'>You feel your burns and bruises healing! It stings like hell!</span>")
 			SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT, "painful_medicine", /datum/mood_event/painful_medicine)
@@ -1677,10 +1685,6 @@
 /datum/reagent/medicine/polypyr/on_mob_life(mob/living/carbon/M) //I wanted a collection of small positive effects, this is as hard to obtain as coniine after all.
 	M.adjustOrganLoss(ORGAN_SLOT_LUNGS, -0.25)
 	M.adjustBruteLoss(-0.35, 0)
-	if(prob(50))
-		if(ishuman(M))
-			var/mob/living/carbon/human/H = M
-			H.bleed_rate = max(H.bleed_rate - 1, 0)
 	..()
 	. = 1
 
@@ -1717,3 +1721,11 @@
 		M.Jitter(5)
 	M.losebreath = 0
 	..()
+
+// handled in cut wounds process
+/datum/reagent/medicine/coagulant
+	name = "Sanguirite"
+	description = "A coagulant used to help open cuts clot faster."
+	reagent_state = LIQUID
+	color = "#bb2424"
+	metabolization_rate = 0.25 * REAGENTS_METABOLISM

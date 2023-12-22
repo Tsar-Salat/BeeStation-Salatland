@@ -287,6 +287,7 @@
 	item_flags = ISWEAPON
 	w_class = WEIGHT_CLASS_TINY
 	obj_flags = UNIQUE_RENAME
+	wound_bonus = -10
 	var/chaplain_spawnable = TRUE
 
 /obj/item/nullrod/Initialize(mapload)
@@ -762,6 +763,8 @@
 	item_flags = ABSTRACT | ISWEAPON
 	w_class = WEIGHT_CLASS_HUGE
 	sharpness = IS_SHARP
+	wound_bonus = -20
+	bare_wound_bonus = 25
 
 /obj/item/nullrod/armblade/Initialize(mapload)
 	. = ..()

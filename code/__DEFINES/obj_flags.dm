@@ -61,6 +61,11 @@
 #define ORGAN_EDIBLE			(1<<5)	//is a snack? :D
 #define ORGAN_UNREMOVABLE 		(1<<6)	//Can't be removed using surgery
 
+/// Integrity defines for clothing (not flags but close enough)
+#define CLOTHING_PRISTINE	0 // We have no damage on the clothing
+#define CLOTHING_DAMAGED	1 // There's some damage on the clothing but it still has at least one functioning bodypart and can be equipped
+#define CLOTHING_SHREDDED	2 // The clothing is useless and cannot be equipped unless repaired first
+
 /// Flags for the pod_flags var on /obj/structure/closet/supplypod
 
 #define FIRST_SOUNDS (1<<0) // If it shouldn't play sounds the first time it lands, used for reverse mode

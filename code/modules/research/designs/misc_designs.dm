@@ -541,6 +541,15 @@
 	category = list("Equipment")
 	departmental_flags = DEPARTMENTAL_FLAG_SERVICE
 
+/datum/design/sticky_tape/surgical
+	name = "Surgical Tape"
+	id = "surgical_tape"
+	build_type = PROTOLATHE
+	materials = list(/datum/material/plastic = 500)
+	build_path = /obj/item/stack/sticky_tape/surgical
+	category = list("initial", "Medical")
+	departmental_flags = DEPARTMENTAL_FLAG_MEDICAL
+
 /datum/design/paper_reader
 	name = "Eletronic Paper Reader"
 	desc = "A device to read papers for blind people."

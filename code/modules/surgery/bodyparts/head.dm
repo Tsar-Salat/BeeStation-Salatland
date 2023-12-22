@@ -15,6 +15,9 @@
 	stam_damage_coeff = 1
 	max_stamina_damage = 100
 	is_dimorphic = TRUE
+	wound_resistance = 10
+	specific_locations = list("left eyebrow", "cheekbone", "neck", "throat", "jawline", "entire face")
+	scars_covered_by_clothes = FALSE
 
 	var/mob/living/brain/brainmob = null //The current occupant.
 	var/obj/item/organ/brain/brain = null //The brain organ
