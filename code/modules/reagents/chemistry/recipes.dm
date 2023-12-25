@@ -2,19 +2,29 @@
 	var/name = null
 	var/id = null
 	var/list/results = new/list()
+	///Required chemicals that are USED in the reaction
 	var/list/required_reagents = new/list()
+	///Required chemicals that must be present in the container but are not USED.
 	var/list/required_catalysts = new/list()
 
 	// Both of these variables are mostly going to be used with slime cores - but if you want to, you can use them for other things
-	var/required_container = null // the exact container path required for the reaction to happen
-	var/required_other = 0 // an integer required for the reaction to happen
+	/// the exact container path required for the reaction to happen
+	var/required_container
+	/// an integer required for the reaction to happen
+	var/required_other = 0
 
-	var/mob_react = TRUE //Determines if a chemical reaction can occur inside a mob
+	///Determines if a chemical reaction can occur inside a mob
+	var/mob_react = TRUE
+	///The message shown to nearby people upon mixing, if applicable
+	var/mix_message = "The solution begins to bubble."
+	///The sound played upon mixing, if applicable
+	var/mix_sound = 'sound/effects/bubbles.ogg'
 
+	/// Set to TRUE if you want the recipe to only react when it's BELOW the required temp.
+	var/is_cold_recipe = FALSE
 	var/required_temp = 0
-	var/is_cold_recipe = 0 // Set to 1 if you want the recipe to only react when it's BELOW the required temp.
-	var/mix_message = "The solution begins to bubble." //The message shown to nearby people upon mixing, if applicable
-	var/mix_sound = 'sound/effects/bubbles.ogg' //The sound played upon mixing, if applicable
+
+
 
 // Extra checks for the reaction to occur.
 /datum/chemical_reaction/proc/can_react(datum/reagents/holder)
