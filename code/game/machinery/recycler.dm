@@ -35,8 +35,12 @@
 		/datum/material/titanium,
 		/datum/material/bluespace
 	)
-	AddComponent(/datum/component/material_container, allowed_materials, INFINITY, FALSE, null, null, null, TRUE, _breakdown_flags=BREAKDOWN_FLAGS_RECYCLER)
-	AddComponent(/datum/component/butchering, 1, amount_produced,amount_produced/5)
+	AddComponent(/datum/component/material_container, allowed_materials, INFINITY, MATCONTAINER_NO_INSERT|BREAKDOWN_FLAGS_RECYCLER)
+	AddComponent(/datum/component/butchering, \
+	speed = 0.1 SECONDS, \
+	effectiveness = amount_produced, \
+	bonus_modifier = amount_produced/5, \
+	)
 	. = ..()
 	update_icon()
 	req_one_access = get_all_accesses() + get_all_centcom_access()
