@@ -17,6 +17,8 @@ Simple datum which is instanced once per type and is used for every object of sa
 	var/greyscale_colors
 	///Base alpha of the material, is used for greyscale icons.
 	var/alpha
+	///Bitflags that influence how SSmaterials handles this material.
+	var/init_flags = MATERIAL_INIT_MAPLOAD
 	///Materials "Traits". its a map of key = category | Value = Bool. Used to define what it can be used for
 	var/list/categories = list()
 	///The type of sheet this material creates. This should be replaced as soon as possible by greyscale sheets
@@ -84,7 +86,7 @@ Simple datum which is instanced once per type and is used for every object of sa
 
 
 ///This proc is called when the material is removed from an object.
-/datum/material/proc/on_removed(atom/source, material_flags)
+/datum/material/proc/on_removed(atom/source, amount, material_flags)
 	if(material_flags & MATERIAL_COLOR) //Prevent changing things with pre-set colors, to keep colored toolboxes their looks for example
 		if(color)
 			source.remove_atom_colour(FIXED_COLOUR_PRIORITY, color)
@@ -97,10 +99,10 @@ Simple datum which is instanced once per type and is used for every object of sa
 		source.name = initial(source.name)
 
 	if(istype(source, /obj)) //objs
-		on_removed_obj(source, material_flags)
+		on_removed_obj(source, amount, material_flags)
 
 ///This proc is called when the material is removed from an object specifically.
-/datum/material/proc/on_removed_obj(var/obj/o, amount, material_flags)
+/datum/material/proc/on_removed_obj(obj/o, amount, material_flags)
 	if(material_flags & MATERIAL_AFFECT_STATISTICS)
 		var/new_max_integrity = initial(o.max_integrity)
 		o.modify_max_integrity(new_max_integrity)
@@ -114,6 +116,9 @@ Simple datum which is instanced once per type and is used for every object of sa
 			new_inhand_left = initial(item.greyscale_config_inhand_left),
 			new_inhand_right = initial(item.greyscale_config_inhand_right)
 		)
+
+/datum/material/proc/on_removed_turf(turf/T, amount, material_flags)
+	return
 
 /**
  * This proc is called when the mat is found in an item that's consumed by accident. see /obj/item/proc/on_accidental_consumption.
@@ -131,3 +136,14 @@ Simple datum which is instanced once per type and is used for every object of sa
 		if(type != initial(path.material_skin))
 			continue
 		return path
+
+/** Returns the composition of this material.
+  *
+  * Mostly used for alloys when breaking down materials.
+  *
+  * Arguments:
+  * - amount: The amount of the material to break down.
+  * - breakdown_flags: Some flags dictating how exactly this material is being broken down.
+  */
+/datum/material/proc/return_composition(amount=1, breakdown_flags=NONE)
+	return list((src) = amount) // Yes we need the parenthesis, without them BYOND stringifies src into "src" and things break.

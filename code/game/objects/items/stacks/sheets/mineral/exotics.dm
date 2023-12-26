@@ -49,7 +49,9 @@ Exotic mineral Sheets
 	item_state = "sheet-abductor"
 	singular_name = "alien alloy sheet"
 	sheettype = "abductor"
+	mats_per_unit = list(/datum/material/alloy/alien=MINERAL_MATERIAL_AMOUNT)
 	merge_type = /obj/item/stack/sheet/mineral/abductor
+	material_type = /datum/material/alloy/alien
 
 /obj/item/stack/sheet/mineral/abductor/get_main_recipes()
 	. = ..()

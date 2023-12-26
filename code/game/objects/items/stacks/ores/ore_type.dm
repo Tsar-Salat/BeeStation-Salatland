@@ -195,6 +195,7 @@ STACKSIZE_MACRO(/obj/item/stack/ore/bananium)
 	singular_name = "titanium ore chunk"
 	points = 38
 	mats_per_unit = list(/datum/material/titanium=MINERAL_MATERIAL_AMOUNT)
+
 	refined_type = /obj/item/stack/sheet/mineral/titanium
 	scan_state = "rock_Titanium"
 	spreadChance = 5
