@@ -37,9 +37,9 @@
 	)
 	AddComponent(/datum/component/material_container, allowed_materials, INFINITY, MATCONTAINER_NO_INSERT|BREAKDOWN_FLAGS_RECYCLER)
 	AddComponent(/datum/component/butchering, \
-	speed = 0.1 SECONDS, \
-	effectiveness = amount_produced, \
-	bonus_modifier = amount_produced/5, \
+	0.1 SECONDS, \
+	_effectiveness = amount_produced, \
+	_bonus_modifier = amount_produced/5, \
 	)
 	. = ..()
 	update_icon()

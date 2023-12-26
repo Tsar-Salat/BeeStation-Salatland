@@ -84,7 +84,7 @@
 	)
 
 	if(remote_materials)
-		AddComponent(/datum/component/remote_materials, "modfab", mapload, TRUE, auto_link, breakdown_flags=BREAKDOWN_FLAGS_LATHE)
+		AddComponent(/datum/component/remote_materials, "modfab", mapload, TRUE, auto_link, mat_container_flags=BREAKDOWN_FLAGS_LATHE)
 	else
 		AddComponent(/datum/component/material_container, allowed_mats, 0, MATCONTAINER_EXAMINE, null, null, CALLBACK(src, PROC_REF(AfterMaterialInsert)))
 	. = ..()
