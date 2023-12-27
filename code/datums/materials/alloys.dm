@@ -31,6 +31,7 @@
 	name = "plasteel"
 	desc = "The heavy duty result of infusing iron with plasma."
 	color = "#706374"
+	greyscale_colors = "#706374"
 	init_flags = MATERIAL_INIT_MAPLOAD
 	value_per_unit = 0.135
 	strength_modifier = 1.25
@@ -63,6 +64,7 @@
 	name = "plastitanium"
 	desc = "The extremely heat resistant result of infusing titanium with plasma."
 	color = "#3a313a"
+	greyscale_colors = "#3a313a"
 	init_flags = MATERIAL_INIT_MAPLOAD
 	value_per_unit = 0.225
 	strength_modifier = 0.9	// It's a lightweight alloy.

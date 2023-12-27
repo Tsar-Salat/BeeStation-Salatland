@@ -1,7 +1,7 @@
 /* Table Frames
  * Contains:
- *		Frames
- *		Wooden Frames
+ * Frames
+ * Wooden Frames
  */
 
 
@@ -20,6 +20,7 @@
 	max_integrity = 100
 	var/framestack = /obj/item/stack/rods
 	var/framestackamount = 2
+
 
 /obj/structure/table_frame/wrench_act(mob/living/user, obj/item/I)
 	to_chat(user, "<span class='notice'>You start disassembling [src]...</span>")

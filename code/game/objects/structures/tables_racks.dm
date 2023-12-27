@@ -415,11 +415,11 @@
 	icon = 'icons/obj/smooth_structures/tables/fancy_tables/fancy_table.dmi'
 	icon_state = "fancy_table-0"
 	base_icon_state = "fancy_table"
-	smoothing_groups = list(SMOOTH_GROUP_FANCY_WOOD_TABLES) //Don't smooth with SMOOTH_GROUP_TABLES or SMOOTH_GROUP_WOOD_TABLES
-	canSmoothWith = list(SMOOTH_GROUP_FANCY_WOOD_TABLES)
 	frame = /obj/structure/table_frame
 	framestack = /obj/item/stack/rods
 	buildstack = /obj/item/stack/tile/carpet
+	smoothing_groups = list(SMOOTH_GROUP_FANCY_WOOD_TABLES) //Don't smooth with SMOOTH_GROUP_TABLES or SMOOTH_GROUP_WOOD_TABLES
+	canSmoothWith = list(SMOOTH_GROUP_FANCY_WOOD_TABLES)
 
 /obj/structure/table/wood/fancy/black
 	icon_state = "fancy_table_black-0"
