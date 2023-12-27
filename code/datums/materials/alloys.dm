@@ -29,6 +29,7 @@
   */
 /datum/material/alloy/plasteel
 	name = "plasteel"
+	id = "plasteel"
 	desc = "The heavy duty result of infusing iron with plasma."
 	color = "#706374"
 	greyscale_colors = "#706374"
@@ -62,6 +63,7 @@
   */
 /datum/material/alloy/plastitanium
 	name = "plastitanium"
+	id = "plastitanium"
 	desc = "The extremely heat resistant result of infusing titanium with plasma."
 	color = "#3a313a"
 	greyscale_colors = "#3a313a"
@@ -80,6 +82,7 @@
   */
 /datum/material/alloy/plasmaglass
 	name = "plasmaglass"
+	id = "plasmaglass"
 	desc = "Plasma-infused silicate. It is much more durable and heat resistant than either of its component materials."
 	color = "#ff80f4"
 	alpha = 150
@@ -97,6 +100,7 @@
   */
 /datum/material/alloy/titaniumglass
 	name = "titanium glass"
+	id = "titanium glass"
 	desc = "A specialized silicate-titanium alloy that is commonly used in shuttle windows."
 	color = "#cfbee0"
 	alpha = 150
