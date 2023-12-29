@@ -40,7 +40,7 @@
 				to_chat(c, "<span class='boldwarning'>You are already reloading an area! Please wait for it to fully finish loading before trying to load another!</span>")
 				deselect_region()
 				return
-		G.defineRegion(cornerA, cornerB, 1)
+		G.define_region(cornerA, cornerB, 1)
 		highlight_region(G.map)
 		var/confirm = alert("Are you sure you want run the map generator?", "Run generator", "Yes", "No")
 		if(confirm == "Yes")

@@ -15,36 +15,36 @@ mapGenerator:
 		Example: defineRegion(locate(1,1,1),locate(5,5,5),0)
 		Desc: Sets the bounds of the mapGenerator's "map"
 
-	defineCircularRegion(var/turf/Start, var/turf/End, var/replace = 0)
-		Example: defineCircularRegion(locate(1,1,1),locate(5,5,5),0)
+	define_circular_region(var/turf/Start, var/turf/End, var/replace = 0)
+		Example: define_circular_region(locate(1,1,1),locate(5,5,5),0)
 		Desc: Sets the mapGenerator's "map" as a circle, with center in the middle of Start and End's X,Y,Z coordinates
 
-	undefineRegion()
-		Example: undefineRegion()
+	undefine_region()
+		Example: undefine_region()
 		Desc: Empties the map generator list
 
-	checkRegion(var/turf/Start, var/turf/End)
-		Example: checkRegion(locate(1,1,1), locate(5,5,5))
+	check_region(var/turf/Start, var/turf/End)
+		Example: check_region(locate(1,1,1), locate(5,5,5))
 		Desc: Checks if a rectangle between Start's coords and End's coords is valid
-		Existing Calls: mapGenerator/defineRegion(), mapGenerator/defineCircularRegion()
+		Existing Calls: mapGenerator/define_region(), mapGenerator/define_circular_region()
 
 	generate()
 		Example: generate()
 		Desc: Orders all mapGeneratorModules in the modules list to generate()
 
-	generateOneTurf(var/turf/T)
-		Example: generateOneTurf(locate(1,1,1))
+	generate_one_turf(var/turf/T)
+		Example: generate_one_turf(locate(1,1,1))
 		Desc: Orders all mapGeneratorModules in the modules list to place(T) on this turf
 
-	initialiseModules()
-		Example: initialiseModules()
+	initialise_modules()
+		Example: initialise_modules()
 		Desc: Replaces all typepaths in the modules list with actual /datum/mapGenerator/Module types
 		Existing Calls: mapGenerator/New()
 
-	syncModules()
-		Example: syncModules()
+	sync_modules()
+		Example: sync_modules()
 		Desc: Sets the Mother variable on all mapGeneratorModules in the modules list to this mapGenerator
-		Existing Calls: initialiseModules(),generate(),generateOneTurf()
+		Existing Calls: initialise_modules(),generate(),generate_one_turf()
 
 
 mapGeneratorModule
@@ -54,7 +54,7 @@ mapGeneratorModule
 	sync(var/datum/mapGenerator/mum)
 		Example: sync(a_mapGenerator_as_a_variable)
 		Desc: Sets the Mother variable to the mum argument
-		Existing Calls: mapGenerator/syncModules()
+		Existing Calls: mapGenerator/sync_modules()
 
 	generate()
 		Example: generate()
@@ -64,7 +64,7 @@ mapGeneratorModule
 	place(var/turf/T)
 		Example: place(locate(1,1,1))
 		Desc: Run this mapGeneratorModule's effects on this turf (Spawning atoms, Changing turfs)
-		Existing Calls: mapGenerator/generate(), mapGenerator/generateOneTurf()
+		Existing Calls: mapGenerator/generate(), mapGenerator/generate_one_turf()
 
 	checkPlaceAtom(var/turf/T)
 		Example: checkPlace(locate(1,1,1))
@@ -91,10 +91,10 @@ Simple Workflow:
 
 	4. Create the mapGenerator type you created
 
-	5. Call yourMapGeneratorType.defineRegion(locate(X,Y,Z), locate(X,Y,Z))
+	5. Call yourmap_generator_type.defineRegion(locate(X,Y,Z), locate(X,Y,Z))
 	 #Note: The above X/Y/Zs are the coordinates of the start and end turfs, the locate() simply finds the turf for the code
 
-	6. Call yourMapGeneratorType.generate(), this will cause all the modules in the generator to build within the map bounds
+	6. Call yourmap_generator_type.generate(), this will cause all the modules in the generator to build within the map bounds
 
 Option Suggestions:
 

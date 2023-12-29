@@ -1,22 +1,22 @@
-/datum/mapGeneratorModule/bottomLayer/repairFloorPlasteel
+/datum/map_generator_module/bottom_layer/repair_floor_plaststeel
 	spawnableTurfs = list(/turf/open/floor/plasteel = 100)
 	var/ignore_wall = FALSE
 	allowAtomsOnSpace = TRUE
 
-/datum/mapGeneratorModule/bottomLayer/repairFloorPlasteel/place(turf/T)
+/datum/map_generator_module/bottom_layer/repair_floor_plaststeel/place(turf/T)
 	if(isclosedturf(T) && !ignore_wall)
 		return FALSE
 	return ..()
 
-/datum/mapGeneratorModule/bottomLayer/repairFloorPlasteel/flatten
+/datum/map_generator_module/bottom_layer/repair_floor_plaststeel/flatten
 	ignore_wall = TRUE
 
-/datum/mapGeneratorModule/border/normalWalls
+/datum/map_generator_module/border/normal_walls
 	spawnableAtoms = list()
 	spawnableTurfs = list(/turf/closed/wall = 100)
 	allowAtomsOnSpace = TRUE
 
-/datum/mapGeneratorModule/reload_station_map/generate()
+/datum/map_generator_module/reload_station_map/generate()
 	if(!istype(mother, /datum/mapGenerator/repair/reload_station_map))
 		return
 	var/datum/mapGenerator/repair/reload_station_map/mother1 = mother
@@ -61,30 +61,30 @@
 	GLOB.reloading_map = FALSE
 
 /datum/mapGenerator/repair
-	modules = list(/datum/mapGeneratorModule/bottomLayer/repairFloorPlasteel,
-	/datum/mapGeneratorModule/bottomLayer/repressurize)
+	modules = list(/datum/map_generator_module/bottom_layer/repair_floor_plaststeel,
+	/datum/map_generator_module/bottom_layer/repressurize)
 	buildmode_name = "Repair: Floor"
 
 /datum/mapGenerator/repair/delete_walls
-	modules = list(/datum/mapGeneratorModule/bottomLayer/repairFloorPlasteel/flatten,
-	/datum/mapGeneratorModule/bottomLayer/repressurize)
+	modules = list(/datum/map_generator_module/bottom_layer/repair_floor_plaststeel/flatten,
+	/datum/map_generator_module/bottom_layer/repressurize)
 	buildmode_name = "Repair: Floor: Flatten Walls"
 
 /datum/mapGenerator/repair/enclose_room
-	modules = list(/datum/mapGeneratorModule/bottomLayer/repairFloorPlasteel/flatten,
-	/datum/mapGeneratorModule/border/normalWalls,
-	/datum/mapGeneratorModule/bottomLayer/repressurize)
+	modules = list(/datum/map_generator_module/bottom_layer/repair_floor_plaststeel/flatten,
+	/datum/map_generator_module/border/normal_walls,
+	/datum/map_generator_module/bottom_layer/repressurize)
 	buildmode_name = "Repair: Generate Aired Room"
 
 /datum/mapGenerator/repair/reload_station_map
-	modules = list(/datum/mapGeneratorModule/bottomLayer/massdelete/no_delete_mobs)
+	modules = list(/datum/map_generator_module/bottom_layer/massdelete/no_delete_mobs)
 	var/x_low = 0
 	var/x_high = 0
 	var/y_low = 0
 	var/y_high = 0
 	var/z = 0
 	var/cleanload = FALSE
-	var/datum/mapGeneratorModule/reload_station_map/loader
+	var/datum/map_generator_module/reload_station_map/loader
 	buildmode_name = "Repair: Reload Block \[DO NOT USE\]"
 
 /datum/mapGenerator/repair/reload_station_map/clean
@@ -92,10 +92,10 @@
 	cleanload = TRUE
 
 /datum/mapGenerator/repair/reload_station_map/clean/in_place
-	modules = list(/datum/mapGeneratorModule/bottomLayer/massdelete/regeneration_delete)
+	modules = list(/datum/map_generator_module/bottom_layer/massdelete/regeneration_delete)
 	buildmode_name = "Repair: Reload Block - Mass Delete - In Place"
 
-/datum/mapGenerator/repair/reload_station_map/defineRegion(turf/start, turf/end)
+/datum/mapGenerator/repair/reload_station_map/define_region(turf/start, turf/end)
 	. = ..()
 	if(!is_station_level(start.z) || !is_station_level(end.z))
 		return
@@ -111,7 +111,7 @@ GLOBAL_VAR_INIT(reloading_map, FALSE)
 	if(!loader)
 		loader = new
 	if(cleanload)
-		..()			//Trigger mass deletion.
+		..() //Trigger mass deletion.
 	modules |= loader
-	syncModules()
+	sync_modules()
 	loader.generate()

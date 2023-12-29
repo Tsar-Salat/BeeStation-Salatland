@@ -15,7 +15,7 @@
 	var/list/type_map = list(/turf/open/floor/plating, /turf/closed/wall)
 	var/turf/start = null
 
-/datum/mapGenerator/ca/defineRegion(turf/Start, turf/End, replace = 0)
+/datum/mapGenerator/ca/define_region(turf/Start, turf/End, replace = 0)
 	. = ..()
 
 	var/min_x = min(Start.x,End.x)
