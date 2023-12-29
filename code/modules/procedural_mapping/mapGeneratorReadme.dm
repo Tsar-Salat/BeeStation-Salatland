@@ -106,7 +106,7 @@ Option Suggestions:
 Using the Modules list
 
 	Simply think of it like each module is a layer in a graphics editing program!
-	To help you do this templates such as /mapGeneratorModule/bottomLayer have been provided with appropriate default settings.
+	To help you do this templates such as /mapGeneratorModule/bottom_layer have been provided with appropriate default settings.
 	These are located near the bottom of mapGeneratorModule.dm
 	you would order your list left to right, top to bottom, e.g:
 	modules = list(bottomLayer,nextLayer,nextNextLayer) etc.

@@ -115,7 +115,7 @@
 
 /*Cabin's forest. Removed in the new cabin map since it was buggy and I prefer manual placement.*/
 /datum/mapGenerator/snowy
-	modules = list(/datum/mapGeneratorModule/bottomlayer/snow, \
+	modules = list(/datum/mapGeneratorModule/bottom_layer/snow, \
 	/datum/mapGeneratorModule/snow/pineTrees, \
 	/datum/mapGeneratorModule/snow/deadTrees, \
 	/datum/mapGeneratorModule/snow/randBushes, \
@@ -127,7 +127,7 @@
 		return ..(T)
 	return 0
 
-/datum/mapGeneratorModule/bottomlayer/snow
+/datum/mapGeneratorModule/bottom_layer/snow
 	spawnableTurfs = list(/turf/open/floor/plating/asteroid/snow/atmosphere = 100)
 
 /datum/mapGeneratorModule/snow/pineTrees

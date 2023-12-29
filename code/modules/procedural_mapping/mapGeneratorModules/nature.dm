@@ -27,7 +27,7 @@
 
 
 //Grass turfs
-/datum/mapGeneratorModule/bottomLayer/grassTurfs
+/datum/mapGeneratorModule/bottom_layer/grassTurfs
 	spawnableTurfs = list(/turf/open/floor/grass = 100)
 
 

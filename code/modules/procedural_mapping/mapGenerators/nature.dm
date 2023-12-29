@@ -2,7 +2,7 @@
 //Exists primarily as a test type.
 
 /datum/mapGenerator/nature
-	modules = list(/datum/mapGeneratorModule/bottomLayer/grassTurfs, \
+	modules = list(/datum/mapGeneratorModule/bottom_layer/grassTurfs, \
 	/datum/mapGeneratorModule/pineTrees, \
 	/datum/mapGeneratorModule/deadTrees, \
 	/datum/mapGeneratorModule/randBushes, \

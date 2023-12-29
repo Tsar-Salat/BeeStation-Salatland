@@ -128,13 +128,13 @@
 
 //Settings appropriate for a turf that covers the entire map region, eg a fill colour on a bottom layer in a graphics program.
 //Should only have one of these in your mapGenerator unless you want to waste CPU
-/datum/mapGeneratorModule/bottomLayer
+/datum/mapGeneratorModule/bottom_layer
 	clusterCheckFlags = CLUSTER_CHECK_NONE
 	spawnableAtoms = list()//Recommended: No atoms.
 	spawnableTurfs = list(/turf = 100)
 
 //Settings appropriate for turfs/atoms that cover SOME of the map region, sometimes referred to as a splatter layer.
-/datum/mapGeneratorModule/splatterLayer
+/datum/mapGeneratorModule/splatter_layer
 	clusterCheckFlags = CLUSTER_CHECK_ALL
 	spawnableAtoms = list(/atom = 30)
 	spawnableTurfs = list(/turf = 30)
