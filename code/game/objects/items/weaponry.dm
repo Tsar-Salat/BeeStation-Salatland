@@ -617,6 +617,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 /obj/item/statuebust/Initialize(mapload)
 	. = ..()
 	AddElement(/datum/element/art, impressiveness)
+	addtimer(CALLBACK(src, /datum.proc/AddComponent, /datum/component/beauty, 1000), 0)
 
 /obj/item/statuebust/hippocratic
 	name = "hippocrates bust"

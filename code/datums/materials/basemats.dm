@@ -20,7 +20,8 @@
 	categories = list(MAT_CATEGORY_RIGID = TRUE/*, MAT_CATEGORY_BASE_RECIPES = TRUE*/) //Excluding glass for now
 	integrity_modifier = 0.1
 	sheet_type = /obj/item/stack/sheet/glass
-	value_per_unit = 0.0025
+	value_per_unit = 0.001
+	beauty_modifier = 0.05
 
 /*
 Color matrices are like regular colors but unlike with normal colors, you can go over 255 on a channel.
@@ -36,7 +37,8 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	greyscale_colors = "#e3f1f8"
 	categories = list(MAT_CATEGORY_ORE = TRUE, MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_BASE_RECIPES = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/silver
-	value_per_unit = 0.025
+	value_per_unit = 0.25
+	beauty_modifier = 0.075
 
 ///Slight force increase
 /datum/material/gold
@@ -49,6 +51,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	categories = list(MAT_CATEGORY_ORE = TRUE, MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_BASE_RECIPES = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/gold
 	value_per_unit = 0.0625
+	beauty_modifier = 0.15
 
 ///Has no special properties
 /datum/material/diamond
@@ -61,6 +64,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	categories = list(MAT_CATEGORY_ORE = TRUE, MAT_CATEGORY_RIGID = TRUE/*, MAT_CATEGORY_BASE_RECIPES = TRUE*/)
 	sheet_type = /obj/item/stack/sheet/mineral/diamond
 	value_per_unit = 0.25
+	beauty_modifier = 0.3
 
 ///Is slightly radioactive
 /datum/material/uranium
@@ -72,6 +76,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	categories = list(MAT_CATEGORY_ORE = TRUE, MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_BASE_RECIPES = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/uranium
 	value_per_unit = 0.05
+	beauty_modifier = 0.3 //It shines so beautiful
 
 /datum/material/uranium/on_applied(atom/source, amount, material_flags)
 	. = ..()
@@ -91,6 +96,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	categories = list(MAT_CATEGORY_ORE = TRUE, MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_BASE_RECIPES = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/plasma
 	value_per_unit = 0.1
+	beauty_modifier = 0.15
 
 /datum/material/plasma/on_applied(atom/source, amount, material_flags)
 	. = ..()
@@ -112,6 +118,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	greyscale_colors = "#4e7dffC8"
 	alpha = 200
 	categories = list(MAT_CATEGORY_ORE = TRUE)
+	beauty_modifier = 0.5
 	sheet_type = /obj/item/stack/ore/bluespace_crystal/refined
 	value_per_unit = 0.15
 
@@ -125,6 +132,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	categories = list(MAT_CATEGORY_ORE = TRUE, MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_BASE_RECIPES = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/bananium
 	value_per_unit = 0.5
+	beauty_modifier = 0.5
 
 /datum/material/bananium/on_applied(atom/source, amount, material_flags)
 	. = ..()
@@ -148,6 +156,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	categories = list(MAT_CATEGORY_ORE = TRUE, MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_BASE_RECIPES = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/titanium
 	value_per_unit = 0.0625
+	beauty_modifier = 0.05
 
 /*
 /datum/material/runite
@@ -159,6 +168,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	categories = list(MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_BASE_RECIPES = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/runite
 	value_per_unit = 0.3
+	beauty_modifier = 0.5
 */
 
 ///Force decrease
@@ -172,6 +182,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	categories = list(MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_BASE_RECIPES = TRUE)
 	sheet_type = /obj/item/stack/sheet/plastic
 	value_per_unit = 0.0125
+	beauty_modifier = -0.01
 
 ///Force decrease and mushy sound effect. (Not yet implemented)
 /datum/material/biomass
@@ -194,6 +205,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	categories = list(MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_BASE_RECIPES = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/adamantine
 	value_per_unit = 0.25
+	beauty_modifier = 0.4
 
 
 /datum/material/copper
@@ -204,3 +216,5 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	greyscale_colors = "#d95802"
 	categories = list(MAT_CATEGORY_ORE = TRUE, MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_BASE_RECIPES = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/copper
+	value_per_unit = 0.0025
+	// shares the same value/beauty as iron
