@@ -1,11 +1,19 @@
 //ATMOS
 //stuff you should probably leave well alone!
-#define R_IDEAL_GAS_EQUATION	8.31	//! kPa*L/(K*mol)
-#define ONE_ATMOSPHERE			101.325	//! kPa
-#define TCMB					2.7		//! -270.3degC
-#define TCRYO					225		//! -48.15degC
-#define T0C						273.15	//! 0degC
-#define T20C					293.15	//! 20degC
+/// kPa*L/(K*mol)
+#define R_IDEAL_GAS_EQUATION 8.31
+/// kPa
+#define ONE_ATMOSPHERE 101.325
+/// -270.3degC
+#define TCMB 2.7
+/// -48.15degC
+#define TCRYO 225
+/// 0degC
+#define T0C 273.15
+/// 20degC
+#define T20C 293.15
+/// -14C - Temperature used for kitchen cold room, medical freezer, etc.
+#define COLD_ROOM_TEMP 259.15
 
 #define MOLES_CELLSTANDARD		(ONE_ATMOSPHERE*CELL_VOLUME/(T20C*R_IDEAL_GAS_EQUATION))	//! moles in a 2.5 m^3 cell at 101.325 Pa and 20 degC
 #define M_CELL_WITH_RATIO		(MOLES_CELLSTANDARD * 0.005) //! compared against for superconductivity
@@ -88,6 +96,19 @@
 /// 270k is about -3c, that is below freezing and would hurt over time.
 #define BODYTEMP_COLD_DAMAGE_LIMIT (BODYTEMP_NORMAL - 40)
 
+// Body temperature warning icons
+/// The temperature the red icon is displayed.
+#define BODYTEMP_HEAT_WARNING_3 (BODYTEMP_HEAT_DAMAGE_LIMIT + 360) //+700k
+/// The temperature the orange icon is displayed.
+#define BODYTEMP_HEAT_WARNING_2 (BODYTEMP_HEAT_DAMAGE_LIMIT + 120) //460K
+/// The temperature the yellow icon is displayed.
+#define BODYTEMP_HEAT_WARNING_1 (BODYTEMP_HEAT_DAMAGE_LIMIT) //340K
+/// The temperature the light green icon is displayed.
+#define BODYTEMP_COLD_WARNING_1 (BODYTEMP_COLD_DAMAGE_LIMIT) //270k
+/// The temperature the cyan icon is displayed.
+#define BODYTEMP_COLD_WARNING_2 (BODYTEMP_COLD_DAMAGE_LIMIT - 70) //200k
+/// The temperature the blue icon is displayed.
+#define BODYTEMP_COLD_WARNING_3 (BODYTEMP_COLD_DAMAGE_LIMIT - 150) //120k
 
 #define SPACE_HELM_MIN_TEMP_PROTECT			2.0		//! what min_cold_protection_temperature is set to for space-helmet quality headwear. MUST NOT BE 0.
 #define SPACE_HELM_MAX_TEMP_PROTECT			1500	//! Thermal insulation works both ways /Malkevin
