@@ -50,7 +50,7 @@
 /obj/effect/decal/cleanable/trail_holder //not a child of blood on purpose
 	name = "blood"
 	icon = 'icons/effects/blood.dmi'
-	desc = "Your instincts say you shouldn't be following these."\
+	desc = "Your instincts say you shouldn't be following these."
 	beauty = -50
 	var/list/existing_dirs = list()
 

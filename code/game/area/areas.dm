@@ -579,16 +579,6 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 		if(AREA_USAGE_DYNAMIC_START to AREA_USAGE_DYNAMIC_END)
 			power_usage[chan] += amount
 
-///Divides total beauty in the room by roomsize to allow us to get an average beauty per tile.
-/area/proc/update_beauty()
-	if(!areasize)
-		beauty = 0
-		return FALSE
-	if(areasize >= beauty_threshold)
-		beauty = 0
-		return FALSE //Too big
-	beauty = totalbeauty / areasize
-
 /**
  * Call back when an atom enters an area
  *
@@ -599,10 +589,10 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 /area/Entered(atom/movable/arrived, area/old_area)
 	set waitfor = FALSE
 	SEND_SIGNAL(src, COMSIG_AREA_ENTERED, arrived, old_area)
-	for(var/atom/movable/recipient as anything in M.area_sensitive_contents)
-		SEND_SIGNAL(recipient, COMSIG_ENTER_AREA, src)
-	if(!isliving(M))
+	if(!LAZYACCESS(arrived.important_recursive_contents, RECURSIVE_CONTENTS_AREA_SENSITIVE))
 		return
+	for(var/atom/movable/recipient as anything in arrived.important_recursive_contents[RECURSIVE_CONTENTS_AREA_SENSITIVE])
+		SEND_SIGNAL(recipient, COMSIG_ENTER_AREA, src)
 
 /**
  * Called when an atom exits an area
@@ -611,8 +601,20 @@ GLOBAL_LIST_EMPTY(teleportlocs)
  */
 /area/Exited(atom/movable/gone, direction)
 	SEND_SIGNAL(src, COMSIG_AREA_EXITED, gone, direction)
-	for(var/atom/movable/recipient as anything in M.area_sensitive_contents)
+	if(!LAZYACCESS(gone.important_recursive_contents, RECURSIVE_CONTENTS_AREA_SENSITIVE))
+		return
+	for(var/atom/movable/recipient as anything in gone.important_recursive_contents[RECURSIVE_CONTENTS_AREA_SENSITIVE])
 		SEND_SIGNAL(recipient, COMSIG_EXIT_AREA, src)
+
+///Divides total beauty in the room by roomsize to allow us to get an average beauty per tile.
+/area/proc/update_beauty()
+	if(!areasize)
+		beauty = 0
+		return FALSE
+	if(areasize >= beauty_threshold)
+		beauty = 0
+		return FALSE //Too big
+	beauty = totalbeauty / areasize
 
 /**
   * Setup an area (with the given name)

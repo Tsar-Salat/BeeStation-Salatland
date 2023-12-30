@@ -2,9 +2,6 @@
 // When the signal is called: (signal arguments)
 // All signals send the source datum of the signal as the first argument
 
-#define COMSIG_MOVABLE_ENTERED_AREA "enter_area" 							//! from base of area/Entered(): (/area)
-#define COMSIG_MOVABLE_EXITTED_AREA "exit_area" 							//! from base of area/Exited(): (/area)
-
 // /atom/movable signals
 
 ///from base of atom/movable/Moved(): (/atom)
