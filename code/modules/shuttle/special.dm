@@ -146,6 +146,7 @@
 /mob/living/simple_animal/drone/snowflake/bardrone/Initialize(mapload)
 	. = ..()
 	access_card.access |= ACCESS_CENT_BAR
+	become_area_sensitive(ROUNDSTART_TRAIT)
 	ADD_TRAIT(src, TRAIT_BARMASTER, ROUNDSTART_TRAIT)
 	ADD_TRAIT(src, TRAIT_SOMMELIER, ROUNDSTART_TRAIT)
 
@@ -167,6 +168,7 @@
 	access_card.access = get_all_accesses()
 	access_card.access |= ACCESS_CENT_BAR
 	ADD_TRAIT(access_card, TRAIT_NODROP, ABSTRACT_ITEM_TRAIT)
+	become_area_sensitive(ROUNDSTART_TRAIT)
 	ADD_TRAIT(src, TRAIT_BARMASTER, ROUNDSTART_TRAIT)
 	ADD_TRAIT(src, TRAIT_SOMMELIER, ROUNDSTART_TRAIT)
 

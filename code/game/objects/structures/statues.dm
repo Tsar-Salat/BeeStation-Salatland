@@ -21,7 +21,7 @@
 /obj/structure/statue/Initialize(mapload)
 	. = ..()
 	AddElement(art_type, impressiveness)
-	AddComponent(/datum/component/beauty, impressiveness * 75)
+	AddElement(/datum/element/beauty, impressiveness * 75)
 
 /obj/structure/statue/attackby(obj/item/W, mob/living/user, params)
 	add_fingerprint(user)
