@@ -26,8 +26,8 @@
 		if(LAZYLEN(diseases_to_add))
 			AddComponent(/datum/component/infective, diseases_to_add)
 
-	addtimer(CALLBACK(src, /datum.proc/AddComponent, /datum/component/beauty, beauty), 0)
-	
+	AddComponent(/datum/component/beauty, beauty)
+
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = PROC_REF(on_entered),
 		COMSIG_ATOM_EXITED = PROC_REF(on_uncrossed),

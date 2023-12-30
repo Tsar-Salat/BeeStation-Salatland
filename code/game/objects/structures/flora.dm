@@ -324,7 +324,7 @@
 	. = ..()
 	AddComponent(/datum/component/two_handed, require_twohands=TRUE, force_unwielded=10, force_wielded=10)
 	AddComponent(/datum/component/storage/concrete/kirbyplants)
-	addtimer(CALLBACK(src, /datum.proc/AddComponent, /datum/component/beauty, 500), 0)
+	AddComponent(/datum/component/beauty, 500)
 
 /datum/component/storage/concrete/kirbyplants
 	max_items = 1
