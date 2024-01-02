@@ -186,7 +186,6 @@
 	attacktext = "kicks"
 	health = 3
 	maxHealth = 3
-	ventcrawler = VENTCRAWLER_ALWAYS
 	var/amount_grown = 0
 	pass_flags = PASSTABLE | PASSMOB
 	mob_size = MOB_SIZE_TINY
@@ -199,6 +198,7 @@
 	. = ..()
 	pixel_x = base_pixel_x + rand(-6, 6)
 	pixel_y = base_pixel_y + rand(0, 10)
+	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
 	GLOB.total_chickens++
 
 /mob/living/simple_animal/chick/Life()
@@ -249,7 +249,6 @@
 	attacktext = "kicks"
 	health = 15
 	maxHealth = 15
-	ventcrawler = VENTCRAWLER_ALWAYS
 	var/eggsleft = 0
 	var/eggsFertile = TRUE
 	var/body_color
@@ -280,6 +279,8 @@
 	pixel_x = rand(-6, 6)
 	pixel_y = rand(0, 10)
 	GLOB.total_chickens++
+
+	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
 
 /mob/living/simple_animal/chicken/death(gibbed)
 	GLOB.total_chickens--
@@ -317,6 +318,7 @@
 				START_PROCESSING(SSobj, E)
 
 /obj/item/food/egg/var/amount_grown = 0
+
 /obj/item/food/egg/process(delta_time)
 	if(isturf(loc))
 		amount_grown += rand(1,2) * delta_time
@@ -345,9 +347,12 @@
 	egg_type = null
 	attacktext = "pecks"
 	attack_sound = 'sound/creatures/turkey.ogg'
-	ventcrawler = VENTCRAWLER_ALWAYS
 	icon_prefix = "turkey"
 	feedMessages = list("It gobbles up the food voraciously.","It clucks happily.")
 	validColors = list("plain")
 	gold_core_spawnable = FRIENDLY_SPAWN
 	chat_color = "#FFDC9B"
+
+/mob/living/simple_animal/chicken/turkey/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)

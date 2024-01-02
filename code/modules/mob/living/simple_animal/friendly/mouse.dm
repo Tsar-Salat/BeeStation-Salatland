@@ -19,7 +19,6 @@
 	response_disarm = "gently pushes aside"
 	response_harm   = "splats"
 	density = FALSE
-	ventcrawler = VENTCRAWLER_ALWAYS
 	pass_flags = PASSTABLE | PASSMOB
 	mob_size = MOB_SIZE_TINY
 	mob_biotypes = list(MOB_ORGANIC, MOB_BEAST)
@@ -41,6 +40,9 @@
 	icon_living = "mouse_[body_color]"
 	icon_dead = "mouse_[body_color]_dead"
 	held_state = "mouse_[body_color]"
+
+	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
+
 	if(prob(75))
 		rat_diseases += new /datum/disease/advance/random(rand(1, 6), 9, 1, infected = src)
 	var/static/list/loc_connections = list(

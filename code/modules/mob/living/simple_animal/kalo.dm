@@ -12,7 +12,6 @@
 	mob_biotypes = list(MOB_ORGANIC, MOB_BEAST, MOB_REPTILE)
 	mob_size = MOB_SIZE_SMALL
 	pass_flags = PASSTABLE | PASSMOB
-	ventcrawler = VENTCRAWLER_ALWAYS
 	density = FALSE
 	see_in_dark     = 5
 	speak_chance    = 1
@@ -33,6 +32,10 @@
 	var/turns_since_scan = 0
 	var/obj/item/reagent_containers/food/snacks/movement_target
 	mobchatspan = "centcom"
+
+/mob/living/simple_animal/kalo/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
 
 /mob/living/simple_animal/kalo/Destroy()
 	movement_target = null

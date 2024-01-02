@@ -17,7 +17,6 @@
 	density = FALSE
 	pass_flags = PASSMOB
 	mob_size = MOB_SIZE_SMALL
-	ventcrawler = VENTCRAWLER_ALWAYS
 
 	name = "\improper hamster"
 	real_name = "hamster"
@@ -34,6 +33,10 @@
 	worn_slot_flags = ITEM_SLOT_HEAD
 	chat_color = "#D3B277"
 
+/mob/living/simple_animal/pet/hamster/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
+
 /mob/living/simple_animal/pet/hamster/vector //now also viro's source of a solitary, shitty starter disease
 	name = "Vector"
 	desc = "It's Vector the hamster. Definitely not a source of deadly diseases."
@@ -42,6 +45,7 @@
 
 /mob/living/simple_animal/pet/hamster/vector/Initialize(mapload)
 	. = ..()
+	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
 	if(prob(5))
 		var/datum/disease/disease = pick(/datum/disease/cold, /datum/disease/flu, /datum/disease/fluspanish)
 		vector_disease = new disease
