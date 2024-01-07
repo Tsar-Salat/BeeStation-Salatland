@@ -16,11 +16,11 @@
 
 /datum/antagonist/gang/apply_innate_effects(mob/living/mob_override)
 	var/mob/living/M = mob_override || owner.current
-	update_gang_icons_added(M)
+	add_antag_hud(antag_hud_type, antag_hud_name, M)
 
 /datum/antagonist/gang/remove_innate_effects(mob/living/mob_override)
 	var/mob/living/M = mob_override || owner.current
-	update_gang_icons_removed(M)
+	remove_antag_hud(antag_hud_type, M)
 
 /datum/antagonist/gang/get_team()
 	return gang

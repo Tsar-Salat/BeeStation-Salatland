@@ -3,14 +3,15 @@
 #define LING_ABSORB_RECENT_SPEECH			8	//The amount of recent spoken lines to gain on absorbing a mob
 
 /datum/antagonist/changeling
-	name = "Changeling"
-	roundend_category  = "changelings"
+	name = "\improper Changeling"
+	roundend_category = "changelings"
 	antagpanel_category = "Changeling"
 	banning_key = ROLE_CHANGELING
-	required_living_playtime = 4
-	ui_name = "AntagInfoChangeling"
 	antag_moodlet = /datum/mood_event/focused
+	required_living_playtime = 4
+	antag_hud_name = "changeling"
 	hijack_speed = 0.5
+	ui_name = "AntagInfoChangeling"
 	var/you_are_greet = TRUE
 	var/team_mode = FALSE //Should assign team objectives ?
 	var/competitive_objectives = FALSE //Should we assign objectives in competition with other lings?
@@ -379,19 +380,25 @@
 	if(ishuman(C))
 		add_new_profile(C)
 
-/datum/antagonist/changeling/apply_innate_effects()
+/datum/antagonist/changeling/apply_innate_effects(mob/living/mob_override)
 	//Brains optional.
 	var/mob/living/carbon/C = owner.current
-	if(istype(C))
-		var/obj/item/organ/brain/B = C.getorganslot(ORGAN_SLOT_BRAIN)
-		if(B)
-			B.organ_flags &= ~ORGAN_VITAL
-			B.decoy_override = TRUE
-		RegisterSignals(C, list(COMSIG_MOB_MIDDLECLICKON, COMSIG_MOB_ALTCLICKON), PROC_REF(stingAtom))
-	update_changeling_icons_added()
+	if(!isliving(C))
+		return
 
-/datum/antagonist/changeling/remove_innate_effects()
-	update_changeling_icons_removed()
+	var/obj/item/organ/brain/B = C.getorganslot(ORGAN_SLOT_BRAIN)
+	if(B)
+		B.organ_flags &= ~ORGAN_VITAL
+		B.decoy_override = TRUE
+	RegisterSignals(C, list(COMSIG_MOB_MIDDLECLICKON, COMSIG_MOB_ALTCLICKON), PROC_REF(stingAtom))
+	var/mob/living/M = mob_override || owner.current
+	add_antag_hud(antag_hud_type, antag_hud_name, M)
+	handle_clown_mutation(M, "You have evolved beyond your clownish nature, allowing you to wield weapons without harming yourself.")
+
+/datum/antagonist/changeling/remove_innate_effects(mob/living/mob_override)
+	var/mob/living/M = mob_override || owner.current
+	remove_antag_hud(antag_hud_type, M)
+	handle_clown_mutation(M, removing = FALSE)
 	UnregisterSignal(owner.current, list(COMSIG_MOB_MIDDLECLICKON, COMSIG_MOB_ALTCLICKON))
 
 
@@ -497,16 +504,6 @@
 			objectives += identity_theft
 			log_objective(owner, identity_theft.explanation_text)
 		escape_objective_possible = FALSE
-
-/datum/antagonist/changeling/proc/update_changeling_icons_added()
-	var/datum/atom_hud/antag/hud = GLOB.huds[ANTAG_HUD_CHANGELING]
-	hud.join_hud(owner.current)
-	set_antag_hud(owner.current, "changeling")
-
-/datum/antagonist/changeling/proc/update_changeling_icons_removed()
-	var/datum/atom_hud/antag/hud = GLOB.huds[ANTAG_HUD_CHANGELING]
-	hud.leave_hud(owner.current)
-	set_antag_hud(owner.current, null)
 
 /datum/antagonist/changeling/admin_add(datum/mind/new_owner,mob/admin)
 	. = ..()

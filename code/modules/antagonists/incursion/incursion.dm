@@ -1,5 +1,5 @@
 /datum/antagonist/incursion
-	name = "Syndicate Incursion Member"
+	name = "\improper Syndicate Incursion Member"
 	antagpanel_category = "Incursion"
 	banning_key = ROLE_INCURSION
 	required_living_playtime = 4

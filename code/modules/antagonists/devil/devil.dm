@@ -89,6 +89,8 @@ GLOBAL_LIST_INIT(devil_suffix, list(" the Red", " the Soulless", " the Master", 
 	roundend_category = "devils"
 	antagpanel_category = "Devil"
 	banning_key = ROLE_DEVIL
+	antag_hud_type = ANTAG_HUD_DEVIL
+	antag_hud_name = "devil"
 	show_to_ghosts = TRUE
 	var/obligation
 	var/ban
@@ -186,6 +188,9 @@ GLOBAL_LIST_INIT(devil_suffix, list(" the Red", " the Soulless", " the Master", 
 		if(0)
 			to_chat(owner.current, "<span class='warning'>Your hellish powers have been restored.</span>")
 			give_appropriate_spells()
+			var/mob/living/M = mob_override || owner.current
+			add_antag_hud(antag_hud_type, antag_hud_name, M)
+			handle_clown_mutation(M, mob_override ? null : "Your infernal nature has allowed you to overcome your clownishness.")
 		if(BLOOD_THRESHOLD)
 			increase_blood_lizard()
 		if(TRUE_THRESHOLD)
@@ -319,6 +324,10 @@ GLOBAL_LIST_INIT(devil_suffix, list(" the Red", " the Soulless", " the Master", 
 		var/obj/effect/proc_holder/spell/S = X
 		if(is_type_in_typecache(S, devil_spells))
 			owner.RemoveSpell(S)
+	var/mob/living/M = mob_override || owner.current
+	remove_antag_hud(antag_hud_type, M)
+	handle_clown_mutation(M, removing = FALSE)
+	.=..()
 
 /datum/antagonist/devil/proc/give_summon_contract()
 	owner.AddSpell(new /obj/effect/proc_holder/spell/targeted/summon_contract(null))

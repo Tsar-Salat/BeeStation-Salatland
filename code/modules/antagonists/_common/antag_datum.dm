@@ -3,37 +3,61 @@ GLOBAL_LIST(admin_antag_list)
 
 /datum/antagonist
 	var/tips
-	var/name = "Antagonist"
-	var/roundend_category = "other antagonists"				//Section of roundend report, datums with same category will be displayed together, also default header for the section
-	var/show_in_roundend = TRUE								//Set to false to hide the antagonists from roundend report
-	var/prevent_roundtype_conversion = TRUE		//If false, the roundtype will still convert with this antag active
-	var/datum/mind/owner						//Mind that owns this datum
-	var/silent = FALSE							//Silent will prevent the gain/lose texts to show
-	var/can_coexist_with_others = TRUE			//Whether or not the person will be able to have more than one datum
-	var/list/typecache_datum_blacklist = list()	//List of datums this type can't coexist with
+	///Public name for this antagonist. Appears for player prompts and round-end reports.
+	var/name = "\improper Antagonist"
+	///Section of roundend report, datums with same category will be displayed together, also default header for the section
+	var/roundend_category = "other antagonists"
+	///Set to false to hide the antagonists from roundend report
+	var/show_in_roundend = TRUE
+	///If false, the roundtype will still convert with this antag active
+	var/prevent_roundtype_conversion = TRUE
+	///Mind that owns this datum
+	var/datum/mind/owner
+	///Silent will prevent the gain/lose texts to show
+	var/silent = FALSE
+	///Whether or not the person will be able to have more than one datum
+	var/can_coexist_with_others = TRUE
+	///List of datums this type can't coexist with
+	var/list/typecache_datum_blacklist = list()
 	/// The ROLE_X key used for this antagonist.
 	var/banning_key
 	/// Required living playtime to be included in the rolling for this antagonist
 	var/required_living_playtime = 0
-	var/give_objectives = TRUE //Should the default objectives be generated?
-	var/replace_banned = TRUE //Should replace jobbanned player with ghosts if granted.
+	//Should the default objectives be generated?
+	var/give_objectives = TRUE
+	///Should replace jobbanned player with ghosts if granted.
+	var/replace_banned = TRUE
+	///List of the objective datums that this role currently has, completing all objectives at round-end will cause this antagonist to greentext.
 	var/list/objectives = list()
+
 	var/delay_roundend = TRUE
-	var/antag_memory = ""//These will be removed with antag datum
-	var/antag_moodlet //typepath of moodlet that the mob will gain with their status
-	var/ui_name = "AntagInfoGeneric"
+	///String dialogue that is added to the player's in-round notes and memories regarding specifics of that antagonist, eg. the nuke code for nuke ops, or your unlock code for traitors.
+	var/antag_memory = ""
+	///typepath of moodlet that the mob will gain when granted this antagonist type.
+	var/antag_moodlet
 
 	var/can_elimination_hijack = ELIMINATION_NEUTRAL //If these antags are alone when a shuttle elimination happens.
 	/// If above 0, this is the multiplier for the speed at which we hijack the shuttle. Do not directly read, use hijack_speed().
 	var/hijack_speed = 0
+	///Name of the antag hud we provide to this mob.
+	var/antag_hud_name
 	var/count_against_dynamic_roll_chance = TRUE
-	//Antag panel properties
-	var/show_in_antagpanel = TRUE	//This will hide adding this antag type in antag panel, use only for internal subtypes that shouldn't be added directly but still show if possessed by mind
-	var/antagpanel_category = "Uncategorized"	//Antagpanel will display these together, REQUIRED
-	var/show_name_in_check_antagonists = FALSE //Will append antagonist name in admin listings - use for categories that share more than one antag type
-	var/show_to_ghosts = FALSE // Should this antagonist be shown as antag to ghosts? Shouldn't be used for stealthy antagonists like traitors
 
-	/// Weakref to button to access antag interface
+	//Antag panel properties
+	///This will hide adding this antag type in antag panel, use only for internal subtypes that shouldn't be added directly but still show if possessed by mind
+	var/show_in_antagpanel = TRUE
+	///Antagpanel will display these together, REQUIRED
+	var/antagpanel_category = "Uncategorized"
+	///Will append antagonist name in admin listings - use for categories that share more than one antag type
+	var/show_name_in_check_antagonists = FALSE
+	/// Should this antagonist be shown as antag to ghosts? Shouldn't be used for stealthy antagonists like traitors
+	var/show_to_ghosts = FALSE
+
+	//ANTAG UI
+
+	///name of the UI that will try to open, right now using a generic ui
+	var/ui_name = "AntagInfoGeneric"
+	///weakref to button to access antag interface
 	var/datum/weakref/info_button_ref
 
 /datum/antagonist/proc/show_tips(fileid)
@@ -98,6 +122,30 @@ GLOBAL_LIST(admin_antag_list)
 //This handles the removal of antag huds/special abilities
 /datum/antagonist/proc/remove_innate_effects(mob/living/mob_override)
 	return
+
+// Adds the specified antag hud to the player. Usually called in an antag datum file
+/datum/antagonist/proc/add_antag_hud(antag_hud_type, antag_hud_name, mob/living/mob_override)
+	var/datum/atom_hud/antag/hud = GLOB.huds[antag_hud_type]
+	hud.join_hud(mob_override)
+	set_antag_hud(mob_override, antag_hud_name)
+
+
+// Removes the specified antag hud from the player. Usually called in an antag datum file
+/datum/antagonist/proc/remove_antag_hud(antag_hud_type, mob/living/mob_override)
+	var/datum/atom_hud/antag/hud = GLOB.huds[antag_hud_type]
+	hud.join_hud(mob_override)
+	set_antag_hud(mob_override, null)
+
+// Handles adding and removing the clumsy mutation from clown antags. Gets called in apply/remove_innate_effects
+/datum/antagonist/proc/handle_clown_mutation(mob/living/mob_override, message, removing = TRUE)
+	var/mob/living/carbon/human/H = mob_override
+	if(H && istype(H) && H.mind.assigned_role == "Clown")
+		if(removing) // They're a clown becoming an antag, remove clumsy
+			H.dna.remove_mutation(CLOWNMUT)
+			if(!silent && message)
+				to_chat(H, "<span class='boldnotice'>[message]</span>")
+		else
+			H.dna.add_mutation(CLOWNMUT) // We're removing their antag status, add back clumsy
 
 //Assign default team and creates one for one of a kind team antagonists
 /datum/antagonist/proc/create_team(datum/team/team)

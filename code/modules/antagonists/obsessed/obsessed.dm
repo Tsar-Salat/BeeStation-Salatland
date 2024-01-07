@@ -3,6 +3,7 @@
 	show_in_antagpanel = TRUE
 	antagpanel_category = "Other"
 	banning_key = ROLE_OBSESSED
+	antag_hud_name = "obsessed"
 	show_name_in_check_antagonists = TRUE
 	roundend_category = "obsessed"
 	count_against_dynamic_roll_chance = FALSE
@@ -60,11 +61,11 @@
 
 /datum/antagonist/obsessed/apply_innate_effects(mob/living/mob_override)
 	var/mob/living/current = mob_override || owner.current
-	update_obsession_icons_added(current)
+	add_antag_hud(antag_hud_type, antag_hud_name, current)
 
 /datum/antagonist/obsessed/remove_innate_effects(mob/living/mob_override)
 	var/mob/living/current = mob_override || owner.current
-	update_obsession_icons_removed(current)
+	remove_antag_hud(antag_hud_type, current)
 
 /datum/antagonist/obsessed/proc/forge_objectives(datum/mind/obsession_mind)
 	var/list/objectives_left = list("spendtime", "polaroid", "hug")
@@ -153,13 +154,3 @@
 		report += "<span class='redtext big'>The [name] has failed!</span>"
 
 	return report.Join("<br>")
-
-/datum/antagonist/obsessed/proc/update_obsession_icons_added(var/mob/living/carbon/human/obsessed)
-	var/datum/atom_hud/antag/creephud = GLOB.huds[ANTAG_HUD_OBSESSED]
-	creephud.join_hud(obsessed)
-	set_antag_hud(obsessed, "obsessed")
-
-/datum/antagonist/obsessed/proc/update_obsession_icons_removed(var/mob/living/carbon/human/obsessed)
-	var/datum/atom_hud/antag/creephud = GLOB.huds[ANTAG_HUD_OBSESSED]
-	creephud.leave_hud(obsessed)
-	set_antag_hud(obsessed, null)

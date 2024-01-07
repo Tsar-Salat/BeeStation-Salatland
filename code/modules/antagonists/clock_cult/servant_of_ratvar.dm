@@ -3,10 +3,11 @@
 //==========================
 
 /datum/antagonist/servant_of_ratvar
-	name = "Servant Of Ratvar"
+	name = "\improper Servant Of Ratvar"
 	roundend_category = "clock cultists"
 	antagpanel_category = "Clockcult"
 	// TODO: ui_name = "AntagInfoClockCult"
+	antag_hud_name = "clockcult"
 	antag_moodlet = /datum/mood_event/cult
 	banning_key = ROLE_SERVANT_OF_RATVAR
 	required_living_playtime = 4
@@ -68,7 +69,6 @@
 		forbearance = mutable_appearance('icons/effects/genetics.dmi', "servitude", -MUTATIONS_LAYER)
 		owner_mob.add_overlay(forbearance)
 	owner.current.throw_alert("clockinfo", /atom/movable/screen/alert/clockwork/clocksense)
-	SSticker.mode.update_clockcult_icons_added(owner)
 	var/datum/language_holder/LH = owner.current.get_language_holder()
 	LH.grant_language(/datum/language/ratvar, TRUE, TRUE, LANGUAGE_CULTIST)
 

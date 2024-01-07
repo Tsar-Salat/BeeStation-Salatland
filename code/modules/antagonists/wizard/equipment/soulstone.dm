@@ -259,8 +259,7 @@
 
 				for(var/datum/mind/B in SSticker.mode.cult)
 					if(B == A.mind)
-						SSticker.mode.cult -= A.mind
-						SSticker.mode.update_cult_icons_removed(A.mind)
+						SSticker.mode.remove_cultist(A.mind)
 				qdel(T)
 				qdel(src)
 			else

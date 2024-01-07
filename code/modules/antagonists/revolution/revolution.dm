@@ -4,12 +4,12 @@
 #define HEAD_UPDATE_PERIOD 300
 
 /datum/antagonist/rev
-	name = "Revolutionary"
+	name = "\improper Revolutionary"
 	roundend_category = "revolutionaries" // if by some miracle revolutionaries without revolution happen
 	antagpanel_category = "Revolution"
 	banning_key = ROLE_REV
 	antag_moodlet = /datum/mood_event/revolution
-	var/hud_type = "rev"
+	antag_hud_name = "rev"
 	var/datum/team/revolution/rev_team
 
 	/// What message should the player receive when they are being demoted, and the revolution has won?
@@ -27,11 +27,13 @@
 
 /datum/antagonist/rev/apply_innate_effects(mob/living/mob_override)
 	var/mob/living/M = mob_override || owner.current
-	update_rev_icons_added(M)
+	add_antag_hud(antag_hud_type, antag_hud_name, M)
+	handle_clown_mutation(M, mob_override ? null : "Your training has allowed you to overcome your clownish nature, allowing you to wield weapons without harming yourself.")
 
 /datum/antagonist/rev/remove_innate_effects(mob/living/mob_override)
 	var/mob/living/M = mob_override || owner.current
-	update_rev_icons_removed(M)
+	remove_antag_hud(antag_hud_type, M)
+	handle_clown_mutation(M, removing = FALSE)
 
 /datum/antagonist/rev/proc/equip_rev()
 	return
@@ -157,7 +159,7 @@
 	demote()
 
 /datum/antagonist/rev/head
-	name = "Head Revolutionary"
+	name = "\improper Head Revolutionary"
 	hud_type = "rev_head"
 	banning_key = ROLE_REV_HEAD
 	required_living_playtime = 4
@@ -167,16 +169,6 @@
 
 /datum/antagonist/rev/head/antag_listing_name()
 	return ..() + "(Leader)"
-
-/datum/antagonist/rev/proc/update_rev_icons_added(mob/living/M)
-	var/datum/atom_hud/antag/revhud = GLOB.huds[ANTAG_HUD_REV]
-	revhud.join_hud(M)
-	set_antag_hud(M,hud_type)
-
-/datum/antagonist/rev/proc/update_rev_icons_removed(mob/living/M)
-	var/datum/atom_hud/antag/revhud = GLOB.huds[ANTAG_HUD_REV]
-	revhud.leave_hud(M)
-	set_antag_hud(M, null)
 
 /datum/antagonist/rev/proc/can_be_converted(mob/living/candidate)
 	if(!candidate.mind)
@@ -265,9 +257,6 @@
 	var/mob/living/carbon/H = owner.current
 	if(!ishuman(H) && !ismonkey(H))
 		return
-
-	if(remove_clumsy)
-		handle_clown_mutation(H, "Your training has allowed you to overcome your clownish nature, allowing you to wield weapons without harming yourself.")
 
 	if(give_flash)
 		var/obj/item/assembly/flash/handheld/T = new(H)

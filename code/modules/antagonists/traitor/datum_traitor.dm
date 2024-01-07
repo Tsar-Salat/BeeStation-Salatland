@@ -2,14 +2,15 @@
 #define TRAITOR_AI	  "AI"
 
 /datum/antagonist/traitor
-	name = "Traitor"
+	name = "\improper Traitor"
 	roundend_category = "traitors"
 	antagpanel_category = "Traitor"
 	banning_key = ROLE_TRAITOR
 	required_living_playtime = 4
 	antag_moodlet = /datum/mood_event/focused
+	antag_hud_name = "traitor"
+	hijack_speed = 0.5 //10 seconds per hijack stage by default
 	ui_name = "AntagInfoTraitor"
-	hijack_speed = 0.5				//10 seconds per hijack stage by default
 	var/special_role = ROLE_TRAITOR
 	var/employer = "The Syndicate"
 	var/should_give_codewords = TRUE
@@ -28,13 +29,7 @@
 	if(give_objectives)
 		forge_traitor_objectives()
 	finalize_traitor()
-	..()
-
-/datum/antagonist/traitor/apply_innate_effects()
-	handle_clown_mutation(owner.current, silent ? null : "Your training has allowed you to overcome your clownish nature, allowing you to wield weapons without harming yourself.")
-
-/datum/antagonist/traitor/remove_innate_effects()
-	handle_clown_mutation(owner.current, removing=FALSE)
+	return ..()
 
 /datum/antagonist/traitor/on_removal()
 	//Remove malf powers.
@@ -51,7 +46,7 @@
 	if(!silent && owner.current)
 		to_chat(owner.current,"<span class='userdanger'> You are no longer the [special_role]! </span>")
 	owner.special_role = null
-	..()
+	return ..()
 
 /datum/antagonist/traitor/ui_static_data(mob/user)
 	var/datum/component/uplink/uplink = uplink_ref?.resolve()
@@ -249,16 +244,6 @@
 	owner.current.client?.tgui_panel?.give_antagonist_popup("Traitor",
 		"Complete your objectives, no matter the cost.")
 
-/datum/antagonist/traitor/proc/update_traitor_icons_added(datum/mind/traitor_mind)
-	var/datum/atom_hud/antag/traitorhud = GLOB.huds[ANTAG_HUD_TRAITOR]
-	traitorhud.join_hud(owner.current)
-	set_antag_hud(owner.current, "traitor")
-
-/datum/antagonist/traitor/proc/update_traitor_icons_removed(datum/mind/traitor_mind)
-	var/datum/atom_hud/antag/traitorhud = GLOB.huds[ANTAG_HUD_TRAITOR]
-	traitorhud.leave_hud(owner.current)
-	set_antag_hud(owner.current, null)
-
 /datum/antagonist/traitor/proc/finalize_traitor()
 	switch(traitor_kind)
 		if(TRAITOR_AI)
@@ -272,8 +257,10 @@
 
 /datum/antagonist/traitor/apply_innate_effects(mob/living/mob_override)
 	. = ..()
-	update_traitor_icons_added()
 	var/mob/living/M = mob_override || owner.current
+	add_antag_hud(antag_hud_type, antag_hud_name, M)
+	handle_clown_mutation(M, mob_override ? null : "Your training has allowed you to overcome your clownish nature, allowing you to wield weapons without harming yourself.")
+	var/mob/living/silicon/ai/A = M
 	if(isAI(M) && traitor_kind == TRAITOR_AI)
 		var/mob/living/silicon/ai/A = M
 		A.hack_software = TRUE
@@ -281,8 +268,10 @@
 
 /datum/antagonist/traitor/remove_innate_effects(mob/living/mob_override)
 	. = ..()
-	update_traitor_icons_removed()
-	var/mob/living/silicon/ai/A = mob_override || owner.current
+	var/mob/living/M = mob_override || owner.current
+	remove_antag_hud(antag_hud_type, M)
+	handle_clown_mutation(M, removing = FALSE)
+	var/mob/living/silicon/ai/A = M
 	if(istype(A)  && traitor_kind == TRAITOR_AI)
 		A.hack_software = FALSE
 	UnregisterSignal(owner.current, COMSIG_MOVABLE_HEAR, PROC_REF(handle_hearing))
