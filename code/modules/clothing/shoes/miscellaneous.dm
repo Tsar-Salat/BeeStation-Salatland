@@ -1,6 +1,3 @@
-/obj/item/clothing/shoes/proc/step_action() //this was made to rewrite clown shoes squeaking
-	SEND_SIGNAL(src, COMSIG_SHOES_STEP_ACTION)
-
 /obj/item/clothing/shoes/sneakers/mime
 	name = "mime shoes"
 	greyscale_colors = "#ffffff#ffffff"
@@ -50,29 +47,6 @@
 	name = "magical sandals"
 	desc = "A pair of sandals imbued with magic."
 	resistance_flags = FIRE_PROOF |  ACID_PROOF
-
-/obj/item/clothing/shoes/galoshes
-	desc = "A pair of yellow rubber boots, designed to prevent slipping on wet surfaces."
-	name = "galoshes"
-	icon_state = "galoshes"
-	permeability_coefficient = 0.01
-	clothing_flags = NOSLIP
-	slowdown = SHOES_SLOWDOWN+1
-	strip_delay = 30
-	equip_delay_other = 50
-	resistance_flags = NONE
-	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 40, ACID = 75, STAMINA = 0)
-	can_be_bloody = FALSE
-	custom_price = 100
-
-/obj/item/clothing/shoes/galoshes/dry
-	name = "absorbent galoshes"
-	desc = "A pair of orange rubber boots, designed to prevent slipping on wet surfaces while also drying them."
-	icon_state = "galoshes_dry"
-
-/obj/item/clothing/shoes/galoshes/dry/step_action()
-	var/turf/open/t_loc = get_turf(src)
-	SEND_SIGNAL(t_loc, COMSIG_TURF_MAKE_DRY, TURF_WET_WATER, TRUE, INFINITY)
 
 /obj/item/clothing/shoes/clown_shoes
 	desc = "The prankster's standard-issue clowning shoes. Damn, they're huge! Ctrl-click to toggle waddle dampeners."

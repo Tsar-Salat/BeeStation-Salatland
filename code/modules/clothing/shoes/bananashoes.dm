@@ -12,11 +12,13 @@
 	. = ..()
 	AddComponent(/datum/component/material_container, list(/datum/material/bananium), 200000, TRUE, /obj/item/stack)
 	AddComponent(/datum/component/squeak, list('sound/items/bikehorn.ogg'=1), 75, falloff_exponent = 20)
+	RegisterSignal(src, COMSIG_SHOES_STEP_ACTION, .proc/on_step)
 	if(always_noslip)
 		clothing_flags |= NOSLIP
 
-/obj/item/clothing/shoes/clown_shoes/banana_shoes/step_action()
-	. = ..()
+/obj/item/clothing/shoes/clown_shoes/banana_shoes/proc/on_step()
+	SIGNAL_HANDLER
+
 	var/mob/wearer = loc
 	var/datum/component/material_container/bananium = GetComponent(/datum/component/material_container)
 	if(on && istype(wearer))

@@ -26,12 +26,8 @@
 /mob/living/carbon/human/Move(NewLoc, direct)
 	. = ..()
 
-	if(shoes)
-		if(mobility_flags & MOBILITY_STAND)
-			if(loc == NewLoc)
-				if(!has_gravity(loc))
-					return
-				var/obj/item/clothing/shoes/S = shoes
+	if(shoes && mobility_flags & MOBILITY_STAND && loc == NewLoc && has_gravity(loc))
+			var/obj/item/clothing/shoes/S = shoes
 
 				//Bloody footprints
 				var/turf/T = get_turf(src)
