@@ -85,7 +85,7 @@
 	anchored = 1;
 	oreAmount = 50
 	},
-/turf/open/floor/light/colour_cycle,
+/turf/open/floor/light/colour_cycle/dancefloor_b,
 /area/shuttle/escape)
 "r" = (
 /turf/open/floor/mineral/plasma,
@@ -94,11 +94,11 @@
 /turf/open/floor/mineral/silver,
 /area/shuttle/escape)
 "t" = (
-/turf/open/floor/light/colour_cycle,
+/turf/open/floor/light/colour_cycle/dancefloor_a,
 /area/shuttle/escape)
 "v" = (
 /obj/machinery/jukebox/disco/indestructible,
-/turf/open/floor/light/colour_cycle,
+/turf/open/floor/light/colour_cycle/dancefloor_a,
 /area/shuttle/escape)
 "x" = (
 /turf/open/floor/wood,
