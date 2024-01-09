@@ -55,9 +55,8 @@
 
 	glasses = /obj/item/clothing/glasses/thermal/eyepatch
 	mask = /obj/item/clothing/mask/gas/sechailer/swat
-	backpack_contents = list(/obj/item/storage/box/survival/engineer=1,
 	backpack_contents = list(
-		/obj/item/storage/box/engineer=1,
+		/obj/item/storage/box/survival/engineer=1,
 		/obj/item/melee/baton/loaded=1,
 		/obj/item/gun/energy/pulse/pistol/loyalpin=1
 	)
@@ -240,7 +239,7 @@
 	suit_store = /obj/item/tank/internals/oxygen
 	back = /obj/item/mod/control/pre_equipped/responsory/inquisitory/medic
 	backpack_contents = list(
-		/obj/item/gun/medbeam=1
+		/obj/item/gun/medbeam=1,
 		/obj/item/storage/box/engineer=1,
 		/obj/item/melee/baton/loaded=1,
 		/obj/item/reagent_containers/hypospray/combat=1,
