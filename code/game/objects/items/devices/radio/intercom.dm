@@ -56,6 +56,10 @@
 		return
 	return ..()
 
+/obj/item/radio/intercom/attack_tk_grab(mob/user)
+	interact(user)
+	return COMPONENT_CANCEL_ATTACK_CHAIN
+
 /obj/item/radio/intercom/attack_ai(mob/user)
 	interact(user)
 

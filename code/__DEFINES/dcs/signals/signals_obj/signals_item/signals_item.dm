@@ -3,14 +3,6 @@
 // All signals send the source datum of the signal as the first argument
 
 // /obj/item signals
-#define COMSIG_ITEM_ATTACK "item_attack"						//! from base of obj/item/attack(): (/mob/living/target, /mob/living/user)
-#define COMSIG_ITEM_ATTACK_SELF "item_attack_self"				//! from base of obj/item/attack_self(): (/mob)
-	#define COMPONENT_NO_INTERACT 1
-#define COMSIG_ITEM_ATTACK_OBJ "item_attack_obj"				//! from base of obj/item/attack_obj(): (/obj, /mob)
-	#define COMPONENT_NO_ATTACK_OBJ 1
-#define COMSIG_ITEM_PRE_ATTACK "item_pre_attack"				//! from base of obj/item/pre_attack(): (atom/target, mob/user, params)
-	#define COMPONENT_NO_ATTACK 1
-#define COMSIG_ITEM_AFTERATTACK "item_afterattack"				//! from base of obj/item/afterattack(): (atom/target, mob/user, proximity_flag, params)
 ///from base of obj/item/equipped(): (/mob/equipper, slot)
 #define COMSIG_ITEM_EQUIPPED "item_equip"
 ///from base of obj/item/on_grind(): ())
@@ -39,6 +31,19 @@
 #define COMSIG_ITEM_CHECK_WIELDED "item_check_wielded"  //! used to check if the item is wielded for special effects
   #define COMPONENT_IS_WIELDED 1
 #define COMSIG_ITEM_DISABLE_EMBED "item_disable_embed"			///from [/obj/item/proc/disableEmbedding]:
+
+#define COMSIG_ITEM_ATTACK "item_attack"
+///from base of obj/item/attack_self(): (/mob)
+#define COMSIG_ITEM_ATTACK_SELF "item_attack_self"
+///from base of obj/item/attack_atom(): (/obj, /mob)
+#define COMSIG_ITEM_ATTACK_OBJ "item_attack_obj"
+///from base of obj/item/pre_attack(): (atom/target, mob/user, params)
+#define COMSIG_ITEM_PRE_ATTACK "item_pre_attack"
+
+///from base of obj/item/afterattack(): (atom/target, mob/user, proximity_flag, click_parameters)
+#define COMSIG_ITEM_AFTERATTACK "item_afterattack"
+
+
 
 ///Called when an item is being offered, from [/obj/item/proc/on_offered(mob/living/carbon/offerer)]
 #define COMSIG_ITEM_OFFERING "item_offering"

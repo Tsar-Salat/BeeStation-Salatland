@@ -93,8 +93,6 @@
 /datum/mutation/proc/on_attack_hand(atom/target, proximity)
 	return
 
-/datum/mutation/proc/on_ranged_attack(atom/target)
-	return
 
 /datum/mutation/proc/on_move(new_loc)
 	SIGNAL_HANDLER

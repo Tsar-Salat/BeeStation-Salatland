@@ -180,7 +180,7 @@
 	// Basically, TK won't work unless the door is all-access.
 	if(!id_scan_hacked() && !allowed())
 		return
-	..()
+	return ..()
 
 /// Handles door activation via clicks, through attackby().
 /obj/machinery/door/proc/try_to_activate_door(obj/item/I, mob/user)

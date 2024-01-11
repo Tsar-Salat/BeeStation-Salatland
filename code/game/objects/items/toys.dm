@@ -498,9 +498,8 @@
 		to_chat(user, "<span class='notice'>You play with [src].</span>")
 		timer = world.time + cooldown
 		if(!quiet)
-			playsound(user, 'sound/mecha/mechstep.ogg', 20, 1)
-	else
-		. = ..()
+			playsound(user, 'sound/mecha/mechstep.ogg', 20, TRUE)
+	return COMPONENT_CANCEL_ATTACK_CHAIN
 
 /obj/item/toy/prize/attack_hand(mob/user)
 	. = ..()

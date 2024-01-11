@@ -132,14 +132,14 @@
 	toggle_lock(user)
 	return
 
+
 /obj/structure/fireaxecabinet/attack_tk(mob/user)
+	. = COMPONENT_CANCEL_ATTACK_CHAIN
 	if(locked)
 		to_chat(user, "<span class='warning'>The [name] won't budge!</span>")
 		return
-	else
-		open = !open
-		update_appearance()
-		return
+	open = !open
+	update_icon()
 
 /obj/structure/fireaxecabinet/update_icon()
 	cut_overlays()
