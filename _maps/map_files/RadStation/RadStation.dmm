@@ -5571,7 +5571,7 @@
 	id = "portsolar";
 	name = "Port Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/fore)
 "bNL" = (
 /obj/structure/cable/yellow{
@@ -12490,7 +12490,7 @@
 	id = "portsolar";
 	name = "Port Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/starboard/aft)
 "dVy" = (
 /obj/effect/turf_decal/bot,
@@ -33132,7 +33132,7 @@
 	id = "portsolar";
 	name = "Port Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/starboard/fore)
 "knO" = (
 /obj/structure/lattice/catwalk/over,
@@ -39032,7 +39032,7 @@
 "mjq" = (
 /obj/item/clothing/suit/cultrobes/alt,
 /obj/item/toy/toy_dagger,
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/chapel/office)
 "mju" = (
 /obj/structure/sign/warning/fire,
@@ -40202,7 +40202,7 @@
 	id = "portsolar";
 	name = "Port Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/aft)
 "mBh" = (
 /obj/machinery/atmospherics/pipe/simple/general/visible{
@@ -40289,7 +40289,7 @@
 	id = "portsolar";
 	name = "Port Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/starboard/fore)
 "mCQ" = (
 /turf/open/floor/plasteel/white,
@@ -43431,7 +43431,7 @@
 	id = "portsolar";
 	name = "Port Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/starboard/aft)
 "nxD" = (
 /obj/effect/decal/cleanable/dirt,
@@ -52880,7 +52880,7 @@
 	id = "portsolar";
 	name = "Port Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/aft)
 "quk" = (
 /obj/machinery/door/airlock/grunge{
@@ -53216,7 +53216,7 @@
 	id = "portsolar";
 	name = "Port Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/fore)
 "qAe" = (
 /obj/structure/table/reinforced,

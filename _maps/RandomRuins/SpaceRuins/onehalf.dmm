@@ -925,7 +925,7 @@
 /turf/open/floor/plasteel,
 /area/ruin/space/has_grav/onehalf/bridge)
 "cx" = (
-/obj/item/stack/tile/plasteel,
+/obj/item/stack/tile/plasteel/base,
 /turf/open/floor/plasteel,
 /area/ruin/space/has_grav/onehalf/bridge)
 "cy" = (

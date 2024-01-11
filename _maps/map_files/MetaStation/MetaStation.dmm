@@ -57,7 +57,7 @@
 	id = "foreport";
 	name = "Fore-Port Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/fore)
 "aam" = (
 /obj/structure/cable,
@@ -134,7 +134,7 @@
 	id = "foreport";
 	name = "Fore-Port Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/fore)
 "aav" = (
 /turf/open/space,
@@ -527,7 +527,7 @@
 	id = "forestarboard";
 	name = "Fore-Starboard Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/starboard/fore)
 "abw" = (
 /obj/structure/cable,
@@ -763,7 +763,7 @@
 	id = "forestarboard";
 	name = "Fore-Starboard Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/starboard/fore)
 "acm" = (
 /obj/effect/turf_decal/stripes/line{
@@ -5043,7 +5043,7 @@
 	pixel_y = 30
 	},
 /obj/effect/decal/cleanable/cobweb,
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/library)
 "aAA" = (
 /obj/docking_port/stationary{
@@ -6266,7 +6266,7 @@
 /obj/item/folder,
 /obj/item/folder,
 /obj/effect/decal/cleanable/cobweb/cobweb2,
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/library)
 "aFK" = (
 /obj/machinery/door/poddoor/shutters{
@@ -14510,7 +14510,7 @@
 /obj/machinery/computer/security/telescreen/entertainment{
 	pixel_y = 30
 	},
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/library)
 "bwg" = (
 /obj/structure/table/wood,
@@ -14519,7 +14519,7 @@
 	},
 /obj/item/folder,
 /obj/item/folder,
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/library)
 "bwi" = (
 /obj/machinery/disposal/bin,
@@ -14812,13 +14812,13 @@
 /turf/open/floor/wood,
 /area/library)
 "bxW" = (
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/library)
 "bxX" = (
 /obj/structure/chair/fancy/comfy{
 	dir = 1
 	},
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/library)
 "bxZ" = (
 /obj/effect/spawner/structure/window/reinforced,
@@ -15256,13 +15256,13 @@
 /obj/machinery/door/morgue{
 	name = "Study #1"
 	},
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/library)
 "bzH" = (
 /obj/machinery/door/morgue{
 	name = "Study #2"
 	},
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/library)
 "bzJ" = (
 /turf/closed/wall,
@@ -15815,7 +15815,7 @@
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
-/turf/open/floor/goonplaque{
+/turf/open/floor/plasteel/goonplaque{
 	desc = "\"This is a plaque in honour of our comrades on the G4407 Stations. Hopefully TG4407 model can live up to your fame and fortune.\" Scratched in beneath that is a crude image of sentient postcards in a realm of darkness. The station model number is MSv42A-160516"
 	},
 /area/hallway/primary/port)
@@ -23238,7 +23238,7 @@
 	id = "aftport";
 	name = "Aft-Port Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/aft)
 "cuC" = (
 /obj/machinery/portable_atmospherics/canister/air,
@@ -23438,7 +23438,7 @@
 	id = "aftport";
 	name = "Aft-Port Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/aft)
 "cwA" = (
 /turf/open/floor/plasteel/white,
@@ -24968,7 +24968,7 @@
 	name = "Relic Closet";
 	req_access_txt = "22"
 	},
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/chapel/office)
 "cMa" = (
 /obj/structure/table/wood,
@@ -24979,7 +24979,7 @@
 /obj/item/organ/heart,
 /obj/item/soulstone/anybody/chaplain,
 /obj/item/book/granter/spell/smoke/lesser,
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/chapel/office)
 "cMe" = (
 /obj/effect/turf_decal/stripes/corner,
@@ -25757,7 +25757,7 @@
 /obj/machinery/door/morgue{
 	name = "Chapel Garden"
 	},
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/chapel/main)
 "cRK" = (
 /obj/effect/turf_decal/stripes/line,
@@ -35664,7 +35664,7 @@
 	id = "aftstarboard";
 	name = "Aft-Starboard Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/starboard/aft)
 "gnA" = (
 /obj/structure/sign/painting/library{
@@ -42019,7 +42019,7 @@
 /obj/machinery/light/small{
 	dir = 1
 	},
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/chapel/main)
 "iTz" = (
 /obj/structure/disposalpipe/segment{
@@ -55346,10 +55346,10 @@
 	pixel_y = 8
 	},
 /obj/structure/table,
-/obj/item/stack/tile/plasteel{
+/obj/item/stack/tile/plasteel/base{
 	amount = 50
 	},
-/obj/item/stack/tile/plasteel{
+/obj/item/stack/tile/plasteel/base{
 	amount = 50;
 	pixel_x = -2;
 	pixel_y = 2
@@ -67218,7 +67218,7 @@
 	id = "aftstarboard";
 	name = "Aft-Starboard Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/starboard/aft)
 "tfQ" = (
 /obj/structure/disposalpipe/segment{

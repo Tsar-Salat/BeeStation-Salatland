@@ -57,13 +57,24 @@
 #define ORGAN_ORGANIC   1
 #define ORGAN_ROBOTIC   2
 
+#define MONKEY_BODYPART "monkey"
+#define TERATOMA_BODYPART "teratoma"
+#define ALIEN_BODYPART "alien"
+#define LARVA_BODYPART "larva"
+#define DEVIL_BODYPART "devil"
 
 //Bodytype defines for how things can be worn.
-#define BODYTYPE_ORGANIC		(1<<0)
-#define BODYTYPE_ROBOTIC		(1<<1)
-#define BODYTYPE_HUMANOID		(1<<2) //Everything that isnt Grod
-#define BODYTYPE_BOXHEAD		(1<<3) //TV Head
-#define BODYTYPE_DIGITIGRADE	(1<<4) //Cancer
+///The limb is organic.
+#define BODYTYPE_ORGANIC (1<<0)
+///The limb is robotic.
+#define BODYTYPE_ROBOTIC (1<<1)
+///The limb fits the human mold. This is not meant to be literal, if the sprite "fits" on a human, it is "humanoid", regardless of origin.
+#define BODYTYPE_HUMANOID (1<<2)
+//TV Head
+#define BODYTYPE_BOXHEAD (1<<3)
+///The limb is digitigrade.
+#define BODYTYPE_DIGITIGRADE (1<<4)
+
 #define NUMBER_OF_BODYTYPES	5 //KEEP THIS UPDATED OR SHIT WILL BREAK
 
 #define BODYPART_NOT_DISABLED 0
@@ -72,12 +83,6 @@
 
 #define DEFAULT_BODYPART_ICON_ORGANIC 'icons/mob/human_parts_greyscale.dmi'
 #define DEFAULT_BODYPART_ICON_ROBOTIC 'icons/mob/augmentation/augments.dmi'
-
-#define MONKEY_BODYPART "monkey"
-#define TERATOMA_BODYPART "teratoma"
-#define ALIEN_BODYPART "alien"
-#define LARVA_BODYPART "larva"
-#define DEVIL_BODYPART "devil"
 
 //Bodypart change blocking flags
 #define BP_BLOCK_CHANGE_SPECIES	(1<<0)
@@ -89,6 +94,9 @@
 #define DIGITIGRADE_NEVER 0
 #define DIGITIGRADE_OPTIONAL 1
 #define DIGITIGRADE_FORCED 2
+
+// Health/damage defines
+#define MAX_LIVING_HEALTH 100
 
 //Reagent Metabolization flags, defines the type of reagents that affect this mob
 #define PROCESS_ORGANIC 1		//Only processes reagents with "ORGANIC" or "ORGANIC | SYNTHETIC"

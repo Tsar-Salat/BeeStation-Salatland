@@ -2388,7 +2388,7 @@
 /obj/structure/cable{
 	icon_state = "0-4"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/fore)
 "ahV" = (
 /obj/effect/turf_decal/bot,
@@ -3164,7 +3164,7 @@
 /obj/structure/cable{
 	icon_state = "0-8"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/fore)
 "akP" = (
 /obj/effect/spawner/structure/window,
@@ -4042,7 +4042,7 @@
 /obj/structure/cable{
 	icon_state = "0-4"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/space/nearstation)
 "amL" = (
 /obj/effect/decal/cleanable/dirt,
@@ -4468,7 +4468,7 @@
 /obj/structure/cable{
 	icon_state = "0-4"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/space/nearstation)
 "aoj" = (
 /obj/machinery/power/solar_control{
@@ -28796,7 +28796,7 @@
 /obj/structure/cable/yellow{
 	icon_state = "4-8"
 	},
-/turf/open/floor/goonplaque,
+/turf/open/floor/plasteel/goonplaque,
 /area/security/brig)
 "cjl" = (
 /obj/structure/lattice/catwalk,
@@ -29418,7 +29418,7 @@
 /obj/structure/cable{
 	icon_state = "0-4"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/aft)
 "cle" = (
 /obj/effect/decal/cleanable/dirt,
@@ -31174,7 +31174,7 @@
 /obj/structure/cable{
 	icon_state = "0-4"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/aft)
 "cqZ" = (
 /obj/effect/turf_decal/stripes/corner{
@@ -31200,7 +31200,7 @@
 /obj/structure/cable{
 	icon_state = "0-8"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/aft)
 "crb" = (
 /obj/structure/lattice/catwalk,
@@ -31289,7 +31289,7 @@
 /obj/structure/cable{
 	icon_state = "0-8"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/starboard/fore)
 "crk" = (
 /obj/machinery/door/firedoor,
@@ -33731,7 +33731,7 @@
 /obj/structure/cable{
 	icon_state = "0-4"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/starboard/aft)
 "cyh" = (
 /obj/machinery/atmospherics/pipe/simple/dark/visible{
@@ -34084,7 +34084,7 @@
 /obj/structure/cable{
 	icon_state = "0-8"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/starboard/aft)
 "czz" = (
 /turf/open/floor/plating,
@@ -36412,7 +36412,7 @@
 /obj/structure/cable{
 	icon_state = "0-4"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/starboard/fore)
 "cGx" = (
 /obj/structure/sign/warning/electricshock,
@@ -40060,7 +40060,7 @@
 /obj/structure/cable{
 	icon_state = "0-8"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/starboard/aft)
 "cPG" = (
 /obj/machinery/power/solar_control{
@@ -58690,7 +58690,7 @@
 /obj/structure/cable{
 	icon_state = "0-8"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/starboard/fore)
 "kHg" = (
 /obj/machinery/portable_atmospherics/pump,

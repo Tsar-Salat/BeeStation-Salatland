@@ -8,7 +8,7 @@
 /area/ruin/space/djstation/solars)
 "ac" = (
 /obj/machinery/power/solar/fake,
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/ruin/space/djstation/solars)
 "ad" = (
 /turf/open/floor/plating/airless,

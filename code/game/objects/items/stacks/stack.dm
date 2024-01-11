@@ -19,12 +19,14 @@
 	icon = 'icons/obj/stacks/minerals.dmi'
 	gender = PLURAL
 	material_modifier = 0.05 //5%, so that a 50 sheet stack has the effect of 5k materials instead of 100k.
+	/// A list to all recipies this stack item can create.
 	var/list/datum/stack_recipe/recipes
 	///The name of the thing when it's singular
 	var/singular_name
 	///The amount of thing in the stack
 	var/amount = 1
-	///also see stack recipes initialisation, param "max_res_amount" must be equal to this max_amount
+	/// How much is allowed in this stack?
+	// Also see stack recipes initialisation. "max_res_amount" must be equal to this max_amount
 	var/max_amount = 50
 	///It's TRUE if module is used by a cyborg, and uses its storage
 	var/is_cyborg = FALSE
@@ -42,10 +44,10 @@
 	var/list/mats_per_unit
 	///Datum material type that this stack is made of
 	var/material_type
-	///Stores table variant to be built from this stack
-	var/obj/structure/table/tableVariant
 	/// Amount of matter for RCD
 	var/matter_amount = 0
+	///Stores table variant to be built from this stack
+	var/obj/structure/table/tableVariant
 
 /obj/item/stack/Initialize(mapload, new_amount, merge = TRUE, mob/user = null)
 	if(new_amount != null)
@@ -68,6 +70,7 @@
 				merge(S)
 				if(QDELETED(src))
 					return
+
 	var/list/temp_recipes = get_main_recipes()
 	recipes = temp_recipes.Copy()
 	if(material_type)
@@ -77,6 +80,7 @@
 				if(MAT_CATEGORY_BASE_RECIPES)
 					var/list/temp = SSmaterials.rigid_stack_recipes.Copy()
 					recipes += temp
+
 	update_weight()
 	update_icon()
 	var/static/list/loc_connections = list(
@@ -104,6 +108,7 @@
  */
 /obj/item/stack/set_custom_materials(list/materials, multiplier=1, is_update=FALSE)
 	return is_update ? ..() : set_mats_per_unit(materials, multiplier/(amount || 1))
+
 
 /obj/item/stack/on_grind()
 	for(var/i in 1 to length(grind_results)) //This should only call if it's ground, so no need to check if grind_results exists
@@ -135,11 +140,11 @@
 
 /obj/item/stack/update_icon_state()
 	if(novariants)
-		return
+		return ..()
 	if(amount <= (max_amount * (1/3)))
 		icon_state = initial(icon_state)
 		return ..()
-	if(amount <= (max_amount * (2/3)))
+	if (amount <= (max_amount * (2/3)))
 		icon_state = "[initial(icon_state)]_2"
 		return ..()
 	icon_state = "[initial(icon_state)]_3"
@@ -294,9 +299,9 @@
 			if(QDELETED(O))
 				return //It's a stack and has already been merged
 
+			O.add_fingerprint(usr) //Add fingerprints first, otherwise O might already be deleted because of stack merging
 			if(isitem(O))
 				usr.put_in_hands(O)
-			O.add_fingerprint(usr)
 
 			if(istype(O, /obj/item/storage))
 				for(var/obj/item/I in O)
@@ -310,7 +315,6 @@
 		else
 			to_chat(usr, "<span class='warning'>You haven't got enough [src] to build \the [recipe.title]!</span>")
 		return FALSE
-
 	var/turf/dest_turf = get_turf(usr)
 
 	// If we're making a window, we have some special snowflake window checks to do.
@@ -368,7 +372,7 @@
 		return TRUE
 	if(length(mats_per_unit))
 		update_custom_materials()
-	update_icon()
+	update_appearance()
 	ui_update()
 	update_weight()
 	return TRUE
@@ -405,7 +409,7 @@
 		amount += _amount
 	if(length(mats_per_unit))
 		update_custom_materials()
-	update_icon()
+	update_appearance()
 	update_weight()
 	ui_update()
 
@@ -419,7 +423,7 @@
 		return FALSE
 	if(mats_per_unit != check.mats_per_unit)
 		return FALSE
-	if(is_cyborg)	// No merging cyborg stacks into other stacks
+	if(is_cyborg) // No merging cyborg stacks into other stacks
 		return FALSE
 	return TRUE
 
@@ -515,53 +519,6 @@
 /obj/item/stack/microwave_act(obj/machinery/microwave/M)
 	if(istype(M) && M.dirty < 100)
 		M.dirty += amount
-
-/*
- * Recipe datum
- */
-/datum/stack_recipe
-	///The name of the recipe
-	var/title = "ERROR"
-	///The thing we get from doing the recipe
-	var/result_type
-	///The amount of type of material we need
-	var/req_amount = 1
-	///The amount of thing we make
-	var/res_amount = 1
-	///The maximum amount of thing we can get from crafting
-	var/max_res_amount = 1
-	///The time it takes to make
-	var/time = 0
-	///Can we have only one instance of recipe result per turf?
-	var/one_per_turf = FALSE
-	///Can we make the result on non-solid turfs (space)
-	var/on_floor = FALSE
-	///Do we do placement checks while placing the recipe?
-	var/placement_checks = FALSE
-	var/applies_mats = FALSE
-
-/datum/stack_recipe/New(title, result_type, req_amount = 1, res_amount = 1, max_res_amount = 1,time = 0, one_per_turf = FALSE, on_floor = FALSE, window_checks = FALSE, placement_checks = FALSE, applies_mats = FALSE)
-	src.title = title
-	src.result_type = result_type
-	src.req_amount = req_amount
-	src.res_amount = res_amount
-	src.max_res_amount = max_res_amount
-	src.time = time
-	src.one_per_turf = one_per_turf
-	src.on_floor = on_floor
-	src.placement_checks = placement_checks
-	src.applies_mats = applies_mats
-
-/*
- * Recipe list datum
- */
-/datum/stack_recipe_list
-	var/title = "ERROR"
-	var/list/recipes
-
-/datum/stack_recipe_list/New(title, recipes)
-	src.title = title
-	src.recipes = recipes
 
 #undef STACK_CHECK_CARDINALS
 #undef STACK_CHECK_ADJACENT

@@ -228,7 +228,7 @@
 /obj/structure/cable{
 	icon_state = "0-2"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/fore)
 "acO" = (
 /obj/structure/lattice,
@@ -1218,7 +1218,7 @@
 "aqU" = (
 /obj/structure/cable,
 /obj/machinery/power/tracker,
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/aft)
 "arb" = (
 /obj/structure/cable{
@@ -6277,7 +6277,7 @@
 	id = "forestarboard";
 	name = "Fore-Starboard Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/fore)
 "bzH" = (
 /obj/structure/sign/poster/contraband/random,
@@ -8152,7 +8152,7 @@
 /obj/item/reagent_containers/food/drinks/bottle/vodka{
 	desc = "Aah, vodka. Prime choice of drink AND fuel by Russians worldwide. This one used to hold many secrets..."
 	},
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/chapel/office)
 "cdD" = (
 /obj/effect/spawner/structure/window/reinforced,
@@ -11071,7 +11071,7 @@
 	},
 /obj/item/reagent_containers/food/drinks/bottle/holywater,
 /obj/item/book/granter/spell/smoke/lesser,
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/chapel/office)
 "cTx" = (
 /obj/effect/turf_decal/guideline/guideline_in/red{
@@ -14740,7 +14740,7 @@
 /area/medical/surgery)
 "dTp" = (
 /obj/effect/spawner/structure/window/reinforced/tinted,
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/library)
 "dTQ" = (
 /obj/structure/rack,
@@ -16875,7 +16875,7 @@
 	color = "#742925";
 	dir = 4
 	},
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/library)
 "eAm" = (
 /obj/effect/decal/cleanable/dirt,
@@ -21506,7 +21506,7 @@
 /turf/open/floor/plasteel/dark,
 /area/hallway/primary/aft)
 "fFg" = (
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/library)
 "fFi" = (
 /obj/effect/turf_decal/stripes/closeup{
@@ -27397,7 +27397,7 @@
 	id = "forestarboard";
 	name = "Fore-Starboard Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/fore)
 "hhj" = (
 /obj/effect/landmark/start/cook,
@@ -37492,7 +37492,7 @@
 /obj/structure/cable{
 	icon_state = "0-4"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port)
 "jRk" = (
 /obj/item/kirbyplants/random,
@@ -44901,7 +44901,7 @@
 /obj/machinery/newscaster{
 	pixel_y = 31
 	},
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/library)
 "lJz" = (
 /obj/effect/turf_decal/siding/wood/corner{
@@ -47126,7 +47126,7 @@
 	},
 /obj/item/folder,
 /obj/structure/table/wood,
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/library)
 "mow" = (
 /obj/effect/turf_decal/trimline/purple/filled/line,
@@ -48649,7 +48649,7 @@
 	pixel_x = 1;
 	pixel_y = 5
 	},
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/library)
 "mIB" = (
 /obj/structure/cable/yellow{
@@ -51118,7 +51118,7 @@
 /obj/structure/cable{
 	icon_state = "0-8"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/starboard/fore)
 "npk" = (
 /obj/machinery/computer/cargo/request{
@@ -52149,7 +52149,7 @@
 /obj/structure/cable{
 	icon_state = "0-4"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/starboard/fore)
 "nBP" = (
 /obj/structure/cable/yellow{
@@ -53803,7 +53803,7 @@
 /obj/structure/cable{
 	icon_state = "0-8"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/starboard/fore)
 "nZA" = (
 /obj/effect/turf_decal/siding/wood/corner,
@@ -61366,7 +61366,7 @@
 /obj/machinery/computer/security/telescreen/entertainment{
 	pixel_y = -32
 	},
-/turf/open/floor/plasteel/cult,
+/turf/open/floor/cult,
 /area/library)
 "pYZ" = (
 /obj/structure/disposalpipe/segment{
@@ -68272,7 +68272,7 @@
 /obj/structure/cable{
 	icon_state = "0-8"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/starboard/fore)
 "rCs" = (
 /obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer4,
@@ -78979,7 +78979,7 @@
 /obj/structure/cable{
 	icon_state = "0-4"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port)
 "uiZ" = (
 /obj/machinery/atmospherics/components/unary/portables_connector/visible{
@@ -79212,7 +79212,7 @@
 	codes_txt = "patrol;next_patrol=21-LobbyCorner";
 	location = "20-Lobby"
 	},
-/turf/open/floor/goonplaque,
+/turf/open/floor/plasteel/goonplaque,
 /area/hallway/primary/port)
 "ulQ" = (
 /turf/closed/wall/r_wall,
@@ -90346,7 +90346,7 @@
 /obj/structure/cable{
 	icon_state = "0-8"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port)
 "wLC" = (
 /turf/open/floor/plasteel,
@@ -90508,7 +90508,7 @@
 /obj/structure/cable{
 	icon_state = "0-8"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port)
 "wNh" = (
 /obj/machinery/newscaster{
@@ -91528,7 +91528,7 @@
 	id = "aftstarboard";
 	name = "Aft-Starboard Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/aft)
 "wXE" = (
 /obj/effect/turf_decal/trimline/purple/filled/line{
@@ -93776,7 +93776,7 @@
 	id = "aftstarboard";
 	name = "Aft-Starboard Solar Array"
 	},
-/turf/open/floor/plasteel/airless/solarpanel,
+/turf/open/floor/plaststeel/solarpanel/airless,
 /area/solar/port/aft)
 "xsR" = (
 /obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer4{

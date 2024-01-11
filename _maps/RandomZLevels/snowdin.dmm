@@ -7763,7 +7763,7 @@
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/cave)
 "xl" = (
-/turf/open/floor/plasteel/elevatorshaft{
+/turf/open/floor/plating/elevatorshaft{
 	initial_gas_mix = "o2=22;n2=82;TEMP=180"
 	},
 /area/awaymission/snowdin/cave)
@@ -11290,7 +11290,7 @@
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/mining_main)
 "JQ" = (
-/turf/open/floor/plasteel/elevatorshaft,
+/turf/open/floor/plating/elevatorshaft,
 /area/awaymission/snowdin/post/mining_main)
 "JV" = (
 /obj/machinery/power/port_gen/pacman,
@@ -14083,7 +14083,7 @@
 /turf/open/floor/plasteel/dark,
 /area/awaymission/snowdin/cave)
 "Ys" = (
-/turf/open/floor/plasteel/elevatorshaft,
+/turf/open/floor/plating/elevatorshaft,
 /area/awaymission/snowdin/post/mining_dock)
 "YB" = (
 /obj/structure/closet/emcloset,

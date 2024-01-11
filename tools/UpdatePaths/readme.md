@@ -260,14 +260,14 @@ Okay, let's say that you want to change all instances of `/obj/structure/sink` t
 ```dm
 "a" = (
 /obj/structure/sink,
-/turf/open/floor/iron,
+/turf/open/floor/plasteel,
 /area/station/bathroom),
 "b" = (
 /obj/structure/sink{
 	dir = 8
 	name = "Money Hole"
 	},
-/turf/open/floor/iron,
+/turf/open/floor/plasteel,
 /area/station/bathroom),
 ```
 
@@ -278,14 +278,14 @@ You would then get the following output:
 /obj/structure/sink{
 	dir = 1
 	},
-/turf/open/floor/iron,
+/turf/open/floor/plasteel,
 /area/station/bathroom),
 "b" = (
 /obj/structure/sink{
 	dir = 8
 	name = "Money Hole"
 	},
-/turf/open/floor/iron,
+/turf/open/floor/plasteel,
 /area/station/bathroom),
 ```
 
