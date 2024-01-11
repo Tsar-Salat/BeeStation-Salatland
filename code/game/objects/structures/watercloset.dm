@@ -5,16 +5,17 @@
 	icon_state = "toilet00"
 	density = FALSE
 	anchored = TRUE
-	var/open = FALSE			//if the lid is up
-	var/cistern = 0			//if the cistern bit is open
-	var/w_items = 0			//the combined w_class of all the items in the cistern
-	var/mob/living/swirlie = null	//the mob being given a swirlie
-
+	var/open = FALSE //if the lid is up
+	var/cistern = 0 //if the cistern bit is open
+	var/w_items = 0 //the combined w_class of all the items in the cistern
+	var/mob/living/swirlie = null //the mob being given a swirlie
+	var/buildstacktype = /obj/item/stack/sheet/iron //they're iron now, shut up
+	var/buildstackamount = 1
 
 /obj/structure/toilet/Initialize(mapload)
 	. = ..()
 	open = round(rand(0, 1))
-	update_icon()
+	update_appearance()
 
 
 /obj/structure/toilet/attack_hand(mob/living/user)
@@ -23,8 +24,9 @@
 		return
 	if(swirlie)
 		user.changeNext_move(CLICK_CD_MELEE)
-		playsound(src.loc, "swing_hit", 25, 1)
+		playsound(src.loc, "swing_hit", 25, TRUE)
 		swirlie.visible_message("<span class='danger'>[user] slams the toilet seat onto [swirlie]'s head!</span>", "<span class='userdanger'>[user] slams the toilet seat onto your head!</span>", "<span class='italics'>You hear reverberating porcelain.</span>")
+		log_combat(user, swirlie, "swirlied (brute)")
 		swirlie.adjustBruteLoss(5)
 
 	else if(user.pulling && user.a_intent == INTENT_GRAB && isliving(user.pulling))
@@ -43,13 +45,16 @@
 						if(iscarbon(GM))
 							var/mob/living/carbon/C = GM
 							if(!C.internal)
+								log_combat(user, C, "swirlied (oxy)")
 								C.adjustOxyLoss(5)
 						else
+							log_combat(user, GM, "swirlied (oxy)")
 							GM.adjustOxyLoss(5)
 					swirlie = null
 				else
-					playsound(src.loc, 'sound/effects/bang.ogg', 25, 1)
+					playsound(src.loc, 'sound/effects/bang.ogg', 25, TRUE)
 					GM.visible_message("<span class='danger'>[user] slams [GM.name] into [src]!</span>", "<span class='userdanger'>[user] slams you into [src]!</span>")
+					log_combat(user, GM, "toilet slammed")
 					GM.adjustBruteLoss(5)
 		else
 			to_chat(user, "<span class='warning'>You need a tighter grip!</span>")
@@ -67,38 +72,52 @@
 			w_items -= I.w_class
 	else
 		open = !open
-		update_icon()
+		update_appearance()
 
 
-/obj/structure/toilet/update_icon()
+/obj/structure/toilet/update_icon_state()
 	icon_state = "toilet[open][cistern]"
+	return ..()
 
+/obj/structure/toilet/deconstruct()
+	if(!(flags_1 & NODECONSTRUCT_1))
+		for(var/obj/toilet_item in contents)
+			toilet_item.forceMove(drop_location())
+		if(buildstacktype)
+			new buildstacktype(loc,buildstackamount)
+		else
+			for(var/i in custom_materials)
+				var/datum/material/M = i
+				new M.sheet_type(loc, FLOOR(custom_materials[M] / MINERAL_MATERIAL_AMOUNT, 1))
+	..()
 
 /obj/structure/toilet/attackby(obj/item/I, mob/living/user, params)
 	if(I.tool_behaviour == TOOL_CROWBAR)
 		to_chat(user, "<span class='notice'>You start to [cistern ? "replace the lid on the cistern" : "lift the lid off the cistern"]...</span>")
-		playsound(loc, 'sound/effects/stonedoor_openclose.ogg', 50, 1)
+		playsound(loc, 'sound/effects/stonedoor_openclose.ogg', 50, TRUE)
 		if(I.use_tool(src, user, 30))
 			user.visible_message("[user] [cistern ? "replaces the lid on the cistern" : "lifts the lid off the cistern"]!", "<span class='notice'>You [cistern ? "replace the lid on the cistern" : "lift the lid off the cistern"]!</span>", "<span class='italics'>You hear grinding porcelain.</span>")
 			cistern = !cistern
-			update_icon()
-
-	else if(cistern)
-		if(user.a_intent != INTENT_HARM)
-			if(I.w_class > WEIGHT_CLASS_NORMAL)
-				to_chat(user, "<span class='warning'>[I] does not fit!</span>")
-				return
-			if(w_items + I.w_class > WEIGHT_CLASS_HUGE)
-				to_chat(user, "<span class='warning'>The cistern is full!</span>")
-				return
-			if(!user.transferItemToLoc(I, src))
-				to_chat(user, "<span class='warning'>\The [I] is stuck to your hand, you cannot put it in the cistern!</span>")
-				return
-			w_items += I.w_class
-			to_chat(user, "<span class='notice'>You carefully place [I] into the cistern.</span>")
+			update_appearance()
+	else if(cistern && user.a_intent != INTENT_HARM)
+		if(I.w_class > WEIGHT_CLASS_NORMAL)
+			to_chat(user, "<span class='warning'>[I] does not fit!</span>")
+			return
+		if(w_items + I.w_class > WEIGHT_CLASS_HUGE)
+			to_chat(user, "<span class='warning'>The cistern is full!</span>")
+			return
+		if(!user.transferItemToLoc(I, src))
+			to_chat(user, "<span class='warning'>\The [I] is stuck to your hand, you cannot put it in the cistern!</span>")
+			return
+		w_items += I.w_class
+		to_chat(user, "<span class='notice'>You carefully place [I] into the cistern.</span>")
 
 	else if(istype(I, /obj/item/reagent_containers))
 		if (!open)
+			return
+		if(istype(I, /obj/item/food/monkeycube))
+			var/obj/item/food/monkeycube/cube = I
+			cube.Expand()
 			return
 		var/obj/item/reagent_containers/RG = I
 		RG.reagents.add_reagent(/datum/reagent/water, min(RG.volume - RG.reagents.total_volume, RG.amount_per_transfer_from_this))
@@ -113,6 +132,10 @@
 	. = ..()
 	if (secret_type)
 		new secret_type(src)
+
+/obj/structure/toilet/greyscale
+	material_flags = MATERIAL_ADD_PREFIX | MATERIAL_COLOR | MATERIAL_AFFECT_STATISTICS
+	buildstacktype = null
 
 /obj/structure/urinal
 	name = "urinal"
@@ -212,39 +235,33 @@
 	name = "sink"
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "sink"
-	desc = "A sink used for washing one's hands and face."
+	desc = "A sink used for washing one's hands and face. Passively reclaims water over time."
 	anchored = TRUE
-	var/busy = FALSE 	//Something's being washed at the moment
+	///Something's being washed at the moment
+	var/busy = FALSE
+	///What kind of reagent is produced by this sink by default? (We now have actual plumbing, Arcane, August 2020)
+	var/dispensedreagent = /datum/reagent/water
+	///Material to drop when broken or deconstructed.
 	var/dispensedreagent = /datum/reagent/water // for whenever plumbing happens
+	///Material to drop when broken or deconstructed.
+	var/buildstacktype = /obj/item/stack/sheet/metal
+	///Number of sheets of material to drop when broken or deconstructed.
+	var/buildstackamount = 1
+	///Does the sink have a water recycler to recollect it's water supply?
+	var/has_water_reclaimer = TRUE
+	///Has the water reclamation begun?
+	var/reclaiming = FALSE
 
-
-/obj/structure/sinkframe
-	name = "sink frame"
-	icon = 'icons/obj/watercloset.dmi'
-	icon_state = "sink_frame"
-	desc = "A sink frame, that needs 2 plastic sheets to finish construction."
-	anchored = FALSE
-
-/obj/structure/sinkframe/attackby(obj/item/I, mob/living/user, params)
-	if(istype(I, /obj/item/stack/sheet/plastic))
-		balloon_alert(user, "You start constructing a sink...")
-		if(do_after(user, 4 SECONDS, target = src))
-			I.use(1)
-			balloon_alert(user, "You create a sink.")
-			var/obj/structure/sink/new_sink = new /obj/structure/sink(loc)
-			new_sink.setDir(dir)
-			qdel(src)
-			return
-	return ..()
-
-/obj/structure/sinkframe/Initialize(mapload)
+/obj/structure/sink/Initialize(mapload, bolt)
 	. = ..()
-	AddComponent(/datum/component/simple_rotation, ROTATION_ALTCLICK | ROTATION_CLOCKWISE | ROTATION_COUNTERCLOCKWISE | ROTATION_VERBS, null, CALLBACK(src, PROC_REF(can_be_rotated)))
+	if(has_water_reclaimer)
+		create_reagents(100, NO_REACT)
+		reagents.add_reagent(dispensedreagent, 100)
+	AddComponent(/datum/component/plumbing/simple_demand, bolt)
 
-/obj/structure/sinkframe/proc/can_be_rotated(mob/user, rotation_type)
-	if(anchored)
-		to_chat(user, "<span class='warning'>It is fastened to the floor!</span>")
-	return !anchored
+/obj/structure/sink/examine(mob/user)
+	. = ..()
+	. += "<span class='notice'>[reagents.total_volume]/[reagents.maximum_volume] liquids remaining.</span>"
 
 /obj/structure/sink/attack_hand(mob/living/user)
 	. = ..()
@@ -256,10 +273,13 @@
 		return
 	if(!Adjacent(user))
 		return
-
+	if(reagents.total_volume < 5)
+		to_chat(user, "<span class='warning'>The sink has no more contents left!</span>")
+		return
 	if(busy)
 		to_chat(user, "<span class='notice'>Someone's already washing here.</span>")
 		return
+	process_check()
 	var/washing_face = user.is_zone_selected(BODY_ZONE_HEAD)
 	user.visible_message("<span class='notice'>[user] starts washing [user.p_their()] [washing_face ? "face" : "hands"]...</span>", \
 						"<span class='notice'>You start washing your [washing_face ? "face" : "hands"]...</span>")
@@ -270,6 +290,8 @@
 		return
 
 	busy = FALSE
+	reagents.remove_any(5)
+	reagents.reaction(user, TOUCH)
 
 	if(washing_face)
 		SEND_SIGNAL(user, COMSIG_COMPONENT_CLEAN_FACE_ACT, CLEAN_WASH)
@@ -292,9 +314,13 @@
 
 	if(istype(O, /obj/item/reagent_containers))
 		var/obj/item/reagent_containers/RG = O
+		process_check()
+		if(reagents.total_volume <= 0)
+			to_chat(user, "<span class='notice'>\The [src] is dry.</span>")
+			return FALSE
 		if(RG.is_refillable())
 			if(!RG.reagents.holder_full())
-				RG.reagents.add_reagent(dispensedreagent, min(RG.volume - RG.reagents.total_volume, RG.amount_per_transfer_from_this))
+				reagents.trans_to(RG, RG.amount_per_transfer_from_this, transfered_by = user)
 				to_chat(user, "<span class='notice'>You fill [RG] from [src].</span>")
 				return TRUE
 			to_chat(user, "<span class='notice'>\The [RG] is full.</span>")
@@ -315,7 +341,10 @@
 				return
 
 	if(istype(O, /obj/item/mop))
-		O.reagents.add_reagent(dispensedreagent, 5)
+		if(reagents.total_volume <= 0)
+			to_chat(user, "<span class='notice'>\The [src] is dry.</span>")
+			return FALSE
+		reagents.trans_to(O, 5, transfered_by = user)
 		to_chat(user, "<span class='notice'>You wet [O] in [src].</span>")
 		playsound(loc, 'sound/effects/slosh.ogg', 25, 1)
 		return
@@ -341,8 +370,6 @@
 		busy = FALSE
 		O.wash(CLEAN_WASH)
 		O.acid_level = 0
-		create_reagents(5)
-		reagents.add_reagent(dispensedreagent, 5)
 		reagents.reaction(O, TOUCH)
 		user.visible_message("<span class='notice'>[user] washes [O] using [src].</span>", \
 							"<span class='notice'>You wash [O] using [src].</span>")
@@ -350,15 +377,68 @@
 	else
 		return ..()
 
-/obj/structure/sink/deconstruct(disassembled = TRUE)
-	new /obj/item/stack/sheet/iron (loc, 3)
-	qdel(src)
+/obj/structure/sink/deconstruct()
+	if(!(flags_1 & NODECONSTRUCT_1))
+		drop_materials()
+	..()
+
+/obj/structure/sink/process(delta_time)
+	if(has_water_reclaimer && reagents.total_volume < reagents.maximum_volume)
+		reagents.add_reagent(dispensedreagent, reclaim_rate * delta_time)
+	else
+		reclaiming = FALSE
+		return PROCESS_KILL
+
+/obj/structure/sink/proc/drop_materials()
+	if(buildstacktype)
+		new buildstacktype(loc,buildstackamount)
+	else
+		for(var/i in custom_materials)
+			var/datum/material/M = i
+			new M.sheet_type(loc, FLOOR(custom_materials[M] / MINERAL_MATERIAL_AMOUNT, 1))
+
+/obj/structure/sink/proc/begin_reclamation()
+	if(!reclaiming)
+		reclaiming = TRUE
+		START_PROCESSING(SSfluids, src)
 
 
 /obj/structure/sink/kitchen
 	name = "kitchen sink"
 	icon_state = "sink_alt"
 
+/obj/structure/sink/greyscale
+	icon_state = "sink_greyscale"
+	material_flags = MATERIAL_ADD_PREFIX | MATERIAL_COLOR | MATERIAL_AFFECT_STATISTICS
+	buildstacktype = null
+
+/obj/structure/sinkframe
+	name = "sink frame"
+	icon = 'icons/obj/watercloset.dmi'
+	icon_state = "sink_frame"
+	desc = "A sink frame, that needs a water recycler to finish construction."
+	anchored = FALSE
+	material_flags = MATERIAL_ADD_PREFIX | MATERIAL_COLOR | MATERIAL_AFFECT_STATISTICS
+
+/obj/structure/sinkframe/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/simple_rotation, ROTATION_ALTCLICK | ROTATION_CLOCKWISE | ROTATION_COUNTERCLOCKWISE | ROTATION_VERBS, null, CALLBACK(src, .proc/can_be_rotated))
+
+/obj/structure/sinkframe/proc/can_be_rotated(mob/user, rotation_type)
+	if(anchored)
+		to_chat(user, "<span class='warning'>It is fastened to the floor!</span>")
+	return !anchored
+
+/obj/structure/sinkframe/attackby(obj/item/I, mob/living/user, params)
+	if(istype(I, /obj/item/stock_parts/water_recycler))
+		qdel(I)
+		var/obj/structure/sink/greyscale/new_sink = new /obj/structure/sink/greyscale(loc)
+		new_sink.has_water_reclaimer = TRUE
+		new_sink.set_custom_materials(custom_materials)
+		new_sink.setDir(dir)
+		qdel(src)
+		return
+	return ..()
 
 /obj/structure/sink/puddle	//splishy splashy ^_^
 	name = "puddle"

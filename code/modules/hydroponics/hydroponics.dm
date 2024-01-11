@@ -26,7 +26,6 @@
 	var/rating = 1
 	var/unwrenchable = 1
 	var/recent_bee_visit = FALSE //Have we been visited by a bee recently, so bees dont overpollinate one plant
-	var/using_irrigation = FALSE //If the tray is connected to other trays via irrigation hoses
 	var/self_sufficiency_req = 20 //Required total dose to make a self-sufficient hydro tray. 1:1 with earthsblood.
 	var/self_sufficiency_progress = 0
 	var/self_sustaining = FALSE //If the tray generates nutrients and water on its own
@@ -36,6 +35,14 @@
 	name = "hydroponics tray"
 	icon = 'icons/obj/hydroponics/equipment.dmi'
 	icon_state = "hydrotray3"
+
+/obj/machinery/hydroponics/constructable/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/simple_rotation, ROTATION_ALTCLICK | ROTATION_CLOCKWISE | ROTATION_COUNTERCLOCKWISE | ROTATION_VERBS, null, CALLBACK(src, .proc/can_be_rotated))
+	AddComponent(/datum/component/plumbing/simple_demand)
+
+/obj/machinery/hydroponics/constructable/proc/can_be_rotated(mob/user, rotation_type)
+	return !anchored
 
 /obj/machinery/hydroponics/constructable/RefreshParts()
 	var/tmp_capacity = 0
@@ -63,33 +70,10 @@
 		// handle opening the panel
 		if(default_deconstruction_screwdriver(user, icon_state, icon_state, I))
 			return
-
-		// handle deconstructing the machine, if permissible
-		if(I.tool_behaviour == TOOL_CROWBAR && using_irrigation)
-			to_chat(user, "<span class='warning'>Disconnect the hoses first!</span>")
-			return
-		else if(default_deconstruction_crowbar(I))
+		if(default_deconstruction_crowbar(I))
 			return
 
 	return ..()
-
-/obj/machinery/hydroponics/proc/FindConnected()
-	var/list/connected = list()
-	var/list/processing_atoms = list(src)
-
-	while(processing_atoms.len)
-		var/atom/a = processing_atoms[1]
-		for(var/step_dir in GLOB.cardinals)
-			var/obj/machinery/hydroponics/h = locate() in get_step(a, step_dir)
-			// Soil plots aren't dense
-			if(h && h.using_irrigation && h.density && !(h in connected) && !(h in processing_atoms))
-				processing_atoms += h
-
-		processing_atoms -= a
-		connected += a
-
-	return connected
-
 
 /obj/machinery/hydroponics/bullet_act(obj/projectile/Proj) //Works with the Somatoray to modify plant variables.
 	if(!myseed)
@@ -273,8 +257,6 @@
 		else
 			add_overlay(mutable_appearance('icons/obj/hydroponics/equipment.dmi', "gaia_blessing"))
 		set_light(3)
-
-	update_icon_hoses()
 
 	if(myseed)
 		update_icon_plant()
@@ -728,7 +710,6 @@
 		var/list/trays = list(src)//makes the list just this in cases of syringes and compost etc
 		var/target = myseed ? myseed.plantname : src
 		var/visi_msg = ""
-		var/irrigate = 0	//How am I supposed to irrigate pill contents?
 		var/transfer_amount
 
 		if(IS_EDIBLE(reagent_source) || istype(reagent_source, /obj/item/reagent_containers/pill))
@@ -746,44 +727,29 @@
 				visi_msg="[user] injects [target] with [syr]"
 				if(syr.reagents.total_volume <= syr.amount_per_transfer_from_this)
 					syr.mode = 0
-			else if(istype(reagent_source, /obj/item/reagent_containers/spray/))
-				visi_msg="[user] sprays [target] with [reagent_source]"
-				playsound(loc, 'sound/effects/spray3.ogg', 50, 1, -6)
-				irrigate = 1
-			else if(transfer_amount) // Droppers, cans, beakers, what have you.
-				visi_msg="[user] uses [reagent_source] on [target]"
-				irrigate = 1
 			// Beakers, bottles, buckets, etc.
 			if(reagent_source.is_drainable())
 				playsound(loc, 'sound/effects/slosh.ogg', 25, 1)
 
-		if(irrigate && transfer_amount > 30 && reagent_source.reagents.total_volume >= 30 && using_irrigation)
-			trays = FindConnected()
-			if (trays.len > 1)
-				visi_msg += ", setting off the irrigation system"
-
 		if(visi_msg)
 			visible_message("<span class='notice'>[visi_msg].</span>")
 
-		var/split = round(transfer_amount/trays.len)
-
 		for(var/obj/machinery/hydroponics/H in trays)
 		//cause I don't want to feel like im juggling 15 tamagotchis and I can get to my real work of ripping flooring apart in hopes of validating my life choices of becoming a space-gardener
-
-			var/datum/reagents/S = new /datum/reagents() //This is a strange way, but I don't know of a better one so I can't fix it at the moment...
-			S.my_atom = H
-
-			reagent_source.reagents.trans_to(S,split, transfered_by = user)
+			//This was originally in apply_chemicals, but due to apply_chemicals only holding nutrients, we handle it here now.
+			if(reagent_source.reagents.has_reagent(/datum/reagent/water, 1))
+				var/water_amt = reagent_source.reagents.get_reagent_amount(/datum/reagent/water) * transfer_amount / reagent_source.reagents.total_volume
+				H.adjustWater(round(water_amt))
+				reagent_source.reagents.remove_reagent(/datum/reagent/water, water_amt)
+			reagent_source.reagents.trans_to(H.reagents, transfer_amount, transfered_by = user)
+			lastuser = WEAKREF(user)
 			if(IS_EDIBLE(reagent_source) || istype(reagent_source, /obj/item/reagent_containers/pill))
 				qdel(reagent_source)
-
-			H.applyChemicals(S, user)
-
-			S.clear_reagents()
-			qdel(S)
-			H.update_icon()
+				H.update_appearance()
+				return 1
+			H.update_appearance()
 		if(reagent_source) // If the source wasn't composted and destroyed
-			reagent_source.update_icon()
+			reagent_source.update_appearance()
 		return 1
 
 	else if(istype(O, /obj/item/seeds) && !istype(O, /obj/item/seeds/sample))
@@ -836,17 +802,6 @@
 	else if(default_unfasten_wrench(user, O))
 		return
 
-	else if((O.tool_behaviour == TOOL_WIRECUTTER) && unwrenchable)
-		if (!anchored)
-			to_chat(user, "<span class='warning'>Anchor the tray first!</span>")
-			return
-		using_irrigation = !using_irrigation
-		O.play_tool_sound(src)
-		user.visible_message("<span class='notice'>[user] [using_irrigation ? "" : "dis"]connects [src]'s irrigation hoses.</span>", \
-		"<span class='notice'>You [using_irrigation ? "" : "dis"]connect [src]'s irrigation hoses.</span>")
-		for(var/obj/machinery/hydroponics/h in range(1,src))
-			h.update_icon()
-
 	else if(istype(O, /obj/item/shovel/spade))
 		if(!myseed && !weedlevel)
 			to_chat(user, "<span class='warning'>[src] doesn't have any plants or weeds!</span>")
@@ -872,11 +827,6 @@
 /obj/machinery/hydroponics/can_be_unfasten_wrench(mob/user, silent)
 	if (!unwrenchable)  // case also covered by NODECONSTRUCT checks in default_unfasten_wrench
 		return CANT_UNFASTEN
-
-	if (using_irrigation)
-		if (!silent)
-			to_chat(user, "<span class='warning'>Disconnect the hoses first!</span>")
-		return FAILED_UNFASTEN
 
 	return ..()
 
@@ -973,9 +923,6 @@
 	use_power = NO_POWER_USE
 	flags_1 = NODECONSTRUCT_1
 	unwrenchable = FALSE
-
-/obj/machinery/hydroponics/soil/update_icon_hoses()
-	return // Has no hoses
 
 /obj/machinery/hydroponics/soil/update_icon_lights()
 	return // Has no lights
