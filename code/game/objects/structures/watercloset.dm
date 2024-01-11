@@ -251,6 +251,8 @@
 	var/has_water_reclaimer = TRUE
 	///Has the water reclamation begun?
 	var/reclaiming = FALSE
+	///Units of water to reclaim per second
+	var/reclaim_rate = 0.5
 
 /obj/structure/sink/Initialize(mapload, bolt)
 	. = ..()
@@ -292,7 +294,7 @@
 	busy = FALSE
 	reagents.remove_any(5)
 	reagents.reaction(user, TOUCH)
-
+	begin_reclamation()
 	if(washing_face)
 		SEND_SIGNAL(user, COMSIG_COMPONENT_CLEAN_FACE_ACT, CLEAN_WASH)
 		user.drowsyness = max(user.drowsyness - rand(2,3), 0) //Washing your face wakes you up if you're falling asleep
@@ -314,13 +316,13 @@
 
 	if(istype(O, /obj/item/reagent_containers))
 		var/obj/item/reagent_containers/RG = O
-		process_check()
 		if(reagents.total_volume <= 0)
 			to_chat(user, "<span class='notice'>\The [src] is dry.</span>")
 			return FALSE
 		if(RG.is_refillable())
 			if(!RG.reagents.holder_full())
 				reagents.trans_to(RG, RG.amount_per_transfer_from_this, transfered_by = user)
+				begin_reclamation()
 				to_chat(user, "<span class='notice'>You fill [RG] from [src].</span>")
 				return TRUE
 			to_chat(user, "<span class='notice'>\The [RG] is full.</span>")
@@ -345,8 +347,9 @@
 			to_chat(user, "<span class='notice'>\The [src] is dry.</span>")
 			return FALSE
 		reagents.trans_to(O, 5, transfered_by = user)
+		begin_reclamation()
 		to_chat(user, "<span class='notice'>You wet [O] in [src].</span>")
-		playsound(loc, 'sound/effects/slosh.ogg', 25, 1)
+		playsound(loc, 'sound/effects/slosh.ogg', 25, TRUE)
 		return
 
 	if(istype(O, /obj/item/stack/medical/gauze))
@@ -401,7 +404,6 @@
 	if(!reclaiming)
 		reclaiming = TRUE
 		START_PROCESSING(SSfluids, src)
-
 
 /obj/structure/sink/kitchen
 	name = "kitchen sink"
