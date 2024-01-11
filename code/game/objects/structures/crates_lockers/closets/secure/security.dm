@@ -71,7 +71,7 @@
 
 	new /obj/item/clothing/neck/petcollar(src)
 	new /obj/item/pet_carrier(src)
-	new /obj/item/storage/photo_album/HoP(src)
+	new /obj/item/storage/photo_album/hop(src)
 
 	new /obj/item/storage/box/radiokey/srv(src)
 	new /obj/item/storage/box/command_keys(src)
@@ -148,7 +148,7 @@
 
 	new /obj/item/clothing/neck/petcollar(src)
 	new /obj/item/pet_carrier(src)
-	new /obj/item/storage/photo_album/HoS(src)
+	new /obj/item/storage/photo_album/hos(src)
 
 	new /obj/item/storage/box/radiokey/sec(src)
 	new /obj/item/storage/box/command_keys(src)
@@ -181,7 +181,7 @@
 	new /obj/item/clothing/under/rank/security/head_of_security/white(src)
 	new /obj/item/clothing/under/rank/security/head_of_security/parade/female(src)
 	new /obj/item/clothing/under/rank/security/head_of_security/parade(src)
-	new /obj/item/clothing/head/HoS(src)
+	new /obj/item/clothing/head/hats/hos/cap(src)
 
 /obj/structure/closet/secure_closet/warden
 	name = "\proper warden's locker"

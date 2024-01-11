@@ -11933,7 +11933,7 @@
 /area/crew_quarters/heads/hos)
 "bmC" = (
 /obj/structure/table/wood,
-/obj/item/storage/secure/safe/HoS{
+/obj/item/storage/secure/safe/hos{
 	pixel_x = 32
 	},
 /obj/item/flashlight/lamp,
@@ -13384,7 +13384,7 @@
 /area/crew_quarters/heads/hos)
 "btC" = (
 /obj/structure/closet/secure_closet/hos,
-/obj/item/clothing/head/HoS/beret,
+/obj/item/clothing/head/hos/beret,
 /obj/item/clothing/suit/armor/hos/trenchcoat,
 /obj/item/clothing/shoes/sneakers/white,
 /obj/effect/turf_decal/stripes/line{

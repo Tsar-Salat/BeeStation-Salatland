@@ -22,7 +22,7 @@
 
 	new /obj/item/clothing/neck/petcollar(src)
 	new /obj/item/pet_carrier(src)
-	new /obj/item/storage/photo_album/RD(src)
+	new /obj/item/storage/photo_album/rd(src)
 
 	new /obj/item/storage/box/radiokey/sci(src)
 	new /obj/item/storage/box/command_keys(src)

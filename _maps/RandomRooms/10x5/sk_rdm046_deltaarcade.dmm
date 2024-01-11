@@ -163,7 +163,7 @@
 "R" = (
 /obj/structure/table/wood,
 /obj/item/folder/blue,
-/obj/item/clothing/head/collectable/HoP,
+/obj/item/clothing/head/collectable/hop,
 /obj/effect/turf_decal/tile/red/opposingcorners,
 /obj/effect/turf_decal/tile/yellow/opposingcorners{
 	dir = 1

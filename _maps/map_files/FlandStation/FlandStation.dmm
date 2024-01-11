@@ -15668,7 +15668,7 @@
 /obj/structure/table/wood,
 /obj/item/folder/blue,
 /obj/item/storage/backpack/duffelbag/drone,
-/obj/item/clothing/head/collectable/HoP{
+/obj/item/clothing/head/collectable/hop{
 	name = "novelty HoP hat"
 	},
 /obj/machinery/camera{
@@ -66131,7 +66131,7 @@
 /obj/item/toy/gun,
 /obj/item/restraints/handcuffs,
 /obj/structure/table/wood,
-/obj/item/clothing/head/collectable/HoS{
+/obj/item/clothing/head/collectable/hos{
 	name = "novelty HoS hat"
 	},
 /obj/structure/cable/yellow{
@@ -69058,7 +69058,7 @@
 /area/medical/morgue)
 "rMs" = (
 /obj/structure/closet/secure_closet/hos,
-/obj/item/clothing/head/HoS/beret,
+/obj/item/clothing/head/hos/beret,
 /obj/item/clothing/suit/armor/hos/trenchcoat,
 /obj/item/clothing/shoes/sneakers/white,
 /obj/effect/turf_decal/stripes/line{
@@ -77255,7 +77255,7 @@
 /area/medical/medbay/lobby)
 "tNq" = (
 /obj/structure/bed/dogbed/cayenne,
-/obj/item/storage/secure/safe/HoS{
+/obj/item/storage/secure/safe/hos{
 	pixel_x = 32
 	},
 /mob/living/simple_animal/hostile/carp/lia,

@@ -1359,7 +1359,7 @@
 	pixel_y = 30
 	},
 /obj/machinery/computer/med_data/laptop,
-/obj/item/storage/secure/safe/HoS{
+/obj/item/storage/secure/safe/hos{
 	pixel_x = 36;
 	pixel_y = 28
 	},
@@ -19216,7 +19216,7 @@
 	pixel_x = -27
 	},
 /obj/item/folder/blue,
-/obj/item/clothing/head/collectable/HoP{
+/obj/item/clothing/head/collectable/hop{
 	name = "novelty HoP hat"
 	},
 /obj/machinery/light/small{
@@ -19346,7 +19346,7 @@
 /obj/item/toy/gun,
 /obj/item/restraints/handcuffs,
 /obj/structure/table/wood,
-/obj/item/clothing/head/collectable/HoS{
+/obj/item/clothing/head/collectable/hos{
 	name = "novelty HoS hat"
 	},
 /obj/machinery/firealarm{

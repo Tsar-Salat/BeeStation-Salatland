@@ -122,33 +122,36 @@
 	w_class = WEIGHT_CLASS_SMALL
 
 //Security
+/obj/item/clothing/head/hats/hos
+	name = "generic head of security hat"
+	desc = "Please contact the Nanotrasen Costuming Department if found."
+	strip_delay = 8 SECONDS
+	dynamic_hair_suffix = ""
+	armor = list(MELEE = 40,  BULLET = 30, LASER = 25, ENERGY = 30, BOMB = 25, BIO = 10, RAD = 0, FIRE = 50, ACID = 60, STAMINA = 30)
 
-/obj/item/clothing/head/HoS
+/obj/item/clothing/head/hats/hos/cap
 	name = "head of security cap"
 	desc = "The robust standard-issue cap of the Head of Security. For showing the officers who's in charge."
 	icon_state = "hoscap"
-	armor = list(MELEE = 40,  BULLET = 30, LASER = 25, ENERGY = 30, BOMB = 25, BIO = 10, RAD = 0, FIRE = 50, ACID = 60, STAMINA = 30)
-	strip_delay = 80
-	dynamic_hair_suffix = ""
 
-/obj/item/clothing/head/HoS/syndicate
+/obj/item/clothing/head/hats/hos/cap/syndicate
 	name = "syndicate cap"
 	desc = "A black cap fit for a high ranking syndicate officer."
 
-/obj/item/clothing/head/HoS/beret
+/obj/item/clothing/head/hats/hos/beret
 	name = "head of security beret"
 	desc = "A robust beret for the Head of Security, for looking stylish while not sacrificing protection."
 	icon_state = "beret_badge"
 	greyscale_config = /datum/greyscale_config/beret_badge
 	greyscale_config_worn = /datum/greyscale_config/beret_badge/worn
-	greyscale_colors = "#3F3C40#FFCE5B"
+	greyscale_colors = "#39393f#f0cc8f"
 
-/obj/item/clothing/head/hos/beret/navyhos
+/obj/item/clothing/head/hats/hos/beret/navyhos
 	name = "head of security's beret"
 	desc = "A special beret with the Head of Security's insignia emblazoned on it. A symbol of excellence, a badge of courage, a mark of distinction."
-	greyscale_colors = "#3C485A#FFCE5B"
+	greyscale_colors = "#638799#f0cc8f"
 
-/obj/item/clothing/head/HoS/beret/syndicate
+/obj/item/clothing/head/hats/hos/beret/syndicate
 	name = "syndicate beret"
 	desc = "A black beret with thick armor padding inside. Stylish and robust."
 

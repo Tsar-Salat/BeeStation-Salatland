@@ -191,7 +191,7 @@
 		return
 	return attack_self(user)
 
-/obj/item/storage/secure/safe/HoS
+/obj/item/storage/secure/safe/hos
 	name = "head of security's safe"
 
 /**

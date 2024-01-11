@@ -41649,7 +41649,7 @@
 	pixel_y = 5
 	},
 /obj/item/clothing/suit/armor/hos/trenchcoat,
-/obj/item/clothing/head/HoS/beret,
+/obj/item/clothing/head/hos/beret,
 /turf/open/floor/carpet/red,
 /area/crew_quarters/heads/hos)
 "mWi" = (
@@ -49898,7 +49898,7 @@
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 1
 	},
-/obj/item/storage/secure/safe/HoS{
+/obj/item/storage/secure/safe/hos{
 	pixel_x = 6;
 	pixel_y = 32
 	},

@@ -502,7 +502,7 @@
 /turf/open/floor/plasteel,
 /area/ai_monitored/security/armory)
 "acn" = (
-/obj/item/storage/secure/safe/HoS{
+/obj/item/storage/secure/safe/hos{
 	pixel_x = 35
 	},
 /obj/structure/closet/secure_closet/hos,

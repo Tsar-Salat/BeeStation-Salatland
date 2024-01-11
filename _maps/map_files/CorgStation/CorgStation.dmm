@@ -71486,7 +71486,7 @@
 /obj/item/radio/intercom{
 	pixel_y = 24
 	},
-/obj/item/storage/secure/safe/HoS{
+/obj/item/storage/secure/safe/hos{
 	pixel_x = 37;
 	pixel_y = 30
 	},

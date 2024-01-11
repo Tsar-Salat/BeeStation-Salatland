@@ -55,13 +55,13 @@
 			if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, P, null, TRUE, TRUE))
 				qdel(P)
 
-/obj/item/storage/photo_album/HoS
+/obj/item/storage/photo_album/hos
 	persistence_id = "HoS"
 
-/obj/item/storage/photo_album/RD
+/obj/item/storage/photo_album/rd
 	persistence_id = "RD"
 
-/obj/item/storage/photo_album/HoP
+/obj/item/storage/photo_album/hop
 	persistence_id = "HoP"
 
 /obj/item/storage/photo_album/Captain
