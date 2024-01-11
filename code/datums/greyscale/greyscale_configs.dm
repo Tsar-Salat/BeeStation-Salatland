@@ -1,3 +1,4 @@
+//Canisters
 /datum/greyscale_config/canister
 	name = "Default Canister"
 	icon_file = 'icons/obj/atmospherics/canisters.dmi'
@@ -28,6 +29,19 @@
 	icon_file = 'icons/obj/atmospherics/prototype_canister.dmi'
 	json_config = 'code/datums/greyscale/json_configs/canister_proto.json'
 
+//Carps
+/datum/greyscale_config/carp
+	name = "Space Carp"
+	icon_file = 'icons/mob/carp.dmi'
+	json_config = 'code/datums/greyscale/json_configs/carp.json'
+
+/datum/greyscale_config/carp/disk_mouth
+	name = "Space Carp Disk in Mouth"
+	json_config = 'code/datums/greyscale/json_configs/carp_disk_mouth.json'
+
+//Wirecutters GO HERE
+
+//Screwdriver
 /datum/greyscale_config/screwdriver
 	name = "Screwdriver"
 	icon_file = 'icons/obj/tools.dmi'
@@ -48,6 +62,8 @@
 	icon_file = 'icons/obj/clothing/belt_overlays.dmi'
 	json_config = 'code/datums/greyscale/json_configs/screwdriver_worn.json'
 
+
+//Jumpsuits
 /datum/greyscale_config/jumpsuit
 	name = "Jumpsuit"
 	icon_file = 'icons/obj/clothing/uniforms.dmi'
@@ -88,6 +104,9 @@
 	icon_file = 'icons/mob/inhands/clothing_righthand.dmi'
 	json_config = 'code/datums/greyscale/json_configs/jumpsuit_prison_inhand.json'
 
+//Tablets/PDAs GO HERE
+
+//Sneakers
 /datum/greyscale_config/sneakers
 	name = "Sneakers"
 	icon_file = 'icons/obj/clothing/shoes.dmi'
@@ -118,6 +137,59 @@
 	icon_file = 'icons/obj/clothing/shoes.dmi'
 	json_config = 'code/datums/greyscale/json_configs/sneakers_marisa.json'
 
+//Circuits GO HERE
+
+//Sombreros GO HERE
+
+//Winter Coats GO HERE
+
+//Lizard Plushes GO HERE
+
+//Datum Mats Mace GO HERE
+
+//Berets
+
+//Suspenders GO HERE
+
+//Wrapping Paper GO HERE
+
+//Gas Meters GO HERE
+
+//Thermomachines GO HERE
+
+//CTF GO HERE
+
+//Bandana GO HERE
+
+//Material Airlock GO HERE
+
+//Vape GO HERE
+
+//Ties GO HERE
+
+//Skirts GO HERE
+
+//Skirt Turtlenecks GO HERE
+
+//Dresses GO HERE
+
+//Beanies GO HERE
+
+//Scarves GO HERE
+
+//Pants-Shorts GO HERE
+
+//Tape GOES HERE
+
+//Buckets GO HERE
+
+//Sweaters GO HERE
+
+//Encryption keys GO HERE
+
+//Heretic runes GO HERE
+
+//Plasmamen
 /datum/greyscale_config/plasmaman_helmet_default
 	name = "Default plasmaman helmet"
 	icon_file = 'icons/obj/clothing/hats.dmi'
@@ -177,12 +249,3 @@
 	name = "Held Mark II plasmam helmet, right"
 	icon_file = 'icons/mob/inhands/clothing_righthand.dmi'
 	json_config = 'code/datums/greyscale/json_configs/plasmaman_helmet_mk2_inhand.json'
-
-/datum/greyscale_config/carp
-	name = "Space Carp"
-	icon_file = 'icons/mob/carp.dmi'
-	json_config = 'code/datums/greyscale/json_configs/carp.json'
-
-/datum/greyscale_config/carp/disk_mouth
-	name = "Space Carp Disk in Mouth"
-	json_config = 'code/datums/greyscale/json_configs/carp_disk_mouth.json'
