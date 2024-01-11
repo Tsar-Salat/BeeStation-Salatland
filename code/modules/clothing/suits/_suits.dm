@@ -1,7 +1,7 @@
 #define FOOTSTEP_COOLDOWN 3	//3 deci-seconds
 
 /obj/item/clothing/suit
-	icon = 'icons/obj/clothing/suits.dmi'
+	icon = 'icons/obj/clothing/suits/suits.dmi'
 	name = "suit"
 	var/fire_resist = T0C+100
 	drop_sound = 'sound/items/handling/cloth_drop.ogg'

@@ -50,7 +50,7 @@
 	new /obj/item/clothing/under/rank/captain/skirt(src)
 	new /obj/item/clothing/under/rank/captain/parade(src)
 	new /obj/item/clothing/head/caphat(src)
-	new /obj/item/clothing/head/beret/captain(src)
+	new /obj/item/clothing/head/caphat/beret(src)
 	new /obj/item/clothing/head/caphat/parade(src)
 	new /obj/item/clothing/head/crown/fancy(src)
 	new /obj/item/clothing/shoes/sneakers/brown(src)

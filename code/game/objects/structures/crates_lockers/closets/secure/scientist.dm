@@ -51,5 +51,5 @@
 	new /obj/item/clothing/under/rank/rnd/research_director/vest(src)
 	new /obj/item/clothing/under/rank/rnd/research_director/turtleneck(src)
 	new /obj/item/clothing/under/rank/rnd/research_director/turtleneck/skirt(src)
-	new /obj/item/clothing/head/beret/sci(src)
+	new /obj/item/clothing/head/beret/science/rd(src)
 	new /obj/item/clothing/shoes/sneakers/brown(src)

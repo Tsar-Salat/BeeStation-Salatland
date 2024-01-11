@@ -55,12 +55,14 @@
 	greyscale_config_inhand_left = null
 	greyscale_config_inhand_right = null
 	greyscale_config_worn = null
+	flags_1 = NONE
 
 /obj/item/clothing/shoes/sneakers/orange
 	name = "orange shoes"
 	greyscale_colors = "#eb7016#ffffff"
 	greyscale_config = /datum/greyscale_config/sneakers_orange
 	greyscale_config_worn = /datum/greyscale_config/sneakers_orange_worn
+	flags_1 = NONE
 
 /obj/item/clothing/shoes/sneakers/orange/attack_self(mob/user)
 	if (src.chained)

@@ -61,7 +61,7 @@
 					/obj/item/clothing/under/rank/medical/paramedic/skirt = 4,
 					/obj/item/clothing/under/rank/medical/doctor/nurse = 4,
 					/obj/item/clothing/head/nursehat = 4,
-					/obj/item/clothing/head/beret/med = 4,
+					/obj/item/clothing/head/beret/medical = 4,
 					/obj/item/clothing/under/rank/medical/doctor/blue = 4,
 					/obj/item/clothing/under/rank/medical/doctor/green = 4,
 					/obj/item/clothing/under/rank/medical/doctor/purple = 4,
@@ -72,6 +72,7 @@
 					/obj/item/clothing/suit/toggle/labcoat = 4,
 					/obj/item/clothing/suit/toggle/labcoat/paramedic = 4,
 					/obj/item/clothing/shoes/sneakers/white = 4,
+					/obj/item/clothing/head/beret/medical/paramedic = 4,
 					/obj/item/clothing/head/soft/paramedic = 4,
 					/obj/item/clothing/suit/apron/surgical = 4,
 					/obj/item/clothing/mask/surgical = 4)
@@ -100,9 +101,9 @@
 					/obj/item/clothing/under/rank/engineering/engineer/skirt = 3,
 					/obj/item/clothing/suit/hazardvest = 3,
 					/obj/item/clothing/shoes/workboots = 3,
+					/obj/item/clothing/head/beret/engi = 3,
 					/obj/item/clothing/head/hardhat = 3,
-					/obj/item/clothing/head/hardhat/weldhat = 3,
-					/obj/item/clothing/head/beret/eng = 3)
+					/obj/item/clothing/head/hardhat/weldhat = 3,)
 	contraband = list(/obj/item/clothing/suit/hooded/wintercoat/engineering/old = 3)
 	refill_canister = /obj/item/vending_refill/wardrobe/engi_wardrobe
 	dept_req_for_free = ACCOUNT_ENG_BITFLAG
@@ -125,8 +126,8 @@
 					/obj/item/clothing/suit/hooded/wintercoat/engineering/atmos = 3,
 					/obj/item/clothing/under/rank/engineering/atmospheric_technician = 3,
 					/obj/item/clothing/under/rank/engineering/atmospheric_technician/skirt = 3,
-					/obj/item/clothing/shoes/sneakers/black = 3,
-					/obj/item/clothing/head/beret/atmos = 3)
+					/obj/item/clothing/head/beret/atmos = 3,
+					/obj/item/clothing/shoes/sneakers/black = 3)
 	contraband = list(/obj/item/clothing/suit/hooded/wintercoat/engineering/atmos/old = 3)
 	refill_canister = /obj/item/vending_refill/wardrobe/atmos_wardrobe
 	dept_req_for_free = ACCOUNT_ENG_BITFLAG
@@ -148,8 +149,8 @@
 					/obj/item/clothing/head/helmet/space/plasmaman/cargo = 3,
 					/obj/item/clothing/shoes/sneakers/black = 3,
 					/obj/item/clothing/gloves/fingerless = 3,
+					/obj/item/clothing/head/beret/cargo = 3,
 					/obj/item/clothing/head/soft/cargo = 3,
-					/obj/item/clothing/head/beret/supply = 3,
 					/obj/item/radio/headset/headset_cargo = 3)
 	premium = list(	/obj/item/clothing/under/rank/cargo/miner = 3,
 					/obj/item/clothing/head/mailman = 2,
@@ -185,7 +186,7 @@
 					/obj/item/clothing/gloves/fingerless = 2,
 					/obj/item/clothing/head/soft/black = 2,
 					/obj/item/clothing/mask/bandana/skull = 2,
-					/obj/item/clothing/head/beret/sci = 2)
+					/obj/item/clothing/head/beret/science = 2)
 
 	contraband = list(/obj/item/clothing/suit/hooded/techpriest = 2,
 					/obj/item/organ/tongue/robot = 2,
@@ -207,7 +208,8 @@
 	light_color = LIGHT_COLOR_WHITE
 	products = list(/obj/item/clothing/accessory/pocketprotector = 3,
 					/obj/item/storage/backpack/science = 3,
-					/obj/item/storage/backpack/satchel/tox = 3,
+					/obj/item/storage/backpack/satchel/tox = 3,\
+					/obj/item/clothing/head/beret/science = 3,
 					/obj/item/clothing/suit/hooded/wintercoat/science = 3,
 					/obj/item/clothing/under/rank/rnd/scientist = 3,
 					/obj/item/clothing/under/rank/rnd/scientist/skirt = 3,
@@ -217,7 +219,6 @@
 					/obj/item/clothing/shoes/sneakers/white = 3,
 					/obj/item/radio/headset/headset_sci = 3,
 					/obj/item/clothing/mask/gas = 3,
-					/obj/item/clothing/head/beret/sci = 3,
 					/obj/item/clothing/head/cowboy_science = 3)
 	contraband = list(/obj/item/clothing/suit/hooded/wintercoat/science/old = 3)
 	refill_canister = /obj/item/vending_refill/wardrobe/science_wardrobe
@@ -454,6 +455,7 @@
 	vend_reply = "Thank you for using the ChemDrobe!"
 	products = list(/obj/item/clothing/under/rank/medical/chemist = 2,
 					/obj/item/clothing/under/rank/medical/chemist/skirt = 2,
+					/obj/item/clothing/head/beret/medical = 2,
 					/obj/item/clothing/under/plasmaman/chemist = 2,
 					/obj/item/clothing/head/helmet/space/plasmaman/chemist = 2,
 					/obj/item/clothing/shoes/sneakers/white = 2,
@@ -461,8 +463,7 @@
 					/obj/item/clothing/suit/hooded/wintercoat/chemist = 2,
 					/obj/item/storage/backpack/chemistry = 2,
 					/obj/item/storage/backpack/satchel/chem = 2,
-					/obj/item/storage/bag/chemistry = 2,
-					/obj/item/clothing/head/beret/med = 2)
+					/obj/item/storage/bag/chemistry = 2)
 	refill_canister = /obj/item/vending_refill/wardrobe/chem_wardrobe
 	dept_req_for_free = ACCOUNT_MED_BITFLAG
 /obj/item/vending_refill/wardrobe/chem_wardrobe
@@ -496,6 +497,7 @@
 	vend_reply = "Thank you for using the ViroDrobe"
 	products = list(/obj/item/clothing/under/rank/medical/virologist = 2,
 					/obj/item/clothing/under/rank/medical/virologist/skirt = 2,
+					/obj/item/clothing/head/beret/medical = 2,
 					/obj/item/clothing/under/plasmaman/viro = 2,
 					/obj/item/clothing/head/helmet/space/plasmaman/viro = 2,
 					/obj/item/clothing/shoes/sneakers/white = 2,

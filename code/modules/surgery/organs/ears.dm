@@ -93,7 +93,7 @@
 
 /obj/item/organ/ears/cat
 	name = "cat ears"
-	icon = 'icons/obj/clothing/hats.dmi'
+	icon = 'icons/obj/clothing/head/hats.dmi'
 	icon_state = "kitty"
 	bang_protect = -2
 

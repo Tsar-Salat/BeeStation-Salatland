@@ -36,7 +36,7 @@
 /datum/team/gang/blasto
 	name = "Blasto"
 	color = "#000080"
-	hat = /obj/item/clothing/head/beret/navy
+	hat = /obj/item/clothing/head/beret
 	outfit = /obj/item/clothing/under/suit/navy
 	suit = /obj/item/clothing/suit/jacket/miljacket
 

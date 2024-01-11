@@ -19,7 +19,7 @@
 	uniform = /obj/item/clothing/under/syndicate/combat
 	suit = /obj/item/clothing/suit/armor/vest/warden/sergeant
 	belt = /obj/item/storage/belt/military
-	head = /obj/item/clothing/head/beret/sergeant
+	head = /obj/item/clothing/head/beret/sec/navyofficer
 	gloves = /obj/item/clothing/gloves/combat
 	shoes = /obj/item/clothing/shoes/jackboots
 	mask = /obj/item/clothing/mask/gas/sechailer/swat/spacepol
