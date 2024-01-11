@@ -11410,7 +11410,7 @@
 /turf/open/floor/grass,
 /area/medical/genetics)
 "aOE" = (
-/obj/structure/sink/puddle,
+/obj/structure/water_source/puddle,
 /obj/structure/flora/ausbushes/reedbush{
 	pixel_y = 5
 	},
@@ -18474,7 +18474,7 @@
 /turf/open/floor/plasteel/dark,
 /area/maintenance/port)
 "bwJ" = (
-/obj/structure/sink/puddle,
+/obj/structure/water_source/puddle,
 /obj/structure/flora/ausbushes/reedbush{
 	pixel_y = 5
 	},

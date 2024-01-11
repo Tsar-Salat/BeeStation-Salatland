@@ -9,7 +9,7 @@
 /area/template_noop)
 "c" = (
 /obj/structure/window/reinforced/spawner,
-/obj/structure/sink/puddle,
+/obj/structure/water_source/puddle,
 /turf/open/floor/grass,
 /area/template_noop)
 "e" = (
