@@ -31,8 +31,6 @@ Behavior that's still missing from this component that original food items had t
 	var/junkiness = 0
 	///Message to send when eating
 	var/list/eatverbs
-	///Callback to be ran before you eat something, so you can check if someone *can* eat it.
-	var/datum/callback/pre_eat
 	///Callback to be ran before composting something, in case you don't want a piece of food to be compostable for some reason.
 	var/datum/callback/on_compost
 	///Callback to be ran for when you take a bite of something
@@ -63,7 +61,6 @@ Behavior that's still missing from this component that original food items had t
 	bite_consumption = 2,
 	microwaved_type,
 	junkiness,
-	datum/callback/pre_eat,
 	datum/callback/on_compost,
 	datum/callback/after_eat,
 	datum/callback/on_consume,
@@ -95,7 +92,6 @@ Behavior that's still missing from this component that original food items had t
 	src.eat_time = eat_time
 	src.eatverbs = string_list(eatverbs)
 	src.junkiness = junkiness
-	src.pre_eat = pre_eat
 	src.on_compost = on_compost
 	src.after_eat = after_eat
 	src.on_consume = on_consume
@@ -127,7 +123,6 @@ Behavior that's still missing from this component that original food items had t
 	list/eatverbs = list("bite","chew","nibble","gnaw","gobble","chomp"),
 	bite_consumption = 2,
 	microwaved_type,
-	datum/callback/pre_eat,
 	datum/callback/on_compost,
 	datum/callback/after_eat,
 	datum/callback/on_consume,
@@ -141,13 +136,11 @@ Behavior that's still missing from this component that original food items had t
 	src.eat_time = eat_time
 	src.eatverbs = eatverbs
 	src.junkiness = junkiness
-	src.pre_eat = pre_eat
 	src.on_compost = on_compost
 	src.after_eat = after_eat
 	src.on_consume = on_consume
 
 /datum/component/edible/Destroy(force, silent)
-	QDEL_NULL(pre_eat)
 	QDEL_NULL(on_compost)
 	QDEL_NULL(after_eat)
 	QDEL_NULL(on_consume)
@@ -284,9 +277,6 @@ Behavior that's still missing from this component that original food items had t
 
 	set waitfor = FALSE // We might end up sleeping here, so we don't want to hold up anything
 
-	if(QDELETED(parent))
-		return
-
 	var/atom/owner = parent
 
 	if(feeder.a_intent == INTENT_HARM)
@@ -310,24 +300,41 @@ Behavior that's still missing from this component that original food items had t
 			return
 		var/eatverb = pick(eatverbs)
 
+		var/message_to_nearby_audience = ""
+		var/message_to_consumer = ""
+		var/message_to_blind_consumer = ""
+
 		if(junkiness && eater.satiety < -150 && eater.nutrition > NUTRITION_LEVEL_STARVING + 50 && !HAS_TRAIT(eater, TRAIT_VORACIOUS))
 			to_chat(eater, "<span class='warning'>You don't feel like eating any more junk food at the moment!</span>")
 			return
-		else if(fullness <= 50)
-			eater.visible_message("<span class='notice'>[eater] hungrily [eatverb]s \the [parent], gobbling it down!</span>", "<span class='notice'>You hungrily [eatverb] \the [parent], gobbling it down!</span>")
-		else if(fullness > 50 && fullness < 150)
-			eater.visible_message("<span class='notice'>[eater] hungrily [eatverb]s \the [parent].</span>", "<span class='notice'>You hungrily [eatverb] \the [parent].</span>")
-		else if(fullness > 150 && fullness < 500)
-			eater.visible_message("<span class='notice'>[eater] [eatverb]s \the [parent].</span>", "<span class='notice'>You [eatverb] \the [parent].</span>")
-		else if(fullness > 500 && fullness < 600)
-			eater.visible_message("<span class='notice'>[eater] unwillingly [eatverb]s a bit of \the [parent].</span>", "<span class='notice'>You unwillingly [eatverb] a bit of \the [parent].</span>")
-		else if(fullness > (600 * (1 + eater.overeatduration / 2000)))	// The more you eat - the more you can eat
-			eater.visible_message("<span class='warning'>[eater] cannot force any more of \the [parent] to go down [eater.p_their()] throat!</span>", "<span class='warning'>You cannot force any more of \the [parent] to go down your throat!</span>")
-			return
-
-
-
-
+		else if(fullness > (600 * (1 + eater.overeatduration / (4000 SECONDS)))) // The more you eat - the more you can eat
+			if(HAS_TRAIT(eater, TRAIT_VORACIOUS))
+				message_to_nearby_audience = "<span class='notice'>[eater] voraciously forces \the [parent] down [eater.p_their()] throat..</span>"
+				message_to_consumer = "<span class='notice'>You voraciously force \the [parent] down your throat.</span>"
+			else
+				message_to_nearby_audience = "<span class='warning'>[eater] cannot force any more of \the [parent] to go down [eater.p_their()] throat!</span>"
+				message_to_consumer = "<span class='warning'>You cannot force any more of \the [parent] to go down your throat!</span>"
+				message_to_blind_consumer = message_to_consumer
+				eater.show_message(message_to_consumer, MSG_VISUAL, message_to_blind_consumer)
+				eater.visible_message(message_to_nearby_audience, ignored_mobs = eater)
+				//if we're too full, return because we can't eat whatever it is we're trying to eat
+				return
+		else if(fullness > 500)
+			if(HAS_TRAIT(eater, TRAIT_VORACIOUS))
+				message_to_nearby_audience = "<span class='notice'>[eater] [eatverb]s \the [parent].</span>"
+				message_to_consumer = "<span class='notice'>You [eatverb] \the [parent].</span>"
+			else
+				message_to_nearby_audience = "<span class='notice'>[eater] unwillingly [eatverb]s a bit of \the [parent].</span>"
+				message_to_consumer = "<span class='notice'>You unwillingly [eatverb] a bit of \the [parent].</span>"
+		else if(fullness > 150)
+			message_to_nearby_audience = "<span class='notice'>[eater] [eatverb]s \the [parent].</span>"
+			message_to_consumer = "<span class='notice'>You [eatverb] \the [parent].</span>"
+		else if(fullness > 50)
+			message_to_nearby_audience = "<span class='notice'>[eater] hungrily [eatverb]s \the [parent].</span>"
+			message_to_consumer = "<span class='notice'>You hungrily [eatverb] \the [parent].</span>"
+		else
+			message_to_nearby_audience = "<span class='notice'>[eater] hungrily [eatverb]s \the [parent], gobbling it down!</span>"
+			message_to_consumer = "<span class='notice'>You hungrily [eatverb] \the [parent], gobbling it down!</span>"
 
 	else //If you're feeding it to someone else.
 		if(isbrain(eater))
@@ -342,8 +349,8 @@ Behavior that's still missing from this component that original food items had t
 				to_chat(eater, "<span class='userdanger'>You feel someone trying to feed you something!</span>")
 		else
 			eater.visible_message(
-				"<span class='warning'>[feeder] cannot force any more of [parent] down [eater]'s throat!</span>", \
-				"<span class='warning'>[feeder] cannot force any more of [parent] down your throat!</span>"
+				"<span class='danger'>[feeder] cannot force any more of [parent] down [eater]'s throat!</span>", \
+				"<span class='userdanger'>[feeder] cannot force any more of [parent] down your throat!</span>"
 			)
 			if(eater.is_blind())
 				to_chat(eater, "<span class='userdanger'>You're too full to eat what's being fed to you!</span>")
@@ -404,8 +411,6 @@ Behavior that's still missing from this component that original food items had t
 ///Checks whether or not the eater can actually consume the food
 /datum/component/edible/proc/CanConsume(mob/living/eater, mob/living/feeder)
 	if(!iscarbon(eater))
-		return FALSE
-	if(pre_eat && !pre_eat.Invoke(eater, feeder))
 		return FALSE
 	var/mob/living/carbon/C = eater
 	var/covered = ""
@@ -469,6 +474,7 @@ Behavior that's still missing from this component that original food items had t
 
 	on_consume?.Invoke(eater, feeder)
 
+	to_chat(feeder, "<span class='warning'>There is nothing left of [parent], oh no!</span>")
 	if(isturf(parent))
 		var/turf/T = parent
 		T.ScrapeAway(1, CHANGETURF_INHERIT_AIR)

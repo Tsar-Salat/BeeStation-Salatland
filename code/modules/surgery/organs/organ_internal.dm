@@ -1,21 +1,25 @@
 /obj/item/organ
 	name = "organ"
 	icon = 'icons/obj/surgery.dmi'
-	var/mob/living/carbon/owner = null
-	var/status = ORGAN_ORGANIC
 	w_class = WEIGHT_CLASS_SMALL
 	throwforce = 0
+	///The mob that owns this organ.
+	var/mob/living/carbon/owner = null
+	var/status = ORGAN_ORGANIC
+	///The body zone this organ is supposed to inhabit.
 	var/zone = BODY_ZONE_CHEST
+	///The organ slot this organ is supposed to inhabit. This should be unique by type. (Lungs, Appendix, Stomach, etc)
 	var/slot
 	// DO NOT add slots with matching names to different zones - it will break internal_organs_slot list!
 	var/organ_flags = ORGAN_EDIBLE
 	var/maxHealth = STANDARD_ORGAN_THRESHOLD
-	var/damage = 0		//total damage this organ has sustained
+	/// Total damage this organ has sustained
+	var/damage = 0
 	///Healing factor and decay factor function on % of maxhealth, and do not work by applying a static number per tick
-	var/healing_factor 	= 0										//fraction of maxhealth healed per on_life(), set to 0 for generic organs
-	var/decay_factor 	= 0										//same as above but when without a living owner, set to 0 for generic organs
-	var/high_threshold	= STANDARD_ORGAN_THRESHOLD * 0.45		//when severe organ damage occurs
-	var/low_threshold	= STANDARD_ORGAN_THRESHOLD * 0.1		//when minor organ damage occurs
+	var/healing_factor = 0 //fraction of maxhealth healed per on_life(), set to 0 for generic organs
+	var/decay_factor = 0 //same as above but when without a living owner, set to 0 for generic organs
+	var/high_threshold = STANDARD_ORGAN_THRESHOLD * 0.45 //when severe organ damage occurs
+	var/low_threshold = STANDARD_ORGAN_THRESHOLD * 0.1 //when minor organ damage occurs
 
 	///Organ variables for determining what we alert the owner with when they pass/clear the damage thresholds
 	var/prev_damage = 0
@@ -36,16 +40,15 @@
 // any nonhumans created in that time would experience the same effect.
 INITIALIZE_IMMEDIATE(/obj/item/organ)
 
-/obj/item/organ/Initialize()
+/obj/item/organ/Initialize(mapload)
 	. = ..()
 	if(organ_flags & ORGAN_EDIBLE)
 		AddComponent(/datum/component/edible,\
-		initial_reagents = food_reagents,\
-		foodtypes = RAW | MEAT | GORE,\
-		volume = 10,\
-		pre_eat = CALLBACK(src, PROC_REF(pre_eat)),\
-		on_compost = CALLBACK(src, PROC_REF(pre_compost)),\
-		after_eat = CALLBACK(src, PROC_REF(on_eat_from)))
+			initial_reagents = food_reagents,\
+			foodtypes = RAW | MEAT | GORE,\
+			volume = 10,\
+			on_compost = CALLBACK(src, PROC_REF(pre_compost)),\
+			after_eat = CALLBACK(src, PROC_REF(on_eat_from)))
 
 /obj/item/organ/proc/Insert(mob/living/carbon/M, special = 0, drop_if_replaced = TRUE, pref_load = FALSE)
 	if(!iscarbon(M) || owner == M)
@@ -137,16 +140,6 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 	else
 		STOP_PROCESSING(SSobj, src)
 	return ..()
-
-// Put any "can we eat this" checks for edible organs here
-/obj/item/organ/proc/pre_eat(eater, feeder)
-	if(iscarbon(eater))
-		var/mob/living/carbon/target = eater
-		for(var/S in target.surgeries)
-			var/datum/surgery/surgery = S
-			if(surgery.location == zone)
-				return FALSE
-	return TRUE
 
 /obj/item/organ/proc/pre_compost(user)
 	return TRUE
