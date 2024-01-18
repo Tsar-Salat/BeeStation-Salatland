@@ -70,7 +70,7 @@
 	speed = 3
 	maxHealth = 1
 	health = 1
-	movement_type = FLYING
+	is_flying_animal = TRUE
 	melee_damage = 2
 	attacktext = "slashes"
 	speak_emote = list("telepathically cries")

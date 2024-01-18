@@ -11,6 +11,11 @@
 	health = 25
 	hardcrit_threshold = HEALTH_THRESHOLD_CRIT
 
+	default_num_legs = 1
+	//num_legs = 1 //Alien larvas always have a movable apendage.
+	//usable_legs = 1 //Alien larvas always have a movable apendage.
+	default_num_hands = 0
+
 	var/amount_grown = 0
 	var/max_grown = 100
 	var/time_of_birth

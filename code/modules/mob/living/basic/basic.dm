@@ -141,7 +141,6 @@
 		mobility_flags = MOBILITY_FLAGS_DEFAULT
 		update_mobility()
 		. = 1
-		setMovetype(initial(movement_type))
 
 /mob/living/basic/proc/melee_attack(atom/target)
 	src.face_atom(target)

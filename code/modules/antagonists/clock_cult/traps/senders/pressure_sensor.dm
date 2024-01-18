@@ -35,7 +35,7 @@
 	if(istype(M))
 		if(is_servant_of_ratvar(M))
 			return
-		if(M.incorporeal_move || M.is_flying())
+		if(M.incorporeal_move || M.movement_type & (FLOATING|FLYING))
 			return
 	else
 		return

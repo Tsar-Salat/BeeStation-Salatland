@@ -76,18 +76,15 @@
 	. = ..()
 	AddComponent(/datum/component/caltrop, force)
 
-/obj/item/light/proc/on_entered(datum/source, atom/movable/L)
+/obj/item/light/proc/on_entered(datum/source, atom/movable/moving_atom)
 	SIGNAL_HANDLER
-
-	if(!istype(L, /mob/living) || !has_gravity(loc))
+	if(!isliving(moving_atom))
 		return
-
-	if(HAS_TRAIT(L, TRAIT_LIGHT_STEP))
-		playsound(loc, 'sound/effects/glass_step.ogg', 30, 1)
-	else
-		playsound(loc, 'sound/effects/glass_step.ogg', 50, 1)
-	if(status == LIGHT_BURNED || status == LIGHT_OK)
-		shatter()
+	var/mob/living/moving_mob = moving_atom
+	if(!(moving_mob.movement_type & (FLYING|FLOATING)) || moving_mob.buckled)
+		playsound(src, 'sound/effects/glass_step.ogg', HAS_TRAIT(moving_mob, TRAIT_LIGHT_STEP) ? 30 : 50, TRUE)
+		if(status == LIGHT_BURNED || status == LIGHT_OK)
+			shatter(moving_mob)
 
 // attack bulb/tube with object
 // if a syringe, can inject plasma to make it explode

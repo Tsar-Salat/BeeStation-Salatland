@@ -21,7 +21,7 @@
 	melee_damage = 20
 	attacktext = "blinks at"
 	attack_sound = 'sound/weapons/pierce.ogg'
-	movement_type = FLYING
+	is_flying_animal = TRUE
 
 	faction = list("spooky")
 	del_on_death = TRUE

@@ -56,6 +56,10 @@ Difficulty: Very Hard
 	small_sprite_type = /datum/action/small_sprite/megafauna/colossus
 	var/invulnerable_finale = FALSE
 
+/mob/living/simple_animal/hostile/megafauna/colossus/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_NO_FLOATING_ANIM, INNATE_TRAIT) //we don't want this guy to float, messes up his animations.
+
 /datum/action/innate/megafauna_attack/spiral_attack
 	name = "Spiral Shots"
 	icon_icon = 'icons/mob/actions/actions_items.dmi'
@@ -703,7 +707,7 @@ GLOBAL_DATUM(blackbox, /obj/machinery/smartfridge/black_box)
 	health = 2
 	friendly = "mends"
 	density = FALSE
-	movement_type = FLYING
+	is_flying_animal = TRUE
 	pass_flags = PASSTABLE | PASSGRILLE | PASSMOB
 	ventcrawler = VENTCRAWLER_ALWAYS
 	mob_size = MOB_SIZE_TINY
@@ -718,7 +722,6 @@ GLOBAL_DATUM(blackbox, /obj/machinery/smartfridge/black_box)
 	faction = list("neutral")
 	del_on_death = TRUE
 	unsuitable_atmos_damage = 0
-	movement_type = FLYING
 	minbodytemp = 0
 	maxbodytemp = 1500
 	obj_damage = 0

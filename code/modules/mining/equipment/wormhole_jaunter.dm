@@ -35,23 +35,24 @@
 
 	return destinations
 
-/obj/item/wormhole_jaunter/proc/activate(mob/living/user, adjacent)
+/obj/item/wormhole_jaunter/proc/activate(mob/living/user, adjacent, teleport)
 	if(!turf_check(user))
 		return
 
-	var/list/L = get_destinations(user)
-	if(!L.len)
+	var/list/destinations = get_destinations()
+	if(!destinations.len)
 		to_chat(user, "<span class='notice'>The [src.name] found no beacons in the world to anchor a wormhole to.</span>")
 		return
-	var/chosen_beacon = pick(L)
-	var/obj/effect/portal/jaunt_tunnel/J = new (get_turf(src), src, 100, null, FALSE, get_turf(chosen_beacon))
-	if(adjacent)
-		try_move_adjacent(J)
-	else
-		user.Paralyze(2 SECONDS, TRUE, TRUE) //Ignore stun immunity here, for their own good
-		user.setMovetype(user.movement_type | FLOATING) //Prevents falling into chasm during delay, automatically removed upon movement
-		addtimer(CALLBACK(J, TYPE_PROC_REF(/atom, attackby), null, user), 1 SECONDS) //Forcibly teleport them away from the chasm after a brief dramatic delay
-	playsound(src,'sound/effects/sparks4.ogg',50,1)
+
+	var/chosen_beacon = pick(destinations)
+
+	var/obj/effect/portal/jaunt_tunnel/tunnel = new (get_turf(src), src, 100, null, FALSE, get_turf(chosen_beacon))
+	if(teleport)
+		tunnel.teleport(user)
+	else if(adjacent)
+		try_move_adjacent(tunnel)
+
+	playsound(src,'sound/effects/sparks4.ogg',50,TRUE)
 	qdel(src)
 
 /obj/item/wormhole_jaunter/emp_act(power)

@@ -1,8 +1,13 @@
 /datum/component/slippery
+	/// If the slip forces you to drop held items.
 	var/force_drop_items = FALSE
+	/// How long the slip keeps you knocked down.
 	var/knockdown_time = 0
+	/// How long the slip paralyzes for.
 	var/paralyze_time = 0
+	/// Flags for how slippery the parent is. See [__DEFINES/mobs.dm]
 	var/lube_flags
+	/// A proc callback to call on slip.
 	var/datum/callback/callback
 
 	///what we give to connect_loc by default, makes slippable mobs moving over us slip
@@ -30,11 +35,10 @@
 
 /datum/component/slippery/proc/Slip(datum/source, atom/movable/arrived, atom/old_loc, list/atom/old_locs)
 	SIGNAL_HANDLER
-
 	if(!isliving(arrived))
 		return
 	var/mob/living/victim = arrived
-	if(!(victim.movement_type & FLYING) && victim.slip(knockdown_time, parent, lube_flags, paralyze_time, force_drop_items) && callback)
+	if(!(victim.movement_type & (FLYING | FLOATING)) && victim.slip(knockdown_time, parent, lube_flags, paralyze_time, force_drop_items) && callback)
 		callback.Invoke(victim)
 
 /datum/component/slippery/UnregisterFromParent()

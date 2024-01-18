@@ -114,6 +114,16 @@
 
 /obj/item/tank/jetpack/proc/move_react(mob/user)
 	SIGNAL_HANDLER
+	if(!user || !user.client)//Don't allow jet self using
+		return
+	if(!isturf(user.loc))//You can't use jet in nowhere or from mecha/closet
+		return
+	if(!(user.movement_type & FLOATING) || user.buckled)//You don't want use jet in gravity or while buckled.
+		return
+	if(user.pulledby)//You don't use jet if someone pull you
+		return
+	if(user.throwing)//You don't use jet if you are thrown
+		return
 	if(on)
 		allow_thrust(THRUST_REQUIREMENT_SPACEMOVE, user)
 		// Update speed according to pressure

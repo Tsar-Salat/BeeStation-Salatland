@@ -173,7 +173,16 @@
 
 /obj/item/organ/cyberimp/chest/thrusters/proc/move_react()
 	SIGNAL_HANDLER
-
+	if(!owner)//Don't allow jet self using
+		return
+	if(!isturf(owner.loc))//You can't use jet in nowhere or in mecha/closet
+		return
+	if(!(owner.movement_type & FLOATING) || owner.buckled)//You don't want use jet in gravity or while buckled.
+		return
+	if(owner.pulledby)//You don't use jet if someone pull you
+		return
+	if(owner.throwing)//You don't use jet if you are thrown
+		return
 	allow_thrust(THRUST_REQUIREMENT_SPACEMOVE)
 
 /obj/item/organ/cyberimp/chest/thrusters/proc/allow_thrust(num, use_fuel = TRUE)
