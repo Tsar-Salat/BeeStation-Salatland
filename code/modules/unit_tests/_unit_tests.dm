@@ -65,6 +65,7 @@
 #endif
 
 #include "dcs_get_id_from_elements.dm"
+#include "dummy_spawn.dm"
 #include "dynamic_ruleset_sanity.dm"
 #include "enumerables.dm"
 #include "gamemode_sanity.dm"
