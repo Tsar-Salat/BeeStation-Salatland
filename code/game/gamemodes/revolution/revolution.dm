@@ -4,7 +4,7 @@
 // Just make sure the converter is a head before you call it!
 // To remove a rev (from brainwashing or w/e), call SSticker.mode:remove_revolutionary(_THE_PLAYERS_MIND_),
 // this will also check they're not a head, so it can just be called freely
-// If the game somtimes isn't registering a win properly, then SSticker.mode.check_win() isn't being called somewhere.
+// If the game somtimes isn't registering a win properly, then our check_finished is fucked up.
 
 
 /datum/game_mode/revolution
@@ -27,7 +27,6 @@
 	<span class='notice'>Crew</span>: Prevent the revolutionaries from taking over the station."
 
 	var/finished = 0
-	var/check_counter = 0
 	var/max_headrevs = 3
 	var/datum/team/revolution/revolution
 	var/list/datum/mind/headrev_candidates = list()
@@ -117,26 +116,14 @@
 	..()
 
 
-/datum/game_mode/revolution/process()
-	check_counter++
-	if(check_counter >= 5)
-		if(!finished)
-			SSticker.mode.check_win()
-		check_counter = 0
-
-//////////////////////////////////////
-//Checks if the revs have won or not//
-//////////////////////////////////////
-/datum/game_mode/revolution/check_win()
+///////////////////////////////////////////
+//Checks who won and if the round is over//
+///////////////////////////////////////////
+/datum/game_mode/revolution/check_finished()
 	if(check_rev_victory())
 		finished = 1
 	else if(check_heads_victory())
 		finished = 2
-
-///////////////////////////////
-//Checks if the round is over//
-///////////////////////////////
-/datum/game_mode/revolution/check_finished()
 	if(CONFIG_GET(keyed_list/continuous)["revolution"])
 		if(finished)
 			SSshuttle.clearHostileEnvironment(src)
@@ -208,6 +195,7 @@
 	end_when_heads_dead = FALSE
 	var/endtime = null
 	var/fuckingdone = FALSE
+	var/check_counter = 0
 
 /datum/game_mode/revolution/speedy/pre_setup()
 	endtime = world.time + 20 MINUTES
@@ -215,7 +203,9 @@
 
 /datum/game_mode/revolution/speedy/process()
 	..()
-	if(check_counter == 0)
+	check_counter++
+	if(check_counter == 5)
+		check_counter = 0
 		if (world.time > endtime && !fuckingdone)
 			fuckingdone = TRUE
 			for (var/obj/machinery/nuclearbomb/N in GLOB.nuke_list)
