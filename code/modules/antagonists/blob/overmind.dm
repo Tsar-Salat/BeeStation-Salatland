@@ -21,25 +21,29 @@ GLOBAL_LIST_EMPTY(blob_nodes)
 	faction = list(FACTION_BLOB)
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	hud_type = /datum/hud/blob_overmind
-	var/obj/structure/blob/core/blob_core = null // The blob overmind's core
+	var/obj/structure/blob/special/core/blob_core = null // The blob overmind's core
 	var/blob_points = 0
-	var/max_blob_points = 100
+	var/max_blob_points = OVERMIND_MAX_POINTS_DEFAULT
 	var/last_attack = 0
-	var/datum/blobstrain/blobstrain
+	var/datum/blobstrain/reagent/blobstrain
 	var/list/blob_mobs = list()
+	/// A list of all blob structures
+	var/list/all_blobs = list()
 	var/list/resource_blobs = list()
-	var/free_strain_rerolls = 1 //one free strain reroll
+	var/list/factory_blobs = list()
+	var/list/node_blobs = list()
+	var/free_strain_rerolls = OVERMIND_STARTING_REROLLS
 	var/last_reroll_time = 0 //time since we last rerolled, used to give free rerolls
 	var/nodes_required = 1 //if the blob needs nodes to place resource and factory blobs
 	var/placed = 0
-	var/manualplace_min_time = 600 //in deciseconds //a minute, to get bearings
-	var/autoplace_max_time = 3600 //six minutes, as long as should be needed
+	var/manualplace_min_time = OVERMIND_STARTING_MIN_PLACE_TIME	// Some time to get your bearings
+	var/autoplace_max_time = OVERMIND_STARTING_AUTO_PLACE_TIME	// Automatically place the core in a random spot
 	var/list/blobs_legit = list()
 	var/max_count = 0 //The biggest it got before death
-	var/blobwincount = 400
+	var/blobwincount = OVERMIND_WIN_CONDITION_AMOUNT
 	var/victory_in_progress = FALSE
 	var/rerolling = FALSE
-	var/announcement_size = 75
+	var/announcement_size = OVERMIND_ANNOUNCEMENT_MIN_SIZE // Announce the biohazard when this size is reached
 	var/announcement_time
 	var/has_announced = FALSE
 
@@ -47,7 +51,7 @@ GLOBAL_LIST_EMPTY(blob_nodes)
 	var/list/strain_choices
 	var/need_reroll_strain = FALSE
 
-/mob/camera/blob/Initialize(mapload, starting_points = 60)
+/mob/camera/blob/Initialize(mapload, starting_points = OVERMIND_STARTING_POINTS)
 	validate_location()
 	blob_points = starting_points
 	manualplace_min_time += world.time
@@ -63,7 +67,6 @@ GLOBAL_LIST_EMPTY(blob_nodes)
 	if(blob_core)
 		blob_core.update_icon()
 	SSshuttle.registerHostileEnvironment(src)
-	announcement_time = world.time + 6000
 	. = ..()
 	START_PROCESSING(SSobj, src)
 
@@ -119,16 +122,17 @@ GLOBAL_LIST_EMPTY(blob_nodes)
 		max_blob_points = INFINITY
 		blob_points = INFINITY
 		addtimer(CALLBACK(src, PROC_REF(victory)), 450)
-	else if(!free_strain_rerolls && (last_reroll_time + BLOB_REROLL_TIME<world.time))
+	else if(!free_strain_rerolls && (last_reroll_time + BLOB_POWER_REROLL_FREE_TIME<world.time))
 		to_chat(src, "<b><span class='big'><font color=\"#EE4000\">You have gained another free strain re-roll.</font></span></b>")
 		free_strain_rerolls = 1
 
 	if(!victory_in_progress && max_count < blobs_legit.len)
 		max_count = blobs_legit.len
 
-	if(!has_announced && (world.time >= announcement_time || blobs_legit.len >= announcement_size))
+	if(announcement_time && (world.time >= announcement_time || blobs_legit.len >= announcement_size) && !has_announced)
 		priority_announce("Confirmed outbreak of level 5 biohazard aboard [station_name()]. All personnel must contain the outbreak.", "Biohazard Alert", ANNOUNCER_OUTBREAK5)
 		has_announced = TRUE
+
 /mob/camera/blob/proc/victory()
 	sound_to_playing_players('sound/machines/alarm.ogg')
 	sleep(100)
@@ -188,6 +192,13 @@ GLOBAL_LIST_EMPTY(blob_nodes)
 		if(BM)
 			BM.overmind = null
 			BM.update_icons()
+	for(var/obj/structure/blob/blob_structure as anything in all_blobs)
+		blob_structure.overmind = null
+	all_blobs = null
+	resource_blobs = null
+	factory_blobs = null
+	node_blobs = null
+	blob_mobs = null
 	GLOB.overminds -= src
 	QDEL_LIST_ASSOC_VAL(strain_choices)
 
@@ -280,7 +291,7 @@ GLOBAL_LIST_EMPTY(blob_nodes)
 
 /mob/camera/blob/Move(NewLoc, Dir = 0)
 	if(placed)
-		var/obj/structure/blob/B = locate() in range("3x3", NewLoc)
+		var/obj/structure/blob/B = locate() in range(OVERMIND_MAX_CAMERA_STRAY, NewLoc)
 		if(B)
 			forceMove(NewLoc)
 		else
