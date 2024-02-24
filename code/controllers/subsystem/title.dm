@@ -71,6 +71,9 @@ SUBSYSTEM_DEF(title)
 				if(splash_turf)
 					splash_turf.icon = icon
 
+
+/datum/controller/subsystem/title
+
 /datum/controller/subsystem/title/Shutdown()
 	if(file_path)
 		var/F = file("data/previous_title.dat")

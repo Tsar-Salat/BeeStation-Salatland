@@ -551,3 +551,17 @@
 					+ "\nThis is only required once and only for the duration that the panic bunker is active.</span>" \
 					+ "\n<span class='boldwarning'>If the interview interface is not open, use the Open Interview verb in the top right.</span>")
 
+
+//Lobby Tracks
+
+/mob/dead/new_player/verb/next_lobby_track()
+	set name = "Play Different Lobby Track"
+	set category = "OOC"
+
+	if(src.client.prefs.read_player_preference(/datum/preference/toggle/sound_lobby))
+		var/decl/audio/track/track = GLOB.using_map.get_lobby_track(GLOB.using_map.lobby_track.type)
+		SEND_SOUND(src, track.get_sound())
+		to_chat(src, track.get_info())
+		
+	else
+		return
