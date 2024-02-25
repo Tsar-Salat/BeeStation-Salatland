@@ -15,7 +15,7 @@
 	color = "#88cdf1"
 	greyscale_colors = "#88cdf196"
 	alpha = 150
-	categories = list(MAT_CATEGORY_RIGID = TRUE/*, MAT_CATEGORY_BASE_RECIPES = TRUE*/) //Excluding glass for now
+	categories = list(MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_BASE_RECIPES = TRUE) //Excluding glass for now
 	integrity_modifier = 0.1
 	sheet_type = /obj/item/stack/sheet/glass
 	value_per_unit = 0.0025

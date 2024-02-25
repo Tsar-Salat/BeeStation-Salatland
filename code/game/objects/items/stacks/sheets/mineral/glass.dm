@@ -24,6 +24,7 @@
 	material_type = /datum/material/glass
 	point_value = 1
 	tableVariant = /obj/structure/table/glass
+	chairVariant = /obj/structure/chair/glass
 	matter_amount = 4
 
 /obj/item/stack/sheet/glass/suicide_act(mob/living/carbon/user)

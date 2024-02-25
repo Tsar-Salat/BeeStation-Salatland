@@ -152,6 +152,13 @@
 	item_chair = /obj/item/chair/greyscale
 	buildstacktype = null //Custom mats handle this
 
+///glass material chair
+/obj/structure/chair/glass
+	icon_state = "glass_chair"
+	material_flags = MATERIAL_EFFECTS | MATERIAL_ADD_PREFIX | MATERIAL_AFFECT_STATISTICS
+	item_chair = /obj/item/chair/glass
+	buildstacktype = null //Custom mats handle this
+
 /obj/structure/chair/wood
 	icon_state = "wooden_chair"
 	name = "wooden chair"

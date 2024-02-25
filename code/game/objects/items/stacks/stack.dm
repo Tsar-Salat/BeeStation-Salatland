@@ -44,6 +44,8 @@
 	var/material_type
 	///Stores table variant to be built from this stack
 	var/obj/structure/table/tableVariant
+	///Stores chair variant to be built from this stack
+	var/obj/structure/chair/chairVariant
 	/// Amount of matter for RCD
 	var/matter_amount = 0
 

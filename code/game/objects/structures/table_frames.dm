@@ -25,10 +25,10 @@
 	to_chat(user, "<span class='notice'>You start disassembling [src]...</span>")
 	I.play_tool_sound(src)
 	if(!I.use_tool(src, user, 3 SECONDS))
-		return
+		return TRUE
 	playsound(src.loc, 'sound/items/deconstruct.ogg', 50, TRUE)
 	deconstruct(TRUE)
-	return
+	return TRUE
 
 /obj/structure/table_frame/attackby(obj/item/I, mob/user, params)
 	if(isstack(I))

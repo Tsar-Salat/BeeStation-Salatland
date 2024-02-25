@@ -87,6 +87,10 @@
 	material_flags = MATERIAL_ADD_PREFIX | MATERIAL_COLOR | MATERIAL_AFFECT_STATISTICS
 	origin_type = /obj/structure/chair/greyscale
 
+/obj/item/chair/glass
+	material_flags = MATERIAL_ADD_PREFIX | MATERIAL_AFFECT_STATISTICS
+	origin_type = /obj/structure/chair/greyscale
+
 /obj/item/chair/stool
 	name = "stool"
 	desc = "The last line of defense."
