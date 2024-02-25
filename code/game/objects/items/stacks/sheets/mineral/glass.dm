@@ -26,6 +26,8 @@
 	tableVariant = /obj/structure/table/glass
 	chairVariant = /obj/structure/chair/glass
 	matter_amount = 4
+	cost = 500
+	source = /datum/robot_energy_storage/glass
 
 /obj/item/stack/sheet/glass/suicide_act(mob/living/carbon/user)
 	user.visible_message("<span class='suicide'>[user] begins to slice [user.p_their()] neck with \the [src]! It looks like [user.p_theyre()] trying to commit suicide!</span>")
