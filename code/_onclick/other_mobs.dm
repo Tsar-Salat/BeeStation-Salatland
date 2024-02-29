@@ -179,6 +179,16 @@
 */
 /mob/living/carbon/alien/UnarmedAttack(atom/A)
 	A.attack_alien(src)
+	//Not a carbon? We dont care if you ghostize
+	if(!iscarbon(A))
+		return
+	//Already have the timed trait? We arent going run through the logic of applying it again
+	if(HAS_TRAIT(A, TRAIT_NOGHOSTIZE))
+		return
+	var/mob/living/carbon/fresh_meat = A
+	//Status effect handles the timer
+	fresh_meat.apply_status_effect(STATUS_EFFECT_NOGHOSTIZE)
+
 
 /atom/proc/attack_alien(mob/living/carbon/alien/user)
 	attack_paw(user)

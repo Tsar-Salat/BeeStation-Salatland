@@ -225,3 +225,18 @@
 /datum/status_effect/offering/proc/dropped_item(obj/item/source)
 	SIGNAL_HANDLER
 	qdel(src)
+
+/datum/status_effect/no_ghostize
+	id = "no ghostize"
+	duration = 60 SECONDS
+	status_type = STATUS_EFFECT_UNIQUE
+	//No alert, we dont want them to game the duration
+	alert_type = null
+
+/datum/status_effect/no_ghostize/on_apply()
+	. = ..()
+	ADD_TRAIT(owner, TRAIT_NO_GHOSTIZE, "[STATUS_EFFECT_TRAIT]_[id]")
+
+/datum/status_effect/no_ghostize/on_remove()
+	. = ..()
+	REMOVE_TRAIT(owner, TRAIT_NO_GHOSTIZE, "[STATUS_EFFECT_TRAIT]_[id]")

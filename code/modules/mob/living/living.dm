@@ -419,6 +419,9 @@
 
 /mob/living/verb/succumb(whispered as null)
 	set hidden = TRUE
+	if(HAS_TRAIT(src, TRAIT_NO_GHOSTIZE))
+		to_chat(src, "<span class='warning'>You cannot succumb, salter.</span>")
+		return
 	if (InCritical())
 		log_message("Has [whispered ? "whispered his final words" : "succumbed to death"] while in [InFullCritical() ? "hard":"soft"] critical with [round(health, 0.1)] points of health!", LOG_ATTACK)
 		adjustOxyLoss(health - HEALTH_THRESHOLD_DEAD)
