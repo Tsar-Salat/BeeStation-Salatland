@@ -53,7 +53,7 @@
 			transfer_fingerprints_to(C)
 			C.add_fingerprint(user)
 		qdel(src)
-		to_chat(user, "<span class='notice'>You tear [src] up.</span>")
+		to_chat(user, "<span class='notice'>You tear [src] up alot.</span>")
 	else
 		return ..()
 
