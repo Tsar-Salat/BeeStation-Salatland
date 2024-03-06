@@ -453,6 +453,7 @@
 		if (proper_bomb) // Why does this exist
 			set_dynamic_high_impact_event("nuclear bomb has been armed")
 			countdown_music = play_soundtrack_music(/datum/soundtrack_song/bee/countdown)
+			usr.add_mob_memory(/datum/memory/bomb_planted/nuke, antagonist = src)
 
 	else
 		detonation_timer = null

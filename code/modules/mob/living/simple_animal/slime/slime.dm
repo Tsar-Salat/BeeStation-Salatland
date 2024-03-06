@@ -538,7 +538,7 @@
 	. = ..()
 	if (.)
 		if(mind && master)
-			mind.add_memory(MEMORY_MYMASTER, list(DETAIL_DEUTERAGONIST = master.real_name), story_value = STORY_VALUE_NONE, memory_flags = MEMORY_FLAG_NOMOOD)//Slimes dont have mood, so nomood flag
+			mind.add_memory(/datum/memory/key/my_master, masters_name = master.real_name)
 	return .
 
 /mob/living/simple_animal/slime/get_spawner_desc()

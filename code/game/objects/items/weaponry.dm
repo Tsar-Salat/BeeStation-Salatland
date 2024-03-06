@@ -910,6 +910,8 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 		user.do_attack_animation(target)
 		target.do_attack_animation(user)
 		playsound(src, 'sound/weapons/punch2.ogg', 50, 0)
+		user.add_mob_memory(/datum/memory/high_five, deuteragonist = target)
+		target.add_mob_memory(/datum/memory/high_five, deuteragonist = user)
 		qdel(src)
 		qdel(downlow)
 	else

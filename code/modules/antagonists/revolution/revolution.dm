@@ -294,6 +294,7 @@
 	banning_key = UNBANNABLE_ANTAGONIST
 
 /datum/antagonist/revolution_enemy/on_gain()
+	owner.add_memory(/datum/memory/revolution_heads_defeated)
 	owner.special_role = "revolution enemy"
 
 	var/datum/objective/survive/survive = new /datum/objective/survive
@@ -394,25 +395,17 @@
 	save_members()
 
 	// Remove everyone as a revolutionary
-	for (var/_rev_mind in members)
-		var/datum/mind/rev_mind = _rev_mind
-		if (rev_mind.has_antag_datum(/datum/antagonist/rev))
-			var/datum/antagonist/rev/rev_antag = rev_mind.has_antag_datum(/datum/antagonist/rev)
+	for (var/datum/mind/rev_mind as anything in members)
+		var/datum/antagonist/rev/rev_antag = rev_mind.has_antag_datum(/datum/antagonist/rev)
+		if (!isnull(rev_antag))
 			rev_antag.remove_revolutionary(FALSE, . == STATION_VICTORY ? DECONVERTER_STATION_WIN : DECONVERTER_REVS_WIN)
-			LAZYADD(rev_mind.special_statuses, "<span class='bad'>Former [(rev_mind in ex_headrevs) ? "head revolutionary" : "revolutionary"]</span>")
-			add_memory_in_range(rev_mind.current, 7, MEMORY_WON_REVOLUTION, list(DETAIL_PROTAGONIST = rev_mind.current, DETAIL_STATION_NAME = station_name()), story_value = STORY_VALUE_LEGENDARY, memory_flags = MEMORY_FLAG_NOSTATIONNAME|MEMORY_CHECK_BLIND_AND_DEAF, protagonist_memory_flags = MEMORY_FLAG_NOSTATIONNAME)
-
+			if(rev_mind in ex_headrevs)
+				LAZYADD(rev_mind.special_statuses, "<span class='bad'>Former head revolutionary</span>")
+			else
+				LAZYADD(rev_mind.special_statuses, "<span class='bad'>Former revolutionary</span>")
 
 	if (. == STATION_VICTORY)
-		// If the revolution was quelled, make rev heads unable to be revived through pods
-		for (var/_rev_head_mind in ex_revs)
-			var/datum/mind/rev_head_mind = _rev_head_mind
-			var/mob/living/carbon/rev_head_body = rev_head_mind.current
-			if(istype(rev_head_body) && rev_head_body.stat == DEAD)
-				rev_head_body.makeUncloneable()
-
-		priority_announce("It appears the mutiny has been quelled. Please return yourself and your incapacitated colleagues to work. \
-		We have remotely blacklisted the head revolutionaries in your medical records to prevent accidental revival.", null, SSstation.announcer.get_rand_report_sound(), null, "Central Command Loyalty Monitoring Division")
+		defeat_effects()
 	else
 		for (var/_player in GLOB.player_list)
 			var/mob/player = _player
@@ -449,6 +442,21 @@
 		For the safety of our staff, we have blacklisted your station for new employment of security and command. \
 		[pick(world.file2list("strings/anti_union_propaganda.txt"))]", null, SSstation.announcer.get_rand_report_sound(), null, "Central Command Loyalty Monitoring Division")
 		addtimer(CALLBACK(SSshuttle.emergency, TYPE_PROC_REF(/obj/docking_port/mobile/emergency, request), null, 1), 50)
+
+/datum/team/revolution/proc/defeat_effects()
+	// If the revolution was quelled, make rev heads unable to be revived through pods
+	for (var/datum/mind/rev_head as anything in ex_headrevs)
+		if(!isnull(rev_head.current))
+			ADD_TRAIT(rev_head.current, TRAIT_DEFIB_BLACKLISTED, REF(src))
+			rev_head.current.med_hud_set_status()
+
+	for(var/datum/objective/mutiny/head_tracker in objectives)
+		var/mob/living/head_of_staff = head_tracker.target?.current
+		if(!isnull(head_of_staff))
+			add_memory_in_range(head_of_staff, 5, /datum/memory/revolution_heads_victory, protagonist = head_of_staff)
+
+	priority_announce("It appears the mutiny has been quelled. Please return yourself and your incapacitated colleagues to work. \
+		We have remotely blacklisted the head revolutionaries in your medical records to prevent accidental revival.", null, null, null, "Central Command Loyalty Monitoring Division")
 
 /// Mutates the ticker to report that the revs have won
 /datum/team/revolution/proc/round_result(finished)

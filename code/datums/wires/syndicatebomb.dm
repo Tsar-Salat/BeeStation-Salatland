@@ -42,8 +42,10 @@
 			else
 				holder.visible_message("<span class='notice'>[icon2html(B, viewers(holder))] The bomb seems to hesitate for a moment.</span>")
 				fake_delayed_hesitate = TRUE
+
 		if(WIRE_UNBOLT)
 			holder.visible_message("<span class='notice'>[icon2html(B, viewers(holder))] The bolts spin in place for a moment.</span>")
+
 		if(WIRE_DELAY)
 			if(delayed_chirp)
 				holder.visible_message("<span class='notice'>[icon2html(B, viewers(holder))] Nothing happens.</span>")
@@ -53,6 +55,7 @@
 				B.detonation_timer += 10 SECONDS
 				if(B.active)
 					delayed_chirp = TRUE
+
 		if(WIRE_PROCEED)
 			holder.visible_message("<span class='danger'>[icon2html(B, viewers(holder))] The bomb buzzes ominously!</span>")
 			playsound(B, 'sound/machines/buzz-sigh.ogg', 30, 1)
@@ -66,6 +69,7 @@
 				time_cut = TRUE
 			else if(seconds_left >= SHORT_FUSE_THRESHOLD) // Both to prevent negative timers and to have a little mercy.
 				B.detonation_timer = world.time + 10 SECONDS
+
 		if(WIRE_ACTIVATE)
 			if(!B.active)
 				holder.visible_message("<span class='danger'>[icon2html(B, viewers(holder))] You hear the bomb start ticking!</span>")
@@ -85,17 +89,28 @@
 			if(!mend && B.active)
 				holder.visible_message("<span class='danger'>[icon2html(B, viewers(holder))] An alarm sounds! It's go-</span>")
 				B.explode_now = TRUE
-				tell_admins(B)
+				if(!istype(B.payload, /obj/machinery/syndicatebomb/training))
+					tell_admins(B)
+					// Cursed usr use but no easy way to get the cutter
+					if(isliving(usr))
+						add_memory_in_range(B, 7, /datum/memory/bomb_defuse_failure, protagonist = usr, antagonist = B)
+
 		if(WIRE_UNBOLT)
 			if(!mend && B.anchored)
 				holder.visible_message("<span class='notice'>[icon2html(B, viewers(holder))] The bolts lift out of the ground!</span>")
 				playsound(B, 'sound/effects/stealthoff.ogg', 30, 1)
 				B.set_anchored(FALSE)
+
 		if(WIRE_PROCEED)
 			if(!mend && B.active)
 				holder.visible_message("<span class='danger'>[icon2html(B, viewers(holder))] An alarm sounds! It's go-</span>")
 				B.explode_now = TRUE
-				tell_admins(B)
+				if(!istype(B.payload, /obj/machinery/syndicatebomb/training))
+					tell_admins(B)
+					// Cursed usr use but no easy way to get the cutter
+					if(isliving(usr))
+						add_memory_in_range(B, 7, /datum/memory/bomb_defuse_failure, protagonist = usr, antagonist = B)
+
 		if(WIRE_ACTIVATE)
 			if(!mend && B.active)
 				holder.visible_message("<span class='notice'>[icon2html(B, viewers(holder))] The timer stops! The bomb has been defused!</span>")
@@ -106,8 +121,6 @@
 				B.update_icon()
 
 /datum/wires/syndicatebomb/proc/tell_admins(obj/machinery/syndicatebomb/B)
-	if(istype(B, /obj/machinery/syndicatebomb/training))
-		return
 	var/turf/T = get_turf(B)
 	log_game("\A [B] was detonated via boom wire at [AREACOORD(T)].")
 	message_admins("A [B.name] was detonated via boom wire at [ADMIN_VERBOSEJMP(T)].")

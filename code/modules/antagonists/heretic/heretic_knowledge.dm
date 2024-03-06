@@ -415,6 +415,7 @@
 	to_chat(user, "<span class='boldnotice'>[name] completed!</span>")
 	to_chat(user, "<span class='hypnophrase'><span class='big>[drain_message]</span></span>")
 	desc += " (Completed!)"
+	user.add_mob_memory(/datum/memory/heretic_knowlege_ritual)
 	return TRUE
 
 #undef KNOWLEDGE_RITUAL_POINTS

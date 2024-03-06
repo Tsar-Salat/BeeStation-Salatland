@@ -12,7 +12,7 @@
 		var/list/display_message = list(
 			"<span class='notice'>Something wet falls out of their pocket and hits the ground. Is that... [name]?</span>",
 			"<span class='warning'>Oh shit! All your pocket [name] fell out!</span>")
-		AddComponent(/datum/component/spill, display_message, 'sound/effects/splat.ogg', MEMORY_SPAGHETTI_SPILL)
+		AddComponent(/datum/component/spill, display_message, 'sound/effects/splat.ogg', /datum/memory/lost_spaghetti)
 
 /obj/item/food/spaghetti/raw
 	name = "spaghetti"

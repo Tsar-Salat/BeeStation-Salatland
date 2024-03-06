@@ -314,8 +314,9 @@
 			O.mmi = W //and give the real mmi to the borg.
 
 			O.updatename(BM.client)
+			// This canonizes that MMI'd cyborgs have memories of their previous life
+			BM.add_mob_memory(/datum/memory/was_cyborged, protagonist = BM.mind, deuteragonist = user)
 			BM.mind.transfer_to(O)
-			BM.mind.add_memory(MEMORY_BORGED, list(DETAIL_PROTAGONIST = user), story_value = STORY_VALUE_OKAY, memory_flags = MEMORY_SKIP_UNCONSCIOUS)
 
 			if(O.mind?.special_role)
 				to_chat(O, "<span class='userdanger'>You have been robotized!</span>")
