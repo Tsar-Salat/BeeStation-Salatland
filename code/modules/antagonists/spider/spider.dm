@@ -24,7 +24,6 @@
 	for(var/datum/antagonist/spider/spider in spiders)
 		to_chat(spider.owner, "<span class='spiderlarge'>Your directives have been updated!</span>")
 		to_chat(spider.owner, "<span class='spiderlarge'>New directive: [directive]</span>")
-		spider.owner.store_memory("<b>Directive: [directive]</b>")
 		spider.update_static_data(spider.owner?.current)
 
 /datum/team/spiders/proc/handle_master_qdel()
@@ -75,12 +74,10 @@
 	if(spider_team.directive)
 		to_chat(owner, "<span class='spiderlarge'>You were left a directive! Follow it at all costs.</span>")
 		to_chat(owner, "<span class='spiderlarge'><b>[spider_team.directive]</b></span>")
-		owner.store_memory("<b>Directive: [spider_team.directive]</b>")
 	else
 		to_chat(owner, "<span class='spider'>You do not have a directive. You'll need to set one before laying eggs.</span>")
 	if(spider_team.master)
 		to_chat(owner, "<span class='spider'>Your master is: [spider_team.master]. Follow their orders when they do not conflict with your directives.")
-		owner.store_memory("<b>Your master is: [spider_team.master]</b>")
 
 	if(!length(old_team.get_team_antags()))
 		qdel(old_team)

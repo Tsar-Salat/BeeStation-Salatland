@@ -52,8 +52,8 @@
 	icon = 'icons/turf/walls/icedmetal_wall.dmi'
 	icon_state = "icedmetal_wall-0"
 	base_icon_state = "icedmetal_wall"
-	smoothing_flags = SMOOTH_BITMASK
 	desc = "A wall covered in a thick sheet of ice."
+	smoothing_flags = SMOOTH_BITMASK
 	canSmoothWith = null
 	hardness = 35
 	slicing_duration = 150 //welding through the ice+metal

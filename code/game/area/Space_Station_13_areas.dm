@@ -1193,6 +1193,7 @@ NOTE: there are two lists of areas in the end of this file: centcom and station 
 /area/security/prison
 	name = "Prison Wing"
 	icon_state = "sec_prison"
+	area_flags = VALID_TERRITORY | BLOBS_ALLOWED | UNIQUE_AREA
 	mood_bonus = -4
 	mood_job_allowed = list(JOB_NAME_HEADOFSECURITY,JOB_NAME_WARDEN, JOB_NAME_SECURITYOFFICER)  // JUSTICE!
 	mood_job_reverse = TRUE
@@ -1240,7 +1241,7 @@ NOTE: there are two lists of areas in the end of this file: centcom and station 
 
 /area/security/execution/education
 	name = "Prisoner Education Chamber"
-	
+
 /area/security/nuke_storage
 	name = "Vault"
 	icon_state = "nuke_storage"

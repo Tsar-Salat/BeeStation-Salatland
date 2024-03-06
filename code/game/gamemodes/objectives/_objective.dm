@@ -233,6 +233,7 @@ GLOBAL_LIST(admin_objective_list) //Prefilled admin assignable objective list
 		// Hard-del handling is done by the component
 		receiver.antag_stash = secret_bag
 		var/atom_text = ""
+		var/secret_bag_location = secret_bag.loc
 		switch (pick_weight(list("airlock" = 3)))
 			if("airlock")
 				atom_text = "An airlock"
@@ -252,16 +253,26 @@ GLOBAL_LIST(admin_objective_list) //Prefilled admin assignable objective list
 					A.AddComponent(/datum/component/stash, receiver, secret_bag)
 					break
 		//Failsafe
-		if(!secret_bag.loc)
+		if(!secret_bag_location)
 			atom_text = "You"
 			message_admins("Could not find a location to put [ADMIN_FLW(receiver.current)]'s stash.")
 			secret_bag.forceMove(get_turf(receiver.current))
 			receiver.current.equip_to_appropriate_slot(secret_bag)
 			// Remove this from memory since the component deals with hard-dels
 			receiver.antag_stash = null
+
 		//Update the mind
-		receiver.store_memory("You have a secret stash of items hidden on the station required for your objectives. It is hidden inside of [atom_text] ([secret_bag.loc]) located at [get_area(secret_bag.loc)] [COORD(secret_bag.loc)], you may have to search around for it. (Use alt click on the object the stash is inside to access it).")
-		to_chat(receiver?.current, "<span class='notice bold'>You have a secret stash at [get_area(secret_bag)], more details are stored in your notes. (IC > Notes)</span>")
+		// DO THIS BEFORE FINISHING PR !!!!
+		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		//!!
+		//!!
+		//!!!
+		//receiver.add_memory(MEMORY_STASH, "You have a secret stash of items hidden on the station required for your objectives. It is hidden inside of [atom_text] ([secret_bag.loc]) located at [get_area(secret_bag.loc)] [COORD(secret_bag.loc)], you may have to search around for it. (Use alt click on the object the stash is inside to access it).")
+		//to_chat(receiver?.current, "<span class='notice bold'>You have a secret stash at [get_area(secret_bag)], more details are stored in your notes. (IC > Notes)</span>")
+		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
 	//Create the objects in the bag
 	for(var/eq_path in special_equipment)
 		new eq_path(secret_bag)

@@ -94,8 +94,6 @@ Slimecrossing Potions
 		return
 	to_chat(user, "<span class='notice'>You feed [M] the love potion!</span>")
 	to_chat(M, "<span class='notice'>You develop feelings for [user], and anyone [user.p_they()] like.</span>")
-	if(M.mind)
-		M.mind.store_memory("You are in love with [user].")
 	M.faction |= "[REF(user)]"
 	M.apply_status_effect(STATUS_EFFECT_INLOVE, user)
 	qdel(src)

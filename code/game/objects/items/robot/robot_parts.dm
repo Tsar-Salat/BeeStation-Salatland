@@ -314,11 +314,10 @@
 			O.mmi = W //and give the real mmi to the borg.
 
 			O.updatename(BM.client)
-
 			BM.mind.transfer_to(O)
+			BM.mind.add_memory(MEMORY_BORGED, list(DETAIL_PROTAGONIST = user), story_value = STORY_VALUE_OKAY)
 
 			if(O.mind?.special_role)
-				O.mind.store_memory("As a cyborg, you must obey your silicon laws and master AI above all else. Your objectives will consider you to be dead.")
 				to_chat(O, "<span class='userdanger'>You have been robotized!</span>")
 				to_chat(O, "<span class='danger'>You must obey your silicon laws and master AI above all else. Your objectives will consider you to be dead.</span>")
 

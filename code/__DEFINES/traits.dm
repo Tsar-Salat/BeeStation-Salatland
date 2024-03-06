@@ -281,11 +281,16 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_HEARING_SENSITIVE "hearing_sensitive"
 
 // item traits
-#define TRAIT_NODROP            "nodrop"
-#define TRAIT_NO_STORAGE_INSERT	"no_storage_insert" //cannot be inserted in a storage.
+#define TRAIT_NODROP "nodrop"
+/// cannot be inserted in a storage.
+#define TRAIT_NO_STORAGE_INSERT "no_storage_insert"
 #define TRAIT_SPRAYPAINTED		"spraypainted"
-#define TRAIT_T_RAY_VISIBLE     "t-ray-visible" // Visible on t-ray scanners if the atom/var/level == 1
-#define TRAIT_NO_TELEPORT		"no-teleport" //you just can't
+/// Visible on t-ray scanners if the atom/var/level == 1
+#define TRAIT_T_RAY_VISIBLE "t-ray-visible"
+/// `do_teleport` will not allow this atom to teleport
+#define TRAIT_NO_TELEPORT "no-teleport"
+/// If something has been engraved/cannot be engraved
+#define TRAIT_NOT_ENGRAVABLE "not_engravable"
 #define TRAIT_STARGAZED			"stargazed"	//Affected by a stargazer
 #define TRAIT_DOOR_PRYER		"door-pryer"	//Item can be used on airlocks to pry them open (even when powered)
 #define TRAIT_FISH_SAFE_STORAGE "fish_case" //Fish in this won't die

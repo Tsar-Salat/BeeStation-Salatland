@@ -234,6 +234,7 @@
 			return
 		visible_message("<span class='danger'>[icon2html(src, viewers(loc))] [timer_set] seconds until detonation, please clear the area.</span>")
 		activate()
+		user.mind?.add_memory(MEMORY_BOMB_PRIMED, list(DETAIL_BOMB_TYPE = src), story_value = STORY_VALUE_AMAZING)
 		update_icon()
 		add_fingerprint(user)
 

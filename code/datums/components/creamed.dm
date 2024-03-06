@@ -18,6 +18,8 @@ GLOBAL_LIST_INIT(creamable, typecacheof(list(
 	if(!is_type_in_typecache(parent, GLOB.creamable))
 		return COMPONENT_INCOMPATIBLE
 
+	add_memory_in_range(parent, 7, MEMORY_CREAMPIED, list(DETAIL_PROTAGONIST = parent), story_value = STORY_VALUE_OKAY)
+
 	creamface = mutable_appearance('icons/effects/creampie.dmi')
 
 	if(ishuman(parent))

@@ -461,6 +461,10 @@ Behavior that's still missing from this component that original food items had t
 			to_chat(human_eater,"<span class='notice'>I love this taste!</span>")
 			human_eater.adjust_disgust(-5 + -2.5 * fraction)
 			SEND_SIGNAL(human_eater, COMSIG_ADD_MOOD_EVENT, "fav_food", /datum/mood_event/favorite_food)
+			//if(istype(parent, /obj/item/food))
+			//	var/obj/item/food/memorable_food = parent
+			//	if(memorable_food.venue_value >= FOOD_PRICE_EXOTIC)
+			//		H.mind?.add_memory(MEMORY_MEAL, list(DETAIL_FOOD = memorable_food), story_value = STORY_VALUE_OKAY)
 	last_check_time = world.time
 
 ///Delete the item when it is fully eaten

@@ -530,6 +530,7 @@ IF YOU MODIFY THE PRODUCTS LIST OF A MACHINE, MAKE SURE TO UPDATE ITS RESUPPLY C
 			L.emote("scream")
 			playsound(L, 'sound/effects/blobattack.ogg', 40, TRUE)
 			playsound(L, 'sound/effects/splat.ogg', 50, TRUE)
+			add_memory_in_range(L, 7, MEMORY_VENDING_CRUSHED, list(DETAIL_PROTAGONIST = L, DETAIL_WHAT_BY = src), story_value = STORY_VALUE_AMAZING)
 
 	var/matrix/M = matrix()
 	M.Turn(pick(90, 270))

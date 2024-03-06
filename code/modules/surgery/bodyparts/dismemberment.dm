@@ -24,6 +24,7 @@
 			C.emote("scream")
 
 	SEND_SIGNAL(C, COMSIG_ADD_MOOD_EVENT, "dismembered", /datum/mood_event/dismembered)
+	C.mind?.add_memory(MEMORY_DISMEMBERED, list(DETAIL_LOST_LIMB = src, DETAIL_PROTAGONIST = C), story_value = STORY_VALUE_AMAZING)
 	drop_limb()
 
 	C.update_equipment_speed_mods() // Update in case speed affecting item unequipped by dismemberment

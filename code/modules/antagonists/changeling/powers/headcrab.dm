@@ -18,7 +18,7 @@
 		var/mob/living/puller = L.pulledby
 		if(puller)
 			var/datum/antagonist/changeling/other_ling = is_changeling(puller)
-			if(other_ling?.isabsorbing)
+			if(other_ling?.is_absorbing)
 				to_chat(user, "<span class='warning'>Our last resort is being disrupted by another changeling!</span>")
 				return
 	var/turf/T = user.loc

@@ -11,6 +11,7 @@
 	ui_name = "AntagInfoChangeling"
 	antag_moodlet = /datum/mood_event/focused
 	hijack_speed = 0.5
+	ui_name = "AntagInfoChangeling"
 	var/you_are_greet = TRUE
 	var/team_mode = FALSE //Should assign team objectives ?
 	var/competitive_objectives = FALSE //Should we assign objectives in competition with other lings?
@@ -28,8 +29,8 @@
 	var/sting_range = 2
 	var/changelingID = "Changeling"
 	var/geneticdamage = 0
-	var/was_absorbed = FALSE //if they were absorbed by another ling already.
-	var/isabsorbing = 0
+	//In the process of absorbing (cancels certain ling action, i.e to prevent escape)
+	var/is_absorbing = FALSE
 	var/islinking = 0
 	var/geneticpoints = 10
 	var/purchasedpowers = list()
@@ -43,12 +44,12 @@
 
 	var/static/list/all_powers = typecacheof(/datum/action/changeling,TRUE)
 
+	var/list/stolen_memories = list()
+
 /datum/antagonist/changeling/New()
 	. = ..()
-	for(var/datum/antagonist/changeling/C in GLOB.antagonists)
-		if(!C.owner || C.owner == owner)
-			continue
-		if(C.was_absorbed) //make sure the other ling wasn't already killed by another one. only matters if the changeling that absorbed them was gibbed after.
+	for(var/datum/antagonist/changeling/other_ling in GLOB.antagonists)
+		if(!other_ling.owner || other_ling.owner == owner)
 			continue
 		competitive_objectives = TRUE
 		break
@@ -86,6 +87,7 @@
 		forge_objectives()
 	handle_clown_mutation(owner.current, "You have evolved beyond your clownish nature, allowing you to wield weapons without harming yourself.")
 	owner.current.grant_all_languages(FALSE, FALSE, TRUE)	//Grants omnitongue. We are able to transform our body after all.
+	owner.current.playsound_local(get_turf(owner.current), 'sound/ambience/antag/ling_aler.ogg', 100, FALSE, pressure_affected = FALSE, use_reverb = FALSE)
 	. = ..()
 
 /datum/antagonist/changeling/on_removal()
@@ -205,7 +207,7 @@
 	if(!ishuman(owner.current))
 		to_chat(owner.current, "<span class='danger'>We can't remove our evolutions in this form!</span>")
 		return
-	if(isabsorbing)
+	if(is_absorbing)
 		to_chat(owner.current, "<span class='danger'>We cannot readapt right now!</span>")
 		return
 	if(canrespec)
@@ -394,18 +396,6 @@
 	update_changeling_icons_removed()
 	UnregisterSignal(owner.current, list(COMSIG_MOB_MIDDLECLICKON, COMSIG_MOB_ALTCLICKON))
 
-
-/datum/antagonist/changeling/greet()
-	if (you_are_greet)
-		to_chat(owner.current, "<span class='boldannounce'>You are [changelingID], a changeling! You have absorbed and taken the form of a human.</span>")
-	to_chat(owner.current, "<b>You must complete the following tasks:</b>")
-	owner.current.playsound_local(get_turf(owner.current), 'sound/ambience/antag/ling_aler.ogg', vol = 100, vary = FALSE, channel = CHANNEL_ANTAG_GREETING, pressure_affected = FALSE, use_reverb = FALSE)
-
-	owner.announce_objectives()
-
-	owner.current.client?.tgui_panel?.give_antagonist_popup("Changeling",
-		"You have absorbed the form of [owner.current] and have infiltrated the station. Use your changeling powers to complete your objectives.")
-
 /datum/antagonist/changeling/farewell()
 	to_chat(owner.current, "<span class='userdanger'>You grow weak and lose your powers! You are no longer a changeling and are stuck in your current form!</span>")
 
@@ -508,10 +498,6 @@
 	hud.leave_hud(owner.current)
 	set_antag_hud(owner.current, null)
 
-/datum/antagonist/changeling/admin_add(datum/mind/new_owner,mob/admin)
-	. = ..()
-	to_chat(new_owner.current, "<span class='boldannounce'>Our powers have awoken. A flash of memory returns to us...we are [changelingID], a changeling!</span>")
-
 /datum/antagonist/changeling/get_admin_commands()
 	. = ..()
 	if(stored_profiles.len && (owner.current.real_name != first_prof.name))
@@ -612,6 +598,29 @@
 		parts += "<span class='redtext'>The changeling has failed.</span>"
 
 	return parts.Join("<br>")
+
+/datum/antagonist/changeling/ui_data(mob/user)
+	var/list/data = list()
+	var/list/memories = list()
+
+	for(var/memory_key in stolen_memories)
+		memories += list(list("name" = memory_key, "story" = stolen_memories[memory_key]))
+
+	data["memories"] = memories
+	data["stolen_antag_info"] = antag_memory
+	data["objectives"] = get_objectives()
+	return data
+
+/datum/memory_panel/ui_data(mob/user)
+	var/list/data = list()
+	var/list/memories = list()
+
+	for(var/memory_key as anything in user?.mind.memories)
+		var/datum/memory/memory =  user.mind.memories[memory_key]
+		memories += list(list("name" = memory.name, "quality" = memory.story_value))
+
+	data["memories"] = memories
+	return data
 
 /datum/antagonist/changeling/antag_listing_name()
 	return ..() + "([changelingID])"

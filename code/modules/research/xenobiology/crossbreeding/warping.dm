@@ -719,7 +719,7 @@ GLOBAL_DATUM(blue_storage, /obj/item/storage/backpack/holding/bluespace)
 		if(length(candidates) && !host.key) //check if anyone wanted to play as the dead person and check if no one's in control of the body one last time.
 			var/mob/dead/observer/ghost = pick(candidates)
 
-			host.mind.memory = "" //resets the memory since it's a new soul inside.
+			host.mind.wipe_memory() //resets the memory since it's a new soul inside.
 			host.key = ghost.key
 			var/mob/living/simple_animal/shade/S = host.change_mob_type(/mob/living/simple_animal/shade , rune_turf, "Shade", FALSE)
 			S.maxHealth = 1

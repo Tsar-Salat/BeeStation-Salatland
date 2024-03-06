@@ -360,6 +360,7 @@
 
 /// Called when this mob slips over, override as needed
 /mob/proc/slip(knockdown, paralyze, forcedrop, w_amount, obj/O, lube)
+	mind?.add_memory(MEMORY_SLIPPED, list(DETAIL_WHAT_BY = O, DETAIL_PROTAGONIST = src), story_value = STORY_VALUE_OKAY)
 	return
 
 /// Update the gravity status of this mob

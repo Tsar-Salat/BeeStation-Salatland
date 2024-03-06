@@ -23,6 +23,8 @@
 		pipe_astar_cost = 35\
 	)
 
+	///bool on whether this wall can be chiselled into
+	var/can_engrave = TRUE
 	var/hardness = 40 //lower numbers are harder. Used to determine the probability of a hulk smashing through.
 	var/slicing_duration = 100  //default time taken to slice the wall
 	var/sheet_type = /obj/item/stack/sheet/iron
@@ -32,6 +34,8 @@
 
 /turf/closed/wall/Initialize(mapload)
 	. = ..()
+	if(!can_engrave)
+		ADD_TRAIT(src, TRAIT_NOT_ENGRAVABLE, INNATE_TRAIT)
 	if(is_station_level(z))
 		GLOB.station_turfs += src
 	if(smoothing_flags & SMOOTH_DIAGONAL_CORNERS && fixed_underlay) //Set underlays for the diagonal walls.
