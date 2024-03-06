@@ -47,7 +47,7 @@
 
 		if(victim == current)
 			story_mood = victim_mood
-		else
+		else if(current.mob_mood)
 			var/datum/component/mood/memorizer_mood_component = current.GetComponent(/datum/component/mood)
 			if(memorizer_mood_component)
 				story_mood = memorizer_mood_component.mood_level
