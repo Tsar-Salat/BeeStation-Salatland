@@ -10,7 +10,7 @@
 
 	. = ..()
 
-	add_memory_in_range(src, 7, MEMORY_DEATH, list(DETAIL_PROTAGONIST = src), memory_flags = MEMORY_FLAG_NOMOOD, story_value = STORY_VALUE_OKAY)
+	add_memory_in_range(src, 7, MEMORY_DEATH, list(DETAIL_PROTAGONIST = src), memory_flags = MEMORY_FLAG_NOMOOD, story_value = STORY_VALUE_OKAY, memory_flags = MEMORY_CHECK_BLIND_AND_DEAF)
 
 	for(var/T in get_traumas())
 		var/datum/brain_trauma/BT = T
@@ -20,7 +20,7 @@
 		SSticker.mode.check_win() //Calls the rounds wincheck, mainly for wizard, malf, and changeling now
 
 /mob/living/carbon/gib(no_brain, no_organs, no_bodyparts)
-	add_memory_in_range(src, 7, MEMORY_GIBBED, list(DETAIL_PROTAGONIST = src), STORY_VALUE_AMAZING, MEMORY_FLAG_NOMOOD)
+	add_memory_in_range(src, 7, MEMORY_GIBBED, list(DETAIL_PROTAGONIST = src), STORY_VALUE_AMAZING, MEMORY_FLAG_NOMOOD, memory_flags = MEMORY_CHECK_BLINDNESS)
 	var/atom/Tsec = drop_location()
 	for(var/mob/M in src)
 		M.forceMove(Tsec)

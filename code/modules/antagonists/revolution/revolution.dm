@@ -400,7 +400,7 @@
 			var/datum/antagonist/rev/rev_antag = rev_mind.has_antag_datum(/datum/antagonist/rev)
 			rev_antag.remove_revolutionary(FALSE, . == STATION_VICTORY ? DECONVERTER_STATION_WIN : DECONVERTER_REVS_WIN)
 			LAZYADD(rev_mind.special_statuses, "<span class='bad'>Former [(rev_mind in ex_headrevs) ? "head revolutionary" : "revolutionary"]</span>")
-			add_memory_in_range(rev_mind.current, 7, MEMORY_WON_REVOLUTION, list(DETAIL_PROTAGONIST = rev_mind.current, DETAIL_STATION_NAME = station_name()), story_value = STORY_VALUE_LEGENDARY, memory_flags = MEMORY_FLAG_NOSTATIONNAME)
+			add_memory_in_range(rev_mind.current, 7, MEMORY_WON_REVOLUTION, list(DETAIL_PROTAGONIST = rev_mind.current, DETAIL_STATION_NAME = station_name()), story_value = STORY_VALUE_LEGENDARY, memory_flags = MEMORY_FLAG_NOSTATIONNAME|MEMORY_CHECK_BLIND_AND_DEAF, protagonist_memory_flags = MEMORY_FLAG_NOSTATIONNAME)
 
 
 	if (. == STATION_VICTORY)

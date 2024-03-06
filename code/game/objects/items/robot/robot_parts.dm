@@ -315,7 +315,7 @@
 
 			O.updatename(BM.client)
 			BM.mind.transfer_to(O)
-			BM.mind.add_memory(MEMORY_BORGED, list(DETAIL_PROTAGONIST = user), story_value = STORY_VALUE_OKAY)
+			BM.mind.add_memory(MEMORY_BORGED, list(DETAIL_PROTAGONIST = user), story_value = STORY_VALUE_OKAY, memory_flags = MEMORY_SKIP_UNCONSCIOUS)
 
 			if(O.mind?.special_role)
 				to_chat(O, "<span class='userdanger'>You have been robotized!</span>")
