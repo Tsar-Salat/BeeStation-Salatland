@@ -9,7 +9,6 @@
 #define COMSIG_HUMAN_ATTACKED "carbon_attacked"					//hit by something that checks shields.
 
 //Heretics stuff
-#define COMSIG_HERETIC_MASK_ACT "void_mask_act"
 /// From /obj/item/melee/touch_attack/mansus_fist/on_mob_hit : (mob/living/source, mob/living/target)
 #define COMSIG_HERETIC_MANSUS_GRASP_ATTACK "mansus_grasp_attack"
 	/// Default behavior is to use a charge, so return this to blocks the mansus fist from being consumed after use.
