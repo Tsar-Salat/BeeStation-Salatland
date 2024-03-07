@@ -26,7 +26,6 @@
 	max_integrity = 200
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 0, STAMINA = 0)
 	var/state = BOOKCASE_UNANCHORED
-	var/list/allowed_books = list(/obj/item/book, /obj/item/spellbook, /obj/item/storage/book, /obj/item/codex_cicatrix) //Things allowed in the bookcase
 	/// When enabled, books_to_load number of random books will be generated for this bookcase when first interacted with.
 	var/load_random_books = FALSE
 	/// The category of books to pick from when populating random books.
@@ -101,7 +100,7 @@
 
 		if(BOOKCASE_FINISHED)
 			var/datum/component/storage/STR = I.GetComponent(/datum/component/storage)
-			if(is_type_in_list(I, allowed_books))
+			if(isbook(I))
 				if(!user.transferItemToLoc(I, src))
 					return
 				update_appearance()
@@ -115,7 +114,7 @@
 				if(!user.is_literate())
 					to_chat(user, "<span class='notice'>You scribble illegibly on the side of [src]!</span>")
 					return
-				var/newname = stripped_input(user, "What would you like to title this bookshelf?")
+				var/newname = tgui_input_text(user, "What would you like to title this bookshelf?", "Bookshelf Renaming", max_length = MAX_NAME_LEN)
 				if(!user.canUseTopic(src, BE_CLOSE))
 					return
 				if(!newname)
@@ -146,17 +145,19 @@
 	if(load_random_books)
 		create_random_books(books_to_load, src, FALSE, random_category)
 		load_random_books = FALSE
-	if(contents.len)
-		var/obj/item/book/choice = input(user, "Which book would you like to remove from the shelf?") as null|obj in sort_names(contents.Copy())
-		if(choice)
-			if(!(user.mobility_flags & MOBILITY_USE) || user.stat || user.restrained() || !in_range(loc, user))
-				return
-			if(ishuman(user))
-				if(!user.get_active_held_item())
-					user.put_in_hands(choice)
-			else
-				choice.forceMove(drop_location())
-			update_icon()
+	if(!length(contents))
+		return
+	var/obj/item/book/choice = tgui_input_list(user, "Book to remove from the shelf", "Remove Book", sort_names(contents.Copy()))
+	if(isnull(choice))
+		return
+	if(!(user.mobility_flags & MOBILITY_USE) || user.stat != CONSCIOUS || user.restrained() || !in_range(loc, user))
+		return
+	if(ishuman(user))
+		if(!user.get_active_held_item())
+			user.put_in_hands(choice)
+	else
+		choice.forceMove(drop_location())
+	update_appearance()
 
 /obj/structure/bookcase/deconstruct(disassembled = TRUE)
 	var/atom/Tsec = drop_location()
@@ -185,7 +186,7 @@
 /obj/structure/bookcase/manuals/medical/Initialize(mapload)
 	. = ..()
 	new /obj/item/book/manual/wiki/medical_cloning(src)
-	update_icon()
+	update_appearance()
 
 
 /obj/structure/bookcase/manuals/engineering
@@ -198,7 +199,7 @@
 	new /obj/item/book/manual/wiki/engineering_guide(src)
 	new /obj/item/book/manual/wiki/engineering_singulo_tesla(src)
 	new /obj/item/book/manual/wiki/robotics_cyborgs(src)
-	update_icon()
+	update_appearance()
 
 
 /obj/structure/bookcase/manuals/research_and_development
@@ -207,7 +208,7 @@
 /obj/structure/bookcase/manuals/research_and_development/Initialize(mapload)
 	. = ..()
 	new /obj/item/book/manual/wiki/research_and_development(src)
-	update_icon()
+	update_appearance()
 
 
 /*
@@ -226,11 +227,11 @@
 	pickup_sound =  'sound/items/handling/book_pickup.ogg'
 	attack_verb = list("bashed", "whacked", "educated")
 	resistance_flags = FLAMMABLE
-	var/dat				//Actual page content
-	var/due_date = 0	//Game time in 1/10th seconds
-	var/author			//Who wrote the thing, can be changed by pen or PC. It is not automatically assigned
-	var/unique = 0		//0 - Normal book, 1 - Should not be treated as normal book, unable to be copied, unable to be modified
-	var/title			//The real name of the book.
+	var/dat //Actual page content
+	var/due_date = 0 //Game time in 1/10th seconds
+	var/author //Who wrote the thing, can be changed by pen or PC. It is not automatically assigned
+	var/unique = FALSE //FALSE - Normal book, TRUE - Should not be treated as normal book, unable to be copied, unable to be modified
+	var/title //The real name of the book.
 	var/window_size = null // Specific window size for the book, i.e: "1920x1080", Size x Width
 
 
@@ -261,12 +262,14 @@
 		if(!literate)
 			to_chat(user, "<span class='notice'>You scribble illegibly on the cover of [src]!</span>")
 			return
-		var/choice = input("What would you like to change?") in list("Title", "Contents", "Author", "Cancel")
+		var/choice = tgui_input_list(usr, "What would you like to change?", "Book Alteration", list("Title", "Contents", "Author", "Cancel"))
+		if(isnull(choice))
+			return
 		if(!user.canUseTopic(src, BE_CLOSE, literate))
 			return
 		switch(choice)
 			if("Title")
-				var/newtitle = reject_bad_text(stripped_input(user, "Write a new title:"))
+				var/newtitle = reject_bad_text(tgui_input_text(user, "Write a new title", "Book Title", max_length = 50))
 				if(!user.canUseTopic(src, BE_CLOSE, literate))
 					return
 				if (length(newtitle) > 50)
@@ -279,7 +282,7 @@
 					name = newtitle
 					title = newtitle
 			if("Contents")
-				var/content = stripped_input(user, "Write your book's contents (HTML NOT allowed):","","",8192)
+				var/content = tgui_input_text(user, "Write your book's contents (HTML NOT allowed)", "Book Contents", max_length = 8192, multiline = TRUE)
 				if(!user.canUseTopic(src, BE_CLOSE, literate))
 					return
 				if(!content)
@@ -288,7 +291,7 @@
 				else
 					dat += content
 			if("Author")
-				var/newauthor = stripped_input(user, "Write the author's name:")
+				var/newauthor = tgui_input_text(user, "Write the author's name", "Author Name", max_length = MAX_NAME_LEN)
 				if(!user.canUseTopic(src, BE_CLOSE, literate))
 					return
 				if(!newauthor)
@@ -364,8 +367,8 @@
 	throw_range = 5
 	w_class = WEIGHT_CLASS_TINY
 	var/obj/machinery/computer/libraryconsole/bookmanagement/computer	//Associated computer - Modes 1 to 3 use this
-	var/obj/item/book/book			//Currently scanned book
-	var/mode = 0							//0 - Scan only, 1 - Scan and Set Buffer, 2 - Scan and Attempt to Check In, 3 - Scan and Attempt to Add to Inventory
+	var/obj/item/book/book //Currently scanned book
+	var/mode = 0 //0 - Scan only, 1 - Scan and Set Buffer, 2 - Scan and Attempt to Check In, 3 - Scan and Attempt to Add to Inventory
 
 /obj/item/barcodescanner/attack_self(mob/user)
 	mode += 1
