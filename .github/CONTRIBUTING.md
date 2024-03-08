@@ -10,7 +10,7 @@ CONTRIBUTING
 4. Code Standards
 5. Codebase-specific Policies
 6. Asset Policy
-7. Pull Request Standards
+7. Pull Request S\tandards
 8. Banned Content
 
 ## 1. Introduction
