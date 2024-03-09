@@ -1,5 +1,5 @@
 /datum/component/storage/concrete/pockets
-	max_items = 2
+	max_slots = 2
 	max_w_class = WEIGHT_CLASS_SMALL
 	max_combined_w_class = 50
 	rustle_sound = FALSE

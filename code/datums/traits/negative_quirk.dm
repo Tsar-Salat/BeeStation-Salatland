@@ -234,7 +234,7 @@
 /datum/quirk/family_heirloom/post_spawn()
 	if(where == "in your backpack")
 		var/mob/living/carbon/human/H = quirk_target
-		SEND_SIGNAL(H.back, COMSIG_TRY_STORAGE_SHOW, H)
+		H.back.atom_storage.show_contents(H)
 
 	to_chat(quirk_target, "<span class='boldnotice'>There is a precious family [heirloom.name] [where], passed down from generation to generation. Keep it safe!</span>")
 

@@ -39,8 +39,10 @@
 	src.uncapped = uncapped
 	src.delete_after = delete_after
 
-/datum/component/explodable/proc/explodable_insert_item(datum/source, obj/item/I, mob/M, silent = FALSE, force = FALSE)
+/datum/component/explodable/proc/explodable_insert_item(datum/source, obj/item/I)
 	SIGNAL_HANDLER
+	if(!(I.item_flags & IN_STORAGE))
+		return
 
 	check_if_detonate(I)
 
