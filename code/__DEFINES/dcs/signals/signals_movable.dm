@@ -14,6 +14,8 @@
 #define COMSIG_MOVABLE_MOVED "movable_moved"
 ///from base of atom/movable/Cross(): (/atom/movable)
 #define COMSIG_MOVABLE_CROSS "movable_cross"
+///from base of atom/movable/Move(): (/atom/movable)
+#define COMSIG_MOVABLE_CROSS_OVER "movable_cross_am"
 ///from base of atom/movable/Bump(): (/atom)
 #define COMSIG_MOVABLE_BUMP "movable_bump"
 ///from base of atom/movable/newtonian_move(): (inertia_direction)
@@ -42,8 +44,12 @@
 	#define HEARING_SPANS 6
 	#define HEARING_MESSAGE_MODE 7
 
-// called when the movable is added to a disposal holder object for disposal movement: (obj/structure/disposalholder/holder, obj/machinery/disposal/source)
+///called when the movable is added to a disposal holder object for disposal movement: (obj/structure/disposalholder/holder, obj/machinery/disposal/source)
 #define COMSIG_MOVABLE_DISPOSING "movable_disposing"
+
+///from base of atom/movable/setGrabState(): (newstate)
+#define COMSIG_MOVABLE_SET_GRAB_STATE "living_set_grab_state"
+
 // called when movable is expelled from a disposal pipe, bin or outlet on obj/pipe_eject: (direction)
 #define COMSIG_MOVABLE_PIPE_EJECTING "movable_pipe_ejecting"
 ///called when the movable sucessfully has it's anchored var changed, from base atom/movable/set_anchored(): (value)

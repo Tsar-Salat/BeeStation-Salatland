@@ -11,7 +11,7 @@
 	idle_power_usage = 300
 	active_power_usage = 300
 	max_integrity = 200
-	integrity_failure = 100
+	integrity_failure = 0.5
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 40, ACID = 20, STAMINA = 0)
 	clicksound = "keyboard"
 	light_system = STATIC_LIGHT
@@ -28,18 +28,13 @@
 	///Should the [icon_state]_broken overlay be shown as an emissive or regular overlay?
 	var/broken_overlay_emissive = FALSE
 
-/obj/machinery/computer/Initialize(mapload, obj/item/circuitboard/C)
+/obj/machinery/computer/Initialize(mapload)
 	. = ..()
 	QUEUE_SMOOTH(src)
 	QUEUE_SMOOTH_NEIGHBORS(src)
 	power_change()
-	if(!QDELETED(C))
-		qdel(circuit)
-		circuit = C
-		C.moveToNullspace()
 
 /obj/machinery/computer/Destroy()
-	QDEL_NULL(circuit)
 	QUEUE_SMOOTH_NEIGHBORS(src)
 	return ..()
 
@@ -72,7 +67,7 @@
 		SET_BITFLAG_LIST(smoothing_groups)
 		SET_BITFLAG_LIST(canSmoothWith)
 		QUEUE_SMOOTH(src)
-		if(smoothing_flags)
+		if(smoothing_flags & (SMOOTH_CORNERS|SMOOTH_BITMASK))
 			QUEUE_SMOOTH_NEIGHBORS(src)
 		update_appearance()
 
@@ -93,7 +88,8 @@
 		return
 
 	. += mutable_appearance(icon, icon_screen)
-	. += emissive_appearance(icon, icon_screen)
+	. += emissive_appearance(icon, icon_screen, layer)
+	ADD_LUM_SOURCE(src, LUM_SOURCE_MANAGED_OVERLAY)
 
 /obj/machinery/computer/power_change()
 	. = ..()
@@ -149,7 +145,9 @@
 			var/obj/structure/frame/computer/A = new /obj/structure/frame/computer(src.loc)
 			A.setDir(dir)
 			A.circuit = circuit
-			A.setAnchored(TRUE)
+			// Circuit removal code is handled in /obj/machinery/Exited()
+			circuit.forceMove(A)
+			A.set_anchored(TRUE)
 			if(machine_stat & BROKEN)
 				if(user)
 					to_chat(user, "<span class='notice'>The broken glass falls out.</span>")
@@ -164,7 +162,6 @@
 					to_chat(user, "<span class='notice'>You disconnect the monitor.</span>")
 				A.state = 4
 				A.icon_state = "4"
-			circuit = null
 		for(var/obj/C in src)
 			C.forceMove(loc)
 	qdel(src)

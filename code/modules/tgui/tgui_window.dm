@@ -294,6 +294,9 @@
 	if(istype(asset, /datum/asset/spritesheet))
 		var/datum/asset/spritesheet/spritesheet = asset
 		send_message("asset/stylesheet", spritesheet.css_filename())
+	else if(istype(asset, /datum/asset/spritesheet_batched))
+		var/datum/asset/spritesheet_batched/spritesheet = asset
+		send_message("asset/stylesheet", spritesheet.css_filename())
 	send_raw_message(asset.get_serialized_url_mappings())
 
 /**
@@ -356,10 +359,7 @@
 	// If not locked, handle these message types
 	switch(type)
 		if("ping")
-			if(client)
-				client.afk_end()
-				addtimer(CALLBACK(src, TYPE_PROC_REF(/client, afk_start)), CONFIG_GET(number/inactivity_period) + 5, TIMER_UNIQUE | TIMER_OVERRIDE | TIMER_DELETE_ME)
-			send_message("ping/reply", payload)
+			send_message("pingReply", payload)
 		if("suspend")
 			close(can_be_suspended = TRUE)
 		if("close")
