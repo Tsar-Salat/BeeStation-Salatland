@@ -69,7 +69,7 @@
 	var/atom/movable/movable_parent = parent
 	if (isnull(dir))
 		dir = movable_parent.dir
-	movable_parent.set_glide_size(DELAY_TO_GLIDE_SIZE((((dir & (dir - 1)) ? SQRT_2 : 1) * vehicle_move_delay * vehicle_move_multiplier)))
+	movable_parent.set_glide_size(DELAY_TO_GLIDE_SIZE((((dir & (dir - 1)) ? sqrt(2) : 1) * vehicle_move_delay * vehicle_move_multiplier)))
 	for (var/m in movable_parent.buckled_mobs)
 		ride_check(m)
 		var/mob/buckled_mob = m

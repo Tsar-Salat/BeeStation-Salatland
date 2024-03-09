@@ -40,7 +40,7 @@
 
 /mob/living/carbon/human/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	. = ..()
-	if(shoes && (mobility_flags & MOBILITY_STAND) && loc == NewLoc && has_gravity(loc))
+	if(shoes && (mobility_flags & MOBILITY_STAND) && loc == newloc && has_gravity(loc))
 		var/obj/item/clothing/shoes/S = shoes
 		S.step_action()
 

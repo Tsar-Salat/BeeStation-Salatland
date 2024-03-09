@@ -181,7 +181,7 @@
 
 /datum/component/orbiter/proc/orbiter_glide_size_update(datum/source, target)
 	SIGNAL_HANDLER
-	for(var/orbiter in orbiters)
+	for(var/orbiter in current_orbiters)
 		var/atom/movable/movable_orbiter = orbiter
 		movable_orbiter.glide_size = target
 
