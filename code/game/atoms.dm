@@ -73,6 +73,9 @@
 	/// Radiation insulation types
 	var/rad_insulation = RAD_NO_INSULATION
 
+	/// The icon state intended to be used for the acid component. Used to override the default acid overlay icon state.
+	var/custom_acid_overlay = null
+
 	///The custom materials this atom is made of, used by a lot of things like furniture, walls, and floors (if I finish the functionality, that is.)
 	///The list referenced by this var can be shared by multiple objects and should not be directly modified. Instead, use [set_custom_materials][/atom/proc/set_custom_materials].
 	var/list/custom_materials
@@ -912,6 +915,7 @@
   */
 /atom/proc/acid_act(acidpwr, acid_volume)
 	SEND_SIGNAL(src, COMSIG_ATOM_ACID_ACT, acidpwr, acid_volume)
+	return FALSE
 
 /**
   * Respond to an emag being used on our atom
@@ -1174,7 +1178,7 @@
 	SHOULD_CALL_PARENT(TRUE)
 
 	. = FALSE
-	if(SEND_SIGNAL(src, COMSIG_COMPONENT_CLEAN_ACT, clean_types))
+	if(SEND_SIGNAL(src, COMSIG_COMPONENT_CLEAN_ACT, clean_types) & COMPONENT_CLEANED)
 		. = TRUE
 
 	// Basically "if has washable coloration"

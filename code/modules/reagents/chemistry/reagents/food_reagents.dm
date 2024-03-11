@@ -24,20 +24,21 @@
 	holder.remove_reagent(type, metabolization_rate)
 
 /datum/reagent/consumable/reaction_mob(mob/living/M, method=TOUCH, reac_volume)
-	if(method == INGEST)
-		if (quality && !HAS_TRAIT(M, TRAIT_AGEUSIA))
-			switch(quality)
-				if (DRINK_BAD)
-					SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT, "quality_drink", /datum/mood_event/quality_bad)
-				if (DRINK_NICE)
-					SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT, "quality_drink", /datum/mood_event/quality_nice)
-				if (DRINK_GOOD)
-					SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT, "quality_drink", /datum/mood_event/quality_good)
-				if (DRINK_VERYGOOD)
-					SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT, "quality_drink", /datum/mood_event/quality_verygood)
-				if (DRINK_FANTASTIC)
-					SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT, "quality_drink", /datum/mood_event/quality_fantastic)
-	return ..()
+	. = ..()
+	if(!(method == INGEST) || !quality || HAS_TRAIT(exposed_mob, TRAIT_AGEUSIA))
+		return
+	if (quality && !HAS_TRAIT(M, TRAIT_AGEUSIA))
+		switch(quality)
+			if (DRINK_BAD)
+				SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT, "quality_drink", /datum/mood_event/quality_bad)
+			if (DRINK_NICE)
+				SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT, "quality_drink", /datum/mood_event/quality_nice)
+			if (DRINK_GOOD)
+				SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT, "quality_drink", /datum/mood_event/quality_good)
+			if (DRINK_VERYGOOD)
+				SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT, "quality_drink", /datum/mood_event/quality_verygood)
+			if (DRINK_FANTASTIC)
+				SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT, "quality_drink", /datum/mood_event/quality_fantastic)
 
 /datum/reagent/consumable/nutriment
 	name = "Nutriment"
@@ -120,17 +121,23 @@
 	taste_description = "oil"
 	nutriment_factor = 7 * REAGENTS_METABOLISM //Not very healthy on its own
 	metabolization_rate = 10 * REAGENTS_METABOLISM
+	penetrates_skin = NONE
 	var/fry_temperature = 450 //Around ~350 F (117 C) which deep fryers operate around in the real world
 	var/boiling //Used in mob life to determine if the oil kills, and only on touch application
 
-/datum/reagent/consumable/cooking_oil/reaction_obj(obj/O, reac_volume)
-	if(holder && holder.chem_temp >= fry_temperature)
-		if(isitem(O) && !istype(O, /obj/item/food/deepfryholder))
-			log_game("[O.name] ([O.type]) has been deep fried by a reaction with cooking oil reagent at [AREACOORD(O)].")
-			O.loc.visible_message("<span class='warning'>[O] rapidly fries as it's splashed with hot oil! Somehow.</span>")
-			var/obj/item/food/deepfryholder/F = new(O.drop_location(), O)
-			F.fry(volume)
-			F.reagents.add_reagent(/datum/reagent/consumable/cooking_oil, reac_volume)
+/datum/reagent/consumable/cooking_oil/reaction_obj(obj/exposed_obj, reac_volume)
+	. = ..()
+	if(!holder || (holder.chem_temp <= fry_temperature))
+		return
+
+	if(!isitem(exposed_obj) || istype(exposed_obj, /obj/item/food/deepfryholder))
+		return
+
+	log_game("[exposed_obj.name] ([exposed_obj.type]) has been deep fried by a reaction with cooking oil reagent at [AREACOORD(exposed_obj)].")
+	exposed_obj.loc.visible_message("<span class='warning'>[exposed_obj] rapidly fries as it's splashed with hot oil! Somehow.</span>")
+	var/obj/item/food/deepfryholder/fry_target = new(exposed_obj.drop_location(), exposed_obj)
+	fry_target.fry(volume)
+	fry_target.reagents.add_reagent(/datum/reagent/consumable/cooking_oil, reac_volume)
 
 /datum/reagent/consumable/cooking_oil/reaction_mob(mob/living/M, method = TOUCH, reac_volume, show_message = 1, touch_protection = 0)
 	if(!istype(M))
@@ -150,6 +157,7 @@
 	return TRUE
 
 /datum/reagent/consumable/cooking_oil/reaction_turf(turf/open/T, reac_volume)
+	. = ..()
 	if(!istype(T) || isgroundlessturf(T))
 		return
 	if(reac_volume >= 5)
@@ -280,14 +288,19 @@
 	..()
 
 /datum/reagent/consumable/frostoil/reaction_turf(turf/T, reac_volume)
-	if(reac_volume >= 5)
-		for(var/mob/living/simple_animal/slime/M in T)
-			M.adjustToxLoss(rand(15,30))
-	if(reac_volume >= 1) // Make Freezy Foam and anti-fire grenades!
-		if(isopenturf(T))
-			var/turf/open/OT = T
-			OT.MakeSlippery(wet_setting=TURF_WET_ICE, min_wet_time=100, wet_time_to_add=reac_volume SECONDS) // Is less effective in high pressure/high heat capacity environments. More effective in low pressure.
-			OT.air.set_temperature(OT.air.return_temperature() - MOLES_CELLSTANDARD*100*reac_volume/OT.air.heat_capacity()) // reduces environment temperature by 5K per unit.
+	. = ..()
+	if(reac_volume < 1)
+		return
+
+	if(isopenturf(T))  // Make Freezy Foam and anti-fire grenades!
+		var/turf/open/OT = T
+		OT.MakeSlippery(wet_setting=TURF_WET_ICE, min_wet_time=100, wet_time_to_add=reac_volume SECONDS) // Is less effective in high pressure/high heat capacity environments. More effective in low pressure.
+		OT.air.set_temperature(OT.air.return_temperature() - MOLES_CELLSTANDARD*100*reac_volume/OT.air.heat_capacity()) // reduces environment temperature by 5K per unit.
+	if(reac_volume < 5)
+		return
+	for(var/mob/living/simple_animal/slime/M in T)
+		M.adjustToxLoss(rand(15,30))
+
 
 /datum/reagent/consumable/condensedcapsaicin
 	name = "Condensed Capsaicin"
@@ -295,8 +308,10 @@
 	color = "#B31008" // rgb: 179, 16, 8
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_GOAL_BOTANIST_HARVEST
 	taste_description = "scorching agony"
+	penetrates_skin = NONE
 
 /datum/reagent/consumable/condensedcapsaicin/reaction_mob(mob/living/M, method=TOUCH, reac_volume)
+	. = ..()
 	if(!ishuman(M) && !ismonkey(M))
 		return
 
@@ -328,17 +343,16 @@
 	color = "#FFFFFF" // rgb: 255,255,255
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
 	taste_description = "salt"
+	penetrates_skin = NONE
 
 /datum/reagent/consumable/sodiumchloride/reaction_mob(mob/living/M, method=TOUCH, reac_volume)
-	if(!istype(M))
-		return
+	. = ..()
 	if(M.has_bane(BANE_SALT))
 		M.mind.disrupt_spells(-200)
 
 /datum/reagent/consumable/sodiumchloride/reaction_turf(turf/T, reac_volume) //Creates an umbra-blocking salt pile
-	if(!istype(T))
-		return
-	if(reac_volume < 1)
+	. = ..()
+	if(!istype(T) || (reac_volume < 1))
 		return
 	new/obj/effect/decal/cleanable/food/salt(T)
 
@@ -460,6 +474,7 @@
 	taste_description = "slime"
 
 /datum/reagent/consumable/cornoil/reaction_turf(turf/open/T, reac_volume)
+	. = ..()
 	if (!istype(T))
 		return
 	T.MakeSlippery(TURF_WET_LUBE, min_wet_time = 10 SECONDS, wet_time_to_add = reac_volume*2 SECONDS)
@@ -518,6 +533,7 @@
 	taste_description = "chalky wheat"
 
 /datum/reagent/consumable/flour/reaction_turf(turf/T, reac_volume)
+	. = ..()
 	if(!isspaceturf(T))
 		var/obj/effect/decal/cleanable/food/flour/reagentdecal = new(T)
 		reagentdecal = locate() in T //Might have merged with flour already there.
@@ -630,6 +646,7 @@
 	taste_description = "bitterness"
 
 /datum/reagent/consumable/tearjuice/reaction_mob(mob/living/M, method=TOUCH, reac_volume)
+	. = ..()
 	if(!istype(M))
 		return
 	var/unprotected = FALSE
@@ -721,6 +738,7 @@
 	var/list/mobs_affected
 
 /datum/reagent/consumable/tinlux/reaction_mob(mob/living/M)
+	. = ..()
 	add_reagent_light(M)
 
 /datum/reagent/consumable/tinlux/on_mob_end_metabolize(mob/living/M)
@@ -776,6 +794,7 @@
 	taste_description = "pure electrictiy"
 
 /datum/reagent/consumable/liquidelectricity/on_mob_life(mob/living/carbon/M)
+	. = ..()
 	if(HAS_TRAIT(M, TRAIT_POWERHUNGRY))
 		var/obj/item/organ/stomach/battery/stomach = M.getorganslot(ORGAN_SLOT_STOMACH)
 		if(istype(stomach))

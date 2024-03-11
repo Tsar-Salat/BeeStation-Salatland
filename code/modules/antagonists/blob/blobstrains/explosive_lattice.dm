@@ -24,18 +24,23 @@
 	color = "#8B2500"
 	chem_flags = CHEMICAL_NOT_SYNTH | CHEMICAL_RNG_FUN
 
-/datum/reagent/blob/explosive_lattice/reaction_mob(mob/living/M, method=TOUCH, reac_volume, show_message, touch_protection, mob/camera/blob/O)
+/datum/reagent/blob/explosive_lattice/reaction_mob(mob/living/exposed_mob, methods=TOUCH, reac_volume, show_message, touch_protection, mob/camera/blob/overmind)
 	var/initial_volume = reac_volume
 	reac_volume = ..()
 	if(reac_volume >= 10) //if it's not a spore cloud, bad time incoming
-		var/obj/effect/temp_visual/explosion/fast/E = new /obj/effect/temp_visual/explosion/fast(get_turf(M))
-		E.alpha = 150
-		for(var/mob/living/L in ohearers(1, get_turf(M)))
-			if(FACTION_BLOB in L.faction) //no friendly fire
+		var/obj/effect/temp_visual/explosion/fast/ex_effect = new /obj/effect/temp_visual/explosion/fast(get_turf(exposed_mob))
+		ex_effect.alpha = 150
+		for(var/mob/living/nearby_mob in ohearers(1, get_turf(exposed_mob)))
+			if(FACTION_BLOB in nearby_mob.faction) //no friendly fire
 				continue
-			var/aoe_volume = ..(L, TOUCH, initial_volume, 0, L.get_permeability_protection(), O)
-			L.apply_damage(0.4*aoe_volume, BRUTE)
-		if(M)
-			M.apply_damage(0.6*reac_volume, BRUTE)
+			exposed_mob = nearby_mob
+			methods = TOUCH
+			reac_volume = initial_volume
+			show_message = FALSE
+			touch_protection = nearby_mob.get_permeability_protection()
+			var/aoe_volume = ..()
+			nearby_mob.apply_damage(0.4*aoe_volume, BRUTE)
+		if(exposed_mob)
+			exposed_mob.apply_damage(0.6*reac_volume, BRUTE)
 	else
-		M.apply_damage(0.6*reac_volume, BRUTE)
+		exposed_mob.apply_damage(0.6*reac_volume, BRUTE)

@@ -755,7 +755,7 @@
 			else
 				set_stat(CONSCIOUS)
 			if(!is_blind())
-				var/datum/component/blind_sense/B = GetComponent(/datum/component/blind_sense)	
+				var/datum/component/blind_sense/B = GetComponent(/datum/component/blind_sense)
 				B?.RemoveComponent()
 		update_mobility()
 	update_damage_hud()
@@ -842,7 +842,7 @@
 /mob/living/carbon/ExtinguishMob()
 	for(var/X in get_equipped_items())
 		var/obj/item/I = X
-		I.acid_level = 0 //washes off the acid on our clothes
+		I.wash(CLEAN_TYPE_ACID) //washes off the acid on our clothes
 		I.extinguish() //extinguishes our clothes
 	..()
 

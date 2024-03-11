@@ -65,23 +65,25 @@ All effects don't start immediately, but rather get worse over time; the rate is
 			O.visible_message("<span class='notice'>[O]'s writing is washed away by [name]!</span>")
 		else
 			O.visible_message("<span class='warning'>[O]'s ink is smeared by [name], but doesn't wash away!</span>")
-	return
+	return ..()
 
-/datum/reagent/consumable/ethanol/reaction_mob(mob/living/M, method=TOUCH, reac_volume)//Splashing people with ethanol isn't quite as good as fuel.
-	if(!isliving(M))
+/datum/reagent/consumable/ethanol/reaction_mob(mob/living/exposed_mob, method=TOUCH, reac_volume)//Splashing people with ethanol isn't quite as good as fuel.
+	. = ..()
+	if(!(method in list(TOUCH, VAPOR, PATCH)))
 		return
 
-	if(method in list(TOUCH, VAPOR, PATCH))
-		M.adjust_fire_stacks(reac_volume / 15)
+	exposed_mob.adjust_fire_stacks(reac_volume / 15)
 
-		if(iscarbon(M))
-			var/mob/living/carbon/C = M
-			var/power_multiplier = boozepwr / 65 // Weak alcohol has less sterilizing power
+	if(!iscarbon(exposed_mob))
+		return
 
-			for(var/s in C.surgeries)
-				var/datum/surgery/S = s
-				S.speed_modifier = max(0.1*power_multiplier, S.speed_modifier)
-				// +10% surgery speed on each step, useful while operating in less-than-perfect conditions
+	var/mob/living/carbon/exposed_carbon = exposed_mob
+	var/power_multiplier = boozepwr / 65 // Weak alcohol has less sterilizing power
+
+	for(var/s in exposed_carbon.surgeries)
+		var/datum/surgery/surgery = s
+		surgery.speed_modifier = max(0.1*power_multiplier, surgery.speed_modifier)
+		// +10% surgery speed on each step, useful while operating in less-than-perfect conditions
 	return ..()
 
 /datum/reagent/consumable/ethanol/beer

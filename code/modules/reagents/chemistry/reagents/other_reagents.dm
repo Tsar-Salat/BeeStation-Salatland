@@ -10,8 +10,10 @@
 	glass_name = "glass of tomato juice"
 	glass_desc = "Are you sure this is tomato juice?"
 	shot_glass_icon_state = "shotglassred"
+	penetrates_skin = NONE
 
 /datum/reagent/blood/reaction_mob(mob/living/L, method=TOUCH, reac_volume)
+	. = ..()
 	if(data && data["viruses"])
 		for(var/thing in data["viruses"])
 			var/datum/disease/D = thing
@@ -78,6 +80,7 @@
 			. += D
 
 /datum/reagent/blood/reaction_turf(turf/T, reac_volume)//splash the blood all over the place
+	. = ..()
 	if(!istype(T))
 		return
 	if(reac_volume < 3)
@@ -105,6 +108,7 @@
 	taste_description = "slime"
 
 /datum/reagent/vaccine/reaction_mob(mob/living/L, method=TOUCH, reac_volume)
+	. = ..()
 	if(islist(data) && (method == INGEST || method == INJECT))
 		for(var/thing in L.diseases)
 			var/datum/disease/D = thing
@@ -172,27 +176,25 @@
  *	Water reaction to turf
  */
 
-/datum/reagent/water/reaction_turf(turf/open/T, reac_volume)
-	if(!istype(T))
+/datum/reagent/water/reaction_turf(turf/open/exposed_turf, reac_volume)
+	. = ..()
+	if(!istype(exposed_turf))
 		return
-	var/CT = cooling_temperature
 
+	var/cool_temp = cooling_temperature
 	if(reac_volume >= 5)
-		T.MakeSlippery(TURF_WET_WATER, 10 SECONDS, min(reac_volume*1.5 SECONDS, 60 SECONDS))
+		exposed_turf.MakeSlippery(TURF_WET_WATER, 10 SECONDS, min(reac_volume*1.5 SECONDS, 60 SECONDS))
 
-	for(var/mob/living/simple_animal/slime/M in T)
-		M.apply_water()
+	for(var/mob/living/simple_animal/slime/exposed_slime in exposed_turf)
+		exposed_slime.apply_water()
 
-	var/obj/effect/hotspot/hotspot = (locate(/obj/effect/hotspot) in T)
-	if(hotspot && !isspaceturf(T))
-		if(T.air)
-			var/datum/gas_mixture/G = T.air
-			G.set_temperature(max(min(G.return_temperature()-(CT*1000),G.return_temperature()/CT),TCMB))
-			G.react(src)
+	var/obj/effect/hotspot/hotspot = (locate(/obj/effect/hotspot) in exposed_turf)
+	if(hotspot && !isspaceturf(exposed_turf))
+		if(exposed_turf.air)
+			var/datum/gas_mixture/air = exposed_turf.air
+			air.set_temperature(max(min(air.return_temperature()-(cool_temp*1000), air.return_temperature()/cool_temp),TCMB))
+			air.react(src)
 			qdel(hotspot)
-	var/obj/effect/acid/A = (locate(/obj/effect/acid) in T)
-	if(A)
-		A.acid_level = max(A.acid_level - reac_volume*50, 0)
 	T.clean_turf_texture()
 
 /*
@@ -200,8 +202,9 @@
  */
 
 /datum/reagent/water/reaction_obj(obj/O, reac_volume)
+	. = ..()
 	O.extinguish()
-	O.acid_level = 0
+	O.wash(CLEAN_TYPE_ACID)
 	// Monkey cube
 	if(istype(O, /obj/item/food/monkeycube))
 		var/obj/item/food/monkeycube/cube = O
@@ -222,8 +225,7 @@
  */
 
 /datum/reagent/water/reaction_mob(mob/living/M, method=TOUCH, reac_volume)//Splashing people with water can help put them out!
-	if(!istype(M))
-		return
+	. = ..()
 	if(isoozeling(M))
 		var/touch_mod = 0
 		if(method in list(TOUCH, VAPOR)) // No melting if you have skin protection
@@ -234,7 +236,6 @@
 	if(method == TOUCH)
 		M.adjust_fire_stacks(-(reac_volume / 10))
 		M.ExtinguishMob()
-	..()
 
 /datum/reagent/water/holywater
 	name = "Holy Water"
@@ -298,7 +299,7 @@
 	holder.remove_reagent(type, 0.4)	//fixed consumption to prevent balancing going out of whack
 
 /datum/reagent/water/holywater/reaction_turf(turf/T, reac_volume)
-	..()
+	. = ..()
 	if(!istype(T))
 		return
 	if(reac_volume>=10)
@@ -311,12 +312,7 @@
 	description = "Something that shouldn't exist on this plane of existence."
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
 	taste_description = "suffering"
-
-/datum/reagent/fuel/unholywater/reaction_mob(mob/living/M, method=TOUCH, reac_volume)
-	if(method == TOUCH || method == VAPOR)
-		M.reagents.add_reagent(type,reac_volume/4)
-		return
-	return ..()
+	penetrates_skin = TOUCH|VAPOR
 
 /datum/reagent/fuel/unholywater/on_mob_life(mob/living/carbon/M)
 	if(iscultist(M))
@@ -368,6 +364,7 @@
 	var/lube_kind = TURF_WET_LUBE ///What kind of slipperiness gets added to turfs.
 
 /datum/reagent/lube/reaction_turf(turf/open/T, reac_volume)
+	. = ..()
 	if (!istype(T))
 		return
 	if(reac_volume >= 1)
@@ -391,6 +388,7 @@
 	taste_description = "sour oranges"
 
 /datum/reagent/spraytan/reaction_mob(mob/living/M, method=TOUCH, reac_volume, show_message = 1)
+	. = ..()
 	if(ishuman(M))
 		if(method == PATCH || method == VAPOR)
 			var/mob/living/carbon/human/N = M
@@ -452,7 +450,6 @@
 		if(method == INGEST)
 			if(show_message)
 				to_chat(M, "<span class='notice'>That tasted horrible.</span>")
-	..()
 
 /datum/reagent/spraytan/overdose_start(mob/living/M)
 	metabolization_rate = 1 * REAGENTS_METABOLISM
@@ -732,8 +729,10 @@
 	color = "#13BC5E" // rgb: 19, 188, 94
 	chem_flags = CHEMICAL_NOT_SYNTH | CHEMICAL_RNG_FUN
 	taste_description = "slime"
+	penetrates_skin = NONE
 
 /datum/reagent/aslimetoxin/reaction_mob(mob/living/L, method=TOUCH, reac_volume)
+	. = ..()
 	if(method != TOUCH)
 		L.ForceContractDisease(new /datum/disease/transformation/slime(), FALSE, TRUE)
 
@@ -743,8 +742,10 @@
 	color = "#5EFF3B" //RGB: 94, 255, 59
 	chem_flags = CHEMICAL_NOT_SYNTH | CHEMICAL_RNG_FUN
 	taste_description = "decay"
+	penetrates_skin = NONE
 
 /datum/reagent/gluttonytoxin/reaction_mob(mob/living/L, method=TOUCH, reac_volume)
+	. = ..()
 	L.ForceContractDisease(new /datum/disease/transformation/morph(), FALSE, TRUE)
 
 /datum/reagent/serotrotium
@@ -771,16 +772,17 @@
 
 
 /datum/reagent/oxygen/reaction_obj(obj/O, reac_volume)
+	. = ..()
 	if((!O) || (!reac_volume))
 		return 0
 	var/temp = holder ? holder.chem_temp : T20C
 	O.atmos_spawn_air("o2=[reac_volume/2];TEMP=[temp]")
 
 /datum/reagent/oxygen/reaction_turf(turf/open/T, reac_volume)
+	. = ..()
 	if(istype(T))
 		var/temp = holder ? holder.chem_temp : T20C
 		T.atmos_spawn_air("o2=[reac_volume/2];TEMP=[temp]")
-	return
 
 /datum/reagent/copper
 	name = "Copper"
@@ -792,6 +794,7 @@
 
 
 /datum/reagent/copper/reaction_obj(obj/O, reac_volume)
+	. = ..()
 	if(istype(O, /obj/item/stack/sheet/iron))
 		var/obj/item/stack/sheet/iron/M = O
 		reac_volume = min(reac_volume, M.amount)
@@ -808,12 +811,14 @@
 
 
 /datum/reagent/nitrogen/reaction_obj(obj/O, reac_volume)
+	. = ..()
 	if((!O) || (!reac_volume))
 		return 0
 	var/temp = holder ? holder.chem_temp : T20C
 	O.atmos_spawn_air("n2=[reac_volume/2];TEMP=[temp]")
 
 /datum/reagent/nitrogen/reaction_turf(turf/open/T, reac_volume)
+	. = ..()
 	if(istype(T))
 		var/temp = holder ? holder.chem_temp : T20C
 		T.atmos_spawn_air("n2=[reac_volume/2];TEMP=[temp]")
@@ -868,7 +873,8 @@
 	chem_flags = CHEMICAL_BASIC_ELEMENT
 	taste_description = "sour chalk"
 
-/datum/reagent/carbon/reaction_turf(turf/T, reac_volume)
+/datum/reagent/carbon/reaction_turf(turf/T, reac_volume)\
+	. = ..()
 	if(!isspaceturf(T))
 		var/obj/effect/decal/cleanable/dirt/D = locate() in T.contents
 		if(!D)
@@ -947,6 +953,7 @@
 	taste_description = "bitterness"
 
 /datum/reagent/space_cleaner/sterilizine/reaction_mob(mob/living/carbon/C, method=TOUCH, reac_volume)
+	. = ..()
 	if(method in list(TOUCH, VAPOR, PATCH))
 		for(var/s in C.surgeries)
 			var/datum/surgery/S = s
@@ -969,6 +976,7 @@
 	..()
 
 /datum/reagent/iron/reaction_mob(mob/living/M, method=TOUCH, reac_volume)
+	. = ..()
 	if(M.has_bane(BANE_IRON)) //If the target is weak to cold iron, then poison them.
 		if(holder && holder.chem_temp < 100) // COLD iron.
 			M.reagents.add_reagent(/datum/reagent/toxin, reac_volume)
@@ -991,9 +999,9 @@
 	taste_description = "expensive yet reasonable metal"
 
 /datum/reagent/silver/reaction_mob(mob/living/M, method=TOUCH, reac_volume)
+	. = ..()
 	if(M.has_bane(BANE_SILVER))
 		M.reagents.add_reagent(/datum/reagent/toxin, reac_volume)
-	..()
 
 /datum/reagent/uranium
 	name ="Uranium"
@@ -1010,6 +1018,7 @@
 	..()
 
 /datum/reagent/uranium/reaction_turf(turf/T, reac_volume)
+	. = ..()
 	if(reac_volume >= 3)
 		if(!isspaceturf(T))
 			var/obj/effect/decal/cleanable/greenglow/GG = locate() in T.contents
@@ -1039,6 +1048,7 @@
 	process_flags = ORGANIC | SYNTHETIC
 
 /datum/reagent/bluespace/reaction_mob(mob/living/M, method=TOUCH, reac_volume)
+	. = ..()
 	if(method == TOUCH || method == VAPOR)
 		do_teleport(M, get_turf(M), (reac_volume / 5), asoundin = 'sound/effects/phasein.ogg', channel = TELEPORT_CHANNEL_BLUESPACE) //4 tiles per crystal
 	..()
@@ -1081,10 +1091,12 @@
 	glass_icon_state = "dr_gibb_glass"
 	glass_name = "glass of welder fuel"
 	glass_desc = "Unless you're an industrial tool, this is probably not safe for consumption."
+	penetrates_skin = NONE
 	process_flags = ORGANIC | SYNTHETIC
 
 
 /datum/reagent/fuel/reaction_mob(mob/living/M, method=TOUCH, reac_volume)//Splashing people with welding fuel to make them easy to ignite!
+	. = ..()
 	if(method == TOUCH || method == VAPOR)
 		M.adjust_fire_stacks(reac_volume / 10)
 		return
@@ -1102,6 +1114,7 @@
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY | CHEMICAL_GOAL_BOTANIST_HARVEST
 	taste_description = "sourness"
 	reagent_weight = 0.6 //so it sprays further
+	penetrates_skin = NONE
 	var/clean_types = CLEAN_WASH
 	var/toxic = FALSE //turn to true if someone drinks this, so it won't poison people who are simply getting sprayed down
 
@@ -1112,9 +1125,11 @@
 	return TRUE
 
 /datum/reagent/space_cleaner/reaction_obj(obj/O, reac_volume)
+	. = ..()
 	O?.wash(clean_types)
 
 /datum/reagent/space_cleaner/reaction_turf(turf/T, reac_volume)
+	. = ..()
 	if(reac_volume >= 1)
 		T.wash(clean_types)
 		for(var/am in T)
@@ -1138,6 +1153,7 @@
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
 	metabolization_rate = 1.5 * REAGENTS_METABOLISM
 	taste_description = "acid"
+	penetrates_skin = VAPOR
 
 /datum/reagent/space_cleaner/ez_clean/on_mob_life(mob/living/carbon/M)
 	M.adjustBruteLoss(3.33)
@@ -1146,7 +1162,7 @@
 	..()
 
 /datum/reagent/space_cleaner/ez_clean/reaction_mob(mob/living/M, method=TOUCH, reac_volume)
-	..()
+	. = ..()
 	if((method == TOUCH || method == VAPOR) && !issilicon(M))
 		M.adjustBruteLoss(1.5)
 		M.adjustFireLoss(1.5)
@@ -1189,8 +1205,10 @@
 	color = "#535E66" // rgb: 83, 94, 102
 	chem_flags = CHEMICAL_NOT_SYNTH | CHEMICAL_RNG_FUN
 	taste_description = "sludge"
+	penetrates_skin = NONE
 
 /datum/reagent/nanomachines/reaction_mob(mob/living/L, method=TOUCH, reac_volume, show_message = 1, touch_protection = 0)
+	. = ..()
 	if(method==PATCH || method==INGEST || method==INJECT || (method == VAPOR && prob(min(reac_volume,100)*(1 - touch_protection))))
 		L.ForceContractDisease(new /datum/disease/transformation/robot(), FALSE, TRUE)
 
@@ -1200,8 +1218,10 @@
 	color = "#535E66" // rgb: 83, 94, 102
 	chem_flags = CHEMICAL_NOT_SYNTH | CHEMICAL_RNG_FUN
 	taste_description = "sludge"
+	penetrates_skin = NONE
 
 /datum/reagent/xenomicrobes/reaction_mob(mob/living/L, method=TOUCH, reac_volume, show_message = 1, touch_protection = 0)
+	. = ..()
 	if(method==PATCH || method==INGEST || method==INJECT || (method == VAPOR && prob(min(reac_volume,100)*(1 - touch_protection))))
 		L.ForceContractDisease(new /datum/disease/transformation/xeno(), FALSE, TRUE)
 
@@ -1211,9 +1231,10 @@
 	color = "#92D17D" // rgb: 146, 209, 125
 	chem_flags = CHEMICAL_NOT_SYNTH | CHEMICAL_RNG_FUN
 	taste_description = "slime"
-
+	penetrates_skin = NONE
 
 /datum/reagent/fungalspores/reaction_mob(mob/living/L, method=TOUCH, reac_volume, show_message = 1, touch_protection = 0)
+	. = ..()
 	if(method==PATCH || method==INGEST || method==INJECT || (method == VAPOR && prob(min(reac_volume,100)*(1 - touch_protection))))
 		L.ForceContractDisease(new /datum/disease/tuberculosis(), FALSE, TRUE)
 
@@ -1223,8 +1244,10 @@
 	color = "#003300" // rgb(0, 51, 0)
 	chem_flags = CHEMICAL_NOT_SYNTH | CHEMICAL_RNG_FUN
 	taste_description = "goo"
+	penetrates_skin = NONE
 
 /datum/reagent/snail/reaction_mob(mob/living/L, method=TOUCH, reac_volume, show_message = 1, touch_protection = 0)
+	. = ..()
 	if(method==PATCH || method==INGEST || method==INJECT || (method == VAPOR && prob(min(reac_volume,100)*(1 - touch_protection))))
 		L.ForceContractDisease(new /datum/disease/gastrolosis(), FALSE, TRUE)
 
@@ -1281,6 +1304,7 @@
 	O.atmos_spawn_air("co2=[reac_volume/5];TEMP=[temp]")
 
 /datum/reagent/carbondioxide/reaction_turf(turf/open/T, reac_volume)
+	. = ..()
 	if(istype(T))
 		var/temp = holder ? holder.chem_temp : T20C
 		T.atmos_spawn_air("co2=[reac_volume/5];TEMP=[temp]")
@@ -1296,17 +1320,20 @@
 	taste_description = "sweetness"
 
 /datum/reagent/nitrous_oxide/reaction_obj(obj/O, reac_volume)
+	. = ..()
 	if((!O) || (!reac_volume))
 		return 0
 	var/temp = holder ? holder.chem_temp : T20C
 	O.atmos_spawn_air("n2o=[reac_volume/5];TEMP=[temp]")
 
 /datum/reagent/nitrous_oxide/reaction_turf(turf/open/T, reac_volume)
+	. = ..()
 	if(istype(T))
 		var/temp = holder ? holder.chem_temp : T20C
 		T.atmos_spawn_air("n2o=[reac_volume/5];TEMP=[temp]")
 
 /datum/reagent/nitrous_oxide/reaction_mob(mob/living/M, method=TOUCH, reac_volume)
+	. = ..()
 	if(method == VAPOR)
 		M.drowsyness += max(round(reac_volume, 1), 2)
 
@@ -1718,19 +1745,19 @@
 	return ..()
 
 /datum/reagent/colorful_reagent/reaction_mob(mob/living/M, reac_volume)
+	. = ..()
 	if(can_colour_mobs)
 		M.add_atom_colour(pick(random_color_list), WASHABLE_COLOUR_PRIORITY)
-	..()
 
 /datum/reagent/colorful_reagent/reaction_obj(obj/O, reac_volume)
+	. = ..()
 	if(O)
 		O.add_atom_colour(pick(random_color_list), WASHABLE_COLOUR_PRIORITY)
-	..()
 
 /datum/reagent/colorful_reagent/reaction_turf(turf/T, reac_volume)
+	. = ..()
 	if(T)
 		T.add_atom_colour(pick(random_color_list), WASHABLE_COLOUR_PRIORITY)
-	..()
 
 /datum/reagent/hair_dye
 	name = "Quantum Hair Dye"
@@ -1740,8 +1767,10 @@
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
 	var/list/potential_colors = list("0ad","a0f","f73","d14","d14","0b5","0ad","f73","fc2","084","05e","d22","fa0") // fucking hair code // someone forgot how hair_color is programmed
 	taste_description = "sourness"
+	penetrates_skin = NONE
 
 /datum/reagent/hair_dye/reaction_mob(mob/living/M, method=TOUCH, reac_volume)
+	. = ..()
 	if(method == TOUCH || method == VAPOR)
 		if(M && ishuman(M))
 			var/mob/living/carbon/human/H = M
@@ -1756,8 +1785,10 @@
 	color = "#C8A5DC"
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_GOAL_BOTANIST_HARVEST
 	taste_description = "sourness"
+	penetrates_skin = NONE
 
 /datum/reagent/barbers_aid/reaction_mob(mob/living/M, method=TOUCH, reac_volume)
+	. = ..()
 	if(method == TOUCH || method == VAPOR)
 		if(M && ishuman(M))
 			var/mob/living/carbon/human/H = M
@@ -1774,8 +1805,10 @@
 	color = "#C8A5DC"
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY | CHEMICAL_GOAL_BOTANIST_HARVEST
 	taste_description = "sourness"
+	penetrates_skin = NONE
 
 /datum/reagent/concentrated_barbers_aid/reaction_mob(mob/living/M, method=TOUCH, reac_volume)
+	. = ..()
 	if(method == TOUCH || method == VAPOR)
 		if(M && ishuman(M))
 			var/mob/living/carbon/human/H = M
@@ -1790,8 +1823,10 @@
 	color = "#FF8800"
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
 	taste_description = "funky sugar"
+	penetrates_skin = NONE
 
 /datum/reagent/barbers_afro_mania/reaction_mob(mob/living/M, method=TOUCH, reac_volume)
+	. = ..()
 	if(method == TOUCH || method == VAPOR)
 		if(M && ishuman(M))
 			var/mob/living/carbon/human/H = M
@@ -1805,8 +1840,10 @@
 	color = "#C0FFAB"
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
 	taste_description = "hairloss"
+	penetrates_skin = NONE
 
 /datum/reagent/barbers_shaving_aid/reaction_mob(mob/living/M, method=TOUCH, reac_volume)
+	. = ..()
 	if(method == TOUCH || method == VAPOR)
 		if(M && ishuman(M))
 			var/mob/living/carbon/human/H = M
@@ -1842,10 +1879,12 @@
 
 
 /datum/reagent/drying_agent/reaction_turf(turf/open/T, reac_volume)
+	. = ..()
 	if(istype(T))
 		T.MakeDry(ALL, TRUE, reac_volume * 5 SECONDS)		//50 deciseconds per unit
 
 /datum/reagent/drying_agent/reaction_obj(obj/O, reac_volume)
+	. = ..()
 	if(O.type == /obj/item/clothing/shoes/galoshes)
 		var/t_loc = get_turf(O)
 		qdel(O)
@@ -1952,11 +1991,11 @@
 	taste_description = "brains"
 
 /datum/reagent/romerol/reaction_mob(mob/living/carbon/human/H, method=TOUCH, reac_volume)
+	. = ..()
 	// Silently add the zombie infection organ to be activated upon death
 	if(!H.getorganslot(ORGAN_SLOT_ZOMBIE))
 		var/obj/item/organ/zombie_infection/nodamage/ZI = new()
 		ZI.Insert(H)
-	..()
 
 /datum/reagent/magillitis
 	name = "Magillitis"

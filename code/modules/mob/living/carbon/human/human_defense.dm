@@ -659,9 +659,9 @@
 
 		inventory_items_to_kill += held_items
 
-	for(var/obj/item/I in inventory_items_to_kill)
-		I.acid_act(acidpwr, acid_volume)
-	return 1
+	for(var/obj/item/inventory_item in inventory_items_to_kill)
+		inventory_item.acid_act(acidpwr, acid_volume)
+	return TRUE
 
 ///The point value is how much they affect the singularity's size
 /mob/living/carbon/human/singularity_act()

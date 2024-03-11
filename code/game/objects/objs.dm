@@ -22,9 +22,6 @@
 	/// INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | ON_FIRE | UNACIDABLE | ACID_PROOF
 	var/resistance_flags = NONE
 
-	/// How much acid is on that obj
-	var/acid_level = 0
-
 	/// Have something WAY too amazing to live to the next round? Set a new path here. Overuse of this var will make me upset. Will replace the object with the type you specify during persistence.
 	var/persistence_replacement
 	var/current_skin //Has the item been reskinned?
@@ -426,8 +423,6 @@
 
 /obj/update_overlays()
 	. = ..()
-	if(acid_level)
-		. += GLOB.acid_overlay
 	if(resistance_flags & ON_FIRE)
 		. += GLOB.fire_overlay
 

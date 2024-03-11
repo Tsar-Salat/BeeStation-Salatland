@@ -400,6 +400,7 @@
 	return TRUE
 
 /datum/reagent/medicine/mine_salve/reaction_mob(mob/living/M, method=TOUCH, reac_volume, show_message = 1)
+	. = ..()
 	if(iscarbon(M) && M.stat != DEAD)
 		if(method in list(INGEST, VAPOR, INJECT))
 			M.adjust_nutrition(-5)
@@ -1675,22 +1676,23 @@
 	taste_description = "numbing bitterness"
 
 /datum/reagent/medicine/polypyr/on_mob_life(mob/living/carbon/M) //I wanted a collection of small positive effects, this is as hard to obtain as coniine after all.
+	. = ..()
 	M.adjustOrganLoss(ORGAN_SLOT_LUNGS, -0.25)
 	M.adjustBruteLoss(-0.35, 0)
 	if(prob(50))
 		if(ishuman(M))
 			var/mob/living/carbon/human/H = M
 			H.bleed_rate = max(H.bleed_rate - 1, 0)
-	..()
-	. = 1
+	return TRUE
 
-/datum/reagent/medicine/polypyr/reaction_mob(mob/living/M, method=TOUCH, reac_volume)
-	if(method == TOUCH || method == VAPOR)
-		if(M && ishuman(M) && reac_volume >= 0.5)
-			var/mob/living/carbon/human/H = M
-			H.hair_color = "92f"
-			H.facial_hair_color = "92f"
-			H.update_hair()
+/datum/reagent/medicine/polypyr/reaction_mob(mob/living/carbon/human/exposed_human, method=TOUCH, reac_volume)
+	. = ..()
+	if(!(method == TOUCH || method == VAPOR) || !ishuman(exposed_human) || (reac_volume < 0.5))
+		return
+
+	exposed_human.hair_color = "92f"
+	exposed_human.facial_hair_color = "92f"
+	exposed_human.update_hair()
 
 /datum/reagent/medicine/polypyr/overdose_process(mob/living/M)
 	M.adjustOrganLoss(ORGAN_SLOT_LUNGS, 0.5)

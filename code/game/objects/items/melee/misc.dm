@@ -652,17 +652,18 @@
 
 /obj/item/melee/supermatter_sword/ex_act(severity, target)
 	visible_message("<span class='danger'>The blast wave smacks into [src] and rapidly flashes to ash.</span>",\
-	"<span class='italics'>You hear a loud crack as you are washed with a wave of heat.</span>")
+	"<span class='hear'>You hear a loud crack as you are washed with a wave of heat.</span>")
 	consume_everything()
 
 /obj/item/melee/supermatter_sword/acid_act()
 	visible_message("<span class='danger'>The acid smacks into [src] and rapidly flashes to ash.</span>",\
-	"<span class='italics'>You hear a loud crack as you are washed with a wave of heat.</span>")
+	"<span class='hear'>You hear a loud crack as you are washed with a wave of heat.</span>")
 	consume_everything()
+	return TRUE
 
 /obj/item/melee/supermatter_sword/bullet_act(obj/projectile/P)
 	visible_message("<span class='danger'>[P] smacks into [src] and rapidly flashes to ash.</span>",\
-	"<span class='italics'>You hear a loud crack as you are washed with a wave of heat.</span>")
+	"<span class='hear'>You hear a loud crack as you are washed with a wave of heat.</span>")
 	consume_everything(P)
 	return BULLET_ACT_HIT
 
