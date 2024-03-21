@@ -267,7 +267,16 @@ const PackagingControls = ({ volume, packagingName }, context) => {
   const [bottleAmount, setBottleAmount] = useSharedState(context, 'bottleAmount', 1);
   const [bagAmount, setBagAmount] = useSharedState(context, 'bagAmount', 1);
   const [packAmount, setPackAmount] = useSharedState(context, 'packAmount', 1);
-  const { condi, chosen_pill_style, pill_styles = [], chosen_patch_style, patch_styles = [] } = data;
+  const {
+    condi,
+    chosen_pill_style,
+    pill_styles = [],
+    chosen_condi_style,
+    autoCondiStyle,
+    condi_styles = [],
+    chosen_patch_style,
+    patch_styles = [],
+  } = data;
   return (
     <LabeledList>
       {!condi && (
@@ -370,21 +379,30 @@ const PackagingControls = ({ volume, packagingName }, context) => {
         />
       )}
       {!!condi && (
-        <PackagingControlsItem
-          label="Packs"
-          amount={packAmount}
-          amountUnit="packs"
-          sideNote="max 10u"
-          onChangeAmount={(e, value) => setPackAmount(value)}
-          onCreate={() =>
-            act('create', {
-              type: 'condimentPack',
-              amount: packAmount,
-              volume: volume,
-              name: packagingName,
-            })
-          }
-        />
+        <LabeledList.Item label="Bottle type">
+          <Button.Checkbox
+            onClick={() => act('condiStyle', { id: autoCondiStyleChosen ? condi_styles[0].id : autoCondiStyle })}
+            checked={autoCondiStyleChosen}
+            disabled={!condi_styles.length}>
+            Guess from contents
+          </Button.Checkbox>
+        </LabeledList.Item>
+      )}
+      {!!condi && !autoCondiStyleChosen && (
+        <LabeledList.Item label="">
+          {condi_styles.map((style) => (
+            <Button
+              key={style.id}
+              width="30px"
+              selected={style.id === chosen_condi_style}
+              textAlign="center"
+              color="transparent"
+              title={style.title}
+              onClick={() => act('condiStyle', { id: style.id })}>
+              <Box mx={-1} className={style.className} />
+            </Button>
+          ))}
+        </LabeledList.Item>
       )}
       {!!condi && (
         <PackagingControlsItem
@@ -403,13 +421,29 @@ const PackagingControls = ({ volume, packagingName }, context) => {
           }
         />
       )}
+      {!!condi && (
+        <PackagingControlsItem
+          label="Packs"
+          amount={packAmount}
+          amountUnit="packs"
+          sideNote="max 10u"
+          onChangeAmount={(e, value) => setPackAmount(value)}
+          onCreate={() =>
+            act('create', {
+              type: 'condimentPack',
+              amount: packAmount,
+              volume: 'auto',
+            })
+          }
+        />
+      )}
     </LabeledList>
   );
 };
 
 const AnalysisResults = (props, context) => {
   const { act, data } = useBackend(context);
-  const { analyzeVars } = data;
+  const { analyze_vars } = data;
   return (
     <Section
       title="Analysis Results"
@@ -425,16 +459,16 @@ const AnalysisResults = (props, context) => {
         />
       }>
       <LabeledList>
-        <LabeledList.Item label="Name">{analyzeVars.name}</LabeledList.Item>
-        <LabeledList.Item label="State">{analyzeVars.state}</LabeledList.Item>
+        <LabeledList.Item label="Name">{analyze_vars.name}</LabeledList.Item>
+        <LabeledList.Item label="State">{analyze_vars.state}</LabeledList.Item>
         <LabeledList.Item label="Color">
-          <ColorBox color={analyzeVars.color} mr={1} />
-          {analyzeVars.color}
+          <ColorBox color={analyze_vars.color} mr={1} />
+          {analyze_vars.color}
         </LabeledList.Item>
-        <LabeledList.Item label="Description">{analyzeVars.description}</LabeledList.Item>
-        <LabeledList.Item label="Metabolization Rate">{analyzeVars.metaRate} u/minute</LabeledList.Item>
-        <LabeledList.Item label="Overdose Threshold">{analyzeVars.overD}</LabeledList.Item>
-        <LabeledList.Item label="Addiction Threshold">{analyzeVars.addicD}</LabeledList.Item>
+        <LabeledList.Item label="Description">{analyze_vars.description}</LabeledList.Item>
+        <LabeledList.Item label="Metabolization Rate">{analyze_vars.metaRate} u/minute</LabeledList.Item>
+        <LabeledList.Item label="Overdose Threshold">{analyze_vars.overD}</LabeledList.Item>
+        <LabeledList.Item label="Addiction Threshold">{analyze_vars.addicD}</LabeledList.Item>
       </LabeledList>
     </Section>
   );
