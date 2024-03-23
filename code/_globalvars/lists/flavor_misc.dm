@@ -80,32 +80,38 @@ GLOBAL_LIST_INIT(color_list_ethereal, list(
 	"Yellow" = "fbdf56",
 ))
 
-GLOBAL_LIST_INIT(ghost_forms_with_directions_list, list("ghost")) //stores the ghost forms that support directional sprites
+GLOBAL_LIST_INIT(ghost_forms_with_directions_list, list(
+	"ghost",
+	"catghost",
+	"skeleghost",
+	))
+	//stores the ghost forms that support directional sprites
+
 GLOBAL_LIST_INIT(ghost_forms_with_accessories_list, list(
 	"ghost",
-	"ghost_red",
 	"ghost_black",
+	"ghost_blazeit",
 	"ghost_blue",
-	"ghost_yellow",
-	"ghost_green",
-	"ghost_pink",
+	"ghost_camo",
 	"ghost_cyan",
-	"ghost_dblue",
-	"ghost_dred",
-	"ghost_dgreen",
 	"ghost_dcyan",
-	"ghost_grey",
+	"ghost_dblue",
+	"ghost_dgreen",
+	"ghost_dred",
 	"ghost_dyellow",
-	"ghost_dpink",
-	"skeleghost",
-	"ghost_purpleswirl",
-	"ghost_rainbow",
 	"ghost_fire",
 	"ghost_funkypurp",
-	"ghost_pinksherbert",
-	"ghost_blazeit",
+	"ghost_green",
+	"ghost_grey",
 	"ghost_mellow",
-	"ghost_camo",))
+	"ghost_pink",
+	"ghost_pinksherbert",
+	"ghost_purpleswirl",
+	"ghost_rainbow",
+	"ghost_red",
+	"ghost_yellow",
+	"skeleghost",
+	))
 	//stores the ghost forms that support hair and other such things
 
 GLOBAL_LIST_INIT(ai_core_display_screens, sort_list(list(
