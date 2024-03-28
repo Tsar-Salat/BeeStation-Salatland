@@ -18,12 +18,13 @@
 	semi_auto = FALSE
 	rack_delay = 4
 	w_class = WEIGHT_CLASS_LARGE
-	zoomable = TRUE
-	zoom_amt = 10 //Long range, enough to see in front of you, but no tiles behind you.
-	zoom_out_amt = 5
 	slot_flags = ITEM_SLOT_BACK
 	actions_types = list()
 	mag_display = TRUE
+
+/obj/item/gun/ballistic/sniper_rifle/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/scope, range_modifier = 2)
 
 /obj/item/gun/ballistic/sniper_rifle/syndicate
 	name = "syndicate sniper rifle"
