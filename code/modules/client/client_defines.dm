@@ -127,3 +127,6 @@
 
 	/// Whether or not this client has standard hotkeys enabled
 	var/hotkeys = TRUE
+
+	/// If this client has been fully initialized or not
+	var/fully_created = FALSE

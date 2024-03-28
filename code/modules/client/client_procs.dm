@@ -478,8 +478,8 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 	view_size = new(src, getScreenSize(mob))
 	view_size.resetFormat()
 	view_size.setZoomMode()
-	fit_viewport()
 	Master.UpdateTickRate()
+	fully_created = TRUE
 
 	if(GLOB.ckey_redirects.Find(ckey))
 		if(isnewplayer(mob))
@@ -1045,8 +1045,7 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 	if (isliving(mob))
 		var/mob/living/M = mob
 		M.update_damage_hud()
-	if (prefs?.read_player_preference(/datum/preference/toggle/auto_fit_viewport))
-		addtimer(CALLBACK(src,.verb/fit_viewport,10)) //Delayed to avoid wingets from Login calls.
+	attempt_auto_fit_viewport()
 
 /client/proc/generate_clickcatcher()
 	if(!void)
