@@ -78,15 +78,20 @@ GLOBAL_LIST_INIT(clockwork_portals, list())
 				var/turf/T = get_turf(M)
 				if((T && T.get_virtual_z_level() == get_virtual_z_level()) || is_servant_of_ratvar(M))
 					M.playsound_local(M, 'sound/machines/clockcult/ark_deathrattle.ogg', 100, FALSE, pressure_affected = FALSE)
-			sleep(27)
-			explosion(src, 1, 3, 8, 8)
-			sound_to_playing_players('sound/effects/explosion_distant.ogg', volume = 50)
-			for(var/obj/effect/portal/wormhole/clockcult/CC in GLOB.all_wormholes)
-				qdel(CC)
-			SSshuttle.clearHostileEnvironment(src)
-			set_security_level(SEC_LEVEL_RED)
-			sleep(300)
-			SSticker.force_ending = TRUE
+			addtimer(CALLBACK(src, PROC_REF(last_call_before_destruction)), 27)
+
+
+/obj/structure/destructible/clockwork/massive/celestial_gateway/proc/last_call_before_destruction()
+	explosion(src, 1, 3, 8, 8)
+	sound_to_playing_players('sound/effects/explosion_distant.ogg', volume = 50)
+	for(var/obj/effect/portal/wormhole/clockcult/CC in GLOB.all_wormholes)
+		qdel(CC)
+	SSshuttle.clearHostileEnvironment(src)
+	set_security_level(SEC_LEVEL_RED)
+	addtimer(CALLBACK(src, PROC_REF(clockies_win)), 300)
+
+/obj/structure/destructible/clockwork/massive/celestial_gateway/proc/clockies_win()
+	SSticker.force_ending = TRUE
 	qdel(src)
 
 /obj/structure/destructible/clockwork/massive/celestial_gateway/take_damage(damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armour_penetration)

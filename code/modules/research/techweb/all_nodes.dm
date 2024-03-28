@@ -24,6 +24,7 @@
 		"destructive_analyzer",
 		"experimentor",
 		"fax",
+		"fork",
 		"glasses_prescription",
 		"handlabel",
 		"large_beaker",
@@ -36,6 +37,9 @@
 		"plasmaglass",
 		"plasmareinforcedglass",
 		"plasteel",
+		"plastic_knife",
+		"plastic_fork",
+		"plastic_spoon",
 		"plastitanium",
 		"plastitaniumglass",
 		"plumbing_rcd",
@@ -52,12 +56,14 @@
 		"sec_Islug",
 		"sec_rshot",
 		"sec_slug",
+		"servingtray",
 		"space_heater",
+		"spoon",
 		"tech_disk",
 		"titaniumglass",
 		"xenoa_labeler",
 		"xlarge_beaker",
-		"epaperread"
+		"epaperread",
 	)
 
 /datum/techweb_node/mmi

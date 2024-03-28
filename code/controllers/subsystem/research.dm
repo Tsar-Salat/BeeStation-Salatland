@@ -159,7 +159,10 @@ SUBSYSTEM_DEF(research)
 		for(var/i in node.design_ids)
 			var/datum/design/D = techweb_designs[i]
 			node.design_ids[i] = TRUE
-			D.unlocked_by += node.id
+			if(isnull(D))
+				stack_trace("There is an incorrect design string [src] in the techweb nodes")
+			else
+				D.unlocked_by += node.id
 		if(node.hidden)
 			techweb_nodes_hidden[node.id] = TRUE
 		CHECK_TICK

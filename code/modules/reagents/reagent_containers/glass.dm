@@ -495,3 +495,22 @@
 		qdel(src)
 		return
 	return ..()
+
+/obj/item/reagent_containers/glass/colocup
+	name = "colo cup"
+	desc = "A cheap, mass produced style of cup, typically used at parties. They never seem to come out red, for some reason..."
+	icon = 'icons/obj/drinks.dmi'
+	icon_state = "colocup"
+	lefthand_file = 'icons/mob/inhands/misc/food_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/misc/food_righthand.dmi'
+	item_state = "colocup"
+	custom_materials = list(/datum/material/plastic = 1000)
+	possible_transfer_amounts = list(5, 10, 15, 20)
+	volume = 20
+	amount_per_transfer_from_this = 5
+
+/obj/item/reagent_containers/glass/colocup/Initialize()
+	.=..()
+	icon_state = "colocup[rand(0, 6)]"
+	pixel_x = rand(-4,4)
+	pixel_y = rand(-4,4)

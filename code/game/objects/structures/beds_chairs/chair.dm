@@ -252,10 +252,10 @@
 	icon_state = "plastic_chair"
 	anchored = FALSE
 	resistance_flags = FLAMMABLE
-	max_integrity = 150
+	max_integrity = 50 //less than other chairs, flimsy plastic. Doesnt make sense for it to snap under weight otherwise.
 	custom_materials = list(/datum/material/plastic = 2000)
 	buildstacktype = /obj/item/stack/sheet/plastic
-	buildstackamount = 1
+	buildstackamount = 2
 	item_chair = /obj/item/chair/plastic
 
 /obj/structure/chair/fancy/plastic/post_buckle_mob(mob/living/M) //you do not want to see an angry spaceman speeding while holding dearly onto it

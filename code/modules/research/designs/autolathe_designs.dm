@@ -353,6 +353,9 @@
 	build_path = /obj/item/rcd_ammo
 	category = list("initial","Construction")
 
+
+//KITCHEN
+
 /datum/design/kitchen_knife
 	name = "Kitchen Knife"
 	id = "kitchen_knife"
@@ -361,21 +364,65 @@
 	build_path = /obj/item/knife/kitchen
 	category = list("initial","Dinnerware")
 
+/datum/design/plastic_knife
+	name = "Plastic Knife"
+	id = "plastic_knife"
+	build_type = AUTOLATHE
+	materials = list(/datum/material/plastic = 100)
+	build_path = /obj/item/knife/plastic
+	category = list("initial", "Tool Designs", "Dinnerware")
+
 /datum/design/fork
 	name = "Fork"
 	id = "fork"
-	build_type = AUTOLATHE
+	build_type =  AUTOLATHE
 	materials = list(/datum/material/iron = 80)
 	build_path = /obj/item/kitchen/fork
 	category = list("initial","Dinnerware")
 
+/datum/design/plastic_fork
+	name = "Plastic Fork"
+	id = "plastic_fork"
+	build_type = AUTOLATHE
+	materials = list(/datum/material/iron = 80)
+	build_path = /obj/item/kitchen/fork
+	category = list("initial", "Tool Designs", "Dinnerware")
+
+/datum/design/spoon
+	name = "Spoon"
+	id = "spoon"
+	build_type = AUTOLATHE
+	materials = list(/datum/material/iron = 120)
+	build_path = /obj/item/kitchen/spoon
+	category = list("initial", "Tool Designs", "Dinnerware")
+
+/datum/design/plastic_spoon
+	name = "Fork"
+	id = "fork"
+	build_type = AUTOLATHE
+	materials = list(/datum/material/plastic = 120)
+	build_path = /obj/item/kitchen/fork
+	category = list("initial", "Tool Designs", "Dinnerware")
+
 /datum/design/tray
-	name = "Tray"
-	id = "tray"
+	name = "Serving Tray"
+	id = "servingtray"
 	build_type = AUTOLATHE
 	materials = list(/datum/material/iron = 3000)
 	build_path = /obj/item/storage/bag/tray
+	category = list("initial", "Dinnerware")
+
+/datum/design/cafeteria_tray
+	name = "Cafeteria Tray"
+	id = "foodtray"
+	build_type = AUTOLATHE
+	materials = list(/datum/material/iron = 3000)
+	build_path = /obj/item/storage/bag/tray/cafeteria
 	category = list("initial","Dinnerware")
+
+/* After Newfood resprite and griddles are done, start work on plates
+/datum/design/plate
+*/
 
 /datum/design/bowl
 	name = "Bowl"

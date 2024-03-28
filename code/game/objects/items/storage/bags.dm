@@ -382,6 +382,12 @@
 	. = ..()
 	update_icon()
 
+/obj/item/storage/bag/tray/cafeteria
+	name = "cafeteria tray"
+	icon = 'icons/obj/food/containers.dmi'
+	icon_state = "foodtray"
+	desc = "A cheap metal tray to pile today's meal onto."
+
 /*
  *	Chemistry bag
  */
