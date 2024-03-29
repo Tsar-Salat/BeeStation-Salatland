@@ -49,7 +49,10 @@
 /obj/item/stack/Initialize(mapload, new_amount, merge = TRUE, list/mat_override=null, mat_amt=1)
 	if(new_amount != null)
 		amount = new_amount
-	check_max_amount()
+	while(amount > max_amount)
+		amount -= max_amount
+		ui_update()
+		new type(loc, max_amount, FALSE)
 	if(!merge_type)
 		merge_type = type
 
@@ -66,11 +69,12 @@
 			if(item_stack == src)
 				continue
 			if(can_merge(item_stack))
-				INVOKE_ASYNC(src, .proc/merge_without_del, item_stack)
+				INVOKE_ASYNC(src, PROC_REF(merge_without_del), item_stack)
 				if(is_zero_amount(delete_if_zero = FALSE))
 					return INITIALIZE_HINT_QDEL
+
 	update_weight()
-	update_icon()
+	update_appearance()
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = PROC_REF(on_movable_entered_occupied_turf),
 	)
@@ -106,12 +110,6 @@
 		to_chat(usr, "<span class='warning'>[src] is electronically synthesized in your chassis and can't be ground up!</span>")
 		return
 	return TRUE
-
-/obj/item/stack/proc/check_max_amount()
-	while(amount > max_amount)
-		amount -= max_amount
-		ui_update()
-		new type(loc, max_amount, FALSE)
 
 /// DO NOT CALL PARENT EVER. Each material should call individual material recipe
 /obj/item/stack/proc/get_recipes()
@@ -470,7 +468,7 @@
 		return
 
 	if(!arrived.throwing && can_merge(arrived))
-		INVOKE_ASYNC(src, .proc/merge, arrived)
+		INVOKE_ASYNC(src, PROC_REF(merge), arrived)
 
 /obj/item/stack/hitby(atom/movable/AM, skipcatch, hitpush, blocked, datum/thrownthing/throwingdatum)
 	if(can_merge(AM))
