@@ -63,6 +63,16 @@ SUBSYSTEM_DEF(materials)
 		materials_by_category[category] += list(mat_ref)
 		materialids_by_category[category] += list(mat_id)
 
+	// Adds the dupe recipes into multiple material recipes
+		var/list/global_mat_recipes = mat_ref.get_material_recipes()
+		if(global_mat_recipes)
+			if(mat_ref.categories[MAT_CATEGORY_BASE_RECIPES])
+				global_mat_recipes += SSmaterials.rigid_stack_recipes.Copy()
+			/* put more material recipes here. example:
+			if(ref.categories[MAT_CATEGORY_SOME_NEW_RECIPES])
+				global_mat_recipes += SSmaterials.SOME_NEW_RECIPES.Copy()
+			*/
+
 	SEND_SIGNAL(src, COMSIG_MATERIALS_INIT_MAT, mat_ref)
 	return mat_ref
 
@@ -92,8 +102,8 @@ SUBSYSTEM_DEF(materials)
 			WARNING("Attempted to fetch material ref with invalid text id '[key]'")
 		return
 
-	//if(!ispath(key, /datum/material))
-	//	CRASH("Attempted to fetch material ref with invalid key [key]")
+	if(!ispath(key, /datum/material))
+		CRASH("Attempted to fetch material ref with invalid key [key]")
 
 	if(!(initial(key.init_flags) & MATERIAL_INIT_BESPOKE))
 		. = materials[key]

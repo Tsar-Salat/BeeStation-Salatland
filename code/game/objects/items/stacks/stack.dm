@@ -69,15 +69,6 @@
 				INVOKE_ASYNC(src, .proc/merge_without_del, item_stack)
 				if(is_zero_amount(delete_if_zero = FALSE))
 					return INITIALIZE_HINT_QDEL
-	var/list/temp_recipes = get_main_recipes()
-	recipes = temp_recipes.Copy()
-	if(material_type)
-		var/datum/material/M = GET_MATERIAL_REF(material_type) //First/main material
-		for(var/i in M.categories)
-			switch(i)
-				if(MAT_CATEGORY_BASE_RECIPES)
-					var/list/temp = SSmaterials.rigid_stack_recipes.Copy()
-					recipes += temp
 	update_weight()
 	update_icon()
 	var/static/list/loc_connections = list(

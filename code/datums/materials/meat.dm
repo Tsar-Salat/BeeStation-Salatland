@@ -1,7 +1,6 @@
 ///It's gross, gets the name of it's owner, and is all kinds of fucked up
 /datum/material/meat
 	name = "meat"
-	id = "meat"
 	desc = "Meat"
 	id = /datum/material/meat // So the bespoke versions are categorized under this
 	color = rgb(214, 67, 67)
