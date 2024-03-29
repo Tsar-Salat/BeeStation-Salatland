@@ -19,7 +19,6 @@
 	icon = 'icons/obj/stacks/minerals.dmi'
 	gender = PLURAL
 	material_modifier = 0.05 //5%, so that a 50 sheet stack has the effect of 5k materials instead of 100k.
-	var/list/datum/stack_recipe/recipes
 	///The name of the thing when it's singular
 	var/singular_name
 	///The amount of thing in the stack
@@ -99,7 +98,13 @@
 /** Updates the custom materials list of this stack.
   */
 /obj/item/stack/proc/update_custom_materials()
-	set_custom_materials(mats_per_unit, amount)
+	set_custom_materials(mats_per_unit, amount, is_update=TRUE)
+
+/**
+ * Override to make things like metalgen accurately set custom materials
+ */
+/obj/item/stack/set_custom_materials(list/materials, multiplier=1, is_update=FALSE)
+	return is_update ? ..() : set_mats_per_unit(materials, multiplier/(amount || 1))
 
 /obj/item/stack/on_grind()
 	for(var/i in 1 to length(grind_results)) //This should only call if it's ground, so no need to check if grind_results exists
@@ -117,9 +122,10 @@
 		ui_update()
 		new type(loc, max_amount, FALSE)
 
-/obj/item/stack/proc/get_main_recipes()
-	SHOULD_CALL_PARENT(TRUE)
-	return list()//empty list
+/// DO NOT CALL PARENT EVER. Each material should call individual material recipe
+/obj/item/stack/proc/get_recipes()
+	SHOULD_CALL_PARENT(FALSE)
+	return
 
 /obj/item/stack/proc/update_weight()
 	if(amount <= (max_amount * (1/3)))
@@ -238,7 +244,7 @@
 
 /obj/item/stack/ui_static_data(mob/user)
 	var/list/data = list()
-	data["recipes"] = recursively_build_recipes(recipes)
+	data["recipes"] = recursively_build_recipes(get_recipes())
 	return data
 
 /obj/item/stack/ui_act(action, params)
@@ -252,7 +258,7 @@
 				qdel(src)
 				return
 			var/datum/stack_recipe/R = locate(params["ref"])
-			if(!is_valid_recipe(R, recipes)) //href exploit protection
+			if(!is_valid_recipe(R, get_recipes())) //href exploit protection
 				return
 			var/multiplier = text2num(params["multiplier"])
 			if(!isnum_safe(multiplier) || (multiplier <= 0)) //href exploit protection
@@ -421,6 +427,8 @@
 	if(!istype(check, merge_type))
 		return FALSE
 	if(mats_per_unit != check.mats_per_unit)
+		return FALSE
+	if(is_cyborg)	// No merging cyborg stacks into other stacks
 		return FALSE
 	return TRUE
 
