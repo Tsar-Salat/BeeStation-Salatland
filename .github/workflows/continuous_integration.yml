@@ -15,6 +15,7 @@ on:
 
 jobs:
   run_linters:
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
     name: Run Linters
     runs-on: ubuntu-20.04
     steps:
@@ -55,6 +56,7 @@ jobs:
           ~/dreamchecker
 
   compile_all_maps:
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
     name: Compile Maps
     runs-on: ubuntu-20.04
     steps:
@@ -74,6 +76,7 @@ jobs:
           python3 tools/ci/template_dm_generator.py
           tools/build/build --ci dm -DCIBUILDING -DCITESTING -DALL_MAPS
   run_all_tests:
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
     name: Integration Tests
     runs-on: ubuntu-20.04
     services:
@@ -120,6 +123,7 @@ jobs:
           tools/build/build --ci build -DCIBUILDING
           bash tools/ci/run_server.sh
   test_windows:
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
     name: Windows Build
     runs-on: windows-latest
     steps:
