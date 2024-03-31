@@ -228,8 +228,8 @@
 #define SSAIR_DEFERRED_AIRS 13
 
 // Explosion Subsystem subtasks
-#define SSEXPLOSIONS_MOVABLES 1
-#define SSEXPLOSIONS_TURFS 2
+#define SSEXPLOSIONS_TURFS 1
+#define SSEXPLOSIONS_MOVABLES 2
 #define SSEXPLOSIONS_THROWS 3
 
 //SSticker.current_state values

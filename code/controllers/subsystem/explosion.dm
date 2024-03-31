@@ -25,7 +25,11 @@ SUBSYSTEM_DEF(explosions)
 	var/list/highturf = list()
 	var/list/flameturf = list()
 
+	/// List of turfs to throw the contents of
 	var/list/throwturf = list()
+	/// List of turfs to throw the contents of... AFTER the next explosion processes
+	/// This avoids order of operations errors and shit
+	var/list/held_throwturf = list()
 
 	var/list/low_mov_atom = list()
 	var/list/med_mov_atom = list()
@@ -62,6 +66,7 @@ SUBSYSTEM_DEF(explosions)
 	msg += "HO:[high_mov_atom.len]|"
 
 	msg += "TO:[throwturf.len]"
+	msg += "HTO:[held_throwturf.len]"
 
 	msg += "} "
 	return ..()
@@ -71,7 +76,7 @@ SUBSYSTEM_DEF(explosions)
 #define SSEX_OBJ "obj"
 
 /datum/controller/subsystem/explosions/proc/is_exploding()
-	return (lowturf.len || medturf.len || highturf.len || flameturf.len || throwturf.len || low_mov_atom.len || med_mov_atom.len || high_mov_atom.len)
+	return (lowturf.len || medturf.len || highturf.len || flameturf.len || throwturf.len || held_throwturf.len || low_mov_atom.len || med_mov_atom.len || high_mov_atom.len)
 
 /datum/controller/subsystem/explosions/proc/wipe_turf(turf/T)
 	lowturf -= T
@@ -79,6 +84,7 @@ SUBSYSTEM_DEF(explosions)
 	highturf -= T
 	flameturf -= T
 	throwturf -= T
+	held_throwturf -= T
 
 /client/proc/check_bomb_impacts()
 	set name = "Check Bomb Impact"
@@ -308,6 +314,7 @@ SUBSYSTEM_DEF(explosions)
 
 	var/reactionary = CONFIG_GET(flag/reactionary_explosions)
 	var/list/cached_exp_block
+	var/list/held_throwturf = src.held_throwturf
 
 	if(reactionary)
 		cached_exp_block = CaculateExplosionBlock(affected_turfs)
@@ -401,7 +408,7 @@ SUBSYSTEM_DEF(explosions)
 				throwingturf[3] = max_range
 		else
 			T.explosion_throw_details = list(throw_range, throw_dir, max_range)
-			throwturf += T
+			held_throwturf += T
 
 	//Calculate above and below Zs
 	//Multi-z explosions only work on station levels.
@@ -597,6 +604,9 @@ SUBSYSTEM_DEF(explosions)
 			low_mov_atom -= movable_thing
 		cost_low_mov_atom = MC_AVERAGE(cost_low_mov_atom, TICK_DELTA_TO_MS(TICK_USAGE_REAL - timer))
 
+		/// Throwing only becomes acceptable after the explosions process, so we don't miss stuff that explosions GENERATE
+		throwturf = held_throwturf
+		held_throwturf = list()
 
 	if (currentpart == SSEXPLOSIONS_THROWS)
 		currentpart = SSEXPLOSIONS_TURFS
@@ -612,12 +622,13 @@ SUBSYSTEM_DEF(explosions)
 			if (length(L) != 3)
 				continue
 			var/throw_range = L[1]
-			var/throw_dir = L[2]
+			var/turf/center = L[2]
 			var/max_range = L[3]
 			for(var/atom/movable/A in T)
 				if(!A.anchored && A.move_resist != INFINITY)
-					var/atom_throw_range = rand(throw_range, max_range)
-					var/turf/throw_at = get_ranged_target_turf(A, throw_dir, atom_throw_range)
+					// We want to have our distance matter, but we do want to bias to a lot of throw, for the vibe
+					var/atom_throw_range = rand(throw_range, max_range) + max_range * 0.3
+					var/turf/throw_at = get_ranged_target_turf_direct(A, center, atom_throw_range, 180) // Throw 180 degrees away from the explosion source
 					A.throw_at(throw_at, atom_throw_range, EXPLOSION_THROW_SPEED, quickstart = FALSE)
 		cost_throwturf = MC_AVERAGE(cost_throwturf, TICK_DELTA_TO_MS(TICK_USAGE_REAL - timer))
 
