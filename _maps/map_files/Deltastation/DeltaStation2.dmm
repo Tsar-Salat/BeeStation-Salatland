@@ -42033,7 +42033,6 @@
 /turf/open/floor/iron/dark,
 /area/security/brig)
 "gGj" = (
-/obj/machinery/food_cart/coffee,
 /obj/machinery/light/small{
 	dir = 1
 	},

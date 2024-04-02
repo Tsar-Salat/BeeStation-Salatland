@@ -23,7 +23,7 @@
 	///How many shit fits on the griddle?
 	var/max_items = 8
 
-/obj/machinery/griddle/Initialize()
+/obj/machinery/griddle/Initialize(mapload)
 	. = ..()
 	grill_loop = new(src, FALSE)
 	if(isnum(variant))
@@ -147,3 +147,12 @@
 /obj/machinery/griddle/update_icon_state()
 	icon_state = "griddle[variant]_[on ? "on" : "off"]"
 	return ..()
+
+/obj/machinery/griddle/stand
+	name = "griddle stand"
+	desc = "A more commercialized version of your traditional griddle. What happened to the good old days where people griddled with passion?"
+	variant = "stand"
+
+/obj/machinery/griddle/stand/update_overlays()
+	. = ..()
+	. += "front_bar"
