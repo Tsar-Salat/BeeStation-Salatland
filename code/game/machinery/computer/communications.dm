@@ -76,7 +76,6 @@
 
 /obj/machinery/computer/communications/ui_act(action, list/params)
 	var/static/list/approved_states = list(STATE_BUYING_SHUTTLE, STATE_CHANGING_STATUS, STATE_MESSAGES)
-	var/static/list/state_status_pictures = list("blank", "shuttle")
 
 	. = ..()
 	if (.)
@@ -272,8 +271,8 @@
 		if ("setStatusMessage")
 			if (!authenticated(usr))
 				return
-			var/line_one = reject_bad_text(params["lineOne"] || "", MAX_STATUS_LINE_LENGTH)
-			var/line_two = reject_bad_text(params["lineTwo"] || "", MAX_STATUS_LINE_LENGTH)
+			var/line_one = reject_bad_text(params["upperText"] || "", MAX_STATUS_LINE_LENGTH)
+			var/line_two = reject_bad_text(params["lowerText"] || "", MAX_STATUS_LINE_LENGTH)
 			message_admins("[ADMIN_LOOKUPFLW(usr)] changed the Status Message to - [line_one], [line_two] - From a Communications Console.")
 			log_game("[key_name(usr)] changed the Status Message to - [line_one], [line_two] - From a Communications Console.")
 			post_status("alert", "blank")
@@ -285,9 +284,9 @@
 			if (!authenticated(usr))
 				return
 			var/picture = params["picture"]
-			if (!(picture in GLOB.approved_status_pictures))
+			if (!(picture in GLOB.status_display_approved_pictures))
 				return
-			if(picture in state_status_pictures)
+			if(picture in GLOB.status_display_state_pictures)
 				post_status(picture)
 			else
 				post_status("alert", picture)
@@ -428,8 +427,8 @@
 				data["budget"] = bank_account.account_balance
 				data["shuttles"] = shuttles
 			if (STATE_CHANGING_STATUS)
-				data["lineOne"] = last_status_display ? last_status_display[1] : ""
-				data["lineTwo"] = last_status_display ? last_status_display[2] : ""
+				data["upperText"] = last_status_display ? last_status_display[1] : ""
+				data["lowerText"] = last_status_display ? last_status_display[2] : ""
 
 	return data
 
@@ -515,8 +514,8 @@
 	var/datum/signal/status_signal = new(list("command" = command))
 	switch(command)
 		if("message")
-			status_signal.data["msg1"] = data1
-			status_signal.data["msg2"] = data2
+			status_signal.data["top_text"] = data1
+			status_signal.data["bottom_text"] = data2
 		if("alert")
 			status_signal.data["picture_state"] = data1
 
