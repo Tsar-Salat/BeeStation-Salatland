@@ -3,6 +3,8 @@
 	roundend_category = "syndicate operatives" //just in case
 	antagpanel_category = "NukeOp"
 	banning_key = ROLE_OPERATIVE
+	antag_hud_type = ANTAG_HUD_OPS
+	antag_hud_name = "synd"
 	required_living_playtime = 8
 	antag_moodlet = /datum/mood_event/focused
 	show_to_ghosts = TRUE
@@ -13,25 +15,15 @@
 	var/send_to_spawnpoint = TRUE //Should the user be moved to default spawnpoint.
 	var/nukeop_outfit = /datum/outfit/syndicate
 
-/datum/antagonist/nukeop/proc/update_synd_icons_added(mob/living/M)
-	var/datum/atom_hud/antag/opshud = GLOB.huds[ANTAG_HUD_OPS]
-	opshud.join_hud(M)
-	set_antag_hud(M, "synd")
-
-/datum/antagonist/nukeop/proc/update_synd_icons_removed(mob/living/M)
-	var/datum/atom_hud/antag/opshud = GLOB.huds[ANTAG_HUD_OPS]
-	opshud.leave_hud(M)
-	set_antag_hud(M, null)
-
 /datum/antagonist/nukeop/apply_innate_effects(mob/living/mob_override)
 	var/mob/living/M = mob_override || owner.current
-	update_synd_icons_added(M)
+	add_antag_hud(antag_hud_type, antag_hud_name, M)
 	ADD_TRAIT(owner, TRAIT_DISK_VERIFIER, NUKEOP_TRAIT)
 	owner.remove_all_quirks()
 
 /datum/antagonist/nukeop/remove_innate_effects(mob/living/mob_override)
 	var/mob/living/M = mob_override || owner.current
-	update_synd_icons_removed(M)
+	remove_antag_hud(antag_hud_type, M)
 	REMOVE_TRAIT(owner, TRAIT_DISK_VERIFIER, NUKEOP_TRAIT)
 
 /datum/antagonist/nukeop/proc/equip_op()

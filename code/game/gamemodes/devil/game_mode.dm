@@ -16,16 +16,6 @@
 			objective.find_target()
 		log_objective(D, objective.explanation_text)
 
-/datum/game_mode/proc/update_devil_icons_added(datum/mind/devil_mind)
-	var/datum/atom_hud/antag/hud = GLOB.huds[ANTAG_HUD_DEVIL]
-	hud.join_hud(devil_mind.current)
-	set_antag_hud(devil_mind.current, "devil")
-
-/datum/game_mode/proc/update_devil_icons_removed(datum/mind/devil_mind)
-	var/datum/atom_hud/antag/hud = GLOB.huds[ANTAG_HUD_DEVIL]
-	hud.leave_hud(devil_mind.current)
-	set_antag_hud(devil_mind.current, null)
-
 /datum/game_mode/proc/update_soulless_icons_added(datum/mind/soulless_mind)
 	var/datum/atom_hud/antag/hud = GLOB.huds[ANTAG_HUD_SOULLESS]
 	hud.join_hud(soulless_mind.current)

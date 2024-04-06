@@ -5,6 +5,8 @@
 	roundend_category = "abductors"
 	antagpanel_category = "Abductor"
 	banning_key = ROLE_ABDUCTOR
+	antag_hud_type = ANTAG_HUD_ABDUCTOR
+	antag_hud_name = "abductor"
 	show_in_antagpanel = FALSE //should only show subtypes
 	show_to_ghosts = TRUE
 	var/datum/team/abductor_team/team
@@ -96,7 +98,7 @@
 			H.forceMove(LM.loc)
 			break
 
-	update_abductor_icons_added(owner,"abductor")
+	add_antag_hud(antag_hud_type, antag_hud_name, owner.current)
 
 /datum/antagonist/abductor/scientist/on_gain()
 	ADD_TRAIT(owner, TRAIT_ABDUCTOR_SCIENTIST_TRAINING, ABDUCTOR_ANTAGONIST)
@@ -189,6 +191,8 @@
 	roundend_category = "abductees"
 	antagpanel_category = "Abductee"
 	banning_key = UNBANNABLE_ANTAGONIST
+	antag_hud_type = ANTAG_HUD_ABDUCTOR
+	antag_hud_name = "abductee"
 
 /datum/antagonist/abductee/on_gain()
 	give_objective()
@@ -212,10 +216,12 @@
 	log_objective(H, O.explanation_text)
 
 /datum/antagonist/abductee/apply_innate_effects(mob/living/mob_override)
-	update_abductor_icons_added(mob_override ? mob_override.mind : owner,"abductee")
+	var/mob/living/M = mob_override || owner.current
+	add_antag_hud(antag_hud_type, antag_hud_name, M)
 
 /datum/antagonist/abductee/remove_innate_effects(mob/living/mob_override)
-	update_abductor_icons_removed(mob_override ? mob_override.mind : owner)
+	var/mob/living/M = mob_override || owner.current
+	remove_antag_hud(antag_hud_type, M)
 
 
 // LANDMARKS
@@ -242,13 +248,3 @@
 		if(E.team_number == T.team_number)
 			return (E.points >= target_amount) || ..()
 	return ..()
-
-/datum/antagonist/proc/update_abductor_icons_added(datum/mind/alien_mind,hud_type)
-	var/datum/atom_hud/antag/hud = GLOB.huds[ANTAG_HUD_ABDUCTOR]
-	hud.join_hud(alien_mind.current)
-	set_antag_hud(alien_mind.current, hud_type)
-
-/datum/antagonist/proc/update_abductor_icons_removed(datum/mind/alien_mind)
-	var/datum/atom_hud/antag/hud = GLOB.huds[ANTAG_HUD_ABDUCTOR]
-	hud.leave_hud(alien_mind.current)
-	set_antag_hud(alien_mind.current, null)

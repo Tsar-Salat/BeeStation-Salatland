@@ -8,6 +8,8 @@
 	banning_key = ROLE_TRAITOR
 	required_living_playtime = 4
 	antag_moodlet = /datum/mood_event/focused
+	antag_hud_type = ANTAG_HUD_TRAITOR
+	antag_hud_name = "traitor"
 	hijack_speed = 0.5				//10 seconds per hijack stage by default
 	var/special_role = ROLE_TRAITOR
 	/// Shown when giving uplinks and codewords to the player
@@ -28,13 +30,7 @@
 	if(give_objectives)
 		forge_traitor_objectives()
 	finalize_traitor()
-	..()
-
-/datum/antagonist/traitor/apply_innate_effects()
-	handle_clown_mutation(owner.current, silent ? null : "Your training has allowed you to overcome your clownish nature, allowing you to wield weapons without harming yourself.")
-
-/datum/antagonist/traitor/remove_innate_effects()
-	handle_clown_mutation(owner.current, removing=FALSE)
+	return ..()
 
 /datum/antagonist/traitor/on_removal()
 	//Remove malf powers.
@@ -51,7 +47,7 @@
 	if(!silent && owner.current)
 		to_chat(owner.current,"<span class='userdanger'> You are no longer the [special_role]! </span>")
 	owner.special_role = null
-	..()
+	return ..()
 
 /datum/antagonist/traitor/proc/handle_hearing(datum/source, list/hearing_args)
 	SIGNAL_HANDLER
@@ -84,16 +80,6 @@
 	if(traitor_kind == TRAITOR_AI)
 		has_codewords = TRUE
 
-/datum/antagonist/traitor/proc/update_traitor_icons_added(datum/mind/traitor_mind)
-	var/datum/atom_hud/antag/traitorhud = GLOB.huds[ANTAG_HUD_TRAITOR]
-	traitorhud.join_hud(owner.current)
-	set_antag_hud(owner.current, "traitor")
-
-/datum/antagonist/traitor/proc/update_traitor_icons_removed(datum/mind/traitor_mind)
-	var/datum/atom_hud/antag/traitorhud = GLOB.huds[ANTAG_HUD_TRAITOR]
-	traitorhud.leave_hud(owner.current)
-	set_antag_hud(owner.current, null)
-
 /datum/antagonist/traitor/proc/finalize_traitor()
 	switch(traitor_kind)
 		if(TRAITOR_AI)
@@ -106,10 +92,11 @@
 
 /datum/antagonist/traitor/apply_innate_effects(mob/living/mob_override)
 	. = ..()
-	update_traitor_icons_added()
 	var/mob/living/M = mob_override || owner.current
-	if(isAI(M) && traitor_kind == TRAITOR_AI)
-		var/mob/living/silicon/ai/A = M
+	add_antag_hud(antag_hud_type, antag_hud_name, M)
+	handle_clown_mutation(M, mob_override ? null : "Your training has allowed you to overcome your clownish nature, allowing you to wield weapons without harming yourself.")
+	var/mob/living/silicon/ai/A = M
+	if(istype(A) && traitor_kind == TRAITOR_AI)
 		A.hack_software = TRUE
 	// Give codewords to the new mob on mind transfer.
 	if(mob_override && istype(faction) && faction.give_codewords)
@@ -117,8 +104,10 @@
 
 /datum/antagonist/traitor/remove_innate_effects(mob/living/mob_override)
 	. = ..()
-	update_traitor_icons_removed()
-	var/mob/living/silicon/ai/A = mob_override || owner.current
+	var/mob/living/M = mob_override || owner.current
+	remove_antag_hud(antag_hud_type, M)
+	handle_clown_mutation(M, removing = FALSE)
+	var/mob/living/silicon/ai/A = M
 	if(istype(A)  && traitor_kind == TRAITOR_AI)
 		A.hack_software = FALSE
 	// Remove codewords from the old mob on mind transfer.

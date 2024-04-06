@@ -12,6 +12,7 @@
 		CRASH("join_hud(): [M] ([M.type]) is not a mob!")
 	if(M.mind.antag_hud) //note: please let this runtime if a mob has no mind, as mindless mobs shouldn't be getting antagged
 		M.mind.antag_hud.leave_hud(M)
+		
 	add_to_hud(M)
 	if(self_visible)
 		add_hud_to(M)

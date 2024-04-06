@@ -6,8 +6,8 @@
 	antag_moodlet = /datum/mood_event/heretics
 	banning_key = ROLE_HERETIC
 	show_in_antagpanel = FALSE
-	var/antag_hud_type = ANTAG_HUD_HERETIC
-	var/antag_hud_name = "heretic_beast"
+	antag_hud_type = ANTAG_HUD_HERETIC
+	antag_hud_name = "heretic_beast"
 	/// Our master (a heretic)'s mind.
 	var/datum/mind/master
 	show_to_ghosts = TRUE

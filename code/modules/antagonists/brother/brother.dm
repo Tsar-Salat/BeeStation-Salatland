@@ -5,6 +5,8 @@
 	required_living_playtime = 4
 	ui_name = "AntagInfoBrother"
 	hijack_speed = 0.5
+	antag_hud_type = ANTAG_HUD_BROTHER
+	antag_hud_name = "brother"
 	var/datum/team/brother_team/team
 	antag_moodlet = /datum/mood_event/focused
 
@@ -33,6 +35,14 @@
 		to_chat(owner.current,"<span class='userdanger'>You are no longer the Blood Brother!</span>")
 	owner.special_role = null
 	return ..()
+
+/datum/antagonist/brother/apply_innate_effects(mob/living/mob_override)
+	var/mob/living/M = mob_override || owner.current
+	add_antag_hud(antag_hud_type, antag_hud_name, M)
+
+/datum/antagonist/brother/remove_innate_effects(mob/living/mob_override)
+	var/mob/living/M = mob_override || owner.current
+	remove_antag_hud(antag_hud_type, M)
 
 /datum/antagonist/brother/antag_panel_data()
 	return "Conspirators : [get_brother_names()]"
@@ -82,7 +92,6 @@
 	for(var/datum/mind/M in team.members) // Link the implants of all team members
 		var/obj/item/implant/bloodbrother/T = locate() in M.current.implants
 		I.link_implant(T)
-	SSticker.mode.update_brother_icons_added(owner)
 	owner.current.playsound_local(get_turf(owner.current), 'sound/ambience/antag/tatoralert.ogg', vol = 100, vary = FALSE, channel = CHANNEL_ANTAG_GREETING, pressure_affected = FALSE, use_reverb = FALSE)
 
 /datum/antagonist/brother/admin_add(datum/mind/new_owner,mob/admin)
