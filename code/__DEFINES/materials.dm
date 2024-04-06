@@ -9,6 +9,8 @@
 
 /// Used to make a material initialize at roundstart.
 #define MATERIAL_INIT_MAPLOAD (1<<0)
+/// Used to make a material type able to be instantiated on demand after roundstart.
+#define MATERIAL_INIT_BESPOKE (1<<1)
 
 //Material Container Flags.
 ///If the container shows the amount of contained materials on examine.
@@ -34,6 +36,8 @@
 #define BREAKDOWN_FLAGS_ORE_PROCESSOR (BREAKDOWN_ALLOYS)
 /// Breakdown flags used by the drone dispenser.
 #define BREAKDOWN_FLAGS_DRONE_DISPENSER (BREAKDOWN_ALLOYS)
+/// Breakdown flags used when exporting materials.
+#define BREAKDOWN_FLAGS_EXPORT (NONE)
 
 /// Whether a material's mechanical effects should apply to the atom. This is necessary for other flags to work.
 #define MATERIAL_EFFECTS (1<<0)
@@ -45,6 +49,9 @@
 #define MATERIAL_AFFECT_STATISTICS (1<<3)
 /// Applies the material greyscale color to the atom's greyscale color.
 #define MATERIAL_GREYSCALE (1<<4)
+
+/// Wrapper for fetching material references. Exists exclusively so that people don't need to wrap everything in a list every time.
+#define GET_MATERIAL_REF(arguments...) SSmaterials._GetMaterialRef(list(##arguments))
 
 #define MATERIAL_SOURCE(mat) "[mat.name]_material"
 

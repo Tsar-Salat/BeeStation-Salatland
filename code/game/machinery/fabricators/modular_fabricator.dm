@@ -71,7 +71,7 @@
 		AddComponent(/datum/component/remote_materials, "modfab", mapload, TRUE, auto_link, mat_container_flags=BREAKDOWN_FLAGS_LATHE)
 	else
 		//We think its a autolathe. NO Ore Silo Connection
-		AddComponent(/datum/component/material_container, SSmaterials.materialtypes_by_category[MAT_CATEGORY_RIGID], 0, MATCONTAINER_EXAMINE, null, null, CALLBACK(src, PROC_REF(AfterMaterialInsert)))
+		AddComponent(/datum/component/material_container, SSmaterials.materials_by_category[MAT_CATEGORY_RIGID], 0, MATCONTAINER_EXAMINE, _after_insert = CALLBACK(src, PROC_REF(AfterMaterialInsert)))
 	. = ..()
 	stored_research = new stored_research_type
 
@@ -366,7 +366,7 @@
 	var/datum/component/material_container/materials = get_material_container()
 	materials.retrieve_all()
 
-/obj/machinery/modular_fabricator/proc/AfterMaterialInsert(item_inserted, id_inserted, amount_inserted)
+/obj/machinery/modular_fabricator/proc/AfterMaterialInsert(obj/item/item_inserted, id_inserted, amount_inserted)
 	if(istype(item_inserted, /obj/item/stack/ore/bluespace_crystal))
 		use_power(MINERAL_MATERIAL_AMOUNT / 10)
 	else
@@ -495,7 +495,7 @@
 	use_power(power)
 	materials.use_materials(materials_used)
 	if(is_stack)
-		var/obj/item/stack/N = new being_built.build_path(A, multiplier)
+		var/obj/item/stack/N = new being_built.build_path(A, multiplier, FALSE)
 		N.update_icon()
 	else
 		for(var/i in 1 to multiplier)
