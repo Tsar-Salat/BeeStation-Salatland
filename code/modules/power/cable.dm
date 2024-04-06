@@ -520,7 +520,7 @@ GLOBAL_LIST_INIT(cable_coil_recipes, list (new/datum/stack_recipe("cable restrai
 /obj/item/stack/cable_coil/get_recipes()
 	return GLOB.cable_coil_recipes
 
-/obj/item/stack/cable_coil/Initialize(mapload, new_amount = null, param_color = null)
+/obj/item/stack/cable_coil/Initialize(mapload, new_amount = null, list/mat_override=null, mat_amt=1, param_color = null)
 	. = ..()
 
 	var/list/cable_colors = GLOB.cable_colors
@@ -822,7 +822,8 @@ GLOBAL_LIST_INIT(cable_coil_recipes, list (new/datum/stack_recipe("cable restrai
 	amount = null
 	icon_state = "coil2"
 
-/obj/item/stack/cable_coil/cut/Initialize(mapload)
+/obj/item/stack/cable_coil/cut/Initialize(mapload, new_amount, merge = TRUE, list/mat_override=null, mat_amt=1)
+	. = ..()
 	if(!amount)
 		amount = rand(1,2)
 	. = ..()

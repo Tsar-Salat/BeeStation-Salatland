@@ -13,7 +13,7 @@
 	resistance_flags = FLAMMABLE
 	var/value = 0
 
-/obj/item/stack/spacecash/Initialize(mapload, new_amount, merge = TRUE, mob/user = null)
+/obj/item/stack/spacecash/Initialize(mapload, new_amount, merge = TRUE, list/mat_override=null, mat_amt=1)
 	. = ..()
 	update_desc()
 
@@ -29,7 +29,7 @@
 	. = ..()
 	update_desc()
 
-/obj/item/stack/spacecash/use(used, transfer = FALSE)
+/obj/item/stack/spacecash/use(used, transfer = FALSE, check = TRUE)
 	. = ..()
 	update_desc()
 

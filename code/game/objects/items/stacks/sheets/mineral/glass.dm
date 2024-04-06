@@ -45,8 +45,9 @@
 		CC.use(5)
 		use(1)
 		to_chat(user, "<span class='notice'>You attach wire to the [name].</span>")
-		new /obj/item/stack/light_w(user.loc, 1, TRUE, user)
-	else if(istype(W, /obj/item/stack/rods))
+		new /obj/item/stack/light_w(user.loc, 5, TRUE, user)
+		return
+	if(istype(W, /obj/item/stack/rods))
 		var/obj/item/stack/rods/V = W
 		if (V.get_amount() >= 1 && get_amount() >= 1)
 			var/obj/item/stack/sheet/rglass/RG = new (get_turf(user), null, TRUE, user)
@@ -57,9 +58,8 @@
 				user.put_in_hands(RG)
 		else
 			to_chat(user, "<span class='warning'>You need one rod and one sheet of glass to make reinforced glass!</span>")
-			return
-	else
-		return ..()
+		return
+	return ..()
 
 /* Reinforced glass */
 
@@ -94,9 +94,11 @@
 /obj/item/stack/sheet/rglass/cyborg/get_amount()
 	return min(round(source.energy / cost), round(glasource.energy / glacost))
 
-/obj/item/stack/sheet/rglass/cyborg/use(used, transfer = FALSE) // Requires special checks, because it uses two storages
-	source.use_charge(used * cost)
-	glasource.use_charge(used * glacost)
+/obj/item/stack/sheet/rglass/cyborg/use(used, transfer = FALSE, check = TRUE) // Requires special checks, because it uses two storages
+	if(get_amount(used)) //ensure we still have enough energy if called in a do_after chain
+		source.use_charge(used * cost)
+		glasource.use_charge(used * glacost)
+		return TRUE
 
 /obj/item/stack/sheet/rglass/cyborg/add(amount)
 	source.add_charge(amount * cost)
@@ -113,7 +115,8 @@
 	singular_name = "plasma glass sheet"
 	icon_state = "sheet-pglass"
 	item_state = "sheet-pglass"
-	mats_per_unit = list(/datum/material/plasma=MINERAL_MATERIAL_AMOUNT * 0.5, /datum/material/glass=MINERAL_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/alloy/plasmaglass=MINERAL_MATERIAL_AMOUNT)
+	material_type = /datum/material/alloy/plasmaglass
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 75, ACID = 100, STAMINA = 0)
 	resistance_flags = ACID_PROOF
 	merge_type = /obj/item/stack/sheet/plasmaglass
@@ -150,7 +153,7 @@
 	singular_name = "reinforced plasma glass sheet"
 	icon_state = "sheet-prglass"
 	item_state = "sheet-prglass"
-	mats_per_unit = list(/datum/material/plasma=MINERAL_MATERIAL_AMOUNT * 0.5, /datum/material/glass=MINERAL_MATERIAL_AMOUNT, /datum/material/iron = MINERAL_MATERIAL_AMOUNT * 0.5)
+	mats_per_unit = list(/datum/material/alloy/plasmaglass=MINERAL_MATERIAL_AMOUNT, /datum/material/iron = MINERAL_MATERIAL_AMOUNT * 0.5)
 	armor = list(MELEE = 20,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 80, ACID = 100, STAMINA = 0)
 	resistance_flags = ACID_PROOF
 	material_flags = NONE
@@ -170,7 +173,8 @@
 	singular_name = "titanium glass sheet"
 	icon_state = "sheet-titaniumglass"
 	item_state = "sheet-titaniumglass"
-	mats_per_unit = list(/datum/material/titanium=MINERAL_MATERIAL_AMOUNT * 0.5, /datum/material/glass=MINERAL_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/alloy/titaniumglass=MINERAL_MATERIAL_AMOUNT)
+	material_type = /datum/material/alloy/titaniumglass
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 80, ACID = 100, STAMINA = 0)
 	resistance_flags = ACID_PROOF
 	merge_type = /obj/item/stack/sheet/titaniumglass
@@ -186,7 +190,8 @@
 	singular_name = "plastitanium glass sheet"
 	icon_state = "sheet-plastitaniumglass"
 	item_state = "sheet-plastitaniumglass"
-	mats_per_unit = list(/datum/material/titanium=MINERAL_MATERIAL_AMOUNT * 0.5, /datum/material/plasma=MINERAL_MATERIAL_AMOUNT * 0.5, /datum/material/glass=MINERAL_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/alloy/plastitaniumglass=MINERAL_MATERIAL_AMOUNT)
+	material_type = /datum/material/alloy/plastitaniumglass
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 80, ACID = 100, STAMINA = 0)
 	resistance_flags = ACID_PROOF
 	material_flags = NONE
@@ -300,5 +305,5 @@
 	force = 6
 	throwforce = 11
 	icon_state = "plasmalarge"
-	custom_materials = list(/datum/material/plasma=MINERAL_MATERIAL_AMOUNT * 0.5, /datum/material/glass=MINERAL_MATERIAL_AMOUNT)
+	custom_materials = list(/datum/material/alloy/plasmaglass=MINERAL_MATERIAL_AMOUNT)
 	icon_prefix = "plasma"

@@ -14,6 +14,9 @@
 /// fires on the target datum when an element is attached to it  (/datum/element)
 #define COMSIG_ELEMENT_DETACH "element_detach"
 
+///from base of [/datum/controller/subsystem/materials/proc/InitializeMaterial]: (/datum/material)
+#define COMSIG_MATERIALS_INIT_MAT "SSmaterials_init_mat"
+
 /// Sent when the amount of materials in material_container changes
 #define COMSIG_MATERIAL_CONTAINER_CHANGED "material_container_changed"
 

@@ -130,6 +130,9 @@ GLOBAL_LIST_EMPTY(created_baseturf_lists)
 	if (opacity)
 		directional_opacity = ALL_CARDINALS
 
+	// apply materials properly from the default custom_materials value
+	set_custom_materials(custom_materials)
+
 	ComponentInitialize()
 	if(isopenturf(src))
 		var/turf/open/O = src

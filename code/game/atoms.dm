@@ -1710,23 +1710,123 @@
 	filters = null
 
 ///Sets the custom materials for an item.
-/atom/proc/set_custom_materials(var/list/materials, multiplier = 1)
-
-	if(custom_materials) //Only runs if custom materials existed at first. Should usually be the case but check anyways
-		for(var/i in custom_materials)
-			var/datum/material/custom_material = SSmaterials.GetMaterialRef(i)
-			custom_material.on_removed(src, material_flags) //Remove the current materials
+/atom/proc/set_custom_materials(list/materials, multiplier = 1)
+	if(custom_materials && material_flags & MATERIAL_EFFECTS) //Only runs if custom materials existed at first and affected src.
+		for(var/current_material in custom_materials)
+			var/datum/material/custom_material = GET_MATERIAL_REF(current_material)
+			custom_material.on_removed(src, custom_materials[current_material] * material_modifier, material_flags) //Remove the current materials
 
 	if(!length(materials))
 		custom_materials = null
 		return
 
 	if(material_flags & MATERIAL_EFFECTS)
-		for(var/x in materials)
-			var/datum/material/custom_material = SSmaterials.GetMaterialRef(x)
-			custom_material.on_applied(src, materials[x] * multiplier * material_modifier, material_flags)
+		for(var/current_material in materials)
+			var/datum/material/custom_material = GET_MATERIAL_REF(current_material)
+			custom_material.on_applied(src, materials[current_material] * multiplier * material_modifier, material_flags)
 
 	custom_materials = SSmaterials.FindOrCreateMaterialCombo(materials, multiplier)
+
+/**
+ * Returns the material composition of the atom.
+ *
+ * Used when recycling items, specifically to turn alloys back into their component mats.
+ *
+ * Exists because I'd need to add a way to un-alloy alloys or otherwise deal
+ * with people converting the entire stations material supply into alloys.
+ *
+ * Arguments:
+ * - flags: A set of flags determining how exactly the materials are broken down.
+ */
+/atom/proc/get_material_composition(breakdown_flags=NONE)
+	. = list()
+
+	var/list/cached_materials = custom_materials
+	for(var/mat in cached_materials)
+		var/datum/material/material = GET_MATERIAL_REF(mat)
+		var/list/material_comp = material.return_composition(cached_materials[mat], breakdown_flags)
+		for(var/comp_mat in material_comp)
+			.[comp_mat] += material_comp[comp_mat]
+
+/**
+ * Fetches a list of all of the materials this object has of the desired type. Returns null if there is no valid materials of the type
+ *
+ * Arguments:
+ * - [mat_type][/datum/material]: The type of material we are checking for
+ * - exact: Whether to search for the _exact_ material type
+ * - mat_amount: The minimum required amount of material
+ */
+/atom/proc/has_material_type(datum/material/mat_type, exact=FALSE, mat_amount=0)
+	var/list/cached_materials = custom_materials
+	if(!length(cached_materials))
+		return null
+
+	var/materials_of_type
+	for(var/current_material in cached_materials)
+		if(cached_materials[current_material] < mat_amount)
+			continue
+		var/datum/material/material = GET_MATERIAL_REF(current_material)
+		if(exact ? material.type != current_material : !istype(material, mat_type))
+			continue
+		LAZYSET(materials_of_type, material, cached_materials[current_material])
+
+	return materials_of_type
+
+/**
+ * Fetches a list of all of the materials this object has with the desired material category.
+ *
+ * Arguments:
+ * - category: The category to check for
+ * - any_flags: Any bitflags that must be present for the category
+ * - all_flags: All bitflags that must be present for the category
+ * - no_flags: Any bitflags that must not be present for the category
+ * - mat_amount: The minimum amount of materials that must be present
+ */
+/atom/proc/has_material_category(category, any_flags=0, all_flags=0, no_flags=0, mat_amount=0)
+	var/list/cached_materials = custom_materials
+	if(!length(cached_materials))
+		return null
+
+	var/materials_of_category
+	for(var/current_material in cached_materials)
+		if(cached_materials[current_material] < mat_amount)
+			continue
+		var/datum/material/material = GET_MATERIAL_REF(current_material)
+		var/category_flags = material?.categories[category]
+		if(isnull(category_flags))
+			continue
+		if(any_flags && !(category_flags & any_flags))
+			continue
+		if(all_flags && (all_flags != (category_flags & all_flags)))
+			continue
+		if(no_flags && (category_flags & no_flags))
+			continue
+		LAZYSET(materials_of_category, material, cached_materials[current_material])
+	return materials_of_category
+
+/**
+ * Gets the most common material in the object.
+ */
+/atom/proc/get_master_material()
+	var/list/cached_materials = custom_materials
+	if(!length(cached_materials))
+		return null
+
+	var/most_common_material = null
+	var/max_amount = 0
+	for(var/material in cached_materials)
+		if(cached_materials[material] > max_amount)
+			most_common_material = material
+			max_amount = cached_materials[material]
+
+	if(most_common_material)
+		return GET_MATERIAL_REF(most_common_material)
+
+/**
+ * Gets the total amount of materials in this atom.
+ */
+/atom/proc/get_custom_material_amount()
+	return isnull(custom_materials) ? 0 : counterlist_sum(custom_materials)
 
 /// Returns the indice in filters of the given filter name.
 /// If it is not found, returns null.

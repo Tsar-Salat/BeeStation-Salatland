@@ -67,9 +67,9 @@
 
 /obj/machinery/modular_fabricator/Initialize(mapload)
 	if(remote_materials)
-		AddComponent(/datum/component/remote_materials, "modfab", mapload, TRUE, auto_link)
+		AddComponent(/datum/component/remote_materials, "modfab", mapload, TRUE, auto_link, mat_container_flags=BREAKDOWN_FLAGS_LATHE)
 	else
-		AddComponent(/datum/component/material_container, list(/datum/material/iron, /datum/material/glass, /datum/material/copper, /datum/material/gold, /datum/material/gold, /datum/material/silver, /datum/material/diamond, /datum/material/uranium, /datum/material/plasma, /datum/material/bluespace, /datum/material/bananium, /datum/material/titanium, /datum/material/plastic, /datum/material/adamantine), 0, TRUE, null, null, CALLBACK(src, PROC_REF(AfterMaterialInsert)))
+		AddComponent(/datum/component/material_container, SSmaterials.materials_by_category[MAT_CATEGORY_RIGID], 0, MATCONTAINER_EXAMINE, _after_insert = CALLBACK(src, PROC_REF(AfterMaterialInsert)))
 	. = ..()
 	stored_research = new stored_research_type
 
@@ -493,7 +493,7 @@
 	use_power(power)
 	materials.use_materials(materials_used)
 	if(is_stack)
-		var/obj/item/stack/N = new being_built.build_path(A, multiplier)
+		var/obj/item/stack/N = new being_built.build_path(A, multiplier, FALSE)
 		N.update_icon()
 	else
 		for(var/i in 1 to multiplier)
