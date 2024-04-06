@@ -190,6 +190,13 @@ GLOBAL_LIST(admin_antag_list)
 	if(team)
 		team.remove_member(owner)
 	SEND_SIGNAL(owner, COMSIG_ANTAGONIST_REMOVED, src)
+
+	// Remove HUDs that they should no longer see
+	var/mob/living/current = owner.current
+	for (var/datum/atom_hud/alternate_appearance/basic/has_antagonist/antag_hud as anything in GLOB.has_antagonist_huds)
+		if (!antag_hud.mobShouldSee(current))
+			antag_hud.remove_hud_from(current)
+
 	qdel(src)
 
 /datum/antagonist/proc/greet()
@@ -362,6 +369,11 @@ GLOBAL_LIST(admin_antag_list)
 		image('icons/mob/hud.dmi', target, antag_hud_name),
 		antag_to_check || type,
 	)
+
+	// Add HUDs that they couldn't see before
+	for (var/datum/atom_hud/alternate_appearance/basic/has_antagonist/antag_hud as anything in GLOB.has_antagonist_huds)
+		if (antag_hud.mobShouldSee(owner.current))
+			antag_hud.add_hud_to(owner.current)
 
 //This one is created by admin tools for custom objectives
 /datum/antagonist/custom
