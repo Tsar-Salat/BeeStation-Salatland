@@ -3,7 +3,6 @@
 	roundend_category = "wizards/witches"
 	antagpanel_category = "Wizard"
 	banning_key = ROLE_WIZARD
-	antag_hud_type = ANTAG_HUD_WIZ
 	antag_hud_name = "wizard"
 	required_living_playtime = 8
 	antag_moodlet = /datum/mood_event/focused
@@ -57,7 +56,6 @@
 	wiz_team = new(owner)
 	wiz_team.name = "Wizard team No.[++count]" // it will be only displayed to admins
 	wiz_team.master_wizard = src
-	add_antag_hud(antag_hud_type, antag_hud_name, owner.current)
 
 /datum/antagonist/wizard/proc/send_to_lair()
 	if(!owner || !owner.current)
@@ -179,12 +177,11 @@
 
 /datum/antagonist/wizard/apply_innate_effects(mob/living/mob_override)
 	var/mob/living/M = mob_override || owner.current
-	add_antag_hud(antag_hud_type, antag_hud_name, M)
 	M.faction |= FACTION_WIZARD
+	add_team_hud(M)
 
 /datum/antagonist/wizard/remove_innate_effects(mob/living/mob_override)
 	var/mob/living/M = mob_override || owner.current
-	remove_antag_hud(antag_hud_type, M)
 	M.faction -= FACTION_WIZARD
 
 

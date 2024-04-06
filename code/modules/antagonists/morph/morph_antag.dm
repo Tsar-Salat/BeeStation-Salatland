@@ -16,6 +16,7 @@
 /datum/antagonist/morph/greet()
 	owner.announce_objectives()
 
+/*
 /datum/antagonist/morph/apply_innate_effects(mob/living/mob_override)
 	. = ..()
 	//Give morph appearance on hud (If they are not an antag already)
@@ -31,6 +32,7 @@
 	morphhud.leave_hud(owner.current)
 	if(owner.antag_hud_icon_state == "morph")
 		set_antag_hud(owner.current, null)
+*/
 
 /datum/antagonist/morph/proc/forge_objectives()
 	var/datum/objective/eat_everything/consume = new

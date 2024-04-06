@@ -34,6 +34,7 @@
 	to_chat(owner, "<span class='big bold warning'>You didn't get a date! They're all having fun without you! you'll show them though...</span>")
 	owner.announce_objectives()
 
+/*
 /datum/antagonist/heartbreaker/apply_innate_effects(mob/living/mob_override)
 	. = ..()
 	//Give valentine appearance on hud (If they are not an antag already)
@@ -49,6 +50,7 @@
 	valhud.leave_hud(owner.current)
 	if(owner.antag_hud_icon_state == "heartbreaker")
 		set_antag_hud(owner.current, null)
+*/
 
 /datum/objective/heartbroken
 	name = "heartbroken"

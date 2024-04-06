@@ -763,6 +763,7 @@
 		objectives |= swarm.objectives
 	return ..()
 
+/*
 /datum/antagonist/swarmer/apply_innate_effects(mob/living/mob_override)
 	. = ..()
 	//Give swarmer appearance on hud (If they are not an antag already)
@@ -778,6 +779,7 @@
 	swarmerhud.leave_hud(owner.current)
 	if(owner.antag_hud_icon_state == "swarmer")
 		set_antag_hud(owner.current, null)
+*/
 
 /datum/antagonist/swarmer/admin_add(datum/mind/new_owner,mob/admin)
 	var/mob/living/M = new_owner.current

@@ -3,7 +3,6 @@
 	show_in_antagpanel = TRUE
 	antagpanel_category = "Other"
 	banning_key = ROLE_OBSESSED
-	antag_hud_type = ANTAG_HUD_OBSESSED
 	antag_hud_name = "obsessed"
 	show_name_in_check_antagonists = TRUE
 	roundend_category = "obsessed"
@@ -59,14 +58,6 @@
 	if(trauma)
 		qdel(trauma)
 	. = ..()
-
-/datum/antagonist/obsessed/apply_innate_effects(mob/living/mob_override)
-	var/mob/living/current = mob_override || owner.current
-	add_antag_hud(antag_hud_type, antag_hud_name, current)
-
-/datum/antagonist/obsessed/remove_innate_effects(mob/living/mob_override)
-	var/mob/living/current = mob_override || owner.current
-	remove_antag_hud(antag_hud_type, antag_hud_name, current)
 
 /datum/antagonist/obsessed/proc/forge_objectives(datum/mind/obsession_mind)
 	var/list/objectives_left = list("spendtime", "polaroid", "hug")

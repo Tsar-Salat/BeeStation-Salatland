@@ -16,6 +16,7 @@
 	to_chat(owner, "<span class='boldannounce'>Your primary goal is keeping the station dark, do not go out of your way to randomly kill people. \
 	You may attack them to snuff out their light or retaliate after they start attacking.</span>")
 
+/*
 /datum/antagonist/nightmare/apply_innate_effects(mob/living/mob_override)
 	. = ..()
 	//Give nightmare appearance on hud (If they are not an antag already)
@@ -31,6 +32,7 @@
 	nightmarehud.leave_hud(owner.current)
 	if(owner.antag_hud_icon_state == "nightmare")
 		set_antag_hud(owner.current, null)
+*/
 
 /datum/antagonist/nightmare/proc/forge_objectives()
 	var/datum/objective/smash_lights/nolight = new

@@ -21,7 +21,6 @@ GLOBAL_LIST(admin_antag_list)
 	var/delay_roundend = TRUE
 	var/antag_memory = ""//These will be removed with antag datum
 	var/antag_moodlet //typepath of moodlet that the mob will gain with their status
-	var/antag_hud_type
 	var/antag_hud_name
 	var/ui_name = "AntagInfoGeneric"
 
@@ -37,6 +36,9 @@ GLOBAL_LIST(admin_antag_list)
 
 	/// Weakref to button to access antag interface
 	var/datum/weakref/info_button_ref
+
+	/// The HUD shown to teammates, created by `add_team_hud`
+	var/datum/atom_hud/alternate_appearance/team_hud
 
 /datum/antagonist/proc/show_tips(fileid)
 	if(!owner || !owner.current || !owner.current.client)
@@ -101,19 +103,6 @@ GLOBAL_LIST(admin_antag_list)
 /datum/antagonist/proc/remove_innate_effects(mob/living/mob_override)
 	return
 
-// Adds the specified antag hud to the player. Usually called in an antag datum file
-/datum/antagonist/proc/add_antag_hud(antag_hud_type, antag_hud_name, mob/living/mob_override)
-	var/datum/atom_hud/antag/hud = GLOB.huds[antag_hud_type]
-	hud.join_hud(mob_override)
-	set_antag_hud(mob_override, antag_hud_name)
-
-
-// Removes the specified antag hud from the player. Usually called in an antag datum file
-/datum/antagonist/proc/remove_antag_hud(antag_hud_type, mob/living/mob_override)
-	var/datum/atom_hud/antag/hud = GLOB.huds[antag_hud_type]
-	hud.leave_hud(mob_override)
-	set_antag_hud(mob_override, null)
-
 // Handles adding and removing the clumsy mutation from clown antags. Gets called in apply/remove_innate_effects
 /datum/antagonist/proc/handle_clown_mutation(mob/living/mob_override, message, removing = TRUE)
 	var/mob/living/carbon/C = mob_override
@@ -153,6 +142,8 @@ GLOBAL_LIST(admin_antag_list)
 		owner.current.client.holder.auto_deadmin()
 	if(count_against_dynamic_roll_chance && owner.current.stat != DEAD && owner.current.client)
 		owner.current.add_to_current_living_antags()
+
+	SEND_SIGNAL(owner, COMSIG_ANTAGONIST_GAINED, src)
 
 //in the future, this should entirely replace greet.
 /datum/antagonist/proc/make_info_button()
@@ -198,6 +189,7 @@ GLOBAL_LIST(admin_antag_list)
 	var/datum/team/team = get_team()
 	if(team)
 		team.remove_member(owner)
+	SEND_SIGNAL(owner, COMSIG_ANTAGONIST_REMOVED, src)
 	qdel(src)
 
 /datum/antagonist/proc/greet()
@@ -358,6 +350,18 @@ GLOBAL_LIST(admin_antag_list)
 /datum/antagonist/proc/hijack_speed()
 	var/datum/objective/hijack/H = locate() in objectives
 	return H?.hijack_speed_override || hijack_speed
+
+/// Adds a HUD that will show you other members with the same antagonist.
+/// If an antag typepath is passed to `antag_to_check`, will check that, otherwise will use the source type.
+/datum/antagonist/proc/add_team_hud(mob/target, antag_to_check)
+	QDEL_NULL(team_hud)
+
+	team_hud = target.add_alt_appearance(
+		/datum/atom_hud/alternate_appearance/basic/has_antagonist,
+		"antag_team_hud_[REF(src)]",
+		image('icons/mob/hud.dmi', target, antag_hud_name),
+		antag_to_check || type,
+	)
 
 //This one is created by admin tools for custom objectives
 /datum/antagonist/custom

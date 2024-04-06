@@ -1,5 +1,5 @@
 /datum/antagonist/pirate
-	name = "Space Pirate"
+	name = "\improper Space Pirate"
 	banning_key = ROLE_SPACE_PIRATE
 	roundend_category = "space pirates"
 	antagpanel_category = "Pirate"
@@ -9,11 +9,6 @@
 /datum/antagonist/pirate/captain
 	name = "Space Pirate Captain"
 
-/datum/antagonist/pirate/captain/on_gain()
-	. = ..()
-	var/mob/living/current = owner.current
-	set_antag_hud(current, "pirate-captain")
-
 /datum/antagonist/pirate/greet()
 	to_chat(owner, "<span class='boldannounce'>You are a Space Pirate!</span>")
 	to_chat(owner, "<B>The station refused to pay for your protection, protect the ship, siphon the credits from the station and raid it for even more loot.</B>")
@@ -21,6 +16,7 @@
 	owner.current.client?.tgui_panel?.give_antagonist_popup("Space Pirate",
 		"The station refused to pay for your protection, protect the ship, siphon the credits from the station and raid it for even more loot.")
 
+/*
 /datum/antagonist/pirate/apply_innate_effects(mob/living/mob_override)
 	. = ..()
 	//Give pirate appearance on hud (If they are not an antag already)
@@ -36,6 +32,7 @@
 	piratehud.leave_hud(owner.current)
 	if(owner.antag_hud_icon_state == "pirate" || owner.antag_hud_icon_state == "pirate-captain")
 		set_antag_hud(owner.current, null)
+*/
 
 /datum/antagonist/pirate/get_team()
 	return crew

@@ -56,6 +56,7 @@
 	else
 		return "<span class='redtext big'>[owner.name] failed to protect their date, [date.name]!</span>"
 
+/*
 /datum/antagonist/valentine/apply_innate_effects(mob/living/mob_override)
 	. = ..()
 	//Give valentine appearance on hud (If they are not an antag already)
@@ -71,3 +72,4 @@
 	valhud.leave_hud(owner.current)
 	if(owner.antag_hud_icon_state == "valentine")
 		set_antag_hud(owner.current, null)
+*/

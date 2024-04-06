@@ -53,11 +53,9 @@
 
 /datum/antagonist/hivevessel/apply_innate_effects()
 	handle_clown_mutation(owner.current, "Our newfound powers allow us to overcome our clownish nature, allowing us to wield weapons with impunity.")
-	master.update_hivemind_hud(owner.current)
 
 /datum/antagonist/hivevessel/remove_innate_effects()
 	handle_clown_mutation(owner.current, removing=FALSE)
-	master.update_hivemind_hud_removed(owner.current)
 
 /datum/antagonist/hivevessel/greet()
 	to_chat(owner, "<span class='assimilator'>Your mind is suddenly opened, as you see the pinnacle of evolution...</span>")

@@ -5,7 +5,6 @@
 	required_living_playtime = 4
 	ui_name = "AntagInfoBrother"
 	hijack_speed = 0.5
-	antag_hud_type = ANTAG_HUD_BROTHER
 	antag_hud_name = "brother"
 	var/datum/team/brother_team/team
 	antag_moodlet = /datum/mood_event/focused
@@ -35,14 +34,6 @@
 		to_chat(owner.current,"<span class='userdanger'>You are no longer the Blood Brother!</span>")
 	owner.special_role = null
 	return ..()
-
-/datum/antagonist/brother/apply_innate_effects(mob/living/mob_override)
-	var/mob/living/M = mob_override || owner.current
-	add_antag_hud(antag_hud_type, antag_hud_name, M)
-
-/datum/antagonist/brother/remove_innate_effects(mob/living/mob_override)
-	var/mob/living/M = mob_override || owner.current
-	remove_antag_hud(antag_hud_type, M)
 
 /datum/antagonist/brother/antag_panel_data()
 	return "Conspirators : [get_brother_names()]"

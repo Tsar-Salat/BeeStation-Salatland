@@ -25,7 +25,7 @@
 	victim.log_message(rendered, LOG_ATTACK, color="red")
 
 /datum/antagonist/hypnotized
-	name = "Hypnotized Victim"
+	name = "\improper Hypnotized Victim"
 	banning_key = ROLE_HYPNOTIZED
 	roundend_category = "hypnotized victims"
 	show_in_antagpanel = TRUE
@@ -59,6 +59,7 @@
 /datum/antagonist/hypnotized/farewell()
 	owner.announce_objectives()
 
+/*
 /datum/antagonist/hypnotized/apply_innate_effects(mob/living/mob_override)
 	. = ..()
 	//Give traitor appearance on hud (If they are not an antag already)
@@ -74,6 +75,7 @@
 	traitorhud.leave_hud(owner.current)
 	if(owner.antag_hud_icon_state == "hypnotized")
 		set_antag_hud(owner.current, null)
+*/
 
 /datum/antagonist/hypnotized/admin_add(datum/mind/new_owner,mob/admin)
 	var/mob/living/carbon/C = new_owner.current

@@ -5,7 +5,6 @@
 	show_name_in_check_antagonists = TRUE
 	show_to_ghosts = TRUE
 	antag_moodlet = /datum/mood_event/focused
-	antag_hud_type = ANTAG_HUD_NINJA
 	antag_hud_name = "ninja"
 	var/helping_station = FALSE
 	var/give_equipment = TRUE
@@ -14,14 +13,6 @@
 	if(helping_station)
 		can_elimination_hijack = ELIMINATION_PREVENT
 	. = ..()
-
-/datum/antagonist/ninja/apply_innate_effects(mob/living/mob_override)
-	var/mob/living/M = mob_override || owner.current
-	add_antag_hud(antag_hud_type, antag_hud_name, M)
-
-/datum/antagonist/ninja/remove_innate_effects(mob/living/mob_override)
-	var/mob/living/M = mob_override || owner.current
-	remove_antag_hud(antag_hud_type, M)
 
 /datum/antagonist/ninja/proc/equip_space_ninja(mob/living/carbon/human/H = owner.current)
 	return H.equipOutfit(/datum/outfit/ninja)

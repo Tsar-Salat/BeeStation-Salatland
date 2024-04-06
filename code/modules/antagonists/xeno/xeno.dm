@@ -36,6 +36,7 @@
 /datum/antagonist/xeno/get_team()
 	return xeno_team
 
+/*
 /datum/antagonist/xeno/apply_innate_effects(mob/living/mob_override)
 	. = ..()
 	//Give traitor appearance on hud (If they are not an antag already)
@@ -51,6 +52,7 @@
 	traitorhud.leave_hud(owner.current)
 	if(owner.antag_hud_icon_state == "xenomorph")
 		set_antag_hud(owner.current, null)
+*/
 
 //XENO
 /mob/living/carbon/alien/mind_initialize()

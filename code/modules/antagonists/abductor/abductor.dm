@@ -5,7 +5,6 @@
 	roundend_category = "abductors"
 	antagpanel_category = "Abductor"
 	banning_key = ROLE_ABDUCTOR
-	antag_hud_type = ANTAG_HUD_ABDUCTOR
 	antag_hud_name = "abductor"
 	show_in_antagpanel = FALSE //should only show subtypes
 	show_to_ghosts = TRUE
@@ -98,8 +97,6 @@
 			H.forceMove(LM.loc)
 			break
 
-	add_antag_hud(antag_hud_type, antag_hud_name, owner.current)
-
 /datum/antagonist/abductor/scientist/on_gain()
 	ADD_TRAIT(owner, TRAIT_ABDUCTOR_SCIENTIST_TRAINING, ABDUCTOR_ANTAGONIST)
 	ADD_TRAIT(owner, TRAIT_ABDUCTOR_SURGEON, ABDUCTOR_ANTAGONIST)
@@ -191,7 +188,6 @@
 	roundend_category = "abductees"
 	antagpanel_category = "Abductee"
 	banning_key = UNBANNABLE_ANTAGONIST
-	antag_hud_type = ANTAG_HUD_ABDUCTOR
 	antag_hud_name = "abductee"
 
 /datum/antagonist/abductee/on_gain()
@@ -214,15 +210,6 @@
 	var/datum/objective/abductee/O = new objtype()
 	objectives += O
 	log_objective(H, O.explanation_text)
-
-/datum/antagonist/abductee/apply_innate_effects(mob/living/mob_override)
-	var/mob/living/M = mob_override || owner.current
-	add_antag_hud(antag_hud_type, antag_hud_name, M)
-
-/datum/antagonist/abductee/remove_innate_effects(mob/living/mob_override)
-	var/mob/living/M = mob_override || owner.current
-	remove_antag_hud(antag_hud_type, M)
-
 
 // LANDMARKS
 /obj/effect/landmark/abductor

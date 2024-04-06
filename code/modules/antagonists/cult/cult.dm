@@ -10,7 +10,6 @@
 	var/datum/action/innate/cult/mastervote/vote = new
 	var/datum/action/innate/cult/blood_magic/magic = new
 	banning_key = ROLE_CULTIST
-	antag_hud_type = ANTAG_HUD_CULT
 	antag_hud_name = "cult"
 	required_living_playtime = 4
 	var/ignore_implant = FALSE
@@ -113,7 +112,6 @@
 	var/mob/living/current = owner.current
 	if(mob_override)
 		current = mob_override
-	add_antag_hud(antag_hud_type, antag_hud_name, current)
 	handle_clown_mutation(current, mob_override ? null : "Your training has allowed you to overcome your clownish nature, allowing you to wield weapons without harming yourself.")
 	current.faction |= "cult"
 	current.grant_language(/datum/language/narsie, TRUE, TRUE, LANGUAGE_CULTIST)
@@ -128,22 +126,13 @@
 		if(cult_team.cult_ascendent)
 			cult_team.ascend(current)
 
-/datum/antagonist/cult/master/apply_innate_effects(mob/living/mob_override)
-	. = ..()
-	var/mob/living/current = owner.current
-	if(!cult_team.reckoning_complete)
-		reckoning.Grant(current)
-	bloodmark.Grant(current)
-	throwing.Grant(current)
-	current.update_action_buttons_icon()
-	current.apply_status_effect(/datum/status_effect/cult_master)
+	add_team_hud(current)
 
 /datum/antagonist/cult/remove_innate_effects(mob/living/mob_override)
 	. = ..()
 	var/mob/living/current = owner.current
 	if(mob_override)
 		current = mob_override
-	remove_antag_hud(antag_hud_type, current)
 	handle_clown_mutation(current, removing = FALSE)
 	current.faction -= "cult"
 	current.remove_language(/datum/language/narsie, TRUE, TRUE, LANGUAGE_CULTIST)
@@ -159,17 +148,6 @@
 		if (H.remove_overlay(HALO_LAYER))
 			REMOVE_LUM_SOURCE(H, LUM_SOURCE_HOLY)
 		H.update_body()
-
-/datum/antagonist/cult/master/remove_innate_effects(mob/living/mob_override)
-	. = ..()
-	var/mob/living/current = owner.current
-	if(mob_override)
-		current = mob_override
-	reckoning.Remove(current)
-	bloodmark.Remove(current)
-	throwing.Remove(current)
-	current.update_action_buttons_icon()
-	current.remove_status_effect(/datum/status_effect/cult_master)
 
 /datum/antagonist/cult/on_removal()
 	SSticker.mode.cult -= owner
@@ -215,6 +193,7 @@
 /datum/antagonist/cult/master
 	ignore_implant = TRUE
 	show_in_antagpanel = FALSE //Feel free to add this later
+	antag_hud_name = "cultmaster"
 	var/datum/action/innate/cult/master/finalreck/reckoning = new
 	var/datum/action/innate/cult/master/cultmark/bloodmark = new
 	var/datum/action/innate/cult/master/pulse/throwing = new
@@ -225,15 +204,32 @@
 	QDEL_NULL(throwing)
 	return ..()
 
-/datum/antagonist/cult/master/on_gain()
-	. = ..()
-	var/mob/living/current = owner.current
-	set_antag_hud(current, "cultmaster")
-
 /datum/antagonist/cult/master/greet()
 	to_chat(owner.current, "<span class='cultlarge'>You are the cult's Master</span>. As the cult's Master, you have a unique title and loud voice when communicating, are capable of marking \
 	targets, such as a location or a noncultist, to direct the cult to them, and, finally, you are capable of summoning the entire living cult to your location <b><i>once</i></b>.")
 	to_chat(owner.current, "Use these abilities to direct the cult to victory at any cost.")
+
+/datum/antagonist/cult/master/apply_innate_effects(mob/living/mob_override)
+	. = ..()
+	var/mob/living/current = owner.current
+	if(!cult_team.reckoning_complete)
+		reckoning.Grant(current)
+	bloodmark.Grant(current)
+	throwing.Grant(current)
+	current.update_action_buttons_icon()
+	current.apply_status_effect(/datum/status_effect/cult_master)
+	add_team_hud(current, /datum/antagonist/cult)
+
+/datum/antagonist/cult/master/remove_innate_effects(mob/living/mob_override)
+	. = ..()
+	var/mob/living/current = owner.current
+	if(mob_override)
+		current = mob_override
+	reckoning.Remove(current)
+	bloodmark.Remove(current)
+	throwing.Remove(current)
+	current.update_action_buttons_icon()
+	current.remove_status_effect(/datum/status_effect/cult_master)
 
 /datum/team/cult
 	name = "Bloodcult"

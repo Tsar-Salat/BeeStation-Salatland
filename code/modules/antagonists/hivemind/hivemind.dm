@@ -166,8 +166,8 @@
 
 /datum/antagonist/hivemind/apply_innate_effects()
 	handle_clown_mutation(owner.current, "The great psionic powers of the Hive lets you overcome your clownish nature, allowing you to wield weapons with impunity.")
-	update_hivemind_hud(owner.current)
 
+/*
 /datum/antagonist/hivemind/proc/update_hivemind_hud(mob/living/M)
 	var/datum/atom_hud/antag/hivehud = GLOB.huds[hud_entry_num]
 	if(!hivehud)
@@ -185,10 +185,10 @@
 	if(hivehud)
 		hivehud.leave_hud(M)
 		set_antag_hud(M, null)
+*/
 
 /datum/antagonist/hivemind/remove_innate_effects()
 	handle_clown_mutation(owner.current, removing=FALSE)
-	update_hivemind_hud_removed(owner.current)
 
 /datum/antagonist/hivemind/on_removal()
 	//Remove all hive powers here

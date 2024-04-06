@@ -15,13 +15,3 @@
 		else
 			objective.find_target()
 		log_objective(D, objective.explanation_text)
-
-/datum/game_mode/proc/update_soulless_icons_added(datum/mind/soulless_mind)
-	var/datum/atom_hud/antag/hud = GLOB.huds[ANTAG_HUD_SOULLESS]
-	hud.join_hud(soulless_mind.current)
-	set_antag_hud(soulless_mind.current, "soulless")
-
-/datum/game_mode/proc/update_soulless_icons_removed(datum/mind/soulless_mind)
-	var/datum/atom_hud/antag/hud = GLOB.huds[ANTAG_HUD_SOULLESS]
-	hud.leave_hud(soulless_mind.current)
-	set_antag_hud(soulless_mind.current, null)
