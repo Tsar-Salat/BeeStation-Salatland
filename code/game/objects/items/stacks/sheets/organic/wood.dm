@@ -69,5 +69,10 @@ Woods Sheets
 	resistance_flags = FLAMMABLE
 	merge_type = /obj/item/stack/sheet/paperframes
 
+/obj/item/stack/sheet/paperframes/Initialize(mapload, new_amount, merge = TRUE, list/mat_override=null, mat_amt=1)
+	. = ..()
+	pixel_x = 0
+	pixel_y = 0
+
 /obj/item/stack/sheet/paperframes/get_recipes()
 	return GLOB.paperframe_recipes

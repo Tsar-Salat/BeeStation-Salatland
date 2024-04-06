@@ -17,6 +17,9 @@
 /// Sent when the amount of materials in material_container changes
 #define COMSIG_MATERIAL_CONTAINER_CHANGED "material_container_changed"
 
+///from base of [/datum/controller/subsystem/materials/proc/InitializeMaterial]: (/datum/material)
+#define COMSIG_MATERIALS_INIT_MAT "SSmaterials_init_mat"
+
 ///from base of [/datum/reagents/proc/add_reagent] - Sent before the reagent is added: (reagenttype, amount, reagtemp, data, no_react)
 #define COMSIG_REAGENTS_PRE_ADD_REAGENT "reagents_pre_add_reagent"
 	/// Prevents the reagent from being added.

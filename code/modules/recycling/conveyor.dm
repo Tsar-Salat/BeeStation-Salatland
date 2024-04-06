@@ -174,7 +174,7 @@ GLOBAL_LIST_EMPTY(conveyors_by_id)
 	if(machine_stat & NOPOWER)
 		set_operating(FALSE)
 		return FALSE
-		
+
 	if(!operating) //If we're on, start conveying so moveloops on our tile can be refreshed if they stopped for some reason
 		return
 	for(var/atom/movable/movable in get_turf(src))
@@ -218,7 +218,7 @@ GLOBAL_LIST_EMPTY(conveyors_by_id)
 		if(I.use_tool(src, user, 40, volume=40))
 			set_operating(FALSE)
 			if(!(machine_stat & BROKEN))
-				var/obj/item/stack/conveyor/C = new /obj/item/stack/conveyor(loc, 1, TRUE, null, id)
+				var/obj/item/stack/conveyor/C = new /obj/item/stack/conveyor(loc, 1, TRUE, null, null, id)
 				if(QDELETED(C))
 					C = locate(/obj/item/stack/conveyor) in loc
 				if(C)
@@ -482,7 +482,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/conveyor_switch)
 	var/id = ""
 
 
-/obj/item/stack/conveyor/Initialize(mapload, new_amount, merge = TRUE, mob/user = null, _id)
+/obj/item/stack/conveyor/Initialize(mapload, new_amount, merge = TRUE, list/mat_override=null, mat_amt=1, _id)
 	. = ..()
 	id = _id
 

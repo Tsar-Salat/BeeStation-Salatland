@@ -137,21 +137,25 @@ RLD
 				to_chat(user, no_ammo_message)
 			return FALSE
 		matter -= amount
-		update_icon()
+		update_appearance()
 		return TRUE
 	else
-		var/list/matlist = list(SSmaterials.GetMaterialRef(/datum/material/iron) = 500)
 		if(silo_mats.on_hold())
 			if(user)
 				to_chat(user, "Mineral access is on hold, please contact the quartermaster.")
 			return FALSE
-		if(!silo_mats.mat_container?.has_materials(matlist, amount))
+		if(!silo_mats.mat_container)
+			to_chat(user, "No silo link detected. Connect to silo via multitool.")
+			return FALSE
+		if(!silo_mats.mat_container.has_materials(list(/datum/material/iron = 500), amount))
 			if(user)
 				to_chat(user, no_ammo_message)
 			return FALSE
 
-		silo_mats.mat_container.use_materials(matlist, amount)
-		silo_mats.silo_log(src, "consume", -amount, "build", matlist)
+		var/list/materials = list()
+		materials[GET_MATERIAL_REF(/datum/material/iron)] = 500
+		silo_mats.mat_container.use_materials(materials, amount)
+		silo_mats.silo_log(src, "consume", -amount, "build", materials)
 		return TRUE
 
 /obj/item/construction/proc/checkResource(amount, mob/user)
@@ -162,7 +166,7 @@ RLD
 			if(user)
 				to_chat(user, "Mineral access is on hold, please contact the quartermaster.")
 			return FALSE
-		. = silo_mats.mat_container?.has_materials(list(SSmaterials.GetMaterialRef(/datum/material/iron) = 500), amount)
+		. = silo_mats.mat_container.has_materials(list(/datum/material/iron = 500), amount)
 	if(!. && user)
 		to_chat(user, no_ammo_message)
 		if(has_ammobar)

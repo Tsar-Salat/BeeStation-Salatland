@@ -61,7 +61,7 @@
 			new refined_type(drop_location(),amountrefined)
 			qdel(src)
 
-/obj/item/stack/ore/Initialize(mapload, new_amount, merge = TRUE, mob/user = null)
+/obj/item/stack/ore/Initialize(mapload, new_amount, merge = TRUE, list/mat_override=null, mat_amt=1)
 	. = ..()
 	pixel_x = base_pixel_x + rand(0,16) - 8
 	pixel_y = base_pixel_y + rand(0,8) - 8
