@@ -102,7 +102,7 @@
 	var/final = NONE
 	if(check_records)
 		final = final|JUDGE_RECORDCHECK
-	if(emagged == 2)
+	if(emagged)
 		final = final|JUDGE_EMAGGED
 	return final
 
@@ -129,13 +129,14 @@
 
 /mob/living/simple_animal/bot/honkbot/on_emag(atom/target, mob/user)
 	..()
-	if(emagged == 2)
-		if(user)
-			user << "<span class='danger'>You short out [src]'s sound control system. It gives out an evil laugh!!</span>"
-			oldtarget_name = user.name
-		audible_message("<span class='danger'>[src] gives out an evil laugh!</span>")
-		playsound(src, 'sound/machines/honkbot_evil_laugh.ogg', 75, 1, -1) // evil laughter
-		update_icon()
+	if(emagged)
+		return
+	if(user)
+		user << "<span class='danger'>You short out [src]'s sound control system. It gives out an evil laugh!!</span>"
+		oldtarget_name = user.name
+	audible_message("<span class='danger'>[src] gives out an evil laugh!</span>")
+	playsound(src, 'sound/machines/honkbot_evil_laugh.ogg', 75, TRUE, -1) // evil laughter
+	update_icon()
 
 /mob/living/simple_animal/bot/honkbot/bullet_act(obj/projectile/Proj)
 	if((istype(Proj,/obj/projectile/beam)) || (istype(Proj,/obj/projectile/bullet) && (Proj.damage_type == BURN))||(Proj.damage_type == BRUTE) && (!Proj.nodamage && Proj.damage < health && ishuman(Proj.firer)))
@@ -168,18 +169,18 @@
 	..()
 
 /mob/living/simple_animal/bot/honkbot/proc/bike_horn() //use bike_horn
-	if (emagged <= 1)
+	if (emagged) //emagged honkbots will spam short and memorable sounds.
 		if (!spam_flag)
-			playsound(src, honksound, 50, TRUE, -1)
-			spam_flag = TRUE //prevent spam
-			sensor_blink()
-			addtimer(CALLBACK(src, PROC_REF(spam_flag_false)), cooldowntimehorn)
-	else if (emagged == 2) //emagged honkbots will spam short and memorable sounds.
-		if (!spam_flag)
-			playsound(src, "honkbot_e", 50, 0)
+			playsound(src, "honkbot_e", 50, FALSE)
 			spam_flag = TRUE // prevent spam
 			icon_state = "honkbot-e"
 			addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, update_icon)), 30, TIMER_OVERRIDE|TIMER_UNIQUE)
+		addtimer(CALLBACK(src, PROC_REF(spam_flag_false)), cooldowntimehorn)
+		return
+	if (!spam_flag)
+		playsound(src, honksound, 50, TRUE, -1)
+		spam_flag = TRUE //prevent spam
+		sensor_blink()
 		addtimer(CALLBACK(src, PROC_REF(spam_flag_false)), cooldowntimehorn)
 
 /mob/living/simple_animal/bot/honkbot/proc/honk_attack(mob/living/carbon/C) // horn attack
@@ -202,13 +203,13 @@
 			var/mob/living/carbon/human/H = C
 			if(client) //prevent spam from players..
 				spam_flag = TRUE
-			if (emagged <= 1) //HONK once, then leave
+			if (emagged) // you really don't want to hit an emagged
+				threatlevel = 6 // will never let you go
+			else
 				var/judgment_criteria = judgment_criteria()
 				threatlevel = H.assess_threat(judgment_criteria)
 				threatlevel -= 6
 				target = oldtarget_name
-			else // you really don't want to hit an emagged honkbot
-				threatlevel = 6 // will never let you go
 			addtimer(CALLBACK(src, PROC_REF(spam_flag_false)), cooldowntime)
 
 			log_combat(src,C,"honked", src)

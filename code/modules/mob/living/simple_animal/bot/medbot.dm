@@ -307,15 +307,16 @@ GLOBAL_VAR(medibot_unique_id_gen)
 
 /mob/living/simple_animal/bot/medbot/on_emag(atom/target, mob/user)
 	..()
-	if(emagged == 2)
-		declare_crit = 0
-		if(user)
-			to_chat(user, "<span class='notice'>You short out [src]'s reagent synthesis circuits.</span>")
-		audible_message("<span class='danger'>[src] buzzes oddly!</span>")
-		flick("medibot_spark", src)
-		playsound(src, "sparks", 75, TRUE)
-		if(user)
-			oldpatient = user
+	if(!emagged)
+		return
+	declare_crit = FALSE
+	if(user)
+		to_chat(user, "<span class='notice'>You short out [src]'s reagent synthesis circuits.</span>")
+	audible_message("<span class='danger'>[src] buzzes oddly!</span>")
+	flick("medibot_spark", src)
+	playsound(src, "sparks", 75, TRUE)
+	if(user)
+		oldpatient = user
 
 /mob/living/simple_animal/bot/medbot/process_scan(mob/living/carbon/human/H)
 	if(H.stat == DEAD)
@@ -524,7 +525,7 @@ GLOBAL_VAR(medibot_unique_id_gen)
 	if(C.dna.species.reagent_tag==PROCESS_SYNTHETIC) //robots don't need our medicine
 		return FALSE
 
-	if(emagged == 2) //Everyone needs our medicine. (Our medicine is bloodloss)
+	if(emagged) //Everyone needs our medicine. (Our medicine is bloodloss)
 		return TRUE
 
 	if(ishuman(C))

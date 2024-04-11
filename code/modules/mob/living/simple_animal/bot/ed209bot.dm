@@ -155,7 +155,7 @@
 		final = final|JUDGE_RECORDCHECK
 	if(weaponscheck)
 		final = final|JUDGE_WEAPONCHECK
-	if(emagged == 2)
+	if(emagged)
 		final = final|JUDGE_EMAGGED
 	//ED209's ignore monkeys
 	final = final|JUDGE_IGNOREMONKEYS
@@ -186,7 +186,7 @@
 
 /mob/living/simple_animal/bot/ed209/on_emag(atom/target, mob/user)
 	..()
-	if(emagged == 2)
+	if(emagged)
 		if(user)
 			to_chat(user, "<span class='warning'>You short out [src]'s target assessment circuits.</span>")
 			oldtarget_name = user.name
@@ -410,7 +410,7 @@
 
 /mob/living/simple_animal/bot/ed209/proc/set_weapon()  //used to update the projectile type and firing sound
 	shoot_sound = 'sound/weapons/laser.ogg'
-	if(emagged == 2)
+	if(emagged)
 		if(lasercolor)
 			projectile = /obj/projectile/beam/lasertag
 		else
@@ -456,32 +456,34 @@
 	. = ..()
 	if(. & EMP_PROTECT_SELF)
 		return
-	if (severity >= 2)
-		new /obj/effect/temp_visual/emp(loc)
-		var/list/mob/living/carbon/targets = new
-		for(var/mob/living/carbon/C in view(12,src))
-			if(C.stat==DEAD)
-				continue
-			targets += C
+	if (severity <= 1)
+		return
+	new /obj/effect/temp_visual/emp(loc)
+	var/list/mob/living/carbon/targets = new
+	for(var/mob/living/carbon/C in view(12,src))
+		if(C.stat==DEAD)
+			continue
+		targets += C
+	if(!targets.len)
+		return
+	if(prob(50))
+		var/mob/toshoot = pick(targets)
+		if(toshoot)
+			targets-=toshoot
+			if(prob(50) && emagged)
+				emagged = TRUE
+				set_weapon()
+				shootAt(toshoot)
+				emagged = FALSE
+				set_weapon()
+			else
+				shootAt(toshoot)
+	else if(prob(50))
 		if(targets.len)
-			if(prob(50))
-				var/mob/toshoot = pick(targets)
-				if(toshoot)
-					targets-=toshoot
-					if(prob(50) && emagged < 2)
-						emagged = 2
-						set_weapon()
-						shootAt(toshoot)
-						emagged = FALSE
-						set_weapon()
-					else
-						shootAt(toshoot)
-			else if(prob(50))
-				if(targets.len)
-					var/mob/toarrest = pick(targets)
-					if(toarrest)
-						target = toarrest
-						mode = BOT_HUNT
+			var/mob/toarrest = pick(targets)
+			if(toarrest)
+				target = toarrest
+				mode = BOT_HUNT
 
 
 /mob/living/simple_animal/bot/ed209/bullet_act(obj/projectile/Proj)
