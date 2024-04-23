@@ -74,7 +74,7 @@
 	update_appearance()
 	return TRUE
 
-/obj/machinery/portable_atmospherics/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
+/obj/machinery/portable_atmospherics/Move()
 	. = ..()
 	if(.)
 		disconnect()

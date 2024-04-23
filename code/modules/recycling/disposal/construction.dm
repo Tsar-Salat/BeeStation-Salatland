@@ -46,7 +46,7 @@
 	if(!initial(pipe_type.density)) //This prevents dense disposals machinery from being hidable under floor tiles
 		AddElement(/datum/element/undertile, TRAIT_T_RAY_VISIBLE)
 
-/obj/structure/disposalconstruct/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
+/obj/structure/disposalconstruct/Move()
 	var/old_dir = dir
 	..()
 	setDir(old_dir) //pipes changing direction when moved is just annoying and buggy

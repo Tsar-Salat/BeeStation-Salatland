@@ -132,7 +132,7 @@
 			do_animate("deny")
 		return
 
-/obj/machinery/door/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
+/obj/machinery/door/Move()
 	var/turf/T = loc
 	. = ..()
 	move_update_air(T)

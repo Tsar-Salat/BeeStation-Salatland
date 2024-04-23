@@ -27,9 +27,9 @@
 	D.set_vehicle_dir_offsets(EAST, -18, 0)
 	D.set_vehicle_dir_offsets(WEST, -18, 0)
 
-/obj/vehicle/ridden/space/speedbike/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
+/obj/vehicle/ridden/space/speedbike/Move(newloc, move_dir)
 	if(has_buckled_mobs())
-		new /obj/effect/temp_visual/dir_setting/speedbike_trail(newloc,direct)
+		new /obj/effect/temp_visual/dir_setting/speedbike_trail(newloc,move_dir)
 	. = ..()
 
 /obj/vehicle/ridden/space/speedbike/red
@@ -90,7 +90,7 @@
 				visible_message("<span class='danger'>[src] crashes into [H]!</span>")
 				playsound(src, 'sound/effects/bang.ogg', 50, 1)
 
-/obj/vehicle/ridden/space/speedwagon/Moved()
+/obj/vehicle/sealed/car/speedwagon/Moved(atom/old_loc, movement_dir, forced, list/old_locs)
 	. = ..()
 	if(has_buckled_mobs())
 		for(var/atom/A as() in range(2, src))

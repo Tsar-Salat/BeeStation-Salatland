@@ -52,7 +52,7 @@
   * (if you ask me, this should be at the top of the move so you don't dance around)
   *
   */
-/client/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
+/client/Move(new_loc, direct)
 	// If the movement delay is slightly less than the period from now until the next tick,
 	// let us move and take the additional delay and add it onto the next move. This means that
 	// it will slowly stack until we can lose a tick, where the ticks we lose are proportional
@@ -62,19 +62,18 @@
 		return FALSE
 	next_move_dir_add = 0
 	next_move_dir_sub = 0
-
 	var/old_move_delay = move_delay
 	move_delay = world.time + world.tick_lag //this is here because Move() can now be called mutiple times per tick
 	if(!mob?.loc)
 		return FALSE
-	if(!newloc || !direct)
+	if(!new_loc || !direct)
 		return FALSE
 	if(mob.notransform)
 		return FALSE	//This is sota the goto stop mobs from moving var
 	if(mob.control_object)
 		return Move_object(direct)
 	if(!isliving(mob))
-		return mob.Move(newloc, direct)
+		return mob.Move(new_loc, direct)
 	if(mob.stat == DEAD)
 		mob.ghostize()
 		return FALSE
@@ -90,7 +89,7 @@
 		return mob.remote_control.relaymove(mob, direct)
 
 	if(isAI(mob))
-		return AIMove(newloc,direct,mob)
+		return AIMove(new_loc, direct, mob)
 
 	if(Process_Grab()) //are we restrained by someone's grip?
 		return
@@ -108,7 +107,7 @@
 	if(!mob.Process_Spacemove(direct))
 		return FALSE
 
-	if(SEND_SIGNAL(mob, COMSIG_MOB_CLIENT_PRE_MOVE, newloc) & COMSIG_MOB_CLIENT_BLOCK_PRE_MOVE)
+	if(SEND_SIGNAL(mob, COMSIG_MOB_CLIENT_PRE_MOVE, new_loc) & COMSIG_MOB_CLIENT_BLOCK_PRE_MOVE)
 		return FALSE
 
 	//We are now going to move
@@ -138,7 +137,7 @@
 			newdir = angle2dir(dir2angle(direct) + pick(45, -45))
 		if(newdir)
 			direct = newdir
-			newloc = get_step(L, direct)
+			new_loc = get_step(L, direct)
 
 	. = ..()
 
@@ -146,7 +145,7 @@
 	var/move_delta = move_delay - floored_move_delay
 	add_delay += move_delta
 
-	if((direct & (direct - 1)) && mob.loc == newloc) //moved diagonally successfully
+	if((direct & (direct - 1)) && mob.loc == new_loc) //moved diagonally successfully
 		add_delay *= sqrt(2)
 
 	var/after_glide = 0
@@ -169,7 +168,7 @@
 
 	var/atom/movable/P = mob.pulling
 	if(P && !ismob(P) && P.density)
-		mob.setDir(turn(mob.dir, 180))
+		mob.setDir(REVERSE_DIR(mob.dir))
 
 /**
   * Checks to see if you're being grabbed and if so attempts to break it
@@ -177,21 +176,21 @@
   * Called by client/Move()
   */
 /client/proc/Process_Grab()
-	if(mob.pulledby)
-		if((mob.pulledby == mob.pulling) && (mob.pulledby.grab_state == GRAB_PASSIVE))			//Don't autoresist passive grabs if we're grabbing them too.
-			return
-		if(mob.incapacitated(ignore_restraints = 1))
-			move_delay = world.time + 10
-			return TRUE
-		else if(mob.restrained(ignore_grab = 1))
-			move_delay = world.time + 10
-			to_chat(src, "<span class='warning'>You're restrained! You can't move!</span>")
-			return TRUE
-		else if(mob.pulledby.grab_state == GRAB_AGGRESSIVE)
-			move_delay = world.time + 10
-			return TRUE
-		else
-			return mob.resist_grab(TRUE)
+	if(!mob.pulledby)
+		return FALSE
+	if((mob.pulledby == mob.pulling) && (mob.pulledby.grab_state == GRAB_PASSIVE))			//Don't autoresist passive grabs if we're grabbing them too.
+		return FALSE
+	if(mob.incapacitated(ignore_restraints = 1))
+		move_delay = world.time + 10
+		return TRUE
+	else if(mob.restrained(ignore_grab = 1))
+		move_delay = world.time + 10
+		to_chat(src, "<span class='warning'>You're restrained! You can't move!</span>")
+		return TRUE
+	else if(mob.pulledby.grab_state == GRAB_AGGRESSIVE)
+		move_delay = world.time + 10
+		return TRUE
+	return mob.resist_grab(TRUE)
 
 /**
   * Allows mobs to ignore density and phase through objects
@@ -207,7 +206,6 @@
   *
   * You'll note this is another mob living level proc living at the client level
   */
-
 /client/proc/Process_Incorpmove(direct)
 	var/turf/mobloc = get_turf(mob)
 	if(!isliving(mob))
@@ -317,13 +315,18 @@
 /mob/Process_Spacemove(movement_dir = 0)
 	if(spacewalk || ..())
 		return TRUE
-	var/atom/movable/backup = get_spacemove_backup(movement_dir)
-	if(backup)
-		if(istype(backup) && movement_dir && !backup.anchored)
-			if(backup.newtonian_move(turn(movement_dir, 180), instant = TRUE)) //You're pushing off something movable, so it moves
-				to_chat(src, "<span class='info'>You push off of [backup] to propel yourself.</span>")
+
+	//sanity check
+	if(buckled)
 		return TRUE
-	return FALSE
+
+	var/atom/movable/backup = get_spacemove_backup(movement_dir)
+	if(!backup)
+		return FALSE
+	if(istype(backup) && movement_dir && !backup.anchored)
+		if(backup.newtonian_move(REVERSE_DIR(movement_dir), instant = TRUE)) //You're pushing off something movable, so it moves
+			to_chat(src, "<span class='info'>You push off of [backup] to propel yourself.</span>")
+	return TRUE
 
 /**
    * Finds a target near a mob that is viable for pushing off when moving.
@@ -340,6 +343,7 @@
 			if(!turf.density)
 				continue
 			return pushover
+
 		var/atom/movable/rebound = pushover
 		if(rebound == buckled)
 			continue
@@ -347,6 +351,7 @@
 			var/mob/M = rebound
 			if(M.buckled)
 				continue
+
 		var/pass_allowed = rebound.CanPass(src, get_dir(rebound, src))
 		if(!rebound.density && pass_allowed)
 			continue

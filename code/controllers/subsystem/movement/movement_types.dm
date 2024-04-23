@@ -105,6 +105,10 @@
 */
 
 /datum/move_loop/process()
+	if(isnull(controller))
+		qdel(src)
+		return
+
 	var/old_delay = delay //The signal can sometimes change delay
 
 	if(SEND_SIGNAL(src, COMSIG_MOVELOOP_PREPROCESS_CHECK) & MOVELOOP_SKIP_STEP) //Chance for the object to react
@@ -129,7 +133,7 @@
 	if(flags & MOVEMENT_LOOP_IGNORE_GLIDE)
 		return
 
-	// in the instance that our delay becomes Zero, we dont want a divide by zero error, so lets reset it 
+	// in the instance that our delay becomes Zero, we dont want a divide by zero error, so lets reset it
 	if(delay == 0)
 		delay = 32
 
@@ -142,7 +146,7 @@
 
 ///Pause our loop untill restarted with resume_loop()
 /datum/move_loop/proc/pause_loop()
-	if(!controller || paused) //we dead
+	if(!controller || !running || paused) //we dead
 		return
 
 	//Dequeue us from our current bucket
@@ -151,7 +155,7 @@
 
 ///Resume our loop after being paused by pause_loop()
 /datum/move_loop/proc/resume_loop()
-	if(!controller || !paused)
+	if(!controller || !running || !paused)
 		return
 
 	controller.queue_loop(src)

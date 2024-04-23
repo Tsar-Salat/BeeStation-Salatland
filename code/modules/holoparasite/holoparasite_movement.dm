@@ -4,7 +4,7 @@
 	/// A simple cooldown preventing balloon alert spam for range-related alerts.
 	COOLDOWN_DECLARE(range_balloon_cooldown)
 
-/mob/living/simple_animal/hostile/holoparasite/Move(atom/new_loc, direct, update_dir = TRUE, glide_size_override = 0)
+/mob/living/simple_animal/hostile/holoparasite/Move(atom/new_loc)
 	// Not manifested? Can't move.
 	if(!is_manifested())
 		return FALSE

@@ -94,7 +94,7 @@
 		return FALSE
 	..()
 
-/obj/machinery/field/containment/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
+/obj/machinery/field/containment/Move()
 	qdel(src)
 	return FALSE
 

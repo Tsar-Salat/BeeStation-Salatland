@@ -125,7 +125,7 @@
 		new /obj/item/stack/sheet/iron (loc, 5)
 	qdel(src)
 
-/obj/structure/particle_accelerator/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
+/obj/structure/particle_accelerator/Move()
 	. = ..()
 	if(master?.active)
 		master.toggle_power()

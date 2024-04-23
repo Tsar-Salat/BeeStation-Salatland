@@ -18,13 +18,13 @@
 	if(has_jetpack_power(movement_dir))
 		return TRUE
 
-/mob/living/carbon/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
+/mob/living/carbon/Move(NewLoc, direct)
 	. = ..()
-
-	if(. && !(movement_type & FLOATING)) //floating is easy
-		if(HAS_TRAIT(src, TRAIT_NOHUNGER))
-			set_nutrition(NUTRITION_LEVEL_FED - 1)	//just less than feeling vigorous
-		else if(nutrition && stat != DEAD)
+	if(!. && (movement_type & FLOATING)) //floating is easy
+		return
+	if(HAS_TRAIT(src, TRAIT_NOHUNGER))
+		set_nutrition(NUTRITION_LEVEL_FED - 1)	//just less than feeling vigorous
+	else if(nutrition && stat != DEAD)
+		adjust_nutrition(-(HUNGER_FACTOR/10))
+		if(m_intent == MOVE_INTENT_RUN)
 			adjust_nutrition(-(HUNGER_FACTOR/10))
-			if(m_intent == MOVE_INTENT_RUN)
-				adjust_nutrition(-(HUNGER_FACTOR/10))

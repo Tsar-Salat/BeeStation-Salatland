@@ -482,7 +482,7 @@
 	COOLDOWN_START(client, crew_manifest_delay, 1 SECONDS)
 	GLOB.crew_manifest_tgui.ui_interact(src)
 
-/mob/dead/new_player/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
+/mob/dead/new_player/Move()
 	return 0
 
 

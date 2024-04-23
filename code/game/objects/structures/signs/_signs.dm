@@ -110,7 +110,7 @@
 		S.setDir(dir)
 		qdel(src)
 
-/obj/item/sign_backing/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
+/obj/item/sign_backing/Move()
 	// pulling, throwing, or conveying a sign backing does not rotate it
 	var/old_dir = dir
 	. = ..()
