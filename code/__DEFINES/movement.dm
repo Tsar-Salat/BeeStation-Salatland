@@ -107,7 +107,7 @@ GLOBAL_VAR_INIT(glide_size_multiplier, 1.0)
 	var/datum/gas_mixture/__env = loc.return_air();\
 	if(full_speed && __env.return_pressure() < JETPACK_FAST_PRESSURE_MAX) {\
 		var/__proportion = CLAMP01(1 - ((__env.return_pressure() - JETPACK_FAST_PRESSURE_MIN) / (JETPACK_FAST_PRESSURE_MAX - JETPACK_FAST_PRESSURE_MIN)));\
-		user.add_movespeed_modifier(movespeed_id, priority=100, override = TRUE, multiplicative_slowdown=speed * __proportion, movetypes=FLOATING, conflict=MOVE_CONFLICT_JETPACK);\
+		user.add_or_update_variable_movespeed_modifier(movespeed_id, multiplicative_slowdown=speed * __proportion);\
 	} else {\
 		user.remove_movespeed_modifier(movespeed_id);\
 	}
