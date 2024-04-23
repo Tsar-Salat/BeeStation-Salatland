@@ -90,7 +90,6 @@
 /datum/move_loop/proc/set_delay(new_delay)
 	delay =  max(new_delay, world.tick_lag)
 
-/* https://github.com/tgstation/tgstation/pull/66628
 ///Pauses the move loop for some passed in period
 ///This functionally means shifting its timer up, and clearing it from its current bucket
 /datum/move_loop/proc/pause_for(time)
@@ -102,7 +101,6 @@
 	timer = world.time + time
 	//Now requeue us with our new target start time
 	controller.queue_loop(src)
-*/
 
 /datum/move_loop/process()
 	if(isnull(controller))

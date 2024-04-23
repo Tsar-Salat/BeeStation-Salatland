@@ -540,7 +540,7 @@
 		occupant_message("<span class='warning'>Air port connection teared off!</span>")
 		log_message("Lost connection to gas port.", LOG_MECHA)
 
-/obj/mecha/Process_Spacemove(var/movement_dir = 0)
+/obj/mecha/Process_Spacemove(movement_dir = 0, continuous_move = FALSE)
 	. = ..()
 	if(.)
 		return
