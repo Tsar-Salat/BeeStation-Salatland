@@ -70,8 +70,8 @@ GLOBAL_LIST_INIT(abstraction_crystals, list())
 		owner.log_message("lost control of the abstraction crystal they were manifested at", LOG_ATTACK)
 	. = ..()
 
-/mob/living/carbon/human/abstraction_hologram/Move(NewLoc, direct)
-	if(get_dist(NewLoc, linked_crystal) > ABSTRACTION_CRYSTAL_RANGE)
+/mob/living/carbon/human/abstraction_hologram/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
+	if(get_dist(newloc, linked_crystal) > ABSTRACTION_CRYSTAL_RANGE)
 		return FALSE
 	. = ..()
 

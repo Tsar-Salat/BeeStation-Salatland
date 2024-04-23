@@ -37,7 +37,7 @@
 	held_state = "cat2"
 	chat_color = "#FFD586"
 
-	do_footstep = TRUE
+	footstep_type = FOOTSTEP_MOB_CLAW
 
 /mob/living/simple_animal/pet/cat/Initialize(mapload)
 	. = ..()
@@ -162,7 +162,7 @@
 	gold_core_spawnable = NO_SPAWN
 	unique_pet = TRUE
 
-/mob/living/simple_animal/pet/cat/Move()
+/mob/living/simple_animal/pet/cat/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	. = ..()
 	if(.)
 		if(stat || resting || buckled)
@@ -290,7 +290,7 @@
 	if(health < maxHealth)
 		adjustBruteLoss(-8) //Fast life regen
 
-/mob/living/simple_animal/pet/cat/cak/Move()
+/mob/living/simple_animal/pet/cat/cak/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	. = ..()
 	if(. && !stat)
 		for(var/obj/item/food/donut/D in get_turf(src)) //Frosts nearby donuts!

@@ -23,6 +23,8 @@
 
 /datum/config_entry/string/servername	// server name (the name of the game window)
 
+/datum/config_entry/string/servertag	// Server tagline for displaying on the hub
+
 /datum/config_entry/string/serversqlname	// short form server name used for the DB
 
 /datum/config_entry/string/stationname	// station name (the name of the station in-game)
@@ -123,7 +125,7 @@
 /datum/config_entry/flag/popup_admin_pm	// adminPMs to non-admins show in a pop-up 'reply' window when set
 
 /datum/config_entry/number/fps
-	config_entry_value = 20
+	config_entry_value = 60
 	integer = FALSE
 	min_val = 1
 	max_val = 100   //byond will start crapping out at 50, so this is just ridic

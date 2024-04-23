@@ -211,7 +211,7 @@
 		var/link = FOLLOW_LINK(M, owner)
 		to_chat(M, "[link] [dead_rendered]")
 
-/mob/camera/imaginary_friend/Move(NewLoc, Dir = 0)
+/mob/camera/imaginary_friend/Move(NewLoc)
 	if(world.time < move_delay)
 		return FALSE
 	if(get_dist(src, owner) > 9)

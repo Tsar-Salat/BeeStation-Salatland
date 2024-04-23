@@ -57,7 +57,7 @@ Difficulty: Medium
 	score_achievement_type = /datum/award/score/drake_score
 	deathmessage = "collapses into a pile of bones, its flesh sloughing away."
 	deathsound = 'sound/magic/demon_dies.ogg'
-	do_footstep = TRUE
+	footstep_type = FOOTSTEP_MOB_HEAVY
 	attack_action_types = list(/datum/action/innate/megafauna_attack/fire_cone,
 							   /datum/action/innate/megafauna_attack/fire_cone_meteors,
 							   /datum/action/innate/megafauna_attack/mass_fire,
@@ -397,7 +397,7 @@ Difficulty: Medium
 	if(!swooping)
 		..()
 
-/mob/living/simple_animal/hostile/megafauna/dragon/Move()
+/mob/living/simple_animal/hostile/megafauna/dragon/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	if(!swooping)
 		..()
 

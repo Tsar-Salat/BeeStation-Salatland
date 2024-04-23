@@ -151,7 +151,7 @@
 		var/obj/mecha/M = target
 		M.take_damage(50, BRUTE, MELEE, 1)
 
-/mob/living/simple_animal/hostile/space_dragon/Move()
+/mob/living/simple_animal/hostile/space_dragon/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	if(!using_special)
 		..()
 

@@ -325,10 +325,12 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		return
 	ghostize(FALSE,SENTIENCE_RETAIN)
 
-/mob/dead/observer/Move(NewLoc, direct)
+/mob/dead/observer/Move(NewLoc, direct, glide_size_override = 32)
 	if(updatedir)
 		setDir(direct)//only update dir if we actually need it, so overlays won't spin on base sprites that don't have directions of their own
 
+	if(glide_size_override)
+		set_glide_size(glide_size_override)
 	if(NewLoc)
 		abstract_move(NewLoc)
 	else
@@ -909,8 +911,8 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 
 // Ghosts have no momentum, being massless ectoplasm
-/mob/dead/observer/Process_Spacemove(movement_dir)
-	return 1
+/mob/dead/observer/Process_Spacemove(movement_dir, continuous_move = FALSE)
+	return TRUE
 
 /mob/dead/observer/vv_edit_var(var_name, var_value)
 	. = ..()

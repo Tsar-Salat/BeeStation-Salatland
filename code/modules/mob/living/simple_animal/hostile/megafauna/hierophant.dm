@@ -452,7 +452,7 @@ Difficulty: Hard
 	if(!blinking)
 		..()
 
-/mob/living/simple_animal/hostile/megafauna/hierophant/Move()
+/mob/living/simple_animal/hostile/megafauna/hierophant/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	if(!blinking)
 		. = ..()
 

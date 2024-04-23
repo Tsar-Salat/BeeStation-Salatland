@@ -2,7 +2,8 @@
 	name = "Unknown"
 	real_name = "Unknown"
 	icon = 'icons/mob/human.dmi'
-	appearance_flags = KEEP_TOGETHER|TILE_BOUND|PIXEL_SCALE
+	icon_state = ""
+	appearance_flags = KEEP_TOGETHER|TILE_BOUND|PIXEL_SCALE|LONG_GLIDE
 	COOLDOWN_DECLARE(special_emote_cooldown)
 
 /mob/living/carbon/human/Initialize(mapload)
@@ -32,6 +33,7 @@
 	AddComponent(/datum/component/personal_crafting)
 	AddComponent(/datum/component/bloodysoles/feet)
 	AddElement(/datum/element/strippable, GLOB.strippable_human_items, TYPE_PROC_REF(/mob/living/carbon/human, should_strip), GLOB.strippable_human_layout)
+	AddElement(/datum/element/footstep, FOOTSTEP_MOB_HUMAN, 1, -6)
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = PROC_REF(on_entered),
 	)

@@ -555,8 +555,7 @@ Pass a positive integer as an argument to override a bot's default speed.
 
 	if(step_count >= 1 && tries < BOT_STEP_MAX_RETRIES)
 		for(var/step_number in 1 to step_count)
-			spawn(BOT_STEP_DELAY*(step_number-1))
-				bot_step(dest)
+			addtimer(CALLBACK(src, .proc/bot_step), BOT_STEP_DELAY*(step_number-1))
 	else
 		return FALSE
 	return TRUE
@@ -863,7 +862,7 @@ Pass a positive integer as an argument to override a bot's default speed.
 
 /mob/living/simple_animal/bot/proc/summon_step()
 
-	if(client)		// In use by player, don't actually move.
+	if(client) // In use by player, don't actually move.
 		return
 
 	if(loc == summon_target)		// Arrived to summon location.
@@ -1178,11 +1177,11 @@ Pass a positive integer as an argument to override a bot's default speed.
 		return
 	var/image/I = path[path[1]]
 	if(I)
-		I.icon_state = null
+		animate(I, alpha = 0, time = 3)
 	path.Cut(1, 2)
 
 	if(!length(path))
-		set_path(null)
+		addtimer(CALLBACK(src, .proc/set_path, null), 0.6 SECONDS) // Enough time for the animate to finish
 
 /mob/living/simple_animal/bot/rust_heretic_act()
 	adjustBruteLoss(400)

@@ -9,6 +9,8 @@
 #define COMSIG_PARENT_ATTACKBY "atom_attackby"
 	///! Return this in response if you don't want afterattack to be called
 	#define COMPONENT_NO_AFTERATTACK 1
+///signal sent out by an atom when it is no longer pulling something : (atom/pulling)
+#define COMSIG_ATOM_NO_LONGER_PULLING "movable_no_longer_pulling"
 ///! from base of atom/attack_hulk(): (/mob/living/carbon/human)
 #define COMSIG_ATOM_HULK_ATTACK "hulk_attack"
 /// from base of atom/examine(): (/mob, list/examine_text)

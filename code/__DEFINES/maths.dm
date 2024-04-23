@@ -4,9 +4,9 @@
 
 #define NUM_E 2.718282
 
-#define PI						3.1416
-#define INFINITY				1e31	//closer then enough
-#define SYSTEM_TYPE_INFINITY					1.#INF //only for isinf check
+#define PI 3.1416
+#define INFINITY 1e31	//closer then enough
+#define SYSTEM_TYPE_INFINITY 1.#INF //only for isinf check
 
 #define SHORT_REAL_LIMIT 16777216
 

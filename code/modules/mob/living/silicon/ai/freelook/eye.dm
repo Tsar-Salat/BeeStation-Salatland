@@ -118,7 +118,7 @@
 	return TRUE
 
 /mob/camera/ai_eye/Move()
-	return 0
+	return
 
 /mob/camera/ai_eye/proc/GetViewerClient()
 	if(ai)

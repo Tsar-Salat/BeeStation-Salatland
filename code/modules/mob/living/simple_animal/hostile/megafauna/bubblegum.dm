@@ -444,7 +444,7 @@ Difficulty: Hard
 	if(!charging)
 		..()
 
-/mob/living/simple_animal/hostile/megafauna/bubblegum/Move()
+/mob/living/simple_animal/hostile/megafauna/bubblegum/Move(atom/newloc, direct, update_dir = TRUE, glide_size_override = 0)
 	update_approach()
 	if(revving_charge)
 		return FALSE
