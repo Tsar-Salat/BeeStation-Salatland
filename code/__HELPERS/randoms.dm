@@ -40,7 +40,7 @@
 	var/list/blocked = list(/obj/item/reagent_containers/cup/soda_cans,
 		/obj/item/reagent_containers/cup/glass/bottle
 		)
-	return pick(subtypesof(/obj/item/reagent_containers/food/drinks) - blocked)
+	return pick(subtypesof(/obj/item/reagent_containers/cup/glass) - blocked)
 
 /// Picks a string of symbols to display as the law number for hacked or ion laws
 /proc/ion_num()

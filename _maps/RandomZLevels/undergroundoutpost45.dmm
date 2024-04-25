@@ -9750,7 +9750,7 @@
 "zB" = (
 /obj/structure/table,
 /obj/item/book/manual/wiki/barman_recipes,
-/obj/item/reagent_containers/food/drinks/shaker,
+/obj/item/reagent_containers/cup/glass/shaker,
 /obj/effect/turf_decal/tile/bar/opposingcorners,
 /turf/open/floor/iron{
 	heat_capacity = 1e+006
@@ -9840,7 +9840,7 @@
 /area/awaymission/undergroundoutpost45/gateway)
 "AO" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/soda_cans/cola,
+/obj/item/reagent_containers/cup/glass/soda_cans/cola,
 /turf/open/floor/carpet/grimy{
 	heat_capacity = 1e+006
 	},
@@ -11071,7 +11071,7 @@
 /area/awaymission/undergroundoutpost45/central)
 "Ly" = (
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/food/drinks/drinkingglass,
+/obj/item/reagent_containers/cup/glass/drinkingglass,
 /obj/effect/turf_decal/tile/bar/opposingcorners,
 /turf/open/floor/iron{
 	heat_capacity = 1e+006
@@ -11713,7 +11713,7 @@
 /area/awaymission/undergroundoutpost45/central)
 "Rp" = (
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/cup/glass/beer,
 /obj/effect/turf_decal/tile/bar/opposingcorners,
 /turf/open/floor/iron{
 	heat_capacity = 1e+006

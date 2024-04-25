@@ -400,7 +400,7 @@
 		/obj/item/reagent_containers/pill,
 		/obj/item/storage/pill_bottle,
 		/obj/item/stack/ore,
-		/obj/item/reagent_containers/food/drinks,
+		/obj/item/reagent_containers/cup/glass,
 		/obj/item/organ/regenerative_core,
 		/obj/item/wormhole_jaunter,
 		/obj/item/storage/bag/plants,
@@ -510,7 +510,7 @@
 	STR.max_w_class = WEIGHT_CLASS_SMALL
 	var/static/list/can_hold = typecacheof(list(
 		/obj/item/food,
-		/obj/item/reagent_containers/food/drinks
+		/obj/item/reagent_containers/cup/glass
 		))
 	STR.can_hold = can_hold
 	var/amount = 5
@@ -518,7 +518,7 @@
 	while(contents.len <= amount)
 		rig_snacks = pick(list(
 		/obj/item/food/candy,
-		/obj/item/reagent_containers/food/drinks/dry_ramen,
+		/obj/item/reagent_containers/cup/glass/dry_ramen,
 		/obj/item/food/chips,
 		/obj/item/food/sosjerky,
 		/obj/item/food/syndicake,

@@ -903,7 +903,7 @@
 "dH" = (
 /obj/structure/table/wood,
 /obj/item/storage/box/drinkingglasses,
-/obj/item/reagent_containers/food/drinks/bottle/whiskey{
+/obj/item/reagent_containers/cup/glass/bottle/whiskey{
 	pixel_y = 5
 	},
 /obj/machinery/light,
@@ -1267,7 +1267,7 @@
 "eQ" = (
 /obj/structure/table/wood,
 /obj/item/book/manual/wiki/barman_recipes,
-/obj/item/reagent_containers/food/drinks/shaker,
+/obj/item/reagent_containers/cup/glass/shaker,
 /obj/item/reagent_containers/glass/rag,
 /obj/machinery/newscaster{
 	pixel_y = -32
@@ -1985,7 +1985,7 @@
 /area/ctf)
 "hT" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/cup/glass/beer{
 	pixel_x = 5;
 	pixel_y = -2
 	},
@@ -4196,7 +4196,7 @@
 /area/centcom/ferry)
 "si" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/shaker,
+/obj/item/reagent_containers/cup/glass/shaker,
 /turf/open/floor/wood,
 /area/syndicate_mothership/control)
 "sj" = (
@@ -5051,7 +5051,7 @@
 /area/centcom/holding)
 "vu" = (
 /obj/item/storage/box/drinkingglasses,
-/obj/item/reagent_containers/food/drinks/bottle/rum,
+/obj/item/reagent_containers/cup/glass/bottle/rum,
 /obj/structure/table/wood,
 /turf/open/floor/wood,
 /area/syndicate_mothership/control)
@@ -5457,7 +5457,7 @@
 /area/wizard_station)
 "wR" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/trophy/gold_cup,
+/obj/item/reagent_containers/cup/glass/trophy/gold_cup,
 /turf/open/floor/carpet/grimy,
 /area/tdome/tdomeobserve)
 "wS" = (
@@ -5998,7 +5998,7 @@
 /obj/effect/turf_decal/stripes/end{
 	dir = 4
 	},
-/obj/item/reagent_containers/food/drinks/britcup,
+/obj/item/reagent_containers/cup/glass/britcup,
 /turf/open/floor/iron/dark,
 /area/ctf)
 "yU" = (
@@ -6976,7 +6976,7 @@
 "Du" = (
 /obj/structure/table/reinforced,
 /obj/machinery/door/firedoor,
-/obj/item/reagent_containers/food/drinks/britcup,
+/obj/item/reagent_containers/cup/glass/britcup,
 /obj/structure/window/reinforced{
 	dir = 8
 	},
@@ -7995,7 +7995,7 @@
 /obj/item/reagent_containers/food/condiment/peppermill{
 	pixel_x = -8
 	},
-/obj/item/reagent_containers/food/drinks/britcup,
+/obj/item/reagent_containers/cup/glass/britcup,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/iron,
 /area/tdome/tdomeobserve)
@@ -8916,8 +8916,8 @@
 /area/centcom/evac)
 "Lz" = (
 /obj/structure/table/wood/bar,
-/obj/item/reagent_containers/food/drinks/drinkingglass,
-/obj/item/reagent_containers/food/drinks/drinkingglass,
+/obj/item/reagent_containers/cup/glass/drinkingglass,
+/obj/item/reagent_containers/cup/glass/drinkingglass,
 /turf/open/floor/mineral/titanium/blue,
 /area/centcom/evac)
 "LA" = (
@@ -9388,7 +9388,7 @@
 "Nh" = (
 /obj/structure/table/wood,
 /obj/item/storage/box/drinkingglasses,
-/obj/item/reagent_containers/food/drinks/shaker,
+/obj/item/reagent_containers/cup/glass/shaker,
 /turf/open/floor/iron/dark,
 /area/centcom/supplypod)
 "Nk" = (
@@ -10071,7 +10071,7 @@
 "Qf" = (
 /obj/structure/table/wood,
 /obj/item/storage/box/drinkingglasses,
-/obj/item/reagent_containers/food/drinks/bottle/whiskey{
+/obj/item/reagent_containers/cup/glass/bottle/whiskey{
 	pixel_y = 5
 	},
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
@@ -10096,7 +10096,7 @@
 /area/ctf)
 "Qj" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/bottle/sake,
+/obj/item/reagent_containers/cup/glass/bottle/sake,
 /turf/open/floor/wood,
 /area/centcom/holding)
 "Qk" = (
@@ -10610,7 +10610,7 @@
 "Sn" = (
 /obj/structure/table/wood,
 /obj/item/storage/box/drinkingglasses,
-/obj/item/reagent_containers/food/drinks/bottle/whiskey{
+/obj/item/reagent_containers/cup/glass/bottle/whiskey{
 	pixel_y = 5
 	},
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
@@ -10841,7 +10841,7 @@
 /area/tdome/tdomeobserve)
 "Tj" = (
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/food/drinks/bottle/whiskey{
+/obj/item/reagent_containers/cup/glass/bottle/whiskey{
 	pixel_y = 5
 	},
 /obj/item/clothing/mask/cigarette/cigar/havana{
@@ -12242,7 +12242,7 @@
 /area/centcom/control)
 "YJ" = (
 /obj/item/reagent_containers/food/condiment/enzyme,
-/obj/item/reagent_containers/food/drinks/shaker,
+/obj/item/reagent_containers/cup/glass/shaker,
 /obj/item/book/manual/wiki/barman_recipes,
 /obj/structure/closet/crate,
 /turf/open/floor/iron/cafeteria,
@@ -12313,9 +12313,9 @@
 /area/centcom/holding)
 "YX" = (
 /obj/structure/table/wood/bar,
-/obj/item/reagent_containers/food/drinks/drinkingglass,
-/obj/item/reagent_containers/food/drinks/drinkingglass,
-/obj/item/reagent_containers/food/drinks/shaker{
+/obj/item/reagent_containers/cup/glass/drinkingglass,
+/obj/item/reagent_containers/cup/glass/drinkingglass,
+/obj/item/reagent_containers/cup/glass/shaker{
 	pixel_x = -12
 	},
 /turf/open/floor/mineral/titanium/blue,

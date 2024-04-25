@@ -3949,7 +3949,7 @@
 /area/engine/atmospherics_engine)
 "axJ" = (
 /obj/structure/rack,
-/obj/item/reagent_containers/food/drinks/bottle/whiskey,
+/obj/item/reagent_containers/cup/glass/bottle/whiskey,
 /obj/effect/spawner/lootdrop/maintenance,
 /turf/open/floor/plating,
 /area/maintenance/port/fore)
@@ -15479,7 +15479,7 @@
 	},
 /obj/structure/disposalpipe/segment,
 /obj/item/flashlight/lamp,
-/obj/item/reagent_containers/food/drinks/flask/det,
+/obj/item/reagent_containers/cup/glass/flask/det,
 /turf/open/floor/carpet/red,
 /area/security/detectives_office)
 "bRl" = (
@@ -16245,7 +16245,7 @@
 	receive_ore_updates = 1
 	},
 /obj/item/book/manual/wiki/barman_recipes,
-/obj/item/reagent_containers/food/drinks/shaker,
+/obj/item/reagent_containers/cup/glass/shaker,
 /obj/item/reagent_containers/glass/rag,
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
 /turf/open/floor/iron/dark,
@@ -18149,7 +18149,7 @@
 	name = "Captain's Intercom";
 	pixel_x = -26
 	},
-/obj/item/reagent_containers/food/drinks/flask/gold,
+/obj/item/reagent_containers/cup/glass/flask/gold,
 /obj/item/razor,
 /turf/open/floor/carpet/royalblue,
 /area/crew_quarters/heads/captain/private)
@@ -22888,7 +22888,7 @@
 /obj/structure/cable/yellow{
 	icon_state = "4-8"
 	},
-/obj/item/reagent_containers/food/drinks/bottle/whiskey,
+/obj/item/reagent_containers/cup/glass/bottle/whiskey,
 /turf/open/floor/carpet/blue,
 /area/bridge/showroom/corporate)
 "cCZ" = (
@@ -43637,7 +43637,7 @@
 /area/crew_quarters/locker)
 "hlk" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/coffee,
+/obj/item/reagent_containers/cup/glass/coffee,
 /obj/effect/turf_decal/tile/red/opposingcorners,
 /obj/effect/turf_decal/tile/yellow/opposingcorners{
 	dir = 1
@@ -44718,7 +44718,7 @@
 /area/science/mixing)
 "hGh" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/bottle/orangejuice,
+/obj/item/reagent_containers/cup/glass/bottle/orangejuice,
 /obj/effect/turf_decal/tile/red/opposingcorners,
 /obj/effect/turf_decal/tile/yellow/opposingcorners{
 	dir = 1
@@ -45809,7 +45809,7 @@
 "hVg" = (
 /obj/structure/table/wood/fancy,
 /obj/item/organ/heart,
-/obj/item/reagent_containers/food/drinks/bottle/holywater,
+/obj/item/reagent_containers/cup/glass/bottle/holywater,
 /obj/item/soulstone/anybody/chaplain,
 /obj/item/book/granter/spell/smoke/lesser,
 /turf/open/floor/carpet/grimy,
@@ -47630,7 +47630,7 @@
 /area/hallway/primary/central)
 "iBx" = (
 /obj/structure/bonfire,
-/obj/item/reagent_containers/food/drinks/bottle/orangejuice{
+/obj/item/reagent_containers/cup/glass/bottle/orangejuice{
 	desc = "For the weary spacemen on their quest to rekindle the first plasma fire.";
 	name = "Carton of Estus"
 	},
@@ -48570,7 +48570,7 @@
 /area/science/shuttledock)
 "iVm" = (
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/food/drinks/soda_cans/thirteenloko,
+/obj/item/reagent_containers/cup/glass/soda_cans/thirteenloko,
 /obj/machinery/firealarm{
 	dir = 4;
 	pixel_x = -24
@@ -51326,7 +51326,7 @@
 /obj/machinery/atmospherics/pipe/manifold/supply/hidden/layer2{
 	dir = 1
 	},
-/obj/item/reagent_containers/food/drinks/bottle/whiskey,
+/obj/item/reagent_containers/cup/glass/bottle/whiskey,
 /obj/effect/mapping_helpers/dead_body_placer,
 /turf/open/floor/iron,
 /area/medical/morgue)
@@ -64322,7 +64322,7 @@
 /area/hallway/secondary/command)
 "ohm" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/soda_cans/cola,
+/obj/item/reagent_containers/cup/glass/soda_cans/cola,
 /obj/effect/turf_decal/tile/red/opposingcorners,
 /obj/effect/turf_decal/tile/yellow/opposingcorners{
 	dir = 1
@@ -70449,11 +70449,11 @@
 /area/science/xenobiology)
 "qnP" = (
 /obj/structure/table,
-/obj/item/reagent_containers/food/drinks/bottle/virusfood{
+/obj/item/reagent_containers/cup/glass/bottle/virusfood{
 	pixel_x = 2;
 	pixel_y = 12
 	},
-/obj/item/reagent_containers/food/drinks/bottle/virusfood{
+/obj/item/reagent_containers/cup/glass/bottle/virusfood{
 	pixel_x = -6;
 	pixel_y = 8
 	},
@@ -73104,7 +73104,7 @@
 /area/security/checkpoint/escape)
 "rgr" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/soda_cans/dr_gibb,
+/obj/item/reagent_containers/cup/glass/soda_cans/dr_gibb,
 /obj/machinery/camera{
 	c_tag = "Science - Break Room";
 	dir = 8;
@@ -73174,7 +73174,7 @@
 /area/quartermaster/office)
 "rhP" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/britcup,
+/obj/item/reagent_containers/cup/glass/britcup,
 /obj/effect/turf_decal/tile/red/opposingcorners,
 /obj/effect/turf_decal/tile/yellow/opposingcorners{
 	dir = 1
@@ -77311,7 +77311,7 @@
 /area/hallway/secondary/entry)
 "sCM" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/soda_cans/dr_gibb,
+/obj/item/reagent_containers/cup/glass/soda_cans/dr_gibb,
 /obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer4,
 /obj/effect/turf_decal/tile/red/opposingcorners,
 /obj/effect/turf_decal/tile/yellow/opposingcorners{
@@ -79018,17 +79018,17 @@
 	pixel_x = 25
 	},
 /obj/item/paper_bin,
-/obj/item/reagent_containers/food/drinks/britcup,
+/obj/item/reagent_containers/cup/glass/britcup,
 /turf/open/floor/iron/white,
 /area/medical/medbay/central)
 "tku" = (
 /obj/structure/table/reinforced,
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/item/reagent_containers/food/drinks/soda_cans/cola{
+/obj/item/reagent_containers/cup/glass/soda_cans/cola{
 	pixel_x = 7;
 	pixel_y = -1
 	},
-/obj/item/reagent_containers/food/drinks/soda_cans/cola{
+/obj/item/reagent_containers/cup/glass/soda_cans/cola{
 	pixel_x = -7;
 	pixel_y = 5
 	},
@@ -79640,7 +79640,7 @@
 	pixel_x = -8;
 	pixel_y = 5
 	},
-/obj/item/reagent_containers/food/drinks/britcup,
+/obj/item/reagent_containers/cup/glass/britcup,
 /obj/machinery/door/firedoor,
 /turf/open/floor/iron,
 /area/crew_quarters/kitchen)
@@ -83225,7 +83225,7 @@
 /area/medical/medbay/aft)
 "uJd" = (
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/food/drinks/britcup{
+/obj/item/reagent_containers/cup/glass/britcup{
 	pixel_x = -5;
 	pixel_y = 1
 	},
@@ -86247,15 +86247,15 @@
 /area/security/prison)
 "vHo" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
 	pixel_x = -3;
 	pixel_y = 15
 	},
-/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
 	pixel_x = -6;
 	pixel_y = 3
 	},
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/cup/glass/beer{
 	desc = "Whatever it is, it reeks of foul, putrid froth.";
 	list_reagents = list(/datum/reagent/consumable/ethanol/bacchus_blessing = 15);
 	name = "Delta-Down";
@@ -90198,7 +90198,7 @@
 /obj/item/folder/yellow,
 /obj/item/pen,
 /obj/effect/turf_decal/bot,
-/obj/item/reagent_containers/food/drinks/soda_cans/thirteenloko,
+/obj/item/reagent_containers/cup/glass/soda_cans/thirteenloko,
 /turf/open/floor/iron,
 /area/engine/break_room)
 "wTc" = (

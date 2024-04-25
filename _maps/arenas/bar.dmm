@@ -76,8 +76,8 @@
 /area/tdome/arena)
 "L" = (
 /obj/structure/table,
-/obj/item/reagent_containers/food/drinks/shaker,
-/obj/item/reagent_containers/food/drinks/shaker{
+/obj/item/reagent_containers/cup/glass/shaker,
+/obj/item/reagent_containers/cup/glass/shaker{
 	pixel_x = -5
 	},
 /obj/structure/sign/plaques/deempisi{

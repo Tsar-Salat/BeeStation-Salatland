@@ -1993,7 +1993,7 @@
 /obj/machinery/requests_console{
 	pixel_x = 32
 	},
-/obj/item/reagent_containers/food/drinks/britcup{
+/obj/item/reagent_containers/cup/glass/britcup{
 	pixel_x = 4;
 	pixel_y = -1
 	},
@@ -9909,7 +9909,7 @@
 	},
 /obj/structure/table/wood,
 /obj/item/clothing/glasses/hud/security/sunglasses,
-/obj/item/reagent_containers/food/drinks/flask/det,
+/obj/item/reagent_containers/cup/glass/flask/det,
 /obj/effect/turf_decal/siding/wood{
 	dir = 8
 	},
@@ -10442,7 +10442,7 @@
 "dhu" = (
 /obj/structure/table/glass,
 /obj/item/candle,
-/obj/item/reagent_containers/food/drinks/soda_cans/cola{
+/obj/item/reagent_containers/cup/glass/soda_cans/cola{
 	pixel_x = -7;
 	pixel_y = 10
 	},
@@ -15294,7 +15294,7 @@
 	pixel_y = 30
 	},
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/shaker,
+/obj/item/reagent_containers/cup/glass/shaker,
 /obj/item/stack/spacecash/c10,
 /obj/item/stack/spacecash/c100{
 	pixel_x = -1;
@@ -18523,11 +18523,11 @@
 /area/science/robotics/lab)
 "fQu" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/beer/light{
+/obj/item/reagent_containers/cup/glass/beer/light{
 	pixel_x = -5;
 	pixel_y = 7
 	},
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/cup/glass/beer{
 	pixel_x = 5;
 	pixel_y = 10
 	},
@@ -24976,7 +24976,7 @@
 /area/medical/virology)
 "hWu" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/bottle/holywater,
+/obj/item/reagent_containers/cup/glass/bottle/holywater,
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer2{
 	dir = 4
 	},
@@ -26884,7 +26884,7 @@
 /area/engine/atmos)
 "izd" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/drinkingglass{
+/obj/item/reagent_containers/cup/glass/drinkingglass{
 	pixel_x = -4;
 	pixel_y = 2
 	},
@@ -33984,7 +33984,7 @@
 /turf/open/floor/iron/white,
 /area/medical/medbay/lobby)
 "kTr" = (
-/obj/item/reagent_containers/food/drinks/mug/cocoa{
+/obj/item/reagent_containers/cup/glass/mug/cocoa{
 	pixel_x = 10
 	},
 /obj/structure/table,
@@ -37905,11 +37905,11 @@
 /area/maintenance/starboard/aft)
 "mfc" = (
 /obj/structure/table/glass,
-/obj/item/reagent_containers/food/drinks/bottle/synthflesh{
+/obj/item/reagent_containers/cup/glass/bottle/synthflesh{
 	pixel_x = 2;
 	pixel_y = 8
 	},
-/obj/item/reagent_containers/food/drinks/bottle/synthflesh{
+/obj/item/reagent_containers/cup/glass/bottle/synthflesh{
 	pixel_x = -3;
 	pixel_y = 4
 	},
@@ -43489,7 +43489,7 @@
 /area/medical/surgery)
 "nPW" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/cup/glass/beer{
 	pixel_x = -1;
 	pixel_y = 4
 	},
@@ -44259,7 +44259,7 @@
 /area/maintenance/starboard/aft)
 "ods" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/drinkingglass{
+/obj/item/reagent_containers/cup/glass/drinkingglass{
 	pixel_x = 4;
 	pixel_y = 10
 	},
@@ -45512,15 +45512,15 @@
 /area/science/shuttle)
 "ozd" = (
 /obj/structure/table/glass,
-/obj/item/reagent_containers/food/drinks/bottle/synthflesh{
+/obj/item/reagent_containers/cup/glass/bottle/synthflesh{
 	pixel_x = -1;
 	pixel_y = 14
 	},
-/obj/item/reagent_containers/food/drinks/bottle/synthflesh{
+/obj/item/reagent_containers/cup/glass/bottle/synthflesh{
 	pixel_x = -7;
 	pixel_y = 11
 	},
-/obj/item/reagent_containers/food/drinks/coffee{
+/obj/item/reagent_containers/cup/glass/coffee{
 	pixel_x = 6;
 	pixel_y = 4
 	},
@@ -52526,11 +52526,11 @@
 	pixel_y = -1;
 	pixel_x = -7
 	},
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/cup/glass/beer{
 	pixel_x = 8;
 	pixel_y = 1
 	},
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/cup/glass/beer{
 	pixel_x = 3;
 	pixel_y = 1
 	},
@@ -54079,11 +54079,11 @@
 /area/hallway/primary/aft)
 "rup" = (
 /obj/structure/table/glass,
-/obj/item/reagent_containers/food/drinks/bottle/virusfood{
+/obj/item/reagent_containers/cup/glass/bottle/virusfood{
 	pixel_x = 2;
 	pixel_y = 12
 	},
-/obj/item/reagent_containers/food/drinks/bottle/virusfood{
+/obj/item/reagent_containers/cup/glass/bottle/virusfood{
 	pixel_x = -6;
 	pixel_y = 8
 	},
@@ -55645,7 +55645,7 @@
 /area/crew_quarters/bar)
 "rUv" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/cup/glass/beer{
 	pixel_x = -9;
 	pixel_y = 4
 	},
@@ -56014,15 +56014,15 @@
 /area/engine/atmos)
 "sac" = (
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/food/drinks/britcup{
+/obj/item/reagent_containers/cup/glass/britcup{
 	pixel_x = 2;
 	pixel_y = 9
 	},
-/obj/item/reagent_containers/food/drinks/britcup{
+/obj/item/reagent_containers/cup/glass/britcup{
 	pixel_x = -5;
 	pixel_y = 1
 	},
-/obj/item/reagent_containers/food/drinks/britcup{
+/obj/item/reagent_containers/cup/glass/britcup{
 	pixel_x = 5;
 	pixel_y = 1
 	},
@@ -57793,7 +57793,7 @@
 /area/crew_quarters/heads/chief)
 "sDy" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/coffee{
+/obj/item/reagent_containers/cup/glass/coffee{
 	pixel_x = 6;
 	pixel_y = 6
 	},
@@ -61302,15 +61302,15 @@
 /area/science/misc_lab/range)
 "tNf" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/bottle/bottleofnothing{
+/obj/item/reagent_containers/cup/glass/bottle/bottleofnothing{
 	pixel_x = 4;
 	pixel_y = 6
 	},
-/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
 	pixel_x = -4;
 	pixel_y = 10
 	},
-/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
 	pixel_x = -6;
 	pixel_y = 6
 	},
@@ -62161,7 +62161,7 @@
 /area/hallway/primary/aft)
 "ucp" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/drinkingglass{
+/obj/item/reagent_containers/cup/glass/drinkingglass{
 	pixel_x = -4;
 	pixel_y = 2
 	},
@@ -67447,7 +67447,7 @@
 /obj/structure/desk_bell{
 	pixel_x = -8
 	},
-/obj/item/reagent_containers/food/drinks/britcup{
+/obj/item/reagent_containers/cup/glass/britcup{
 	pixel_x = 9;
 	pixel_y = -3
 	},
@@ -67809,7 +67809,7 @@
 /area/crew_quarters/heads/chief)
 "vOe" = (
 /obj/structure/table/wood/fancy/royalblue,
-/obj/item/reagent_containers/food/drinks/flask/gold{
+/obj/item/reagent_containers/cup/glass/flask/gold{
 	pixel_x = -1;
 	pixel_y = 9
 	},
@@ -73829,9 +73829,9 @@
 "xNY" = (
 /obj/structure/table/wood,
 /obj/item/storage/box/drinkingglasses,
-/obj/item/reagent_containers/food/drinks/beer,
-/obj/item/reagent_containers/food/drinks/beer,
-/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/cup/glass/beer,
+/obj/item/reagent_containers/cup/glass/beer,
+/obj/item/reagent_containers/cup/glass/beer,
 /obj/machinery/newscaster{
 	pixel_y = 32
 	},
@@ -74337,23 +74337,23 @@
 /obj/effect/turf_decal/tile/neutral,
 /obj/structure/table/reinforced,
 /obj/effect/turf_decal/tile/red/anticorner/contrasted,
-/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
 	pixel_y = 2;
 	pixel_x = 11
 	},
-/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
 	pixel_y = 2;
 	pixel_x = 3
 	},
-/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
 	pixel_y = 13;
 	pixel_x = 11
 	},
-/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
 	pixel_y = 13;
 	pixel_x = 3
 	},
-/obj/item/reagent_containers/food/drinks/bottle/vodka/badminka{
+/obj/item/reagent_containers/cup/glass/bottle/vodka/badminka{
 	pixel_x = -8;
 	pixel_y = 7
 	},

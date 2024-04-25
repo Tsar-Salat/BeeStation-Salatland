@@ -368,17 +368,17 @@
 /area/template_noop)
 "KV" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/sillycup{
+/obj/item/reagent_containers/cup/glass/sillycup{
 	pixel_x = -4;
 	pixel_y = 6
 	},
-/obj/item/reagent_containers/food/drinks/sillycup{
+/obj/item/reagent_containers/cup/glass/sillycup{
 	pixel_x = 9;
 	pixel_y = -2
 	},
-/obj/item/reagent_containers/food/drinks/sillycup,
-/obj/item/reagent_containers/food/drinks/sillycup,
-/obj/item/reagent_containers/food/drinks/sillycup,
+/obj/item/reagent_containers/cup/glass/sillycup,
+/obj/item/reagent_containers/cup/glass/sillycup,
+/obj/item/reagent_containers/cup/glass/sillycup,
 /turf/open/floor/iron/white,
 /area/template_noop)
 "Ls" = (

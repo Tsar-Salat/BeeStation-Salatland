@@ -30,7 +30,7 @@
 	dir = 4;
 	layer = 2.9
 	},
-/obj/item/reagent_containers/food/drinks/shaker{
+/obj/item/reagent_containers/cup/glass/shaker{
 	pixel_x = 4
 	},
 /obj/item/book/manual/wiki/barman_recipes{

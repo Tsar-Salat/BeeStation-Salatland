@@ -148,7 +148,7 @@
 /obj/item/book/manual/wiki/barman_recipes{
 	pixel_y = 6
 	},
-/obj/item/reagent_containers/food/drinks/shaker{
+/obj/item/reagent_containers/cup/glass/shaker{
 	pixel_x = 6;
 	pixel_y = 2
 	},

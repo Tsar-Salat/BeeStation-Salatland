@@ -4046,19 +4046,19 @@
 /turf/open/floor/iron,
 /area/bridge)
 "aqK" = (
-/obj/item/reagent_containers/food/drinks/flask/gold{
+/obj/item/reagent_containers/cup/glass/flask/gold{
 	pixel_x = 3;
 	pixel_y = 8
 	},
-/obj/item/reagent_containers/food/drinks/bottle/rum{
+/obj/item/reagent_containers/cup/glass/bottle/rum{
 	pixel_x = -4;
 	pixel_y = 4
 	},
-/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
 	pixel_x = 7;
 	pixel_y = 4
 	},
-/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass,
+/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass,
 /obj/machinery/status_display/evac{
 	pixel_y = 32
 	},
@@ -11627,17 +11627,17 @@
 /obj/item/storage/box/seccarts{
 	pixel_y = 5
 	},
-/obj/item/reagent_containers/food/drinks/bottle/whiskey{
+/obj/item/reagent_containers/cup/glass/bottle/whiskey{
 	desc = "A bottle of whiskey. There's a label that reads 'tears' taped to the front.";
 	name = "Bottle of Tears";
 	pixel_x = 3;
 	pixel_y = 5
 	},
-/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
 	pixel_x = -6;
 	pixel_y = 4
 	},
-/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
 	pixel_y = 2
 	},
 /obj/machinery/keycard_auth{
@@ -12446,7 +12446,7 @@
 /area/crew_quarters/kitchen)
 "boy" = (
 /obj/structure/table,
-/obj/item/reagent_containers/food/drinks/soda_cans/cola{
+/obj/item/reagent_containers/cup/glass/soda_cans/cola{
 	pixel_x = 4;
 	pixel_y = 4
 	},
@@ -13012,7 +13012,7 @@
 	pixel_x = -8;
 	pixel_y = 12
 	},
-/obj/item/reagent_containers/food/drinks/britcup{
+/obj/item/reagent_containers/cup/glass/britcup{
 	pixel_x = 4;
 	pixel_y = 4
 	},
@@ -13219,7 +13219,7 @@
 	dir = 4
 	},
 /obj/item/clothing/suit/hooded/chaplain_hoodie,
-/obj/item/reagent_containers/food/drinks/bottle/holywater,
+/obj/item/reagent_containers/cup/glass/bottle/holywater,
 /obj/item/soulstone/anybody/chaplain,
 /obj/item/organ/heart,
 /obj/item/book/granter/spell/smoke/lesser,
@@ -13309,7 +13309,7 @@
 	pixel_x = -4;
 	pixel_y = 4
 	},
-/obj/item/reagent_containers/food/drinks/bottle/whiskey{
+/obj/item/reagent_containers/cup/glass/bottle/whiskey{
 	pixel_x = 8;
 	pixel_y = 6
 	},
@@ -34845,15 +34845,15 @@
 /area/science/lab)
 "eWx" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
 	pixel_x = -3;
 	pixel_y = 15
 	},
-/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
 	pixel_x = -6;
 	pixel_y = 3
 	},
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/cup/glass/beer{
 	desc = "A station exclusive. Consumption may result in seizures, blindness, drunkenness, or even death.";
 	list_reagents = list(/datum/reagent/consumable/ethanol/thirteenloko=30);
 	name = "Kilo-Kocktail";
@@ -35663,16 +35663,16 @@
 	pixel_y = 27
 	},
 /obj/structure/table,
-/obj/item/reagent_containers/food/drinks/sillycup{
+/obj/item/reagent_containers/cup/glass/sillycup{
 	pixel_x = -5;
 	pixel_y = 3
 	},
-/obj/item/reagent_containers/food/drinks/sillycup{
+/obj/item/reagent_containers/cup/glass/sillycup{
 	pixel_x = 5;
 	pixel_y = 3
 	},
-/obj/item/reagent_containers/food/drinks/sillycup,
-/obj/item/reagent_containers/food/drinks/bottle/vodka{
+/obj/item/reagent_containers/cup/glass/sillycup,
+/obj/item/reagent_containers/cup/glass/bottle/vodka{
 	pixel_x = -8;
 	pixel_y = 7
 	},
@@ -41956,7 +41956,7 @@
 /area/quartermaster/qm)
 "htk" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/item/reagent_containers/food/drinks/soda_cans/dr_gibb,
+/obj/item/reagent_containers/cup/glass/soda_cans/dr_gibb,
 /turf/open/floor/plating{
 	burnt = 1
 	},
@@ -45177,12 +45177,12 @@
 /area/maintenance/fore)
 "izu" = (
 /obj/structure/table,
-/obj/item/reagent_containers/food/drinks/soda_cans/pwr_game{
+/obj/item/reagent_containers/cup/glass/soda_cans/pwr_game{
 	pixel_x = 6;
 	pixel_y = 7;
 	list_reagents = list(/datum/reagent/consumable/pwr_game = 5)
 	},
-/obj/item/reagent_containers/food/drinks/britcup{
+/obj/item/reagent_containers/cup/glass/britcup{
 	pixel_x = -5;
 	pixel_y = 1
 	},
@@ -45288,7 +45288,7 @@
 "iAH" = (
 /obj/structure/table/wood,
 /obj/item/clipboard,
-/obj/item/reagent_containers/food/drinks/shaker{
+/obj/item/reagent_containers/cup/glass/shaker{
 	pixel_x = -2;
 	pixel_y = 2
 	},
@@ -47046,7 +47046,7 @@
 /turf/open/floor/iron,
 /area/security/execution/transfer)
 "jcF" = (
-/obj/item/reagent_containers/food/drinks/soda_cans/dr_gibb,
+/obj/item/reagent_containers/cup/glass/soda_cans/dr_gibb,
 /turf/open/floor/plating,
 /area/quartermaster/warehouse)
 "jcT" = (
@@ -50140,7 +50140,7 @@
 	pixel_x = 2;
 	pixel_y = -1
 	},
-/obj/item/reagent_containers/food/drinks/bottle/virusfood{
+/obj/item/reagent_containers/cup/glass/bottle/virusfood{
 	pixel_x = -9;
 	pixel_y = 5
 	},
@@ -56029,7 +56029,7 @@
 	pixel_x = -8;
 	pixel_y = 12
 	},
-/obj/item/reagent_containers/food/drinks/bottle/orangejuice{
+/obj/item/reagent_containers/cup/glass/bottle/orangejuice{
 	desc = "An emerald flask, from the Keeper's soul. High in vitamins!";
 	name = "estus flask";
 	pixel_x = 4;
@@ -65238,27 +65238,27 @@
 	icon_state = "4-8"
 	},
 /obj/structure/table,
-/obj/item/reagent_containers/food/drinks/soda_cans/starkist{
+/obj/item/reagent_containers/cup/glass/soda_cans/starkist{
 	pixel_x = 10;
 	pixel_y = 2
 	},
-/obj/item/reagent_containers/food/drinks/soda_cans/shamblers{
+/obj/item/reagent_containers/cup/glass/soda_cans/shamblers{
 	pixel_x = 2;
 	pixel_y = 2
 	},
-/obj/item/reagent_containers/food/drinks/soda_cans/lemon_lime{
+/obj/item/reagent_containers/cup/glass/soda_cans/lemon_lime{
 	pixel_x = -7;
 	pixel_y = 2
 	},
-/obj/item/reagent_containers/food/drinks/soda_cans/pwr_game{
+/obj/item/reagent_containers/cup/glass/soda_cans/pwr_game{
 	pixel_x = -4;
 	pixel_y = 11
 	},
-/obj/item/reagent_containers/food/drinks/soda_cans/cola{
+/obj/item/reagent_containers/cup/glass/soda_cans/cola{
 	pixel_x = 6;
 	pixel_y = 11
 	},
-/obj/item/reagent_containers/food/drinks/soda_cans/thirteenloko{
+/obj/item/reagent_containers/cup/glass/soda_cans/thirteenloko{
 	pixel_y = 20
 	},
 /obj/effect/turf_decal/tile/purple/half/contrasted{
@@ -65625,7 +65625,7 @@
 /area/security/execution/education)
 "pmx" = (
 /obj/structure/bonfire,
-/obj/item/reagent_containers/food/drinks/bottle/orangejuice{
+/obj/item/reagent_containers/cup/glass/bottle/orangejuice{
 	desc = "For the weary spacemen on their quest to rekindle the first plasma fire.";
 	name = "Carton of Estus"
 	},
@@ -75741,15 +75741,15 @@
 /area/science/shuttledock)
 "sMK" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
 	pixel_x = -6;
 	pixel_y = 3
 	},
-/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
 	pixel_x = -3;
 	pixel_y = 15
 	},
-/obj/item/reagent_containers/food/drinks/bottle/holywater{
+/obj/item/reagent_containers/cup/glass/bottle/holywater{
 	pixel_x = 4;
 	pixel_y = 4
 	},
@@ -86124,7 +86124,7 @@
 	pixel_x = -3;
 	pixel_y = 2
 	},
-/obj/item/reagent_containers/food/drinks/bottle/virusfood{
+/obj/item/reagent_containers/cup/glass/bottle/virusfood{
 	pixel_x = -6;
 	pixel_y = 8
 	},

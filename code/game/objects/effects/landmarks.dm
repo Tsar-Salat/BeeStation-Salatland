@@ -515,7 +515,7 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark/start/new_player)
 	if(prob(70))
 		var/bottle_count = pick(10;1, 5;2, 2;3)
 		for(var/index in 1 to bottle_count)
-			var/obj/item/reagent_containers/food/drinks/beer/almost_empty/B = new(get_turf(src))
+			var/obj/item/reagent_containers/cup/glass/beer/almost_empty/B = new(get_turf(src))
 			B.pixel_x += rand(-6, 6)
 			B.pixel_y += rand(-6, 6)
 	return INITIALIZE_HINT_QDEL

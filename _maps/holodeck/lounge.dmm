@@ -54,7 +54,7 @@
 /area/template_noop)
 "i" = (
 /obj/structure/table/wood/bar,
-/obj/item/reagent_containers/food/drinks/shaker,
+/obj/item/reagent_containers/cup/glass/shaker,
 /turf/open/floor/holofloor{
 	dir = 9;
 	icon_state = "wood"

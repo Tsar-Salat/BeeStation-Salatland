@@ -42,7 +42,7 @@
 	pixel_x = 6;
 	pixel_y = 3
 	},
-/obj/item/reagent_containers/food/drinks/syndicatebeer{
+/obj/item/reagent_containers/cup/glass/syndicatebeer{
 	pixel_x = -8;
 	pixel_y = 2
 	},
@@ -653,7 +653,7 @@
 /obj/item/reagent_containers/glass/rag{
 	pixel_y = 5
 	},
-/obj/item/reagent_containers/food/drinks/shaker{
+/obj/item/reagent_containers/cup/glass/shaker{
 	pixel_x = 4;
 	pixel_y = 1
 	},
@@ -878,7 +878,7 @@
 /area/shuttle/exploration)
 "UN" = (
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/food/drinks/britcup{
+/obj/item/reagent_containers/cup/glass/britcup{
 	pixel_x = 9;
 	pixel_y = -3
 	},
@@ -887,7 +887,7 @@
 	pixel_x = -3;
 	pixel_y = 5
 	},
-/obj/item/reagent_containers/food/drinks/beer/light{
+/obj/item/reagent_containers/cup/glass/beer/light{
 	pixel_x = 4;
 	pixel_y = 7
 	},
@@ -903,7 +903,7 @@
 	pixel_y = 1
 	},
 /obj/item/trash/pistachios,
-/obj/item/reagent_containers/food/drinks/beer/almost_empty{
+/obj/item/reagent_containers/cup/glass/beer/almost_empty{
 	pixel_x = -8
 	},
 /obj/machinery/light,
