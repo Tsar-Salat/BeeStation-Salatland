@@ -432,7 +432,7 @@
 		return "[state_prefix]_cash"
 	if(istype(item, /obj/item/card))
 		return "[state_prefix]_id"
-	if(istype(item, /obj/item/reagent_containers/food))
+	if(isfood(item))
 		return "[state_prefix]_food"
 	if(istype(item, /obj/item/throwing_star))
 		return "[state_prefix]_star"

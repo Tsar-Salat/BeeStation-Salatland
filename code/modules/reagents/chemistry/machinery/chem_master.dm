@@ -422,9 +422,9 @@
 						reagents.trans_to(P, vol_each, transfered_by = usr)
 					. = TRUE
 				if("condimentPack")
-					var/obj/item/reagent_containers/food/condiment/pack/P
+					var/obj/item/reagent_containers/condiment/pack/P
 					for(var/i in 1 to amount)
-						P = new/obj/item/reagent_containers/food/condiment/pack(drop_location())
+						P = new/obj/item/reagent_containers/condiment/pack(drop_location())
 						P.originalname = name
 						P.name = trim("[name] pack")
 						P.label_name = trim(name)
@@ -432,9 +432,9 @@
 						reagents.trans_to(P, vol_each, transfered_by = usr)
 					. = TRUE
 				if("condimentBottle")
-					var/obj/item/reagent_containers/food/condiment/P
+					var/obj/item/reagent_containers/condiment/P
 					for(var/i in 1 to amount)
-						P = new/obj/item/reagent_containers/food/condiment(drop_location())
+						P = new/obj/item/reagent_containers/condiment(drop_location())
 						P.originalname = name
 						P.name = trim("[name] bottle")
 						P.label_name = trim(name)

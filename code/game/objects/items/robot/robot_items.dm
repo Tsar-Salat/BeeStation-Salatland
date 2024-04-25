@@ -1033,7 +1033,8 @@
 /obj/item/borg/apparatus/beaker/service
 	name = "versatile service grasper"
 	desc = "Specially designed for carrying glasses, food and seeds."
-	storable = list(/obj/item/reagent_containers/food,
+	storable = list(
+	/obj/item/food,
 	/obj/item/seeds,
 	/obj/item/storage/fancy/donut_box,
 	/obj/item/storage/fancy/egg_box,

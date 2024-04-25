@@ -3,7 +3,7 @@
 
 # Foods
 /obj/item/reagent_containers/cup/glass/@SUBTYPES : /obj/item/reagent_containers/cup/glass/@SUBTYPES {@OLD}
-/obj/item/reagent_containers/food/condiment/@SUBTYPES : /obj/item/reagent_containers/condiment/@SUBTYPES {@OLD}
+/obj/item/reagent_containers/condiment/@SUBTYPES : /obj/item/reagent_containers/condiment/@SUBTYPES {@OLD}
 
 # Sodas
 /obj/item/reagent_containers/cup/soda_cans/@SUBTYPES : /obj/item/reagent_containers/cup/soda_cans/@SUBTYPES {@OLD}

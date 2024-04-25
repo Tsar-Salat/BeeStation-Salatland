@@ -23,7 +23,7 @@
 	id = "milk_carton"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass= 100)
-	build_path = /obj/item/reagent_containers/food/condiment/milk
+	build_path = /obj/item/reagent_containers/condiment/milk
 	category = list("initial","Food")
 
 /datum/design/cream_carton
@@ -47,7 +47,7 @@
 	id = "pepper_mill"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass= 50)
-	build_path = /obj/item/reagent_containers/food/condiment/peppermill
+	build_path = /obj/item/reagent_containers/condiment/peppermill
 	make_reagents = list()
 	category = list("initial","Food")
 
@@ -65,14 +65,14 @@
 	id = "flour_sack"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass= 150)
-	build_path = /obj/item/reagent_containers/food/condiment/flour
+	build_path = /obj/item/reagent_containers/condiment/flour
 	category = list("initial","Food")
 /datum/design/sugar_sack
 	name = "Sugar Sack"
 	id = "sugar_sack"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass= 200)
-	build_path = /obj/item/reagent_containers/food/condiment/sugar
+	build_path = /obj/item/reagent_containers/condiment/sugar
 	category = list("initial","Food")
 
 /datum/design/monkey_cube
@@ -216,5 +216,5 @@
 	id = "soy_milk_carton"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass = 100)
-	build_path = /obj/item/reagent_containers/food/condiment/soymilk
+	build_path = /obj/item/reagent_containers/condiment/soymilk
 	category = list("initial","Food")
