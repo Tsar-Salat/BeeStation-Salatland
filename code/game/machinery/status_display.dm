@@ -182,10 +182,10 @@
 /obj/machinery/status_display/proc/display_shuttle_status(obj/docking_port/mobile/shuttle)
 	if(!shuttle)
 		// the shuttle is missing - no processing
-		set_messages("shutl?","")
+		set_messages("shutl","not in service")
 		return PROCESS_KILL
 	else if(shuttle.timer)
-		var/line1 = "- [shuttle.getModeStr()] -"
+		var/line1 = shuttle.getModeStr()
 		var/line2 = shuttle.getTimerStr()
 
 		set_messages(line1, line2)
@@ -221,7 +221,7 @@
 
 	if(line_width > MAX_STATIC_WIDTH)
 		// Marquee text
-		var/marquee_message = "[line] [line] [line]"
+		var/marquee_message = "[line]    [line]    [line]"
 
 		// Width of full content. Must of these is never revealed unless the user inputted a single character.
 		var/full_marquee_width = display_font.get_metrics("[marquee_message]    ")
@@ -243,7 +243,7 @@
 		// Centered text
 		var/color = header_regex.Find(line) ? header_text_color : text_color
 		maptext = generate_text(line, center = TRUE, text_color = color)
-		maptext_x = xoffset
+		maptext_x = xoffset //Defaults to 0, this would be centered unless overided
 
 /**
  * Generate the actual maptext.
@@ -338,8 +338,8 @@
 	if(!SSshuttle.supply)
 		// Might be missing in our first update on initialize before shuttles
 		// have loaded. Cross our fingers that it will soon return.
-		line1 = "CARGO"
-		line2 = "shutl?"
+		line1 = "shutl"
+		line2 = "not in service"
 	else if(SSshuttle.supply.mode == SHUTTLE_IDLE)
 		if(is_station_level(SSshuttle.supply.z))
 			line1 = "CARGO"
@@ -348,7 +348,7 @@
 			line1 = ""
 			line2 = ""
 	else
-		line1 = "- [SSshuttle.supply.getModeStr()] -"
+		line1 = SSshuttle.supply.getModeStr()
 		line2 = SSshuttle.supply.getTimerStr()
 	set_messages(line1, line2)
 
@@ -358,8 +358,8 @@
 	current_mode = SD_MESSAGE
 	var/shuttle_id
 
-	text_color = "#0F5"
-	header_text_color = "#2FC"
+	text_color = "#3CF046"
+	header_text_color = "#22FFCC"
 
 /obj/machinery/status_display/shuttle/process()
 	if(!shuttle_id || (machine_stat & NOPOWER))
@@ -388,7 +388,6 @@
 	name = "\improper AI display"
 	desc = "A small screen which the AI can use to present itself."
 	current_mode = SD_PICTURE
-
 	var/emotion = AI_EMOTION_BLANK
 
 	/// A mapping between AI_EMOTION_* string constants, which also double as user readable descriptions, and the name of the iconfile.
@@ -525,3 +524,5 @@
 #undef LINE2_X
 #undef LINE2_Y
 #undef STATUS_DISPLAY_FONT_DATUM
+
+#undef SCROLL_PADDING
