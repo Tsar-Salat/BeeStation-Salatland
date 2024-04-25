@@ -169,7 +169,7 @@
 	name = "Rice Bowl"
 	id = "ricebowl"
 	required_reagents = list(/datum/reagent/consumable/rice = 10, /datum/reagent/water = 10)
-	required_container = /obj/item/reagent_containers/glass/bowl
+	required_container = /obj/item/reagent_containers/cup/bowl
 	mix_message = "The rice absorbs the water."
 
 /datum/chemical_reaction/ricebowl/on_reaction(datum/reagents/holder)

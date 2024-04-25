@@ -1724,19 +1724,19 @@
 	desc = "Contains thirteen different chemicals, for all the fun experiments you can make."
 	cost = 1000
 	max_supply = 4
-	contains = list(/obj/item/reagent_containers/glass/bottle/hydrogen,
-					/obj/item/reagent_containers/glass/bottle/carbon,
-					/obj/item/reagent_containers/glass/bottle/nitrogen,
-					/obj/item/reagent_containers/glass/bottle/oxygen,
-					/obj/item/reagent_containers/glass/bottle/fluorine,
-					/obj/item/reagent_containers/glass/bottle/phosphorus,
-					/obj/item/reagent_containers/glass/bottle/silicon,
-					/obj/item/reagent_containers/glass/bottle/chlorine,
-					/obj/item/reagent_containers/glass/bottle/radium,
-					/obj/item/reagent_containers/glass/bottle/sacid,
-					/obj/item/reagent_containers/glass/bottle/ethanol,
-					/obj/item/reagent_containers/glass/bottle/potassium,
-					/obj/item/reagent_containers/glass/bottle/sugar,
+	contains = list(/obj/item/reagent_containers/cup/bottle/hydrogen,
+					/obj/item/reagent_containers/cup/bottle/carbon,
+					/obj/item/reagent_containers/cup/bottle/nitrogen,
+					/obj/item/reagent_containers/cup/bottle/oxygen,
+					/obj/item/reagent_containers/cup/bottle/fluorine,
+					/obj/item/reagent_containers/cup/bottle/phosphorus,
+					/obj/item/reagent_containers/cup/bottle/silicon,
+					/obj/item/reagent_containers/cup/bottle/chlorine,
+					/obj/item/reagent_containers/cup/bottle/radium,
+					/obj/item/reagent_containers/cup/bottle/sacid,
+					/obj/item/reagent_containers/cup/bottle/ethanol,
+					/obj/item/reagent_containers/cup/bottle/potassium,
+					/obj/item/reagent_containers/cup/bottle/sugar,
 					/obj/item/clothing/glasses/science,
 					/obj/item/reagent_containers/dropper,
 					/obj/item/storage/box/beakers)
@@ -1766,10 +1766,10 @@
 	desc = "Contains a little bit of everything needed to stock a medbay or to form your own."
 	cost = 2000
 	max_supply = 3
-	contains = list(/obj/item/reagent_containers/glass/bottle/charcoal,
-					/obj/item/reagent_containers/glass/bottle/epinephrine,
-					/obj/item/reagent_containers/glass/bottle/morphine,
-					/obj/item/reagent_containers/glass/bottle/toxin,
+	contains = list(/obj/item/reagent_containers/cup/bottle/charcoal,
+					/obj/item/reagent_containers/cup/bottle/epinephrine,
+					/obj/item/reagent_containers/cup/bottle/morphine,
+					/obj/item/reagent_containers/cup/bottle/toxin,
 					/obj/item/reagent_containers/cup/beaker/large,
 					/obj/item/reagent_containers/pill/insulin,
 					/obj/item/stack/medical/gauze,
@@ -1819,11 +1819,11 @@
 	max_supply = 3
 	access = ACCESS_VIROLOGY
 	access_budget = ACCESS_VIROLOGY
-	contains = list(/obj/item/reagent_containers/glass/bottle/inorganic_virion,
-					/obj/item/reagent_containers/glass/bottle/necrotic_virion,
-					/obj/item/reagent_containers/glass/bottle/evolution_virion,
-					/obj/item/reagent_containers/glass/bottle/adaptation_virion,
-					/obj/item/reagent_containers/glass/bottle/aggression_virion)
+	contains = list(/obj/item/reagent_containers/cup/bottle/inorganic_virion,
+					/obj/item/reagent_containers/cup/bottle/necrotic_virion,
+					/obj/item/reagent_containers/cup/bottle/evolution_virion,
+					/obj/item/reagent_containers/cup/bottle/adaptation_virion,
+					/obj/item/reagent_containers/cup/bottle/aggression_virion)
 	crate_name = "virus sample crate"
 	crate_type = /obj/structure/closet/crate/secure/plasma
 	dangerous = TRUE
@@ -1831,7 +1831,7 @@
 /datum/supply_pack/medical/randomvirus/fill(obj/structure/closet/crate/C)
 	for(var/item in contains)
 		if(CONFIG_GET(flag/chemviro_allowed))
-			new /obj/item/reagent_containers/glass/bottle/random_virus(C)
+			new /obj/item/reagent_containers/cup/bottle/random_virus(C)
 		else
 			new item(C)
 
@@ -1844,9 +1844,9 @@
 	access = ACCESS_VIROLOGY
 	contains = list(/obj/item/food/monkeycube,
 					/obj/item/reagent_containers/cup/glass/bottle/virusfood,
-					/obj/item/reagent_containers/glass/bottle/mutagen,
-					/obj/item/reagent_containers/glass/bottle/formaldehyde,
-					/obj/item/reagent_containers/glass/bottle/synaptizine,
+					/obj/item/reagent_containers/cup/bottle/mutagen,
+					/obj/item/reagent_containers/cup/bottle/formaldehyde,
+					/obj/item/reagent_containers/cup/bottle/synaptizine,
 					/obj/item/storage/box/beakers,
 					/obj/item/toy/figure/virologist)
 	crate_name = "Junior Epidemiology Kit"
@@ -1869,12 +1869,12 @@
 	access = ACCESS_CMO
 	access_budget = ACCESS_VIROLOGY
 	contraband = TRUE
-	contains = list(/obj/item/reagent_containers/glass/bottle/fake_gbs,
-					/obj/item/reagent_containers/glass/bottle/magnitis,
-					/obj/item/reagent_containers/glass/bottle/pierrot_throat,
-					/obj/item/reagent_containers/glass/bottle/brainrot,
-					/obj/item/reagent_containers/glass/bottle/anxiety,
-					/obj/item/reagent_containers/glass/bottle/beesease)
+	contains = list(/obj/item/reagent_containers/cup/bottle/fake_gbs,
+					/obj/item/reagent_containers/cup/bottle/magnitis,
+					/obj/item/reagent_containers/cup/bottle/pierrot_throat,
+					/obj/item/reagent_containers/cup/bottle/brainrot,
+					/obj/item/reagent_containers/cup/bottle/anxiety,
+					/obj/item/reagent_containers/cup/bottle/beesease)
 	crate_name = "virus crate"
 	crate_type = /obj/structure/closet/crate/secure/plasma
 	dangerous = TRUE
@@ -2453,8 +2453,8 @@
 	access_budget = ACCESS_HYDROPONICS
 	contains = list(/obj/item/reagent_containers/spray/plantbgone,
 					/obj/item/reagent_containers/spray/plantbgone,
-					/obj/item/reagent_containers/glass/bottle/ammonia,
-					/obj/item/reagent_containers/glass/bottle/ammonia,
+					/obj/item/reagent_containers/cup/bottle/ammonia,
+					/obj/item/reagent_containers/cup/bottle/ammonia,
 					/obj/item/hatchet,
 					/obj/item/cultivator,
 					/obj/item/plant_analyzer,

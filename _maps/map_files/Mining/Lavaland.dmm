@@ -2706,7 +2706,7 @@
 "tM" = (
 /obj/structure/table,
 /obj/effect/landmark/event_spawn,
-/obj/item/reagent_containers/glass/beaker,
+/obj/item/reagent_containers/cup/beaker,
 /obj/item/shovel/spade,
 /obj/item/cultivator,
 /turf/open/floor/iron/grid/steel,
@@ -2868,7 +2868,7 @@
 /turf/open/floor/plating/asteroid/basalt/lava_land_surface,
 /area/lavaland/surface/outdoors)
 "uL" = (
-/obj/item/reagent_containers/glass/bucket,
+/obj/item/reagent_containers/cup/bucket,
 /obj/effect/turf_decal/bot,
 /obj/structure/reagent_dispensers/watertank/high,
 /turf/open/floor/iron/grid/steel,

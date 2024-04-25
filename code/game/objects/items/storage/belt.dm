@@ -92,7 +92,7 @@
 	var/static/list/can_hold = typecacheof(list(
 		/obj/item/reagent_containers/spray,
 		/obj/item/reagent_containers/cup/beaker,//those will usually be used for fertilizer
-		/obj/item/reagent_containers/glass/bottle,//fertilizer bottles
+		/obj/item/reagent_containers/cup/bottle,//fertilizer bottles
 		/obj/item/reagent_containers/syringe,//blood samples for pod cloning
 		/obj/item/reagent_containers/dropper,//on request by forums users
 		/obj/item/plant_analyzer,
@@ -228,7 +228,7 @@
 		/obj/item/dnainjector,
 		/obj/item/reagent_containers/dropper,
 		/obj/item/reagent_containers/cup/beaker,
-		/obj/item/reagent_containers/glass/bottle,
+		/obj/item/reagent_containers/cup/bottle,
 		/obj/item/reagent_containers/pill,
 		/obj/item/reagent_containers/syringe,
 		/obj/item/reagent_containers/medspray,

@@ -1,5 +1,5 @@
 
-/obj/item/reagent_containers/glass
+/obj/item/reagent_containers/cup
 	name = "glass"
 	amount_per_transfer_from_this = 10
 	possible_transfer_amounts = list(5, 10, 15, 20, 25, 30, 50)
@@ -9,7 +9,7 @@
 	spillable = TRUE
 	resistance_flags = ACID_PROOF
 
-/obj/item/reagent_containers/glass/attack(mob/M, mob/user, obj/target)
+/obj/item/reagent_containers/cup/attack(mob/M, mob/user, obj/target)
 	if(!canconsume(M, user))
 		return
 
@@ -53,7 +53,7 @@
 			addtimer(CALLBACK(reagents, TYPE_PROC_REF(/datum/reagents, trans_to), M, 5), 5)
 			playsound(M.loc,'sound/items/drink.ogg', rand(10,50), 1)
 
-/obj/item/reagent_containers/glass/afterattack(obj/target, mob/user, proximity)
+/obj/item/reagent_containers/cup/afterattack(obj/target, mob/user, proximity)
 	. = ..()
 	if((!proximity) || !check_allowed_items(target,target_self=1))
 		return
@@ -92,7 +92,7 @@
 			reagents.reaction(target, TOUCH)
 			reagents.clear_reagents()
 
-/obj/item/reagent_containers/glass/attackby(obj/item/I, mob/user, params)
+/obj/item/reagent_containers/cup/attackby(obj/item/I, mob/user, params)
 	var/hotness = I.is_hot()
 	if(hotness && reagents)
 		reagents.expose_temperature(hotness)
@@ -221,7 +221,7 @@
 	name = "epinephrine reserve tank"
 	list_reagents = list(/datum/reagent/medicine/epinephrine = 50)
 
-/obj/item/reagent_containers/glass/beaker/synthflesh
+/obj/item/reagent_containers/cup/beaker/synthflesh
 	list_reagents = list(/datum/reagent/medicine/synthflesh = 50)
 
 /obj/item/reagent_containers/cup/bucket
@@ -290,7 +290,7 @@
 		return
 	return ..()
 
-/obj/item/reagent_containers/glass/waterbottle
+/obj/item/reagent_containers/cup/waterbottle
 	name = "bottle of water"
 	desc = "A bottle of water filled at an old Earth bottling facility."
 	icon = 'icons/obj/drinks.dmi'
@@ -309,19 +309,19 @@
 	var/mutable_appearance/cap_overlay
 	var/flip_chance = 10
 
-/obj/item/reagent_containers/glass/waterbottle/Initialize(mapload)
+/obj/item/reagent_containers/cup/waterbottle/Initialize(mapload)
 	. = ..()
 	cap_overlay = mutable_appearance(icon, cap_icon_state)
 	if(cap_on)
 		spillable = FALSE
 		update_icon()
 
-/obj/item/reagent_containers/glass/waterbottle/update_overlays()
+/obj/item/reagent_containers/cup/waterbottle/update_overlays()
 	. = ..()
 	if(cap_on)
 		. += cap_overlay
 
-/obj/item/reagent_containers/glass/waterbottle/examine(mob/user)
+/obj/item/reagent_containers/cup/waterbottle/examine(mob/user)
 	. = ..()
 	if(cap_lost)
 		. += "<span class='notice'>The cap seems to be missing.</span>"
@@ -330,7 +330,7 @@
 	else
 		. += "<span class='notice'>The cap has been taken off. Alt-click to put a cap on.</span>"
 
-/obj/item/reagent_containers/glass/waterbottle/AltClick(mob/user)
+/obj/item/reagent_containers/cup/waterbottle/AltClick(mob/user)
 	if(!user.canUseTopic(src, BE_CLOSE))
 		return
 	if(cap_lost)
@@ -353,35 +353,35 @@
 		to_chat(user, "<span class='notice'>You put the cap on [src].</span>")
 	update_icon()
 
-/obj/item/reagent_containers/glass/waterbottle/is_refillable()
+/obj/item/reagent_containers/cup/waterbottle/is_refillable()
 	if(cap_on)
 		return FALSE
 	. = ..()
 
-/obj/item/reagent_containers/glass/waterbottle/is_drainable()
+/obj/item/reagent_containers/cup/waterbottle/is_drainable()
 	if(cap_on)
 		return FALSE
 	. = ..()
 
-/obj/item/reagent_containers/glass/waterbottle/attack(mob/M, mob/user, obj/target)
+/obj/item/reagent_containers/cup/waterbottle/attack(mob/M, mob/user, obj/target)
 	if(cap_on && reagents.total_volume && istype(M))
 		to_chat(user, "<span class='warning'>You must remove the cap before you can do that!</span>")
 		return
 	. = ..()
 
-/obj/item/reagent_containers/glass/waterbottle/afterattack(obj/target, mob/user, proximity)
+/obj/item/reagent_containers/cup/waterbottle/afterattack(obj/target, mob/user, proximity)
 	if(cap_on && (target.is_refillable() || target.is_drainable() || (reagents.total_volume && user.a_intent == INTENT_HARM)))
 		to_chat(user, "<span class='warning'>You must remove the cap before you can do that!</span>")
 		return
 
-	else if(istype(target, /obj/item/reagent_containers/glass/waterbottle))
-		var/obj/item/reagent_containers/glass/waterbottle/WB = target
+	else if(istype(target, /obj/item/reagent_containers/cup/waterbottle))
+		var/obj/item/reagent_containers/cup/waterbottle/WB = target
 		if(WB.cap_on)
 			to_chat(user, "<span class='warning'>[WB] has a cap firmly twisted on!</span>")
 	. = ..()
 
 // heehoo bottle flipping
-/obj/item/reagent_containers/glass/waterbottle/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+/obj/item/reagent_containers/cup/waterbottle/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
 	. = ..()
 	if(cap_on && reagents.total_volume)
 		if(prob(flip_chance)) // landed upright
@@ -391,15 +391,15 @@
 		else // landed on it's side
 			animate(src, transform = matrix(prob(50)? 90 : -90, MATRIX_ROTATE), time = 3, loop = 0)
 
-/obj/item/reagent_containers/glass/waterbottle/pickup(mob/user)
+/obj/item/reagent_containers/cup/waterbottle/pickup(mob/user)
 	..()
 	animate(src, transform = null, time = 1, loop = 0)
 
-/obj/item/reagent_containers/glass/waterbottle/empty
+/obj/item/reagent_containers/cup/waterbottle/empty
 	list_reagents = list()
 	cap_on = FALSE
 
-/obj/item/reagent_containers/glass/waterbottle/large
+/obj/item/reagent_containers/cup/waterbottle/large
 	desc = "A fresh commercial-sized bottle of water."
 	icon_state = "largebottle"
 	custom_materials = list(/datum/material/glass=0)
@@ -409,7 +409,7 @@
 	cap_icon_state = "bottle_cap"
 	icon_state_preview = "waterbottle_large"
 
-/obj/item/reagent_containers/glass/waterbottle/large/empty
+/obj/item/reagent_containers/cup/waterbottle/large/empty
 	list_reagents = list()
 	cap_on = FALSE
 
@@ -420,7 +420,7 @@
 	icon_state = "pestle"
 	force = 7
 
-/obj/item/reagent_containers/glass/mortar
+/obj/item/reagent_containers/cup/mortar
 	name = "mortar"
 	desc = "A specially formed bowl of ancient design. It is possible to crush or juice items placed in it using a pestle; however the process, unlike modern methods, is slow and physically exhausting. Alt click to eject the item."
 	icon_state = "mortar"
@@ -432,7 +432,7 @@
 	spillable = TRUE
 	var/obj/item/grinded
 
-/obj/item/reagent_containers/glass/mortar/AltClick(mob/user)
+/obj/item/reagent_containers/cup/mortar/AltClick(mob/user)
 	if(!user.canUseTopic(src, BE_CLOSE))
 		return
 	if(grinded)
@@ -440,7 +440,7 @@
 		grinded = null
 		to_chat(user, "You eject the item inside.")
 
-/obj/item/reagent_containers/glass/mortar/attackby(obj/item/I, mob/living/carbon/human/user)
+/obj/item/reagent_containers/cup/mortar/attackby(obj/item/I, mob/living/carbon/human/user)
 	..()
 	if(istype(I,/obj/item/pestle))
 		if(grinded)
@@ -482,12 +482,12 @@
 		return
 	to_chat(user, "<span class='danger'>You can't grind this!</span>")
 
-/obj/item/reagent_containers/glass/saline
+/obj/item/reagent_containers/cup/saline
 	name = "saline canister"
 	volume = 5000
 	list_reagents = list(/datum/reagent/medicine/salglu_solution = 5000)
 
-/obj/item/reagent_containers/glass/saline/Moved(atom/OldLoc, Dir)
+/obj/item/reagent_containers/cup/saline/Moved(atom/OldLoc, Dir)
 	if (loc && !istype(loc, /obj/machinery/iv_drip/saline))
 		qdel(src)
 		return

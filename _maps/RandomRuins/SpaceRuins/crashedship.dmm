@@ -1221,7 +1221,7 @@
 /turf/template_noop,
 /area/space/nearstation)
 "Fd" = (
-/obj/item/reagent_containers/glass/bucket,
+/obj/item/reagent_containers/cup/bucket,
 /obj/effect/turf_decal/tile/bar/opposingcorners,
 /turf/open/floor/iron,
 /area/awaymission/BMPship/Midship)
@@ -1711,7 +1711,7 @@
 /turf/template_noop,
 /area/space/nearstation)
 "Pd" = (
-/obj/item/reagent_containers/glass/bucket,
+/obj/item/reagent_containers/cup/bucket,
 /turf/open/floor/iron/showroomfloor,
 /area/awaymission/BMPship/Aft)
 "Pf" = (

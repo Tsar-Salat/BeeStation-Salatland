@@ -44,7 +44,7 @@
 /area/template_noop)
 "i" = (
 /obj/structure/table/wood/bar,
-/obj/item/reagent_containers/glass/rag{
+/obj/item/reagent_containers/cup/rag{
 	pixel_x = 10;
 	pixel_y = 1
 	},

@@ -51,8 +51,8 @@
 			/obj/item/book/granter/spell/mimery_blockade,
 			/obj/item/gun/ballistic/rifle/boltaction/enchanted,
 			/obj/item/melee/classic_baton/police/telescopic,
-			/obj/item/reagent_containers/glass/bottle/random_virus/minor,
-			/obj/item/reagent_containers/glass/bottle/random_virus,
+			/obj/item/reagent_containers/cup/bottle/random_virus/minor,
+			/obj/item/reagent_containers/cup/bottle/random_virus,
 			/obj/item/gun/ballistic/revolver/nagant
 		)
 

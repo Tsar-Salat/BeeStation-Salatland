@@ -511,7 +511,7 @@
 /turf/open/floor/iron/white,
 /area/ruin/unpowered)
 "SR" = (
-/obj/item/reagent_containers/glass/beaker,
+/obj/item/reagent_containers/cup/beaker,
 /obj/structure/table,
 /obj/effect/turf_decal/tile/blue/half/contrasted{
 	dir = 8

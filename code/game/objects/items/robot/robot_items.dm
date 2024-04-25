@@ -929,7 +929,7 @@
 	desc = "A special apparatus for carrying beakers without spilling the contents."
 	icon_state = "borg_beaker_apparatus"
 	storable = list(/obj/item/reagent_containers/cup/beaker,
-				/obj/item/reagent_containers/glass/bottle)
+				/obj/item/reagent_containers/cup/bottle)
 
 /obj/item/borg/apparatus/beaker/Initialize(mapload)
 	. = ..()
@@ -1040,7 +1040,7 @@
 	/obj/item/clothing/mask/cigarette,
 	/obj/item/storage/fancy/cigarettes,
 	/obj/item/reagent_containers/cup/beaker,
-	/obj/item/reagent_containers/glass/bottle,
+	/obj/item/reagent_containers/cup/bottle,
 	/obj/item/reagent_containers/cup/bucket
 	)
 

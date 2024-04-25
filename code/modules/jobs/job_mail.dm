@@ -27,7 +27,7 @@
 /datum/job/bartender
 	mail_goodies = list(
 		/obj/item/storage/box/rubbershot = 30,
-		/obj/item/reagent_containers/glass/bottle/clownstears = 10,
+		/obj/item/reagent_containers/cup/bottle/clownstears = 10,
 		/obj/item/stack/sheet/mineral/plasma = 5,
 		/obj/item/stack/sheet/mineral/uranium = 5,
 		/obj/item/reagent_containers/cup/glass/bottle/fernet = 3,
@@ -38,9 +38,9 @@
 //BOTANIST
 /datum/job/botanist
 	mail_goodies = list(
-		/obj/item/reagent_containers/glass/bottle/saltpetre = 15,
-		/obj/item/reagent_containers/glass/bottle/diethylamine = 15,
-		/obj/item/reagent_containers/glass/bottle/toxin/mutagen = 12,
+		/obj/item/reagent_containers/cup/bottle/saltpetre = 15,
+		/obj/item/reagent_containers/cup/bottle/diethylamine = 15,
+		/obj/item/reagent_containers/cup/bottle/toxin/mutagen = 12,
 		/obj/item/grenade/chem_grenade/antiweed = 10,
 		/obj/item/gun/energy/floragun = 5,
 		// These are strong, rare seeds, so use sparingly.
@@ -95,11 +95,11 @@
 //CHEMIST
 /datum/job/chemist
 	mail_goodies = list(
-		/obj/item/reagent_containers/glass/bottle/flash_powder = 15,
+		/obj/item/reagent_containers/cup/bottle/flash_powder = 15,
 		/obj/item/reagent_containers/dropper = 10,
 		/obj/item/reagent_containers/cup/beaker/large = 10,
 		/obj/item/reagent_containers/cup/beaker/plastic = 10,
-		/obj/item/reagent_containers/glass/bottle/ketamine = 5,
+		/obj/item/reagent_containers/cup/bottle/ketamine = 5,
 	)
 
 //CHIEF ENGINEER
@@ -146,7 +146,7 @@
 //COOK
 /datum/job/cook
 	mail_goodies = list(
-		/obj/item/reagent_containers/glass/bottle/caramel = 20,
+		/obj/item/reagent_containers/cup/bottle/caramel = 20,
 		/obj/item/reagent_containers/food/condiment/flour = 20,
 		/obj/item/reagent_containers/food/condiment/rice = 20,
 		/obj/item/reagent_containers/food/condiment/enzyme = 15,
@@ -303,7 +303,7 @@
 	mail_goodies = list(
 		/obj/item/healthanalyzer/advanced = 10,
 		/obj/item/storage/pill_bottle/epinephrine = 8,
-		/obj/item/reagent_containers/glass/bottle/formaldehyde = 6,
+		/obj/item/reagent_containers/cup/bottle/formaldehyde = 6,
 		/obj/effect/spawner/mail/advmedtool = 4,
 		/obj/effect/spawner/mail/organminor = 5,
 		/obj/effect/spawner/mail/organmajor = 1,
@@ -415,9 +415,9 @@
 		//keep your workplace clean, please.
 		/obj/item/reagent_containers/spray/cleaner = 15,
 		/obj/item/food/monkeycube = 10,
-		/obj/item/reagent_containers/glass/bottle/formaldehyde = 10,
-		/obj/item/reagent_containers/glass/bottle/random_virus/minor = 10,
-		/obj/item/reagent_containers/glass/bottle/random_virus = 5,
+		/obj/item/reagent_containers/cup/bottle/formaldehyde = 10,
+		/obj/item/reagent_containers/cup/bottle/random_virus/minor = 10,
+		/obj/item/reagent_containers/cup/bottle/random_virus = 5,
 		/obj/item/stock_parts/scanning_module/phasic = 5,
 		//hampter.
 		/obj/item/choice_beacon/pet/hamster = 5,

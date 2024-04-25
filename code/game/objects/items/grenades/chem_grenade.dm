@@ -7,7 +7,7 @@
 	force = 2
 	var/stage = GRENADE_EMPTY
 	var/list/obj/item/reagent_containers/cup/beakers = list()
-	var/list/allowed_containers = list(/obj/item/reagent_containers/cup/beaker, /obj/item/reagent_containers/glass/bottle, /obj/item/reagent_containers/glass/waterbottle)
+	var/list/allowed_containers = list(/obj/item/reagent_containers/cup/beaker, /obj/item/reagent_containers/cup/bottle, /obj/item/reagent_containers/cup/waterbottle)
 	var/list/banned_containers = list(/obj/item/reagent_containers/cup/beaker/bluespace) //Containers to exclude from specific grenade subtypes
 	var/affected_area = 3
 	var/ignition_temp = 10 // The amount of heat added to the reagents when this grenade goes off.
@@ -37,7 +37,7 @@
 	if(user.can_see_reagents())
 		if(beakers.len)
 			. += "<span class='notice'>You scan the grenade and detect the following reagents:</span>"
-			for(var/obj/item/reagent_containers/glass/G in beakers)
+			for(var/obj/item/reagent_containers/cup/G in beakers)
 				for(var/datum/reagent/R in G.reagents.reagent_list)
 					. += "<span class='notice'>[R.volume] units of [R.name] in the [G.name].</span>"
 			if(beakers.len == 1)
@@ -48,7 +48,7 @@
 		if(beakers.len == 2 && beakers[1].name == beakers[2].name)
 			. += "<span class='notice'>You see two [beakers[1].name]s inside the grenade.</span>"
 		else
-			for(var/obj/item/reagent_containers/glass/G in beakers)
+			for(var/obj/item/reagent_containers/cup/G in beakers)
 				. += "<span class='notice'>You see a [G.name] inside the grenade.</span>"
 
 /obj/item/grenade/chem_grenade/attack_self(mob/user)
@@ -194,7 +194,7 @@
 		return
 
 	var/list/datum/reagents/reactants = list()
-	for(var/obj/item/reagent_containers/glass/G in beakers)
+	for(var/obj/item/reagent_containers/cup/G in beakers)
 		reactants += G.reagents
 
 	var/turf/detonation_turf = get_turf(src)
@@ -221,7 +221,7 @@
 	desc = "A custom made large grenade. Larger splash range and increased ignition temperature compared to basic grenades. Fits exotic and bluespace based containers."
 	casedesc = "This casing affects a larger area than the basic model and can fit exotic containers, including slime cores and bluespace beakers. Heats contents by 25 K upon ignition."
 	icon_state = "large_grenade"
-	allowed_containers = list(/obj/item/reagent_containers/glass, /obj/item/reagent_containers/food/condiment, /obj/item/reagent_containers/cup/glass)
+	allowed_containers = list(/obj/item/reagent_containers/cup, /obj/item/reagent_containers/food/condiment, /obj/item/reagent_containers/cup/glass)
 	banned_containers = list()
 	affected_area = 5
 	ignition_temp = 25 // Large grenades are slightly more effective at setting off heat-sensitive mixtures than smaller grenades.
@@ -235,7 +235,7 @@
 
 	for(var/obj/item/slime_extract/S in beakers)
 		if(S.Uses)
-			for(var/obj/item/reagent_containers/glass/G in beakers)
+			for(var/obj/item/reagent_containers/cup/G in beakers)
 				G.reagents.trans_to(S, G.reagents.total_volume)
 
 			//If there is still a core (sometimes it's used up)
@@ -244,7 +244,7 @@
 
 			if(S)
 				if(S.reagents?.total_volume)
-					for(var/obj/item/reagent_containers/glass/G in beakers)
+					for(var/obj/item/reagent_containers/cup/G in beakers)
 						S.reagents.trans_to(G, S.reagents.total_volume)
 				else
 					S.forceMove(get_turf(src))

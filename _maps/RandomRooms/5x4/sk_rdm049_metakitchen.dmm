@@ -33,7 +33,7 @@
 "f" = (
 /obj/structure/table,
 /obj/item/kitchen/rollingpin,
-/obj/item/reagent_containers/glass/beaker,
+/obj/item/reagent_containers/cup/beaker,
 /turf/open/floor/plating{
 	broken = 1
 	},

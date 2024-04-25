@@ -115,7 +115,7 @@
 "aB" = (
 /obj/structure/rack,
 /obj/item/mop,
-/obj/item/reagent_containers/glass/bucket,
+/obj/item/reagent_containers/cup/bucket,
 /obj/machinery/light/small,
 /obj/item/paper/fluff/itemnotice,
 /turf/open/floor/pod/dark,

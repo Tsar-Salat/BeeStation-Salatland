@@ -27,13 +27,13 @@
 	if(machine_stat & NOPOWER)
 		return
 	if((reagents.total_volume >= bottle_size) && (stored_bottles.len < max_stored_bottles))
-		var/obj/item/reagent_containers/glass/bottle/P = new(src)
+		var/obj/item/reagent_containers/cup/bottle/P = new(src)
 		reagents.trans_to(P, bottle_size)
 		P.name = bottle_name
 		stored_bottles += P
 	if(stored_bottles.len)
 		var/bottle_amount = 0
-		for(var/obj/item/reagent_containers/glass/bottle/P in loc)
+		for(var/obj/item/reagent_containers/cup/bottle/P in loc)
 			bottle_amount++
 			if(bottle_amount >= max_floor_bottles) //too much so just stop
 				break

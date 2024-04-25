@@ -404,9 +404,9 @@
 						reagents.trans_to(P, vol_each, transfered_by = usr)
 					. = TRUE
 				if("bottle")
-					var/obj/item/reagent_containers/glass/bottle/P
+					var/obj/item/reagent_containers/cup/bottle/P
 					for(var/i in 1 to amount)
-						P = new/obj/item/reagent_containers/glass/bottle(drop_location())
+						P = new/obj/item/reagent_containers/cup/bottle(drop_location())
 						P.name = trim("[name] bottle")
 						P.label_name = trim(name)
 						adjust_item_drop_location(P)

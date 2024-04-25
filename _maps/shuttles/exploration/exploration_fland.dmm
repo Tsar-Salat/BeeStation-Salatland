@@ -650,7 +650,7 @@
 /area/shuttle/exploration)
 "JR" = (
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/glass/rag{
+/obj/item/reagent_containers/cup/rag{
 	pixel_y = 5
 	},
 /obj/item/reagent_containers/cup/glass/shaker{
@@ -788,7 +788,7 @@
 	dir = 8
 	},
 /obj/item/mop,
-/obj/item/reagent_containers/glass/bucket,
+/obj/item/reagent_containers/cup/bucket,
 /obj/item/reagent_containers/spray/cleaner,
 /obj/machinery/light/small{
 	dir = 8

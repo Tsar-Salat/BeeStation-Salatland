@@ -1241,7 +1241,7 @@
 /obj/effect/decal/cleanable/oil{
 	pixel_y = 11
 	},
-/obj/item/reagent_containers/glass/bucket{
+/obj/item/reagent_containers/cup/bucket{
 	pixel_x = -8;
 	pixel_y = 2
 	},

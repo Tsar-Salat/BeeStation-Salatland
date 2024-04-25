@@ -3,8 +3,8 @@
 /obj/item/reagent_containers/cup/glass/drinkingglass
 	name = "drinking glass"
 	desc = "Your standard drinking glass."
-	custom_price = 5
 	icon_state = "glass_empty"
+	base_icon_state = "glass_empty"
 	amount_per_transfer_from_this = 10
 	volume = 50
 	custom_materials = list(/datum/material/glass=500)
@@ -14,6 +14,7 @@
 	obj_flags = UNIQUE_RENAME
 	drop_sound = 'sound/items/handling/drinkglass_drop.ogg'
 	pickup_sound =  'sound/items/handling/drinkglass_pickup.ogg'
+	custom_price = PAYCHECK_
 
 /obj/item/reagent_containers/cup/glass/drinkingglass/on_reagent_change(changetype)
 	cut_overlays()

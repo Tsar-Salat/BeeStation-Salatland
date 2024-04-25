@@ -157,7 +157,7 @@
 /area/shuttle/hunter)
 "my" = (
 /obj/structure/reagent_dispensers/watertank,
-/obj/item/reagent_containers/glass/bucket,
+/obj/item/reagent_containers/cup/bucket,
 /obj/item/storage/bag/trash{
 	pixel_x = 6
 	},

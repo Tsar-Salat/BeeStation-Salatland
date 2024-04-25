@@ -3485,7 +3485,7 @@
 	pixel_x = -6;
 	pixel_y = 3
 	},
-/obj/item/reagent_containers/glass/bucket{
+/obj/item/reagent_containers/cup/bucket{
 	pixel_x = 4;
 	pixel_y = -5
 	},
@@ -9983,7 +9983,7 @@
 	})
 "eNg" = (
 /obj/effect/turf_decal/siding/wood,
-/obj/item/reagent_containers/glass/bucket{
+/obj/item/reagent_containers/cup/bucket{
 	pixel_x = 12;
 	pixel_y = 7
 	},
@@ -10388,7 +10388,7 @@
 /area/engine/engineering)
 "eVT" = (
 /obj/structure/table/glass,
-/obj/item/reagent_containers/glass/beaker/large,
+/obj/item/reagent_containers/cup/beaker/large,
 /obj/effect/turf_decal/stripes/corner{
 	dir = 4
 	},
@@ -18179,7 +18179,7 @@
 	})
 "iYE" = (
 /obj/effect/turf_decal/bot,
-/obj/item/reagent_containers/glass/bucket,
+/obj/item/reagent_containers/cup/bucket,
 /obj/structure/closet/secure_closet/hydroponics{
 	req_access = null;
 	req_one_access_txt = "28;25;35"
@@ -19612,11 +19612,11 @@
 	icon_state = "1-2"
 	},
 /obj/structure/table,
-/obj/item/reagent_containers/glass/beaker/cryoxadone{
+/obj/item/reagent_containers/cup/beaker/cryoxadone{
 	pixel_x = -2;
 	pixel_y = 12
 	},
-/obj/item/reagent_containers/glass/beaker/cryoxadone{
+/obj/item/reagent_containers/cup/beaker/cryoxadone{
 	pixel_x = -6;
 	pixel_y = 9
 	},
@@ -19645,7 +19645,7 @@
 	},
 /obj/machinery/vending/wallmed{
 	pixel_y = 31;
-	products = list(/obj/item/stack/medical/gauze = 4, /obj/item/reagent_containers/hypospray/medipen = 6, /obj/item/reagent_containers/hypospray/medipen/dexalin = 3, /obj/item/reagent_containers/glass/bottle/epinephrine = 2, /obj/item/reagent_containers/glass/bottle/charcoal = 2)
+	products = list(/obj/item/stack/medical/gauze = 4, /obj/item/reagent_containers/hypospray/medipen = 6, /obj/item/reagent_containers/hypospray/medipen/dexalin = 3, /obj/item/reagent_containers/cup/bottle/epinephrine = 2, /obj/item/reagent_containers/cup/bottle/charcoal = 2)
 	},
 /turf/open/floor/carpet/green,
 /area/crew_quarters/cafeteria)
@@ -22032,7 +22032,7 @@
 /area/science/mixing)
 "lbc" = (
 /obj/structure/table,
-/obj/item/reagent_containers/glass/bucket,
+/obj/item/reagent_containers/cup/bucket,
 /obj/effect/turf_decal/tile/dark_green/anticorner/contrasted{
 	dir = 1
 	},
@@ -22685,7 +22685,7 @@
 	dir = 10
 	},
 /obj/machinery/biogenerator,
-/obj/item/reagent_containers/glass/bucket,
+/obj/item/reagent_containers/cup/bucket,
 /turf/open/floor/prison/dark,
 /area/security/prison)
 "lsH" = (
@@ -23601,7 +23601,7 @@
 /area/asteroid/paradise)
 "lRO" = (
 /obj/machinery/biogenerator,
-/obj/item/reagent_containers/glass/bucket,
+/obj/item/reagent_containers/cup/bucket,
 /obj/effect/turf_decal/bot,
 /obj/machinery/door/window/eastright{
 	dir = 8;
@@ -30278,7 +30278,7 @@
 	pixel_x = -5;
 	pixel_y = 8
 	},
-/obj/item/reagent_containers/glass/beaker{
+/obj/item/reagent_containers/cup/beaker{
 	pixel_x = 6;
 	pixel_y = 10
 	},
@@ -30286,7 +30286,7 @@
 	pixel_x = -3;
 	pixel_y = -4
 	},
-/obj/item/reagent_containers/glass/beaker/large{
+/obj/item/reagent_containers/cup/beaker/large{
 	pixel_x = 9;
 	pixel_y = 1
 	},
@@ -31209,7 +31209,7 @@
 	pixel_x = -8;
 	pixel_y = 8
 	},
-/obj/item/reagent_containers/glass/beaker{
+/obj/item/reagent_containers/cup/beaker{
 	pixel_x = 6;
 	pixel_y = 8
 	},
@@ -31377,7 +31377,7 @@
 	pixel_x = -2;
 	pixel_y = 13
 	},
-/obj/item/reagent_containers/glass/bowl,
+/obj/item/reagent_containers/cup/bowl,
 /obj/item/clothing/head/chefhat{
 	pixel_x = 5;
 	pixel_y = 4
@@ -34973,7 +34973,7 @@
 	pixel_y = -33
 	},
 /obj/item/book/manual/hydroponics_pod_people,
-/obj/item/reagent_containers/glass/bucket,
+/obj/item/reagent_containers/cup/bucket,
 /turf/open/floor/iron/grid/steel,
 /area/hydroponics)
 "rSK" = (
@@ -44143,7 +44143,7 @@
 	pixel_x = -1;
 	pixel_y = 12
 	},
-/obj/item/reagent_containers/glass/bucket{
+/obj/item/reagent_containers/cup/bucket{
 	pixel_x = 9;
 	pixel_y = 3
 	},

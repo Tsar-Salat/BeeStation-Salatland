@@ -40,7 +40,7 @@
 "e" = (
 /obj/structure/table/wood/poker,
 /obj/item/reagent_containers/cup/glass/shaker,
-/obj/item/reagent_containers/glass/beaker/cryoxadone,
+/obj/item/reagent_containers/cup/beaker/cryoxadone,
 /obj/item/reagent_containers/dropper,
 /turf/open/floor/plating,
 /area/template_noop)

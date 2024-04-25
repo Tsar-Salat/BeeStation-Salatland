@@ -14,7 +14,7 @@
 	var/static/list/drip_containers = typecacheof(list(/obj/item/reagent_containers/blood,
 									/obj/item/reagent_containers/chem_bag,
 									/obj/item/reagent_containers/food,
-									/obj/item/reagent_containers/glass))
+									/obj/item/reagent_containers/cup))
 	var/can_convert = TRUE // If it can be made into an anesthetic machine or not
 
 /obj/machinery/iv_drip/Initialize(mapload)
@@ -260,7 +260,7 @@
 
 /obj/machinery/iv_drip/saline/Initialize(mapload)
 	. = ..()
-	beaker = new /obj/item/reagent_containers/glass/saline(src)
+	beaker = new /obj/item/reagent_containers/cup/saline(src)
 
 /obj/machinery/iv_drip/saline/ComponentInitialize()
 	. = ..()
