@@ -135,12 +135,12 @@ window "mapwindow"
 		size = 640x480
 		anchor1 = 0,0
 		anchor2 = 100,100
-		font-family = "Arial"
-		font-size = 7
+		font-family = "Grand9K Pixel"
+		font-size = 6pt
 		text-color = none
 		is-default = true
 		saved-params = "zoom;letterbox;zoom-mode"
-		style=".center { text-align: center; } .maptext { font-family: 'Small Fonts'; font-size: 7px; -dm-text-outline: 1px black; color: white; } .small { font-size: 6px; } .big { font-size: 8px; } .reallybig { font-size: 8px; } .extremelybig { font-size: 8px; } .greentext { color: #00FF00; font-size: 7px; } .redtext { color: #FF0000; font-size: 7px; } .clowntext { color: #FF69Bf !important; font-size: 9px;  font-weight: bold; } .megaphone { font-size: 9px; } .his_grace { color: #15D512; } .hypnophrase { color: #0d0d0d; font-weight: bold; } .yell { font-weight: bold; } .italics { font-size: 6px; } .emote { font-size: 6px; }"
+		style=".center { text-align: center; } .maptext { font-family: 'Grand9K Pixel'; font-size: 6pt; -dm-text-outline: 1px black; color: white; } .small { font-family: 'TinyUnicode'; font-size: 12pt; line-height: 0.75; } .big { font-size: 8pt; } .reallybig { font-size: 8pt; } .extremelybig { font-size: 8pt; } .greentext { color: #00FF00; font-size: 6pt; } .redtext { color: #FF0000; font-size: 6pt; } .clowntext { color: #FF69BF !important; font-size: 9pt;  font-weight: bold; } .megaphone { font-size: 9pt; } .his_grace { color: #15D512; } .hypnophrase { color: #0d0d0d; font-weight: bold; } .yell { font-weight: bold; } .italics { font-family: 'TinyUnicode'; font-size: 12pt; line-height: 0.75; } .emote { font-size: 6pt; }"
 	elem "status_bar"
 		type = LABEL
 		pos = 0,464
