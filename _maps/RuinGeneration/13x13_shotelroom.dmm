@@ -19,7 +19,7 @@
 /area/ruin/unpowered)
 "d" = (
 /obj/structure/table/wood/fancy/purple,
-/obj/item/reagent_containers/cup/glass/bottle/orangejuice{
+/obj/item/reagent_containers/cup/glass/bottle/juice/orangejuice{
 	pixel_x = 2;
 	pixel_y = 7
 	},

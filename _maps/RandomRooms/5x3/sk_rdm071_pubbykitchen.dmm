@@ -21,7 +21,7 @@
 /obj/structure/table,
 /obj/item/reagent_containers/cup/bowl,
 /obj/item/reagent_containers/cup/bowl,
-/obj/item/reagent_containers/food/condiment/rice,
+/obj/item/reagent_containers/condiment/rice,
 /obj/machinery/light/small{
 	dir = 1
 	},

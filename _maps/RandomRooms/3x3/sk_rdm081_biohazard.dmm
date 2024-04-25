@@ -44,7 +44,7 @@
 	pixel_x = -9;
 	pixel_y = 3
 	},
-/obj/item/reagent_containers/cup/glass/soda_cans/canned_laughter{
+/obj/item/reagent_containers/cup/soda_cans/canned_laughter{
 	pixel_x = -2;
 	pixel_y = 9
 	},

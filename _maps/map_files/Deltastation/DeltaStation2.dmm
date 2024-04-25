@@ -1367,11 +1367,11 @@
 /area/maintenance/starboard/fore)
 "ajQ" = (
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	pixel_x = -8;
 	pixel_y = 5
 	},
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	pixel_x = -8
 	},
 /obj/effect/turf_decal/delivery,
@@ -9768,7 +9768,7 @@
 /obj/structure/table/reinforced,
 /obj/item/storage/bag/tray,
 /obj/effect/turf_decal/bot,
-/obj/item/reagent_containers/food/condiment/flour,
+/obj/item/reagent_containers/condiment/flour,
 /turf/open/floor/iron,
 /area/crew_quarters/kitchen)
 "bgu" = (
@@ -10557,7 +10557,7 @@
 "blv" = (
 /obj/structure/table/reinforced,
 /obj/item/food/mint,
-/obj/item/reagent_containers/food/condiment/enzyme{
+/obj/item/reagent_containers/condiment/enzyme{
 	pixel_y = 5
 	},
 /obj/effect/turf_decal/bot,
@@ -10597,11 +10597,11 @@
 /area/crew_quarters/kitchen)
 "blA" = (
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	pixel_x = -8;
 	pixel_y = 5
 	},
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	pixel_x = -8
 	},
 /obj/item/knife/kitchen,
@@ -44718,7 +44718,7 @@
 /area/science/mixing)
 "hGh" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/cup/glass/bottle/orangejuice,
+/obj/item/reagent_containers/cup/glass/bottle/juice/orangejuice,
 /obj/effect/turf_decal/tile/red/opposingcorners,
 /obj/effect/turf_decal/tile/yellow/opposingcorners{
 	dir = 1
@@ -47630,7 +47630,7 @@
 /area/hallway/primary/central)
 "iBx" = (
 /obj/structure/bonfire,
-/obj/item/reagent_containers/cup/glass/bottle/orangejuice{
+/obj/item/reagent_containers/cup/glass/bottle/juice/orangejuice{
 	desc = "For the weary spacemen on their quest to rekindle the first plasma fire.";
 	name = "Carton of Estus"
 	},
@@ -48570,7 +48570,7 @@
 /area/science/shuttledock)
 "iVm" = (
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/cup/glass/soda_cans/thirteenloko,
+/obj/item/reagent_containers/cup/soda_cans/thirteenloko,
 /obj/machinery/firealarm{
 	dir = 4;
 	pixel_x = -24
@@ -64322,7 +64322,7 @@
 /area/hallway/secondary/command)
 "ohm" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/cup/glass/soda_cans/cola,
+/obj/item/reagent_containers/cup/soda_cans/cola,
 /obj/effect/turf_decal/tile/red/opposingcorners,
 /obj/effect/turf_decal/tile/yellow/opposingcorners{
 	dir = 1
@@ -73104,7 +73104,7 @@
 /area/security/checkpoint/escape)
 "rgr" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/cup/glass/soda_cans/dr_gibb,
+/obj/item/reagent_containers/cup/soda_cans/dr_gibb,
 /obj/machinery/camera{
 	c_tag = "Science - Break Room";
 	dir = 8;
@@ -75061,11 +75061,11 @@
 /turf/open/floor/iron,
 /area/science/research)
 "rMB" = (
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	pixel_x = -8;
 	pixel_y = 5
 	},
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	pixel_x = -8
 	},
 /obj/structure/table/wood,
@@ -77311,7 +77311,7 @@
 /area/hallway/secondary/entry)
 "sCM" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/cup/glass/soda_cans/dr_gibb,
+/obj/item/reagent_containers/cup/soda_cans/dr_gibb,
 /obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer4,
 /obj/effect/turf_decal/tile/red/opposingcorners,
 /obj/effect/turf_decal/tile/yellow/opposingcorners{
@@ -78705,7 +78705,7 @@
 "tcc" = (
 /obj/structure/table/reinforced,
 /obj/item/kitchen/rollingpin,
-/obj/item/reagent_containers/food/condiment/flour{
+/obj/item/reagent_containers/condiment/flour{
 	pixel_x = -2;
 	pixel_y = 13
 	},
@@ -79024,11 +79024,11 @@
 "tku" = (
 /obj/structure/table/reinforced,
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/item/reagent_containers/cup/glass/soda_cans/cola{
+/obj/item/reagent_containers/cup/soda_cans/cola{
 	pixel_x = 7;
 	pixel_y = -1
 	},
-/obj/item/reagent_containers/cup/glass/soda_cans/cola{
+/obj/item/reagent_containers/cup/soda_cans/cola{
 	pixel_x = -7;
 	pixel_y = 5
 	},
@@ -79633,10 +79633,10 @@
 	name = "Kitchen Counter Shutters"
 	},
 /obj/effect/turf_decal/delivery,
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	pixel_x = -8
 	},
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	pixel_x = -8;
 	pixel_y = 5
 	},
@@ -90198,7 +90198,7 @@
 /obj/item/folder/yellow,
 /obj/item/pen,
 /obj/effect/turf_decal/bot,
-/obj/item/reagent_containers/cup/glass/soda_cans/thirteenloko,
+/obj/item/reagent_containers/cup/soda_cans/thirteenloko,
 /turf/open/floor/iron,
 /area/engine/break_room)
 "wTc" = (

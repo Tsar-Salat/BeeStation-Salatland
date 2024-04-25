@@ -11904,8 +11904,8 @@
 /obj/effect/turf_decal/bot,
 /obj/structure/table,
 /obj/effect/turf_decal/tile/bar/opposingcorners,
-/obj/item/reagent_containers/food/condiment/sugar,
-/obj/item/reagent_containers/food/condiment/flour{
+/obj/item/reagent_containers/condiment/sugar,
+/obj/item/reagent_containers/condiment/flour{
 	pixel_x = 4
 	},
 /turf/open/floor/iron/cafeteria,
@@ -37116,7 +37116,7 @@
 /area/hallway/primary/port)
 "jsw" = (
 /obj/structure/bonfire,
-/obj/item/reagent_containers/cup/glass/bottle/orangejuice{
+/obj/item/reagent_containers/cup/glass/bottle/juice/orangejuice{
 	desc = "For the weary spacemen on their quest to rekindle the first plasma fire.";
 	name = "Carton of Estus"
 	},
@@ -42616,11 +42616,11 @@
 	pixel_x = 28
 	},
 /obj/structure/table,
-/obj/item/reagent_containers/cup/glass/soda_cans/grey_bull{
+/obj/item/reagent_containers/cup/soda_cans/grey_bull{
 	pixel_x = -6;
 	pixel_y = 3
 	},
-/obj/item/reagent_containers/cup/glass/soda_cans/cola{
+/obj/item/reagent_containers/cup/soda_cans/cola{
 	pixel_x = 4;
 	pixel_y = 4
 	},
@@ -56291,7 +56291,7 @@
 	dir = 6
 	},
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/cup/glass/soda_cans/dr_gibb,
+/obj/item/reagent_containers/cup/soda_cans/dr_gibb,
 /obj/structure/railing,
 /turf/open/floor/iron/techmaint,
 /area/science/misc_lab)
@@ -64075,19 +64075,19 @@
 	pixel_x = 6;
 	pixel_y = 12
 	},
-/obj/item/reagent_containers/food/condiment/flour{
+/obj/item/reagent_containers/condiment/flour{
 	pixel_x = 8;
 	pixel_y = 8
 	},
-/obj/item/reagent_containers/food/condiment/flour{
+/obj/item/reagent_containers/condiment/flour{
 	pixel_x = 8;
 	pixel_y = 5
 	},
-/obj/item/reagent_containers/food/condiment/sugar{
+/obj/item/reagent_containers/condiment/sugar{
 	pixel_x = 8;
 	pixel_y = 2
 	},
-/obj/item/reagent_containers/food/condiment/enzyme{
+/obj/item/reagent_containers/condiment/enzyme{
 	pixel_x = -4;
 	pixel_y = 17
 	},
@@ -64398,12 +64398,12 @@
 "qxm" = (
 /obj/structure/table,
 /obj/item/food/spaghetti/raw,
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	pixel_x = 4;
 	pixel_y = 4
 	},
-/obj/item/reagent_containers/food/condiment/peppermill,
-/obj/item/reagent_containers/food/condiment/enzyme{
+/obj/item/reagent_containers/condiment/peppermill,
+/obj/item/reagent_containers/condiment/enzyme{
 	pixel_y = 6
 	},
 /obj/effect/turf_decal/bot,
@@ -64576,7 +64576,7 @@
 /obj/item/screwdriver,
 /obj/item/wrench,
 /obj/item/kitchen/rollingpin,
-/obj/item/reagent_containers/food/condiment/enzyme,
+/obj/item/reagent_containers/condiment/enzyme,
 /obj/item/knife/kitchen,
 /obj/structure/extinguisher_cabinet{
 	pixel_y = -30
@@ -67249,7 +67249,7 @@
 "rkq" = (
 /obj/item/folder,
 /obj/item/clipboard,
-/obj/item/reagent_containers/cup/glass/soda_cans/dr_gibb,
+/obj/item/reagent_containers/cup/soda_cans/dr_gibb,
 /obj/structure/table/wood,
 /obj/item/reagent_containers/spray/cleaner{
 	pixel_x = -3;
@@ -71795,7 +71795,7 @@
 "soC" = (
 /obj/structure/table/wood,
 /obj/effect/turf_decal/bot,
-/obj/item/reagent_containers/cup/glass/soda_cans/thirteenloko{
+/obj/item/reagent_containers/cup/soda_cans/thirteenloko{
 	pixel_x = -6
 	},
 /obj/item/reagent_containers/cup/glass/mug/cocoa{
@@ -76183,11 +76183,11 @@
 "tvw" = (
 /obj/structure/table/reinforced,
 /obj/machinery/door/firedoor,
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	pixel_x = -2;
 	pixel_y = 2
 	},
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	pixel_x = 5;
 	pixel_y = -2
 	},
@@ -77592,10 +77592,10 @@
 /obj/item/food/mint{
 	pixel_y = 9
 	},
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	pixel_x = 2
 	},
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	pixel_y = 2
 	},
 /obj/structure/noticeboard{
@@ -84987,7 +84987,7 @@
 	dir = 8
 	},
 /obj/structure/closet/secure_closet/freezer/kitchen/maintenance,
-/obj/item/reagent_containers/food/condiment/sugar,
+/obj/item/reagent_containers/condiment/sugar,
 /obj/item/food/tofu/prison,
 /turf/open/floor/iron/dark,
 /area/vacant_room/commissary/commissaryFood)
@@ -96125,7 +96125,7 @@
 /area/crew_quarters/fitness/recreation)
 "xTR" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/cup/glass/soda_cans/dr_gibb,
+/obj/item/reagent_containers/cup/soda_cans/dr_gibb,
 /turf/open/floor/carpet/grimy,
 /area/hallway/primary/port)
 "xUa" = (
@@ -96650,12 +96650,12 @@
 "yaa" = (
 /obj/structure/table,
 /obj/item/kitchen/fork,
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	desc = "Salt. From space oceans, presumably. A staple of modern medicine.";
 	pixel_x = -8;
 	pixel_y = 12
 	},
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	pixel_x = 5;
 	pixel_y = 6
 	},

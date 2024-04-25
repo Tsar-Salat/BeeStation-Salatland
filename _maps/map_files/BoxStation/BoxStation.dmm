@@ -3720,7 +3720,7 @@
 "aQh" = (
 /obj/structure/table/wood,
 /obj/item/food/chips,
-/obj/item/reagent_containers/cup/glass/soda_cans/cola,
+/obj/item/reagent_containers/cup/soda_cans/cola,
 /obj/machinery/atmospherics/pipe/simple/supply/hidden/layer2{
 	dir = 5
 	},
@@ -4259,10 +4259,10 @@
 "aTN" = (
 /obj/structure/table,
 /obj/item/kitchen/rollingpin,
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	pixel_x = 3
 	},
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	pixel_x = -3
 	},
 /turf/open/floor/iron/cafeteria,
@@ -4514,7 +4514,7 @@
 /area/crew_quarters/kitchen)
 "aVB" = (
 /obj/structure/table,
-/obj/item/reagent_containers/food/condiment/enzyme{
+/obj/item/reagent_containers/condiment/enzyme{
 	layer = 5
 	},
 /obj/item/stack/package_wrap,
@@ -17318,11 +17318,11 @@
 /area/medical/sleeper)
 "cGR" = (
 /obj/structure/table,
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	pixel_x = 5;
 	pixel_y = -2
 	},
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	pixel_x = -2;
 	pixel_y = 2
 	},
@@ -22919,12 +22919,12 @@
 /area/quartermaster/miningdock)
 "eSA" = (
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/food/condiment/flour,
-/obj/item/reagent_containers/food/condiment/flour{
+/obj/item/reagent_containers/condiment/flour,
+/obj/item/reagent_containers/condiment/flour{
 	pixel_x = 4
 	},
-/obj/item/reagent_containers/food/condiment/sugar,
-/obj/item/reagent_containers/food/condiment/enzyme{
+/obj/item/reagent_containers/condiment/sugar,
+/obj/item/reagent_containers/condiment/enzyme{
 	pixel_y = 5
 	},
 /turf/open/floor/prison,

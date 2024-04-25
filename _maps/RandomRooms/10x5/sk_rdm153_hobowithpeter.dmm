@@ -60,7 +60,7 @@
 	pixel_x = 4;
 	pixel_y = 4
 	},
-/obj/item/reagent_containers/cup/glass/soda_cans/space_up,
+/obj/item/reagent_containers/cup/soda_cans/space_up,
 /obj/effect/spawner/lootdrop/maintenance/two,
 /turf/open/floor/plating,
 /area/template_noop)

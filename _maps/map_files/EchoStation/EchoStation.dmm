@@ -16810,11 +16810,11 @@
 /obj/structure/table/reinforced,
 /obj/item/toy/figure/chef,
 /obj/machinery/door/firedoor,
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	pixel_x = -2;
 	pixel_y = 14
 	},
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	pixel_x = 4;
 	pixel_y = 13
 	},
@@ -18741,10 +18741,10 @@
 /area/storage/primary)
 "jrE" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	pixel_y = 25
 	},
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	pixel_y = 21
 	},
 /obj/effect/turf_decal/siding/wood,
@@ -22632,7 +22632,7 @@
 /obj/structure/disposalpipe/segment{
 	dir = 8
 	},
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	pixel_x = -9;
 	pixel_y = 5
 	},
@@ -25749,10 +25749,10 @@
 	},
 /obj/structure/table/wood,
 /obj/effect/turf_decal/siding/wood,
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	pixel_y = 28
 	},
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	pixel_y = 23
 	},
 /turf/open/floor/carpet/green,
@@ -28426,7 +28426,7 @@
 	pixel_x = 3;
 	pixel_y = 5
 	},
-/obj/item/reagent_containers/food/condiment/enzyme{
+/obj/item/reagent_containers/condiment/enzyme{
 	pixel_x = -6;
 	pixel_y = 19
 	},
@@ -31373,7 +31373,7 @@
 	})
 "qcg" = (
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/food/condiment/flour{
+/obj/item/reagent_containers/condiment/flour{
 	pixel_x = -2;
 	pixel_y = 13
 	},
@@ -38684,11 +38684,11 @@
 /area/science/lab)
 "tJw" = (
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	pixel_x = -8;
 	pixel_y = 5
 	},
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	pixel_x = -8
 	},
 /obj/machinery/door/poddoor/shutters{
@@ -39156,10 +39156,10 @@
 /turf/open/floor/iron/dark,
 /area/security/brig)
 "tSZ" = (
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	pixel_y = 25
 	},
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	pixel_y = 21
 	},
 /obj/structure/table/wood,

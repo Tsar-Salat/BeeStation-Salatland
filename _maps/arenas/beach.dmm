@@ -35,7 +35,7 @@
 /turf/open/floor/wood,
 /area/tdome/arena)
 "h" = (
-/obj/item/reagent_containers/cup/glass/soda_cans/monkey_energy,
+/obj/item/reagent_containers/cup/soda_cans/monkey_energy,
 /turf/open/floor/plating/beach/sand,
 /area/tdome/arena)
 "i" = (

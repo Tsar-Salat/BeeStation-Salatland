@@ -100,7 +100,7 @@
 /area/warped_room)
 "u" = (
 /obj/structure/table/wood,
-/obj/item/reagent_containers/cup/glass/soda_cans/cola,
+/obj/item/reagent_containers/cup/soda_cans/cola,
 /obj/item/knife/kitchen,
 /obj/item/kitchen/rollingpin,
 /turf/open/indestructible/hotelwood,

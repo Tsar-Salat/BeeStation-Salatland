@@ -119,8 +119,8 @@
 	dir = 4;
 	pixel_x = 26
 	},
-/obj/item/reagent_containers/cup/glass/soda_cans/canned_laughter,
-/obj/item/reagent_containers/cup/glass/soda_cans/canned_laughter,
+/obj/item/reagent_containers/cup/soda_cans/canned_laughter,
+/obj/item/reagent_containers/cup/soda_cans/canned_laughter,
 /obj/item/extrapolator,
 /turf/open/floor/iron/white/side{
 	dir = 5
@@ -4850,7 +4850,7 @@
 /area/ruin/unpowered/syndicate_lava_base/arrivals)
 "Fz" = (
 /obj/structure/closet/secure_closet/freezer/fridge/open,
-/obj/item/reagent_containers/food/condiment/enzyme,
+/obj/item/reagent_containers/condiment/enzyme,
 /obj/item/food/chocolatebar,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/iron/dark,

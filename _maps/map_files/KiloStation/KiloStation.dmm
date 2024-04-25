@@ -12022,12 +12022,12 @@
 /obj/structure/table/reinforced,
 /obj/effect/turf_decal/delivery,
 /obj/machinery/door/firedoor,
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	desc = "Often used to flavor food or make people sneeze. Fashionably moved to the left side of the table.";
 	pixel_x = -8;
 	pixel_y = 2
 	},
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	desc = "Salt. From space oceans, presumably. A staple of modern medicine.";
 	pixel_x = -8;
 	pixel_y = 12
@@ -12214,12 +12214,12 @@
 /obj/structure/table/reinforced,
 /obj/effect/turf_decal/delivery,
 /obj/machinery/door/firedoor,
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	desc = "Often used to flavor food or make people sneeze. Fashionably moved to the left side of the table.";
 	pixel_x = -8;
 	pixel_y = 2
 	},
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	desc = "Salt. From space oceans, presumably. A staple of modern medicine.";
 	pixel_x = -8;
 	pixel_y = 12
@@ -12446,7 +12446,7 @@
 /area/crew_quarters/kitchen)
 "boy" = (
 /obj/structure/table,
-/obj/item/reagent_containers/cup/glass/soda_cans/cola{
+/obj/item/reagent_containers/cup/soda_cans/cola{
 	pixel_x = 4;
 	pixel_y = 4
 	},
@@ -13002,12 +13002,12 @@
 	dir = 4;
 	pixel_x = -27
 	},
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	desc = "Often used to flavor food or make people sneeze. Fashionably moved to the left side of the table.";
 	pixel_x = -8;
 	pixel_y = 2
 	},
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	desc = "Salt. From space oceans, presumably. A staple of modern medicine.";
 	pixel_x = -8;
 	pixel_y = 12
@@ -29040,12 +29040,12 @@
 "cYd" = (
 /obj/structure/table,
 /obj/effect/decal/cleanable/dirt,
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	desc = "Often used to flavor food or make people sneeze. Fashionably moved to the left side of the table.";
 	pixel_x = -8;
 	pixel_y = 2
 	},
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	desc = "Salt. From space oceans, presumably. A staple of modern medicine.";
 	pixel_x = -8;
 	pixel_y = 12
@@ -41956,7 +41956,7 @@
 /area/quartermaster/qm)
 "htk" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/item/reagent_containers/cup/glass/soda_cans/dr_gibb,
+/obj/item/reagent_containers/cup/soda_cans/dr_gibb,
 /turf/open/floor/plating{
 	burnt = 1
 	},
@@ -45177,7 +45177,7 @@
 /area/maintenance/fore)
 "izu" = (
 /obj/structure/table,
-/obj/item/reagent_containers/cup/glass/soda_cans/pwr_game{
+/obj/item/reagent_containers/cup/soda_cans/pwr_game{
 	pixel_x = 6;
 	pixel_y = 7;
 	list_reagents = list(/datum/reagent/consumable/pwr_game = 5)
@@ -47046,7 +47046,7 @@
 /turf/open/floor/iron,
 /area/security/execution/transfer)
 "jcF" = (
-/obj/item/reagent_containers/cup/glass/soda_cans/dr_gibb,
+/obj/item/reagent_containers/cup/soda_cans/dr_gibb,
 /turf/open/floor/plating,
 /area/quartermaster/warehouse)
 "jcT" = (
@@ -48106,7 +48106,7 @@
 /area/engine/atmos)
 "jre" = (
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/food/condiment/flour{
+/obj/item/reagent_containers/condiment/flour{
 	pixel_x = -2;
 	pixel_y = 6
 	},
@@ -56019,17 +56019,17 @@
 /area/crew_quarters/bar)
 "lZo" = (
 /obj/structure/table,
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	desc = "Often used to flavor food or make people sneeze. Fashionably moved to the left side of the table.";
 	pixel_x = -8;
 	pixel_y = 2
 	},
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	desc = "Salt. From space oceans, presumably. A staple of modern medicine.";
 	pixel_x = -8;
 	pixel_y = 12
 	},
-/obj/item/reagent_containers/cup/glass/bottle/orangejuice{
+/obj/item/reagent_containers/cup/glass/bottle/juice/orangejuice{
 	desc = "An emerald flask, from the Keeper's soul. High in vitamins!";
 	name = "estus flask";
 	pixel_x = 4;
@@ -61017,11 +61017,11 @@
 "nPI" = (
 /obj/structure/table,
 /obj/item/food/mint,
-/obj/item/reagent_containers/food/condiment/enzyme{
+/obj/item/reagent_containers/condiment/enzyme{
 	pixel_x = -2;
 	pixel_y = 6
 	},
-/obj/item/reagent_containers/food/condiment/sugar{
+/obj/item/reagent_containers/condiment/sugar{
 	pixel_x = 5;
 	pixel_y = 5
 	},
@@ -61629,12 +61629,12 @@
 /area/security/main)
 "nZh" = (
 /obj/structure/table,
-/obj/item/reagent_containers/food/condiment/peppermill{
+/obj/item/reagent_containers/condiment/peppermill{
 	desc = "Often used to flavor food or make people sneeze. Fashionably moved to the left side of the table.";
 	pixel_x = -8;
 	pixel_y = 2
 	},
-/obj/item/reagent_containers/food/condiment/saltshaker{
+/obj/item/reagent_containers/condiment/saltshaker{
 	desc = "Salt. From space oceans, presumably. A staple of modern medicine.";
 	pixel_x = -8;
 	pixel_y = 12
@@ -65238,27 +65238,27 @@
 	icon_state = "4-8"
 	},
 /obj/structure/table,
-/obj/item/reagent_containers/cup/glass/soda_cans/starkist{
+/obj/item/reagent_containers/cup/soda_cans/starkist{
 	pixel_x = 10;
 	pixel_y = 2
 	},
-/obj/item/reagent_containers/cup/glass/soda_cans/shamblers{
+/obj/item/reagent_containers/cup/soda_cans/shamblers{
 	pixel_x = 2;
 	pixel_y = 2
 	},
-/obj/item/reagent_containers/cup/glass/soda_cans/lemon_lime{
+/obj/item/reagent_containers/cup/soda_cans/lemon_lime{
 	pixel_x = -7;
 	pixel_y = 2
 	},
-/obj/item/reagent_containers/cup/glass/soda_cans/pwr_game{
+/obj/item/reagent_containers/cup/soda_cans/pwr_game{
 	pixel_x = -4;
 	pixel_y = 11
 	},
-/obj/item/reagent_containers/cup/glass/soda_cans/cola{
+/obj/item/reagent_containers/cup/soda_cans/cola{
 	pixel_x = 6;
 	pixel_y = 11
 	},
-/obj/item/reagent_containers/cup/glass/soda_cans/thirteenloko{
+/obj/item/reagent_containers/cup/soda_cans/thirteenloko{
 	pixel_y = 20
 	},
 /obj/effect/turf_decal/tile/purple/half/contrasted{
@@ -65625,7 +65625,7 @@
 /area/security/execution/education)
 "pmx" = (
 /obj/structure/bonfire,
-/obj/item/reagent_containers/cup/glass/bottle/orangejuice{
+/obj/item/reagent_containers/cup/glass/bottle/juice/orangejuice{
 	desc = "For the weary spacemen on their quest to rekindle the first plasma fire.";
 	name = "Carton of Estus"
 	},
