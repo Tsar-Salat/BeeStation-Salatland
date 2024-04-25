@@ -213,7 +213,7 @@
 	else if(is_wire_tool(I))
 		if(wires && bomb)
 			wires.interact(user)
-	else if(istype(I, /obj/item/food))
+	else if(isfood(I))
 		to_chat(user, "<span class='warning'>That's not a pizza!</span>")
 	..()
 

@@ -66,7 +66,7 @@
 			if(initial(tempCheck.icon_state) != null) //check it's an actual usable item, in a hacky way
 				valid_items["[I]"] += 15
 
-		if(ispath(I, /obj/item/food))
+		if(isfood(I))
 			var/obj/item/tempCheck = I
 			if(initial(tempCheck.icon_state) != null) //check it's an actual usable item, in a hacky way
 				valid_items["[I]"] += rand(1,4)

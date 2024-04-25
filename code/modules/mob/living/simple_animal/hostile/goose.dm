@@ -72,7 +72,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/goose/vomit/attacked_by(obj/item/O, mob/user)
 	. = ..()
-	if(istype(O, /obj/item/food))
+	if(isfood(O))
 		feed(O)
 
 /mob/living/simple_animal/hostile/retaliate/goose/vomit/proc/feed(obj/item/food/tasty)
