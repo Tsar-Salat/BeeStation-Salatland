@@ -398,7 +398,7 @@
 /obj/machinery/smartfridge/drinks/accept_check(obj/item/O)
 	if(!istype(O, /obj/item/reagent_containers) || (O.item_flags & ABSTRACT) || !O.reagents || !O.reagents.reagent_list.len)
 		return FALSE
-	if(istype(O, /obj/item/reagent_containers/cup) || istype(O, /obj/item/reagent_containers/food/drinks) || istype(O, /obj/item/reagent_containers/food/condiment))
+	if(istype(O, /obj/item/reagent_containers/cup) || istype(O, /obj/item/reagent_containers/cup/glass) || istype(O, /obj/item/reagent_containers/food/condiment))
 		return TRUE
 
 // ----------------------------

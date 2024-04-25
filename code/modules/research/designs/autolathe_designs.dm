@@ -406,7 +406,7 @@
 	id = "shaker"
 	build_type = AUTOLATHE
 	materials = list(/datum/material/iron = 1500)
-	build_path = /obj/item/reagent_containers/food/drinks/shaker
+	build_path = /obj/item/reagent_containers/cup/glass/shaker
 	category = list("initial","Dinnerware")
 
 /datum/design/cultivator

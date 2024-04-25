@@ -431,7 +431,7 @@
 		/obj/item/clothing/ears/headphones = 10,
 		//Only on the iScream 12
 		/obj/item/clothing/under/syndicate/tacticool = 10,
-		/obj/item/reagent_containers/food/drinks/flask/gold = 10,
+		/obj/item/reagent_containers/cup/glass/flask/gold = 10,
 		/obj/item/choice_beacon/pet = 5,
 		/obj/item/storage/bag/money = 5,
 		/obj/item/coin/gold = 5,

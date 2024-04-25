@@ -3,10 +3,10 @@
 	desc = "A technological marvel, supposedly able to mix just the mixture you'd like to drink the moment you ask for one."
 	icon_state = "boozeomat"
 	icon_deny = "boozeomat-deny"
-	products = list(/obj/item/reagent_containers/food/drinks/drinkingglass = 30,
-					/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass = 12,
-					/obj/item/reagent_containers/food/drinks/flask = 3,
-					/obj/item/reagent_containers/food/drinks/ice = 10,
+	products = list(/obj/item/reagent_containers/cup/glass/drinkingglass = 30,
+					/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass = 12,
+					/obj/item/reagent_containers/cup/glass/flask = 3,
+					/obj/item/reagent_containers/cup/glass/ice = 10,
 					/obj/item/reagent_containers/cup/glass/bottle/orangejuice = 4,
 					/obj/item/reagent_containers/cup/glass/bottle/tomatojuice = 4,
 					/obj/item/reagent_containers/cup/glass/bottle/limejuice = 4,
@@ -16,8 +16,8 @@
 					/obj/item/reagent_containers/cup/soda_cans/sodawater = 15,
 					/obj/item/reagent_containers/cup/glass/bottle/grenadine = 4,
 					/obj/item/reagent_containers/cup/glass/bottle/menthol = 4,
-					/obj/item/reagent_containers/food/drinks/ale = 6,
-					/obj/item/reagent_containers/food/drinks/beer = 6,
+					/obj/item/reagent_containers/cup/glass/ale = 6,
+					/obj/item/reagent_containers/cup/glass/beer = 6,
 					/obj/item/reagent_containers/cup/glass/bottle/gin = 5,
 		            /obj/item/reagent_containers/cup/glass/bottle/whiskey = 5,
 					/obj/item/reagent_containers/cup/glass/bottle/tequila = 5,
@@ -35,7 +35,7 @@
 					/obj/item/reagent_containers/cup/glass/bottle/blank = 15,
 					/obj/item/reagent_containers/cup/glass/bottle/blank/small = 15
 					)
-	contraband = list(/obj/item/reagent_containers/food/drinks/mug/tea = 12,
+	contraband = list(/obj/item/reagent_containers/cup/glass/mug/tea = 12,
 					 /obj/item/reagent_containers/cup/glass/bottle/fernet = 5)
 	premium = list(/obj/item/reagent_containers/cup/bottle/ethanol = 4,
 				   /obj/item/reagent_containers/cup/glass/bottle/champagne = 5,
@@ -69,18 +69,18 @@
 			/obj/item/reagent_containers/cup/glass/bottle/cream = 1,
 			/obj/item/reagent_containers/cup/soda_cans/tonic = 1,
 			/obj/item/reagent_containers/cup/glass/drinkingglass = 10,
-			/obj/item/reagent_containers/food/drinks/ice = 3,
+			/obj/item/reagent_containers/cup/glass/ice = 3,
 			/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass = 6,
-			/obj/item/reagent_containers/food/drinks/flask = 1)
+			/obj/item/reagent_containers/cup/glass/flask = 1)
 	req_access = null
 
 /obj/machinery/vending/boozeomat/captain//Captain's quarters variant
 	desc = "A technological marvel, supposedly able to mix just the mixture you'd like to drink the moment you ask for one. This one has less items, yet more fit for a captain."
 	products = list(/obj/item/reagent_containers/cup/glass/bottle/rum = 1,
 					/obj/item/reagent_containers/cup/glass/bottle/wine = 1,
-					/obj/item/reagent_containers/food/drinks/ale = 1,
+					/obj/item/reagent_containers/cup/glass/ale = 1,
 					/obj/item/reagent_containers/cup/glass/drinkingglass = 6,
-					/obj/item/reagent_containers/food/drinks/ice = 1,
+					/obj/item/reagent_containers/cup/glass/ice = 1,
 					/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass = 4);
 	req_access = list(ACCESS_CAPTAIN)
 

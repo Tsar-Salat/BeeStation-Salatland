@@ -147,8 +147,7 @@
 
 /obj/item/reagent_containers/cup/beaker/Initialize(mapload)
 	. = ..()
-	update_icon()
-
+	update_appearance()
 
 /obj/item/reagent_containers/cup/beaker/get_part_rating()
 	return reagents.maximum_volume
@@ -244,6 +243,10 @@
 /obj/item/reagent_containers/cup/beaker/large/epinephrine
 	name = "epinephrine reserve tank"
 	list_reagents = list(/datum/reagent/medicine/epinephrine = 50)
+
+/obj/item/reagent_containers/cup/beaker/large/kelobic
+	name = "kelotane-bicaridine reserve tank"
+	list_reagents = list(/datum/reagent/medicine/kelotane = 50, /datum/reagent/medicine/bicaridine = 50)
 
 /obj/item/reagent_containers/cup/beaker/synthflesh
 	list_reagents = list(/datum/reagent/medicine/synthflesh = 50)

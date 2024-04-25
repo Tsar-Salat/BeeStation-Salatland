@@ -64,7 +64,7 @@
 
 /obj/item/reagent_containers/pre_attack(atom/target, mob/living/user, params)
 	if (try_splash(user, target))
-		return CANCEL_ATTACK_CHAIN
+		return COMPONENT_CANCEL_ATTACK_CHAIN
 
 	return ..()
 

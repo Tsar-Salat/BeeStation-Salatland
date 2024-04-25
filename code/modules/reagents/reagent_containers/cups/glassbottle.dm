@@ -16,7 +16,7 @@
 	item_state = "broken_beer" //Generic held-item sprite until unique ones are made.
 	lefthand_file = 'icons/mob/inhands/misc/food_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/misc/food_righthand.dmi'
-	foodtype = ALCOHOL
+	drink_type = ALCOHOL
 	item_flags = ISWEAPON
 	///Directly relates to the 'knockdown' duration. Lowered by armor (i.e. helmets)
 	var/bottle_knockdown_duration = 1.3 SECONDS
@@ -179,7 +179,7 @@
 	desc = "A bottle filled with nothing."
 	icon_state = "bottleofnothing"
 	list_reagents = list(/datum/reagent/consumable/nothing = 100)
-	foodtype = NONE
+	drink_type = NONE
 
 /obj/item/reagent_containers/cup/glass/bottle/patron
 	name = "Wrapp Artiste Patron"
@@ -198,7 +198,7 @@
 	desc = "A flask of the chaplain's holy water."
 	icon_state = "holyflask"
 	list_reagents = list(/datum/reagent/water/holywater = 100)
-	foodtype = NONE
+	drink_type = NONE
 
 /obj/item/reagent_containers/cup/glass/bottle/holywater/hell
 	desc = "A flask of holy water...it's been sitting in the Necropolis a while though."
@@ -215,7 +215,7 @@
 	desc = "A widely known, Mexican coffee-flavoured liqueur. In production since 1936, HONK."
 	icon_state = "kahluabottle"
 	list_reagents = list(/datum/reagent/consumable/ethanol/kahlua = 100)
-	foodtype = VEGETABLES
+	drink_type = VEGETABLES
 
 /obj/item/reagent_containers/cup/glass/bottle/goldschlager
 	name = "College Girl goldschlager"
@@ -234,7 +234,7 @@
 	desc = "A faint aura of unease and asspainery surrounds the bottle."
 	icon_state = "winebottle"
 	list_reagents = list(/datum/reagent/consumable/ethanol/wine = 100)
-	foodtype = FRUIT | ALCOHOL
+	drink_type = FRUIT | ALCOHOL
 
 /obj/item/reagent_containers/cup/glass/bottle/absinthe
 	name = "extra-strong absinthe"
@@ -294,7 +294,7 @@
 	desc = "An alcoholic beverage from Space China, made by infusing lizard tails in ethanol. Inexplicably popular among command staff."
 	icon_state = "lizardwine"
 	list_reagents = list(/datum/reagent/consumable/ethanol/lizardwine = 100)
-	foodtype = FRUIT | ALCOHOL
+	drink_type = FRUIT | ALCOHOL
 
 /obj/item/reagent_containers/cup/glass/bottle/hcider
 	name = "Jian Hard Cider"
@@ -362,7 +362,7 @@
 	righthand_file = 'icons/mob/inhands/equipment/kitchen_righthand.dmi'
 	isGlass = FALSE
 	list_reagents = list(/datum/reagent/consumable/orangejuice = 100)
-	foodtype = FRUIT | BREAKFAST
+	drink_type = FRUIT | BREAKFAST
 
 /obj/item/reagent_containers/cup/glass/bottle/cream
 	name = "milk cream"
@@ -374,7 +374,7 @@
 	righthand_file = 'icons/mob/inhands/equipment/kitchen_righthand.dmi'
 	isGlass = FALSE
 	list_reagents = list(/datum/reagent/consumable/cream = 100)
-	foodtype = DAIRY
+	drink_type = DAIRY
 
 /obj/item/reagent_containers/cup/glass/bottle/tomatojuice
 	name = "tomato juice"
@@ -386,7 +386,7 @@
 	righthand_file = 'icons/mob/inhands/equipment/kitchen_righthand.dmi'
 	isGlass = FALSE
 	list_reagents = list(/datum/reagent/consumable/tomatojuice = 100)
-	foodtype = VEGETABLES
+	drink_type = VEGETABLES
 
 /obj/item/reagent_containers/cup/glass/bottle/limejuice
 	name = "lime juice"
@@ -398,7 +398,7 @@
 	righthand_file = 'icons/mob/inhands/equipment/kitchen_righthand.dmi'
 	isGlass = FALSE
 	list_reagents = list(/datum/reagent/consumable/limejuice = 100)
-	foodtype = FRUIT
+	drink_type = FRUIT
 
 /obj/item/reagent_containers/cup/glass/bottle/pineapplejuice
 	name = "pineapple juice"
@@ -410,7 +410,7 @@
 	righthand_file = 'icons/mob/inhands/equipment/kitchen_righthand.dmi'
 	isGlass = FALSE
 	list_reagents = list(/datum/reagent/consumable/pineapplejuice = 100)
-	foodtype = FRUIT | PINEAPPLE
+	drink_type = FRUIT | PINEAPPLE
 
 /obj/item/reagent_containers/cup/glass/bottle/menthol
 	name = "menthol"
@@ -430,7 +430,7 @@
 	icon_state = "grenadine"
 	isGlass = TRUE
 	list_reagents = list(/datum/reagent/consumable/grenadine = 100)
-	foodtype = FRUIT
+	drink_type = FRUIT
 
 /obj/item/reagent_containers/cup/glass/bottle/synthflesh
 	name = "carton of synthflesh"
@@ -461,7 +461,7 @@
 	icon_state = "applejack_bottle"
 	isGlass = TRUE
 	list_reagents = list(/datum/reagent/consumable/ethanol/applejack = 100)
-	foodtype = FRUIT
+	drink_type = FRUIT
 
 /obj/item/reagent_containers/cup/glass/bottle/champagne
 	name = "Eau d' Dandy Brut Champagne"

@@ -223,7 +223,7 @@
 	desc = "Refreshing! You aren't sure what those things in the bottom are."
 	icon_state = "bubble_tea"
 	list_reagents = list(/datum/reagent/consumable/bubble_tea = 50)
-	foodtype = SUGAR
+	drink_type = SUGAR
 	spillable = TRUE
 	isGlass = FALSE
 
@@ -263,7 +263,7 @@
 	name = "Dutch hot cocoa"
 	desc = "Made in Space South America."
 	list_reagents = list(/datum/reagent/consumable/cocoa/hot_cocoa = 15, /datum/reagent/consumable/sugar = 5)
-	foodtype = SUGAR
+	drink_type = SUGAR
 	resistance_flags = FREEZE_PROOF
 	custom_price = 42
 
@@ -276,7 +276,7 @@
 		/datum/reagent/consumable/sodiumchloride = 3,
 		/datum/reagent/consumable/maltodextrin = 5
 	)
-	foodtype = GRAIN
+	drink_type = GRAIN
 	isGlass = FALSE
 	custom_price = 38
 
@@ -285,7 +285,7 @@
 	desc = "Beer. In space."
 	icon_state = "beer"
 	list_reagents = list(/datum/reagent/consumable/ethanol/beer = 30)
-	foodtype = GRAIN | ALCOHOL
+	drink_type = GRAIN | ALCOHOL
 
 /obj/item/reagent_containers/cup/glass/beer/almost_empty
 	var/amount
@@ -301,14 +301,14 @@
 	desc = "Consumed only by the finest syndicate agents. There is a round warning label stating 'Don't drink more than one in quick succession!'"
 	icon_state = "syndicatebeer"
 	list_reagents = list(/datum/reagent/consumable/ethanol/beer = 10, /datum/reagent/medicine/antitoxin = 20)
-	foodtype = GRAIN | ALCOHOL
+	drink_type = GRAIN | ALCOHOL
 
 /obj/item/reagent_containers/cup/glass/ftliver
 	name = "Faster-Than-Liver"
 	desc = "They've gone into plaid!"
 	icon_state = "ftliver"
 	list_reagents = list(/datum/reagent/consumable/ethanol/ftliver = 30)
-	foodtype = ALCOHOL
+	drink_type = ALCOHOL
 
 /obj/item/reagent_containers/cup/glass/beer/light
 	name = "Carp Lite"
@@ -321,7 +321,7 @@
 	icon_state = "alebottle"
 	item_state = "beer"
 	list_reagents = list(/datum/reagent/consumable/ethanol/ale = 30)
-	foodtype = GRAIN | ALCOHOL
+	drink_type = GRAIN | ALCOHOL
 
 /obj/item/reagent_containers/cup/glass/sillycup
 	name = "paper cup"
@@ -368,22 +368,22 @@
 				icon_state = "orangebox"
 				name = "orange juice box"
 				desc = "A great source of vitamins. Stay healthy!"
-				foodtype = FRUIT | BREAKFAST
+				drink_type = FRUIT | BREAKFAST
 			if(/datum/reagent/consumable/milk)
 				icon_state = "milkbox"
 				name = "carton of milk"
 				desc = "An excellent source of calcium for growing space explorers."
-				foodtype = DAIRY | BREAKFAST
+				drink_type = DAIRY | BREAKFAST
 			if(/datum/reagent/consumable/applejuice)
 				icon_state = "juicebox"
 				name = "apple juice box"
 				desc = "Sweet apple juice. Don't be late for school!"
-				foodtype = FRUIT
+				drink_type = FRUIT
 			if(/datum/reagent/consumable/grapejuice)
 				icon_state = "grapebox"
 				name = "grape juice box"
 				desc = "Tasty grape juice in a fun little container. Non-alcoholic!"
-				foodtype = FRUIT
+				drink_type = FRUIT
 			if(/datum/reagent/consumable/pineapplejuice)
 				icon_state = "pineapplebox"
 				name = "pineapple juice box"
@@ -392,12 +392,12 @@
 				icon_state = "chocolatebox"
 				name = "carton of chocolate milk"
 				desc = "Milk for cool kids!"
-				foodtype = SUGAR
+				drink_type = SUGAR
 			if(/datum/reagent/consumable/ethanol/eggnog)
 				icon_state = "nog2"
 				name = "carton of eggnog"
 				desc = "For enjoying the most wonderful time of the year."
-				foodtype = MEAT
+				drink_type = MEAT
 	else
 		icon_state = "juicebox"
 		name = "small carton"
@@ -524,102 +524,3 @@
 	if(!is_drainable())
 		open_soda(user)
 	return ..()
-
-/obj/item/reagent_containers/cup/soda_cans/cola
-	name = "Space Cola"
-	desc = "Cola. in space."
-	icon_state = "cola"
-	list_reagents = list(/datum/reagent/consumable/space_cola = 30)
-	foodtype = SUGAR
-
-/obj/item/reagent_containers/cup/soda_cans/tonic
-	name = "T-Borg's tonic water"
-	desc = "Quinine tastes funny, but at least it'll keep that Space Malaria away."
-	icon_state = "tonic"
-	list_reagents = list(/datum/reagent/consumable/tonic = 50)
-	foodtype = ALCOHOL
-
-/obj/item/reagent_containers/cup/soda_cans/sodawater
-	name = "soda water"
-	desc = "A can of soda water. Why not make a scotch and soda?"
-	icon_state = "sodawater"
-	list_reagents = list(/datum/reagent/consumable/sodawater = 50)
-
-/obj/item/reagent_containers/cup/soda_cans/lemon_lime
-	name = "orange soda"
-	desc = "You wanted ORANGE. It gave you Lemon Lime."
-	icon_state = "lemon-lime"
-	list_reagents = list(/datum/reagent/consumable/lemon_lime = 30)
-	foodtype = FRUIT
-
-/obj/item/reagent_containers/cup/soda_cans/lemon_lime/Initialize(mapload)
-	. = ..()
-	name = "lemon-lime soda"
-
-/obj/item/reagent_containers/cup/soda_cans/space_up
-	name = "Space-Up!"
-	desc = "Tastes like a hull breach in your mouth."
-	icon_state = "space-up"
-	list_reagents = list(/datum/reagent/consumable/space_up = 30)
-	foodtype = SUGAR | JUNKFOOD
-
-/obj/item/reagent_containers/cup/soda_cans/starkist
-	name = "Star-kist"
-	desc = "The taste of a star in liquid form. And, a bit of tuna...?"
-	icon_state = "starkist"
-	list_reagents = list(/datum/reagent/consumable/space_cola = 15, /datum/reagent/consumable/orangejuice = 15)
-	foodtype = SUGAR | FRUIT | JUNKFOOD
-
-/obj/item/reagent_containers/cup/soda_cans/space_mountain_wind
-	name = "Space Mountain Wind"
-	desc = "Blows right through you like a space wind."
-	icon_state = "space_mountain_wind"
-	list_reagents = list(/datum/reagent/consumable/spacemountainwind = 30)
-	foodtype = SUGAR | JUNKFOOD
-
-/obj/item/reagent_containers/cup/soda_cans/thirteenloko
-	name = "Thirteen Loko"
-	desc = "The CMO has advised crew members that consumption of Thirteen Loko may result in seizures, blindness, drunkenness, or even death. Please Drink Responsibly."
-	icon_state = "thirteen_loko"
-	list_reagents = list(/datum/reagent/consumable/ethanol/thirteenloko = 30)
-	foodtype = SUGAR | JUNKFOOD
-
-/obj/item/reagent_containers/cup/soda_cans/dr_gibb
-	name = "Dr. Gibb"
-	desc = "A delicious mixture of 42 different flavors."
-	icon_state = "dr_gibb"
-	list_reagents = list(/datum/reagent/consumable/dr_gibb = 30)
-	foodtype = SUGAR | JUNKFOOD
-
-/obj/item/reagent_containers/cup/soda_cans/pwr_game
-	name = "Pwr Game"
-	desc = "The only drink with the PWR that true gamers crave."
-	icon_state = "purple_can"
-	list_reagents = list(/datum/reagent/consumable/pwr_game = 30)
-
-/obj/item/reagent_containers/cup/soda_cans/shamblers
-	name = "Shambler's juice"
-	desc = "~Shake me up some of that Shambler's Juice!~"
-	icon_state = "shamblers"
-	list_reagents = list(/datum/reagent/consumable/shamblers = 30)
-	foodtype = SUGAR | JUNKFOOD
-
-/obj/item/reagent_containers/cup/soda_cans/grey_bull
-	name = "Grey Bull"
-	desc = "Grey Bull, it gives you gloves!"
-	icon_state = "energy_drink"
-	list_reagents = list(/datum/reagent/consumable/grey_bull = 20)
-	foodtype = SUGAR | JUNKFOOD
-
-/obj/item/reagent_containers/cup/soda_cans/monkey_energy
-	name = "Monkey Energy"
-	desc = "Unleash the ape!"
-	icon_state = "monkey_energy"
-	list_reagents = list(/datum/reagent/consumable/monkey_energy = 50)
-	foodtype = SUGAR | JUNKFOOD
-
-/obj/item/reagent_containers/cup/soda_cans/air
-	name = "canned air"
-	desc = "There is no air shortage. Do not drink."
-	icon_state = "air"
-	list_reagents = list(/datum/reagent/nitrogen = 24, /datum/reagent/oxygen = 6)

@@ -2493,7 +2493,7 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	name = "Syndicate Beer"
 	desc = "Syndicate brand 'beer' designed to flush toxins out of your system. \
 			Warning: Do not consume more than one!"
-	item = /obj/item/reagent_containers/food/drinks/syndicatebeer
+	item = /obj/item/reagent_containers/cup/glass/syndicatebeer
 	cost = 4
 	illegal_tech = FALSE
 
