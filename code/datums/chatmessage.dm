@@ -180,6 +180,10 @@
 		qdel(src)
 		return
 
+	// Why are you yelling?
+	if(copytext_char(text, -2) == "!!")
+		extra_classes |= SPAN_YELL
+
 	var/list/prefixes
 
 	// Append radio icon if from a virtual speaker
@@ -205,7 +209,7 @@
 	text = "[prefixes?.Join("&nbsp;")][text]"
 
 	// Approximate text height
-	var/complete_text = "<span class='center [extra_classes.Join(" ")]' style='color: [tgt_color]'>[target.say_emphasis(text)]</span>"
+	var/complete_text = "<span style='color: [tgt_color]'><span class='center [extra_classes.Join(" ")]'>[target.say_emphasis(text)]</span></span>"
 	var/mheight = WXH_TO_HEIGHT(first_hearer.MeasureText(complete_text, null, CHAT_MESSAGE_WIDTH))
 	approx_lines = max(1, mheight / CHAT_MESSAGE_APPROX_LHEIGHT)
 
