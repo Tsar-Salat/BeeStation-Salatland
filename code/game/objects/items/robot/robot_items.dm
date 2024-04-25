@@ -928,12 +928,12 @@
 	name = "beaker storage apparatus"
 	desc = "A special apparatus for carrying beakers without spilling the contents."
 	icon_state = "borg_beaker_apparatus"
-	storable = list(/obj/item/reagent_containers/glass/beaker,
+	storable = list(/obj/item/reagent_containers/cup/beaker,
 				/obj/item/reagent_containers/glass/bottle)
 
 /obj/item/borg/apparatus/beaker/Initialize(mapload)
 	. = ..()
-	stored = new /obj/item/reagent_containers/glass/beaker/large(src)
+	stored = new /obj/item/reagent_containers/cup/beaker/large(src)
 	RegisterSignal(stored, COMSIG_ATOM_UPDATE_ICON, TYPE_PROC_REF(/atom, update_icon))
 	update_icon()
 
@@ -964,7 +964,7 @@
 		stored.pixel_x = 0
 		stored.pixel_y = 0
 		var/mutable_appearance/stored_copy = new /mutable_appearance(stored)
-		if(istype(stored, /obj/item/reagent_containers/glass/beaker))
+		if(istype(stored, /obj/item/reagent_containers/cup/beaker))
 			arm.pixel_y = arm.pixel_y - 3
 		stored_copy.layer = FLOAT_LAYER
 		stored_copy.plane = FLOAT_PLANE
@@ -1039,9 +1039,9 @@
 	/obj/item/storage/fancy/egg_box,
 	/obj/item/clothing/mask/cigarette,
 	/obj/item/storage/fancy/cigarettes,
-	/obj/item/reagent_containers/glass/beaker,
+	/obj/item/reagent_containers/cup/beaker,
 	/obj/item/reagent_containers/glass/bottle,
-	/obj/item/reagent_containers/glass/bucket
+	/obj/item/reagent_containers/cup/bucket
 	)
 
 /obj/item/borg/apparatus/beaker/service/examine()

@@ -91,7 +91,7 @@
 	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
 	var/static/list/can_hold = typecacheof(list(
 		/obj/item/reagent_containers/spray,
-		/obj/item/reagent_containers/glass/beaker,//those will usually be used for fertilizer
+		/obj/item/reagent_containers/cup/beaker,//those will usually be used for fertilizer
 		/obj/item/reagent_containers/glass/bottle,//fertilizer bottles
 		/obj/item/reagent_containers/syringe,//blood samples for pod cloning
 		/obj/item/reagent_containers/dropper,//on request by forums users
@@ -227,7 +227,7 @@
 		/obj/item/healthanalyzer,
 		/obj/item/dnainjector,
 		/obj/item/reagent_containers/dropper,
-		/obj/item/reagent_containers/glass/beaker,
+		/obj/item/reagent_containers/cup/beaker,
 		/obj/item/reagent_containers/glass/bottle,
 		/obj/item/reagent_containers/pill,
 		/obj/item/reagent_containers/syringe,
@@ -389,7 +389,7 @@
 		/obj/item/stack/sheet/bone,
 		/obj/item/lighter,
 		/obj/item/storage/fancy/cigarettes,
-		/obj/item/reagent_containers/food/drinks/bottle,
+		/obj/item/reagent_containers/cup/glass/bottle,
 		/obj/item/stack/medical,
 		/obj/item/knife/kitchen,
 		/obj/item/reagent_containers/hypospray,
@@ -531,14 +531,14 @@
 		/obj/item/food/spaghetti/pastatomato,
 		/obj/item/food/rofflewaffles,
 		/obj/item/food/donkpocket,
-		/obj/item/reagent_containers/food/drinks/soda_cans/cola,
-		/obj/item/reagent_containers/food/drinks/soda_cans/space_mountain_wind,
-		/obj/item/reagent_containers/food/drinks/soda_cans/dr_gibb,
-		/obj/item/reagent_containers/food/drinks/soda_cans/starkist,
-		/obj/item/reagent_containers/food/drinks/soda_cans/space_up,
-		/obj/item/reagent_containers/food/drinks/soda_cans/pwr_game,
-		/obj/item/reagent_containers/food/drinks/soda_cans/lemon_lime,
-		/obj/item/reagent_containers/food/drinks/drinkingglass/filled/nuka_cola
+		/obj/item/reagent_containers/cup/soda_cans/cola,
+		/obj/item/reagent_containers/cup/soda_cans/space_mountain_wind,
+		/obj/item/reagent_containers/cup/soda_cans/dr_gibb,
+		/obj/item/reagent_containers/cup/soda_cans/starkist,
+		/obj/item/reagent_containers/cup/soda_cans/space_up,
+		/obj/item/reagent_containers/cup/soda_cans/pwr_game,
+		/obj/item/reagent_containers/cup/soda_cans/lemon_lime,
+		/obj/item/reagent_containers/cup/glass/drinkingglass/filled/nuka_cola
 		))
 		new rig_snacks(src)
 
@@ -594,7 +594,7 @@
 		/obj/item/screwdriver,
 		/obj/item/lighter,
 		/obj/item/multitool,
-		/obj/item/reagent_containers/food/drinks/bottle/molotov,
+		/obj/item/reagent_containers/cup/glass/bottle/molotov,
 		/obj/item/grenade/plastic/c4,
 		/obj/item/food/grown/cherry_bomb,
 		/obj/item/food/grown/firelemon

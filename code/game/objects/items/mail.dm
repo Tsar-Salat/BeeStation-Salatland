@@ -25,8 +25,8 @@
 
 	var/static/list/generic_goodies = list(
 		/obj/item/stack/spacecash/c10										= 22, //the lamest chance to get item, what do you expect really?
-		/obj/item/reagent_containers/food/drinks/soda_cans/pwr_game			= 10,
-		/obj/item/reagent_containers/food/drinks/soda_cans/monkey_energy	= 10,
+		/obj/item/reagent_containers/cup/soda_cans/pwr_game			= 10,
+		/obj/item/reagent_containers/cup/soda_cans/monkey_energy	= 10,
 		/obj/item/food/cheesiehonkers 			= 10,
 		/obj/item/food/candy						= 10,
 		/obj/item/food/chips						= 10,

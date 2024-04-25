@@ -30,9 +30,9 @@
 		/obj/item/reagent_containers/glass/bottle/clownstears = 10,
 		/obj/item/stack/sheet/mineral/plasma = 5,
 		/obj/item/stack/sheet/mineral/uranium = 5,
-		/obj/item/reagent_containers/food/drinks/bottle/fernet = 3,
-		/obj/item/reagent_containers/food/drinks/bottle/champagne = 3,
-		/obj/item/reagent_containers/food/drinks/bottle/trappist = 3,
+		/obj/item/reagent_containers/cup/glass/bottle/fernet = 3,
+		/obj/item/reagent_containers/cup/glass/bottle/champagne = 3,
+		/obj/item/reagent_containers/cup/glass/bottle/trappist = 3,
 	)
 
 //BOTANIST
@@ -66,7 +66,7 @@
 		/obj/item/pen/fountain/captain = 10,
 		/obj/item/coin/plasma = 7,
 		/obj/item/storage/fancy/cigarettes/cigars/havana = 5,
-		/obj/item/reagent_containers/food/drinks/bottle/champagne = 5,
+		/obj/item/reagent_containers/cup/glass/bottle/champagne = 5,
 		/obj/item/ammo_box/n762 = 2,
 		/obj/item/gun/ballistic/revolver/nagant = 1,
 	)
@@ -84,7 +84,7 @@
 //CHAPLAIN
 /datum/job/chaplain
 	mail_goodies = list(
-		/obj/item/reagent_containers/food/drinks/bottle/holywater = 15,
+		/obj/item/reagent_containers/cup/glass/bottle/holywater = 15,
 		/obj/item/storage/book/bible = 10,
 		/obj/item/grenade/chem_grenade/holy = 5,
 		/obj/item/toy/plush/awakenedplushie = 3,
@@ -97,8 +97,8 @@
 	mail_goodies = list(
 		/obj/item/reagent_containers/glass/bottle/flash_powder = 15,
 		/obj/item/reagent_containers/dropper = 10,
-		/obj/item/reagent_containers/glass/beaker/large = 10,
-		/obj/item/reagent_containers/glass/beaker/plastic = 10,
+		/obj/item/reagent_containers/cup/beaker/large = 10,
+		/obj/item/reagent_containers/cup/beaker/plastic = 10,
 		/obj/item/reagent_containers/glass/bottle/ketamine = 5,
 	)
 
@@ -107,7 +107,7 @@
 	mail_goodies = list(
 		//you know. for poly
 		/obj/item/food/cracker = 15,
-		/obj/item/reagent_containers/food/drinks/soda_cans/thirteenloko = 15,
+		/obj/item/reagent_containers/cup/soda_cans/thirteenloko = 15,
 		/obj/item/rcd_ammo = 10,
 		/obj/item/wrench/caravan = 3,
 		/obj/item/wirecutters/caravan = 3,
@@ -191,7 +191,7 @@
 	mail_goodies = list(
 		/obj/item/storage/fancy/cigarettes = 15,
 		/obj/item/ammo_box/c38 = 10,
-		/obj/item/reagent_containers/food/drinks/bottle/rum = 10,
+		/obj/item/reagent_containers/cup/glass/bottle/rum = 10,
 		/obj/item/ammo_box/c38/dumdum = 5,
 		/obj/item/ammo_box/c38/hotshot = 5,
 		/obj/item/ammo_box/c38/iceblox = 5,
@@ -314,7 +314,7 @@
 	mail_goodies = list(
 		/obj/item/food/baguette/mime = 15,
 		/obj/item/food/cheese/wheel = 10,
-		/obj/item/reagent_containers/food/drinks/bottle/bottleofnothing = 10,
+		/obj/item/reagent_containers/cup/glass/bottle/bottleofnothing = 10,
 		/obj/item/book/mimery = 2,
 		//when you thought it could get worse...
 		/obj/item/book/granter/spell/mimery_blockade = 1,
@@ -401,7 +401,7 @@
 /datum/job/station_engineer
 	mail_goodies = list(
 		/obj/item/storage/box/lights/mixed = 15,
-		/obj/item/reagent_containers/food/drinks/soda_cans/thirteenloko = 15,
+		/obj/item/reagent_containers/cup/soda_cans/thirteenloko = 15,
 		/obj/item/lightreplacer = 10,
 		/obj/item/holosign_creator/engineering = 8,
 		//An assistant can only dream of those...

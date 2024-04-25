@@ -205,7 +205,7 @@
 		user.visible_message("<span class='notice'>[user] cleans \the [src].</span>", "<span class='notice'>You clean \the [src].</span>")
 		jammed = FALSE
 		return TRUE
-	if(istype(item, /obj/item/soap) || istype(item, /obj/item/reagent_containers/glass/rag))
+	if(istype(item, /obj/item/soap) || istype(item, /obj/item/reagent_containers/cup/rag))
 		var/cleanspeed = 50
 		if(istype(item, /obj/item/soap))
 			var/obj/item/soap/used_soap = item

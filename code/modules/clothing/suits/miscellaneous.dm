@@ -86,7 +86,7 @@
 	desc = "Yarr."
 	icon_state = "pirate"
 	item_state = "pirate"
-	allowed = list(/obj/item/melee/transforming/energy/sword/pirate, /obj/item/clothing/glasses/eyepatch, /obj/item/reagent_containers/food/drinks/bottle/rum)
+	allowed = list(/obj/item/melee/transforming/energy/sword/pirate, /obj/item/clothing/glasses/eyepatch, /obj/item/reagent_containers/cup/glass/bottle/rum)
 
 /obj/item/clothing/suit/pirate/captain
 	name = "pirate captain coat"
@@ -163,7 +163,7 @@
 	item_state = "imperium_monk"
 	body_parts_covered = CHEST|GROIN|LEGS|ARMS
 	flags_inv = HIDESHOES|HIDEJUMPSUIT
-	allowed = list(/obj/item/storage/book/bible, /obj/item/nullrod, /obj/item/reagent_containers/food/drinks/bottle/holywater, /obj/item/storage/fancy/candle_box, /obj/item/candle, /obj/item/tank/internals/emergency_oxygen)
+	allowed = list(/obj/item/storage/book/bible, /obj/item/nullrod, /obj/item/reagent_containers/cup/glass/bottle/holywater, /obj/item/storage/fancy/candle_box, /obj/item/candle, /obj/item/tank/internals/emergency_oxygen)
 
 
 /obj/item/clothing/suit/chickensuit
@@ -697,7 +697,7 @@
 		/obj/item/healthanalyzer,
 		/obj/item/paper,
 		/obj/item/reagent_containers/dropper,
-		/obj/item/reagent_containers/glass/beaker,
+		/obj/item/reagent_containers/cup/beaker,
 		/obj/item/reagent_containers/glass/bottle,
 		/obj/item/reagent_containers/hypospray,
 		/obj/item/reagent_containers/pill,
@@ -733,7 +733,7 @@
 		/obj/item/melee/classic_baton/police/telescopic,
 		/obj/item/paper,
 		/obj/item/reagent_containers/dropper,
-		/obj/item/reagent_containers/glass/beaker,
+		/obj/item/reagent_containers/cup/beaker,
 		/obj/item/reagent_containers/glass/bottle,
 		/obj/item/reagent_containers/hypospray,
 		/obj/item/reagent_containers/pill,
@@ -768,7 +768,7 @@
 		/obj/item/melee/classic_baton/police/telescopic,
 		/obj/item/paper,
 		/obj/item/reagent_containers/dropper,
-		/obj/item/reagent_containers/glass/beaker,
+		/obj/item/reagent_containers/cup/beaker,
 		/obj/item/reagent_containers/glass/bottle,
 		/obj/item/reagent_containers/hypospray,
 		/obj/item/reagent_containers/pill,
@@ -805,7 +805,7 @@
 		/obj/item/melee/classic_baton/police/telescopic,
 		/obj/item/paper,
 		/obj/item/reagent_containers/dropper,
-		/obj/item/reagent_containers/glass/beaker,
+		/obj/item/reagent_containers/cup/beaker,
 		/obj/item/reagent_containers/glass/bottle,
 		/obj/item/reagent_containers/hypospray,
 		/obj/item/reagent_containers/pill,
@@ -846,7 +846,7 @@
 		/obj/item/melee/classic_baton/police/telescopic,
 		/obj/item/paper,
 		/obj/item/reagent_containers/dropper,
-		/obj/item/reagent_containers/glass/beaker,
+		/obj/item/reagent_containers/cup/beaker,
 		/obj/item/reagent_containers/glass/bottle,
 		/obj/item/reagent_containers/hypospray,
 		/obj/item/reagent_containers/pill,
@@ -873,7 +873,7 @@
 	name = "science winter coat"
 	icon_state = "coatscience"
 	item_state = "coatscience"
-	allowed = list(/obj/item/analyzer, /obj/item/stack/medical, /obj/item/dnainjector, /obj/item/reagent_containers/dropper, /obj/item/reagent_containers/syringe, /obj/item/reagent_containers/hypospray, /obj/item/healthanalyzer, /obj/item/flashlight/pen, /obj/item/reagent_containers/glass/bottle, /obj/item/reagent_containers/glass/beaker, /obj/item/reagent_containers/pill, /obj/item/storage/pill_bottle, /obj/item/paper, /obj/item/melee/classic_baton/police/telescopic, /obj/item/toy, /obj/item/storage/fancy/cigarettes, /obj/item/lighter, /obj/item/tank/internals/emergency_oxygen, /obj/item/tank/internals/plasmaman)
+	allowed = list(/obj/item/analyzer, /obj/item/stack/medical, /obj/item/dnainjector, /obj/item/reagent_containers/dropper, /obj/item/reagent_containers/syringe, /obj/item/reagent_containers/hypospray, /obj/item/healthanalyzer, /obj/item/flashlight/pen, /obj/item/reagent_containers/glass/bottle, /obj/item/reagent_containers/cup/beaker, /obj/item/reagent_containers/pill, /obj/item/storage/pill_bottle, /obj/item/paper, /obj/item/melee/classic_baton/police/telescopic, /obj/item/toy, /obj/item/storage/fancy/cigarettes, /obj/item/lighter, /obj/item/tank/internals/emergency_oxygen, /obj/item/tank/internals/plasmaman)
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 10, BIO = 0, RAD = 0, FIRE = 0, ACID = 0, STAMINA = 0)
 	hoodtype = /obj/item/clothing/head/hooded/winterhood/science
 
@@ -923,7 +923,7 @@
 		/obj/item/clipboard,
 		/obj/item/stamp,
 		/obj/item/export_scanner,
-		/obj/item/reagent_containers/food/drinks/bottle,
+		/obj/item/reagent_containers/cup/glass/bottle,
 		/obj/item/flashlight,
 		/obj/item/tank/internals/emergency_oxygen,
 		/obj/item/tank/internals/plasmaman,
@@ -950,7 +950,7 @@
 		/obj/item/mining_scanner,
 		/obj/item/t_scanner/adv_mining_scanner,
 		/obj/item/gun/energy/kinetic_accelerator,
-		/obj/item/reagent_containers/food/drinks/bottle,
+		/obj/item/reagent_containers/cup/glass/bottle,
 		/obj/item/flashlight,
 		/obj/item/tank/internals/emergency_oxygen,
 		/obj/item/tank/internals/plasmaman,

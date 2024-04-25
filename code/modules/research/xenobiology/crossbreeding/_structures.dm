@@ -474,10 +474,10 @@ GLOBAL_LIST_EMPTY(bluespace_slime_crystals)
 	if(blood_amt < 10)
 		return ..()
 
-	if(!istype(I, /obj/item/reagent_containers/glass/beaker))
+	if(!istype(I, /obj/item/reagent_containers/cup/beaker))
 		return ..()
 
-	var/obj/item/reagent_containers/glass/beaker/item_beaker = I
+	var/obj/item/reagent_containers/cup/beaker/item_beaker = I
 
 	if(!item_beaker.is_refillable() || (item_beaker.reagents.total_volume + 10 > item_beaker.reagents.maximum_volume))
 		return ..()

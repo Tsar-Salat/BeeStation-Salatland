@@ -524,7 +524,7 @@
 	new /obj/item/stack/cable_coil/random(src)
 	new /obj/item/wirecutters(src)
 	new /obj/item/multitool(src)
-	
+
 /obj/item/storage/backpack/duffelbag/science
 	name = "science duffel bag"
 	desc = "A large duffel bag for holding extra tools and artifacts."
@@ -687,7 +687,7 @@
 	new /obj/item/gun/ballistic/automatic/pistol/APS(src)
 	new /obj/item/ammo_box/magazine/pistolm9mm(src)
 	new /obj/item/ammo_box/magazine/pistolm9mm(src)
-	new /obj/item/reagent_containers/food/drinks/bottle/vodka/badminka(src)
+	new /obj/item/reagent_containers/cup/glass/bottle/vodka/badminka(src)
 	new /obj/item/reagent_containers/hypospray/medipen/stimulants(src)
 	new /obj/item/grenade/syndieminibomb(src)
 

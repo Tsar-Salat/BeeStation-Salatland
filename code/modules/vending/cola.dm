@@ -5,6 +5,7 @@
 	icon_state = "Cola_Machine"
 	product_slogans = "Robust Softdrinks: More robust than a toolbox to the head!"
 	product_ads = "Refreshing!;Hope you're thirsty!;Over 1 million drinks sold!;Thirsty? Why not cola?;Please, have a drink!;Drink up!;The best drinks in space."
+	light_color = LIGHT_COLOR_BLUE
 	products = list(/obj/item/reagent_containers/food/drinks/soda_cans/cola = 10,
 		            /obj/item/reagent_containers/food/drinks/soda_cans/space_mountain_wind = 10,
 					/obj/item/reagent_containers/food/drinks/soda_cans/dr_gibb = 10,
@@ -13,12 +14,12 @@
 					/obj/item/reagent_containers/food/drinks/soda_cans/pwr_game = 10,
 					/obj/item/reagent_containers/food/drinks/soda_cans/lemon_lime = 10,
 					/obj/item/reagent_containers/glass/waterbottle = 10)
-	contraband = list(/obj/item/reagent_containers/food/drinks/soda_cans/thirteenloko = 6,
-		              /obj/item/reagent_containers/food/drinks/soda_cans/shamblers = 6)
-	premium = list(/obj/item/reagent_containers/food/drinks/drinkingglass/filled/nuka_cola = 1,
-		           /obj/item/reagent_containers/food/drinks/soda_cans/air = 1,
-		           /obj/item/reagent_containers/food/drinks/soda_cans/monkey_energy = 1,
-		           /obj/item/reagent_containers/food/drinks/soda_cans/grey_bull = 1)
+	contraband = list(/obj/item/reagent_containers/cup/soda_cans/thirteenloko = 6,
+		              /obj/item/reagent_containers/cup/soda_cans/shamblers = 6)
+	premium = list(/obj/item/reagent_containers/cup/glass/drinkingglass/filled/nuka_cola = 1,
+		           /obj/item/reagent_containers/cup/soda_cans/air = 1,
+		           /obj/item/reagent_containers/cup/soda_cans/monkey_energy = 1,
+		           /obj/item/reagent_containers/cup/soda_cans/grey_bull = 1)
 	refill_canister = /obj/item/vending_refill/cola
 	default_price = 5
 	extra_price = 60
@@ -79,6 +80,7 @@
 	name = "\improper Shambler's Vendor"
 	desc = "~Shake me up some of that Shambler's Juice!~"
 	icon_state = "shamblers_juice"
+	light_color = LIGHT_COLOR_RED
 	products = list(
 		/obj/item/reagent_containers/food/drinks/soda_cans/cola = 10,
 		/obj/item/reagent_containers/food/drinks/soda_cans/space_mountain_wind = 10,

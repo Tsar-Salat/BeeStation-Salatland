@@ -475,7 +475,7 @@
 			B.forceMove(drop_location())
 			beakers -= B
 		return
-	else if(istype(I, /obj/item/reagent_containers/glass/beaker) || istype(I, /obj/item/reagent_containers/glass/bottle))
+	else if(istype(I, /obj/item/reagent_containers/cup/beaker) || istype(I, /obj/item/reagent_containers/glass/bottle))
 		if(beakers.len < max_beakers)
 			if(!user.transferItemToLoc(I, src))
 				return

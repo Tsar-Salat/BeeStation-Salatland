@@ -7,7 +7,7 @@
 	id = "bucket"
 	build_type = AUTOLATHE | PROTOLATHE
 	materials = list(/datum/material/iron = 200)
-	build_path = /obj/item/reagent_containers/glass/bucket
+	build_path = /obj/item/reagent_containers/cup/bucket
 	category = list("initial","Tools","Tool Designs")
 	departmental_flags = DEPARTMENTAL_FLAG_SERVICE
 
@@ -390,7 +390,7 @@
 	id = "drinking_glass"
 	build_type = AUTOLATHE
 	materials = list(/datum/material/glass = 500)
-	build_path = /obj/item/reagent_containers/food/drinks/drinkingglass
+	build_path = /obj/item/reagent_containers/cup/glass/drinkingglass
 	category = list("initial","Dinnerware")
 
 /datum/design/shot_glass
@@ -398,7 +398,7 @@
 	id = "shot_glass"
 	build_type = AUTOLATHE
 	materials = list(/datum/material/glass = 100)
-	build_path = /obj/item/reagent_containers/food/drinks/drinkingglass/shotglass
+	build_path = /obj/item/reagent_containers/cup/glass/drinkingglass/shotglass
 	category = list("initial","Dinnerware")
 
 /datum/design/shaker
@@ -530,7 +530,7 @@
 	id = "beaker"
 	build_type = AUTOLATHE | PROTOLATHE
 	materials = list(/datum/material/glass = 500)
-	build_path = /obj/item/reagent_containers/glass/beaker
+	build_path = /obj/item/reagent_containers/cup/beaker
 	category = list("initial", "Medical", "Medical Designs")
 	departmental_flags = DEPARTMENTAL_FLAG_MEDICAL | DEPARTMENTAL_FLAG_SERVICE
 
@@ -539,7 +539,7 @@
 	id = "large_beaker"
 	build_type = AUTOLATHE | PROTOLATHE
 	materials = list(/datum/material/glass = 2500)
-	build_path = /obj/item/reagent_containers/glass/beaker/large
+	build_path = /obj/item/reagent_containers/cup/beaker/large
 	category = list("initial", "Medical", "Medical Designs")
 	departmental_flags = DEPARTMENTAL_FLAG_MEDICAL | DEPARTMENTAL_FLAG_SERVICE
 

@@ -212,7 +212,7 @@
 //	rather then having to add it to something else first. They should only contain liquids. They have a default container size of 50.
 //	Formatting is the same as food.
 
-/obj/item/reagent_containers/food/drinks/coffee
+/obj/item/reagent_containers/cup/glass/coffee
 	name = "Robust coffee"
 	desc = "Careful, the beverage you're about to enjoy is extremely hot."
 	icon_state = "coffee"
@@ -469,7 +469,7 @@
 //////////////////////////soda_cans//
 //These are in their own group to be used as IED's in /obj/item/grenade/ghettobomb.dm
 
-/obj/item/reagent_containers/food/drinks/soda_cans
+/obj/item/reagent_containers/cup/soda_cans
 	name = "soda can"
 	lefthand_file = 'icons/mob/inhands/misc/food_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/misc/food_righthand.dmi'
@@ -478,7 +478,7 @@
 	isGlass = FALSE
 	custom_price = 10
 
-/obj/item/reagent_containers/food/drinks/soda_cans/suicide_act(mob/living/carbon/human/H)
+/obj/item/reagent_containers/cup/soda_cans/suicide_act(mob/living/carbon/human/H)
 	if(!reagents.total_volume)
 		H.visible_message("<span class='warning'>[H] is trying to take a big sip from [src]... The can is empty!</span>")
 		return SHAME
@@ -499,7 +499,7 @@
 	sleep(20) //dramatic pause
 	return TOXLOSS
 
-/obj/item/reagent_containers/food/drinks/soda_cans/attack(mob/M, mob/user)
+/obj/item/reagent_containers/cup/soda_cans/attack(mob/M, mob/user)
 	if(M == user && !src.reagents.total_volume && user.a_intent == INTENT_HARM && user.is_zone_selected(BODY_ZONE_HEAD))
 		user.visible_message("<span class='warning'>[user] crushes the can of [src] on [user.p_their()] forehead!</span>", "<span class='notice'>You crush the can of [src] on your forehead.</span>")
 		playsound(user.loc,'sound/weapons/pierce.ogg', rand(10,50), 1)
@@ -508,7 +508,7 @@
 		qdel(src)
 	..()
 
-/obj/item/reagent_containers/food/drinks/soda_cans/bullet_act(obj/projectile/P)
+/obj/item/reagent_containers/cup/soda_cans/bullet_act(obj/projectile/P)
 	. = ..()
 	if(!(P.nodamage) && P.damage_type == BRUTE && !QDELETED(src))
 		var/obj/item/trash/can/crushed_can = new /obj/item/trash/can(src.loc)
@@ -518,111 +518,111 @@
 		qdel(src)
 		return
 
-/obj/item/reagent_containers/food/drinks/soda_cans/proc/open_soda(mob/user)
+/obj/item/reagent_containers/cup/soda_cans/proc/open_soda(mob/user)
 	to_chat(user, "You pull back the tab of \the [src] with a satisfying pop.") //Ahhhhhhhh
 	ENABLE_BITFIELD(reagents.flags, OPENCONTAINER)
 	playsound(src, "can_open", 50, 1)
 	spillable = TRUE
 
-/obj/item/reagent_containers/food/drinks/soda_cans/attack_self(mob/user)
+/obj/item/reagent_containers/cup/soda_cans/attack_self(mob/user)
 	if(!is_drainable())
 		open_soda(user)
 	return ..()
 
-/obj/item/reagent_containers/food/drinks/soda_cans/cola
+/obj/item/reagent_containers/cup/soda_cans/cola
 	name = "Space Cola"
 	desc = "Cola. in space."
 	icon_state = "cola"
 	list_reagents = list(/datum/reagent/consumable/space_cola = 30)
 	foodtype = SUGAR
 
-/obj/item/reagent_containers/food/drinks/soda_cans/tonic
+/obj/item/reagent_containers/cup/soda_cans/tonic
 	name = "T-Borg's tonic water"
 	desc = "Quinine tastes funny, but at least it'll keep that Space Malaria away."
 	icon_state = "tonic"
 	list_reagents = list(/datum/reagent/consumable/tonic = 50)
 	foodtype = ALCOHOL
 
-/obj/item/reagent_containers/food/drinks/soda_cans/sodawater
+/obj/item/reagent_containers/cup/soda_cans/sodawater
 	name = "soda water"
 	desc = "A can of soda water. Why not make a scotch and soda?"
 	icon_state = "sodawater"
 	list_reagents = list(/datum/reagent/consumable/sodawater = 50)
 
-/obj/item/reagent_containers/food/drinks/soda_cans/lemon_lime
+/obj/item/reagent_containers/cup/soda_cans/lemon_lime
 	name = "orange soda"
 	desc = "You wanted ORANGE. It gave you Lemon Lime."
 	icon_state = "lemon-lime"
 	list_reagents = list(/datum/reagent/consumable/lemon_lime = 30)
 	foodtype = FRUIT
 
-/obj/item/reagent_containers/food/drinks/soda_cans/lemon_lime/Initialize(mapload)
+/obj/item/reagent_containers/cup/soda_cans/lemon_lime/Initialize(mapload)
 	. = ..()
 	name = "lemon-lime soda"
 
-/obj/item/reagent_containers/food/drinks/soda_cans/space_up
+/obj/item/reagent_containers/cup/soda_cans/space_up
 	name = "Space-Up!"
 	desc = "Tastes like a hull breach in your mouth."
 	icon_state = "space-up"
 	list_reagents = list(/datum/reagent/consumable/space_up = 30)
 	foodtype = SUGAR | JUNKFOOD
 
-/obj/item/reagent_containers/food/drinks/soda_cans/starkist
+/obj/item/reagent_containers/cup/soda_cans/starkist
 	name = "Star-kist"
 	desc = "The taste of a star in liquid form. And, a bit of tuna...?"
 	icon_state = "starkist"
 	list_reagents = list(/datum/reagent/consumable/space_cola = 15, /datum/reagent/consumable/orangejuice = 15)
 	foodtype = SUGAR | FRUIT | JUNKFOOD
 
-/obj/item/reagent_containers/food/drinks/soda_cans/space_mountain_wind
+/obj/item/reagent_containers/cup/soda_cans/space_mountain_wind
 	name = "Space Mountain Wind"
 	desc = "Blows right through you like a space wind."
 	icon_state = "space_mountain_wind"
 	list_reagents = list(/datum/reagent/consumable/spacemountainwind = 30)
 	foodtype = SUGAR | JUNKFOOD
 
-/obj/item/reagent_containers/food/drinks/soda_cans/thirteenloko
+/obj/item/reagent_containers/cup/soda_cans/thirteenloko
 	name = "Thirteen Loko"
 	desc = "The CMO has advised crew members that consumption of Thirteen Loko may result in seizures, blindness, drunkenness, or even death. Please Drink Responsibly."
 	icon_state = "thirteen_loko"
 	list_reagents = list(/datum/reagent/consumable/ethanol/thirteenloko = 30)
 	foodtype = SUGAR | JUNKFOOD
 
-/obj/item/reagent_containers/food/drinks/soda_cans/dr_gibb
+/obj/item/reagent_containers/cup/soda_cans/dr_gibb
 	name = "Dr. Gibb"
 	desc = "A delicious mixture of 42 different flavors."
 	icon_state = "dr_gibb"
 	list_reagents = list(/datum/reagent/consumable/dr_gibb = 30)
 	foodtype = SUGAR | JUNKFOOD
 
-/obj/item/reagent_containers/food/drinks/soda_cans/pwr_game
+/obj/item/reagent_containers/cup/soda_cans/pwr_game
 	name = "Pwr Game"
 	desc = "The only drink with the PWR that true gamers crave."
 	icon_state = "purple_can"
 	list_reagents = list(/datum/reagent/consumable/pwr_game = 30)
 
-/obj/item/reagent_containers/food/drinks/soda_cans/shamblers
+/obj/item/reagent_containers/cup/soda_cans/shamblers
 	name = "Shambler's juice"
 	desc = "~Shake me up some of that Shambler's Juice!~"
 	icon_state = "shamblers"
 	list_reagents = list(/datum/reagent/consumable/shamblers = 30)
 	foodtype = SUGAR | JUNKFOOD
 
-/obj/item/reagent_containers/food/drinks/soda_cans/grey_bull
+/obj/item/reagent_containers/cup/soda_cans/grey_bull
 	name = "Grey Bull"
 	desc = "Grey Bull, it gives you gloves!"
 	icon_state = "energy_drink"
 	list_reagents = list(/datum/reagent/consumable/grey_bull = 20)
 	foodtype = SUGAR | JUNKFOOD
 
-/obj/item/reagent_containers/food/drinks/soda_cans/monkey_energy
+/obj/item/reagent_containers/cup/soda_cans/monkey_energy
 	name = "Monkey Energy"
 	desc = "Unleash the ape!"
 	icon_state = "monkey_energy"
 	list_reagents = list(/datum/reagent/consumable/monkey_energy = 50)
 	foodtype = SUGAR | JUNKFOOD
 
-/obj/item/reagent_containers/food/drinks/soda_cans/air
+/obj/item/reagent_containers/cup/soda_cans/air
 	name = "canned air"
 	desc = "There is no air shortage. Do not drink."
 	icon_state = "air"

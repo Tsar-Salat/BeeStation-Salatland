@@ -7,7 +7,7 @@
 /obj/structure/closet/secure_closet/medical1/PopulateContents()
 	..()
 	var/static/items_inside = list(
-		/obj/item/reagent_containers/glass/beaker = 2,
+		/obj/item/reagent_containers/cup/beaker = 2,
 		/obj/item/reagent_containers/dropper = 2,
 		/obj/item/storage/belt/medical = 1,
 		/obj/item/storage/box/syringes = 1,
@@ -104,7 +104,7 @@
 	new /obj/item/storage/lockbox/medal/med(src)
 
 	new /obj/item/circuitboard/machine/techfab/department/medical(src)
-	new /obj/item/reagent_containers/food/drinks/bottle/synthflesh(src)
+	new /obj/item/reagent_containers/cup/glass/bottle/synthflesh(src)
 
 	// prioritized items
 	new /obj/item/door_remote/chief_medical_officer(src)

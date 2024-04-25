@@ -444,7 +444,7 @@
 		/obj/item/melee/flyswatter,
 		/obj/item/extinguisher/mini,
 		/obj/item/mop/cyborg,
-		/obj/item/reagent_containers/glass/bucket,
+		/obj/item/reagent_containers/cup/bucket,
 		/obj/item/paint/paint_remover,
 		/obj/item/lightreplacer/cyborg,
 		/obj/item/holosign_creator/janibarrier,
@@ -508,7 +508,7 @@
 	name = "Service"
 	basic_modules = list(
 		/obj/item/assembly/flash/cyborg,
-		/obj/item/reagent_containers/food/drinks/drinkingglass,
+		/obj/item/reagent_containers/cup/glass/drinkingglass,
 		/obj/item/pen,
 		/obj/item/toy/crayon/spraycan/borg,
 		/obj/item/extinguisher/mini,

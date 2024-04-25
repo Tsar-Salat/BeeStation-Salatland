@@ -10,78 +10,78 @@
 		/obj/item/organ/tail/lizard = 1,
 		/datum/reagent/consumable/ethanol = 100
 	)
-	result = /obj/item/reagent_containers/food/drinks/bottle/lizardwine
+	result = /obj/item/reagent_containers/cup/glass/bottle/lizardwine
 	category = CAT_DRINK
 
 /datum/crafting_recipe/moonshinejug
 	name = "Moonshine Jug"
 	time = 30
 	reqs = list(
-		/obj/item/reagent_containers/food/drinks/bottle/blank = 1,
+		/obj/item/reagent_containers/cup/glass/bottle/blank = 1,
 		/datum/reagent/consumable/ethanol/moonshine = 100
 	)
-	result = /obj/item/reagent_containers/food/drinks/bottle/moonshine
+	result = /obj/item/reagent_containers/cup/glass/bottle/moonshine
 	category = CAT_DRINK
 
 /datum/crafting_recipe/hoochbottle
 	name = "Hooch Bottle"
 	time = 30
 	reqs = list(
-		/obj/item/reagent_containers/food/drinks/bottle/blank = 1,
+		/obj/item/reagent_containers/cup/glass/bottle/blank = 1,
 		/obj/item/storage/box/papersack = 1,
 		/datum/reagent/consumable/ethanol/hooch = 100
 	)
-	result = /obj/item/reagent_containers/food/drinks/bottle/hooch
+	result = /obj/item/reagent_containers/cup/glass/bottle/hooch
 	category = CAT_DRINK
 
 /datum/crafting_recipe/blazaambottle
 	name = "Blazaam Bottle"
 	time = 20
 	reqs = list(
-		/obj/item/reagent_containers/food/drinks/bottle/blank = 1,
+		/obj/item/reagent_containers/cup/glass/bottle/blank = 1,
 		/datum/reagent/consumable/ethanol/blazaam = 100
 	)
-	result = /obj/item/reagent_containers/food/drinks/bottle/blazaam
+	result = /obj/item/reagent_containers/cup/glass/bottle/blazaam
 	category = CAT_DRINK
 
 /datum/crafting_recipe/champagnebottle
 	name = "Champagne Bottle"
 	time = 30
 	reqs = list(
-		/obj/item/reagent_containers/food/drinks/bottle/blank = 1,
+		/obj/item/reagent_containers/cup/glass/bottle/blank = 1,
 		/datum/reagent/consumable/ethanol/champagne = 100
 	)
-	result = /obj/item/reagent_containers/food/drinks/bottle/champagne
+	result = /obj/item/reagent_containers/cup/glass/bottle/champagne
 	category = CAT_DRINK
 
 /datum/crafting_recipe/trappistbottle
 	name = "Trappist Bottle"
 	time = 15
 	reqs = list(
-		/obj/item/reagent_containers/food/drinks/bottle/blank/small = 1,
+		/obj/item/reagent_containers/cup/glass/bottle/blank/small = 1,
 		/datum/reagent/consumable/ethanol/trappist = 50
 	)
-	result = /obj/item/reagent_containers/food/drinks/bottle/trappist
+	result = /obj/item/reagent_containers/cup/glass/bottle/trappist
 	category = CAT_DRINK
 
 /datum/crafting_recipe/goldschlagerbottle
 	name = "Goldschlager Bottle"
 	time = 30
 	reqs = list(
-		/obj/item/reagent_containers/food/drinks/bottle/blank = 1,
+		/obj/item/reagent_containers/cup/glass/bottle/blank = 1,
 		/datum/reagent/consumable/ethanol/goldschlager = 100
 	)
-	result = /obj/item/reagent_containers/food/drinks/bottle/goldschlager
+	result = /obj/item/reagent_containers/cup/glass/bottle/goldschlager
 	category = CAT_DRINK
 
 /datum/crafting_recipe/patronbottle
 	name = "Patron Bottle"
 	time = 30
 	reqs = list(
-		/obj/item/reagent_containers/food/drinks/bottle/blank = 1,
+		/obj/item/reagent_containers/cup/glass/bottle/blank = 1,
 		/datum/reagent/consumable/ethanol/patron = 100
 	)
-	result = /obj/item/reagent_containers/food/drinks/bottle/patron
+	result = /obj/item/reagent_containers/cup/glass/bottle/patron
 	category = CAT_DRINK
 
 ////////////////////// Non-alcoholic recipes ///////////////////
@@ -90,10 +90,10 @@
 	name = "Holy Water Flask"
 	time = 30
 	reqs = list(
-		/obj/item/reagent_containers/food/drinks/bottle/blank = 1,
+		/obj/item/reagent_containers/cup/glass/bottle/blank = 1,
 		/datum/reagent/water/holywater = 100
 	)
-	result = /obj/item/reagent_containers/food/drinks/bottle/holywater
+	result = /obj/item/reagent_containers/cup/glass/bottle/holywater
 	category = CAT_DRINK
 
 //flask of unholy water is a beaker for some reason, I will try making it a bottle and add it here once the antag freeze is over. t. kryson
@@ -102,10 +102,10 @@
 	name = "Nothing Bottle"
 	time = 30
 	reqs = list(
-		/obj/item/reagent_containers/food/drinks/bottle/blank = 1,
+		/obj/item/reagent_containers/cup/glass/bottle/blank = 1,
 		/datum/reagent/consumable/nothing = 100
 	)
-	result = /obj/item/reagent_containers/food/drinks/bottle/bottleofnothing
+	result = /obj/item/reagent_containers/cup/glass/bottle/bottleofnothing
 	category = CAT_DRINK
 
 /datum/crafting_recipe/smallcarton

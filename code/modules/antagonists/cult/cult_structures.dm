@@ -8,7 +8,7 @@
 	debris = list(/obj/item/stack/sheet/runed_metal = 1)
 
 /obj/structure/destructible/cult/Initialize(mapload)
-	. = ..()	
+	. = ..()
 	generate_psychic_mask()
 
 /obj/structure/destructible/cult/proc/conceal() //for spells that hide cult presence
@@ -97,7 +97,7 @@
 		if("Construct Shell")
 			pickedtype += /obj/structure/constructshell
 		if("Flask of Unholy Water")
-			pickedtype += /obj/item/reagent_containers/glass/beaker/unholywater
+			pickedtype += /obj/item/reagent_containers/cup/beaker/unholywater
 		else
 			return
 	if(src && !QDELETED(src) && anchored && pickedtype && Adjacent(user) && !user.incapacitated() && iscultist(user) && cooldowntime <= world.time)

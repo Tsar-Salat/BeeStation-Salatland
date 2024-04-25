@@ -6,9 +6,9 @@
 	w_class = WEIGHT_CLASS_SMALL
 	force = 2
 	var/stage = GRENADE_EMPTY
-	var/list/obj/item/reagent_containers/glass/beakers = list()
-	var/list/allowed_containers = list(/obj/item/reagent_containers/glass/beaker, /obj/item/reagent_containers/glass/bottle, /obj/item/reagent_containers/glass/waterbottle)
-	var/list/banned_containers = list(/obj/item/reagent_containers/glass/beaker/bluespace) //Containers to exclude from specific grenade subtypes
+	var/list/obj/item/reagent_containers/cup/beakers = list()
+	var/list/allowed_containers = list(/obj/item/reagent_containers/cup/beaker, /obj/item/reagent_containers/glass/bottle, /obj/item/reagent_containers/glass/waterbottle)
+	var/list/banned_containers = list(/obj/item/reagent_containers/cup/beaker/bluespace) //Containers to exclude from specific grenade subtypes
 	var/affected_area = 3
 	var/ignition_temp = 10 // The amount of heat added to the reagents when this grenade goes off.
 	var/threatscale = 1 // Used by advanced grenades to make them slightly more worthy.
@@ -335,8 +335,8 @@
 
 /obj/item/grenade/chem_grenade/metalfoam/Initialize(mapload)
 	. = ..()
-	var/obj/item/reagent_containers/glass/beaker/B1 = new(src)
-	var/obj/item/reagent_containers/glass/beaker/B2 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/B1 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/B2 = new(src)
 
 	B1.reagents.add_reagent(/datum/reagent/aluminium, 30)
 	B2.reagents.add_reagent(/datum/reagent/foaming_agent, 10)
@@ -353,8 +353,8 @@
 
 /obj/item/grenade/chem_grenade/smart_metal_foam/Initialize(mapload)
 	. = ..()
-	var/obj/item/reagent_containers/glass/beaker/large/B1 = new(src)
-	var/obj/item/reagent_containers/glass/beaker/B2 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/large/B1 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/B2 = new(src)
 
 	B1.reagents.add_reagent(/datum/reagent/aluminium, 75)
 	B2.reagents.add_reagent(/datum/reagent/smart_foaming_agent, 25)
@@ -371,8 +371,8 @@
 
 /obj/item/grenade/chem_grenade/incendiary/Initialize(mapload)
 	. = ..()
-	var/obj/item/reagent_containers/glass/beaker/B1 = new(src)
-	var/obj/item/reagent_containers/glass/beaker/B2 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/B1 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/B2 = new(src)
 
 	B1.reagents.add_reagent(/datum/reagent/phosphorus, 25)
 	B2.reagents.add_reagent(/datum/reagent/stable_plasma, 25)
@@ -389,8 +389,8 @@
 
 /obj/item/grenade/chem_grenade/antiweed/Initialize(mapload)
 	. = ..()
-	var/obj/item/reagent_containers/glass/beaker/B1 = new(src)
-	var/obj/item/reagent_containers/glass/beaker/B2 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/B1 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/B2 = new(src)
 
 	B1.reagents.add_reagent(/datum/reagent/toxin/plantbgone, 25)
 	B1.reagents.add_reagent(/datum/reagent/potassium, 25)
@@ -408,8 +408,8 @@
 
 /obj/item/grenade/chem_grenade/cleaner/Initialize(mapload)
 	. = ..()
-	var/obj/item/reagent_containers/glass/beaker/B1 = new(src)
-	var/obj/item/reagent_containers/glass/beaker/B2 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/B1 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/B2 = new(src)
 
 	B1.reagents.add_reagent(/datum/reagent/fluorosurfactant, 40)
 	B2.reagents.add_reagent(/datum/reagent/water, 40)
@@ -426,8 +426,8 @@
 
 /obj/item/grenade/chem_grenade/ez_clean/Initialize(mapload)
 	. = ..()
-	var/obj/item/reagent_containers/glass/beaker/large/B1 = new(src)
-	var/obj/item/reagent_containers/glass/beaker/large/B2 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/large/B1 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/large/B2 = new(src)
 
 	B1.reagents.add_reagent(/datum/reagent/fluorosurfactant, 40)
 	B2.reagents.add_reagent(/datum/reagent/water, 40)
@@ -445,8 +445,8 @@
 
 /obj/item/grenade/chem_grenade/teargas/Initialize(mapload)
 	. = ..()
-	var/obj/item/reagent_containers/glass/beaker/large/B1 = new(src)
-	var/obj/item/reagent_containers/glass/beaker/large/B2 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/large/B1 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/large/B2 = new(src)
 
 	B1.reagents.add_reagent(/datum/reagent/consumable/condensedcapsaicin, 60)
 	B1.reagents.add_reagent(/datum/reagent/potassium, 40)
@@ -464,8 +464,8 @@
 
 /obj/item/grenade/chem_grenade/facid/Initialize(mapload)
 	. = ..()
-	var/obj/item/reagent_containers/glass/beaker/bluespace/B1 = new(src)
-	var/obj/item/reagent_containers/glass/beaker/bluespace/B2 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/bluespace/B1 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/bluespace/B2 = new(src)
 
 	B1.reagents.add_reagent(/datum/reagent/toxin/acid/fluacid, 290)
 	B1.reagents.add_reagent(/datum/reagent/potassium, 10)
@@ -484,8 +484,8 @@
 
 /obj/item/grenade/chem_grenade/colorful/Initialize(mapload)
 	. = ..()
-	var/obj/item/reagent_containers/glass/beaker/B1 = new(src)
-	var/obj/item/reagent_containers/glass/beaker/B2 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/B1 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/B2 = new(src)
 
 	B1.reagents.add_reagent(/datum/reagent/colorful_reagent, 25)
 	B1.reagents.add_reagent(/datum/reagent/potassium, 25)
@@ -503,8 +503,8 @@
 
 /obj/item/grenade/chem_grenade/glitter/Initialize(mapload)
 	. = ..()
-	var/obj/item/reagent_containers/glass/beaker/B1 = new(src)
-	var/obj/item/reagent_containers/glass/beaker/B2 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/B1 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/B2 = new(src)
 
 	B1.reagents.add_reagent(glitter_type, 25)
 	B1.reagents.add_reagent(/datum/reagent/potassium, 25)
@@ -536,8 +536,8 @@
 
 /obj/item/grenade/chem_grenade/clf3/Initialize(mapload)
 	. = ..()
-	var/obj/item/reagent_containers/glass/beaker/bluespace/B1 = new(src)
-	var/obj/item/reagent_containers/glass/beaker/bluespace/B2 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/bluespace/B1 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/bluespace/B2 = new(src)
 
 	B1.reagents.add_reagent(/datum/reagent/fluorosurfactant, 250)
 	B1.reagents.add_reagent(/datum/reagent/clf3, 50)
@@ -554,8 +554,8 @@
 
 /obj/item/grenade/chem_grenade/bioterrorfoam/Initialize(mapload)
 	. = ..()
-	var/obj/item/reagent_containers/glass/beaker/bluespace/B1 = new(src)
-	var/obj/item/reagent_containers/glass/beaker/bluespace/B2 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/bluespace/B1 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/bluespace/B2 = new(src)
 
 	B1.reagents.add_reagent(/datum/reagent/cryptobiolin, 75)
 	B1.reagents.add_reagent(/datum/reagent/water, 50)
@@ -574,8 +574,8 @@
 
 /obj/item/grenade/chem_grenade/tuberculosis/Initialize(mapload)
 	. = ..()
-	var/obj/item/reagent_containers/glass/beaker/bluespace/B1 = new(src)
-	var/obj/item/reagent_containers/glass/beaker/bluespace/B2 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/bluespace/B1 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/bluespace/B2 = new(src)
 
 	B1.reagents.add_reagent(/datum/reagent/potassium, 50)
 	B1.reagents.add_reagent(/datum/reagent/phosphorus, 50)
@@ -594,8 +594,8 @@
 
 /obj/item/grenade/chem_grenade/holy/Initialize(mapload)
 	. = ..()
-	var/obj/item/reagent_containers/glass/beaker/large/B1 = new(src)
-	var/obj/item/reagent_containers/glass/beaker/large/B2 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/large/B1 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/large/B2 = new(src)
 
 	B1.reagents.add_reagent(/datum/reagent/potassium, 100)
 	B2.reagents.add_reagent(/datum/reagent/water/holywater, 100)
@@ -610,8 +610,8 @@
 
 /obj/item/grenade/chem_grenade/ghostbuster/Initialize(mapload)
 	. = ..()
-	var/obj/item/reagent_containers/glass/beaker/large/B1 = new(src)
-	var/obj/item/reagent_containers/glass/beaker/large/B2 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/large/B1 = new(src)
+	var/obj/item/reagent_containers/cup/beaker/large/B2 = new(src)
 
 	B1.reagents.add_reagent(/datum/reagent/fluorosurfactant, 50)
 	B1.reagents.add_reagent(/datum/reagent/water/holywater, 50)

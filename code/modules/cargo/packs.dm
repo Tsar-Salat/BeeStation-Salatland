@@ -248,9 +248,9 @@
 					/obj/item/clothing/suit/radiation,
 					/obj/item/geiger_counter,
 					/obj/item/geiger_counter,
-					/obj/item/reagent_containers/food/drinks/bottle/vodka,
-					/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass,
-					/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass)
+					/obj/item/reagent_containers/cup/glass/bottle/vodka,
+					/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass,
+					/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass)
 	crate_name = "radiation protection crate"
 	crate_type = /obj/structure/closet/crate/radiation
 
@@ -717,7 +717,7 @@
 					/obj/item/survivalcapsule/barricade)
 	cost = 2000
 	crate_name = "security barriers crate XL"
-	
+
 /datum/supply_pack/security/armory/capsule_checkpoints
 	name = "Security Checkpoint capsules"
 	desc = "A 3x3 checkpoint designed for allowing safely searching passing personnel. Requires Security access to open."
@@ -1657,10 +1657,10 @@
 	desc = "Contains four 100u cartons of synthflesh in case the cloner ran out of it."
 	cost = 1400
 	max_supply = 3
-	contains = list(/obj/item/reagent_containers/food/drinks/bottle/synthflesh,
-					/obj/item/reagent_containers/food/drinks/bottle/synthflesh,
-					/obj/item/reagent_containers/food/drinks/bottle/synthflesh,
-					/obj/item/reagent_containers/food/drinks/bottle/synthflesh)
+	contains = list(/obj/item/reagent_containers/cup/glass/bottle/synthflesh,
+					/obj/item/reagent_containers/cup/glass/bottle/synthflesh,
+					/obj/item/reagent_containers/cup/glass/bottle/synthflesh,
+					/obj/item/reagent_containers/cup/glass/bottle/synthflesh)
 	crate_name = "rusty freezer"
 	crate_type = /obj/structure/closet/crate/freezer
 
@@ -1770,7 +1770,7 @@
 					/obj/item/reagent_containers/glass/bottle/epinephrine,
 					/obj/item/reagent_containers/glass/bottle/morphine,
 					/obj/item/reagent_containers/glass/bottle/toxin,
-					/obj/item/reagent_containers/glass/beaker/large,
+					/obj/item/reagent_containers/cup/beaker/large,
 					/obj/item/reagent_containers/pill/insulin,
 					/obj/item/stack/medical/gauze,
 					/obj/item/storage/box/beakers,
@@ -1843,7 +1843,7 @@
 	max_supply = 4
 	access = ACCESS_VIROLOGY
 	contains = list(/obj/item/food/monkeycube,
-					/obj/item/reagent_containers/food/drinks/bottle/virusfood,
+					/obj/item/reagent_containers/cup/glass/bottle/virusfood,
 					/obj/item/reagent_containers/glass/bottle/mutagen,
 					/obj/item/reagent_containers/glass/bottle/formaldehyde,
 					/obj/item/reagent_containers/glass/bottle/synaptizine,
@@ -2092,9 +2092,9 @@
 	cost = 800
 	max_supply = 4
 	access_budget = ACCESS_JANITOR
-	contains = list(/obj/item/reagent_containers/glass/bucket,
-					/obj/item/reagent_containers/glass/bucket,
-					/obj/item/reagent_containers/glass/bucket,
+	contains = list(/obj/item/reagent_containers/cup/bucket,
+					/obj/item/reagent_containers/cup/bucket,
+					/obj/item/reagent_containers/cup/bucket,
 					/obj/item/mop,
 					/obj/item/pushbroom,
 					/obj/item/clothing/suit/caution,
@@ -2102,7 +2102,7 @@
 					/obj/item/clothing/suit/caution,
 					/obj/item/storage/bag/trash,
 					/obj/item/reagent_containers/spray/cleaner,
-					/obj/item/reagent_containers/glass/rag,
+					/obj/item/reagent_containers/cup/rag,
 					/obj/item/grenade/chem_grenade/cleaner,
 					/obj/item/grenade/chem_grenade/cleaner,
 					/obj/item/grenade/chem_grenade/cleaner)
@@ -2146,8 +2146,8 @@
 	max_supply = 5
 	contains = list(/obj/item/storage/box/drinkingglasses,
 					/obj/item/reagent_containers/food/drinks/shaker,
-					/obj/item/reagent_containers/food/drinks/bottle/patron,
-					/obj/item/reagent_containers/food/drinks/bottle/goldschlager,
+					/obj/item/reagent_containers/cup/glass/bottle/patron,
+					/obj/item/reagent_containers/cup/glass/bottle/goldschlager,
 					/obj/item/reagent_containers/food/drinks/ale,
 					/obj/item/reagent_containers/food/drinks/ale,
 					/obj/item/reagent_containers/food/drinks/beer,
@@ -2578,7 +2578,7 @@
 	crate_type = /obj/structure/closet/crate
 	contains = list(/obj/item/stack/sheet/mineral/coal/five,
 					/obj/machinery/grill/unwrenched,
-					/obj/item/reagent_containers/food/drinks/soda_cans/monkey_energy
+					/obj/item/reagent_containers/cup/soda_cans/monkey_energy
 					)
 	crate_name = "grilling starter kit crate"
 
@@ -2589,7 +2589,7 @@
 	max_supply = 5
 	crate_type = /obj/structure/closet/crate
 	contains = list(/obj/item/stack/sheet/mineral/coal/ten,
-					/obj/item/reagent_containers/food/drinks/soda_cans/monkey_energy
+					/obj/item/reagent_containers/cup/soda_cans/monkey_energy
 					)
 	crate_name = "grilling fuel kit crate"
 
@@ -2850,7 +2850,7 @@
 					/obj/item/storage/pill_bottle/aranesp,
 					/obj/item/storage/pill_bottle/stimulant,
 					/obj/item/toy/cards/deck/syndicate,
-					/obj/item/reagent_containers/food/drinks/bottle/absinthe,
+					/obj/item/reagent_containers/cup/glass/bottle/absinthe,
 					/obj/item/clothing/under/syndicate/tacticool,
 					/obj/item/storage/fancy/cigarettes/cigpack_syndicate,
 					/obj/item/storage/fancy/cigarettes/cigpack_shadyjims,
@@ -3002,7 +3002,7 @@
 					/obj/item/clothing/mask/gas/mime,
 					/obj/item/clothing/head/frenchberet,
 					/obj/item/clothing/suit/suspenders,
-					/obj/item/reagent_containers/food/drinks/bottle/bottleofnothing,
+					/obj/item/reagent_containers/cup/glass/bottle/bottleofnothing,
 					/obj/item/storage/backpack/mime)
 	crate_name = "standard costume crate"
 	crate_type = /obj/structure/closet/crate/wooden
@@ -3375,8 +3375,8 @@
 	cost = 4000
 	max_supply = 3
 	access_budget = ACCESS_CHAPEL_OFFICE
-	contains = list(/obj/item/reagent_containers/food/drinks/bottle/holywater,
-					/obj/item/reagent_containers/food/drinks/bottle/holywater,
+	contains = list(/obj/item/reagent_containers/cup/glass/bottle/holywater,
+					/obj/item/reagent_containers/cup/glass/bottle/holywater,
 					/obj/item/storage/book/bible/booze,
 					/obj/item/storage/book/bible/booze,
 					/obj/item/clothing/neck/crucifix/rosary,

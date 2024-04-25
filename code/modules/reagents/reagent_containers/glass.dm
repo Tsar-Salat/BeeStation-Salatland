@@ -111,7 +111,7 @@
 	..()
 
 
-/obj/item/reagent_containers/glass/beaker
+/obj/item/reagent_containers/cup/beaker
 	name = "beaker"
 	desc = "A beaker. It can hold up to 50 units."
 	icon = 'icons/obj/chemical.dmi'
@@ -121,15 +121,15 @@
 	fill_icon_thresholds = list(1, 10, 20, 40, 60, 80, 100)
 	label_icon = "label_beaker"
 
-/obj/item/reagent_containers/glass/beaker/Initialize(mapload)
+/obj/item/reagent_containers/cup/beaker/Initialize(mapload)
 	. = ..()
 	update_icon()
 
 
-/obj/item/reagent_containers/glass/beaker/get_part_rating()
+/obj/item/reagent_containers/cup/beaker/get_part_rating()
 	return reagents.maximum_volume
 
-/obj/item/reagent_containers/glass/beaker/jar
+/obj/item/reagent_containers/cup/beaker/jar
 	name = "honey jar"
 	desc = "A jar for honey. It can hold up to 50 units of sweet delight."
 	icon = 'icons/obj/chemical.dmi'
@@ -138,7 +138,7 @@
 	fill_icon_thresholds = null
 	label_icon = null
 
-/obj/item/reagent_containers/glass/beaker/large
+/obj/item/reagent_containers/cup/beaker/large
 	name = "large beaker"
 	desc = "A large beaker. Can hold up to 100 units."
 	icon_state = "beakerlarge"
@@ -148,7 +148,7 @@
 	possible_transfer_amounts = list(5,10,15,20,25,30,50,100)
 	label_icon = "label_beakerlarge"
 
-/obj/item/reagent_containers/glass/beaker/plastic
+/obj/item/reagent_containers/cup/beaker/plastic
 	name = "x-large beaker"
 	desc = "An extra-large beaker. Can hold up to 120 units."
 	icon_state = "beakerwhite"
@@ -158,7 +158,7 @@
 	possible_transfer_amounts = list(5,10,15,20,25,30,60,120)
 	label_icon = "label_beakerlarge"
 
-/obj/item/reagent_containers/glass/beaker/meta
+/obj/item/reagent_containers/cup/beaker/meta
 	name = "metamaterial beaker"
 	desc = "A large beaker. Can hold up to 180 units."
 	icon_state = "beakergold"
@@ -169,7 +169,7 @@
 	fill_icon_thresholds = list(1, 10, 25, 35, 50, 60, 80, 100)
 	label_icon = "label_beakerlarge"
 
-/obj/item/reagent_containers/glass/beaker/noreact
+/obj/item/reagent_containers/cup/beaker/noreact
 	name = "cryostasis beaker"
 	desc = "A cryostasis beaker that allows for chemical storage without \
 		reactions. Can hold up to 50 units."
@@ -182,7 +182,7 @@
 	fill_icon_thresholds = null
 	label_icon = null
 
-/obj/item/reagent_containers/glass/beaker/bluespace
+/obj/item/reagent_containers/cup/beaker/bluespace
 	name = "bluespace beaker"
 	desc = "A bluespace beaker, powered by experimental bluespace technology \
 		and Element Cuban combined with the Compound Pete. Can hold up to \
@@ -196,39 +196,35 @@
 	fill_icon_thresholds = null
 	label_icon = "label_beakerlarge"
 
-/obj/item/reagent_containers/glass/beaker/cryoxadone
+/obj/item/reagent_containers/cup/beaker/cryoxadone
 	list_reagents = list(/datum/reagent/medicine/cryoxadone = 30)
 
-/obj/item/reagent_containers/glass/beaker/sulfuric
+/obj/item/reagent_containers/cup/beaker/sulfuric
 	list_reagents = list(/datum/reagent/toxin/acid = 50)
 
-/obj/item/reagent_containers/glass/beaker/slime
+/obj/item/reagent_containers/cup/beaker/slime
 	list_reagents = list(/datum/reagent/toxin/slimejelly = 50)
 
-/obj/item/reagent_containers/glass/beaker/large/styptic
+/obj/item/reagent_containers/cup/beaker/large/styptic
 	name = "styptic reserve tank"
 	list_reagents = list(/datum/reagent/medicine/styptic_powder = 50)
 
-/obj/item/reagent_containers/glass/beaker/large/silver_sulfadiazine
+/obj/item/reagent_containers/cup/beaker/large/silver_sulfadiazine
 	name = "silver sulfadiazine reserve tank"
 	list_reagents = list(/datum/reagent/medicine/silver_sulfadiazine = 50)
 
-/obj/item/reagent_containers/glass/beaker/large/charcoal
+/obj/item/reagent_containers/cup/beaker/large/charcoal
 	name = "charcoal reserve tank"
 	list_reagents = list(/datum/reagent/medicine/charcoal = 50)
 
-/obj/item/reagent_containers/glass/beaker/large/epinephrine
+/obj/item/reagent_containers/cup/beaker/large/epinephrine
 	name = "epinephrine reserve tank"
 	list_reagents = list(/datum/reagent/medicine/epinephrine = 50)
-
-/obj/item/reagent_containers/glass/beaker/large/kelobic
-	name = "kelotane-bicaridine reserve tank"
-	list_reagents = list(/datum/reagent/medicine/kelotane = 50, /datum/reagent/medicine/bicaridine = 50)
 
 /obj/item/reagent_containers/glass/beaker/synthflesh
 	list_reagents = list(/datum/reagent/medicine/synthflesh = 50)
 
-/obj/item/reagent_containers/glass/bucket
+/obj/item/reagent_containers/cup/bucket
 	name = "bucket"
 	desc = "It's a bucket."
 	icon = 'icons/obj/janitor.dmi'
@@ -256,7 +252,7 @@
 		ITEM_SLOT_DEX_STORAGE
 	)
 
-/obj/item/reagent_containers/glass/bucket/attackby(obj/O, mob/user, params)
+/obj/item/reagent_containers/cup/bucket/attackby(obj/O, mob/user, params)
 	if(istype(O, /obj/item/mop))
 		if(reagents.total_volume < 1)
 			to_chat(user, "<span class='warning'>[src] is out of water!</span>")
@@ -272,7 +268,7 @@
 	else
 		..()
 
-/obj/item/reagent_containers/glass/bucket/equipped(mob/user, slot)
+/obj/item/reagent_containers/cup/bucket/equipped(mob/user, slot)
 	..()
 	if (slot == ITEM_SLOT_HEAD)
 		if(reagents.total_volume)
@@ -281,11 +277,11 @@
 			reagents.clear_reagents()
 		reagents.flags = NONE
 
-/obj/item/reagent_containers/glass/bucket/dropped(mob/user)
+/obj/item/reagent_containers/cup/bucket/dropped(mob/user)
 	..()
 	reagents.flags = initial(reagent_flags)
 
-/obj/item/reagent_containers/glass/bucket/equip_to_best_slot(var/mob/M)
+/obj/item/reagent_containers/cup/bucket/equip_to_best_slot(var/mob/M)
 	if(reagents.total_volume) //If there is water in a bucket, don't quick equip it to the head
 		var/index = slot_equipment_priority.Find(ITEM_SLOT_HEAD)
 		slot_equipment_priority.Remove(ITEM_SLOT_HEAD)

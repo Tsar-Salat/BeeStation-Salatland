@@ -31,7 +31,7 @@
 	id = "cream_carton"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass= 300)
-	build_path = /obj/item/reagent_containers/food/drinks/bottle/cream
+	build_path = /obj/item/reagent_containers/cup/glass/bottle/cream
 	category = list("initial","Food")
 
 /datum/design/black_pepper
