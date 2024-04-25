@@ -4,13 +4,56 @@
 	amount_per_transfer_from_this = 10
 	possible_transfer_amounts = list(5, 10, 15, 20, 25, 30, 50)
 	volume = 50
-	obj_flags = UNIQUE_RENAME
 	reagent_flags = OPENCONTAINER | DUNKABLE
 	spillable = TRUE
 	resistance_flags = ACID_PROOF
 
-/obj/item/reagent_containers/cup/attack(mob/M, mob/user, obj/target)
-	if(!canconsume(M, user))
+	///Like Edible's food type, what kind of drink is this?
+	var/drink_type = NONE
+	///The last time we have checked for taste.
+	var/last_check_time
+	///How much we drink at once, shot glasses drink more.
+	var/gulp_size = 5
+	///Whether the 'bottle' is made of glass or not so that milk cartons dont shatter when someone gets hit by it.
+	var/isGlass = FALSE
+
+/obj/item/reagent_containers/cup/examine(mob/user)
+	. = ..()
+	if(drink_type)
+		var/list/types = bitfield_to_list(drink_type, FOOD_FLAGS)
+		. += "<span class='notice'>It is [lowertext(english_list(types))].</span>"
+
+/obj/item/reagent_containers/cup/proc/checkLiked(fraction, mob/M)
+	if(last_check_time + 50 >= world.time)
+		return
+	if(!ishuman(M))
+		return
+	var/mob/living/carbon/human/H = M
+	var/obj/item/organ/tongue/tongue = H.getorganslot(ORGAN_SLOT_TONGUE)
+	if(HAS_TRAIT(H, TRAIT_AGEUSIA))
+		if(drink_type & tongue.toxic_food)
+			to_chat(H, "<span class='warning'>You don't feel so good...</span>")
+			H.adjust_disgust(25 + 30 * fraction)
+	else
+		if(drink_type & tongue.toxic_food)
+			to_chat(H,"<span class='warning'>What the hell was that thing?!</span>")
+			H.adjust_disgust(25 + 30 * fraction)
+			SEND_SIGNAL(H, COMSIG_ADD_MOOD_EVENT, "disgusting_food", /datum/mood_event/disgusting_food)
+		else if(drink_type & tongue.disliked_food)
+			to_chat(H,"<span class='notice'>That didn't taste very good...</span>")
+			H.adjust_disgust(11 + 15 * fraction)
+			SEND_SIGNAL(H, COMSIG_ADD_MOOD_EVENT, "gross_food", /datum/mood_event/gross_food)
+		else if(drink_type & tongue.liked_food)
+			to_chat(H,"<span class='notice'>I love this taste!</span>")
+			H.adjust_disgust(-5 + -2.5 * fraction)
+			SEND_SIGNAL(H, COMSIG_ADD_MOOD_EVENT, "fav_food", /datum/mood_event/favorite_food)
+
+	if((drink_type & BREAKFAST) && world.time - SSticker.round_start_time < STOP_SERVING_BREAKFAST)
+		SEND_SIGNAL(H, COMSIG_ADD_MOOD_EVENT, "breakfast", /datum/mood_event/breakfast)
+	last_check_time = world.time
+
+/obj/item/reagent_containers/cup/attack(mob/living/target_mob, mob/living/user, obj/target)
+	if(!canconsume(target_mob, user))
 		return
 
 	if(!spillable)
@@ -20,38 +63,26 @@
 		to_chat(user, "<span class='warning'>[src] is empty!</span>")
 		return
 
-	if(istype(M))
-		if(user.a_intent == INTENT_HARM)
-			var/R
-			M.visible_message("<span class='danger'>[user] splashes the contents of [src] onto [M]!</span>", \
-							"<span class='userdanger'>[user] splashes the contents of [src] onto you!</span>")
-			if(reagents)
-				for(var/datum/reagent/A in reagents.reagent_list)
-					R += "[A] ([num2text(A.volume)]),"
+	if(!istype(target_mob))
+		return
 
-			if(isturf(target) && reagents.reagent_list.len && thrownby)
-				log_combat(thrownby, target, "splashed (thrown) [english_list(reagents.reagent_list)]")
-				message_admins("[ADMIN_LOOKUPFLW(thrownby)] splashed (thrown) [english_list(reagents.reagent_list)] on [target] at [ADMIN_VERBOSEJMP(target)].")
-			reagents.reaction(M, TOUCH)
-			log_combat(user, M, "splashed", R)
-			reagents.clear_reagents()
-		else
-			if(M != user)
-				M.visible_message("<span class='danger'>[user] attempts to feed [M] something from [src].</span>", \
-						"<span class='userdanger'>[user] attempts to feed you something from [src].</span>")
-				if(!do_after(user, target = M))
-					return
-				if(!reagents || !reagents.total_volume)
-					return // The drink might be empty after the delay, such as by spam-feeding
-				M.visible_message("<span class='danger'>[user] feeds [M] something from [src].</span>", \
-						"<span class='userdanger'>[user] feeds you something from [src].</span>")
-				log_combat(user, M, "fed", reagents.log_list())
-			else
-				to_chat(user, "<span class='notice'>You swallow a gulp of [src].</span>")
-			var/fraction = min(5/reagents.total_volume, 1)
-			reagents.reaction(M, INGEST, fraction)
-			addtimer(CALLBACK(reagents, TYPE_PROC_REF(/datum/reagents, trans_to), M, 5), 5)
-			playsound(M.loc,'sound/items/drink.ogg', rand(10,50), 1)
+	if(target_mob != user)
+		target_mob.visible_message("<span class='danger'>[user] attempts to feed [target_mob] something from [src].</span>", \
+				"<span class='userdanger'>[user] attempts to feed you something from [src].</span>")
+		if(!do_after(user, 3 SECONDS, target_mob))
+			return
+		if(!reagents || !reagents.total_volume)
+			return // The drink might be empty after the delay, such as by spam-feeding
+		target_mob.visible_message("<span class='danger'>[user] feeds [target_mob] something from [src].</span>", \
+				"<span class='userdanger'>[user] feeds you something from [src].</span>")
+		log_combat(user, target_mob, "fed", reagents.log_list())
+	else
+		to_chat(user, "<span class='notice'>You swallow a gulp of [src].</span>")
+
+	var/fraction = min(gulp_size/reagents.total_volume, 1)
+	reagents.trans_to(target_mob, gulp_size, transfered_by = user, method = INGEST)
+	checkLiked(fraction, target_mob)
+	playsound(target_mob.loc,'sound/items/drink.ogg', rand(10,50), TRUE)
 
 /obj/item/reagent_containers/cup/afterattack(obj/target, mob/user, proximity)
 	. = ..()
@@ -84,13 +115,6 @@
 
 		var/trans = target.reagents.trans_to(src, amount_per_transfer_from_this, transfered_by = user)
 		to_chat(user, "<span class='notice'>You fill [src] with [trans] unit\s of the contents of [target].</span>")
-
-	else if(reagents.total_volume)
-		if(user.a_intent == INTENT_HARM)
-			user.visible_message("<span class='danger'>[user] splashes the contents of [src] onto [target]!</span>", \
-								"<span class='notice'>You splash the contents of [src] onto [target].</span>")
-			reagents.reaction(target, TOUCH)
-			reagents.clear_reagents()
 
 /obj/item/reagent_containers/cup/attackby(obj/item/I, mob/user, params)
 	var/hotness = I.is_hot()

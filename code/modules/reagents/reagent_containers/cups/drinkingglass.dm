@@ -14,7 +14,7 @@
 	obj_flags = UNIQUE_RENAME
 	drop_sound = 'sound/items/handling/drinkglass_drop.ogg'
 	pickup_sound =  'sound/items/handling/drinkglass_pickup.ogg'
-	custom_price = PAYCHECK_
+	custom_price = 5
 
 /obj/item/reagent_containers/cup/glass/drinkingglass/on_reagent_change(changetype)
 	cut_overlays()
@@ -108,25 +108,3 @@
 			return
 	else
 		..()
-
-/obj/item/reagent_containers/cup/glass/drinkingglass/attack(obj/target, mob/user)
-	if(user.a_intent == INTENT_HARM && ismob(target) && target.reagents && reagents.total_volume)
-		target.visible_message("<span class='danger'>[user] splashes the contents of [src] onto [target]!</span>", \
-						"<span class='userdanger'>[user] splashes the contents of [src] onto you!</span>")
-		log_combat(user, target, "splashed", src)
-		reagents.reaction(target, TOUCH)
-		reagents.clear_reagents()
-		return
-	..()
-
-/obj/item/reagent_containers/cup/glass/drinkingglass/afterattack(obj/target, mob/user, proximity)
-	. = ..()
-	if((!proximity) || !check_allowed_items(target,target_self=1))
-		return
-
-	else if(reagents.total_volume && user.a_intent == INTENT_HARM)
-		user.visible_message("<span class='danger'>[user] splashes the contents of [src] onto [target]!</span>", \
-							"<span class='notice'>You splash the contents of [src] onto [target].</span>")
-		reagents.reaction(target, TOUCH)
-		reagents.clear_reagents()
-		return

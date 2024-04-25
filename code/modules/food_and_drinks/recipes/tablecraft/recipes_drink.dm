@@ -110,7 +110,7 @@
 
 /datum/crafting_recipe/smallcarton
 	name = "Small Carton"
-	result = /obj/item/reagent_containers/food/drinks/sillycup/smallcarton
+	result = /obj/item/reagent_containers/cup/glass/sillycup/smallcarton
 	time = 10
 	reqs = list(/obj/item/stack/sheet/cardboard = 1)
 	category = CAT_DRINK
