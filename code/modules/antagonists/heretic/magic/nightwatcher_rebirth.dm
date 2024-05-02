@@ -18,7 +18,7 @@
 		revert_cast()
 		return
 	var/did_something = user.on_fire // This might be a false negative if the user has items on fire but they themselves are not.
-	user.ExtinguishMob()
+	user.extinguish_mob()
 
 	for(var/mob/living/carbon/target in view(7, user))
 		if(!target.mind || !target.client || target.stat == DEAD || !target.on_fire || IS_HERETIC_OR_MONSTER(target))

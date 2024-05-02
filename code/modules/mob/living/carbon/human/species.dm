@@ -2092,7 +2092,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		return FALSE
 	return TRUE
 
-/datum/species/proc/ExtinguishMob(mob/living/carbon/human/H)
+/datum/species/proc/extinguish_mob(mob/living/carbon/human/H)
 	return
 
 /datum/species/proc/spec_revival(mob/living/carbon/human/H)

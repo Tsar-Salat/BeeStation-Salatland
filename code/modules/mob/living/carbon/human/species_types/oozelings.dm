@@ -192,9 +192,9 @@
 		target.visible_message("<span class='notice'>[user] begins to closely hug [target]...</span>", "<span class='boldnotice'>[user] holds you closely in a tight hug!</span>")
 		if(do_after(user, 1 SECONDS, target, IGNORE_HELD_ITEM))
 			target.visible_message("<span class='notice'>[user] extingushes [target] with a hug!</span>", "<span class='boldnotice'>[user] extingushes you with a hug!</span>", "<span class='italics'>You hear a fire sizzle out.</span>")
-			target.fire_stacks = max(target.fire_stacks - 5, 0)
+			target.set_fire_stacks(max(target.fire_stacks - 5, 0))
 			if(target.fire_stacks <= 0)
-				target.ExtinguishMob()
+				target.extinguish_mob()
 		else
 			target.visible_message("<span class='notice'>[target] wriggles out of [user]'s close hug!</span>", "<span class='notice'>You wriggle out of [user]'s close hug.</span>")
 

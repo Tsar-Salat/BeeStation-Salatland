@@ -439,7 +439,7 @@
 	. = ..()
 	if (occupant && !enclosed && !silicon_pilot)
 		if (occupant.fire_stacks < 5)
-			occupant.fire_stacks += 1
+			occupant.adjust_fire_stacks(1)
 		occupant.IgniteMob()
 
 /obj/mecha/Hear(message, atom/movable/speaker, message_language, raw_message, radio_freq, list/spans, list/message_mods = list())

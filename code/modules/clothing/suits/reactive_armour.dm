@@ -160,17 +160,18 @@
 
 /obj/item/clothing/suit/armor/reactive/fire/reactive_activation(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", damage = 0, attack_type = MELEE_ATTACK)
 	owner.visible_message("<span class='danger'>[src] blocks [attack_text], sending out jets of flame!</span>")
-	playsound(get_turf(owner),'sound/magic/fireball.ogg', 100, 1)
+	playsound(get_turf(owner),'sound/magic/fireball.ogg', 100, TRUE)
 	for(var/mob/living/carbon/C in ohearers(6, owner))
-		C.fire_stacks += 8
-		C.IgniteMob()
-	owner.fire_stacks = -20
+		if(C != owner)
+			C.adjust_fire_stacks(8)
+			C.IgniteMob()
+	owner.set_fire_stacks(-20)
 	return TRUE
 
 /obj/item/clothing/suit/armor/reactive/fire/emp_activation(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", damage = 0, attack_type = MELEE_ATTACK)
 	owner.visible_message("<span class='danger'>[src] just makes [attack_text] worse by spewing fire on [owner]!</span>")
-	playsound(get_turf(owner),'sound/magic/fireball.ogg', 100, 1)
-	owner.fire_stacks += 12
+	playsound(get_turf(owner),'sound/magic/fireball.ogg', 100, TRUE)
+	owner.adjust_fire_stacks(12)
 	owner.IgniteMob()
 	return FALSE
 

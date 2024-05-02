@@ -22,7 +22,7 @@
 			SEND_SOUND(M, sound('sound/magic/fireball.ogg'))
 		if(!is_servant_of_ratvar(M) && isliving(M))
 			var/mob/living/L = M
-			L.fire_stacks = INFINITY
+			L.set_fire_stacks(INFINITY)
 			L.IgniteMob()
 			L.emote("scream")
 

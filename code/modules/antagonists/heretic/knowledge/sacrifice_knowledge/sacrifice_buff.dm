@@ -61,7 +61,7 @@
  * Initially heals the owner a bit, ensuring they have no suffocation and no immobility.
 */
 /datum/status_effect/unholy_determination/proc/initial_heal()
-	owner.ExtinguishMob()
+	owner.extinguish_mob()
 	// catch your breath
 	owner.losebreath = 0
 	owner.setOxyLoss(0, FALSE)
@@ -77,7 +77,7 @@
  */
 /datum/status_effect/unholy_determination/proc/adjust_all_damages(amount)
 
-	owner.fire_stacks = max(owner.fire_stacks - 1, 0)
+	owner.set_fire_stacks(max(owner.fire_stacks - 1, 0))
 	owner.losebreath = max(owner.losebreath - 0.5, 0)
 
 	owner.adjustToxLoss(-amount, FALSE, TRUE)
