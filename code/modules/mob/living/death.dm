@@ -49,7 +49,7 @@
 
 /mob/living/death(gibbed)
 	set_stat(DEAD)
-	SEND_SIGNAL(src, COMSIG_LIVING_DEATH, gibbed, was_dead_before)
+	SEND_SIGNAL(src, COMSIG_LIVING_DEATH, gibbed)
 	unset_machine()
 	timeofdeath = world.time
 	tod = station_time_timestamp()
