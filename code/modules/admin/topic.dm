@@ -47,7 +47,6 @@
 			to_chat(usr, "<span class='danger'>ERROR: Mob not found.</span>")
 			return
 		cmd_show_exp_panel(M.client)
-
 	else if(href_list["toggleexempt"])
 		if(!check_rights(R_ADMIN))
 			return

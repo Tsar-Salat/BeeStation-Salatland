@@ -321,7 +321,15 @@
 	midround_ruleset_style = MIDROUND_RULESET_STYLE_HEAVY
 	role_preference = /datum/role_preference/midround_ghost/nuclear_operative
 	antag_datum = /datum/antagonist/nukeop
-	enemy_roles = list(JOB_NAME_AI, JOB_NAME_CYBORG, JOB_NAME_SECURITYOFFICER, JOB_NAME_WARDEN, JOB_NAME_DETECTIVE, JOB_NAME_HEADOFSECURITY, JOB_NAME_CAPTAIN)
+	enemy_roles = list(
+		JOB_NAME_AI,
+		JOB_NAME_CYBORG,
+		JOB_NAME_SECURITYOFFICER,
+		JOB_NAME_WARDEN,
+		JOB_NAME_DETECTIVE,
+		JOB_NAME_HEADOFSECURITY,
+		JOB_NAME_CAPTAIN
+	)
 	required_enemies = list(3,3,2,2,2,2,1,1,0,0)
 	required_candidates = 5
 	weight = 5

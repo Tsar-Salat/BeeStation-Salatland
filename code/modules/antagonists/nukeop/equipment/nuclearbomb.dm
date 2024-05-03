@@ -1,3 +1,5 @@
+GLOBAL_VAR_INIT(station_was_nuked, FALSE)
+GLOBAL_VAR(station_nuke_source)
 #define ARM_ACTION_COOLDOWN (5 SECONDS)
 
 /obj/machinery/nuclearbomb
@@ -8,9 +10,6 @@
 	anchored = FALSE
 	density = TRUE
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
-
-
-
 
 	var/timer_set = 90
 	var/minimum_timer_set = 90
@@ -76,10 +75,9 @@
 	// actually the nuke op bomb is a stole nt bomb
 
 /obj/machinery/nuclearbomb/syndicate/get_cinematic_type(off_station)
-	var/datum/game_mode/nuclear/NM = SSticker.mode
 	switch(off_station)
 		if(0)
-			if(istype(NM) && !NM.nuke_team.syndies_escaped())
+			if(get_antag_minds(/datum/antagonist/nukeop).len && syndies_escaped())
 				return CINEMATIC_ANNIHILATION
 			else
 				return CINEMATIC_NUKE_WIN
@@ -447,6 +445,7 @@
 		detonation_timer = world.time + (timer_set * 10)
 		for(var/obj/item/pinpointer/nuke/syndicate/S in GLOB.pinpointer_list)
 			S.switch_mode_to(TRACK_INFILTRATOR)
+
 		countdown.start()
 		set_security_level(SEC_LEVEL_DELTA)
 
@@ -513,25 +512,31 @@
 	if(bomb_location && is_station_level(bomb_location.z))
 		if(istype(A, /area/space))
 			off_station = NUKE_NEAR_MISS
-		if((bomb_location.x < (128-NUKERANGE)) || (bomb_location.x > (128+NUKERANGE)) || (bomb_location.y < (128-NUKERANGE)) || (bomb_location.y > (128+NUKERANGE)))
+		else if((bomb_location.x < (128-NUKERANGE)) || (bomb_location.x > (128+NUKERANGE)) || (bomb_location.y < (128-NUKERANGE)) || (bomb_location.y > (128+NUKERANGE)))
 			off_station = NUKE_NEAR_MISS
+		else // station actually nuked
+			off_station = STATION_DESTROYED_NUKE
+			GLOB.station_was_nuked = TRUE
 	else if(bomb_location.onSyndieBase())
 		off_station = NUKE_SYNDICATE_BASE
 	else
 		off_station = NUKE_MISS_STATION
 
-	if(off_station < 2)
+	if(off_station < NUKE_MISS_STATION)
 		SSshuttle.registerHostileEnvironment(src)
 		SSshuttle.lockdown = TRUE
-
 	//Cinematic
-	SSticker.mode.OnNukeExplosion(off_station)
+	GLOB.station_nuke_source = off_station
 	really_actually_explode(off_station)
 	SSticker.roundend_check_paused = FALSE
 
 /obj/machinery/nuclearbomb/proc/really_actually_explode(off_station)
 	Cinematic(get_cinematic_type(off_station),world,CALLBACK(SSticker, TYPE_PROC_REF(/datum/controller/subsystem/ticker, station_explosion_detonation), src))
-	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(KillEveryoneOnZLevel), get_virtual_z_level())
+	if(off_station == STATION_DESTROYED_NUKE)
+		INVOKE_ASYNC(GLOBAL_PROC,.proc/KillEveryoneOnStation)
+		return
+	if(off_station != NUKE_NEAR_MISS) // Don't kill people in the station if the nuke missed, even if we are technically on the same z-level
+		INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(KillEveryoneOnZLevel), get_virtual_z_level())
 
 /obj/machinery/nuclearbomb/proc/get_cinematic_type(off_station)
 	if(off_station < 2)

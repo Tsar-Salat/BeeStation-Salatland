@@ -319,27 +319,22 @@
 			return FALSE
 	return TRUE
 
-/datum/team/nuclear/proc/syndies_escaped()
-	var/obj/docking_port/mobile/S = SSshuttle.getShuttle("syndicate")
-	var/obj/docking_port/stationary/transit/T = locate() in S.loc
-	return S && (is_centcom_level(S.z) || T)
-
 /datum/team/nuclear/proc/get_result()
 	var/evacuation = EMERGENCY_ESCAPED_OR_ENDGAMED
 	var/disk_rescued = disk_rescued()
 	var/syndies_didnt_escape = !syndies_escaped()
-	var/station_was_nuked = SSticker.mode.station_was_nuked
-	var/nuke_off_station = SSticker.mode.nuke_off_station
+	var/station_was_nuked = GLOB.station_was_nuked
+	var/station_nuke_source = GLOB.station_nuke_source
 
-	if(nuke_off_station == NUKE_SYNDICATE_BASE)
+	if(station_nuke_source == NUKE_SYNDICATE_BASE)
 		return NUKE_RESULT_FLUKE
 	else if(station_was_nuked && !syndies_didnt_escape)
 		return NUKE_RESULT_NUKE_WIN
 	else if (station_was_nuked && syndies_didnt_escape)
 		return NUKE_RESULT_NOSURVIVORS
-	else if (!disk_rescued && !station_was_nuked && nuke_off_station && !syndies_didnt_escape)
+	else if (!disk_rescued && !station_was_nuked && station_nuke_source && !syndies_didnt_escape)
 		return NUKE_RESULT_WRONG_STATION
-	else if (!disk_rescued && !station_was_nuked && nuke_off_station && syndies_didnt_escape)
+	else if (!disk_rescued && !station_was_nuked && station_nuke_source && syndies_didnt_escape)
 		return NUKE_RESULT_WRONG_STATION_DEAD
 	else if ((disk_rescued && evacuation) && operatives_dead())
 		return NUKE_RESULT_CREW_WIN_SYNDIES_DEAD
@@ -404,7 +399,7 @@
 	text += "<br>"
 	var/effective_message = TC_uses < effective_tc ? " / effectively worth [effective_tc] TC" : ""
 	text += "(Syndicates used [TC_uses] TC[effective_message]) [purchases]"
-	if(TC_uses == 0 && SSticker.mode.station_was_nuked && !operatives_dead())
+	if(TC_uses == 0 && GLOB.station_was_nuked && !operatives_dead())
 		text += "<BIG>[icon2html('icons/badass.dmi', world, "badass")]</BIG>"
 
 	parts += text
@@ -436,5 +431,12 @@
 	var/common_part = ..()
 	return common_part + disk_report
 
+//TODO: KILL THIS SHITTTTT proc AHHHHHHHHHH. But later, when gamemodes is kil.
 /datum/team/nuclear/is_gamemode_hero()
 	return SSticker.mode.name == "nuclear emergency"
+
+/// Returns whether or not syndicate operatives escaped.
+/proc/syndies_escaped()
+	var/obj/docking_port/mobile/S = SSshuttle.getShuttle("syndicate")
+	var/obj/docking_port/stationary/transit/T = locate() in S.loc
+	return S && (is_centcom_level(S.z) || T)
