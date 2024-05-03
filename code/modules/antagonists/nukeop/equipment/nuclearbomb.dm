@@ -520,7 +520,7 @@
 	else
 		off_station = NUKE_MISS_STATION
 
-	if(off_station < 2)
+	if(off_station < NUKE_NEAR_MISS)
 		SSshuttle.registerHostileEnvironment(src)
 		SSshuttle.lockdown = TRUE
 
@@ -530,11 +530,13 @@
 	SSticker.roundend_check_paused = FALSE
 
 /obj/machinery/nuclearbomb/proc/really_actually_explode(off_station)
+	var/turf/bomb_location = get_turf(src)
 	Cinematic(get_cinematic_type(off_station),world,CALLBACK(SSticker, TYPE_PROC_REF(/datum/controller/subsystem/ticker, station_explosion_detonation), src))
-	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(KillEveryoneOnZLevel), get_virtual_z_level())
+	if(off_station != NUKE_NEAR_MISS) // Don't kill people in the station if the nuke missed, even if we are technically on the same z-level
+		INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(KillEveryoneOnZLevel), get_virtual_z_level())
 
 /obj/machinery/nuclearbomb/proc/get_cinematic_type(off_station)
-	if(off_station < 2)
+	if(off_station < NUKE_NEAR_MISS)
 		return CINEMATIC_SELFDESTRUCT
 	else
 		return CINEMATIC_SELFDESTRUCT_MISS
