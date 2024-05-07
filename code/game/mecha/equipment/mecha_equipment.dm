@@ -130,6 +130,7 @@
 /obj/item/mecha_parts/mecha_equipment/proc/attach(obj/mecha/M)
 	M.equipment += src
 	chassis = M
+	SEND_SIGNAL(src, COMSIG_MECHA_EQUIPMENT_ATTACHED)
 	forceMove(M)
 	log_message("[src] initialized.", LOG_MECHA)
 	if(!M.selected && selectable)
@@ -144,6 +145,7 @@
 		if(chassis.selected == src)
 			chassis.selected = null
 		update_chassis_page()
+		SEND_SIGNAL(src, COMSIG_MECHA_EQUIPMENT_DETACHED)
 		log_message("[src] removed from equipment.", LOG_MECHA)
 		chassis = null
 		set_ready_state(1)

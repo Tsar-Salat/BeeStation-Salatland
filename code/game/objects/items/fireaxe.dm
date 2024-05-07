@@ -26,7 +26,13 @@
 
 /obj/item/fireaxe/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/butchering, 100, 80, 0 , hitsound) //axes are not known for being precision butchering tools
+	AddComponent(/datum/component/butchering, \
+	speed = 10 SECONDS, \
+	effectiveness = 80, \
+	bonus_modifier = 0 , \
+	butcher_sound = hitsound, \
+	)
+	//axes are not known for being precision butchering tools
 	AddComponent(/datum/component/two_handed, force_unwielded=5, force_wielded=24, block_power_wielded=25, icon_wielded="[icon_prefix]1")
 
 /obj/item/fireaxe/update_icon()

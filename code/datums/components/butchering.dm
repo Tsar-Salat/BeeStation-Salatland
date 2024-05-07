@@ -11,20 +11,26 @@
 	var/butchering_enabled = TRUE
 	/// Whether or not this component is compatible with blunt tools.
 	var/can_be_blunt = FALSE
+	/// Callback for butchering
+	var/datum/callback/butcher_callback
 
-/datum/component/butchering/Initialize(_speed, _effectiveness, _bonus_modifier, _butcher_sound, disabled, _can_be_blunt)
-	if(_speed)
-		speed = _speed
-	if(_effectiveness)
-		effectiveness = _effectiveness
-	if(_bonus_modifier)
-		bonus_modifier = _bonus_modifier
-	if(_butcher_sound)
-		butcher_sound = _butcher_sound
+/datum/component/butchering/Initialize(
+	speed,
+	effectiveness,
+	bonus_modifier,
+	butcher_sound,
+	disabled,
+	can_be_blunt,
+	butcher_callback,
+)
+	src.speed = speed
+	src.effectiveness = effectiveness
+	src.bonus_modifier = bonus_modifier
+	src.butcher_sound = butcher_sound
 	if(disabled)
-		butchering_enabled = FALSE
-	if(_can_be_blunt)
-		can_be_blunt = _can_be_blunt
+		src.butchering_enabled = FALSE
+	src.can_be_blunt = can_be_blunt
+	src.butcher_callback = butcher_callback
 	if(isitem(parent))
 		RegisterSignal(parent, COMSIG_ITEM_ATTACK, PROC_REF(onItemAttack))
 
@@ -35,7 +41,8 @@
 		if(butchering_enabled && (can_be_blunt || source.is_sharp()))
 			INVOKE_ASYNC(src, PROC_REF(startButcher), source, M, user)
 			return COMPONENT_CANCEL_ATTACK_CHAIN
-	if(user.a_intent == INTENT_GRAB && ishuman(M) && source.is_sharp())
+
+	if(ishuman(M) && source.force && source.is_sharp())
 		var/mob/living/carbon/human/H = M
 		if(H.has_status_effect(/datum/status_effect/neck_slice))
 			user.show_message("<span class='danger'>[H]'s neck has already been already cut, you can't make the bleeding any worse!", 1, \
@@ -49,9 +56,10 @@
 	to_chat(user, "<span class='notice'>You begin to butcher [M]...</span>")
 	playsound(M.loc, butcher_sound, 50, TRUE, -1)
 	if(do_after(user, speed, M) && M.Adjacent(source))
-		Butcher(user, M)
+		on_butchering(user, M)
 
 /datum/component/butchering/proc/startNeckSlice(obj/item/source, mob/living/carbon/human/H, mob/living/user)
+
 	user.visible_message("<span class='danger'>[user] is slitting [H]'s throat!</span>", \
 					"<span class='danger'>You start slicing [H]'s throat!</span>", \
 					"<span class='hear'>You hear a cutting noise!</span>")
@@ -74,7 +82,7 @@
 		H.bleed_rate = clamp(H.bleed_rate + 20, 0, 30)
 		H.apply_status_effect(/datum/status_effect/neck_slice)
 
-/datum/component/butchering/proc/Butcher(mob/living/butcher, mob/living/meat)
+/datum/component/butchering/proc/on_butchering(atom/butcher, mob/living/meat)
 	var/turf/T = meat.drop_location()
 	var/final_effectiveness = effectiveness - meat.butcher_difficulty
 	var/bonus_chance = max(0, (final_effectiveness - 100) + bonus_modifier) //so 125 total effectiveness = 25% extra chance
@@ -93,40 +101,122 @@
 			else
 				new bones (T)
 		meat.butcher_results.Remove(bones) //in case you want to, say, have it drop its results on gib
+
+
 	for(var/V in meat.guaranteed_butcher_results)
 		var/obj/sinew = V
 		var/amount = meat.guaranteed_butcher_results[sinew]
 		for(var/i in 1 to amount)
 			new sinew (T)
 		meat.guaranteed_butcher_results.Remove(sinew)
+
 	if(butcher)
 		butcher.visible_message("<span class='notice'>[butcher] butchers [meat].</span>", \
 								"<span class='notice'>You butcher [meat].</span>")
-	ButcherEffects(meat)
+	butcher_callback?.Invoke(butcher, meat)
 	meat.harvest(butcher)
 	meat.log_message("has been butchered by [key_name(butcher)]", LOG_ATTACK)
 	meat.investigate_log("was gibbed via butchering", INVESTIGATE_DEATHS)
 	meat.gib(FALSE, FALSE, TRUE)
 
-/datum/component/butchering/proc/ButcherEffects(mob/living/meat) //extra effects called on butchering, override this via subtypes
-	return
+///Enables the butchering mechanic for the mob who has equipped us.
+/datum/component/butchering/proc/enable_butchering(datum/source)
+	SIGNAL_HANDLER
+	butchering_enabled = TRUE
+
+///Disables the butchering mechanic for the mob who has dropped us.
+/datum/component/butchering/proc/disable_butchering(datum/source)
+	SIGNAL_HANDLER
+	butchering_enabled = FALSE
 
 ///Special snowflake component only used for the recycler.
 /datum/component/butchering/recycler
 
-/datum/component/butchering/recycler/Initialize(_speed, _effectiveness, _bonus_modifier, _butcher_sound, disabled, _can_be_blunt)
+
+/datum/component/butchering/recycler/Initialize(
+	speed,
+	effectiveness,
+	bonus_modifier,
+	butcher_sound,
+	disabled,
+	can_be_blunt,
+	butcher_callback,
+)
 	if(!istype(parent, /obj/machinery/recycler)) //EWWW
 		return COMPONENT_INCOMPATIBLE
 	. = ..()
 	if(. == COMPONENT_INCOMPATIBLE)
 		return
-	RegisterSignal(parent, COMSIG_MOVABLE_CROSSED, .proc/onCrossed)
 
-/datum/component/butchering/recycler/proc/onCrossed(datum/source, mob/living/L)
-	if(!istype(L))
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
+	AddComponent(/datum/component/connect_loc_behalf, parent, loc_connections)
+
+/datum/component/butchering/recycler/proc/on_entered(datum/source, atom/movable/arrived, atom/old_loc, list/atom/old_locs)
+	SIGNAL_HANDLER
+
+	if(!isliving(arrived))
 		return
+	var/mob/living/victim = arrived
 	var/obj/machinery/recycler/eater = parent
-	if(eater.safety_mode || (eater.stat & (BROKEN|NOPOWER))) //I'm so sorry.
+	if(eater.safety_mode || (eater.machine_stat & (BROKEN|NOPOWER))) //I'm so sorry.
 		return
-	if(L.stat == DEAD && (L.butcher_results || L.guaranteed_butcher_results))
-		Butcher(src, L)
+	if(victim.stat == DEAD && (victim.butcher_results || victim.guaranteed_butcher_results))
+		on_butchering(parent, victim)
+
+/datum/component/butchering/mecha
+
+/datum/component/butchering/mecha/RegisterWithParent()
+	. = ..()
+	RegisterSignal(parent, COMSIG_MECHA_EQUIPMENT_ATTACHED, .proc/enable_butchering)
+	RegisterSignal(parent, COMSIG_MECHA_EQUIPMENT_DETACHED, .proc/disable_butchering)
+	RegisterSignal(parent, COMSIG_MECHA_DRILL_MOB, .proc/on_drill)
+
+/datum/component/butchering/mecha/UnregisterFromParent()
+	. = ..()
+	UnregisterSignal(parent, list(
+		COMSIG_MECHA_DRILL_MOB,
+		COMSIG_MECHA_EQUIPMENT_ATTACHED,
+		COMSIG_MECHA_EQUIPMENT_DETACHED,
+	))
+
+///When we are ready to drill through a mob
+/datum/component/butchering/mecha/proc/on_drill(datum/source, obj/mecha/chassis, mob/living/meat)
+	SIGNAL_HANDLER
+	INVOKE_ASYNC(src, .proc/on_butchering, chassis, meat)
+
+/datum/component/butchering/wearable
+
+/datum/component/butchering/wearable/RegisterWithParent()
+	. = ..()
+	RegisterSignal(parent, COMSIG_ITEM_EQUIPPED, .proc/worn_enable_butchering)
+	RegisterSignal(parent, COMSIG_ITEM_DROPPED, .proc/worn_disable_butchering)
+
+/datum/component/butchering/wearable/UnregisterFromParent()
+	. = ..()
+	UnregisterSignal(parent, list(
+		COMSIG_ITEM_EQUIPPED,
+		COMSIG_ITEM_DROPPED,
+	))
+
+///Same as enable_butchering but for worn items
+/datum/component/butchering/wearable/proc/worn_enable_butchering(obj/item/source, mob/user, slot)
+	SIGNAL_HANDLER
+	//check if the item is being not worn
+	if(!(slot & source.slot_flags))
+		return
+	butchering_enabled = TRUE
+	RegisterSignal(user, COMSIG_HUMAN_EARLY_UNARMED_ATTACK, .proc/butcher_target)
+
+///Same as disable_butchering but for worn items
+/datum/component/butchering/wearable/proc/worn_disable_butchering(obj/item/source, mob/user)
+	SIGNAL_HANDLER
+	butchering_enabled = FALSE
+	UnregisterSignal(user, COMSIG_HUMAN_EARLY_UNARMED_ATTACK)
+
+/datum/component/butchering/wearable/proc/butcher_target(mob/user, atom/target, proximity)
+	SIGNAL_HANDLER
+	if(!isliving(target))
+		return
+	onItemAttack(parent, target, user)

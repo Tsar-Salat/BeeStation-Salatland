@@ -20,9 +20,8 @@
 	var/eat_victim_items = TRUE
 	var/item_recycle_sound = 'sound/items/welder.ogg'
 
-/obj/machinery/recycler/Initialize(mapload)
-	AddComponent(/datum/component/butchering/recycler, 1, amount_produced,amount_produced/5)
-	AddComponent(/datum/component/material_container, list(
+/obj/machinery/recycler/Intialize(mapload)
+	var/static/list/allowed_materials = list(
 		/datum/material/iron,
 		/datum/material/glass,
 		/datum/material/copper,
@@ -34,9 +33,14 @@
 		/datum/material/uranium,
 		/datum/material/bananium,
 		/datum/material/titanium,
-		/datum/material/bluespace
-		),
-		INFINITY, FALSE, null, null, null, TRUE)
+		/datum/material/bluespace,
+	)
+	AddComponent(/datum/component/material_container, allowed_materials, INFINITY, FALSE, null, null, null, TRUE)
+	AddComponent(/datum/component/butchering/recycler, \
+		speed = 0.1 SECONDS, \
+		effectiveness = amount_produced, \
+		bonus_modifier = amount_produced/5, \
+	)
 	. = ..()
 	update_icon()
 	req_one_access = get_all_accesses() + get_all_centcom_access()
@@ -95,22 +99,23 @@
 		is_powered = FALSE
 	icon_state = icon_name + "[is_powered]" + "[(blood ? "bld" : "")]" // add the blood tag at the end
 
-/obj/machinery/recycler/CanPass(atom/movable/AM)
+/obj/machinery/recycler/CanAllowThrough(atom/movable/mover, border_dir)
 	. = ..()
 	if(!anchored)
 		return
-	var/move_dir = get_dir(loc, AM.loc)
-	if(move_dir == eat_dir)
+	if(border_dir == eat_dir)
 		return TRUE
 
-/obj/machinery/recycler/Crossed(atom/movable/AM)
-	eat(AM)
-	. = ..()
+/obj/machinery/recycler/proc/on_entered(datum/source, atom/movable/AM)
+	SIGNAL_HANDLER
+	INVOKE_ASYNC(src, PROC_REF(eat), AM)
 
 /obj/machinery/recycler/proc/eat(atom/AM0, sound=TRUE)
-	if(stat & (BROKEN|NOPOWER))
+	if(machine_stat & (BROKEN|NOPOWER))
 		return
 	if(safety_mode)
+		return
+	if(iseffect(AM0))
 		return
 
 	var/list/to_eat

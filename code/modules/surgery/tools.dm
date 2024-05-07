@@ -206,7 +206,13 @@
 
 /obj/item/circular_saw/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/butchering, 40 * toolspeed, 100, 5, 'sound/weapons/circsawhit.ogg') //saws are very accurate and fast at butchering
+	AddComponent(/datum/component/butchering, \
+	speed = 4 SECONDS * toolspeed, \
+	effectiveness = 100, \
+	bonus_modifier = 5, \
+	butcher_sound = 'sound/weapons/circsawhit.ogg', \
+	)
+	//saws are very accurate and fast at butchering
 
 /obj/item/circular_saw/augment
 	name = "circular saw"

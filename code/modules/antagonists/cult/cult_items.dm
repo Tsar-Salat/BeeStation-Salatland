@@ -59,7 +59,10 @@ Striking a noncultist, however, will tear their flesh."}
 
 /obj/item/melee/cultblade/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/butchering, 40, 100)
+	AddComponent(/datum/component/butchering, \
+	speed = 4 SECONDS, \
+	effectiveness = 100, \
+	)
 
 /obj/item/melee/cultblade/attack(mob/living/target, mob/living/carbon/human/user)
 	if(!iscultist(user))
@@ -122,7 +125,10 @@ Striking a noncultist, however, will tear their flesh."}
 	. = ..()
 	jaunt = new(src)
 	linked_action = new(src)
-	AddComponent(/datum/component/butchering, 50, 80)
+	AddComponent(/datum/component/butchering, \
+	speed = 5 SECONDS, \
+	effectiveness = 80, \
+	)
 	AddComponent(/datum/component/two_handed, require_twohands=TRUE)
 
 /obj/item/cult_bastard/Destroy()
@@ -665,7 +671,10 @@ Striking a noncultist, however, will tear their flesh."}
 
 /obj/item/cult_spear/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/butchering, 100, 90)
+	AddComponent(/datum/component/butchering, \
+	speed = 10 SECONDS, \
+	effectiveness = 90, \
+	)
 	AddComponent(/datum/component/two_handed, force_unwielded=17, force_wielded=24, icon_wielded="bloodspear1")
 
 /obj/item/cult_spear/update_icon()

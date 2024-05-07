@@ -113,7 +113,11 @@
 
 /obj/item/pen/fountain/captain/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/butchering, 200, 115) //the pen is mightier than the sword
+	AddComponent(/datum/component/butchering, \
+	speed = 20 SECONDS, \
+	effectiveness = 115, \
+	)
+	//the pen is mightier than the sword
 
 /obj/item/pen/fountain/captain/reskin_obj(mob/M)
 	if(isnull(unique_reskin))
@@ -230,7 +234,10 @@
 
 /obj/item/pen/edagger/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/butchering, 60, 100, 0, 'sound/weapons/edagger.ogg')
+	AddComponent(/datum/component/butchering, \
+	speed = 6 SECONDS, \
+	butcher_sound = 'sound/weapons/edagger.ogg', \
+	)
 
 /obj/item/pen/edagger/is_sharp()
 	return on * sharpness

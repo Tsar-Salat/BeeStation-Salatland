@@ -171,7 +171,10 @@
 		loc.visible_message("<span class='warning'>A grotesque blade forms around [loc.name]\'s arm!</span>", "<span class='warning'>Our arm twists and mutates, transforming it into a deadly blade.</span>", "<span class='italics'>You hear organic matter ripping and tearing!</span>")
 	if(synthetic)
 		can_drop = TRUE
-	AddComponent(/datum/component/butchering, 60, 80)
+	AddComponent(/datum/component/butchering, \
+	speed = 6 SECONDS, \
+	effectiveness = 80, \
+	)
 
 /obj/item/melee/arm_blade/afterattack(atom/target, mob/user, proximity)
 	. = ..()

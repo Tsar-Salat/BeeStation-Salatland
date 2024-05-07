@@ -573,7 +573,11 @@
 
 /obj/item/nullrod/scythe/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/butchering, 70, 110) //the harvest gives a high bonus chance
+	AddComponent(/datum/component/butchering, \
+	speed = 7 SECONDS, \
+	effectiveness = 110, \
+	)
+	//the harvest gives a high bonus chance
 
 /obj/item/nullrod/scythe/vibro
 	icon_state = "hfrequency0"
@@ -692,7 +696,12 @@
 /obj/item/nullrod/chainsaw/Initialize(mapload)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_NODROP, HAND_REPLACEMENT_TRAIT)
-	AddComponent(/datum/component/butchering, 30, 100, 0, hitsound)
+	AddComponent(/datum/component/butchering, \
+	speed = 3 SECONDS, \
+	effectiveness = 100, \
+	bonus_modifier = 0, \
+	butcher_sound = hitsound, \
+	)
 
 /obj/item/nullrod/clown
 	icon = 'icons/obj/wizard.dmi'
@@ -767,7 +776,10 @@
 	. = ..()
 	ADD_TRAIT(src, TRAIT_NODROP, HAND_REPLACEMENT_TRAIT)
 //	ADD_TRAIT(src, TRAIT_DOOR_PRYER, INNATE_TRAIT)	//uncomment if you want chaplains to have AA as a null rod option. The armblade will behave even more like a changeling one then!
-	AddComponent(/datum/component/butchering, 80, 70)
+	AddComponent(/datum/component/butchering, \
+	speed = 8 SECONDS, \
+	effectiveness = 70, \
+	)
 
 /obj/item/nullrod/armblade/tentacle
 	name = "unholy blessing"
@@ -827,7 +839,10 @@
 /obj/item/nullrod/tribal_knife/Initialize(mapload)
 	. = ..()
 	START_PROCESSING(SSobj, src)
-	AddComponent(/datum/component/butchering, 50, 100)
+	AddComponent(/datum/component/butchering, \
+	speed = 5 SECONDS, \
+	effectiveness = 100, \
+	)
 
 /obj/item/nullrod/tribal_knife/Destroy()
 	STOP_PROCESSING(SSobj, src)

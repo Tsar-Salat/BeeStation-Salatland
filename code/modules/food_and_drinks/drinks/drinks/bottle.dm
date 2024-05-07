@@ -138,7 +138,10 @@
 
 /obj/item/broken_bottle/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/butchering, 200, 55)
+	AddComponent(/datum/component/butchering, \
+	speed = 20 SECONDS, \
+	effectiveness = 55, \
+	)
 
 /obj/item/reagent_containers/food/drinks/bottle/gin
 	name = "Griffeater gin"

@@ -31,7 +31,13 @@
 
 /obj/item/chainsaw/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/butchering, 30, 100, 0, 'sound/weapons/chainsawhit.ogg', TRUE)
+	AddComponent(/datum/component/butchering, \
+	speed = 3 SECONDS, \
+	effectiveness = 100, \
+	bonus_modifier = 0, \
+	butcher_sound = 'sound/weapons/chainsawhit.ogg', \
+	disabled = TRUE, \
+	)
 	AddComponent(/datum/component/two_handed, require_twohands=TRUE, block_power_unwielded=block_power, block_power_wielded=block_power)
 
 /obj/item/chainsaw/suicide_act(mob/living/carbon/user)

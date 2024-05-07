@@ -88,7 +88,10 @@
 
 /obj/item/hatchet/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/butchering, 70, 100)
+	AddComponent(/datum/component/butchering, \
+	speed = 7 SECONDS, \
+	effectiveness = 100, \
+	)
 
 /obj/item/hatchet/suicide_act(mob/living/user)
 	user.visible_message("<span class='suicide'>[user] is chopping at [user.p_them()]self with [src]! It looks like [user.p_theyre()] trying to commit suicide!</span>")
@@ -116,7 +119,10 @@
 
 /obj/item/scythe/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/butchering, 90, 105)
+	AddComponent(/datum/component/butchering, \
+	speed = 9 SECONDS, \
+	effectiveness = 105, \
+	)
 
 /obj/item/scythe/suicide_act(mob/living/user)
 	user.visible_message("<span class='suicide'>[user] is beheading [user.p_them()]self with [src]! It looks like [user.p_theyre()] trying to commit suicide!</span>")

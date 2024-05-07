@@ -21,7 +21,13 @@
 
 /obj/item/mecha_parts/mecha_equipment/drill/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/butchering, 50, 100, null, null, TRUE)
+	AddComponent(/datum/component/butchering/mecha, \
+	speed = 5 SECONDS, \
+	effectiveness = 100, \
+	bonus_modifier = null, \
+	butcher_sound = null, \
+	disabled = TRUE, \
+	)
 
 /obj/item/mecha_parts/mecha_equipment/drill/action(atom/target)
 	if(!action_checks(target))
@@ -101,16 +107,6 @@
 			return 1
 	return 0
 
-/obj/item/mecha_parts/mecha_equipment/drill/attach(obj/mecha/M)
-	..()
-	var/datum/component/butchering/butchering = src.GetComponent(/datum/component/butchering)
-	butchering.butchering_enabled = TRUE
-
-/obj/item/mecha_parts/mecha_equipment/drill/detach(atom/moveto)
-	..()
-	var/datum/component/butchering/butchering = src.GetComponent(/datum/component/butchering)
-	butchering.butchering_enabled = FALSE
-
 /obj/item/mecha_parts/mecha_equipment/drill/proc/drill_mob(mob/living/target, mob/user)
 	target.visible_message("<span class='danger'>[chassis] is drilling [target] with [src]!</span>", \
 						"<span class='userdanger'>[chassis] is drilling you with [src]!</span>")
@@ -118,8 +114,7 @@
 	if(target.stat == DEAD && target.getBruteLoss() >= 200)
 		log_combat(user, target, "gibbed", name)
 		if(LAZYLEN(target.butcher_results) || LAZYLEN(target.guaranteed_butcher_results))
-			var/datum/component/butchering/butchering = src.GetComponent(/datum/component/butchering)
-			butchering.Butcher(chassis, target)
+			SEND_SIGNAL(src, COMSIG_MECHA_DRILL_MOB, chassis, target)
 		else
 			investigate_log("has been gibbed by [src] (attached to [chassis]).", INVESTIGATE_DEATHS)
 			target.gib()
