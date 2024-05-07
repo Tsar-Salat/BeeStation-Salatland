@@ -257,6 +257,9 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	if(LAZYLEN(embedding))
 		updateEmbedding()
 
+	if(sharpness) //give sharp objects butchering functionality, for consistency
+		AddComponent(/datum/component/butchering, 80 * toolspeed)
+
 /obj/item/Destroy()
 	item_flags &= ~DROPDEL	//prevent reqdels
 	if(ismob(loc))

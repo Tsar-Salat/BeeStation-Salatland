@@ -155,7 +155,12 @@
 
 /obj/item/scalpel/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/butchering, 80 * toolspeed, 100, 0)
+	AddComponent(
+		/datum/component/butchering, \
+		speed = 8 SECONDS * toolspeed, \
+		effectiveness = 100, \
+		bonus_modifier = 0, \
+	)
 
 /obj/item/scalpel/augment
 	name = "scalpel"
