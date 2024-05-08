@@ -214,7 +214,7 @@
 		else
 			switch(virus_threat)
 				if(DISEASE_PANDEMIC)
-					holder.icon_state = "hudill6"
+					holder.icon_state = "hudill5"
 				if(DISEASE_BIOHAZARD)
 					holder.icon_state = "hudill5"
 				if(DISEASE_DANGEROUS)
@@ -230,7 +230,7 @@
 				if(DISEASE_POSITIVE)
 					holder.icon_state = "hudbuff"
 				if(DISEASE_BENEFICIAL)
-					holder.icon_state = "hudbuff2"
+					holder.icon_state = "hudbuff"
 				if(null)
 					holder.icon_state = "hudhealthy"
 	else
