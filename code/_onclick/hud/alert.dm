@@ -631,13 +631,13 @@ so as to remain in compliance with the most up-to-date laws."
 	if(!istype(ghost_owner))
 		return
 	//Any actions that cause you to jump to the target turf
-	if (action == NOTIFY_ATTACK || action == NOTIFY_JUMP)
+	if (action == NOTIFY_PLAY || action == NOTIFY_JUMP)
 		var/turf/T = get_turf(target)
 		if(isturf(T))
 			ghost_owner.abstract_move(T)
 	//Other additional actions
 	switch(action)
-		if(NOTIFY_ATTACK)
+		if(NOTIFY_PLAY)
 			target.attack_ghost(ghost_owner)
 		if(NOTIFY_ORBIT)
 			ghost_owner.check_orbitable(target)

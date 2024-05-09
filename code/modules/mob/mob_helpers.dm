@@ -409,39 +409,53 @@
   * * notify_suiciders If it should notify suiciders (who do not qualify for many ghost roles)
   * * notify_volume How loud the sound should be to spook the user
   */
-/proc/notify_ghosts(var/message, var/ghost_sound = null, var/enter_link = null, var/atom/source = null, var/mutable_appearance/alert_overlay = null, var/action = NOTIFY_JUMP, flashwindow = TRUE, ignore_mapload = TRUE, ignore_key, header = null, notify_suiciders = TRUE, var/notify_volume = 100) //Easy notification of ghosts.
+/proc/notify_ghosts(
+	message,
+	ghost_sound,
+	enter_link,
+	atom/source,
+	mutable_appearance/alert_overlay,
+	action = NOTIFY_JUMP,
+	flashwindow = TRUE,
+	ignore_mapload = TRUE,
+	ignore_key,
+	header,
+	notify_suiciders = TRUE,
+	var/notify_volume = 100
+)
 	if(ignore_mapload && SSatoms.initialized != INITIALIZATION_INNEW_REGULAR)	//don't notify for objects created during a map load
 		return
-	for(var/mob/dead/observer/O in GLOB.player_list)
-		if(O.client)
-			if(!notify_suiciders && (O in GLOB.suicided_mob_list))
-				continue
-			if (ignore_key && (O.ckey in GLOB.poll_ignore[ignore_key]))
-				continue
-			var/orbit_link
-			if (source && action == NOTIFY_ORBIT)
-				orbit_link = " <a href='?src=[REF(O)];follow=[REF(source)]'>(Orbit)</a>"
-			to_chat(O, "<span class='ghostalert'>[message][(enter_link) ? " [enter_link]" : ""][orbit_link]</span>")
-			if(ghost_sound)
-				SEND_SOUND(O, sound(ghost_sound, volume = notify_volume))
-			if(flashwindow)
-				window_flash(O.client)
-			if(source)
-				var/atom/movable/screen/alert/notify_action/A = O.throw_alert("[REF(source)]_notify_action", /atom/movable/screen/alert/notify_action)
-				if(A)
-					var/ui_style = O.client?.prefs?.read_player_preference(/datum/preference/choiced/ui_style)
-					if(ui_style)
-						A.icon = ui_style2icon(ui_style)
-					if (header)
-						A.name = header
-					A.desc = message
-					A.action = action
-					A.target = source
-					if(!alert_overlay)
-						alert_overlay = new(source)
-					alert_overlay.layer = FLOAT_LAYER
-					alert_overlay.plane = FLOAT_PLANE
-					A.add_overlay(alert_overlay)
+
+	for(var/mob/dead/observer/ghost in GLOB.player_list)
+		if(!notify_suiciders && (ghost in GLOB.suicided_mob_list))
+			continue
+		if (ignore_key && (ghost.ckey in GLOB.poll_ignore[ignore_key]))
+			continue
+
+		if(flashwindow)
+			window_flash(ghost.client)
+
+		if(ghost_sound)
+			SEND_SOUND(ghost, sound(ghost_sound, volume = notify_volume))
+
+		if(isnull(source))
+			to_chat(ghost, "<span class='ghostalert'>[message]</span>")
+			continue
+
+		var/custom_link = enter_link ? " [enter_link]" : ""
+		var/link = " <a href='?src=[REF(ghost)];[action]=[REF(source)]'>([capitalize(action)])</a>"
+
+		to_chat(ghost, "<span class='ghostalert'>[message][custom_link][link]</span>")
+
+		var/atom/movable/screen/alert/notify_action/toast = ghost.throw_alert(
+			category = "[REF(source)]_notify_action",
+			type = /atom/movable/screen/alert/notify_action,
+			new_master = source,
+		)
+		toast.action = action
+		toast.desc = "Click to [action]."
+		toast.name = header
+		toast.target = source
 
 /**
   * Heal a robotic body part on a mob
