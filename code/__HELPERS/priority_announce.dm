@@ -1,57 +1,59 @@
+// please don't use these defines outside of this file in order to ensure a unified framework. unless you have a really good reason to make them global, then whatever
+
+// these four are just text spans that furnish the TEXT itself with the appropriate CSS classes
+#define MAJOR_ANNOUNCEMENT_TITLE(string) ("<span class='major_announcement_title'>" + string + "</span>")
+#define MAJOR_ANNOUNCEMENT_TEXT(string) ("<span class='major_announcement_text'>" + string + "</span>")
+#define MINOR_ANNOUNCEMENT_TITLE(string) ("<span class='minor_announcement_title'>" + string + "</span>")
+#define MINOR_ANNOUNCEMENT_TEXT(string) ("<span class='minor_announcement_text'>" + string + "</span>")
+
+// these two are the ones that actually give the striped background
+#define CHAT_ALERT_DEFAULT_SPAN(string) ("<div class='chat_alert_default'>" + string + "</div>")
+#define CHAT_ALERT_COLORED_SPAN(color, string) ("<div class='chat_alert_" + color + "'>" + string + "</div>")
+
 #define DEFAULT_ALERT "alert_sound"
 
 /proc/priority_announce(text, title = "", sound = DEFAULT_ALERT, type, sender_override, has_important_message, auth_id)
 	if(!text)
 		return
 
-	var/announcement = "<meta charset='UTF-8'>"
+	var/list/announcement_strings = list()
 	if(sound == DEFAULT_ALERT)
 		sound = SSstation.announcer.get_rand_alert_sound()
 
 	if(sound && SSstation.announcer.event_sounds[sound])
 		sound = SSstation.announcer.event_sounds[sound]
 
-	announcement += "<br>"
-
-	if(type == "Priority")
-		announcement += "<span class='priorityannounce'><u>Priority Announcement<u></span>"
-		if (title && length(title) > 0)
-			announcement += "<span class='prioritytitle'><br>[html_encode(title)]</span>"
-	else if(type == JOB_NAME_CAPTAIN)
-		announcement += "<span class='priorityannounce'><u>[JOB_NAME_CAPTAIN] Announces<u></span>"
-		GLOB.news_network.submit_article(html_encode(text), "[JOB_NAME_CAPTAIN]'s Announcement", "Station Announcements", null)
-
-	else
-		if(!sender_override)
-			announcement += "<span class='priorityannounce'><u>[command_name()] Update<u></span>"
+	var/header
+	switch(type)
+		if(ANNOUNCEMENT_TYPE_PRIORITY)
+			header = MAJOR_ANNOUNCEMENT_TITLE("Priority Announcement")
+			if(length(title) > 0)
+				header += MINOR_ANNOUNCEMENT_TITLE(title)
+		if(ANNOUNCEMENT_TYPE_CAPTAIN)
+			header = MAJOR_ANNOUNCEMENT_TITLE("Captain's Announcement")
+			GLOB.news_network.submit_article(text, "Captain's Announcement", "Station Announcements", null)
+		if(ANNOUNCEMENT_TYPE_SYNDICATE)
+			header = MAJOR_ANNOUNCEMENT_TITLE("Syndicate Captain's Announcement")
 		else
-			announcement += "<span class='priorityannounce'><u>[sender_override]<u></span>"
-		if (title && length(title) > 0)
-			announcement += "<span class='prioritytitle'>[html_encode(title)]</span>"
+			header += generate_unique_announcement_header(title, sender_override)
 
-		if(!sender_override)
-			if(title == "")
-				GLOB.news_network.submit_article(text, "Central Command Update", "Station Announcements", null)
-			else
-				GLOB.news_network.submit_article(title + "<br><br>" + text, "Central Command", "Station Announcements", null)
+	announcement_strings += header
 
 	///If the announcer overrides alert messages, use that message.
 	if(SSstation.announcer.custom_alert_message && !has_important_message)
-		announcement +=  "<span class='priorityalert'><br>[SSstation.announcer.custom_alert_message]<br></span>"
+		announcement_strings += SSstation.announcer.custom_alert_message
 	else
-		announcement += "<span class='priorityalert'><br>[html_encode(text)]<br></span><br>"
+		announcement_strings += MAJOR_ANNOUNCEMENT_TEXT(text)
 
-	announcement += "<br>"
+	var/finalized_announcement = CHAT_ALERT_DEFAULT_SPAN(jointext(announcement_strings, "<br>"))
 
-	if(auth_id)
-		announcement += "<span class='priorityalert'><br>-[auth_id]<br></span>"
+	dispatch_announcement_to_players(finalized_announcement, players, sound)
 
-	var/s = sound(sound)
-	for(var/mob/M in GLOB.player_list)
-		if(!isnewplayer(M) && M.can_hear())
-			to_chat(M, announcement)
-			if(M.client.prefs.read_player_preference(/datum/preference/toggle/sound_announcements))
-				SEND_SOUND(M, s)
+	if(isnull(sender_override))
+		if(length(title) > 0)
+			GLOB.news_network.submit_article(title + "<br><br>" + text, "Central Command", "Station Announcements", null)
+		else
+			GLOB.news_network.submit_article(text, "Central Command Update", "Station Announcements", null)
 
 /proc/exploration_announce(text, z_value)
 	var/announcement = "<meta charset='UTF-8'>"
@@ -93,7 +95,7 @@
  * players - optional, a list mobs to send the announcement to. If unset, sends to all players.
  * sound_override - optional, use the passed sound file instead of the default notice sounds.
  */
-/proc/minor_announce(message, title = "Attention:", alert, from, html_encode = TRUE, list/players, sound_override)
+/proc/minor_announce(message, title = "Attention:", alert = FALSE, from, html_encode = TRUE, list/players = null, sound_override = null, should_play_sound = TRUE)
 	if(!message)
 		return
 
@@ -101,21 +103,77 @@
 		title = html_encode(title)
 		message = html_encode(message)
 
+	var/list/minor_announcement_strings = list()
+	minor_announcement_strings += MINOR_ANNOUNCEMENT_TITLE(title)
+	minor_announcement_strings += MINOR_ANNOUNCEMENT_TEXT(message)
+
+	var/finalized_announcement = CHAT_ALERT_DEFAULT_SPAN(jointext(minor_announcement_strings, "<br>"))
+
+	var/custom_sound = sound_override || (alert ? 'sound/misc/notice1.ogg' : 'sound/misc/notice2.ogg')
+	dispatch_announcement_to_players(finalized_announcement, players, custom_sound, should_play_sound)
+
+/// Sends an announcement about the level changing to players. Uses the passed in datum and the subsystem's previous security level to generate the message.
+/proc/level_announce(datum/security_level/selected_level, previous_level_number)
+	var/current_level_number = selected_level.number_level
+	var/current_level_name = selected_level.name
+	var/current_level_color = selected_level.announcement_color
+	var/current_level_sound = selected_level.sound
+
+	var/title
+	var/message
+
+	if(current_level_number > previous_level_number)
+		title = "Attention! Security level elevated to [current_level_name]:"
+		message = selected_level.elevating_to_announcement
+	else
+		title = "Attention! Security level lowered to [current_level_name]:"
+		message = selected_level.lowering_to_announcement
+
+	var/list/level_announcement_strings = list()
+	level_announcement_strings += MINOR_ANNOUNCEMENT_TITLE(title)
+	level_announcement_strings += MINOR_ANNOUNCEMENT_TEXT(message)
+
+	var/finalized_announcement = CHAT_ALERT_COLORED_SPAN(current_level_color, jointext(level_announcement_strings, "<br>"))
+
+	dispatch_announcement_to_players(finalized_announcement, GLOB.player_list, current_level_sound)
+
+/// Proc that just generates a custom header based on variables fed into `priority_announce()`
+/// Will return a string.
+/proc/generate_unique_announcement_header(title, sender_override)
+	var/list/returnable_strings = list()
+	if(isnull(sender_override))
+		returnable_strings += MAJOR_ANNOUNCEMENT_TITLE("[command_name()] Update")
+	else
+		returnable_strings += MAJOR_ANNOUNCEMENT_TITLE(sender_override)
+
+	if(length(title) > 0)
+		returnable_strings += MINOR_ANNOUNCEMENT_TITLE(title)
+
+	return jointext(returnable_strings, "<br>")
+
+/// Proc that just dispatches the announcement to our applicable audience. Only the announcement is a mandatory arg.
+/proc/dispatch_announcement_to_players(announcement, list/players, sound_override = null, should_play_sound = TRUE)
 	if(!players)
 		players = GLOB.player_list
 
+	var/sound_to_play = !isnull(sound_override) ? sound_override : 'sound/misc/notice2.ogg'
+
 	for(var/mob/target in players)
-		if(isnewplayer(target))
-			continue
-		if(!target.can_hear())
+		if(isnewplayer(target) || !target.can_hear())
 			continue
 
-		var/complete_msg = "<meta charset='UTF-8'><span class='big bold'><font color = red>[title]</font color><BR>[message]</span><BR>"
-		if(from)
-			complete_msg += "<span class='alert'>-[from]</span>"
-		to_chat(target, complete_msg)
-		if(target.client.prefs.read_player_preference(/datum/preference/toggle/sound_announcements))
-			var/sound_to_play = sound_override || (alert ? 'sound/misc/notice1.ogg' : 'sound/misc/notice2.ogg')
+		to_chat(target, announcement)
+		if(!should_play_sound)
+			continue
+
+		if(target.client?.prefs.read_preference(/datum/preference/toggle/sound_announcements))
 			SEND_SOUND(target, sound(sound_to_play))
 
 #undef DEFAULT_ALERT
+
+#undef MAJOR_ANNOUNCEMENT_TITLE
+#undef MAJOR_ANNOUNCEMENT_TEXT
+#undef MINOR_ANNOUNCEMENT_TITLE
+#undef MINOR_ANNOUNCEMENT_TEXT
+#undef CHAT_ALERT_DEFAULT_SPAN
+#undef CHAT_ALERT_COLORED_SPAN
