@@ -11,7 +11,7 @@
 	if(sound && SSstation.announcer.event_sounds[sound])
 		sound = SSstation.announcer.event_sounds[sound]
 
-	announcement += "<br><br>"
+	announcement += "<br>"
 
 	if(type == "Priority")
 		announcement += "<span class='priorityannounce'><u>Priority Announcement<u></span>"
@@ -41,7 +41,7 @@
 	else
 		announcement += "<span class='priorityalert'><br>[html_encode(text)]<br></span><br>"
 
-	announcement += "<br><br>"
+	announcement += "<br>"
 
 	if(auth_id)
 		announcement += "<span class='priorityalert'><br>-[auth_id]<br></span>"
@@ -73,7 +73,7 @@
 
 	if(announce)
 		priority_announce("A report has been downloaded and printed out at all communications consoles.", "Incoming Classified Message", SSstation.announcer.get_rand_report_sound(), has_important_message = TRUE)
-		
+
 	var/datum/comm_message/message = new
 	message.title = title
 	message.content = text
