@@ -353,7 +353,7 @@ SUBSYSTEM_DEF(ticker)
 		to_chat(world, "<span class='notice'>and...</span>")
 		for(var/holidayname in SSevents.holidays)
 			var/datum/holiday/holiday = SSevents.holidays[holidayname]
-			to_chat(world, "<h4>[holiday.greet()]</h4>")
+			to_chat(world, "<span class='info'>[holiday.greet()]</span>")
 
 	//Setup orbits.
 	SSorbits.post_load_init()

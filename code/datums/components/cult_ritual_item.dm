@@ -358,7 +358,9 @@
 	priority_announce("Figments from an eldritch god are being summoned by [cultist.real_name] into [get_area(cultist)] from an unknown dimension. Disrupt the ritual at all costs!","Central Command Higher Dimensional Affairs", ANNOUNCER_SPANOMALIES)
 
 	for(var/shielded_turf in spiral_range_turfs(1, cultist, 1))
-		LAZYADD(shields, new /obj/structure/emergency_shield/sanguine(shielded_turf))
+		LAZYADD(shields, new /obj/structure/emergency_shield/cult/narsie(shielded_turf))
+
+	notify_ghosts("[cultist] has begun scribing a Nar'Sie rune!", source = cultist, action = NOTIFY_ORBIT, header = "Maranax Infirmux!")
 
 	return TRUE
 

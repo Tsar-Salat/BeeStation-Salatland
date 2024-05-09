@@ -11,21 +11,23 @@
 	if(sound && SSstation.announcer.event_sounds[sound])
 		sound = SSstation.announcer.event_sounds[sound]
 
+	announcement += "<br><br>"
+
 	if(type == "Priority")
-		announcement += "<h1 class='alert'>Priority Announcement</h1>"
+		announcement += "<span class='priorityannounce'><u>Priority Announcement<u></span>"
 		if (title && length(title) > 0)
-			announcement += "<br><h2 class='alert'>[html_encode(title)]</h2>"
+			announcement += "<span class='prioritytitle'><br>[html_encode(title)]</span>"
 	else if(type == JOB_NAME_CAPTAIN)
-		announcement += "<h1 class='alert'>[JOB_NAME_CAPTAIN] Announces</h1>"
+		announcement += "<span class='priorityannounce'><u>[JOB_NAME_CAPTAIN] Announces<u></span>"
 		GLOB.news_network.submit_article(html_encode(text), "[JOB_NAME_CAPTAIN]'s Announcement", "Station Announcements", null)
 
 	else
 		if(!sender_override)
-			announcement += "<h1 class='alert'>[command_name()] Update</h1>"
+			announcement += "<span class='priorityannounce'><u>[command_name()] Update<u></span>"
 		else
-			announcement += "<h1 class='alert'>[sender_override]</h1>"
+			announcement += "<span class='priorityannounce'><u>[sender_override]<u></span>"
 		if (title && length(title) > 0)
-			announcement += "<br><h2 class='alert'>[html_encode(title)]</h2>"
+			announcement += "<span class='prioritytitle'>[html_encode(title)]</span>"
 
 		if(!sender_override)
 			if(title == "")
@@ -35,12 +37,14 @@
 
 	///If the announcer overrides alert messages, use that message.
 	if(SSstation.announcer.custom_alert_message && !has_important_message)
-		announcement +=  SSstation.announcer.custom_alert_message
+		announcement +=  "<span class='priorityalert'><br>[SSstation.announcer.custom_alert_message]<br></span>"
 	else
-		announcement += "<br><span class='alert'>[html_encode(text)]</span><br>"
-	announcement += "<br>"
+		announcement += "<span class='priorityalert'><br>[html_encode(text)]<br></span><br>"
+
+	announcement += "<br><br>"
+
 	if(auth_id)
-		announcement += "<span class='alert'>-[auth_id]</span><br>"
+		announcement += "<span class='priorityalert'><br>-[auth_id]<br></span>"
 
 	var/s = sound(sound)
 	for(var/mob/M in GLOB.player_list)
@@ -69,11 +73,12 @@
 
 	if(announce)
 		priority_announce("A report has been downloaded and printed out at all communications consoles.", "Incoming Classified Message", SSstation.announcer.get_rand_report_sound(), has_important_message = TRUE)
-	var/datum/comm_message/M  = new
-	M.title = title
-	M.content =  text
+		
+	var/datum/comm_message/message = new
+	message.title = title
+	message.content = text
 
-	SScommunications.send_message(M)
+	SScommunications.send_message(message)
 
 /**
  * Sends a minor annoucement to players.
