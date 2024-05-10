@@ -1039,12 +1039,11 @@
 
 /obj/item/mayhem/attack_self(mob/user)
 	for(var/mob/living/carbon/human/H in range(7,user))
-		var/obj/effect/mine/pickup/bloodbath/B = new(H)
-		INVOKE_ASYNC(B, TYPE_PROC_REF(/obj/effect/mine/pickup/bloodbath, mineEffect), H)
+		H.apply_status_effect(STATUS_EFFECT_MAYHEM)
 	to_chat(user, "<span class='notice'>You shatter the bottle!</span>")
 	playsound(user.loc, 'sound/effects/glassbr1.ogg', 100, 1)
 	message_admins("<span class='adminnotice'>[ADMIN_LOOKUPFLW(user)] has activated a bottle of mayhem!</span>")
-	log_combat(user, null, "activated a bottle of mayhem", src)
+	user.log_message("activated a bottle of mayhem", LOG_ATTACK)
 	qdel(src)
 
 /obj/item/blood_contract

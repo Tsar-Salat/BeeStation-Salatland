@@ -64,6 +64,7 @@
 	if(selfcharge)
 		START_PROCESSING(SSobj, src)
 	update_appearance(UPDATE_ICON)
+	RegisterSignal(src, COMSIG_ITEM_RECHARGED, .proc/instant_recharge)
 
 /obj/item/gun/energy/fire_sounds()
 	var/obj/item/ammo_casing/energy/shot = ammo_type[select]
@@ -294,3 +295,10 @@
 			playsound(user, BB.hitsound, 50, 1)
 			cell.use(E.e_cost)
 			. = "<span class='danger'>[user] casually lights [A.loc == user ? "[user.p_their()] [A.name]" : A] with [src]. Damn.</span>"
+
+/obj/item/gun/energy/proc/instant_recharge()
+	if(!cell)
+		return
+	cell.charge = cell.maxcharge
+	recharge_newshot(no_cyborg_drain = TRUE)
+	update_icon()

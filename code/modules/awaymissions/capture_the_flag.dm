@@ -4,7 +4,6 @@
 #define FLAG_RETURN_TIME 200 // 20 seconds
 #define INSTAGIB_RESPAWN 50 //5 seconds
 #define DEFAULT_RESPAWN 150 //15 seconds
-#define AMMO_DROP_LIFETIME 300
 #define CTF_REQUIRED_PLAYERS 4
 
 /obj/item/ctf
@@ -192,7 +191,7 @@
 	///assoc list for classes. If there's only one, it'll just equip. Otherwise, it lets you pick which outfit!
 	var/list/ctf_gear = list("white" = /datum/outfit/ctf)
 	var/instagib_gear = /datum/outfit/ctf/instagib
-	var/ammo_type = /obj/effect/ctf/ammo
+	var/ammo_type = /obj/effect/powerup/ammo/ctf
 	//var/player_traits = list(TRAIT_NEVER_WOUNDED)
 
 	var/list/dead_barricades = list()
@@ -681,50 +680,6 @@
 	alpha = 100
 	resistance_flags = INDESTRUCTIBLE
 
-/obj/effect/ctf/ammo
-	name = "ammo pickup"
-	desc = "You like revenge, right? Everybody likes revenge! Well, \
-		let's go get some!"
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "at_shield1"
-	layer = ABOVE_MOB_LAYER
-	alpha = 255
-	invisibility = 0
-
-/obj/effect/ctf/ammo/Initialize(mapload)
-	..()
-	QDEL_IN(src, AMMO_DROP_LIFETIME)
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = PROC_REF(on_entered),
-	)
-	AddElement(/datum/element/connect_loc, loc_connections)
-
-/obj/effect/ctf/ammo/proc/on_entered(datum/source, atom/movable/AM)
-	SIGNAL_HANDLER
-
-	INVOKE_ASYNC(src, PROC_REF(reload), AM)
-
-/obj/effect/ctf/ammo/Bump(atom/movable/AM)
-	reload(AM)
-
-/obj/effect/ctf/ammo/Bumped(atom/movable/AM)
-	reload(AM)
-
-/obj/effect/ctf/ammo/proc/reload(mob/living/M)
-	if(!ishuman(M))
-		return
-	for(var/obj/machinery/capture_the_flag/CTF in GLOB.machines)
-		if(M in CTF.spawned_mobs)
-			var/outfit = CTF.spawned_mobs[M]
-			var/datum/outfit/O = new outfit
-			for(var/obj/item/gun/G in M)
-				qdel(G)
-			O.equip(M)
-			to_chat(M, "<span class='notice'>Ammunition reloaded!</span>")
-			playsound(get_turf(M), 'sound/weapons/shotgunpump.ogg', 50, 1, -1)
-			qdel(src)
-			break
-
 /obj/effect/ctf/dead_barricade
 	name = "dead barrier"
 	desc = "It provided cover in fire fights. And now it's gone."
@@ -797,5 +752,4 @@
 #undef FLAG_RETURN_TIME
 #undef INSTAGIB_RESPAWN
 #undef DEFAULT_RESPAWN
-#undef AMMO_DROP_LIFETIME
 #undef CTF_REQUIRED_PLAYERS

@@ -23,12 +23,17 @@
 	#define COMPONENT_BLOCK_MARK_RETRIEVAL 1
 #define COMSIG_ITEM_HIT_REACT "item_hit_react"					//! from base of obj/item/hit_reaction(): (list/args)
 	#define COMPONENT_HIT_REACTION_BLOCK (1<<0)
-#define COMSIG_ITEM_SHARPEN_ACT "sharpen_act"           //! from base of item/sharpener/attackby(): (amount, max)
+///from base of item/sharpener/attackby(): (amount, max)
+#define COMSIG_ITEM_SHARPEN_ACT "sharpen_act"
   #define COMPONENT_BLOCK_SHARPEN_APPLIED 1
   #define COMPONENT_BLOCK_SHARPEN_BLOCKED 2
   #define COMPONENT_BLOCK_SHARPEN_ALREADY 4
   #define COMPONENT_BLOCK_SHARPEN_MAXED 8
-#define COMSIG_ITEM_CHECK_WIELDED "item_check_wielded"  //! used to check if the item is wielded for special effects
+
+///Called when an item gets recharged by the ammo powerup
+#define COMSIG_ITEM_RECHARGED "item_recharged"
+///used to check if the item is wielded for special effects
+#define COMSIG_ITEM_CHECK_WIELDED "item_check_wielded"
   #define COMPONENT_IS_WIELDED 1
 #define COMSIG_ITEM_DISABLE_EMBED "item_disable_embed"			///from [/obj/item/proc/disableEmbedding]:
 
