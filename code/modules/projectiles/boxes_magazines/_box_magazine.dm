@@ -34,9 +34,27 @@
 			material_amount /= max_ammo
 			LAZYSET(bullet_cost, material, material_amount)
 	if(!start_empty)
-		for(var/i in 1 to max_ammo)
-			stored_ammo += new ammo_type(src)
-	update_icon()
+		top_off(starting=TRUE)
+
+/**
+ * top_off is used to refill the magazine to max, in case you want to increase the size of a magazine with VV then refill it at once
+ *
+ * Arguments:
+ * * load_type - if you want to specify a specific ammo casing type to load, enter the path here, otherwise it'll use the basic [/obj/item/ammo_box/var/ammo_type]. Must be a compatible round
+ * * starting - Relevant for revolver cylinders, if FALSE then we mind the nulls that represent the empty cylinders (since those nulls don't exist yet if we haven't initialized when this is TRUE)
+ */
+/obj/item/ammo_box/proc/top_off(load_type, starting=FALSE)
+	if(!load_type) //this check comes first so not defining an argument means we just go with default ammo
+		load_type = ammo_type
+
+	var/obj/item/ammo_casing/round_check = load_type
+	if(!starting && !(caliber ? (caliber == initial(round_check.caliber)) : (ammo_type == load_type)))
+		stack_trace("Tried loading unsupported ammocasing type [load_type] into ammo box [type].")
+		return
+
+	for(var/i in max(1, stored_ammo.len) to max_ammo)
+		stored_ammo += new round_check(src)
+	update_ammo_count()
 
 /obj/item/ammo_box/proc/get_round(keep = FALSE)
 	if (!stored_ammo.len)
@@ -83,6 +101,8 @@
 					playsound(src, 'sound/weapons/bulletinsert.ogg', 60, TRUE)
 			if(!did_load)
 				break
+		if(num_loaded)
+			AM.update_ammo_count()
 	if(istype(A, /obj/item/ammo_casing))
 		var/obj/item/ammo_casing/AC = A
 		if(give_round(AC))
@@ -94,28 +114,43 @@
 			to_chat(user, "<span class='notice'>You loaded [num_loaded] shell\s into \the [src]!</span>")
 			if(istype(A, /obj/item/ammo_casing))
 				playsound(src, 'sound/weapons/bulletinsert.ogg', 60, TRUE)
-		A.update_icon()
-		update_icon()
+		update_ammo_count()
+
 	return num_loaded
 
 /obj/item/ammo_box/attack_self(mob/user)
 	var/obj/item/ammo_casing/A = get_round()
-	if(A)
-		A.forceMove(drop_location())
-		if(!user.is_holding(src) || !user.put_in_hands(A))	//incase they're using TK
-			A.bounce_away(FALSE, NONE)
-		playsound(src, 'sound/weapons/bulletinsert.ogg', 60, TRUE)
-		to_chat(user, "<span class='notice'>You remove a round from [src]!</span>")
-		update_icon()
+	if(!A)
+		return
 
-/obj/item/ammo_box/update_icon()
-	var/shells_left = stored_ammo.len
+	A.forceMove(drop_location())
+	if(!user.is_holding(src) || !user.put_in_hands(A))	//incase they're using TK
+		A.bounce_away(FALSE, NONE)
+	playsound(src, 'sound/weapons/bulletinsert.ogg', 60, TRUE)
+	to_chat(user, "<span class='notice'>You remove a round from [src]!</span>")
+	update_ammo_count()
+
+/// Updates the materials and appearance of this ammo box
+/obj/item/ammo_box/proc/update_ammo_count()
+	update_custom_materials()
+	update_appearance()
+
+/obj/item/ammo_box/update_desc(updates)
+	. = ..()
+	var/shells_left = LAZYLEN(stored_ammo)
+	desc = "[initial(desc)] There [(shells_left == 1) ? "is" : "are"] [shells_left] shell\s left!"
+
+/obj/item/ammo_box/update_icon_state()
+	var/shells_left = LAZYLEN(stored_ammo)
 	switch(multiple_sprites)
 		if(1)
 			icon_state = "[initial(icon_state)]-[shells_left]"
 		if(2)
 			icon_state = "[initial(icon_state)]-[shells_left ? "[max_ammo]" : "0"]"
-	desc = "[initial(desc)] There [(shells_left == 1) ? "is" : "are"] [shells_left] shell\s left!"
+	return ..()
+
+/// Updates the amount of material in this ammo box according to how many bullets are left in it.
+/obj/item/ammo_box/proc/update_custom_materials()
 	if(length(bullet_cost))
 		var/temp_materials = custom_materials.Copy()
 		for (var/material in bullet_cost)
@@ -146,7 +181,7 @@
 
 /obj/item/ammo_box/magazine/handle_atom_del(atom/A)
 	stored_ammo -= A
-	update_icon()
+	update_ammo_count()
 
 //Behavior for ammo pouches (disposable paper ammo box)
 /obj/item/ammo_box/pouch

@@ -311,6 +311,7 @@
 	SIGNAL_HANDLER
 
 	recently_dead_ckeys += body.ckey
+	spawned_mobs -= body
 	addtimer(CALLBACK(src, PROC_REF(clear_cooldown), body.ckey), respawn_cooldown, TIMER_UNIQUE)
 
 /obj/machinery/capture_the_flag/proc/clear_cooldown(var/ckey)
