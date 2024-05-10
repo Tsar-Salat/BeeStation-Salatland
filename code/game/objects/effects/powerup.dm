@@ -15,13 +15,17 @@
 	/// Cooldown for the powerup to respawn after it's been used
 	COOLDOWN_DECLARE(respawn_cooldown)
 
-/obj/effect/powerup/Initialize()
+/obj/effect/powerup/Initialize(mapload)
 	..()
 	if(lifetime)
 		QDEL_IN(src, lifetime)
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = PROC_REF(on_entered),
+	)
+	AddElement(/datum/element/connect_loc, loc_connections)
 
-/obj/effect/powerup/Crossed(atom/movable/movable_atom)
-	. = ..()
+/obj/effect/powerup/proc/on_entered(datum/source, atom/movable/movable_atom)
+	SIGNAL_HANDLER
 	trigger(movable_atom)
 
 /obj/effect/powerup/Bump(atom/bumped_atom)
@@ -51,7 +55,7 @@
 /obj/effect/powerup/health
 	name = "health pickup"
 	desc = "Blessing from the havens."
-	icon = 'icons/obj/storage.dmi'
+	icon = 'icons/obj/storage/storage.dmi'
 	icon_state = "medicalpack"
 	respawn_time = 30 SECONDS
 	pickup_message = "Health restored!"
@@ -81,11 +85,11 @@
 /obj/effect/powerup/ammo
 	name = "ammo pickup"
 	desc = "You like revenge, right? Everybody likes revenge! Well, let's go get some!"
-	icon = 'icons/obj/storage.dmi'
+	icon = 'icons/obj/storage/storage.dmi'
 	icon_state = "ammobox"
 	respawn_time = 30 SECONDS
 	pickup_message = "Ammunition reloaded!"
-	pickup_sound = 'sound/weapons/gun/shotgun/rack.ogg'
+	pickup_sound = "sound/weapons/shotgunpump.ogg"
 
 /obj/effect/powerup/ammo/trigger(mob/living/target)
 	. = ..()

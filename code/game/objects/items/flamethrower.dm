@@ -262,8 +262,7 @@
 
 /obj/item/flamethrower/proc/instant_refill()
 	if(ptank)
-		ptank.air_contents.assert_gas(/datum/gas/plasma)
-		ptank.air_contents.gases[/datum/gas/plasma][MOLES] = (10*ONE_ATMOSPHERE)*ptank.volume/(R_IDEAL_GAS_EQUATION*T20C)
+		ptank.air_contents.set_moles(GAS_PLASMA, (10*ONE_ATMOSPHERE)*ptank.volume/(R_IDEAL_GAS_EQUATION*T20C))
 	else
 		ptank = new /obj/item/tank/internals/plasma/full(src)
 	update_icon()
