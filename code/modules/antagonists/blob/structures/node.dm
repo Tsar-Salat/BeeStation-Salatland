@@ -1,6 +1,6 @@
 /obj/structure/blob/node
 	name = "blob node"
-	icon = 'icons/mob/blob.dmi'
+	icon = 'icons/hud/blob.dmi'
 	icon_state = "blank_blob"
 	desc = "A large, pulsating yellow mass."
 	max_integrity = 200
@@ -20,11 +20,11 @@
 /obj/structure/blob/node/update_icon()
 	cut_overlays()
 	color = null
-	var/mutable_appearance/blob_overlay = mutable_appearance('icons/mob/blob.dmi', "blob")
+	var/mutable_appearance/blob_overlay = mutable_appearance('icons/hud/blob.dmi', "blob")
 	if(overmind)
 		blob_overlay.color = overmind.blobstrain.color
 	add_overlay(blob_overlay)
-	add_overlay(mutable_appearance('icons/mob/blob.dmi', "blob_node_overlay"))
+	add_overlay(mutable_appearance('icons/hud/blob.dmi', "blob_node_overlay"))
 
 /obj/structure/blob/node/Destroy()
 	GLOB.blob_nodes -= src

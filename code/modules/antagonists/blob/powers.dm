@@ -361,7 +361,7 @@
 		for (var/_ in 1 to BLOB_REROLL_CHOICES)
 			var/datum/blobstrain/strain = pick_n_take(new_strains)
 
-			var/image/strain_icon = image('icons/mob/blob.dmi', "blob_core")
+			var/image/strain_icon = image('icons/hud/blob.dmi', "blob_core")
 			strain_icon.color = initial(strain.color)
 
 			var/info_text = "<span class='boldnotice'>[initial(strain.name)]</span>"

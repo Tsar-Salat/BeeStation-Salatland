@@ -77,6 +77,9 @@
 // /obj/item/pen signals
 #define COMSIG_PEN_ROTATED "pen_rotated"						//! called after rotation in /obj/item/pen/attack_self(): (rotation, mob/living/carbon/user)
 
+///called in /obj/item/gun/ballistic/process_chamber (casing)
+#define COMSIG_CASING_EJECTED "casing_ejected"
+
 /// Puts a target atom into the push (datum/source, datum/target)
 #define COMSIG_ITEM_PUSH_BUFFER "push_buffer"
 	#define COMPONENT_BUFFER_STORE_SUCCESS (1 << 0)
