@@ -1303,6 +1303,28 @@ update_label("John Doe", "Clowny")
 	assignment = JOB_NAME_KING
 	hud_state = JOB_HUD_KING
 
+/obj/item/card/id/red
+	name = "Red Team identification card"
+	desc = "A card used to identify members of the red team for CTF"
+	icon_state = "ctf_red"
+
+/obj/item/card/id/blue
+	name = "Blue Team identification card"
+	desc = "A card used to identify members of the blue team for CTF"
+	icon_state = "ctf_blue"
+
+/obj/item/card/id/yellow
+	name = "Yellow Team identification card"
+	desc = "A card used to identify members of the yellow team for CTF"
+	icon_state = "ctf_yellow"
+
+/obj/item/card/id/green
+	name = "Green Team identification card"
+	desc = "A card used to identify members of the green team for CTF"
+	icon_state = "ctf_green"
+
+
+/////////////////
 
 /obj/item/card/id/pass
 	name = "promotion pass"

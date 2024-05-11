@@ -906,7 +906,21 @@
 	item_state = "ert_command"
 	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/shielded/ctf/blue
 
+/obj/item/clothing/suit/space/hardsuit/shielded/ctf/green
+	name = "green shielded hardsuit"
+	icon_state = "ert_green"
+	item_state = "ert_green"
+	hardsuit_type = "ert_green"
+	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/shielded/ctf/green
+	shield_icon = "shield-green"
 
+/obj/item/clothing/suit/space/hardsuit/shielded/ctf/yellow
+	name = "yellow shielded hardsuit"
+	icon_state = "ert_engineer"
+	item_state = "ert_engineer"
+	hardsuit_type = "ert_engineer"
+	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/shielded/ctf/yellow
+	shield_icon = "shield-yellow"
 
 /obj/item/clothing/head/helmet/space/hardsuit/shielded/ctf
 	name = "shielded hardsuit helmet"
@@ -929,7 +943,15 @@
 	item_state = "hardsuit0-ert_commander"
 	hardsuit_type = "ert_commander"
 
+/obj/item/clothing/head/helmet/space/hardsuit/shielded/ctf/green
+	icon_state = "hardsuit0-ert_green"
+	item_state = "hardsuit0-ert_green"
+	hardsuit_type = "ert_green"
 
+/obj/item/clothing/head/helmet/space/hardsuit/shielded/ctf/yellow
+	icon_state = "hardsuit0-ert_engineer"
+	item_state = "hardsuit0-ert_engineer"
+	hardsuit_type = "ert_engineer"
 
 
 
