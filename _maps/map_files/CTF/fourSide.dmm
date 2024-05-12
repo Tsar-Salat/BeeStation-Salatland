@@ -635,21 +635,6 @@
 	},
 /turf/open/floor/iron,
 /area/ctf)
-"Ah" = (
-/obj/structure/barricade/security/ctf,
-/obj/structure/barricade/security/ctf,
-/obj/effect/turf_decal/tile/green,
-/obj/effect/turf_decal/tile/green{
-	dir = 1
-	},
-/obj/effect/turf_decal/tile/green{
-	dir = 4
-	},
-/obj/effect/turf_decal/tile/green{
-	dir = 8
-	},
-/turf/open/floor/iron/dark,
-/area/ctf)
 "AH" = (
 /obj/structure/barricade/security/ctf,
 /obj/effect/turf_decal/tile/yellow,
@@ -1959,7 +1944,7 @@ ab
 sq
 ow
 ow
-YW
+ow
 sq
 ab
 cJ
@@ -4388,7 +4373,7 @@ wA
 wA
 wb
 cC
-Ah
+zw
 Ci
 wA
 cJ
