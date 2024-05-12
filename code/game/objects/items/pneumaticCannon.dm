@@ -11,7 +11,7 @@
 	attack_verb = list("bludgeoned", "smashed", "beaten")
 	icon = 'icons/obj/pneumaticCannon.dmi'
 	icon_state = "pneumaticCannon"
-	item_state = "bulldog"
+	inhand_icon_state = "bulldog"
 	lefthand_file = 'icons/mob/inhands/weapons/guns_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/guns_righthand.dmi'
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 60, ACID = 50, STAMINA = 0)
@@ -306,7 +306,7 @@
 	desc = "A weapon favored by carp hunters. Fires specialized spears using magnetic energy. A savvy- or desperate- hunter may be able to find more esoteric payloads"
 	icon = 'icons/obj/guns/projectile.dmi'
 	icon_state = "speargun"
-	item_state = "speargun"
+	inhand_icon_state = "speargun"
 	w_class = WEIGHT_CLASS_BULKY
 	force = 10
 	fire_sound = 'sound/weapons/grenadelaunch.ogg'
@@ -327,7 +327,7 @@
 	name = "quiver"
 	desc = "A quiver for holding magspears."
 	icon_state = "quiver"
-	item_state = "quiver"
+	inhand_icon_state = "quiver"
 
 /obj/item/storage/backpack/magspear_quiver/ComponentInitialize()
 	. = ..()

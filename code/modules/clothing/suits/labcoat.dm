@@ -4,7 +4,7 @@
 	icon_state = "labcoat"
 	icon = 'icons/obj/clothing/suits/labcoat.dmi'
 	worn_icon = 'icons/mob/clothing/suits/labcoat.dmi'
-	item_state = "labcoat"
+	inhand_icon_state = "labcoat"
 	blood_overlay_type = "coat"
 	body_parts_covered = CHEST|ARMS
 	allowed = list(
@@ -35,25 +35,25 @@
 	name = "chief medical officer's labcoat"
 	desc = "Bluer than the standard model. Issued to Chief Medical Officers, keeping them visible at all times among the sea of the wounded and other doctors."
 	icon_state = "labcoat_cmo"
-	item_state = null
+	inhand_icon_state = null
 
 /obj/item/clothing/suit/toggle/labcoat/paramedic
 	name = "\improper EMT's jacket"
 	desc = "A dark blue jacket with reflective strips for emergency medical technicians."
 	icon_state = "labcoat_emt"
-	item_state = "labcoat_cmo"
+	inhand_icon_state = "labcoat_cmo"
 
 /obj/item/clothing/suit/toggle/labcoat/brig_physician
 	name = "security medic's labcoat"
 	icon_state = "labcoat_sec"
-	item_state = "labcoat_sec"
+	inhand_icon_state = "labcoat_sec"
 	armor = list(melee = 10, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 10, rad = 0, fire = 50, acid = 50, stamina = 30)
 
 /obj/item/clothing/suit/toggle/labcoat/mad
 	name = "\proper The Mad's labcoat"
 	desc = "It makes you look capable of konking someone on the noggin and shooting them into space."
 	icon_state = "labgreen"
-	item_state = null
+	inhand_icon_state = null
 
 /obj/item/clothing/suit/toggle/labcoat/genetics
 	name = "geneticist labcoat"
@@ -79,4 +79,4 @@
 	name = "research director's labcoat"
 	desc = "Popped collar, ancient science fair medal from middle school.. worn out buttons that barely keep the coat closed? Oh yeah, its plasma research time. Has a legacy purple U stripe along the back."
 	icon_state = "labcoat_rd"
-	item_state = "labcoat_tox"
+	inhand_icon_state = "labcoat_tox"

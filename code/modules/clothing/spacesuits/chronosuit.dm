@@ -2,7 +2,7 @@
 	name = "Chronosuit Helmet"
 	desc = "A white helmet with an opaque blue visor."
 	icon_state = "chronohelmet"
-	item_state = "chronohelmet"
+	inhand_icon_state = "chronohelmet"
 	slowdown = 1
 	armor = list(MELEE = 60,  BULLET = 60, LASER = 60, ENERGY = 60, BOMB = 30, BIO = 90, RAD = 90, FIRE = 100, ACID = 100, STAMINA = 70)
 	resistance_flags = FIRE_PROOF | ACID_PROOF
@@ -22,7 +22,7 @@
 	name = "Chronosuit"
 	desc = "An advanced spacesuit equipped with time-bluespace teleportation and anti-compression technology."
 	icon_state = "chronosuit"
-	item_state = "chronosuit"
+	inhand_icon_state = "chronosuit"
 	actions_types = list(/datum/action/item_action/toggle)
 	armor = list(MELEE = 60,  BULLET = 60, LASER = 60, ENERGY = 60, BOMB = 30, BIO = 90, RAD = 90, FIRE = 100, ACID = 1000, STAMINA = 70)
 	resistance_flags = FIRE_PROOF | ACID_PROOF

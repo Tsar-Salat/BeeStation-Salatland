@@ -30,7 +30,7 @@
 	name = "reactive armor"
 	desc = "Doesn't seem to do much for some reason."
 	icon_state = "reactiveoff"
-	item_state = "reactiveoff"
+	inhand_icon_state = "reactiveoff"
 	blood_overlay_type = "armor"
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100, STAMINA = 0)
 	actions_types = list(/datum/action/item_action/toggle)
@@ -55,11 +55,11 @@
 	if(active)
 		to_chat(user, "<span class='notice'>[src] is now active.</span>")
 		icon_state = "reactive"
-		item_state = "reactive"
+		inhand_icon_state = "reactive"
 	else
 		to_chat(user, "<span class='notice'>[src] is now inactive.</span>")
 		icon_state = "reactiveoff"
-		item_state = "reactiveoff"
+		inhand_icon_state = "reactiveoff"
 	add_fingerprint(user)
 	return
 

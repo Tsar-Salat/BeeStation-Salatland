@@ -24,34 +24,34 @@
 	name = "armor vest"
 	desc = "A slim Type I-A armored vest that provides decent protection against most types of damage."
 	icon_state = "armoralt"
-	item_state = "armor"
+	inhand_icon_state = "armor"
 	blood_overlay_type = "armor"
 	dog_fashion = /datum/dog_fashion/back
 
 /obj/item/clothing/suit/armor/vest/alt
 	desc = "An alternate style Type I-B armored vest that provides decent protection against most types of damage. They perform identically in the field."
 	icon_state = "armor"
-	item_state = "armor"
+	inhand_icon_state = "armor"
 
 /obj/item/clothing/suit/armor/vest/old
 	name = "degrading armor vest"
 	desc = "Older generation Type 1 armored vest. Due to degradation over time the vest is far less maneuverable to move in."
 	icon_state = "armor"
-	item_state = "armor"
+	inhand_icon_state = "armor"
 	slowdown = 1
 
 /obj/item/clothing/suit/armor/vest/blueshirt
 	name = "large armor vest"
 	desc = "A large, yet comfortable piece of armor, protecting you from some threats. Type H-L"
 	icon_state = "blueshift"
-	item_state = null
+	inhand_icon_state = null
 	custom_premium_price = 600
 
 /obj/item/clothing/suit/armor/vest/corporate
 	name = "corporate Jacket"
 	desc = "A Stylish Corporate Jacket which also provides Protection."
 	icon_state = "secjacket"
-	item_state = "secjacket"
+	inhand_icon_state = "secjacket"
 	body_parts_covered = CHEST|ARMS
 	armor = list(MELEE = 25,  BULLET = 25, LASER = 25, ENERGY = 35, BOMB = 20, BIO = 0, RAD = 0, FIRE = 45, ACID = 45, STAMINA = 30)
 
@@ -59,7 +59,7 @@
 	name = "armored greatcoat"
 	desc = "A greatcoat enhanced with a special alloy for some extra protection and style for those with a commanding presence."
 	icon_state = "hos"
-	item_state = "greatcoat"
+	inhand_icon_state = "greatcoat"
 	body_parts_covered = CHEST|GROIN|ARMS|LEGS
 	armor = list(MELEE = 30,  BULLET = 30, LASER = 30, ENERGY = 40, BOMB = 25, BIO = 0, RAD = 0, FIRE = 70, ACID = 90, STAMINA = 40)
 	cold_protection = CHEST|GROIN|LEGS|ARMS
@@ -71,7 +71,7 @@
 	name = "armored trenchcoat"
 	desc = "A trenchcoat enhanced with a special lightweight kevlar. The epitome of tactical plainclothes."
 	icon_state = "hostrench"
-	item_state = "hostrench"
+	inhand_icon_state = "hostrench"
 	flags_inv = 0
 	strip_delay = 80
 
@@ -79,7 +79,7 @@
 	name = "warden's jacket"
 	desc = "A navy-blue armored jacket with blue shoulder designations and '/Warden/' stitched into one of the chest pockets."
 	icon_state = "warden_alt"
-	item_state = "armor"
+	inhand_icon_state = "armor"
 	body_parts_covered = CHEST|GROIN|ARMS
 	cold_protection = CHEST|GROIN|ARMS|HANDS
 	heat_protection = CHEST|GROIN|ARMS|HANDS
@@ -100,7 +100,7 @@
 	name = "security overcoat"
 	desc = "Lightly armored leather overcoat meant as casual wear for high-ranking officers. Bears the crest of Nanotrasen Security."
 	icon_state = "leathercoat-sec"
-	item_state = "hostrench"
+	inhand_icon_state = "hostrench"
 	body_parts_covered = CHEST|GROIN|ARMS|LEGS
 	cold_protection = CHEST|GROIN|LEGS|ARMS
 	heat_protection = CHEST|GROIN|LEGS|ARMS
@@ -110,7 +110,7 @@
 	name = "captain's carapace"
 	desc = "A fireproof armored chestpiece reinforced with ceramic plates and plasteel pauldrons to provide additional protection whilst still offering maximum mobility and flexibility. Issued only to the station's finest, although it does chafe your nipples."
 	icon_state = "capcarapace"
-	item_state = "armor"
+	inhand_icon_state = "armor"
 	body_parts_covered = CHEST|GROIN
 	armor = list(MELEE = 50,  BULLET = 40, LASER = 50, ENERGY = 60, BOMB = 25, BIO = 0, RAD = 0, FIRE = 100, ACID = 90, STAMINA = 40)
 	dog_fashion = null
@@ -125,14 +125,14 @@
 	name = "captain's parade coat"
 	desc = "For when an armoured vest isn't fashionable enough."
 	icon_state = "capformal"
-	item_state = null
+	inhand_icon_state = null
 	body_parts_covered = CHEST|GROIN|ARMS
 
 /obj/item/clothing/suit/armor/vest/capcarapace/jacket
 	name = "captain's jacket"
 	desc = "An armored Jacket in the Captains colors"
 	icon_state = "capjacket"
-	item_state = null
+	inhand_icon_state = null
 	body_parts_covered = CHEST|ARMS
 	armor = list(MELEE = 40,  BULLET = 30, LASER = 40, ENERGY = 50, BOMB = 55, BIO = 0, RAD = 0, FIRE = 90, ACID = 80, STAMINA = 40)
 
@@ -140,7 +140,7 @@
 	name = "riot suit"
 	desc = "A suit of semi-flexible polycarbonate body armor with heavy padding to protect against melee attacks. Helps the wearer resist shoving in close quarters."
 	icon_state = "riot"
-	item_state = "swat_suit"
+	inhand_icon_state = "swat_suit"
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	cold_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	heat_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
@@ -155,7 +155,7 @@
 	name = "bone armor"
 	desc = "A tribal armor plate, crafted from animal bone."
 	icon_state = "bonearmor"
-	item_state = "bonearmor"
+	inhand_icon_state = "bonearmor"
 	blood_overlay_type = "armor"
 	armor = list(MELEE = 35,  BULLET = 25, LASER = 25, ENERGY = 30, BOMB = 25, BIO = 0, RAD = 0, FIRE = 50, ACID = 50, STAMINA = 20)
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS
@@ -165,7 +165,7 @@
 	name = "bulletproof armor"
 	desc = "A Type III heavy bulletproof vest that excels in protecting the wearer against traditional projectile weaponry and explosives to a minor extent."
 	icon_state = "bulletproof"
-	item_state = "armor"
+	inhand_icon_state = "armor"
 	blood_overlay_type = "armor"
 	armor = list(MELEE = 15,  BULLET = 60, LASER = 10, ENERGY = 10, BOMB = 40, BIO = 0, RAD = 0, FIRE = 50, ACID = 50, STAMINA = 40)
 	strip_delay = 70
@@ -175,7 +175,7 @@
 	name = "reflector vest"
 	desc = "A vest that excels in protecting the wearer against energy projectiles, as well as occasionally reflecting them."
 	icon_state = "armor_reflec"
-	item_state = "armor_reflec"
+	inhand_icon_state = "armor_reflec"
 	blood_overlay_type = "armor"
 	armor = list(MELEE = 10,  BULLET = 10, LASER = 60, ENERGY = 80, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100, STAMINA = 40)
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | ACID_PROOF
@@ -204,7 +204,7 @@
 	name = "\improper CentCom armor"
 	desc = "A suit that protects against some damage."
 	icon_state = "centcom"
-	item_state = "centcom"
+	inhand_icon_state = "centcom"
 	w_class = WEIGHT_CLASS_BULKY
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	allowed = list(/obj/item/gun/energy, /obj/item/melee/baton, /obj/item/restraints/handcuffs, /obj/item/tank/internals/emergency_oxygen, /obj/item/tank/internals/plasmaman)
@@ -220,7 +220,7 @@
 	name = "heavy armor"
 	desc = "A heavily armored suit that protects against moderate damage."
 	icon_state = "heavy"
-	item_state = "swat_suit"
+	inhand_icon_state = "swat_suit"
 	w_class = WEIGHT_CLASS_BULKY
 	gas_transfer_coefficient = 0.9
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
@@ -242,13 +242,13 @@
 	name = "thunderdome suit"
 	desc = "Reddish armor."
 	icon_state = "tdred"
-	item_state = "tdred"
+	inhand_icon_state = "tdred"
 
 /obj/item/clothing/suit/armor/tdome/green
 	name = "thunderdome suit"
 	desc = "Pukish armor."	//classy.
 	icon_state = "tdgreen"
-	item_state = "tdgreen"
+	inhand_icon_state = "tdgreen"
 
 /obj/item/clothing/suit/armor/tdome/holosuit
 	name = "thunderdome suit"
@@ -259,38 +259,38 @@
 /obj/item/clothing/suit/armor/tdome/holosuit/red
 	desc = "Reddish armor."
 	icon_state = "tdred"
-	item_state = "tdred"
+	inhand_icon_state = "tdred"
 
 /obj/item/clothing/suit/armor/tdome/holosuit/green
 	desc = "Pukish armor."
 	icon_state = "tdgreen"
-	item_state = "tdgreen"
+	inhand_icon_state = "tdgreen"
 
 /obj/item/clothing/suit/armor/riot/knight
 	name = "plate armour"
 	desc = "A classic suit of plate armour, highly effective at stopping melee attacks."
 	icon_state = "knight_green"
-	item_state = "knight_green"
+	inhand_icon_state = "knight_green"
 	move_sound = null
 	slowdown = 0.08
 
 /obj/item/clothing/suit/armor/riot/knight/yellow
 	icon_state = "knight_yellow"
-	item_state = "knight_yellow"
+	inhand_icon_state = "knight_yellow"
 
 /obj/item/clothing/suit/armor/riot/knight/blue
 	icon_state = "knight_blue"
-	item_state = "knight_blue"
+	inhand_icon_state = "knight_blue"
 
 /obj/item/clothing/suit/armor/riot/knight/red
 	icon_state = "knight_red"
-	item_state = "knight_red"
+	inhand_icon_state = "knight_red"
 
 /obj/item/clothing/suit/armor/vest/durathread
 	name = "durathread vest"
 	desc = "A bulletproof vest made from durathread, an inexpesive but relatively effective form of protection."
 	icon_state = "durathread"
-	item_state = "durathread"
+	inhand_icon_state = "durathread"
 	strip_delay = 60
 	equip_delay_other = 40
 	max_integrity = 200
@@ -301,7 +301,7 @@
 	name = "russian vest"
 	desc = "A bulletproof vest with forest camo. Good thing there's plenty of forests to hide in around here, right?"
 	icon_state = "rus_armor"
-	item_state = "rus_armor"
+	inhand_icon_state = "rus_armor"
 	armor = list(MELEE = 25,  BULLET = 30, LASER = 0, ENERGY = 15, BOMB = 10, BIO = 0, RAD = 20, FIRE = 20, ACID = 50, STAMINA = 25)
 	slowdown = 0.05
 
@@ -309,7 +309,7 @@
 	name = "russian battle coat"
 	desc = "Used in extremly cold fronts, made out of real bears."
 	icon_state = "rus_coat"
-	item_state = null
+	inhand_icon_state = null
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	cold_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	min_cold_protection_temperature = SPACE_SUIT_MIN_TEMP_PROTECT

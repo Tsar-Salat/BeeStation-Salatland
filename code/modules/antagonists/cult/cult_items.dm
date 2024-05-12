@@ -12,7 +12,7 @@
 	desc = "A strange dagger said to be used by sinister groups for \"preparing\" a corpse before sacrificing it to their dark gods."
 	icon = 'icons/obj/wizard.dmi'
 	icon_state = "render"
-	item_state = "cultdagger"
+	inhand_icon_state = "cultdagger"
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
 	inhand_x_dimension = 32
@@ -43,7 +43,7 @@ Striking a noncultist, however, will tear their flesh."}
 	name = "eldritch longsword"
 	desc = "A sword humming with unholy energy. It glows with a dim red light."
 	icon_state = "cultblade"
-	item_state = "cultblade"
+	inhand_icon_state = "cultblade"
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
 	flags_1 = CONDUCT_1
@@ -104,7 +104,7 @@ Striking a noncultist, however, will tear their flesh."}
 	light_range = 4
 	attack_verb = list("cleaved", "slashed", "tore", "hacked", "ripped", "diced", "carved")
 	icon_state = "cultbastard"
-	item_state = "cultbastard"
+	inhand_icon_state = "cultbastard"
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/64x64_righthand.dmi'
@@ -262,7 +262,7 @@ Striking a noncultist, however, will tear their flesh."}
 	name = "\improper Nar'Sien bola"
 	desc = "A strong bola, bound with dark magic that allows it to pass harmlessly through Nar'Sien cultists. Throw it to trip and slow your victim."
 	icon_state = "bola_cult"
-	item_state = "bola_cult"
+	inhand_icon_state = "bola_cult"
 	breakouttime = 60
 	knockdown = 20
 
@@ -301,7 +301,7 @@ Striking a noncultist, however, will tear their flesh."}
 	icon_state = "cultrobes"
 	icon = 'icons/obj/clothing/suits/armor.dmi'
 	worn_icon = 'icons/mob/clothing/suits/armor.dmi'
-	item_state = "cultrobes"
+	inhand_icon_state = "cultrobes"
 	body_parts_covered = CHEST|GROIN|LEGS|ARMS
 	allowed = list(/obj/item/tome, /obj/item/melee/cultblade)
 	armor = list(MELEE = 30,  BULLET = 30, LASER = 20, ENERGY = 20, BOMB = 25, BIO = 10, RAD = 0, FIRE = 10, ACID = 10, STAMINA = 40)
@@ -316,13 +316,13 @@ Striking a noncultist, however, will tear their flesh."}
 	name = "cultist hood"
 	desc = "An armored hood worn by the followers of Nar'Sie."
 	icon_state = "cult_hoodalt"
-	item_state = null
+	inhand_icon_state = null
 
 /obj/item/clothing/suit/hooded/cultrobes/alt
 	name = "cultist robes"
 	desc = "An armored set of robes worn by the followers of Nar'Sie."
 	icon_state = "cultrobesalt"
-	item_state = null
+	inhand_icon_state = null
 	hoodtype = /obj/item/clothing/head/hooded/cult_hoodie/alt
 
 /obj/item/clothing/suit/hooded/cultrobes/alt/ghost
@@ -335,7 +335,7 @@ Striking a noncultist, however, will tear their flesh."}
 /obj/item/clothing/head/wizard/magus
 	name = "magus helm"
 	icon_state = "magus"
-	item_state = null
+	inhand_icon_state = null
 	desc = "A helm worn by the followers of Nar'Sie."
 	flags_inv = HIDEFACE|HIDEHAIR|HIDEFACIALHAIR|HIDEEARS|HIDEEYES|HIDESNOUT
 	armor = list(MELEE = 50,  BULLET = 30, LASER = 50, ENERGY = 20, BOMB = 25, BIO = 10, RAD = 0, FIRE = 10, ACID = 10, STAMINA = 50)
@@ -347,7 +347,7 @@ Striking a noncultist, however, will tear their flesh."}
 	icon_state = "magusred"
 	icon = 'icons/obj/clothing/suits/wizard.dmi'
 	worn_icon = 'icons/mob/clothing/suits/wizard.dmi'
-	item_state = null
+	inhand_icon_state = null
 	body_parts_covered = CHEST|GROIN|LEGS|ARMS
 	allowed = list(/obj/item/tome, /obj/item/melee/cultblade)
 	armor = list(MELEE = 50,  BULLET = 30, LASER = 50, ENERGY = 20, BOMB = 25, BIO = 10, RAD = 0, FIRE = 10, ACID = 10, STAMINA = 50)
@@ -357,7 +357,7 @@ Striking a noncultist, however, will tear their flesh."}
 	name = "\improper Nar'Sien hardened armor"
 	desc = "A heavily-armored exosuit worn by warriors of the Nar'Sien cult. It can withstand hard vacuum."
 	icon_state = "cult_armor"
-	item_state = null
+	inhand_icon_state = null
 	w_class = WEIGHT_CLASS_BULKY
 	allowed = list(/obj/item/tome, /obj/item/melee/cultblade, /obj/item/tank/internals)
 	armor = list(MELEE = 70,  BULLET = 50, LASER = 30, ENERGY = 15, BOMB = 30, BIO = 30, RAD = 30, FIRE = 40, ACID = 75, STAMINA = 50)
@@ -372,7 +372,7 @@ Striking a noncultist, however, will tear their flesh."}
 	name = "\improper Nar'Sien hardened helmet"
 	desc = "A heavily-armored helmet worn by warriors of the Nar'Sien cult. It is reinforced by hard vacuum."
 	icon_state = "cult_helmet"
-	item_state = null
+	inhand_icon_state = null
 	armor = list(MELEE = 70,  BULLET = 50, LASER = 30, ENERGY = 15, BOMB = 30, BIO = 30, RAD = 30, FIRE = 40, ACID = 75, STAMINA = 50)
 	clothing_flags = STOPSPRESSUREDAMAGE | THICKMATERIAL | SNUG_FIT | HEADINTERNALS
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR|HIDESNOUT
@@ -399,7 +399,7 @@ Striking a noncultist, however, will tear their flesh."}
 	name = "empowered cultist armor"
 	desc = "Empowered armor which creates a powerful shield around the user."
 	icon_state = "cult_armor"
-	item_state = null
+	inhand_icon_state = null
 	w_class = WEIGHT_CLASS_BULKY
 	armor = list(MELEE = 40,  BULLET = 30, LASER = 40, ENERGY = 30, BOMB = 50, BIO = 30, RAD = 30, FIRE = 50, ACID = 60, STAMINA = 40)
 	hoodtype = /obj/item/clothing/head/hooded/cult_hoodie
@@ -462,7 +462,7 @@ Striking a noncultist, however, will tear their flesh."}
 	desc = "may Nar'Sie guide you through the darkness and shield you from the light."
 	name = "zealot's blindfold"
 	icon_state = "blindfold"
-	item_state = "blindfold"
+	inhand_icon_state = "blindfold"
 	flash_protect = 1
 	vision_correction = 1
 
@@ -596,7 +596,7 @@ Striking a noncultist, however, will tear their flesh."}
 	w_class = WEIGHT_CLASS_SMALL
 	light_range = 1
 	icon_state = "torch"
-	item_state = "torch"
+	inhand_icon_state = "torch"
 	color = "#ff0000"
 	on_damage = 15
 	slot_flags = null
@@ -801,7 +801,7 @@ Striking a noncultist, however, will tear their flesh."}
 	lefthand_file = 'icons/mob/inhands/misc/touchspell_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/misc/touchspell_righthand.dmi'
 	icon_state = "disintegrate"
-	item_state = "disintegrate"
+	inhand_icon_state = "disintegrate"
 	item_flags = ABSTRACT | DROPDEL
 	w_class = WEIGHT_CLASS_HUGE
 	throwforce = 0

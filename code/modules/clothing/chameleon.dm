@@ -253,7 +253,7 @@
 			if(initial(picked_item.greyscale_config_inhand_right))
 				I.righthand_file = SSgreyscale.GetColoredIconByType(initial(picked_item.greyscale_config_inhand_right), initial(picked_item.greyscale_colors))
 		I.worn_icon_state = initial(picked_item.worn_icon_state)
-		I.item_state = initial(picked_item.item_state)
+		I.inhand_icon_state = initial(picked_item.inhand_icon_state)
 		if(isclothing(I) && ispath(picked_item, /obj/item/clothing))
 			var/obj/item/clothing/CL = I
 			var/obj/item/clothing/PCL = picked_item
@@ -378,7 +378,7 @@
 	desc = "A tough jumpsuit woven from alloy threads. It can take on the appearance of other jumpsuits."
 	icon = 'icons/obj/clothing/under/color.dmi'
 	worn_icon = 'icons/mob/clothing/under/color.dmi'
-	item_state = "engi_suit"
+	inhand_icon_state = "engi_suit"
 	greyscale_colors = null
 	greyscale_config = null
 	greyscale_config_inhand_left = null
@@ -388,7 +388,7 @@
 /obj/item/clothing/under/chameleon/envirosuit/ratvar
 	name = "ratvarian engineer's envirosuit"
 	desc = "A tough envirosuit woven from alloy threads. It can take on the appearance of other jumpsuits."
-	item_state = "engineer_envirosuit"
+	inhand_icon_state = "engineer_envirosuit"
 
 /obj/item/clothing/under/chameleon/Initialize(mapload)
 	. = ..()
@@ -430,7 +430,7 @@
 	icon_state = "armor"
 	icon = 'icons/obj/clothing/suits/armor.dmi'
 	worn_icon = 'icons/mob/clothing/suits/armor.dmi'
-	item_state = "armor"
+	inhand_icon_state = "armor"
 	blood_overlay_type = "armor"
 	resistance_flags = NONE
 	armor = list(MELEE = 10,  BULLET = 10, LASER = 10, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 50, STAMINA = 10)
@@ -475,7 +475,7 @@
 	name = "Optical Meson Scanner"
 	desc = "Used by engineering and mining staff to see basic structural and terrain layouts through walls, regardless of lighting condition."
 	icon_state = "meson"
-	item_state = "meson"
+	inhand_icon_state = "meson"
 	resistance_flags = NONE
 	armor = list(MELEE = 10,  BULLET = 10, LASER = 10, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 50, STAMINA = 10)
 
@@ -519,14 +519,14 @@
 	name = "welding goggles"
 	desc = "Protects the eyes from welders; approved by the mad scientist association."
 	icon_state = "welding-g"
-	item_state = "welding-g"
+	inhand_icon_state = "welding-g"
 	flash_protect = 3
 
 /obj/item/clothing/gloves/chameleon
 	desc = "These gloves provide protection against electric shock."
 	name = "insulated gloves"
 	icon_state = "yellow"
-	item_state = "ygloves"
+	inhand_icon_state = "ygloves"
 	worn_icon_state = "ygloves"
 
 	resistance_flags = NONE
@@ -572,7 +572,7 @@
 	name = "combat gloves"
 	desc = "These tactical gloves are fireproof and shock resistant."
 	icon_state = "cgloves"
-	item_state = "combatgloves"
+	inhand_icon_state = "combatgloves"
 	worn_icon_state = "combatgloves"
 	siemens_coefficient = 0
 	permeability_coefficient = 0.05
@@ -632,7 +632,7 @@
 /obj/item/clothing/head/chameleon/envirohelm
 	name = "plasma envirosuit helmet"
 	desc = "A special containment helmet that allows plasma-based lifeforms to exist safely in an oxygenated environment. It is space-worthy, and may be worn in tandem with other EVA gear."
-	item_state = "mime_envirohelm"
+	inhand_icon_state = "mime_envirohelm"
 	resistance_flags = FIRE_PROOF
 	strip_delay = 80
 	clothing_flags = STOPSPRESSUREDAMAGE | THICKMATERIAL | SNUG_FIT | HEADINTERNALS
@@ -648,7 +648,7 @@
 	name = "ratvarian engineer's envirosuit helmet"
 	desc = "A tough envirohelm woven from alloy threads. It can take on the appearance of other headgear."
 	//icon_state = "engineer_envirohelm"
-	item_state = "engineer_envirohelm"
+	inhand_icon_state = "engineer_envirohelm"
 	flash_protect = 1
 
 /obj/item/clothing/head/chameleon/drone
@@ -707,7 +707,7 @@
 	name = "gas mask"
 	desc = "A face-covering mask that can be connected to an air supply. While good for concealing your identity, it isn't good for blocking gas flow." //More accurate
 	icon_state = "gas_alt"
-	item_state = "gas_alt"
+	inhand_icon_state = "gas_alt"
 	resistance_flags = NONE
 	armor = list(MELEE = 5,  BULLET = 5, LASER = 5, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 50, STAMINA = 10)
 	clothing_flags = BLOCK_GAS_SMOKE_EFFECT | MASKINTERNALS
@@ -967,7 +967,7 @@
 /obj/item/radio/headset/chameleon/bowman
 	name = "bowman headset"
 	icon_state = "syndie_headset"
-	item_state = "syndie_headset"
+	inhand_icon_state = "syndie_headset"
 	bang_protect = 3
 
 /obj/item/modular_computer/tablet/pda/chameleon
