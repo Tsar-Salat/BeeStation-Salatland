@@ -51,14 +51,17 @@
 
 /obj/item/ctf/proc/reset_flag(capture = FALSE)
 	SIGNAL_HANDLER
+	STOP_PROCESSING(SSobj, src)
 
-	forceMove(get_turf(src.reset))
+	var/turf/our_turf = get_turf(src.reset)
+	if(!our_turf)
+		return TRUE
+	forceMove(our_turf)
 	for(var/mob/M in GLOB.player_list)
 		var/area/mob_area = get_area(M)
 		if(istype(mob_area, game_area))
 			if(!capture)
 				to_chat(M, "<span class='userdanger'>[src] has been returned to the base!</span>")
-	STOP_PROCESSING(SSobj, src)
 	return TRUE //so if called by a signal, it doesn't delete
 
 //working with attack hand feels like taking my brain and putting it through an industrial pill press so i'm gonna be a bit liberal with the comments
@@ -460,20 +463,20 @@
 		arena_reset = TRUE
 
 /obj/machinery/capture_the_flag/proc/reset_the_arena()
-	var/area/A = get_area(src)
-	var/list/ctf_object_typecache = typecacheof(list(
+	var/area/ctf_area = get_area(src)
+	var/static/list/ctf_object_typecache = typecacheof(list(
 				/obj/machinery,
 				/obj/effect/ctf,
 				/obj/item/ctf
 			))
-	for(var/atm in A)
-		if (isturf(A) || ismob(A) || isarea(A))
+	for(var/atom/movable/area_movable in ctf_area)
+		if (ismob(area_movable))
 			continue
-		if(isstructure(atm))
-			var/obj/structure/S = atm
-			S.obj_integrity = S.max_integrity
-		else if(!is_type_in_typecache(atm, ctf_object_typecache))
-			qdel(atm)
+		if(isstructure(area_movable))
+			var/obj/structure/ctf_structure = area_movable
+			ctf_structure.obj_integrity = ctf_structure.max_integrity
+		else if(!is_type_in_typecache(area_movable, ctf_object_typecache))
+			qdel(area_movable)
 
 
 /obj/machinery/capture_the_flag/proc/stop_ctf()
@@ -575,8 +578,8 @@
 
 /obj/effect/ctf/dead_barricade/Destroy()
 	for(var/obj/machinery/capture_the_flag/CTF in GLOB.machines)
-		//if(CTF.game_id != game_id)
-		//	continue
+		if(CTF.game_id != game_id)
+			continue
 		CTF.dead_barricades -= src
 	return ..()
 
