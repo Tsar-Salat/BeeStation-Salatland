@@ -1176,9 +1176,6 @@
 	},
 /turf/open/floor/iron/dark,
 /area/ctf)
-"YV" = (
-/turf/open/space/basic,
-/area/ctf)
 "YW" = (
 /obj/structure/barricade/security/ctf,
 /obj/structure/barricade/security/ctf,
@@ -3238,7 +3235,7 @@ ab
 ab
 ab
 ab
-YV
+ab
 ab
 ab
 ab
