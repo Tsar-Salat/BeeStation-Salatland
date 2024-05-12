@@ -1918,21 +1918,6 @@
 /obj/effect/decal/cleanable/shreds,
 /turf/open/floor/iron/dark,
 /area/ctf)
-"JZ" = (
-/obj/structure/barricade/security/ctf,
-/obj/structure/barricade/security/ctf,
-/obj/effect/turf_decal/tile/red,
-/obj/effect/turf_decal/tile/red{
-	dir = 4
-	},
-/obj/effect/turf_decal/tile/red{
-	dir = 1
-	},
-/obj/effect/turf_decal/tile/red{
-	dir = 8
-	},
-/turf/open/floor/iron,
-/area/ctf)
 "Kd" = (
 /obj/structure/flora/ausbushes/grassybush,
 /turf/open/floor/plating/grass,
@@ -5230,7 +5215,7 @@ Te
 td
 rQ
 vU
-JZ
+vU
 vU
 rQ
 KD

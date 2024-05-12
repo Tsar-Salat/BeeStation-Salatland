@@ -153,11 +153,6 @@
 	},
 /turf/open/floor/circuit/green/off,
 /area/ctf)
-"hh" = (
-/obj/structure/barricade/security/ctf,
-/obj/structure/barricade/security/ctf,
-/turf/open/floor/iron/cult,
-/area/ctf)
 "hl" = (
 /obj/effect/turf_decal/siding/wood/corner{
 	dir = 1
@@ -746,21 +741,6 @@
 	},
 /turf/open/floor/carpet/orange,
 /area/ctf)
-"GX" = (
-/obj/structure/barricade/security/ctf,
-/obj/structure/barricade/security/ctf,
-/obj/effect/turf_decal/tile/yellow,
-/obj/effect/turf_decal/tile/yellow{
-	dir = 1
-	},
-/obj/effect/turf_decal/tile/yellow{
-	dir = 4
-	},
-/obj/effect/turf_decal/tile/yellow{
-	dir = 8
-	},
-/turf/open/floor/iron/cult,
-/area/ctf)
 "GZ" = (
 /obj/effect/portal/permanent{
 	icon_state = "portal1";
@@ -1094,21 +1074,6 @@
 /area/ctf)
 "Xl" = (
 /turf/closed/indestructible/riveted/uranium,
-/area/ctf)
-"XC" = (
-/obj/structure/barricade/security/ctf,
-/obj/structure/barricade/security/ctf,
-/obj/effect/turf_decal/tile/blue{
-	dir = 1
-	},
-/obj/effect/turf_decal/tile/blue,
-/obj/effect/turf_decal/tile/blue{
-	dir = 8
-	},
-/obj/effect/turf_decal/tile/blue{
-	dir = 4
-	},
-/turf/open/floor/iron/cult,
 /area/ctf)
 "Yl" = (
 /obj/effect/portal/permanent{
@@ -1475,7 +1440,7 @@ nB
 Tw
 Tw
 mP
-hh
+mP
 mP
 Tw
 Xl
@@ -2463,7 +2428,7 @@ ny
 ny
 ny
 ep
-XC
+ep
 ep
 ny
 Xl
@@ -2497,7 +2462,7 @@ uh
 Xl
 sl
 Ga
-GX
+Ga
 Ga
 sl
 sl
@@ -3485,7 +3450,7 @@ uh
 Xl
 Tw
 mP
-hh
+mP
 mP
 Tw
 Tw
