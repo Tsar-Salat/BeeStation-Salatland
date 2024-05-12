@@ -340,10 +340,12 @@
 		if(CTF.team_members.len < src.team_members.len)
 			to_chat(user, "[src.team] has more team members than [CTF.team]. Try joining [CTF.team] team to even things up.")
 			return
+
 	var/client/new_team_member = user.client
-	if(user.mind && user.mind.current)
-		ctf_dust_old(user.mind.current)
+	team_members |= new_team_member.ckey
+	to_chat(user, "<span class='warning'>You are now a member of [src.team]. Get the enemy flag and bring it back to your team's controller!</span>")
 	spawn_team_member(new_team_member)
+
 
 //does not add to recently dead, because it dusts and that triggers ctf_qdelled_player
 /obj/machinery/capture_the_flag/proc/ctf_dust_old(mob/living/body)
