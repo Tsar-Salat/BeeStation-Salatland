@@ -262,7 +262,7 @@
 /turf/open/floor/iron,
 /area/ctf)
 "fZ" = (
-/obj/machinery/disposal/delivery_chute{
+/obj/machinery/disposal/deliveryChute{
 	dir = 4;
 	resistance_flags = 64
 	},
@@ -754,7 +754,7 @@
 /obj/structure/rack{
 	resistance_flags = 64
 	},
-/obj/item/clothing/head/helmet/space/plasmaman/captain{
+/obj/item/clothing/head/helmet/space/plasmaman/command{
 	name = "blue plasma envirosuit helmet"
 	},
 /obj/effect/turf_decal/siding/wood,
@@ -1106,7 +1106,7 @@
 /obj/structure/rack{
 	resistance_flags = 64
 	},
-/obj/item/clothing/head/fedora/white{
+/obj/item/clothing/head/fedora{
 	color = "#FF3333";
 	name = "red fedora"
 	},
@@ -1679,7 +1679,7 @@
 /obj/structure/rack{
 	resistance_flags = 64
 	},
-/obj/item/clothing/head/hardhat/dblue{
+/obj/item/clothing/head/utility/hardhat/dblue{
 	name = "blue hardhat"
 	},
 /turf/open/floor/carpet/blue,
@@ -1708,7 +1708,7 @@
 /obj/structure/rack{
 	resistance_flags = 64
 	},
-/obj/item/clothing/head/fedora/white{
+/obj/item/clothing/head/fedora{
 	color = "#3333AA";
 	name = "blue fedora"
 	},
@@ -1886,7 +1886,7 @@
 /obj/structure/rack{
 	resistance_flags = 64
 	},
-/obj/item/clothing/head/hardhat/red,
+/obj/item/clothing/head/utility/hardhat/red,
 /turf/open/floor/carpet/red,
 /area/ctf)
 "JM" = (
@@ -2701,7 +2701,7 @@
 /turf/open/floor/iron,
 /area/ctf)
 "Zl" = (
-/obj/machinery/disposal/delivery_chute{
+/obj/machinery/disposal/deliveryChute{
 	dir = 8;
 	resistance_flags = 64
 	},

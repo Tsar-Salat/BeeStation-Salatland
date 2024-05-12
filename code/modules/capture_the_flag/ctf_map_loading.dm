@@ -45,7 +45,9 @@
 	description = "A KOTH map that takes place in a wizard den with looping hallways"
 	mappath = "_maps/map_files/CTF/limbo.dmm"
 
+/*
 /datum/map_template/ctf/cruiser
 	name = "Crusier"
 	description = "A CTF map that takes place across multiple space ships, one carring a powerful device that can accelerate those who obtain it"
 	mappath = "_maps/map_files/CTF/cruiser.dmm"
+*/

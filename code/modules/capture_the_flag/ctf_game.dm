@@ -548,6 +548,10 @@
 /obj/structure/barricade/security/ctf/make_debris()
 	new /obj/effect/ctf/dead_barricade(get_turf(src))
 
+/obj/structure/table/reinforced/ctf
+	resistance_flags = INDESTRUCTIBLE
+	flags_1 = NODECONSTRUCT_1
+
 /obj/effect/ctf
 	density = FALSE
 	anchored = TRUE

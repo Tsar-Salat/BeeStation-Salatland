@@ -211,3 +211,10 @@
 	icon = 'icons/effects/blood.dmi'
 	icon_state = "xfloor1"
 	random_icon_states = list("xfloor1", "xfloor2", "xfloor3", "xfloor4", "xfloor5", "xfloor6", "xfloor7")
+
+/obj/effect/decal/cleanable/plastic
+	name = "plastic shreds"
+	desc = "Bits of torn, broken, worthless plastic."
+	icon = 'icons/obj/objects.dmi'
+	icon_state = "shards"
+	color = "#c6f4ff"
