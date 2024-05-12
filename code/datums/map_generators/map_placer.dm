@@ -245,10 +245,10 @@
 			// Tick overrun, return to MC (We will pick up where we left from)
 			if (TICK_CHECK)
 				return
-		if(members)
-			continue
-		if(members_attributes)
-			continue
+		//if(members)
+		//	continue
+		//if(members_attributes)
+		//	continue
 		//check and see if we can just skip this turf
 		//So you don't have to understand this horrid statement, we can do this if
 		// 1. no_changeturf is set
