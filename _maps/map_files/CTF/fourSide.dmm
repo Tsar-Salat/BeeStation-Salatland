@@ -1161,21 +1161,6 @@
 	},
 /turf/open/floor/iron/dark,
 /area/ctf)
-"YW" = (
-/obj/structure/barricade/security/ctf,
-/obj/structure/barricade/security/ctf,
-/obj/effect/turf_decal/tile/red{
-	dir = 1
-	},
-/obj/effect/turf_decal/tile/red{
-	dir = 4
-	},
-/obj/effect/turf_decal/tile/red,
-/obj/effect/turf_decal/tile/red{
-	dir = 8
-	},
-/turf/open/floor/iron/dark,
-/area/ctf)
 "Zd" = (
 /obj/effect/turf_decal/tile/green{
 	dir = 4
@@ -2556,7 +2541,7 @@ ab
 ab
 ow
 ow
-YW
+ow
 ab
 ab
 ab
