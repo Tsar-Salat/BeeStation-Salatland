@@ -12,12 +12,15 @@
 	)
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 0, ACID = 0, STAMINA = 0)
 	slot_flags = ITEM_SLOT_OCLOTHING
+	pocket_storage_component_path = /datum/component/storage/concrete/pockets/exo
 	var/blood_overlay_type = "suit"
 	var/move_sound = null
 	var/footstep = 0
 	var/mob/listeningTo
-	pocket_storage_component_path = /datum/component/storage/concrete/pockets/exo
 
+/obj/item/clothing/suit/Initialize(mapload)
+	. = ..()
+	setup_shielding()
 
 /obj/item/clothing/suit/worn_overlays(mutable_appearance/standing, isinhands = FALSE, icon_file, item_layer, atom/origin)
 	. = list()
@@ -39,6 +42,15 @@
 	if(ismob(loc))
 		var/mob/M = loc
 		M.update_inv_wear_suit()
+
+/**
+ * Wrapper proc to apply shielding through AddComponent().
+ * Called in /obj/item/clothing/Initialize().
+ * Override with an AddComponent(/datum/component/shielded, args) call containing the desired shield statistics.
+ * See /datum/component/shielded documentation for a description of the arguments
+ **/
+/obj/item/clothing/suit/proc/setup_shielding()
+	return
 
 /obj/item/clothing/suit/proc/on_mob_move()
 	SIGNAL_HANDLER
