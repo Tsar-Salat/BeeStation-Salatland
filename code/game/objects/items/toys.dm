@@ -450,6 +450,8 @@
 	w_class = WEIGHT_CLASS_NORMAL
 	attack_verb = list("attacked", "slashed", "stabbed", "sliced")
 	hitsound = 'sound/weapons/bladeslice.ogg'
+	sharpness = IS_SHARP
+	bleed_force = BLEED_SURFACE
 	block_flags = BLOCKING_ACTIVE | BLOCKING_PROJECTILE //if it some how gets block level, katanas block projectiles for the meme
 	item_flags = ISWEAPON
 
