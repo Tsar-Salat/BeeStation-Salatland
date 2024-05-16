@@ -155,7 +155,7 @@
 	name = "bone armor"
 	desc = "A tribal armor plate, crafted from animal bone."
 	icon_state = "bonearmor"
-	inhand_icon_state = "bonearmor"
+	inhand_icon_state = null
 	blood_overlay_type = "armor"
 	armor = list(MELEE = 35,  BULLET = 25, LASER = 25, ENERGY = 30, BOMB = 25, BIO = 0, RAD = 0, FIRE = 50, ACID = 50, STAMINA = 20)
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS
@@ -270,27 +270,27 @@
 	name = "plate armour"
 	desc = "A classic suit of plate armour, highly effective at stopping melee attacks."
 	icon_state = "knight_green"
-	inhand_icon_state = "knight_green"
+	inhand_icon_state = null
 	move_sound = null
 	slowdown = 0.08
 
 /obj/item/clothing/suit/armor/riot/knight/yellow
 	icon_state = "knight_yellow"
-	inhand_icon_state = "knight_yellow"
+	inhand_icon_state = null
 
 /obj/item/clothing/suit/armor/riot/knight/blue
 	icon_state = "knight_blue"
-	inhand_icon_state = "knight_blue"
+	inhand_icon_state = null
 
 /obj/item/clothing/suit/armor/riot/knight/red
 	icon_state = "knight_red"
-	inhand_icon_state = "knight_red"
+	inhand_icon_state = null
 
 /obj/item/clothing/suit/armor/vest/durathread
 	name = "durathread vest"
 	desc = "A bulletproof vest made from durathread, an inexpesive but relatively effective form of protection."
 	icon_state = "durathread"
-	inhand_icon_state = "durathread"
+	inhand_icon_state = null
 	strip_delay = 60
 	equip_delay_other = 40
 	max_integrity = 200
@@ -301,7 +301,7 @@
 	name = "russian vest"
 	desc = "A bulletproof vest with forest camo. Good thing there's plenty of forests to hide in around here, right?"
 	icon_state = "rus_armor"
-	inhand_icon_state = "rus_armor"
+	inhand_icon_state = null
 	armor = list(MELEE = 25,  BULLET = 30, LASER = 0, ENERGY = 15, BOMB = 10, BIO = 0, RAD = 20, FIRE = 20, ACID = 50, STAMINA = 25)
 	slowdown = 0.05
 
