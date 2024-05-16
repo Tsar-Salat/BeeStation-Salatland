@@ -7,8 +7,8 @@
 	icon_state = "std_mod"
 	w_class = WEIGHT_CLASS_GIGANTIC
 	inhand_icon_state = "electronic"
-	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 	flags_1 = CONDUCT_1
 
 	var/list/basic_modules = list() //a list of paths, converted to a list of instances on New()

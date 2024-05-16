@@ -40,8 +40,8 @@
 	name = "plush fabric"
 	desc = "An empty plush fabric. Ready to be stuffed with cotton."
 	icon = 'icons/obj/plushes.dmi'
-	lefthand_file = 'icons/mob/inhands/plushes_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/plushes_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/plushes_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/plushes_righthand.dmi'
 	icon_state = "debug"
 
 /obj/item/toy/empty_plush/attackby(obj/item/I, mob/living/user, params)
@@ -661,8 +661,8 @@
 	desc = "A tool to help you write fictional devils!"
 	icon = 'icons/obj/library.dmi'
 	icon_state = "demonomicon"
-	lefthand_file = 'icons/mob/inhands/misc/books_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/books_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/books_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/books_righthand.dmi'
 	w_class = WEIGHT_CLASS_SMALL
 	recharge_time = 60
 

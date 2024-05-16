@@ -274,8 +274,8 @@
 /obj/item/nullrod/godhand
 	icon_state = "disintegrate"
 	inhand_icon_state = "disintegrate"
-	lefthand_file = 'icons/mob/inhands/misc/touchspell_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/touchspell_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/touchspell_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/touchspell_righthand.dmi'
 	name = "god hand"
 	desc = "This hand of yours glows with an awesome power!"
 	item_flags = ABSTRACT | DROPDEL

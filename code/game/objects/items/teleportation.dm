@@ -20,8 +20,8 @@
 	flags_1 = CONDUCT_1
 	w_class = WEIGHT_CLASS_SMALL
 	inhand_icon_state = "electronic"
-	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 	throw_speed = 3
 	throw_range = 7
 	custom_materials = list(/datum/material/iron=400)
@@ -103,8 +103,8 @@
 	icon = 'icons/obj/device.dmi'
 	icon_state = "hand_tele"
 	inhand_icon_state = "electronic"
-	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 	throwforce = 0
 	w_class = WEIGHT_CLASS_SMALL
 	throw_speed = 3
@@ -277,8 +277,8 @@
 	icon = 'icons/obj/device.dmi'
 	icon_state = "syndi_tele"
 	inhand_icon_state = "electronic"
-	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 	throwforce = 5
 	w_class = WEIGHT_CLASS_SMALL
 	throw_speed = 4

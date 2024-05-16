@@ -4,8 +4,8 @@
 	icon = 'icons/obj/tools.dmi'
 	icon_state = "compression_c"
 	inhand_icon_state = "RPED"
-	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 	w_class = WEIGHT_CLASS_NORMAL
 	var/charges = 5
 	// var/damage_multiplier = 0.2 Not in use yet.

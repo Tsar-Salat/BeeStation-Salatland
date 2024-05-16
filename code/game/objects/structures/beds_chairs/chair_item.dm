@@ -6,8 +6,8 @@
 	icon = 'icons/obj/beds_chairs/chairs.dmi'
 	icon_state = "chair_toppled"
 	inhand_icon_state = "chair"
-	lefthand_file = 'icons/mob/inhands/misc/chairs_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/chairs_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/chairs_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/chairs_righthand.dmi'
 	w_class = WEIGHT_CLASS_HUGE
 	item_flags = ISWEAPON
 	force = 8
@@ -158,8 +158,8 @@
 	name = "folding chair"
 	desc = "Somehow, you can always find one under the wrestling ring."
 	icon_state = "chair_foldable_toppled" //for convenience sake
-	lefthand_file = 'icons/mob/inhands/misc/chairs_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/chairs_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/chairs_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/chairs_righthand.dmi'
 	w_class = WEIGHT_CLASS_NORMAL
 	force = 7
 	break_chance = 25

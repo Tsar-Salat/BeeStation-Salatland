@@ -7,8 +7,8 @@ If you create T5+ please take a pass at gene_modder.dm [L40]. Max_values MUST fi
 	icon = 'icons/obj/storage/storage.dmi'
 	icon_state = "RPED"
 	inhand_icon_state = "RPED"
-	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 	w_class = WEIGHT_CLASS_HUGE
 	component_type = /datum/component/storage/concrete/rped
 	var/works_from_distance = FALSE
@@ -206,8 +206,8 @@ If you create T5+ please take a pass at gene_modder.dm [L40]. Max_values MUST fi
 	desc = "Special mechanical module made to store, sort, and apply standard machine parts."
 	icon_state = "borgrped"
 	inhand_icon_state = "RPED"
-	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 
 /proc/cmp_rped_sort(obj/item/A, obj/item/B)
 	return B.get_part_rating() - A.get_part_rating()

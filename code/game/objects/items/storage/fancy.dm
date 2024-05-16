@@ -119,8 +119,8 @@
 	inhand_icon_state = "eggbox"
 	icon_state = "eggbox"
 	base_icon_state = "eggbox"
-	lefthand_file = 'icons/mob/inhands/misc/food_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/food_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/food_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/food_righthand.dmi'
 	name = "egg box"
 	desc = "A carton for containing eggs."
 	spawn_type = /obj/item/food/egg
@@ -423,8 +423,8 @@
 	inhand_icon_state = "chocolatebox"
 	icon_state = "chocolatebox"
 	base_icon_state = "chocolatebox"
-	lefthand_file = 'icons/mob/inhands/misc/food_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/food_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/food_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/food_righthand.dmi'
 	contents_tag = "chocolate"
 	spawn_type = /obj/item/food/bonbon
 

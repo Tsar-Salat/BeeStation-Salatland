@@ -5,8 +5,8 @@
 	var/on_use_sound = null
 	var/obj/effect/proc_holder/spell/targeted/touch/attached_spell
 	icon = 'icons/obj/items_and_weapons.dmi'
-	lefthand_file = 'icons/mob/inhands/misc/touchspell_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/touchspell_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/touchspell_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/touchspell_righthand.dmi'
 	icon_state = "syndballoon"
 	inhand_icon_state = null
 	item_flags = NEEDS_PERMIT | ABSTRACT | DROPDEL | ISWEAPON

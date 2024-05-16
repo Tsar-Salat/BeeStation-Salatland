@@ -47,8 +47,8 @@
 	icon = 'icons/obj/nuke_tools.dmi'
 	icon_state = "core_container_empty"
 	inhand_icon_state = "tile"
-	lefthand_file = 'icons/mob/inhands/misc/sheets_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/sheets_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/sheets_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/sheets_righthand.dmi'
 	var/obj/item/nuke_core/core
 
 /obj/item/nuke_core_container/Destroy()

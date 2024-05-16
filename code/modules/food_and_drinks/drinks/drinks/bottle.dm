@@ -9,8 +9,8 @@
 	volume = 100
 	throwforce = 15
 	inhand_icon_state = "broken_beer" //Generic held-item sprite until unique ones are made.
-	lefthand_file = 'icons/mob/inhands/misc/food_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/food_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/food_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/food_righthand.dmi'
 	isGlass = TRUE
 	foodtype = ALCOHOL
 	item_flags = ISWEAPON

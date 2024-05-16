@@ -342,8 +342,8 @@
 	name = "\improper magical aura"
 	desc = "A sinister looking aura that distorts the flow of reality around it."
 	icon = 'icons/obj/items_and_weapons.dmi'
-	lefthand_file = 'icons/mob/inhands/misc/touchspell_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/touchspell_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/touchspell_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/touchspell_righthand.dmi'
 	icon_state = "disintegrate"
 	inhand_icon_state = "disintegrate"
 	item_flags = NEEDS_PERMIT | ABSTRACT | DROPDEL

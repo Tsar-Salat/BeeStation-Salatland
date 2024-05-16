@@ -10,8 +10,8 @@
 	inhand_icon_state = "electronic"
 	w_class = WEIGHT_CLASS_SMALL
 	//worn_icon_state = "electronic"		//remember to change it later lol
-	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 
 	light_system = MOVABLE_LIGHT
 

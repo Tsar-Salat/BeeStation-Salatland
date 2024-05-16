@@ -6,8 +6,8 @@
 	name = "bedsheet"
 	desc = "A surprisingly soft linen bedsheet."
 	icon = 'icons/obj/beds_chairs/beds.dmi'
-	lefthand_file = 'icons/mob/inhands/misc/bedsheet_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/bedsheet_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/bedsheet_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/bedsheet_righthand.dmi'
 	icon_state = "sheetwhite"
 	inhand_icon_state = "sheetwhite"
 	slot_flags = ITEM_SLOT_NECK

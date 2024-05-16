@@ -189,8 +189,8 @@ interface with the mining shuttle at the landing site if a mobile beacon is also
 	name = "Landing Field Designator"
 	icon_state = "gangtool-purple"
 	inhand_icon_state = "electronic"
-	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 	desc = "Deploy to designate the landing zone of the auxillary base."
 	w_class = WEIGHT_CLASS_SMALL
 	shuttle_id = "colony_drop"

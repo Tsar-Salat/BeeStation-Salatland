@@ -5,8 +5,8 @@
 	icon = 'icons/obj/device.dmi'
 	icon_state = "gangtool"
 	inhand_icon_state = "radio"
-	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 	throwforce = 0
 	w_class = WEIGHT_CLASS_TINY
 	throw_speed = 3

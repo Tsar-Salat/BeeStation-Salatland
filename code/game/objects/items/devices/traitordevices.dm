@@ -26,8 +26,8 @@ effective or pretty fucking useless.
 	throw_range = 7
 	flags_1 = CONDUCT_1
 	inhand_icon_state = "electronic"
-	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 
 	var/times_used = 0 //Number of times it's been used.
 	var/max_uses = 2
@@ -254,8 +254,8 @@ effective or pretty fucking useless.
 	name = "magician's cape"
 	desc = "A magician never reveals his secrets."
 	icon = 'icons/obj/beds_chairs/beds.dmi'
-	lefthand_file = 'icons/mob/inhands/misc/bedsheet_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/bedsheet_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/bedsheet_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/bedsheet_righthand.dmi'
 	icon_state = "sheetmagician"
 	inhand_icon_state = "sheetmagician"
 	worn_icon_state = "sheetblack"
