@@ -2317,7 +2317,7 @@
 /area/engine/atmos)
 "jU" = (
 /obj/structure/table,
-/obj/item/melee/transforming/energy/axe,
+/obj/item/melee/energy/axe,
 /turf/open/floor/iron,
 /area/storage/primary)
 "kn" = (

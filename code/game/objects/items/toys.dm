@@ -195,7 +195,8 @@
 	slot_flags = ITEM_SLOT_BELT
 	w_class = WEIGHT_CLASS_NORMAL
 	custom_materials = list(/datum/material/iron=10, /datum/material/glass=10)
-	attack_verb = list("struck", "pistol whipped", "hit", "bashed")
+	attack_verb_continuous = list("strikes", "pistol whips", "hits", "bashes")
+	attack_verb_simple = list("strike", "pistol whip", "hit", "bash")
 	var/bullets = 7
 
 /obj/item/toy/gun/examine(mob/user)
@@ -265,62 +266,69 @@
 /obj/item/toy/sword
 	name = "toy sword"
 	desc = "A cheap, plastic replica of an energy sword. Realistic sounds! Ages 8 and up."
+	icon_state = "e_sword"
 	icon = 'icons/obj/transforming_energy.dmi'
-	icon_state = "sword0"
-	item_state = "sword0"
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
-	var/active = 0
 	w_class = WEIGHT_CLASS_SMALL
-	attack_verb = list("attacked", "struck", "hit")
+	attack_verb_continuous = list("attacks", "strikes", "hits")
+	attack_verb_simple = list("attack", "strike", "hit")
+	/// Whether our sword has been multitooled to rainbow
 	var/hacked = FALSE
-	var/saber_color
+	/// The color of our fake energy sword
+	var/saber_color = "blue"
 
-/obj/item/toy/sword/attack_self(mob/user)
-	active = !( active )
-	if (active)
-		to_chat(user, "<span class='notice'>You extend the plastic blade with a quick flick of your wrist.</span>")
-		playsound(user, 'sound/weapons/saberon.ogg', 20, 1)
-		if(hacked)
-			icon_state = "swordrainbow"
-			item_state = "swordrainbow"
-		else
-			icon_state = "swordblue"
-			item_state = "swordblue"
-		w_class = WEIGHT_CLASS_BULKY
-	else
-		to_chat(user, "<span class='notice'>You push the plastic blade back down into the handle.</span>")
-		playsound(user, 'sound/weapons/saberoff.ogg', 20, 1)
-		icon_state = "sword0"
-		item_state = "sword0"
-		w_class = WEIGHT_CLASS_SMALL
-	add_fingerprint(user)
+/obj/item/toy/sword/Initialize()
+	. = ..()
+	AddComponent(/datum/component/transforming, \
+		throw_speed_on = throw_speed, \
+		hitsound_on = hitsound, \
+		clumsy_check = FALSE)
+	RegisterSignal(src, COMSIG_TRANSFORMING_ON_TRANSFORM, PROC_REF(on_transform))
 
-// Copied from /obj/item/melee/transforming/energy/sword/attackby
-/obj/item/toy/sword/attackby(obj/item/W, mob/living/user, params)
-	if(istype(W, /obj/item/toy/sword))
-		if(HAS_TRAIT(W, TRAIT_NODROP) || HAS_TRAIT(src, TRAIT_NODROP))
-			to_chat(user, "<span class='warning'>\the [HAS_TRAIT(src, TRAIT_NODROP) ? src : W] is stuck to your hand, you can't attach it to \the [HAS_TRAIT(src, TRAIT_NODROP) ? W : src]!</span>")
+
+/*
+ * Signal proc for [COMSIG_TRANSFORMING_ON_TRANSFORM].
+ *
+ * Updates our icon to have the correct color, and give some feedback.
+ */
+/obj/item/toy/sword/proc/on_transform(obj/item/source, mob/user, active)
+	SIGNAL_HANDLER
+
+	if(active)
+		icon_state = "[icon_state]_[saber_color]"
+
+	balloon_alert(user, "[active ? "flicked out":"pushed in"] [src]")
+	playsound(user ? user : src, active ? 'sound/weapons/saberon.ogg' : 'sound/weapons/saberoff.ogg', 20, TRUE)
+	return COMPONENT_NO_DEFAULT_MESSAGE
+
+// Copied from /obj/item/melee/energy/sword/attackby
+/obj/item/toy/sword/attackby(obj/item/weapon, mob/living/user, params)
+	if(istype(weapon, /obj/item/toy/sword))
+		var/obj/item/toy/sword/attatched_sword = weapon
+		if(HAS_TRAIT(weapon, TRAIT_NODROP))
+			to_chat(user, "<span class='warning'>[weapon] is stuck to your hand, you can't attach it to [src]!</span>")
+			return
+		else if(HAS_TRAIT(src, TRAIT_NODROP))
+			to_chat(user, "<span class='warning'>[src] is stuck to your hand, you can't attach it to [weapon]!</span>")
 			return
 		else
 			to_chat(user, "<span class='notice'>You attach the ends of the two plastic swords, making a single double-bladed toy! You're fake-cool.</span>")
-			var/obj/item/dualsaber/toy/newSaber = new /obj/item/dualsaber/toy(user.loc)
-			if(hacked) // That's right, we'll only check the "original" "sword".
-				newSaber.hacked = TRUE
-				newSaber.saber_color = "rainbow"
-			qdel(W)
+			var/obj/item/dualsaber/toy/new_saber = new /obj/item/dualsaber/toy(user.loc)
+			if(attatched_sword.hacked || hacked)
+				new_saber.hacked = TRUE
+				new_saber.saber_color = "rainbow"
+			qdel(weapon)
 			qdel(src)
-	else if(W.tool_behaviour == TOOL_MULTITOOL)
-		if(!hacked)
+			user.put_in_hands(new_saber)
+	else if(weapon.tool_behaviour == TOOL_MULTITOOL)
+		if(hacked)
+			to_chat(user, "<span class='warning'>It's already fabulous!</span>")
+		else
 			hacked = TRUE
 			saber_color = "rainbow"
 			to_chat(user, "<span class='warning'>RNBW_ENGAGE</span>")
 
-			if(active)
-				icon_state = "swordrainbow"
-				user.update_inv_hands()
-		else
-			to_chat(user, "<span class='warning'>It's already fabulous!</span>")
 	else
 		return ..()
 
@@ -335,7 +343,8 @@
 	item_state = "arm_blade"
 	lefthand_file = 'icons/mob/inhands/antag/changeling_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/antag/changeling_righthand.dmi'
-	attack_verb = list("pricked", "absorbed", "gored")
+	attack_verb_continuous = list("pricks", "absorbs", "gores")
+	attack_verb_simple = list("prick", "absorb", "gore")
 	w_class = WEIGHT_CLASS_SMALL
 	resistance_flags = FLAMMABLE
 	item_flags = ISWEAPON
@@ -351,7 +360,8 @@
 	item_state = "baton"
 	lefthand_file = 'icons/mob/inhands/equipment/security_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/security_righthand.dmi'
-	attack_verb = list("batonged", "stunned", "hit")
+	attack_verb_continuous = list("batongs", "stuns", "hits")
+	attack_verb_simple = list("batong", "stun", "hit")
 	w_class = WEIGHT_CLASS_SMALL
 	item_flags = ISWEAPON
 
@@ -367,7 +377,8 @@
 	hitsound = 'sound/weapons/smash.ogg'
 	drop_sound = 'sound/items/handling/toolbox_drop.ogg'
 	pickup_sound = 'sound/items/handling/toolbox_pickup.ogg'
-	attack_verb = list("robusted")
+	attack_verb_continuous = list("robusts")
+	attack_verb_simple = list("robust")
 	item_flags = ISWEAPON
 
 /obj/item/toy/windupToolbox/attack_self(mob/user)
@@ -414,7 +425,8 @@
 	throw_speed = 3
 	throw_range = 5
 	twohand_force = 0
-	attack_verb = list("attacked", "struck", "hit")
+	attack_verb_continuous = list("attacks", "strikes", "hits")
+	attack_verb_simple = list("attack", "strike", "hit")
 	block_upgrade_walk = 0
 	block_level = 0
 	item_flags = ISWEAPON
@@ -443,7 +455,8 @@
 	force = 5
 	throwforce = 5
 	w_class = WEIGHT_CLASS_NORMAL
-	attack_verb = list("attacked", "slashed", "stabbed", "sliced")
+	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices")
+	attack_verb_simple = list("attack", "slash", "stab", "slice")
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	block_flags = BLOCKING_ACTIVE | BLOCKING_PROJECTILE //if it some how gets block level, katanas block projectiles for the meme
 	item_flags = ISWEAPON
@@ -715,7 +728,8 @@
 	var/card_throwforce = 0
 	var/card_throw_speed = 3
 	var/card_throw_range = 7
-	var/list/card_attack_verb = list("attacked")
+	var/list/card_attack_verb_continuous = list("attacks")
+	var/list/card_attack_verb_simple = list("attack")
 	var/card_sharpness
 
 /obj/item/toy/cards/suicide_act(mob/living/carbon/user)
@@ -918,7 +932,8 @@
 	newobj.card_throwforce = sourceobj.card_throwforce
 	newobj.card_throw_speed = sourceobj.card_throw_speed
 	newobj.card_throw_range = sourceobj.card_throw_range
-	newobj.card_attack_verb = sourceobj.card_attack_verb
+	newobj.card_attack_verb_continuous = sourceobj.card_attack_verb_continuous
+	newobj.card_attack_verb_simple = sourceobj.card_attack_verb_simple
 	newobj.resistance_flags = sourceobj.resistance_flags
 
 /**
@@ -1043,8 +1058,10 @@
 	newobj.throw_speed = newobj.card_throw_speed
 	newobj.card_throw_range = sourceobj.card_throw_range
 	newobj.throw_range = newobj.card_throw_range
-	newobj.card_attack_verb = sourceobj.card_attack_verb
-	newobj.attack_verb = newobj.card_attack_verb
+	newobj.card_attack_verb_continuous = sourceobj.card_attack_verb_continuous
+	newobj.attack_verb_continuous = newobj.card_attack_verb_continuous
+	newobj.card_attack_verb_simple = sourceobj.card_attack_verb_simple
+	newobj.attack_verb_simple = newobj.card_attack_verb_simple
 
 /*
 || Syndicate playing cards, for pretending you're Gambit and playing poker for the nuke disk. ||
@@ -1061,7 +1078,8 @@
 	embedding = list("pain_mult" = 1, "embed_chance" = 80, "max_damage_mult" = 8, "fall_chance" = 0, "embed_chance_turf_mod" = 15, "armour_block" = 60) //less painful than throwing stars
 	card_sharpness = IS_SHARP
 	card_throw_range = 7
-	card_attack_verb = list("attacked", "sliced", "diced", "slashed", "cut")
+	card_attack_verb_continuous = list("attacks", "slices", "dices", "slashes", "cuts")
+	card_attack_verb_simple = list("attack", "slice", "dice", "slash", "cut")
 	resistance_flags = NONE
 
 /*
@@ -1532,7 +1550,8 @@
 	icon = 'icons/obj/heretic.dmi'
 	icon_state = "book"
 	w_class = WEIGHT_CLASS_SMALL
-	attack_verb = list("sacrificed", "transmuted", "grasped", "cursed")
+	attack_verb_continuous = list("sacrifices", "transmutes", "grasps", "curses")
+	attack_verb_simple = list("sacrifice", "transmute", "grasp", "curse")
 	var/open = FALSE
 
 /obj/item/toy/eldrich_book/attack_self(mob/user)
