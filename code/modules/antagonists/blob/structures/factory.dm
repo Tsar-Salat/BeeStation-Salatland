@@ -1,6 +1,6 @@
 /obj/structure/blob/factory
 	name = "factory blob"
-	icon = 'icons/mob/blob.dmi'
+	icon = 'icons/hud/blob.dmi'
 	icon_state = "blob_factory"
 	desc = "A thick spire of tendrils."
 	max_integrity = 200

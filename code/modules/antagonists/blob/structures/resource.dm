@@ -1,6 +1,6 @@
 /obj/structure/blob/resource
 	name = "resource blob"
-	icon = 'icons/mob/blob.dmi'
+	icon = 'icons/hud/blob.dmi'
 	icon_state = "blob_resource"
 	desc = "A thin spire of slightly swaying tendrils."
 	max_integrity = 60

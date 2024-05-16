@@ -162,7 +162,7 @@ GLOBAL_LIST_EMPTY(blob_nodes)
 				continue
 			A.color = blobstrain.color
 			A.name = "blob"
-			A.icon = 'icons/mob/blob.dmi'
+			A.icon = 'icons/hud/blob.dmi'
 			A.icon_state = "blob_shield"
 			A.layer = BELOW_MOB_LAYER
 			A.invisibility = 0

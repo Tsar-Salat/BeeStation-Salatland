@@ -238,7 +238,7 @@
 
 	var/turf/our_tile = get_turf(src)
 	var/turf/tile = get_turf(A)
-	var/image/arrow = image(icon = 'icons/mob/screen_gen.dmi', loc = our_tile, icon_state = "arrow")
+	var/image/arrow = image(icon = 'icons/hud/screen_gen.dmi', loc = our_tile, icon_state = "arrow")
 	arrow.plane = POINT_PLANE
 	animate(arrow, pixel_x = (tile.x - our_tile.x) * world.icon_size + A.pixel_x, pixel_y = (tile.y - our_tile.y) * world.icon_size + A.pixel_y, time = 1.7, easing = EASE_OUT)
 	owner?.client?.images += arrow

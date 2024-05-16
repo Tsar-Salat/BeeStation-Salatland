@@ -16,7 +16,7 @@
 	var/button_icon = 'icons/mob/actions/backgrounds.dmi' //This is the file for the BACKGROUND icon
 	var/background_icon_state = ACTION_BUTTON_DEFAULT_BACKGROUND //And this is the state for the background icon
 
-	var/icon_icon = 'icons/mob/actions.dmi' //This is the file for the ACTION icon
+	var/icon_icon = 'icons/hud/actions.dmi' //This is the file for the ACTION icon
 	var/button_icon_state = "default" //And this is the state for the action icon
 	var/mob/owner
 
@@ -349,12 +349,12 @@
 
 /datum/action/item_action/toggle_beacon
 	name = "Toggle Hardsuit Locator Beacon"
-	icon_icon = 'icons/mob/actions.dmi'
+	icon_icon = 'icons/hud/actions.dmi'
 	button_icon_state = "toggle-transmission"
 
 /datum/action/item_action/toggle_beacon_hud
 	name = "Toggle Hardsuit Locator HUD"
-	icon_icon = 'icons/mob/actions.dmi'
+	icon_icon = 'icons/hud/actions.dmi'
 	button_icon_state = "toggle-hud"
 
 /datum/action/item_action/toggle_beacon_hud/explorer
@@ -362,7 +362,7 @@
 
 /datum/action/item_action/toggle_beacon_frequency
 	name = "Toggle Hardsuit Locator Frequency"
-	icon_icon = 'icons/mob/actions.dmi'
+	icon_icon = 'icons/hud/actions.dmi'
 	button_icon_state = "change-code"
 
 /datum/action/item_action/crew_monitor

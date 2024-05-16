@@ -158,10 +158,7 @@
 	var/mob/living/M = AM
 	M.forceMove(get_turf(LA))
 	to_chat(M, "<span class='reallybig redtext'>You're trapped in a deadly arena! To escape, you'll need to drag a severed head to the escape portals.</span>")
-	spawn()
-		var/obj/effect/mine/pickup/bloodbath/B = new (M)
-		B.mineEffect(M)
-
+	M.apply_status_effect(STATUS_EFFECT_MAYHEM)
 
 /area/shuttle_arena
 	name = "arena"

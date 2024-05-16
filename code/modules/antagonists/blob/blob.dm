@@ -74,7 +74,7 @@
 /datum/action/innate/blobpop
 	name = "Pop"
 	desc = "Unleash the blob"
-	icon_icon = 'icons/mob/blob.dmi'
+	icon_icon = 'icons/hud/blob.dmi'
 	button_icon_state = "blob"
 
 /datum/action/innate/blobpop/Activate()

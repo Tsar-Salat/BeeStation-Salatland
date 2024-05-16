@@ -122,7 +122,7 @@
 	desc = "What is that thing?"
 	density = TRUE
 	anchored = TRUE
-	icon = 'icons/mob/blob.dmi'
+	icon = 'icons/hud/blob.dmi'
 	icon_state = "blobpod"
 	var/triggered = 0
 

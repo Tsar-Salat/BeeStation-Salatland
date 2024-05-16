@@ -77,6 +77,7 @@
 		caliber = magazine.caliber
 	chamber_round()
 	update_icon()
+	RegisterSignal(src, COMSIG_ITEM_RECHARGED, PROC_REF(instant_reload))
 
 /obj/item/gun/ballistic/fire_sounds()
 	var/frequency_to_use
@@ -153,6 +154,7 @@
 		else if(casing_ejector || !from_firing)
 			casing.forceMove(drop_location()) //Eject casing onto ground.
 			casing.bounce_away(TRUE)
+			SEND_SIGNAL(casing, COMSIG_CASING_EJECTED)
 			chambered = null
 		else if(empty_chamber)
 			chambered = null
@@ -553,6 +555,17 @@
 	if(chambered.BB)
 		process_fire(user, user, FALSE)
 		. = TRUE
+
+/obj/item/gun/ballistic/proc/instant_reload()
+	SIGNAL_HANDLER
+	if(magazine)
+		magazine.top_off()
+	else
+		if(!mag_type)
+			return
+		magazine = new mag_type(src)
+	chamber_round()
+	update_icon()
 
 /obj/item/suppressor
 	name = "suppressor"
