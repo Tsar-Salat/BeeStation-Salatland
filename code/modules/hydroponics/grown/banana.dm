@@ -19,7 +19,7 @@
 	name = "banana"
 	desc = "It's an excellent prop for a clown."
 	icon_state = "banana"
-	inhand_icon_state = "banana"
+	inhand_icon_state = "banana_peel"
 	trash_type = /obj/item/grown/bananapeel
 	bite_consumption_mod = 3
 	foodtypes = FRUIT

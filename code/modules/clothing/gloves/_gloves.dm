@@ -4,8 +4,10 @@
 	w_class = WEIGHT_CLASS_SMALL
 	icon = 'icons/obj/clothing/gloves.dmi'
 	icon_state = "white"
-	inhand_icon_state = "wgloves"
-	worn_icon_state = "wgloves"
+	inhand_icon_state = "greyscale_gloves"
+	greyscale_colors = null
+	greyscale_config_inhand_left = /datum/greyscale_config/gloves_inhand_left
+	greyscale_config_inhand_right = /datum/greyscale_config/gloves_inhand_right
 	siemens_coefficient = 0.5
 	body_parts_covered = HANDS
 	slot_flags = ITEM_SLOT_GLOVES

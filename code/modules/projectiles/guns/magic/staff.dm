@@ -131,7 +131,7 @@
 	fire_sound = 'sound/magic/staff_change.ogg'
 	ammo_type = /obj/item/ammo_casing/magic/sapping
 	icon_state = "staffofsapping"
-	inhand_icon_state = "staffofsapping"
+	//inhand_icon_state = "staffofsapping"
 	worn_icon_state = "staff"
 
 /obj/item/gun/magic/staff/necropotence
@@ -140,7 +140,7 @@
 	fire_sound = 'sound/magic/staff_change.ogg'
 	ammo_type = /obj/item/ammo_casing/magic/necropotence
 	icon_state = "staffofnecropotence"
-	inhand_icon_state = "staffofnecropotence"
+	//inhand_icon_state = "staffofnecropotence" Doesnt exist
 	worn_icon_state = "necrostaff"
 
 /obj/item/gun/magic/staff/wipe
@@ -149,5 +149,5 @@
 	fire_sound = 'sound/magic/staff_change.ogg'
 	ammo_type = /obj/item/ammo_casing/magic/wipe
 	icon_state = "staffofwipe"
-	inhand_icon_state = "staffofwipe"
+	//inhand_icon_state = "staffofwipe"
 	worn_icon_state = "wipestaff"

@@ -49,6 +49,20 @@
 	json_config = 'code/datums/greyscale/json_configs/screwdriver_worn.json'
 
 //
+// GLOVES
+//
+
+/datum/greyscale_config/gloves_inhand_left
+	name = "Gloves (Held, Left)"
+	icon_file = 'icons/mob/inhands/clothing/gloves_lefthand.dmi'
+	json_config = 'code/datums/greyscale/json_configs/gloves_inhand.json'
+
+/datum/greyscale_config/gloves_inhand_right
+	name = "Gloves (Held, Right)"
+	icon_file = 'icons/mob/inhands/clothing/gloves_righthand.dmi'
+	json_config = 'code/datums/greyscale/json_configs/gloves_inhand.json'
+
+//
 // UNDER
 //
 
