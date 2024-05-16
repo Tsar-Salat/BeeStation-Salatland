@@ -14,7 +14,6 @@ Miscellaneous material sheets
 /obj/item/stack/sheet/wax
 	name = "wax"
 	icon_state = "sheet-wax"
-	inhand_icon_state = "sheet-wax"
 	singular_name = "wax block"
 	force = 1
 	throwforce = 2
@@ -66,7 +65,6 @@ GLOBAL_LIST_INIT(sandbag_recipes, list ( \
 /obj/item/stack/sheet/snow
 	name = "snow"
 	icon_state = "sheet-snow"
-	inhand_icon_state = "sheet-snow"
 	icon = 'icons/obj/stacks/minerals.dmi'
 	singular_name = "snow block"
 	force = 1

@@ -5,7 +5,7 @@
 	desc = "The by-product of mob grinding."
 	singular_name = "leather piece"
 	icon_state = "sheet-leather"
-	inhand_icon_state = "sheet-leather"
+	inhand_icon_state = null
 	icon = 'icons/obj/stacks/organic.dmi'
 
 /obj/item/stack/sheet/leather/get_recipes()
@@ -16,7 +16,7 @@
 	desc = "This hide was stripped of its hair, but still needs washing and tanning."
 	singular_name = "hairless hide piece"
 	icon_state = "sheet-hairlesshide"
-	inhand_icon_state = "sheet-hairlesshide"
+	inhand_icon_state = null
 	icon = 'icons/obj/stacks/organic.dmi'
 
 /obj/item/stack/sheet/leather/wetleather
@@ -24,7 +24,7 @@
 	desc = "This leather has been cleaned but still needs to be dried."
 	singular_name = "wet leather piece"
 	icon_state = "sheet-wetleather"
-	inhand_icon_state = "sheet-wetleather"
+	inhand_icon_state = null
 	icon = 'icons/obj/stacks/organic.dmi'
 	var/wetness = 30 //Reduced when exposed to high temperautres
 	var/drying_threshold_temperature = 500 //Kelvin to start drying

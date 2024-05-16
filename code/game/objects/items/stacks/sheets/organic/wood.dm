@@ -63,7 +63,7 @@ Woods Sheets
 	desc = "A thin wooden frame with paper attached."
 	singular_name = "paper frame"
 	icon_state = "sheet-paper"
-	inhand_icon_state = "sheet-paper"
+	inhand_icon_state = null
 	icon = 'icons/obj/stacks/organic.dmi'
 	merge_type = /obj/item/stack/sheet/paperframes
 	resistance_flags = FLAMMABLE

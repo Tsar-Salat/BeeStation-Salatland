@@ -24,7 +24,7 @@
 /obj/item/stack/sheet/bone
 	name = "bones"
 	icon_state = "bone"
-	inhand_icon_state = "sheet-bone"
+	inhand_icon_state = null
 	icon = 'icons/obj/stacks/organic.dmi'
 	singular_name = "bone"
 	desc = "Someone's been drinking their milk."

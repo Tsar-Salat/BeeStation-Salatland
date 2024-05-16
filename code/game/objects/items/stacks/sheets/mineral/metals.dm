@@ -78,7 +78,6 @@ Metals Sheets
 	desc = "Sheets of cold metal with shifting inscriptions writ upon them."
 	singular_name = "runed metal sheet"
 	icon_state = "sheet-runed"
-	inhand_icon_state = "sheet-runed"
 	//icon = 'icons/obj/stacks/mineral.dmi'
 	sheettype = "runed"
 	merge_type = /obj/item/stack/sheet/runed_metal
@@ -109,7 +108,6 @@ Metals Sheets
 	desc = "Sheets made out of brass."
 	singular_name = "brass sheet"
 	icon_state = "sheet-brass"
-	inhand_icon_state = "sheet-brass"
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	throwforce = 10
 	max_amount = 50
@@ -144,7 +142,6 @@ Metals Sheets
 	desc = "On closer inspection, what appears to be wholly-unsuitable-for-building brass is actually more structurally stable bronze."
 	singular_name = "bronze sheet"
 	icon_state = "sheet-brass"
-	inhand_icon_state = "sheet-brass"
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	throwforce = 10
 	max_amount = 50

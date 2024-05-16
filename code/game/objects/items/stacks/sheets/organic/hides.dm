@@ -34,7 +34,7 @@
 	desc = "The by-product of corgi farming."
 	singular_name = "corgi hide piece"
 	icon_state = "sheet-corgi"
-	inhand_icon_state = "sheet-corgi"
+	inhand_icon_state = null
 
 /obj/item/stack/sheet/animalhide/corgi/get_recipes()
 	return GLOB.corgi_recipes
@@ -46,7 +46,7 @@
 	desc = "A thin layer of mothroach hide."
 	singular_name = "mothroach hide piece"
 	icon_state = "sheet-mothroach"
-	inhand_icon_state = "sheet-mothroach"
+	inhand_icon_state = null
 
 /* Gondola hide */
 
@@ -55,7 +55,7 @@
 	desc = "The extremely valuable product of gondola hunting."
 	singular_name = "gondola hide piece"
 	icon_state = "sheet-gondola"
-	inhand_icon_state = "sheet-gondola"
+	inhand_icon_state = null
 
 /obj/item/stack/sheet/animalhide/gondola/get_recipes()
 	return GLOB.gondola_recipes
@@ -67,7 +67,7 @@
 	desc = "The by-product of cat farming."
 	singular_name = "cat hide piece"
 	icon_state = "sheet-cat"
-	inhand_icon_state = "sheet-cat"
+	inhand_icon_state = null
 
 /* Monkey hide */
 
@@ -76,7 +76,7 @@
 	desc = "The by-product of monkey farming."
 	singular_name = "monkey hide piece"
 	icon_state = "sheet-monkey"
-	icon_state = "sheet-monkey"
+	inhand_icon_state = null
 
 /obj/item/stack/sheet/animalhide/monkey/get_recipes()
 	return GLOB.monkey_recipes
@@ -88,7 +88,7 @@
 	desc = "Sssssss..."
 	singular_name = "lizard hide"
 	icon_state = "sheet-lizard"
-	inhand_icon_state = "sheet-lizard"
+	inhand_icon_state = null
 
 /* Xeno hide */
 
@@ -97,7 +97,7 @@
 	desc = "The skin of a terrible creature."
 	singular_name = "alien hide piece"
 	icon_state = "sheet-xeno"
-	inhand_icon_state = "sheet-xeno"
+	inhand_icon_state = null
 
 /obj/item/stack/sheet/animalhide/xeno/get_recipes()
 	return GLOB.xeno_recipes
