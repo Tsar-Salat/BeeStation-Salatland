@@ -22,7 +22,8 @@
 /obj/item/powertool/hand_drill
 	name = "hand drill"
 	desc = "A simple powered hand drill. It's fitted with a screw bit."
-	icon_state = "drill_screw"
+	icon_state = "drill"
+	belt_icon_state = null
 	item_state = "drill"
 	worn_icon_state = "drill"
 
@@ -36,34 +37,28 @@
 	tool_behaviour = TOOL_SCREWDRIVER
 	usesound = 'sound/items/drill_use.ogg'
 
-/obj/item/powertool/hand_drill/toggle_mode(mob/user)
-	playsound(get_turf(user), 'sound/items/change_drill.ogg', 50, 1)
-	if(tool_behaviour == TOOL_SCREWDRIVER)
-		balloon_alert(user, "You attach the bolt driver bit.")
-		become_wrench()
-	else
-		balloon_alert(user, "You attach the screw driver bit.")
-		become_screwdriver()
+/obj/item/screwdriver/power/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/transforming, \
+		force_on = force, \
+		throwforce_on = throwforce, \
+		hitsound_on = hitsound, \
+		w_class_on = w_class, \
+		clumsy_check = FALSE)
+	RegisterSignal(src, COMSIG_TRANSFORMING_ON_TRANSFORM, .proc/on_transform)
 
-/obj/item/powertool/hand_drill/proc/become_wrench()
-	icon_state = "drill_bolt"
-	tool_behaviour = TOOL_WRENCH
+/*
+ * Signal proc for [COMSIG_TRANSFORMING_ON_TRANSFORM].
+ *
+ * Toggles between crowbar and wirecutters and gives feedback to the user.
+ */
+/obj/item/screwdriver/power/proc/on_transform(obj/item/source, mob/user, active)
+	SIGNAL_HANDLER
 
-	hitsound = null
-
-	attack_verb_continuous = list("attacks", "bashes", "batters", "bludgeons", "whacks")
-	attack_verb_simple = list("attack", "bash", "batter", "bludgeon", "whack")
-	throw_range = 7
-
-/obj/item/powertool/hand_drill/proc/become_screwdriver()
-	icon_state = "drill_screw"
-	tool_behaviour = TOOL_SCREWDRIVER
-
-	hitsound = 'sound/items/drill_hit.ogg'
-
-	attack_verb_continuous = list("drills", "screws", "jabs", "whacks")
-	attack_verb_simple = list("drill", "screw", "jab", "whack")
-	throw_range = 3
+	tool_behaviour = (active ? TOOL_WRENCH : TOOL_SCREWDRIVER)
+	balloon_alert(user, "attached [active ? "bolt bit" : "screw bit"]")
+	playsound(user ? user : src, 'sound/items/change_drill.ogg', 50, TRUE)
+	return COMPONENT_NO_DEFAULT_MESSAGE
 
 /obj/item/powertool/hand_drill/suicide_act(mob/living/user)
 	if(tool_behaviour == TOOL_SCREWDRIVER)
@@ -90,7 +85,7 @@
 	name = "jaws of life"
 	desc = "A set of jaws of life, compressed through the magic of science. It's fitted with a prying head."
 	usesound = 'sound/items/jaws_pry.ogg'
-	icon_state = "jaws_pry"
+	icon_state = "jaws"
 	item_state = "jawsoflife"
 	worn_icon_state = "jawsoflife"
 
@@ -104,16 +99,28 @@
 /obj/item/powertool/jaws_of_life/Initialize(mapload)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_DOOR_PRYER, TRAIT_JAWS_OF_LIFE)
+	AddComponent(/datum/component/transforming, \
+		force_on = force, \
+		throwforce_on = throwforce, \
+		hitsound_on = hitsound, \
+		w_class_on = w_class, \
+		clumsy_check = FALSE)
+	RegisterSignal(src, COMSIG_TRANSFORMING_ON_TRANSFORM, .proc/on_transform)
 
-/obj/item/powertool/jaws_of_life/toggle_mode(mob/user)
-	playsound(get_turf(user), 'sound/items/change_jaws.ogg', 50, 1)
-	if(tool_behaviour == TOOL_CROWBAR)
-		balloon_alert(user, "You attach the cutting jaws.")
-		become_wirecutters()
-	else
-		balloon_alert(user, "You attach the prying jaws.")
-		become_crowbar()
+/*
+ * Signal proc for [COMSIG_TRANSFORMING_ON_TRANSFORM].
+ *
+ * Toggles between crowbar and wirecutters and gives feedback to the user.
+ */
+/obj/item/crowbar/power/proc/on_transform(obj/item/source, mob/user, active)
+	SIGNAL_HANDLER
 
+	tool_behaviour = (active ? TOOL_WIRECUTTER : TOOL_CROWBAR)
+	balloon_alert(user, "attached [active ? "cutting" : "prying"]")
+	playsound(user ? user : src, 'sound/items/change_jaws.ogg', 50, TRUE)
+	return COMPONENT_NO_DEFAULT_MESSAGE
+
+/*&
 /obj/item/powertool/jaws_of_life/proc/become_wirecutters()
 	icon_state = "jaws_cutter"
 	tool_behaviour = TOOL_WIRECUTTER
@@ -139,6 +146,7 @@
 	throw_speed = 2
 
 	ADD_TRAIT(src, TRAIT_DOOR_PRYER, TRAIT_JAWS_OF_LIFE)
+*/
 
 /obj/item/powertool/jaws_of_life/suicide_act(mob/living/user)
 	if(tool_behaviour == TOOL_CROWBAR)

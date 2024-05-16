@@ -383,7 +383,7 @@
 	desc = "An illegal and highly dangerous implanted carbon-fiber blade with a toggleable hard-light edge."
 	icon_state = "implant-esaw_0"
 	syndicate_implant = TRUE
-	items_to_create = list(/obj/item/melee/transforming/energy/sword/esaw/implant)
+	items_to_create = list(/obj/item/melee/energy/sword/esaw/implant)
 
 /obj/item/organ/cyberimp/arm/hydraulic_blade
 	name = "arm-mounted hydraulic blade"

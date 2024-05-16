@@ -390,27 +390,19 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	var/extended_throwforce = 23
 	var/extended_icon_state = "switchblade_ext"
 
-/obj/item/switchblade/attack_self(mob/user)
-	extended = !extended
-	playsound(src.loc, 'sound/weapons/batonextend.ogg', 50, 1)
-	if(extended)
-		force = extended_force
-		w_class = WEIGHT_CLASS_NORMAL
-		throwforce = extended_throwforce
-		icon_state = extended_icon_state
-		attack_verb_continuous = list("slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
-		attack_verb_simple = list("slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
-		hitsound = 'sound/weapons/bladeslice.ogg'
-		sharpness = IS_SHARP
-	else
-		force = initial(force)
-		w_class = WEIGHT_CLASS_SMALL
-		throwforce = initial(throwforce)
-		icon_state = initial(icon_state)
-		attack_verb_continuous = list("stubs", "pokes")
-		attack_verb_simple = list("stub", "poke")
-		hitsound = 'sound/weapons/genhit.ogg'
-		sharpness = IS_BLUNT
+/obj/item/switchblade/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/update_icon_updates_onmob)
+	AddComponent(/datum/component/transforming, \
+		start_transformed = start_extended, \
+		force_on = 20, \
+		throwforce_on = 23, \
+		throw_speed_on = throw_speed, \
+		sharpness_on = SHARP_EDGED, \
+		hitsound_on = 'sound/weapons/bladeslice.ogg', \
+		w_class_on = WEIGHT_CLASS_NORMAL, \
+		attack_verb_continuous_on = list("slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts"), \
+		attack_verb_simple_on = list("slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut"))
 
 /obj/item/switchblade/suicide_act(mob/living/user)
 	user.visible_message("<span class='suicide'>[user] is slitting [user.p_their()] own throat with [src]! It looks like [user.p_theyre()] trying to commit suicide!</span>")
@@ -435,6 +427,9 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	extended_force = 15
 	extended_throwforce = 17
 	extended_icon_state = "switchblade_ext_msf"
+
+/obj/item/switchblade/extended
+	start_extended = TRUE
 
 /obj/item/phone
 	name = "red phone"
