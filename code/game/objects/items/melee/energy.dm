@@ -52,7 +52,7 @@
 		w_class_on = active_w_class, \
 		attack_verb_continuous_on = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts"), \
 		attack_verb_simple_on = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut"))
-	RegisterSignal(src, COMSIG_TRANSFORMING_ON_TRANSFORM, .proc/on_transform)
+	RegisterSignal(src, COMSIG_TRANSFORMING_ON_TRANSFORM, PROC_REF(on_transform))
 
 /obj/item/melee/energy/suicide_act(mob/user)
 	if(!blade_active)
@@ -143,7 +143,7 @@
 		throw_speed_on = throw_speed, \
 		sharpness_on = sharpness, \
 		w_class_on = active_w_class)
-	RegisterSignal(src, COMSIG_TRANSFORMING_ON_TRANSFORM, .proc/on_transform)
+	RegisterSignal(src, COMSIG_TRANSFORMING_ON_TRANSFORM, PROC_REF(on_transform))
 
 /obj/item/melee/energy/axe/suicide_act(mob/user)
 	user.visible_message("<span class='suicide'>[user] swings [src] towards [user.p_their()] head! It looks like [user.p_theyre()] trying to commit suicide!</span>")
@@ -159,7 +159,7 @@
 	hitsound = "swing_hit"
 	force = 3
 	throwforce = 5
-	throwforce_on = 35	//Does a lot of damage on throw, but will embed
+	active_throwforce = 35	//Does a lot of damage on throw, but will embed
 	throw_speed = 3
 	throw_range = 5
 	armour_penetration = 35
@@ -178,15 +178,13 @@
 /obj/item/melee/energy/sword/esaw //Energy Saw on it's own
 	name = "energy saw"
 	desc = "For heavy duty cutting. It has a carbon-fiber blade in addition to a toggleable hard-light edge to dramatically increase sharpness."
-	force_on = 30
-	force = 18 //About as much as a spear
-	hitsound = 'sound/weapons/circsawhit.ogg'
 	icon = 'icons/obj/surgery.dmi'
-	icon_state = "esaw_0"
-	icon_state_on = "esaw_1"
+	icon_state = "esaw"
 	lefthand_file = 'icons/mob/inhands/equipment/medical_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/medical_righthand.dmi'
-	sword_color = null //stops icon from breaking when turned on.
+	hitsound = 'sound/weapons/circsawhit.ogg'
+	active_throwforce = 30
+	force = 18 //About as much as a spear
 	w_class = WEIGHT_CLASS_NORMAL
 	sharpness = IS_SHARP
 	light_color = "#40ceff"
@@ -236,8 +234,7 @@
 	return FALSE
 
 /obj/item/melee/energy/sword/esaw/implant //Energy Saw Arm Implant
-	icon_state = "implant-esaw_0"
-	icon_state_on = "implant-esaw_1"
+	icon_state = "implant-esaw"
 	lefthand_file = 'icons/mob/inhands/equipment/medical_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/medical_righthand.dmi'
 
@@ -250,6 +247,7 @@
 		"blue" = LIGHT_COLOR_LIGHT_CYAN,
 		"green" = LIGHT_COLOR_GREEN,
 		"purple" = LIGHT_COLOR_LAVENDER,
+		"yellow" = COLOR_YELLOW,
 		)
 	/// Whether this saber has beel multitooled.
 	var/hacked = FALSE
@@ -297,11 +295,11 @@
 	name = "Bee Sword"
 	desc = "Channel the might of the bees with this powerful sword"
 	force = 0
+	active_force = 22
 	throwforce = 0
-	force_on = 22
-	throwforce_on = 16
-	sword_color = "yellow"
-	light_color = "#ffff00"
+	active_throwforce = 16
+	sword_color_icon = "yellow"
+	light_color = COLOR_YELLOW
 
 /obj/item/melee/energy/sword/pirate
 	name = "energy cutlass"

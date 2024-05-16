@@ -741,7 +741,7 @@
 		w_class_on = w_class, \
 		attack_verb_continuous_on = list("cleaves", "swipes", "slashes", "chops"), \
 		attack_verb_simple_on = list("cleave", "swipe", "slash", "chop"))
-	RegisterSignal(src, COMSIG_TRANSFORMING_ON_TRANSFORM, .proc/on_transform)
+	RegisterSignal(src, COMSIG_TRANSFORMING_ON_TRANSFORM, PROC_REF(on_transform))
 
 /obj/item/melee/cleaving_saw/examine(mob/user)
 	. = ..()
@@ -796,11 +796,11 @@
 /obj/item/melee/cleaving_saw/proc/nemesis_effects(mob/living/user, mob/living/target)
 	if(istype(target, /mob/living/simple_animal/hostile/asteroid/elite))
 		return
-	var/datum/status_effect/stacking/saw_bleed/existing_bleed = target.has_status_effect(STATUS_EFFECT_SAWBLEED)
+	var/datum/status_effect/saw_bleed/existing_bleed = target.has_status_effect(STATUS_EFFECT_SAWBLEED)
 	if(existing_bleed)
-		existing_bleed.add_stacks(bleed_stacks_per_hit)
+		existing_bleed.add_bleed(existing_bleed.bleed_buildup)
 	else
-		target.apply_status_effect(STATUS_EFFECT_SAWBLEED, bleed_stacks_per_hit)
+		target.apply_status_effect(STATUS_EFFECT_SAWBLEED)
 
 /*
  * Signal proc for [COMSIG_TRANSFORMING_ON_TRANSFORM].

@@ -244,7 +244,7 @@ Difficulty: Medium
 		transform_stop_attack = TRUE
 		icon_state = "miner[miner_saw.is_open ? "_transformed":""]"
 		icon_living = "miner[miner_saw.is_open ? "_transformed":""]"
-		update_cooldowns(list(COOLDOWN_UPDATE_SET_TRANSFORM = rand(5 SECONDS, 10 SECONDS)))
+		time_until_next_transform = world.time + rand(50, 100)
 
 /obj/effect/temp_visual/dir_setting/miner_death
 	icon_state = "miner_death"

@@ -385,7 +385,8 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	attack_verb_continuous = list("stubs", "pokes")
 	attack_verb_simple = list("stub", "poke")
 	resistance_flags = FIRE_PROOF
-	var/extended = 0
+	/// Whether the switchblade starts extended or not.
+	var/start_extended = FALSE
 	var/extended_force = 20
 	var/extended_throwforce = 23
 	var/extended_icon_state = "switchblade_ext"
@@ -395,8 +396,8 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	AddElement(/datum/element/update_icon_updates_onmob)
 	AddComponent(/datum/component/transforming, \
 		start_transformed = start_extended, \
-		force_on = 20, \
-		throwforce_on = 23, \
+		extended_force = 20, \
+		extended_throwforce = 23, \
 		throw_speed_on = throw_speed, \
 		sharpness_on = IS_SHARP, \
 		hitsound_on = 'sound/weapons/bladeslice.ogg', \
