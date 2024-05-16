@@ -5,6 +5,8 @@
 	icon = 'icons/obj/clothing/gloves.dmi'
 	icon_state = "white"
 	inhand_icon_state = "greyscale_gloves"
+	lefthand_file = 'icons/mob/inhands/clothing/gloves_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/clothing/gloves_righthand.dmi'
 	greyscale_colors = null
 	greyscale_config_inhand_left = /datum/greyscale_config/gloves_inhand_left
 	greyscale_config_inhand_right = /datum/greyscale_config/gloves_inhand_right

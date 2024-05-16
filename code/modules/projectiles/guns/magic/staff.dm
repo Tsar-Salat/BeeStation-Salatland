@@ -122,7 +122,7 @@
 	fire_sound = 'sound/magic/staff_healing.ogg'
 	ammo_type = /obj/item/ammo_casing/magic/flying
 	icon_state = "staffofflight"
-	inhand_icon_state = "staffofflight"
+	inhand_icon_state = "staffofchange"
 	worn_icon_state = "flightstaff"
 
 /obj/item/gun/magic/staff/sapping
