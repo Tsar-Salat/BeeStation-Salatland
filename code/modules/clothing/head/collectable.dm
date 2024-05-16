@@ -113,6 +113,8 @@
 	worn_icon = 'icons/mob/clothing/head/utility.dmi'
 	icon_state = "welding"
 	inhand_icon_state = "welding"
+	lefthand_file = 'icons/mob/inhands/clothing/masks_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/clothing/masks_righthand.dmi'
 	clothing_flags = SNUG_FIT
 
 /obj/item/clothing/head/collectable/slime
@@ -196,7 +198,7 @@
 	icon = 'icons/obj/clothing/head/helmet.dmi'
 	worn_icon = 'icons/mob/clothing/head/helmet.dmi'
 	icon_state = "thunderdome"
-	inhand_icon_state = "thunderdome"
+	inhand_icon_state = "thunderdome_helmet"
 	clothing_flags = SNUG_FIT
 	flags_inv = HIDEHAIR
 
@@ -206,6 +208,6 @@
 	icon = 'icons/obj/clothing/head/helmet.dmi'
 	worn_icon = 'icons/mob/clothing/head/helmet.dmi'
 	icon_state = "swatsyndie"
-	inhand_icon_state = "swatsyndie"
+	inhand_icon_state = "swatsyndie_helmet"
 	clothing_flags = SNUG_FIT
 	flags_inv = HIDEHAIR

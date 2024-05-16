@@ -171,7 +171,7 @@
 	name = "\improper SWAT helmet"
 	desc = "An extremely robust, space-worthy helmet in a nefarious red and black stripe pattern."
 	icon_state = "swatsyndie"
-	inhand_icon_state = "swatsyndie"
+	inhand_icon_state = "swatsyndie_helmet"
 	armor = list(MELEE = 40,  BULLET = 30, LASER = 30, ENERGY = 40, BOMB = 50, BIO = 90, RAD = 20, FIRE = 50, ACID = 50, STAMINA = 50)
 	cold_protection = HEAD
 	min_cold_protection_temperature = SPACE_HELM_MIN_TEMP_PROTECT
@@ -197,7 +197,7 @@
 	desc = "<i>'Let the battle commence!'</i>"
 	flags_inv = HIDEEARS|HIDEHAIR
 	icon_state = "thunderdome"
-	inhand_icon_state = "thunderdome"
+	inhand_icon_state = "thunderdome_helmet"
 	armor = list(MELEE = 80,  BULLET = 80, LASER = 50, ENERGY = 50, BOMB = 100, BIO = 100, RAD = 100, FIRE = 90, ACID = 90, STAMINA = 0)
 	cold_protection = HEAD
 	min_cold_protection_temperature = SPACE_HELM_MIN_TEMP_PROTECT
