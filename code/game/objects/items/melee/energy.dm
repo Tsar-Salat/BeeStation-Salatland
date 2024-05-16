@@ -22,7 +22,7 @@
 	/// Throwforce while active.
 	var/active_throwforce = 20
 	/// Sharpness while active.
-	var/active_sharpness = SHARP_EDGED
+	var/active_sharpness = IS_SHARP
 	/// Hitsound played attacking while active.
 	var/active_hitsound = 'sound/weapons/blade1.ogg'
 	/// Weight class while active.
@@ -127,7 +127,7 @@
 	throw_speed = 3
 	throw_range = 5
 	armour_penetration = 100
-	sharpness = SHARP_EDGED
+	sharpness = IS_SHARP
 	w_class = WEIGHT_CLASS_NORMAL
 	flags_1 = CONDUCT_1
 	light_color = LIGHT_COLOR_LIGHT_CYAN

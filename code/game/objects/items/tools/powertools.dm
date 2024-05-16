@@ -112,7 +112,7 @@
  *
  * Toggles between crowbar and wirecutters and gives feedback to the user.
  */
-/obj/item/crowbar/power/proc/on_transform(obj/item/source, mob/user, active)
+/obj/item/powertool/jaws_of_life/proc/on_transform(obj/item/source, mob/user, active)
 	SIGNAL_HANDLER
 
 	tool_behaviour = (active ? TOOL_WIRECUTTER : TOOL_CROWBAR)

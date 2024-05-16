@@ -302,7 +302,7 @@
 	RegisterSignal(src, COMSIG_TRANSFORMING_ON_TRANSFORM, .proc/on_transform)
 
 /obj/item/shield/energy/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
-	if(active)
+	if(enabled)
 		if(isprojectile(hitby))
 			var/obj/projectile/P = hitby
 			if(P.reflectable)

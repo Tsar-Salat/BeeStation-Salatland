@@ -398,7 +398,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 		force_on = 20, \
 		throwforce_on = 23, \
 		throw_speed_on = throw_speed, \
-		sharpness_on = SHARP_EDGED, \
+		sharpness_on = IS_SHARP, \
 		hitsound_on = 'sound/weapons/bladeslice.ogg', \
 		w_class_on = WEIGHT_CLASS_NORMAL, \
 		attack_verb_continuous_on = list("slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts"), \

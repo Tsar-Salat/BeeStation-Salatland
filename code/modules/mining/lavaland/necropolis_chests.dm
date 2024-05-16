@@ -745,12 +745,12 @@
 
 /obj/item/melee/cleaving_saw/examine(mob/user)
 	. = ..()
-	. += span_notice("It is [is_open ? "open, will cleave enemies in a wide arc and deal additional damage to fauna":"closed, and can be used for rapid consecutive attacks that cause fauna to bleed"].")
-	. += span_notice("Both modes will build up existing bleed effects, doing a burst of high damage if the bleed is built up high enough.")
-	. += span_notice("Transforming it immediately after an attack causes the next attack to come out faster.")
+	. += "<span class='notice'>It is [is_open ? "open, will cleave enemies in a wide arc and deal additional damage to fauna":"closed, and can be used for rapid consecutive attacks that cause fauna to bleed"].</span>"
+	. += "<span class='notice'>Both modes will build up existing bleed effects, doing a burst of high damage if the bleed is built up high enough.</span>"
+	. += "<span class='notice'>Transforming it immediately after an attack causes the next attack to come out faster.</span>"
 
 /obj/item/melee/cleaving_saw/suicide_act(mob/user)
-	user.visible_message(span_suicide("[user] is [is_open ? "closing [src] on [user.p_their()] neck" : "opening [src] into [user.p_their()] chest"]! It looks like [user.p_theyre()] trying to commit suicide!"))
+	user.visible_message("<span class='suicide'>[user] is [is_open ? "closing [src] on [user.p_their()] neck" : "opening [src] into [user.p_their()] chest"]! It looks like [user.p_theyre()] trying to commit suicide!</span>")
 	attack_self(user)
 	return BRUTELOSS
 
@@ -784,7 +784,7 @@
 			var/turf/T = get_step(user_turf, turn(dir_to_target, i))
 			for(var/mob/living/L in T)
 				if(user.Adjacent(L) && L.density)
-					melee_attack_chain(user, living_target)
+					melee_attack_chain(user, L)
 		swiping = FALSE
 
 /*

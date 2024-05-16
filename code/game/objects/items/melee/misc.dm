@@ -947,7 +947,7 @@
 /obj/item/melee/roastingstick/Initialize(mapload)
 	. = ..()
 	if (!ovens)
-		ovens = typecacheof(list(/obj/singularity, /obj/energy_ball, /obj/machinery/power/supermatter_crystal, /obj/structure/bonfire))
+		ovens = typecacheof(list(/obj/anomaly/singularity, /obj/anomaly/energy_ball, /obj/machinery/power/supermatter_crystal, /obj/structure/bonfire))
 	AddComponent(/datum/component/transforming, \
 		hitsound_on = hitsound, \
 		clumsy_check = FALSE)
@@ -963,7 +963,7 @@
 	SIGNAL_HANDLER
 
 	if(held_sausage)
-		to_chat(user, span_warning("You can't retract [src] while [held_sausage] is attached!"))
+		to_chat(user,"<span class='warning'>You can't retract [src] while [held_sausage] is attached!</span>")
 		return COMPONENT_BLOCK_TRANSFORM
 
 /*
