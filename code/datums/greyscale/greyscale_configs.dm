@@ -48,6 +48,10 @@
 	icon_file = 'icons/obj/clothing/belt_overlays.dmi'
 	json_config = 'code/datums/greyscale/json_configs/screwdriver_worn.json'
 
+//
+// UNDER
+//
+
 /datum/greyscale_config/jumpsuit
 	name = "Jumpsuit"
 	icon_file = 'icons/obj/clothing/under/color.dmi'
@@ -60,12 +64,12 @@
 
 /datum/greyscale_config/jumpsuit_inhand_left
 	name = "Held Jumpsuit, Left"
-	icon_file = 'icons/mob/inhands/clothing_lefthand.dmi'
+	icon_file = 'icons/mob/inhands/clothing/suits_lefthand.dmi'
 	json_config = 'code/datums/greyscale/json_configs/jumpsuit_inhand.json'
 
 /datum/greyscale_config/jumpsuit_inhand_right
 	name = "Held Jumpsuit, Right"
-	icon_file = 'icons/mob/inhands/clothing_righthand.dmi'
+	icon_file = 'icons/mob/inhands/clothing/suits_righthand.dmi'
 	json_config = 'code/datums/greyscale/json_configs/jumpsuit_inhand.json'
 
 /datum/greyscale_config/jumpsuit_prison
@@ -80,13 +84,17 @@
 
 /datum/greyscale_config/jumpsuit_prison_inhand_left
 	name = "Held Prison Jumpsuit, Left"
-	icon_file = 'icons/mob/inhands/clothing_lefthand.dmi'
+	icon_file = 'icons/mob/inhands/clothing/suits_lefthand.dmi'
 	json_config = 'code/datums/greyscale/json_configs/jumpsuit_prison_inhand.json'
 
 /datum/greyscale_config/jumpsuit_prison_inhand_right
 	name = "Held Prison Jumpsuit, Right"
-	icon_file = 'icons/mob/inhands/clothing_righthand.dmi'
+	icon_file = 'icons/mob/inhands/clothing/suits_righthand.dmi'
 	json_config = 'code/datums/greyscale/json_configs/jumpsuit_prison_inhand.json'
+
+//
+// SHOES
+//
 
 /datum/greyscale_config/sneakers
 	name = "Sneakers"
@@ -98,6 +106,16 @@
 	icon_file = 'icons/mob/clothing/feet.dmi'
 	json_config = 'code/datums/greyscale/json_configs/sneakers_worn.json'
 
+/datum/greyscale_config/sneakers_inhand_left
+	name = "Held Sneakers, Left"
+	icon_file = 'icons/mob/inhands/clothing/shoes_lefthand.dmi'
+	json_config = 'code/datums/greyscale/json_configs/sneakers_inhand.json'
+
+/datum/greyscale_config/sneakers_inhand_right
+	name = "Held Sneakers, Right"
+	icon_file = 'icons/mob/inhands/clothing/shoes_righthand.dmi'
+	json_config = 'code/datums/greyscale/json_configs/sneakers_inhand.json'
+
 /datum/greyscale_config/sneakers_orange
 	name = "Orange Sneakers"
 	icon_file = 'icons/obj/clothing/shoes.dmi'
@@ -107,6 +125,16 @@
 	name = "Worn Orange Sneakers"
 	icon_file = 'icons/mob/clothing/feet.dmi'
 	json_config = 'code/datums/greyscale/json_configs/sneakers_orange_worn.json'
+
+/datum/greyscale_config/sneakers_orange_inhand_left
+	name = "Held Orange Sneakers, Left"
+	icon_file = 'icons/mob/inhands/clothing/shoes_lefthand.dmi'
+	json_config = 'code/datums/greyscale/json_configs/sneakers_orange_inhand.json'
+
+/datum/greyscale_config/sneakers_orange_inhand_right
+	name = "Held Orange Sneakers, Right"
+	icon_file = 'icons/mob/inhands/clothing/shoes_righthand.dmi'
+	json_config = 'code/datums/greyscale/json_configs/sneakers_orange_inhand.json'
 
 /datum/greyscale_config/sneakers_wheelys
 	name = "Wheeled Sneakers"
@@ -150,32 +178,32 @@
 
 /datum/greyscale_config/plasmaman_helmet_default_inhand_left
 	name = "Held Default plasmam helmet, left"
-	icon_file = 'icons/mob/inhands/clothing_lefthand.dmi'
+	icon_file = 'icons/mob/inhands/clothing/clothing_lefthand.dmi'
 	json_config = 'code/datums/greyscale/json_configs/plasmaman_helmet_default_inhand.json'
 
 /datum/greyscale_config/plasmaman_helmet_default_inhand_right
 	name = "Held Default plasmam helmet, right"
-	icon_file = 'icons/mob/inhands/clothing_righthand.dmi'
+	icon_file = 'icons/mob/inhands/clothing/clothing_righthand.dmi'
 	json_config = 'code/datums/greyscale/json_configs/plasmaman_helmet_default_inhand.json'
 
 /datum/greyscale_config/plasmaman_helmet_protective_inhand_left
 	name = "Held Protective plasmam helmet, left"
-	icon_file = 'icons/mob/inhands/clothing_lefthand.dmi'
+	icon_file = 'icons/mob/inhands/clothing/clothing_lefthand.dmi'
 	json_config = 'code/datums/greyscale/json_configs/plasmaman_helmet_protective_inhand.json'
 
 /datum/greyscale_config/plasmaman_helmet_protective_inhand_right
 	name = "Held Protective plasmam helmet, right"
-	icon_file = 'icons/mob/inhands/clothing_righthand.dmi'
+	icon_file = 'icons/mob/inhands/clothing/clothing_righthand.dmi'
 	json_config = 'code/datums/greyscale/json_configs/plasmaman_helmet_protective_inhand.json'
 
 /datum/greyscale_config/plasmaman_helmet_mark2_inhand_left
 	name = "Held Mark II plasmam helmet, left"
-	icon_file = 'icons/mob/inhands/clothing_lefthand.dmi'
+	icon_file = 'icons/mob/inhands/clothing/clothing_lefthand.dmi'
 	json_config = 'code/datums/greyscale/json_configs/plasmaman_helmet_mk2_inhand.json'
 
 /datum/greyscale_config/plasmaman_helmet_mark2_inhand_right
 	name = "Held Mark II plasmam helmet, right"
-	icon_file = 'icons/mob/inhands/clothing_righthand.dmi'
+	icon_file = 'icons/mob/inhands/clothing/clothing_righthand.dmi'
 	json_config = 'code/datums/greyscale/json_configs/plasmaman_helmet_mk2_inhand.json'
 
 /datum/greyscale_config/carp
