@@ -39,7 +39,7 @@
 	name = "spacepol mask"
 	desc = "A close-fitting tactical mask created in cooperation with a certain megacorporation, comes with an especially aggressive Compli-o-nator 3000."
 	icon_state = "spacepol"
-	inhand_icon_state = "spacepol"
+	inhand_icon_state = "spacepol_mask"
 
 /obj/item/clothing/mask/gas/sechailer/cyborg
 	name = "security hailer"

@@ -2,8 +2,8 @@
 	name = "botanist's leather gloves"
 	desc = "These leather gloves protect against thorns, barbs, prickles, spikes and other harmful objects of floral origin.  They're also quite warm."
 	icon_state = "leather"
-	inhand_icon_state = "ggloves"
-	worn_icon_state = "ggloves"
+	inhand_icon_state = null
+	greyscale_colors = null
 	permeability_coefficient = 0.9
 	cold_protection = HANDS
 	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
@@ -15,9 +15,8 @@
 /obj/item/clothing/gloves/combat
 	name = "combat gloves"
 	desc = "These tactical gloves are fireproof and shock resistant."
-	icon_state = "cgloves"
-	inhand_icon_state = "combatgloves"
-	worn_icon_state = "combatgloves"
+	icon_state = "black"
+	greyscale_colors = "#2f2e31"
 	siemens_coefficient = 0
 	permeability_coefficient = 0.05
 	strip_delay = 80
@@ -32,8 +31,7 @@
 	name = "bone bracers"
 	desc = "For when you're expecting to get slapped on the wrist. Offers modest protection to your arms."
 	icon_state = "bracers"
-	inhand_icon_state = "bracers"
-	worn_icon_state = "bracers"
+	inhand_icon_state = null
 	transfer_prints = TRUE
 	strip_delay = 40
 	equip_delay_other = 20

@@ -243,7 +243,7 @@
 	name = "grave robber gloves"
 	desc = "A pair of leather gloves in poor condition."
 	icon_state = "graverobber-gloves"
-	inhand_icon_state = "graverobber-gloves"
+	inhand_icon_state = null
 	permeability_coefficient = 0.9
 	cold_protection = HANDS
 	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT

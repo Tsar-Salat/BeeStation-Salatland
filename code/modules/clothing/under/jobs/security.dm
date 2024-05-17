@@ -241,7 +241,7 @@
 	name = "police uniform"
 	desc = "Space not controlled by megacorporations, planets, or pirates is under the jurisdiction of Spacepol."
 	icon_state = "spacepol"
-	inhand_icon_state = "spacepol"
+	inhand_icon_state = "spacepol_mask"
 	can_adjust = FALSE
 
 /obj/item/clothing/under/rank/prisoner

@@ -395,7 +395,6 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	icon_off = "spliffoff"
 	type_butt = /obj/item/cigbutt/roach
 	throw_speed = 0.5
-	inhand_icon_state = "spliffoff"
 	smoketime = 4 * 60
 	chem_volume = 50
 	list_reagents = null
@@ -489,6 +488,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	inhand_icon_state = "pipeoff"
 	icon_on = "pipeon"  //Note - these are in masks.dmi
 	icon_off = "pipeoff"
+	inhand_icon_state = null
 	smoketime = 0
 	chem_volume = 100
 	list_reagents = null
@@ -573,7 +573,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	name = "corn cob pipe"
 	desc = "A nicotine delivery system popularized by folksy backwoodsmen and kept popular in the modern age and beyond by space hipsters. Can be loaded with objects."
 	icon_state = "cobpipeoff"
-	inhand_icon_state = "cobpipeoff"
+	inhand_icon_state = null
 	icon_on = "cobpipeon"  //Note - these are in masks.dmi
 	icon_off = "cobpipeoff"
 	smoketime = 0

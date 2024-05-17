@@ -106,7 +106,9 @@
 	desc = "A feminine clown mask for the dabbling crossdressers or female entertainers."
 	clothing_flags = MASKINTERNALS
 	icon_state = "sexyclown"
-	inhand_icon_state = "sexyclown"
+	inhand_icon_state = "sexyclown_hat"
+	lefthand_file = 'icons/mob/inhands/clothing/hats_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/clothing/hats_righthand.dmi'
 	flags_cover = MASKCOVERSEYES
 	resistance_flags = FLAMMABLE
 

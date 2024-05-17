@@ -573,7 +573,7 @@
 	desc = "These tactical gloves are fireproof and shock resistant."
 	icon_state = "cgloves"
 	inhand_icon_state = "combatgloves"
-	worn_icon_state = "combatgloves"
+	worn_icon_state = null
 	siemens_coefficient = 0
 	permeability_coefficient = 0.05
 	strip_delay = 80

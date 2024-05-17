@@ -140,7 +140,7 @@
 	name = "winter boots"
 	desc = "Boots lined with 'synthetic' animal fur."
 	icon_state = "winterboots"
-	inhand_icon_state = "winterboots"
+	inhand_icon_state = null
 	permeability_coefficient = 0.15
 	cold_protection = FEET|LEGS
 	min_cold_protection_temperature = SHOES_MIN_TEMP_PROTECT
@@ -183,7 +183,7 @@
 	name = "\improper Nar'Sien invoker boots"
 	desc = "A pair of boots worn by the followers of Nar'Sie."
 	icon_state = "cult"
-	inhand_icon_state = "cult"
+	inhand_icon_state = null
 	cold_protection = FEET
 	min_cold_protection_temperature = SHOES_MIN_TEMP_PROTECT
 	heat_protection = FEET

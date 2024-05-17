@@ -47,7 +47,7 @@
 	name = "rainbow gloves"
 	desc = "A pair of gloves, they don't look special in any way."
 	icon_state = "rainbow"
-	inhand_icon_state = "rainbowgloves"
+	inhand_icon_state = "rainbow_gloves"
 	greyscale_colors = null
 
 /obj/item/clothing/gloves/color/blue
@@ -88,9 +88,9 @@
 
 /obj/item/clothing/gloves/color/denied
 	name = "ERROR gloves"
-	desc = "With these gloves you will be like the legendary Midas. Except instead of turning to gold everthing you touch will become -REDACTED-."
+	desc = "With these gloves you will be like the legendary Midas. Except instead of turning to gold everything you touch will become -REDACTED-."
 	icon_state = "denied"
-	inhand_icon_state = "redgloves"
+	inhand_icon_state = null
 	worn_icon_state = "deniedgloves"
 
 /obj/item/clothing/gloves/color/white
@@ -126,5 +126,5 @@
 	name = "maid arm covers"
 	desc = "Cylindrical looking tubes that go over your arm, weird."
 	icon_state = "maid_arms"
-	inhand_icon_state = "maid_arms"
-	worn_icon_state = "maid_arms"
+	inhand_icon_state = null
+	greyscale_colors = null
