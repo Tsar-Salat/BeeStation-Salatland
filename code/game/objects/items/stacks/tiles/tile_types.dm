@@ -313,16 +313,15 @@
 	singular_name = "grimy carpet floor tile"
 	desc = "A piece of carpet that feels more like floor tiles, sure it feels hard to the touch for being carpet..."
 	icon_state = "tile-carpet-grimy"
-	inhand_icon_state = "tile-carpet-grimy"
+	// PestoVerde's sin!
+	//inhand_icon_state = "tile-carpet-grimy"
 	merge_type = /obj/item/stack/tile/carpet/grimy
 	turf_type = /turf/open/floor/carpet/grimy
 
-/*
 /obj/item/stack/tile/material/place_tile(turf/open/T)
 	. = ..()
 	var/turf/open/floor/material/F = .
 	F?.set_custom_materials(mats_per_unit)
-*/
 
 /obj/item/stack/tile/eighties
 	name = "retro tile"

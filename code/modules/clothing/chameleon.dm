@@ -967,7 +967,6 @@
 /obj/item/radio/headset/chameleon/bowman
 	name = "bowman headset"
 	icon_state = "syndie_headset"
-	inhand_icon_state = "syndie_headset"
 	bang_protect = 3
 
 /obj/item/modular_computer/tablet/pda/chameleon

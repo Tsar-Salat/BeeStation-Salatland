@@ -255,8 +255,7 @@
 /obj/item/flashlight/lamp/bananalamp
 	name = "banana lamp"
 	desc = "Only a clown would think to make a ghetto banana-shaped lamp. Even has a goofy pullstring."
-	inhand_icon_state = null
-	inhand_icon_state = "bananalamp"
+	icon_state = "bananalamp"
 
 // FLARES
 

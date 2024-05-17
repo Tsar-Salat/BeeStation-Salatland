@@ -2,7 +2,7 @@
 	name = "pipe painter"
 	icon = 'icons/obj/bureaucracy.dmi'
 	icon_state = "labeler1"
-	inhand_icon_state = "flight"
+	inhand_icon_state = null
 	item_flags = NOBLUDGEON
 	var/paint_color = "grey"
 

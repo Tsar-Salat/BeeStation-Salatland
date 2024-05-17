@@ -1,8 +1,10 @@
-/obj/item/latexballon
+/obj/item/latexballon //lern 2 spel dude, cmon
 	name = "latex glove"
 	desc = "Sterile and airtight."
 	icon_state = "latexballon"
-	inhand_icon_state = "lgloves"
+	inhand_icon_state = "greyscale_gloves"
+	lefthand_file = 'icons/mob/inhands/clothing/gloves_righthand.dmi'
+	righthand_file = 'icons/mob/inhands/clothing/gloves_lefthand.dmi'
 	force = 0
 	throwforce = 0
 	w_class = WEIGHT_CLASS_TINY
@@ -25,7 +27,7 @@
 		return
 	playsound(src, 'sound/weapons/gunshot.ogg', 100, 1)
 	icon_state = "latexballon_bursted"
-	inhand_icon_state = "lgloves"
+	inhand_icon_state = "greyscale_gloves"
 	if(isliving(loc))
 		var/mob/living/user = src.loc
 		user.update_inv_hands()
