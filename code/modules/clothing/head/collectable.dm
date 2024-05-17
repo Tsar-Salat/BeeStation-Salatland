@@ -60,7 +60,7 @@
 	icon = 'icons/obj/clothing/head/utility.dmi'
 	worn_icon = 'icons/mob/clothing/head/utility.dmi'
 	icon_state = "chef"
-	inhand_icon_state = "chef"
+	inhand_icon_state = "chefhat"
 	dynamic_hair_suffix = ""
 	dog_fashion = /datum/dog_fashion/head/chef
 

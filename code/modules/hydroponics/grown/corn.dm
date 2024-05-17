@@ -39,6 +39,7 @@
 	desc = "A reminder of meals gone by."
 	icon_state = "corncob"
 	inhand_icon_state = "corncob"
+	inhand_icon_state = null
 	w_class = WEIGHT_CLASS_TINY
 	throwforce = 0
 	throw_speed = 3

@@ -59,6 +59,8 @@
 	clothing_flags = MASKINTERNALS
 	icon_state = "clown"
 	inhand_icon_state = "clown_hat"
+	lefthand_file = 'icons/mob/inhands/clothing/hats_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/clothing/hats_righthand.dmi'
 	dye_color = "clown"
 	flags_cover = MASKCOVERSEYES
 	resistance_flags = FLAMMABLE

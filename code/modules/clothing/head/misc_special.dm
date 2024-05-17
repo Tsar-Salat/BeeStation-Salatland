@@ -15,6 +15,8 @@
 	desc = "A head-mounted face cover designed to protect the wearer completely from space-arc eye."
 	icon_state = "welding"
 	inhand_icon_state = "welding"
+	lefthand_file = 'icons/mob/inhands/clothing/masks_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/clothing/masks_righthand.dmi'
 	clothing_flags = SNUG_FIT
 	custom_materials = list(/datum/material/iron=1750, /datum/material/glass=400)
 	flash_protect = 2
