@@ -117,7 +117,7 @@
 	desc = "The traditional mime's mask. It has an eerie facial posture."
 	clothing_flags = MASKINTERNALS
 	icon_state = "mime"
-	inhand_icon_state = "mime"
+	inhand_icon_state = null
 	flags_cover = MASKCOVERSEYES
 	resistance_flags = FLAMMABLE
 	actions_types = list(/datum/action/item_action/adjust)
@@ -200,7 +200,7 @@
 	name = "tiki mask"
 	desc = "A creepy wooden mask. Surprisingly expressive for a poorly carved bit of wood."
 	icon_state = "tiki_eyebrow"
-	inhand_icon_state = "tiki_eyebrow"
+	inhand_icon_state = null
 	custom_materials = list(/datum/material/wood = MINERAL_MATERIAL_AMOUNT * 1.25)
 	resistance_flags = FLAMMABLE
 	max_integrity = 100
@@ -243,7 +243,7 @@
 /obj/item/clothing/mask/gas/old
 	desc = "A face-covering mask that can be connected to an air supply. This one appears to be one of the older models."
 	icon_state = "gas_alt_old"
-	inhand_icon_state = "gas_alt_old"
+	inhand_icon_state = "gas_alt"
 
 /obj/item/clothing/mask/gas/old/modulator
 	name = "modified gas mask"

@@ -571,8 +571,8 @@
 /obj/item/clothing/gloves/chameleon/combat
 	name = "combat gloves"
 	desc = "These tactical gloves are fireproof and shock resistant."
-	icon_state = "cgloves"
-	inhand_icon_state = "combatgloves"
+	icon_state = "black"
+	greyscale_colors = "#2f2e31"
 	worn_icon_state = null
 	siemens_coefficient = 0
 	permeability_coefficient = 0.05

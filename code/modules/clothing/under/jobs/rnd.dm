@@ -93,14 +93,14 @@
 	desc = "It's a slimming black jumpsuit with reinforced seams; great for industrial work."
 	name = "roboticist's jumpsuit"
 	icon_state = "robotics"
-	inhand_icon_state = "robotics"
+	inhand_icon_state = null
 	resistance_flags = NONE
 
 /obj/item/clothing/under/rank/rnd/roboticist/skirt
 	name = "roboticist's jumpskirt"
 	desc = "It's a slimming black jumpskirt with reinforced seams; great for industrial work."
 	icon_state = "robotics_skirt"
-	inhand_icon_state = "robotics"
+	inhand_icon_state = null
 	body_parts_covered = CHEST|GROIN|ARMS
 	can_adjust = FALSE
 	fitted = FEMALE_UNIFORM_TOP
@@ -111,7 +111,7 @@
 	desc = "It's a slimming black jumpsuit with reinforced seams; great for industrial work. Vintage design, modern look, and the gloves are just for show."
 	name = "roboticist's retro jumpsuit"
 	icon_state = "robotics_retro"
-	inhand_icon_state = "robotics"
+	inhand_icon_state = null
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	fitted = NO_FEMALE_UNIFORM
 	alternate_worn_layer = GLOVES_LAYER

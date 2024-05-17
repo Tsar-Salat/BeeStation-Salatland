@@ -210,7 +210,7 @@
 	name = "roman sandals"
 	desc = "Sandals with buckled leather straps on it."
 	icon_state = "roman"
-	inhand_icon_state = "roman"
+	inhand_icon_state = "wizshoe"
 	strip_delay = 100
 	equip_delay_other = 100
 	permeability_coefficient = 0.9
@@ -219,14 +219,14 @@
 	name = "griffon boots"
 	desc = "A pair of costume boots fashioned after bird talons."
 	icon_state = "griffinboots"
-	inhand_icon_state = "griffinboots"
+	inhand_icon_state = null
 	pocket_storage_component_path = /datum/component/storage/concrete/pockets/shoes
 
 /obj/item/clothing/shoes/bhop
 	name = "jump boots"
 	desc = "A specialized pair of combat boots with a built-in propulsion system for rapid forward movement."
 	icon_state = "jetboots"
-	inhand_icon_state = "jetboots"
+	inhand_icon_state = null
 	resistance_flags = FIRE_PROOF
 	pocket_storage_component_path = /datum/component/storage/concrete/pockets/shoes
 	actions_types = list(/datum/action/item_action/bhop)
@@ -280,7 +280,7 @@
 	name = "Kindle Kicks"
 	desc = "They'll sure kindle something in you, and it's not childhood nostalgia..."
 	icon_state = "kindleKicks"
-	inhand_icon_state = "kindleKicks"
+	inhand_icon_state = null
 	actions_types = list(/datum/action/item_action/kindleKicks)
 	var/lightCycle = 0
 	var/active = FALSE
@@ -311,11 +311,11 @@
 	name = "russian boots"
 	desc = "Comfy shoes."
 	icon_state = "rus_shoes"
-	inhand_icon_state = "rus_shoes"
+	inhand_icon_state = null
 	pocket_storage_component_path = /datum/component/storage/concrete/pockets/shoes
 
 /obj/item/clothing/shoes/swagshoes
 	name = "swag shoes"
 	desc = "They got me for my foams!"
 	icon_state = "SwagShoes"
-	inhand_icon_state = "SwagShoes"
+	inhand_icon_state = null

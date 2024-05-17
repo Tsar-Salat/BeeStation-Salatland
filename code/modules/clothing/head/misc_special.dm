@@ -150,4 +150,4 @@
 	icon = 'icons/obj/clothing/head/cowboy.dmi'
 	worn_icon = 'icons/mob/clothing/head/cowboy.dmi'
 	icon_state = "cowboy"
-	inhand_icon_state = "cowboy"
+	inhand_icon_state = null

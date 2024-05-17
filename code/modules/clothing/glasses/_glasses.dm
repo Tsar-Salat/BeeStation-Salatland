@@ -248,14 +248,14 @@
 	name = "hipster glasses"
 	desc = "Made by Uncool. Co."
 	icon_state = "hipster_glasses"
-	inhand_icon_state = "hipster_glasses"
+	inhand_icon_state = null
 	vision_correction = 1
 
 /obj/item/clothing/glasses/regular/circle
 	name = "circle glasses"
 	desc = "Why would you wear something so controversial yet so brave?"
 	icon_state = "circle_glasses"
-	inhand_icon_state = "circle_glasses"
+	inhand_icon_state = null
 	vision_correction = 1
 
 /obj/item/clothing/glasses/sunglasses/circle_sunglasses
@@ -362,7 +362,7 @@
 	name = "optical ecto-scanner"
 	desc = "A bulky pair of unwieldy glasses that lets you see things best left unseen. Obscures vision, but also has enhanced shielding which blocks flashes."
 	icon_state = "bustin-g"
-	inhand_icon_state = "bustin-g"
+	inhand_icon_state = "meson"
 	flash_protect = 2
 	tint = 2
 	glass_colour_type = /datum/client_colour/glass_colour/green
@@ -414,7 +414,7 @@
 	name = "blind personnel blindfold"
 	desc = "Indicates that the wearer suffers from blindness."
 	icon_state = "blindfoldwhite"
-	inhand_icon_state = "blindfoldwhite"
+	inhand_icon_state = null
 	var/colored_before = FALSE
 
 /obj/item/clothing/glasses/blindfold/white/equipped(mob/living/carbon/human/user, slot)
@@ -439,7 +439,7 @@
 
 /obj/item/clothing/glasses/sunglasses/advanced/big
 	icon_state = "bigsunglasses"
-	inhand_icon_state = "bigsunglasses"
+	inhand_icon_state = "glasses"
 
 /obj/item/clothing/glasses/thermal
 	name = "optical thermal scanner"
@@ -501,32 +501,32 @@
 	name = "optical thermal eyepatch"
 	desc = "An eyepatch with built-in thermal optics."
 	icon_state = "eyepatch"
-	inhand_icon_state = "eyepatch"
+	inhand_icon_state = null
 
 /obj/item/clothing/glasses/cold
 	name = "cold goggles"
 	desc = "A pair of goggles meant for low temperatures."
 	icon_state = "cold"
-	inhand_icon_state = "cold"
+	inhand_icon_state = null
 
 /obj/item/clothing/glasses/heat
 	name = "heat goggles"
 	desc = "A pair of goggles meant for high temperatures."
 	icon_state = "heat"
-	inhand_icon_state = "heat"
+	inhand_icon_state = null
 
 /obj/item/clothing/glasses/orange
 	name = "orange glasses"
 	desc = "A sweet pair of orange shades."
 	icon_state = "orangeglasses"
-	inhand_icon_state = "orangeglasses"
+	inhand_icon_state = null
 	glass_colour_type = /datum/client_colour/glass_colour/lightorange
 
 /obj/item/clothing/glasses/red
 	name = "red glasses"
 	desc = "Hey, you're looking good, senpai!"
 	icon_state = "redglasses"
-	inhand_icon_state = "redglasses"
+	inhand_icon_state = null
 	glass_colour_type = /datum/client_colour/glass_colour/red
 
 /obj/item/clothing/glasses/godeye

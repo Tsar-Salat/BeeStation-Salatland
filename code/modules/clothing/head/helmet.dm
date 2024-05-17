@@ -218,7 +218,7 @@
 	armor = list(MELEE = 25,  BULLET = 0, LASER = 25, ENERGY = 30, BOMB = 10, BIO = 0, RAD = 0, FIRE = 100, ACID = 50, STAMINA = 40)
 	resistance_flags = FIRE_PROOF
 	icon_state = "roman"
-	inhand_icon_state = "roman"
+	inhand_icon_state = "roman_helmet"
 	strip_delay = 100
 
 /obj/item/clothing/head/helmet/roman/fake
@@ -256,14 +256,14 @@
 	desc = "They'll need more men."
 	icon_state = "bluetaghelm"
 	flags_cover = HEADCOVERSEYES
-	inhand_icon_state = "bluetaghelm"
+	inhand_icon_state = "bluetag_helmet"
 	armor = list(MELEE = 15,  BULLET = 10, LASER = 20, ENERGY = 30, BOMB = 20, BIO = 0, RAD = 0, FIRE = 0, ACID = 50, STAMINA = 10)
 
 /obj/item/clothing/head/helmet/knight
 	name = "medieval helmet"
 	desc = "A classic metal helmet."
 	icon_state = "knight_green"
-	inhand_icon_state = "knight_green"
+	inhand_icon_state = "knight_helmet"
 	armor = list(MELEE = 50,  BULLET = 10, LASER = 10, ENERGY = 10, BOMB = 0, BIO = 0, RAD = 0, FIRE = 80, ACID = 80, STAMINA = 50)
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE|HIDEHAIR|HIDESNOUT
 	flags_cover = HEADCOVERSEYES | HEADCOVERSMOUTH
@@ -272,15 +272,15 @@
 
 /obj/item/clothing/head/helmet/knight/blue
 	icon_state = "knight_blue"
-	inhand_icon_state = "knight_blue"
+	inhand_icon_state = "knight_helmet"
 
 /obj/item/clothing/head/helmet/knight/yellow
 	icon_state = "knight_yellow"
-	inhand_icon_state = "knight_yellow"
+	inhand_icon_state = "knight_helmet"
 
 /obj/item/clothing/head/helmet/knight/red
 	icon_state = "knight_red"
-	inhand_icon_state = "knight_red"
+	inhand_icon_state = "knight_helmet"
 
 /obj/item/clothing/head/helmet/skull
 	name = "skull helmet"
