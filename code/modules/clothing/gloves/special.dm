@@ -88,8 +88,9 @@
 	desc = "Regal blue gloves, with a nice gold trim, a diamond anti-shock coating, and an integrated thermal barrier. Swanky."
 	name = "captain's gloves"
 	icon_state = "captain"
-	inhand_icon_state = "egloves"
 	worn_icon_state = "egloves"
+	inhand_icon_state = null
+	greyscale_colors = null
 	siemens_coefficient = 0
 	permeability_coefficient = 0.05
 	cold_protection = HANDS
@@ -103,8 +104,8 @@
 	name = "latex gloves"
 	desc = "Cheap sterile gloves made from latex. Transfers minor paramedic knowledge to the user via budget nanochips."
 	icon_state = "latex"
-	inhand_icon_state = "latex"
-	worn_icon_state = "latex"
+	inhand_icon_state = "latex_gloves"
+	greyscale_colors = null
 	siemens_coefficient = 0.3
 	permeability_coefficient = 0.01
 	transfer_prints = TRUE
@@ -134,7 +135,7 @@
 	name = "nitrile gloves"
 	desc = "Pricy sterile gloves that are stronger than latex. Transfers intimate paramedic knowledge into the user via nanochips."
 	icon_state = "nitrile"
-	inhand_icon_state = "nitrilegloves"
-	worn_icon_state = "nitrilegloves"
+	inhand_icon_state = "greyscale_gloves"
+	greyscale_colors = "#99eeff"
 	transfer_prints = FALSE
 	carrytrait = TRAIT_QUICKER_CARRY

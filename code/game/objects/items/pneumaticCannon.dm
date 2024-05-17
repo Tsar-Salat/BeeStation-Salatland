@@ -327,7 +327,7 @@
 	name = "quiver"
 	desc = "A quiver for holding magspears."
 	icon_state = "quiver"
-	inhand_icon_state = "quiver"
+	inhand_icon_state = null
 
 /obj/item/storage/backpack/magspear_quiver/ComponentInitialize()
 	. = ..()
