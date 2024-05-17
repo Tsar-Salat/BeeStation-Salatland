@@ -39,8 +39,6 @@
 /obj/item/clothing/gloves/color/white/magic
 	name = "white gloves"
 	desc = "These look pretty fancy."
-	icon_state = "white"
-	inhand_icon_state = "wgloves"
 	var/range = 3
 
 /obj/item/clothing/gloves/color/white/magic/attackby(obj/item/W, mob/user, params)
