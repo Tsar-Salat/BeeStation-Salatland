@@ -347,6 +347,8 @@
 	icon = 'icons/obj/hydroponics/equipment.dmi'
 	icon_state = "plantbgone"
 	inhand_icon_state = "plantbgone"
+	lefthand_file = 'icons/mob/inhands/equipment/hydroponics_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/equipment/hydroponics_righthand.dmi'
 	set_reagent = /datum/reagent/toxin/plantbgone
 
 /obj/item/reagent_containers/spray/cyborg/lube

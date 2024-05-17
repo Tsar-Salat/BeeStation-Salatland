@@ -447,7 +447,7 @@
 	light_range = 4
 	color = LIGHT_COLOR_GREEN
 	icon_state = "glowstick"
-	inhand_icon_state = "glowstick"
+	inhand_icon_state = null
 	grind_results = list(/datum/reagent/phenol = 15, /datum/reagent/hydrogen = 10, /datum/reagent/oxygen = 5) //Meth-in-a-stick
 	var/burn_pickup = FALSE	//If true, fuel will only decrease after being picked up or used in hand (Useful for mapping)
 	var/fuel = 0 // How many seconds of fuel we have left
