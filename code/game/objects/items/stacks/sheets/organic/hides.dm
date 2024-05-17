@@ -4,7 +4,7 @@
 	name = "hide"
 	desc = "Something went wrong."
 	icon_state = "sheet-hide"
-	inhand_icon_state = "sheet-hide"
+	inhand_icon_state = null
 	icon = 'icons/obj/stacks/organic.dmi'
 	novariants = TRUE
 

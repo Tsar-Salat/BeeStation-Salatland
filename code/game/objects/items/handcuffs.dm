@@ -1,5 +1,5 @@
 /obj/item/restraints
-	breakouttime = 600
+	breakouttime = 1 MINUTES
 	item_flags = ISWEAPON
 
 /obj/item/restraints/suicide_act(mob/living/carbon/user)
@@ -102,6 +102,8 @@
 	icon_state = "cuff"
 	inhand_icon_state = "coil_red"
 	color = CABLE_HEX_COLOR_RED
+	///for generating the correct icons based off the original cable's color.
+	var/cable_color = CABLE_COLOR_RED
 	lefthand_file = 'icons/mob/inhands/equipment/tools_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/tools_righthand.dmi'
 	custom_materials = list(/datum/material/iron=150, /datum/material/glass=75)
