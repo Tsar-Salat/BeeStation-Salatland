@@ -7,7 +7,7 @@
 	reagent_flags = NONE
 	icon = 'icons/obj/chemical.dmi'
 	icon_state = "hard_locked_closed"
-	inhand_icon_state = "hard_locked_closed"
+	inhand_icon_state = "beaker"
 	var/locked = TRUE
 	var/datum/reagent/rand_cont //Reagent of choice
 	var/datum/callback/roundend_callback

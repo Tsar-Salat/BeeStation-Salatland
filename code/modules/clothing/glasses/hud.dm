@@ -285,7 +285,7 @@
 	name = "\improper HUD gar glasses"
 	desc = "GAR glasses with a HUD."
 	icon_state = "gars"
-	inhand_icon_state = "garb"
+	inhand_icon_state = "gar_black"
 	force = 10
 	throwforce = 10
 	throw_speed = 4
@@ -297,7 +297,7 @@
 	name = "giga HUD gar glasses"
 	desc = "GIGA GAR glasses with a HUD."
 	icon_state = "supergars"
-	inhand_icon_state = "garb"
+	inhand_icon_state = "gar_black"
 	force = 12
 	throwforce = 12
 

@@ -10,7 +10,7 @@
 	desc = "A sack neatly crafted out of paper."
 	icon = 'icons/obj/storage/paperbag.dmi'
 	icon_state = "paperbag_None"
-	inhand_icon_state = "paperbag_None"
+	inhand_icon_state = null
 	resistance_flags = FLAMMABLE
 	foldable = null
 	var/design = NODESIGN

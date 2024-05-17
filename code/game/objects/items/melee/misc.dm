@@ -140,9 +140,6 @@
 	desc = "An elegant weapon, it has an inscription on it that says:  \"La Gluten Gutter\"."
 	force = 18
 	icon_state = "rapier"
-	inhand_icon_state = "rapier"
-	lefthand_file = null
-	righthand_file = null
 	block_power = 60
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
 
@@ -1048,7 +1045,7 @@
 	desc = "An portable anti-gravity generator which knocks people back upon contact."
 	icon = 'icons/obj/items_and_weapons.dmi'
 	icon_state = "telebaton_1"
-	inhand_icon_state = "nullrod"
+	inhand_icon_state = "classic_baton"
 	worn_icon_state = "tele_baton"
 	lefthand_file = 'icons/mob/inhands/equipment/security_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/security_righthand.dmi'

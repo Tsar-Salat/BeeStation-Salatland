@@ -304,7 +304,7 @@
 	name = "black gar glasses"
 	desc = "Go beyond impossible and kick reason to the curb!  Has enhanced shielding which blocks flashes."
 	icon_state = "garb"
-	inhand_icon_state = "garb"
+	inhand_icon_state = "gar_black"
 	force = 10
 	throwforce = 10
 	throw_speed = 4
@@ -316,7 +316,7 @@
 	name = "black giga gar glasses"
 	desc = "Believe in us humans.  Has enhanced shielding which blocks flashes."
 	icon_state = "supergarb"
-	inhand_icon_state = "garb"
+	inhand_icon_state = "gar_black"
 	force = 12
 	throwforce = 12
 

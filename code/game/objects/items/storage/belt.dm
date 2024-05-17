@@ -724,7 +724,7 @@
 	name = "leather quiver"
 	desc = "A quiver made from the hide of some animal. Used to hold arrows."
 	icon_state = "quiver"
-	inhand_icon_state = "quiver"
+	inhand_icon_state = null
 	worn_icon_state = "quiver"
 
 /obj/item/storage/belt/quiver/ComponentInitialize()
@@ -829,6 +829,7 @@
 /obj/item/storage/belt/sabre/ComponentInitialize()
 	. = ..()
 	AddElement(/datum/element/update_icon_updates_onmob)
+	
 	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
 	STR.max_items = 1
 	STR.rustle_sound = FALSE
@@ -873,14 +874,13 @@
 	desc = "Bon appetit!"
 	icon = 'icons/obj/food/burgerbread.dmi'
 	icon_state = "baguette"
-	inhand_icon_state = "baguette"
+	inhand_icon_state = null
 	worn_icon_state = "baguette"
 	w_class = WEIGHT_CLASS_BULKY
 	slot_flags = ITEM_SLOT_BACK|ITEM_SLOT_BELT
 
 /obj/item/storage/belt/sabre/mime/update_icon()
 	icon_state = "baguette"
-	inhand_icon_state = "baguette"
 
 /obj/item/storage/belt/sabre/mime/ComponentInitialize()
 	. = ..()
