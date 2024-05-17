@@ -341,7 +341,6 @@
 	name = "exploration hardsuit helmet"
 	desc = "An advanced space-proof hardsuit designed to protect against off-station threats."
 	icon_state = "hardsuit0-exploration"
-	inhand_icon_state = "death_commando_mask"
 	hardsuit_type = "exploration"
 	heat_protection = HEAD
 	armor = list(MELEE = 35,  BULLET = 15, LASER = 20, ENERGY = 10, BOMB = 50, BIO = 100, RAD = 50, FIRE = 50, ACID = 75, STAMINA = 20)
@@ -397,7 +396,7 @@
 		sacrificed in favor of more effective blunt armor plates and radiation shielding."
 	armor = list(MELEE = 30,  BULLET = 35, LASER = 15, ENERGY = 15, BOMB = 60, BIO = 100, RAD = 55, FIRE = 30, ACID = 60, STAMINA = 15)
 	hardsuit_type = "cybersun"
-	inhand_icon_state = "death_commando_mask"
+	inhand_icon_state = null
 	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/cybersun
 	jetpack = /obj/item/tank/jetpack/suit
 

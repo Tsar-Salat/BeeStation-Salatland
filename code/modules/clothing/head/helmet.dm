@@ -190,7 +190,7 @@
 	name = "\improper SWAT helmet"
 	desc = "An extremely robust, space-worthy helmet with the Nanotrasen logo emblazoned on the top."
 	icon_state = "swat"
-	inhand_icon_state = "swat"
+	inhand_icon_state = "swat_helmet"
 
 /obj/item/clothing/head/helmet/thunderdome
 	name = "\improper Thunderdome helmet"

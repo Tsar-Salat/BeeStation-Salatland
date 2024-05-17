@@ -3,6 +3,8 @@
 	desc = "To stop that awful noise."
 	icon_state = "muzzle"
 	inhand_icon_state = "blindfold"
+	lefthand_file = 'icons/mob/inhands/clothing/glasses_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/clothing/glasses_righthand.dmi'
 	flags_cover = MASKCOVERSMOUTH
 	w_class = WEIGHT_CLASS_SMALL
 	gas_transfer_coefficient = 0.9

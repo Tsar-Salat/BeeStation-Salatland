@@ -62,7 +62,7 @@
 	name = "chicken suit head"
 	desc = "Bkaw!"
 	icon_state = "chickenhead"
-	inhand_icon_state = "chickensuit"
+	inhand_icon_state = "chicken_head"
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR|HIDESNOUT
 	clothing_flags = SNUG_FIT
 

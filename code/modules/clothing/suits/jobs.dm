@@ -104,7 +104,7 @@
 	icon = 'icons/obj/clothing/suits/armor.dmi'
 	worn_icon = 'icons/mob/clothing/suits/armor.dmi'
 	icon_state = "brig_phys_vest"
-	inhand_icon_state = "sec_helm"//looks kinda similar, I guess
+	inhand_icon_state = null
 	allowed = list(/obj/item/analyzer, /obj/item/stack/medical, /obj/item/storage/firstaid, /obj/item/dnainjector, /obj/item/reagent_containers/dropper, /obj/item/reagent_containers/syringe, /obj/item/reagent_containers/hypospray, /obj/item/healthanalyzer, /obj/item/flashlight/pen, /obj/item/reagent_containers/glass/bottle, /obj/item/reagent_containers/glass/beaker, /obj/item/reagent_containers/pill, /obj/item/storage/pill_bottle, /obj/item/paper, /obj/item/melee/classic_baton/police/telescopic, /obj/item/soap, /obj/item/sensor_device, /obj/item/tank/internals/emergency_oxygen, /obj/item/tank/internals/plasmaman)
 	armor = list(MELEE = 10, BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 10, RAD = 0, FIRE = 50, ACID = 50, STAMINA = 30)
 

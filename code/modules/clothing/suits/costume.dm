@@ -431,7 +431,7 @@
 	name = "xenos suit"
 	desc = "A suit made out of chitinous alien hide."
 	icon_state = "xenos"
-	inhand_icon_state = "xenos_helm"
+	inhand_icon_state = "xenos_suit"
 	body_parts_covered = CHEST|GROIN|LEGS|ARMS|HANDS
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT
 	allowed = list(/obj/item/clothing/mask/facehugger/toy)
