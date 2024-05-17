@@ -1,9 +1,8 @@
 /obj/item/storage/belt
-	name = "belt"
-	desc = "Can hold various things."
+	name = "belt PARENT"
+	desc = "Can hold various things. THIS IS NOT MEANT TO BE INGAME, MAPPERS."
 	icon = 'icons/obj/clothing/belts.dmi'
-	w_class = WEIGHT_CLASS_BULKY
-	icon_state = "utilitybelt"
+	icon_state = "utility"
 	inhand_icon_state = "utility"
 	worn_icon_state = "utility"
 	lefthand_file = 'icons/mob/inhands/equipment/belt_lefthand.dmi'
@@ -11,6 +10,7 @@
 	slot_flags = ITEM_SLOT_BELT
 	attack_verb = list("whipped", "lashed", "disciplined")
 	max_integrity = 300
+	w_class = WEIGHT_CLASS_BULKY
 	var/content_overlays = FALSE //If this is true, the belt will gain overlays based on what it's holding
 
 /obj/item/storage/belt/suicide_act(mob/living/carbon/user)
@@ -37,7 +37,7 @@
 /obj/item/storage/belt/utility
 	name = "toolbelt" //Carn: utility belt is nicer, but it bamboozles the text parsing.
 	desc = "Holds tools."
-	icon_state = "utilitybelt"
+	icon_state = "utility"
 	inhand_icon_state = "utility"
 	worn_icon_state = "utility"
 	content_overlays = TRUE
@@ -114,7 +114,7 @@
 /obj/item/storage/belt/utility/chief
 	name = "\improper Chief Engineer's toolbelt" //"the Chief Engineer's toolbelt", because "Chief Engineer's toolbelt" is not a proper noun
 	desc = "Holds tools, looks snazzy."
-	icon_state = "utilitybelt_ce"
+	icon_state = "utility_ce"
 	inhand_icon_state = "utility_ce"
 	worn_icon_state = "utility_ce"
 
@@ -758,7 +758,7 @@
 /obj/item/storage/belt/fannypack/detective //Starting contents defined in detective.dm where the rest of their loadout is handled.
 	name = "Worn belt"
 	desc = "A weathered belt that is used for storing various gadgets"
-	icon_state = "utilitybelt" //Placeholder for now.
+	icon_state = "utility" //Placeholder for now. //For now? Its not a TODO, so assuming its forever.
 	inhand_icon_state = "utility"
 	worn_icon_state = "utility"
 

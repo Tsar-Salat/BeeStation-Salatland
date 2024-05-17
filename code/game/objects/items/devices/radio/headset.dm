@@ -91,7 +91,7 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	name = "syndicate headset"
 	desc = "A syndicate headset that can be used to hear all radio frequencies. Protects ears from flashbangs."
 	icon_state = "syndie_headset"
-	inhand_icon_state = "syndie_headset"
+	worn_icon_state = "syndie_headset"
 	bang_protect = 1
 
 /obj/item/radio/headset/syndicate/alt/leader

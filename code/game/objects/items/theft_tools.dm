@@ -47,8 +47,8 @@
 	icon = 'icons/obj/nuke_tools.dmi'
 	icon_state = "core_container_empty"
 	inhand_icon_state = "tile"
-	lefthand_file = 'icons/mob/inhands/items/sheets_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/items/sheets_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/tiles_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/tiles_righthand.dmi'
 	var/obj/item/nuke_core/core
 
 /obj/item/nuke_core_container/Destroy()
@@ -124,7 +124,7 @@
 	name = "supermatter sliver"
 	desc = "A tiny, highly volatile sliver of a supermatter crystal. Do not handle without protection!"
 	icon_state = "supermatter_sliver"
-	inhand_icon_state = "supermattersliver"
+	inhand_icon_state = null //touching it dusts you, so no need for an inhand icon.
 	pulseicon = "supermatter_sliver_pulse"
 
 /obj/item/nuke_core/supermatter_sliver/attack_tk(mob/user) // no TK dusting memes

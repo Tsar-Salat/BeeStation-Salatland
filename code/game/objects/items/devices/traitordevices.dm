@@ -190,8 +190,10 @@ effective or pretty fucking useless.
 	name = "cloaker belt"
 	desc = "Makes you invisible for short periods of time. Recharges in darkness."
 	icon = 'icons/obj/clothing/belts.dmi'
-	icon_state = "utilitybelt"
+	icon_state = "utility"
 	inhand_icon_state = "utility"
+	lefthand_file = 'icons/mob/inhands/equipment/belt_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/equipment/belt_righthand.dmi'
 	worn_icon_state = "utility"
 	slot_flags = ITEM_SLOT_BELT
 	attack_verb = list("whipped", "lashed", "disciplined")

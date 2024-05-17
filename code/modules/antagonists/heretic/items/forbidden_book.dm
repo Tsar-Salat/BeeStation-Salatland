@@ -3,7 +3,6 @@
 	name = "Codex Cicatrix"
 	desc = "This book describes the secrets of the veil between worlds."
 	icon = 'icons/obj/heretic.dmi'
-	inhand_icon_state = "book"
 	icon_state = "book"
 	worn_icon_state = "book"
 	w_class = WEIGHT_CLASS_SMALL

@@ -113,6 +113,8 @@
 	desc = "The best part of a maid costume."
 	icon_state = "maidapron"
 	inhand_icon_state = "maidapron"
+	lefthand_file = 'icons/mob/inhands/clothing/suits_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/clothing/suits_righthand.dmi'
 	minimize_when_attached = FALSE
 	attachment_slot = null
 
@@ -376,7 +378,6 @@
 	name = "shoulder holster"
 	desc = "A holster to carry a handgun and ammo. WARNING: Badasses only."
 	icon_state = "holster"
-	inhand_icon_state = "holster"
 	pocket_storage_component_path = /datum/component/storage/concrete/pockets/holster
 
 /obj/item/clothing/accessory/holster/detective

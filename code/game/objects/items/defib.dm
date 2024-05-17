@@ -248,7 +248,7 @@
 	name = "compact defibrillator"
 	desc = "A belt-equipped defibrillator that can be rapidly deployed."
 	icon_state = "defibcompact"
-	inhand_icon_state = "defibcompact"
+	inhand_icon_state = null
 	worn_icon_state = "defibcompact"
 	w_class = WEIGHT_CLASS_LARGE
 	slot_flags = ITEM_SLOT_BELT

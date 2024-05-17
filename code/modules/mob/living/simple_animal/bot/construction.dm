@@ -350,6 +350,8 @@
 	desc = "Some sort of bizarre assembly made from a proximity sensor, helmet, and signaler."
 	icon_state = "helmet_signaler"
 	inhand_icon_state = "helmet"
+	lefthand_file = 'icons/mob/inhands/clothing/hats_righthand.dmi'
+	righthand_file = 'icons/mob/inhands/clothing/hats_lefthand.dmi'
 	created_name = "Securitron" //To preserve the name if it's a unique securitron I guess
 	var/swordamt = 0 //If you're converting it into a grievousbot, how many swords have you attached
 	var/toyswordamt = 0 //honk

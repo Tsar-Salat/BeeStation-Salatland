@@ -198,6 +198,8 @@
 	desc = "Such a dapper eyepiece!"
 	icon_state = "monocle"
 	inhand_icon_state = "headset" // lol
+	lefthand_file = 'icons/mob/inhands/items_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items_righthand.dmi'
 	vision_correction = 1
 
 /obj/item/clothing/glasses/material

@@ -255,7 +255,7 @@
 /obj/item/flashlight/lamp/bananalamp
 	name = "banana lamp"
 	desc = "Only a clown would think to make a ghetto banana-shaped lamp. Even has a goofy pullstring."
-	icon_state = "bananalamp"
+	inhand_icon_state = null
 	inhand_icon_state = "bananalamp"
 
 // FLARES
@@ -377,7 +377,7 @@
 	desc = "Extract from a yellow slime. It emits a strong light when squeezed."
 	icon = 'icons/obj/lighting.dmi'
 	icon_state = "slime"
-	inhand_icon_state = "slime"
+	inhand_icon_state = null
 	w_class = WEIGHT_CLASS_SMALL
 	slot_flags = ITEM_SLOT_BELT
 	custom_materials = null
