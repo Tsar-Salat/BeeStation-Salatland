@@ -4,7 +4,7 @@
 	icon = 'icons/obj/guns/magic.dmi'
 	icon_state = "staffofnothing"
 	inhand_icon_state = "staff"
-	lefthand_file = 'icons/mob/inhands/weapons/staves_lefthand.dmi'
+	lefthand_file = 'icons/mob/inhands/weapons/staves_lefthand.dmi' //not really a gun and some toys use these inhands
 	righthand_file = 'icons/mob/inhands/weapons/staves_righthand.dmi'
 	fire_sound = 'sound/weapons/emitter.ogg'
 	flags_1 =  CONDUCT_1

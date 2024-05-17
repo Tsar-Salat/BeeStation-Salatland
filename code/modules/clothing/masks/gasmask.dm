@@ -156,7 +156,7 @@
 	desc = "A mask used when acting as a monkey."
 	clothing_flags = MASKINTERNALS
 	icon_state = "monkeymask"
-	inhand_icon_state = "monkeymask"
+	inhand_icon_state = "owl_mask"
 	flags_cover = MASKCOVERSEYES
 	resistance_flags = FLAMMABLE
 
@@ -165,7 +165,7 @@
 	desc = "A traditional female mime's mask."
 	clothing_flags = MASKINTERNALS
 	icon_state = "sexymime"
-	inhand_icon_state = "sexymime"
+	inhand_icon_state = null
 	flags_cover = MASKCOVERSEYES
 	resistance_flags = FLAMMABLE
 
@@ -184,6 +184,7 @@
 	name = "owl mask"
 	desc = "Twoooo!"
 	icon_state = "owl"
+	inhand_icon_state = "owl_mask"
 	clothing_flags = MASKINTERNALS
 	flags_cover = MASKCOVERSEYES
 	resistance_flags = FLAMMABLE
