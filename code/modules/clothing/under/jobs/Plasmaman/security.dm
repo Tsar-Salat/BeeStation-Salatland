@@ -2,7 +2,7 @@
 	name = "security plasma envirosuit"
 	desc = "A plasmaman containment suit designed for security officers, offering a limited amount of extra protection."
 	icon_state = "security_envirosuit"
-	inhand_icon_state = "security_envirosuit"
+	inhand_icon_state = null
 	armor = list(MELEE = 10,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 100, RAD = 0, FIRE = 95, ACID = 95, STAMINA = 10)
 	sensor_mode = SENSOR_COORDS
 	random_sensor = FALSE
@@ -17,11 +17,11 @@
 	name = "head of security plasma envirosuit"
 	desc = "A black padded envirosuit designed for the head of security, its gold stripes and black pallete instills fear and respect."
 	icon_state = "hos_envirosuit"
-	inhand_icon_state = "hos_envirosuit"
+	inhand_icon_state = null
 
 /obj/item/clothing/under/plasmaman/security/secmed
 	name = "security plasma envirosuit"
 	desc = "A plasmaman containment suit designed for brig physicians. It has a red cross emblasoned on the chest."
 	icon_state = "secmed_envirosuit"
-	inhand_icon_state = "secmed_envirosuit"
+	inhand_icon_state = null
 	armor = list(MELEE = 5,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 100, RAD = 0, FIRE = 95, ACID = 95, STAMINA = 10)
