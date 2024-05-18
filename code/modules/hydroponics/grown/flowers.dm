@@ -230,8 +230,8 @@
 	name = "pack of moonflower seeds"
 	desc = "Its petals are known for helping insomiacs around the world."
 	icon_state = "seed-moonflower"
-	lefthand_file = 'icons/mob/inhands/misc/food_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/food_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/food_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/food_righthand.dmi'
 	species = "moonflower"
 	plantname = "Moonflowers"
 	icon_grow = "moonflower-grow"

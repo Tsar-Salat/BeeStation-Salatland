@@ -5,7 +5,7 @@
 	name = "syringe"
 	desc = "A syringe that can hold up to 15 units."
 	icon = 'icons/obj/syringe.dmi'
-	item_state = "syringe_0"
+	inhand_icon_state = "syringe_0"
 	base_icon_state = "syringe"
 	lefthand_file = 'icons/mob/inhands/equipment/medical_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/medical_righthand.dmi'
@@ -209,7 +209,7 @@
 	else
 		rounded_vol = 0
 	icon_state = "[base_icon_state]_[rounded_vol]"
-	item_state = "[base_icon_state]_[rounded_vol]"
+	inhand_icon_state = "[base_icon_state]_[rounded_vol]"
 	if(ismob(loc))
 		var/mob/M = loc
 		var/injoverlay

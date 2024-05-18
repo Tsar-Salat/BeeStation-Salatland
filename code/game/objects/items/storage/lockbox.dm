@@ -3,7 +3,7 @@
 	desc = "A locked box."
 	icon = 'icons/obj/storage/case.dmi'
 	icon_state = "lockbox+l"
-	item_state = "lockbox+l"
+	inhand_icon_state = "lockbox+l"
 	lefthand_file = 'icons/mob/inhands/equipment/case_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/case_righthand.dmi'
 	w_class = WEIGHT_CLASS_BULKY
@@ -31,13 +31,13 @@
 			locked = SEND_SIGNAL(src, COMSIG_IS_STORAGE_LOCKED)
 			if(locked)
 				icon_state = "[base_icon_state]+l"
-				item_state = "[base_icon_state]+l"
+				inhand_icon_state = "[base_icon_state]+l"
 				to_chat(user, "<span class='danger'>You lock the [src.name]!</span>")
 				SEND_SIGNAL(src, COMSIG_TRY_STORAGE_HIDE_ALL)
 				return
 			else
 				icon_state = "[base_icon_state]"
-				item_state = "[base_icon_state]"
+				inhand_icon_state = "[base_icon_state]"
 				to_chat(user, "<span class='danger'>You unlock the [src.name]!</span>")
 				return
 		else
@@ -57,7 +57,7 @@
 	SEND_SIGNAL(src, COMSIG_TRY_STORAGE_SET_LOCKSTATE, FALSE)
 	desc += "It appears to be broken."
 	icon_state = "[src.base_icon_state]+b"
-	item_state = "[src.base_icon_state]+b"
+	inhand_icon_state = "[src.base_icon_state]+b"
 	user?.visible_message("<span class='warning'>[user] breaks \the [src] with an electromagnetic card!</span>")
 
 /obj/item/storage/lockbox/Entered(atom/movable/arrived, atom/old_loc, list/atom/old_locs)
@@ -83,7 +83,7 @@
 	name = "medal box"
 	desc = "A locked box used to store medals of honor."
 	icon_state = "medalbox+l"
-	item_state = "medalbox+l"
+	inhand_icon_state = "medalbox+l"
 	base_icon_state = "medalbox"
 	w_class = WEIGHT_CLASS_NORMAL
 	req_access = list(ACCESS_CAPTAIN)
@@ -122,15 +122,15 @@
 	var/locked = SEND_SIGNAL(src, COMSIG_IS_STORAGE_LOCKED)
 	if(locked)
 		icon_state = "[base_icon_state]+l"
-		item_state = "[base_icon_state]+l"
+		inhand_icon_state = "[base_icon_state]+l"
 	else
 		icon_state = "[base_icon_state]"
-		item_state = "[base_icon_state]"
+		inhand_icon_state = "[base_icon_state]"
 		if(open)
 			icon_state += "open"
 		if(broken)
 			icon_state += "+b"
-			item_state = "[base_icon_state]+b"
+			inhand_icon_state = "[base_icon_state]+b"
 	return ..()
 
 /obj/item/storage/lockbox/medal/update_overlays()

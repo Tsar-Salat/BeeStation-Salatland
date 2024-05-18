@@ -24,7 +24,7 @@
 	desc = "This is kind of like when you rub your feet on a shag rug so you can zap your friends, only a lot less safe."
 	on_use_sound = 'sound/weapons/zapbang.ogg'
 	icon_state = "zapper"
-	item_state = "zapper"
+	inhand_icon_state = "zapper"
 
 /obj/item/melee/touch_attack/mutation/shock/afterattack(atom/target, mob/living/carbon/user, proximity)
 	if(QDELETED(target) || isturf(target))
@@ -76,7 +76,7 @@
 	desc = "Keep away from children, paperwork, and children doing paperwork."
 	icon = 'icons/effects/blood.dmi'
 	icon_state = "bloodhand_left"
-	item_state = "fleshtostone"
+	inhand_icon_state = "fleshtostone"
 	var/static/base_acid_volume = 15
 	var/static/base_blood_cost = 20
 	var/static/icon_left = "bloodhand_left"

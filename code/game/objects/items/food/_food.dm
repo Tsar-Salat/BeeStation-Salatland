@@ -12,8 +12,8 @@
 	w_class = WEIGHT_CLASS_SMALL
 	icon = 'icons/obj/food/food.dmi'
 	icon_state = null
-	lefthand_file = 'icons/mob/inhands/misc/food_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/food_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/food_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/food_righthand.dmi'
 	///List of reagents this food gets on creation
 	var/list/food_reagents
 	///Extra flags for things such as if the food is in a container or not

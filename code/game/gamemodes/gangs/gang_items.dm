@@ -241,7 +241,6 @@
 /obj/item/storage/belt/military/gang
 	name = "badass belt"
 	icon_state = "gangbelt"
-	item_state = "gang"
 	desc = "The belt buckle simply reads 'BAMF'."
 
 ///////////////////

@@ -152,7 +152,7 @@
 /obj/item/construction/rcd/arcd/debug
 	name = "\improper CentCom Admin RCD"
 	icon_state = "ircd"
-	item_state = "ircd"
+	inhand_icon_state = "ircd"
 	w_class = WEIGHT_CLASS_TINY
 	max_matter = INFINITY
 	matter = INFINITY
@@ -232,7 +232,7 @@
 	name = "bag of portable hole"
 	desc = "A backpack that opens into a localized pocket of nullspace."
 	icon_state = "holdingpack"
-	item_state = "holdingpack"
+	inhand_icon_state = "holdingpack"
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	item_flags = NO_MAT_REDEMPTION
 	armor = list(MELEE = 100, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 100, BIO = 100, RAD = 100, FIRE = 100, ACID = 100, STAMINA = 0)

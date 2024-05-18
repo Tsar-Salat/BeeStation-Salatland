@@ -13,7 +13,7 @@
 	name = "Mental Fist"
 	desc = "The physical embodiment of a hivemind's might."
 	icon_state = "disintegrate"
-	item_state = "disintegrate"
+	inhand_icon_state = "disintegrate"
 	catchphrase = null
 
 /obj/item/melee/touch_attack/hive_fist/afterattack(atom/target, mob/user, proximity_flag, click_parameters)

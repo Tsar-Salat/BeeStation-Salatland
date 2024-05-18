@@ -787,7 +787,7 @@
 	w_class = WEIGHT_CLASS_LARGE
 	dual_wield_spread = 0
 	fire_sound_volume = 60    //tried on 90 my eardrums said goodbye
-	item_state = "leveraction"
+	inhand_icon_state = "leveraction"
 	icon_state = "leveraction"
 	worn_icon_state = "shotgun"
 	rack_sound = "sound/weapons/leveractionrack.ogg"

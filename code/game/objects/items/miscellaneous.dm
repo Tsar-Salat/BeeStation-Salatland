@@ -17,7 +17,9 @@
 	desc = "Hey, why are you viewing this?!! Please let CentCom know about this odd occurrence."
 	icon = 'icons/obj/device.dmi'
 	icon_state = "gangtool-blue"
-	item_state = "radio"
+	inhand_icon_state = "radio"
+	lefthand_file = 'icons/mob/inhands/items/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 	var/uses = 1
 
 /obj/item/choice_beacon/attack_self(mob/user)
@@ -399,7 +401,7 @@
 	name = "Upgrade Wand"
 	icon = 'icons/obj/guns/magic.dmi'
 	icon_state = "nothingwand"
-	item_state = "wand"
+	inhand_icon_state = "wand"
 	w_class = WEIGHT_CLASS_SMALL
 	var/used = FALSE
 

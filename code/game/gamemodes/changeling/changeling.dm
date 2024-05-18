@@ -140,7 +140,7 @@ GLOBAL_LIST_INIT(slot2type, list("head" = /obj/item/clothing/head/changeling, "w
 		C.appearance = chosen_prof.appearance_list[slot]
 		C.name = chosen_prof.name_list[slot]
 		C.flags_cover = chosen_prof.flags_cover_list[slot]
-		C.item_state = chosen_prof.item_state_list[slot]
+		C.inhand_icon_state = chosen_prof.inhand_icon_state_list[slot]
 
 		if(istype(C, /obj/item/card/id/changeling) && chosen_prof.id_job_name)
 			var/obj/item/card/id/changeling/flesh_id = C

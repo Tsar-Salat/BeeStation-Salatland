@@ -23,7 +23,7 @@
 	name = "hand drill"
 	desc = "A simple powered hand drill. It's fitted with a screw bit."
 	icon_state = "drill_screw"
-	item_state = "drill"
+	inhand_icon_state = "drill"
 	worn_icon_state = "drill"
 
 	force = 8 //might or might not be too high, subject to change
@@ -89,7 +89,7 @@
 	desc = "A set of jaws of life, compressed through the magic of science. It's fitted with a prying head."
 	usesound = 'sound/items/jaws_pry.ogg'
 	icon_state = "jaws_pry"
-	item_state = "jawsoflife"
+	inhand_icon_state = "jawsoflife"
 	worn_icon_state = "jawsoflife"
 
 	tool_behaviour = TOOL_CROWBAR

@@ -48,22 +48,25 @@
 #define COLOR_YELLOW "#FFFF00"
 #define COLOR_VIVID_YELLOW "#FBFF23"
 
-#define COLOR_OLIVE            "#808000"
+#define COLOR_OLIVE "#808000"
 #define COLOR_VIBRANT_LIME     "#00FF00"
 #define COLOR_LIME "#32CD32"
 #define COLOR_GREEN "#008000"
+#define COLOR_DARK_LIME "#00aa00"
 #define COLOR_DARK_MODERATE_LIME_GREEN "#44964A"
 
 #define COLOR_CYAN             "#00FFFF"
 #define COLOR_DARK_CYAN	  	   "#00A2FF"
 #define COLOR_TEAL             "#008080"
 #define COLOR_BLUE             "#0000FF"
+#define COLOR_STRONG_BLUE "#1919c8"
 #define COLOR_MODERATE_BLUE "#555CC2"
 #define COLOR_BLUE_LIGHT       "#33CCFF"
 #define COLOR_NAVY             "#000080"
 #define COLOR_BLUE_GRAY        "#75A2BB"
 
-#define COLOR_PINK             "#FFC0CB"
+#define COLOR_PINK "#FFC0CB"
+#define COLOR_LIGHT_PINK "#FF3CC8"
 #define COLOR_MOSTLY_PURE_PINK "#E4005B"
 #define COLOR_BLUSH_PINK 		"#DE5D83"
 #define COLOR_FADED_PINK 	   "#ff80d5"
@@ -75,6 +78,8 @@
 #define COLOR_DARK_PURPLE 	   "#551A8B"
 
 #define COLOR_ORANGE "#FF9900"
+#define COLOR_ENGINEERING_ORANGE "#FFA62B"
+#define COLOR_MOSTLY_PURE_ORANGE "#ff8000"
 #define COLOR_LIGHT_ORANGE "#ffc44d"
 #define COLOR_DARK_ORANGE "#C3630C"
 #define COLOR_BEIGE "#CEB689"
@@ -201,6 +206,26 @@ GLOBAL_LIST_INIT(color_list_rainbow, list(
 #define AMBIENT_OCCLUSION filter(type="drop_shadow", x=0, y=-2, size=4, color="#04080FAA")
 /// Icon filter that creates gaussian blur
 #define GAUSSIAN_BLUR(filter_size) filter(type="blur", size=filter_size)
+
+// Colors related to items used in construction
+#define CABLE_COLOR_BLUE "blue"
+	#define CABLE_HEX_COLOR_BLUE COLOR_STRONG_BLUE
+#define CABLE_COLOR_BROWN "brown"
+	#define CABLE_HEX_COLOR_BROWN COLOR_ORANGE_BROWN
+#define CABLE_COLOR_CYAN "cyan"
+	#define CABLE_HEX_COLOR_CYAN COLOR_CYAN
+#define CABLE_COLOR_GREEN "green"
+	#define CABLE_HEX_COLOR_GREEN COLOR_DARK_LIME
+#define CABLE_COLOR_ORANGE "orange"
+	#define CABLE_HEX_COLOR_ORANGE COLOR_MOSTLY_PURE_ORANGE
+#define CABLE_COLOR_PINK "pink"
+	#define CABLE_HEX_COLOR_PINK COLOR_LIGHT_PINK
+#define CABLE_COLOR_RED "red"
+	#define CABLE_HEX_COLOR_RED COLOR_RED
+#define CABLE_COLOR_WHITE "white"
+	#define CABLE_HEX_COLOR_WHITE COLOR_WHITE
+#define CABLE_COLOR_YELLOW "yellow"
+	#define CABLE_HEX_COLOR_YELLOW COLOR_YELLOW
 
 /// The default color for admin say, used as a fallback when the preference is not enabled
 #define DEFAULT_ASAY_COLOR COLOR_MOSTLY_PURE_RED

@@ -292,7 +292,7 @@ GLOBAL_LIST_INIT(dye_registry, list(
 
 	add_atom_colour(initial(target_type.color), FIXED_COLOUR_PRIORITY)
 	icon_state = initial(target_type.icon_state)
-	item_state = initial(target_type.item_state)
+	inhand_icon_state = initial(target_type.inhand_icon_state)
 	worn_icon_state = initial(target_type.worn_icon_state)
 	inhand_x_dimension = initial(target_type.inhand_x_dimension)
 	inhand_y_dimension = initial(target_type.inhand_y_dimension)
@@ -358,12 +358,9 @@ GLOBAL_LIST_INIT(dye_registry, list(
 	addtimer(VARSET_CALLBACK(src, freshly_laundered, FALSE), 5 MINUTES, TIMER_UNIQUE | TIMER_OVERRIDE)
 	..()
 
-/obj/item/clothing/shoes/sneakers/machine_wash(obj/machinery/washing_machine/WM)
-	if(chained)
-		chained = 0
-		slowdown = SHOES_SLOWDOWN
-		new /obj/item/restraints/handcuffs(loc)
-	..()
+/obj/item/clothing/shoes/sneakers/orange/machine_wash(obj/machinery/washing_machine/washer)
+	attached_cuffs?.forceMove(loc)
+	return ..()
 
 /obj/machinery/washing_machine/relaymove(mob/user)
 	container_resist(user)

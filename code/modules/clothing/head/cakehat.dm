@@ -4,10 +4,10 @@
 	icon = 'icons/obj/clothing/head/costume.dmi'
 	worn_icon = 'icons/mob/clothing/head/costume.dmi'
 	icon_state = "hardhat0_cakehat"
-	item_state = "hardhat0_cakehat"
+	inhand_icon_state = "hardhat0_cakehat"
 	hat_type = "cakehat"
-	lefthand_file = 'icons/mob/inhands/clothing_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/clothing_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/clothing/hats_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/clothing/hats_righthand.dmi'
 	hitsound = 'sound/weapons/tap.ogg'
 	flags_inv = HIDEEARS|HIDEHAIR
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 0, ACID = 0, STAMINA = 0)
@@ -55,7 +55,7 @@
 	name = "energy cake"
 	desc = "You put the energy sword on your cake. Brilliant."
 	icon_state = "hardhat0_energycake"
-	item_state = "hardhat0_energycake"
+	inhand_icon_state = "hardhat0_energycake"
 	hat_type = "energycake"
 	hitsound = 'sound/weapons/tap.ogg'
 	hitsound_on = 'sound/weapons/blade1.ogg'

@@ -8,7 +8,9 @@
 	desc = "A device that is able to create sounds."
 	icon = 'icons/obj/radio.dmi'
 	icon_state = "radio"
-	item_state = "radio"
+	inhand_icon_state = "radio"
+	lefthand_file = 'icons/mob/inhands/items/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 	w_class = WEIGHT_CLASS_TINY
 	siemens_coefficient = 1
 

@@ -7,7 +7,7 @@
 	reagent_flags = NONE
 	icon = 'icons/obj/chemical.dmi'
 	icon_state = "hard_locked_closed"
-	item_state = "hard_locked_closed"
+	inhand_icon_state = "beaker"
 	var/locked = TRUE
 	var/datum/reagent/rand_cont //Reagent of choice
 	var/datum/callback/roundend_callback
@@ -46,7 +46,7 @@
 	desc = "An opened bottle of [initial(rand_cont.name)]."
 	name = "bottle of [initial(rand_cont.name)]"
 	volume = CHEM_H_VOL
-	item_state = "hard_locked_open"
+	inhand_icon_state = "hard_locked_open"
 	icon_state = "hard_locked_open"
 	locked = FALSE
 	spillable = TRUE

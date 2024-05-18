@@ -12,7 +12,7 @@
 	name = "Mansus Grasp"
 	desc = "A sinister looking aura that distorts the flow of reality around it. Causes knockdown and major stamina damage in addition to some brute. It gains additional beneficial effects as you expand your knowledge of the Mansus."
 	icon_state = "mansus_grasp"
-	item_state = "mansus_grasp"
+	inhand_icon_state = "mansus_grasp"
 	catchphrase = "R'CH T'H TR'TH!"
 	on_use_sound = 'sound/items/welder.ogg'
 
