@@ -307,11 +307,11 @@
 	. = ..()
 	if(action == "toggle")
 		if(activated)
-			to_chat(usr, "[icon2html(src, usr)][span_warning("Power generation enabled.")]")
+			to_chat(usr, "[icon2html(src, usr)]["<span class='warning'>Power generation enabled.</span>"]")
 			START_PROCESSING(SSobj, src)
 			log_message("Activated.", LOG_MECHA)
 		else
-			to_chat(usr, "[icon2html(src, usr)][span_warning("Power generation disabled.")]")
+			to_chat(usr, "[icon2html(src, usr)]["<span class='warning'>Power generation disabled.</span>"]")
 			STOP_PROCESSING(SSobj, src)
 			log_message("Deactivated.", LOG_MECHA)
 		return TRUE

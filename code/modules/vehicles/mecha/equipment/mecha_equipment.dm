@@ -49,7 +49,7 @@
 		attach(M, attach_right)
 		user.visible_message(span_notice("[user] attaches [src] to [M]."), span_notice("You attach [src] to [M]."))
 		return TRUE
-	to_chat(user, span_warning("You are unable to attach [src] to [M]!"))
+	to_chat(user, "<span class='warning'>You are unable to attach [src] to [M]!</span>")
 	return FALSE
 
 /obj/item/mecha_parts/mecha_equipment/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
@@ -89,6 +89,9 @@
 		return FALSE
 	if(chassis.equipment_disabled)
 		to_chat(chassis.occupants, "<span=warn>Error -- Equipment control unit is unresponsive.</span>")
+		return FALSE
+	if(get_integrity() <= 1)
+		to_chat(chassis.occupants, "<span class='warning'>Error -- Equipment critically damaged.</span>")
 		return FALSE
 	if(TIMER_COOLDOWN_CHECK(chassis, COOLDOWN_MECHA_EQUIPMENT(type)))
 		return FALSE

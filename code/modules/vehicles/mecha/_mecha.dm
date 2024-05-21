@@ -313,7 +313,7 @@
 		return ..()
 	if(phase_state)
 		flick(phase_state, src)
-	var/area/destination_area = target.loc
+	//var/area/destination_area = target.loc
 	//if(destination_area.teleport_restriction >= TELEPORT_ALLOW_NONE)
 	//	return FALSE
 	return TRUE
@@ -557,14 +557,15 @@
 ////////////////////////////
 
 ///Called when a driver clicks somewhere. Handles everything like equipment, punches, etc.
-/obj/vehicle/sealed/mecha/proc/on_mouseclick(mob/user, atom/target, params)
+/obj/vehicle/sealed/mecha/proc/on_mouseclick(mob/user, atom/target, list/modifiers)
 	SIGNAL_HANDLER
+	if(isAI(user)) //For AIs: If safeties are off, use mech functions. If safeties are on, use AI functions.
+		. = COMSIG_MOB_CANCEL_CLICKON
+	if(modifiers[SHIFT_CLICK]) //Allows things to be examined.
+		return
 	if(!isturf(target) && !isturf(target.loc)) // Prevents inventory from being drilled
 		return
 	if(completely_disabled || is_currently_ejecting || (mecha_flags & CANNOT_INTERACT))
-		return
-	var/list/mouse_control = params2list(params)
-	if(isAI(user) == !mouse_control["middle"])//BASICALLY if a human uses MMB, or an AI doesn't, then do nothing.
 		return
 	if(phasing)
 		balloon_alert(user, "not while [phasing]!")

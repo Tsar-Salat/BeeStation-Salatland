@@ -323,8 +323,9 @@
 	if (!can_hit)
 		return FALSE
 	M.do_attack_animation(src)
-	var/play_soundeffect = 0
-	var/mech_damtype = M.damtype
+	//var/play_soundeffect = 0
+	//var/mech_damtype = M.damtype
+	/*
 	if(M.selected)
 		mech_damtype = M.selected.damtype
 		play_soundeffect = 1
@@ -341,6 +342,7 @@
 				return FALSE
 	M.visible_message("<span class='danger'>[M.name] hits [src]!</span>", "<span class='danger'>You hit [src]!</span>", null, COMBAT_MESSAGE_RANGE)
 	return take_damage(M.force*3, mech_damtype, MELEE, play_soundeffect, get_dir(src, M)) // multiplied by 3 so we can hit objs hard but not be overpowered against mobs.
+	*/
 
 //====================================
 // Singularity

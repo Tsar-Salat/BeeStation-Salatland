@@ -107,6 +107,9 @@
 	SStgui.close_uis(src)
 	. = ..()
 
+/obj/proc/get_integrity()
+	SHOULD_BE_PURE(TRUE)
+	return obj_integrity
 
 /obj/assume_air(datum/gas_mixture/giver)
 	if(loc)

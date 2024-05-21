@@ -317,9 +317,6 @@
 	playsound(target, 'sound/items/deconstruct.ogg', 50, TRUE)
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/rcd/get_equip_info()
-	return "[..()] \[<a href='?src=[REF(src)];mode=0'>D</a>|<a href='?src=[REF(src)];mode=1'>C</a>|<a href='?src=[REF(src)];mode=2'>A</a>\]"
-
 #undef MODE_DECONSTRUCT
 #undef MODE_WALL
 #undef MODE_AIRLOCK

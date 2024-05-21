@@ -1,4 +1,7 @@
 /// A preview of the mech for the UI
+#define span_notice(str) ("<span class='notice'>" + str + "</span>")
+#define span_danger(str) ("<span class='danger'>" + str + "</span>")
+
 /atom/movable/screen/mech_view
 	name = "mechview"
 	del_on_map_removal = FALSE
@@ -43,7 +46,7 @@
 		return UI_INTERACTIVE
 	return min(
 		ui_status_user_is_abled(user, src),
-		ui_status_user_has_free_hands(user, src),
+		//ui_status_user_has_free_hands(user, src),
 		ui_status_user_is_advanced_tool_user(user),
 		ui_status_only_living(user),
 		max(
@@ -110,24 +113,23 @@
 	ui_view.appearance = appearance
 	var/datum/gas_mixture/int_tank_air= internal_tank?.return_air()
 	data["name"] = name
-	data["integrity"] = atom_integrity/max_integrity
+	data["integrity"] = obj_integrity/max_integrity
 	data["power_level"] = cell?.charge
 	data["power_max"] = cell?.maxcharge
 	data["mecha_flags"] = mecha_flags
 	data["internal_damage"] = internal_damage
 	data["air_source"] = use_internal_tank ? "Internal Airtank" : "Environment"
 	data["airtank_pressure"] = int_tank_air ? round(int_tank_air.return_pressure(), 0.01) : null
-	data["airtank_temp"] = int_tank_air?.temperature
+	data["airtank_temp"] = int_tank_air?.return_temperature()
 	data["port_connected"] = internal_tank?.connected_port ? TRUE : FALSE
 	data["cabin_pressure"] = round(return_pressure(), 0.01)
 	data["cabin_temp"] = return_temperature()
-	data["dna_lock"] = dna_lock
 	data["mech_view"] = ui_view.assigned_map
 	if(radio)
 		data["mech_electronics"] = list(
-			"microphone" = radio.get_broadcasting(),
-			"speaker" = radio.get_listening(),
-			"frequency" = radio.get_frequency(),
+			"microphone" = radio.broadcasting,
+			"speaker" = radio.listening,
+			"frequency" = radio.frequency,
 		)
 	if(equip_by_category[MECHA_L_ARM])
 		var/obj/item/mecha_parts/mecha_equipment/l_gun = equip_by_category[MECHA_L_ARM]
@@ -211,10 +213,10 @@
 					return FALSE
 				if(construction_state == MECHA_LOCKED)
 					construction_state = MECHA_SECURE_BOLTS
-					to_chat(usr, span_notice("The securing bolts are now exposed."))
+					to_chat(usr, "<span class='notice'>The securing bolts are now exposed.</span>")
 				else if(construction_state == MECHA_SECURE_BOLTS)
 					construction_state = MECHA_LOCKED
-					to_chat(usr, span_notice("The securing bolts are now hidden."))
+					to_chat(usr, "<span class='notice'>The securing bolts are now hidden.</span>")
 			if("drop_cell")
 				if(construction_state != MECHA_OPEN_HATCH)
 					return
@@ -235,7 +237,7 @@
 				if(isnull(new_pressure) || !construction_state)
 					return
 				internal_tank_valve = new_pressure
-				to_chat(usr, span_notice("The internal pressure valve has been set to [internal_tank_valve]kPa."))
+				to_chat(usr, "<span class='notice'>The internal pressure valve has been set to [internal_tank_valve]kPa.</span>")
 			if("add_req_access")
 				if(!(mecha_flags & ADDING_ACCESS_POSSIBLE))
 					return
@@ -266,18 +268,6 @@
 				tgui_alert(usr, "You cannot set a name that contains a word prohibited in IC chat!")
 				return
 			name = userinput
-		if("dna_lock")
-			var/mob/living/carbon/user = usr
-			if(!istype(user) || !user.dna)
-				to_chat(user, "[icon2html(src, occupants)][span_notice("You can't create a DNA lock with no DNA!.")]")
-				return
-			dna_lock = user.dna.unique_enzymes
-			to_chat(user, "[icon2html(src, occupants)][span_notice("You feel a prick as the needle takes your DNA sample.")]")
-		if("reset_dna")
-			dna_lock = null
-		if("view_dna")
-			tgui_alert(usr, "Enzymes detected: " + dna_lock)
-			return FALSE
 		if("toggle_airsource")
 			use_internal_tank = !use_internal_tank
 			balloon_alert(usr, "taking air from [use_internal_tank ? "internal airtank" : "environment"]")
@@ -285,7 +275,7 @@
 		if("toggle_port")
 			if(internal_tank.connected_port)
 				if(internal_tank.disconnect())
-					to_chat(occupants, "[icon2html(src, occupants)][span_notice("Disconnected from the air system port.")]")
+					to_chat(occupants, "[icon2html(src, occupants)]["<span class='notice'>Disconnected from the air system port.</span>"]")
 					log_message("Disconnected from gas port.", LOG_MECHA)
 					return TRUE
 				to_chat(occupants, "[icon2html(src, occupants)][span_warning("Unable to disconnect from the air system port!")]")

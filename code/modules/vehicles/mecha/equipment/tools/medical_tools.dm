@@ -472,7 +472,7 @@
 	known_reagents[r_id] = r_name
 	return TRUE
 
-/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/on_reagent_change(changetype)
+/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/proc/on_reagent_change(changetype)
 	SIGNAL_HANDLER
 	send_byjax(chassis.occupants,"msyringegun.browser","reagents",get_current_reagents())
 	send_byjax(chassis.occupants,"msyringegun.browser","reagents_form",get_reagents_form())

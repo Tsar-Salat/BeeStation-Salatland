@@ -100,7 +100,6 @@
 	rad_flags = RAD_PROTECT_CONTENTS
 	lights_power = 7
 	armor = list(MELEE = 40,  BULLET = 30, LASER = 30, ENERGY = 30, BOMB = 60, BIO = 0, RAD = 70, FIRE = 100, ACID = 100, STAMINA = 0)
-	max_equip = 5 // More armor, less tools
 	wreckage = /obj/structure/mecha_wreckage/ripley/firefighter
 	enclosed = TRUE
 	enter_delay = 40
@@ -219,7 +218,7 @@
 		var/obj/crate = locate(params["cargoref"]) in miner.cargo
 		if(!crate)
 			return FALSE
-		to_chat(miner.occupants, "[icon2html(src,  miner.occupants)][span_notice("You unload [crate].")]")
+		to_chat(miner.occupants, "[icon2html(src,  miner.occupants)]["<span class='notice'>You unload [crate].</span>"]")
 		crate.forceMove(drop_location())
 		LAZYREMOVE(miner.cargo, crate)
 		if(crate == miner.box)

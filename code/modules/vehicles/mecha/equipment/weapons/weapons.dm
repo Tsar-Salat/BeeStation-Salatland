@@ -202,6 +202,8 @@
 	name = "general ballistic weapon"
 	fire_sound = 'sound/weapons/gunshot.ogg'
 	var/projectiles
+	var/projectiles_cache //ammo to be loaded in, if possible.
+	var/projectiles_cache_max
 
 /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/action_checks(target)
 	if(!..())
@@ -219,10 +221,11 @@
 /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/rearm()
 	if(projectiles < initial(projectiles))
 		var/projectiles_to_add = initial(projectiles) - projectiles
-		while(chassis.get_charge() >= projectile_energy_cost && projectiles_to_add)
-			projectiles++
-			projectiles_to_add--
-			chassis.use_power(projectile_energy_cost)
+		if(!projectiles_cache)
+			return FALSE
+		if(projectiles_to_add <= projectiles_cache)
+			projectiles = projectiles + projectiles_to_add
+			projectiles_cache = projectiles_cache - projectiles_to_add
 	log_message("Rearmed [src].", LOG_MECHA)
 	return TRUE
 
@@ -242,7 +245,8 @@
 	equip_cooldown = 10
 	projectile = /obj/projectile/bullet/incendiary/fnx99
 	projectiles = 24
-	projectile_energy_cost = 15
+	projectiles_cache = 24
+	projectiles_cache_max = 96
 	harmful = TRUE
 
 /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/silenced
@@ -263,7 +267,8 @@
 	equip_cooldown = 20
 	projectile = /obj/projectile/bullet/scattershot
 	projectiles = 40
-	projectile_energy_cost = 25
+	projectiles_cache = 40
+	projectiles_cache_max = 160
 	projectiles_per_shot = 4
 	variance = 25
 	harmful = TRUE
@@ -275,7 +280,8 @@
 	equip_cooldown = 10
 	projectile = /obj/projectile/bullet/lmg
 	projectiles = 300
-	projectile_energy_cost = 20
+	projectiles_cache = 300
+	projectiles_cache_max = 1200
 	projectiles_per_shot = 3
 	variance = 6
 	randomspread = 1
@@ -322,8 +328,9 @@
 	projectile = /obj/item/grenade/flashbang
 	fire_sound = 'sound/weapons/grenadelaunch.ogg'
 	projectiles = 6
+	projectiles_cache = 6
+	projectiles_cache_max = 24
 	missile_speed = 1.5
-	projectile_energy_cost = 800
 	equip_cooldown = 60
 	var/det_time = 20
 
