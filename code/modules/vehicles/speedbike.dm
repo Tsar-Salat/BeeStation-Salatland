@@ -44,6 +44,7 @@
 	icon = 'icons/obj/car.dmi'
 	icon_state = "speedwagon"
 	layer = LYING_MOB_LAYER
+	rider_check_flags = REQUIRES_LEGS | REQUIRES_ARMS | UNBUCKLE_DISABLED_RIDER
 	var/static/mutable_appearance/overlay
 	max_buckled_mobs = 4
 	var/crash_all = FALSE //CHAOS

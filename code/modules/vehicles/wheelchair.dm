@@ -6,7 +6,7 @@
 	layer = OBJ_LAYER
 	max_integrity = 100
 	armor = list(MELEE = 10,  BULLET = 10, LASER = 10, ENERGY = 0, BOMB = 10, BIO = 0, RAD = 0, FIRE = 20, ACID = 30, STAMINA = 0)	//Wheelchairs aren't super tough yo
-	legs_required = 0	//You'll probably be using this if you don't have legs
+	rider_check_flags = REQUIRES_ARMS | UNBUCKLE_DISABLED_RIDER
 	canmove = TRUE
 	density = FALSE		//Thought I couldn't fix this one easily, phew
 	move_resist = MOVE_FORCE_WEAK
@@ -40,10 +40,10 @@
 
 /obj/vehicle/ridden/wheelchair/driver_move(mob/living/user, direction)
 	if(istype(user))
-		if(canmove && (user.get_num_arms() < arms_required))
-			to_chat(user, "<span class='warning'>You don't have enough arms to operate the wheels!</span>")
+		if(canmove && rider_check_flags & REQUIRES_ARMS && HAS_TRAIT(user, TRAIT_HANDS_BLOCKED))
+			to_chat(user, "<span class='warning'>You can't grip the wheelchair well enough to move it!</span>")
 			canmove = FALSE
-			addtimer(VARSET_CALLBACK(src, canmove, TRUE), 20)
+			addtimer(VARSET_CALLBACK(src, canmove, TRUE), 2 SECONDS)
 			return FALSE
 		set_move_delay(user)
 	return ..()
@@ -52,7 +52,7 @@
 	var/datum/component/riding/D = GetComponent(/datum/component/riding)
 	//1.5 (movespeed as of this change) multiplied by 6.7 gets ABOUT 10 (rounded), the old constant for the wheelchair that gets divided by how many arms they have
 	//if that made no sense this simply makes the wheelchair speed change along with movement speed delay
-	D.vehicle_move_delay = round(1.5 * delay_multiplier) / clamp(user.get_num_arms(), arms_required, 2)
+	D.vehicle_move_delay = round(1.5 * delay_multiplier) / clamp(user.get_num_arms(), 2, 2)
 
 /obj/vehicle/ridden/wheelchair/Moved()
 	. = ..()
