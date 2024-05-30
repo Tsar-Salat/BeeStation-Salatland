@@ -46,6 +46,17 @@
 #define WOUND "wound"
 */
 
+#define ARMOR_ALL "all_damage_types"
+
+/// Armor values that are used for damage
+#define ARMOR_LIST_DAMAGE(...) list(BIO, RAD, BOMB, BULLET, ENERGY, LASER, MELEE)
+
+/// Armor values that are used for durability
+#define ARMOR_LIST_DURABILITY(...) list(ACID, FIRE)
+
+/// All armors, preferable in the order as seen above
+#define ARMOR_LIST_ALL(...) list(ACID, BIO, RAD, BOMB, BULLET, CONSUME, ENERGY, FIRE, LASER, MELEE, /*WOUND*/)
+
 //bitflag damage defines used for suicide_act
 #define BRUTELOSS (1<<0)
 #define FIRELOSS (1<<1)
