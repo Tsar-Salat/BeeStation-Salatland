@@ -9,7 +9,9 @@
 	var/damtype = BRUTE
 	var/force = 0
 
-	var/datum/armor/armor
+	VAR_PROTECTED/datum/armor/armor_type = /datum/armor/none
+	VAR_PRIVATE/datum/armor/armor
+
 	/// The integrity the object starts at. Defaults to max_integrity.
 	var/obj_integrity
 	/// The maximum integrity the object can have.
@@ -64,12 +66,6 @@
 	return ..()
 
 /obj/Initialize(mapload)
-	if (islist(armor))
-		armor = getArmor(arglist(armor))
-	else if (!armor)
-		armor = getArmor()
-	else if (!istype(armor, /datum/armor))
-		stack_trace("Invalid type [armor.type] found in .armor during /obj Initialize()")
 	if(obj_integrity == null)
 		obj_integrity = max_integrity
 
