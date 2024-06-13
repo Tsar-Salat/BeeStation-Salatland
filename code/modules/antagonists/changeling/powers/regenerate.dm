@@ -104,6 +104,6 @@
 	chat_color = "#26F55A"
 	mobchatspan = "chaplain"
 	faction = list("hostile","creature")
-	poison_per_bite = 4
-	poison_type = /datum/reagent/toxin/staminatoxin
+	var/poison_per_bite = 4
+	var/poison_type = /datum/reagent/toxin/staminatoxin
 	discovery_points = 1000

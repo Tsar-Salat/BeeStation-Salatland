@@ -24,7 +24,7 @@
 	if(!is_manifested() && a_intent != INTENT_HELP)
 		to_chat(src, "<span class='danger bold'>You must be manifested to interact with or attack things!</span>")
 		return
-	if(SEND_SIGNAL(src, COMSIG_HOSTILE_ATTACKINGTARGET, target) & COMPONENT_HOSTILE_NO_ATTACK)
+	if(SEND_SIGNAL(src, COMSIG_HOSTILE_POST_ATTACKINGTARGET, target) & COMPONENT_HOSTILE_NO_ATTACK)
 		return
 	if(target == src)
 		to_chat(src, "<span class='danger bold'>You can't attack yourself!</span>")

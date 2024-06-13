@@ -66,7 +66,7 @@
 		var/mob/living/carbon/M = target
 		if(blocked != 100) // not completely blocked
 			if(M.can_inject(null, FALSE, def_zone) && !HAS_TRAIT(M, TRAIT_BEEFRIEND))
-				var/mob/living/simple_animal/hostile/poison/bees/B = new(src.loc)
+				var/mob/living/simple_animal/hostile/bee/B = new(src.loc)
 				for(var/datum/reagent/R in reagents.reagent_list)
 					B.assign_reagent(GLOB.chemical_reagents_list[R.type])
 					break
@@ -75,7 +75,7 @@
 				new /obj/effect/decal/cleanable/insectguts(src.loc)
 
 		else if (prob(20)) //high velocity bees die easily
-			var/mob/living/simple_animal/hostile/poison/bees/B = new(M.loc)
+			var/mob/living/simple_animal/hostile/bee/B = new(M.loc)
 			for(var/datum/reagent/R in reagents.reagent_list)
 				B.assign_reagent(GLOB.chemical_reagents_list[R.type])
 				break
@@ -85,7 +85,7 @@
 			new /obj/effect/decal/cleanable/insectguts(src.loc)
 
 	else if(prob(20))
-		var/mob/living/simple_animal/hostile/poison/bees/B = new(src.loc)
+		var/mob/living/simple_animal/hostile/bee/B = new(src.loc)
 		for(var/datum/reagent/R in reagents.reagent_list)
 			B.assign_reagent(GLOB.chemical_reagents_list[R.type])
 			break
