@@ -10,6 +10,7 @@
 	icon_dead = "base_dead"
 	icon_gib = "carp_gib"
 	mob_biotypes = list(MOB_ORGANIC, MOB_BEAST)
+	movement_type = FLYING
 	speak_chance = 0
 	turns_per_move = 5
 	butcher_results = list(/obj/item/food/fishmeat/carp = 2)

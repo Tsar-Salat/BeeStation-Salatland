@@ -241,8 +241,6 @@
 	speak_chance = 2
 	turns_per_move = 3
 	butcher_results = list(/obj/item/food/meat/slab/chicken = 2)
-	var/egg_type = /obj/item/food/egg
-	food_type = list(/obj/item/food/grown/wheat)
 	response_help  = "pets"
 	response_disarm = "gently pushes aside"
 	response_harm   = "kicks"
@@ -250,36 +248,34 @@
 	health = 15
 	maxHealth = 15
 	ventcrawler = VENTCRAWLER_ALWAYS
-	var/eggsleft = 0
-	var/eggsFertile = TRUE
-	var/body_color
-	var/icon_prefix = "chicken"
 	can_be_held = TRUE
 	worn_slot_flags = ITEM_SLOT_HEAD
 	pass_flags = PASSTABLE | PASSMOB
 	mob_size = MOB_SIZE_SMALL
-	var/list/feedMessages = list("It clucks happily.","It clucks happily.")
-	var/list/layMessage = EGG_LAYING_MESSAGES
-	var/list/validColors = list("brown","black","white")
 	gold_core_spawnable = FRIENDLY_SPAWN
-	var/static/chicken_count = 0
 	chat_color = "#FFDC9B"
 	mobchatspan = "stationengineer"
 
 	footstep_type = FOOTSTEP_MOB_CLAW
+	///counter for how many chickens are in existence to stop too many chickens from lagging shit up
+	var/static/chicken_count = 0
+	///boolean deciding whether eggs laid by this chicken can hatch into chicks
+	var/process_eggs = TRUE
 
 /mob/living/simple_animal/chicken/Initialize(mapload)
 	. = ..()
-	if(!body_color)
-		body_color = pick(validColors)
-	icon_state = "[icon_prefix]_[body_color]"
-	icon_living = "[icon_prefix]_[body_color]"
-	icon_dead = "[icon_prefix]_[body_color]_dead"
-	held_state = "[icon_prefix]_[body_color]"
-	head_icon = 'icons/mob/pets_held_large.dmi'
-	pixel_x = rand(-6, 6)
-	pixel_y = rand(0, 10)
 	GLOB.total_chickens++
+	AddElement(/datum/element/animal_variety, "chicken", pick("brown","black","white"), TRUE)
+	AddComponent(/datum/component/egg_layer,\
+		/obj/item/food/egg,\
+		list(/obj/item/food/grown/wheat),\
+		feed_messages = list("[p_they()] clucks happily."),\
+		lay_messages = EGG_LAYING_MESSAGES,\
+		eggs_left = 0,\
+		eggs_added_from_eating = rand(1, 4),\
+		max_eggs_held = 8,\
+		egg_laid_callback = CALLBACK(src, .proc/egg_laid)\
+	)
 
 /mob/living/simple_animal/chicken/death(gibbed)
 	GLOB.total_chickens--
@@ -290,31 +286,9 @@
 		GLOB.total_chickens--
 	return ..()
 
-/mob/living/simple_animal/chicken/attackby(obj/item/O, mob/user, params)
-	if(is_type_in_list(O, food_type)) //feedin' dem chickens
-		if(!stat && eggsleft < 8)
-			var/feedmsg = "[user] feeds [O] to [name]! [pick(feedMessages)]"
-			user.visible_message(feedmsg)
-			qdel(O)
-			eggsleft += rand(1, 4)
-		else
-			to_chat(user, "<span class='warning'>[name] doesn't seem hungry!</span>")
-	else
-		..()
-
-/mob/living/simple_animal/chicken/Life()
-	. =..()
-	if(!.)
-		return
-	if((!stat && prob(3) && eggsleft > 0) && egg_type && GLOB.total_chickens < CONFIG_GET(number/max_chickens))
-		visible_message("[src] [pick(layMessage)]")
-		eggsleft--
-		var/obj/item/E = new egg_type(get_turf(src))
-		E.pixel_x = E.base_pixel_x + rand(-6,6)
-		E.pixel_y = E.base_pixel_y + rand(-6,6)
-		if(eggsFertile)
-			if(prob(25))
-				START_PROCESSING(SSobj, E)
+/mob/living/simple_animal/chicken/proc/egg_laid(obj/item/egg)
+	if(chicken_count <= MAX_CHICKENS && process_eggs && prob(25))
+		START_PROCESSING(SSobj, egg)
 
 /obj/item/food/egg/var/amount_grown = 0
 /obj/item/food/egg/process(delta_time)
@@ -342,12 +316,13 @@
 	density = FALSE
 	health = 15
 	maxHealth = 15
-	egg_type = null
 	attacktext = "pecks"
 	attack_sound = 'sound/creatures/turkey.ogg'
 	ventcrawler = VENTCRAWLER_ALWAYS
-	icon_prefix = "turkey"
-	feedMessages = list("It gobbles up the food voraciously.","It clucks happily.")
-	validColors = list("plain")
 	gold_core_spawnable = FRIENDLY_SPAWN
 	chat_color = "#FFDC9B"
+
+//we override
+/mob/living/simple_animal/chicken/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/animal_variety, "turkey", pick("plain"), TRUE)

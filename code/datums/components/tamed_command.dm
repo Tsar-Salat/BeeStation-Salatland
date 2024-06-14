@@ -11,7 +11,7 @@
 		//set ai
 		M.ai_controller = new /datum/ai_controller/tamed(M)
 		//Add riding component
-		M.tame = TRUE
+		SEND_SIGNAL(M, COMSIG_SIMPLEMOB_SENTIENCEPOTION)
 		M.can_buckle = TRUE
 		M.buckle_lying = FALSE
 		var/datum/component/riding/D = M.LoadComponent(/datum/component/riding/tamed)
