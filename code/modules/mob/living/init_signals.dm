@@ -170,11 +170,11 @@
 		clear_alert("succumb")
 
 ///From [element/movetype_handler/on_movement_type_trait_gain()]
-/mob/living/proc/on_movement_type_flag_enabled(datum/source, trait)
+/mob/living/proc/on_movement_type_flag_enabled(datum/source, flag, old_movement_type)
 	SIGNAL_HANDLER
 	update_movespeed(FALSE)
 
 ///From [element/movetype_handler/on_movement_type_trait_loss()]
-/mob/living/proc/on_movement_type_flag_disabled(datum/source, trait)
+/mob/living/proc/on_movement_type_flag_disabled(datum/source, flag, old_movement_type)
 	SIGNAL_HANDLER
 	update_movespeed(FALSE)
