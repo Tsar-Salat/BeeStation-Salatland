@@ -182,7 +182,9 @@
 	var/turf/T = get_turf(owner)
 	if(!T) // No more runtimes from being stuck in nullspace.
 		return 0
-	if(owner.is_flying() && owner.has_gravity())
+	if(!isturf(owner.loc))//You can't use jet in nowhere or in mecha/closet
+		return 0
+	if(!(owner.movement_type & FLOATING) || owner.buckled)//You don't want use jet in gravity or while buckled.
 		return 0
 	// Priority 1: use air from environment.
 	var/datum/gas_mixture/environment = T.return_air()

@@ -140,7 +140,8 @@
 	icon = initial(icon)
 	icon_state = icon_living
 	density = initial(density)
-	setMovetype(initial(movement_type))
+	if(is_flying_animal)
+		ADD_TRAIT(src, TRAIT_MOVE_FLYING, ROUNDSTART_TRAIT)
 
 /mob/living/basic/proc/melee_attack(atom/target)
 	src.face_atom(target)
