@@ -147,6 +147,7 @@ export const Orbit = (props, context) => {
             <Flex.Item grow={1}>
               <Input
                 placeholder="Search..."
+                autoFocus
                 fluid
                 value={searchText}
                 onInput={(_, value) => setSearchText(value)}
@@ -165,7 +166,17 @@ export const Orbit = (props, context) => {
 
         <OrbitSection title="Alive" source={alive} searchText={searchText} color="good" />
 
-        <OrbitSection title="Ghosts" source={ghosts} searchText={searchText} basic />
+        <Section title="Ghosts">
+          {ghosts
+            .filter(searchFor(searchText))
+            .sort(compareNumberedText)
+            .map(thing => (
+              <OrbitedButton
+                key={thing.name}
+                color="grey"
+                thing={thing} />
+            ))}
+        </Section>
 
         <OrbitSection title="Dead" source={dead} searchText={searchText} basic />
 
