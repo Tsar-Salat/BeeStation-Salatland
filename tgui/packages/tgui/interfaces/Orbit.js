@@ -33,7 +33,7 @@ const compareNumberedText = (a, b) => {
 
 const OrbitSection = (props, context) => {
   const { act } = useBackend(context);
-  const { searchText, source, title, color, basic } = props;
+  const { searchText, source, title, autoObserve, color, basic } = props;
   const things = source.filter(searchFor(searchText));
   things.sort(compareNumberedText);
   return (
@@ -52,6 +52,7 @@ const OrbitSection = (props, context) => {
               onClick={() =>
                 act('orbit', {
                   ref: thing.ref,
+                  auto_observe: autoObserve,
                 })
               }
             />
@@ -66,7 +67,7 @@ const OrbitSection = (props, context) => {
 
 const OrbitedButton = (props, context) => {
   const { act } = useBackend(context);
-  const { color, thing, job, antag } = props;
+  const { color, thing, autoObserve, job, antag } = props;
 
   return (
     <Button
@@ -75,6 +76,7 @@ const OrbitedButton = (props, context) => {
       onClick={() =>
         act('orbit', {
           ref: thing.ref,
+          auto_observe: autoObserve,
         })
       }>
       {job && (
@@ -109,9 +111,10 @@ const OrbitedButton = (props, context) => {
 
 export const Orbit = (props, context) => {
   const { act, data } = useBackend(context);
-  const { alive, antagonists, auto_observe, dead, ghosts, misc, npcs } = data;
+  const { alive, antagonists, dead, ghosts, misc, npcs } = data;
 
   const [searchText, setSearchText] = useLocalState(context, 'searchText', '');
+  const [autoObserve, setAutoObserve] = useLocalState(context, 'autoObserve', false);
 
   const collatedAntagonists = {};
   for (const antagonist of antagonists) {
@@ -130,7 +133,10 @@ export const Orbit = (props, context) => {
     for (const source of [sortedAntagonists.map(([_, antags]) => antags), alive, ghosts, dead, npcs, misc]) {
       const member = source.filter(searchFor(searchText)).sort(compareNumberedText)[0];
       if (member !== undefined) {
-        act('orbit', { ref: member.ref });
+        act('orbit', {
+          ref: member.ref,
+          auto_observe: autoObserve,
+        });
         break;
       }
     }
@@ -163,23 +169,16 @@ export const Orbit = (props, context) => {
                 tooltip={multiline`Toggle Auto-Observe. When active, you'll
                 see the UI / full inventory of whoever you're orbiting. Neat!`}
                 tooltipPosition="bottom-left"
-                selected={auto_observe}
-                icon={auto_observe ? "toggle-on" : "toggle-off"}
-                onClick={() => act("toggle_observe")} />
-              <Button
-                inline
-                color="transparent"
-                tooltip="Refresh"
-                tooltipPosition="bottom-left"
-                icon="sync-alt"
-                onClick={() => act("refresh")} />
+                selected={autoObserve}
+                icon={autoObserve ? "toggle-on" : "toggle-off"}
+                onClick={() => setAutoObserve(!autoObserve)} />
             </Flex.Item>
           </Flex>
         </Section>
         {antagonists.length > 0 && (
           <CollapsibleSection title="Ghost-Visible Antagonists" sectionKey="Ghost-Visible Antagonists" forceOpen={searchText}>
             {sortedAntagonists.map(([name, antags]) => (
-              <OrbitSection key={name} title={name} source={antags} searchText={searchText} color="bad" />
+              <OrbitSection key={name} title={name} source={antags} searchText={searchText} color="bad" autoObserve={autoObserve} />
             ))}
           </CollapsibleSection>
         )}
@@ -194,15 +193,16 @@ export const Orbit = (props, context) => {
               <OrbitedButton
                 key={thing.name}
                 color="grey"
-                thing={thing} />
+                thing={thing}
+                autoObserve={autoObserve} />
             ))}
         </Section>
 
-        <OrbitSection title="Dead" source={dead} searchText={searchText} basic />
+        <OrbitSection title="Dead" source={dead} searchText={searchText} autoObserve={autoObserve} basic />
 
-        <OrbitSection title="NPCs" source={npcs} searchText={searchText} basic />
+        <OrbitSection title="NPCs" source={npcs} searchText={searchText} autoObserve={autoObserve} basic />
 
-        <OrbitSection title="Misc" source={misc} searchText={searchText} basic />
+        <OrbitSection title="Misc" source={misc} searchText={searchText} autoObserve={autoObserve} basic />
       </Window.Content>
     </Window>
   );

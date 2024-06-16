@@ -24,7 +24,7 @@
 /obj/machinery/dominator/Initialize(mapload)
 	. = ..()
 	set_light(2)
-	AddElement(/datum/element/point_of_interest)
+	SSpoints_of_interest.make_point_of_interest(src)
 	spark_system = new
 	spark_system.set_up(5, TRUE, src)
 	countdown = new(src)
