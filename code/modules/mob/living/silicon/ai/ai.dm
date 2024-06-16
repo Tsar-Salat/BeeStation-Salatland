@@ -790,9 +790,6 @@
 		to_chat(src, "You have been downloaded to a mobile storage device. Remote device connection severed.")
 		to_chat(user, "<span class='boldnotice'>Transfer successful</span>: [name] ([rand(1000,9999)].exe) removed from host terminal and stored within local memory.")
 
-/mob/living/silicon/ai/can_buckle()
-	return 0
-
 /mob/living/silicon/ai/canUseTopic(atom/movable/M, be_close=FALSE, no_dexterity=FALSE, no_tk=FALSE)
 	if(control_disabled || incapacitated())
 		to_chat(src, "<span class='warning'>You can't do that right now!</span>")
