@@ -497,9 +497,10 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	var/list/possible_destinations = SSpoints_of_interest.get_mob_pois()
 	var/target = null
 
-	target = tgui_input_list(src, "Please, select a player!", "Jump to Mob", dest)
-
-	if (!target || !isobserver(usr))
+	target = tgui_input_list(usr, "Please, select a player!", "Jump to Mob", possible_destinations)
+	if(isnull(target))
+		return
+	if (!isobserver(usr))
 		return
 
 	var/mob/destination_mob = possible_destinations[target] //Destination mob
@@ -515,7 +516,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		source_mob.abstract_move(destination_turf)
 		//source_mob.update_parallax_contents()
 	else
-		to_chat(A, "This mob is not located in the game world.")
+		to_chat(source_mob, "This mob is not located in the game world.")
 
 /mob/dead/observer/verb/change_view_range()
 	set category = "Ghost"

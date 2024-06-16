@@ -4,6 +4,7 @@ import { multiline } from 'common/string';
 import { Button, Collapsible, Icon, Input, Section, Stack } from '../components';
 import { Window } from '../layouts';
 import { flow } from 'common/fp';
+import { COLORS } from '../constants';
 import { logger } from '../logging';
 
 type AntagGroup = [string, Observable[]];
@@ -34,6 +35,7 @@ const ANTAG2COLOR = {
   'Abductors': 'pink',
   'Ash Walkers': 'olive',
   'Biohazards': 'brown',
+  'CentCom': COLORS.department.centcom,
 } as const;
 
 const ANTAG2GROUP = {
@@ -42,6 +44,11 @@ const ANTAG2GROUP = {
   'Ash Walker': 'Ash Walkers',
   'Blob': 'Biohazards',
   'Sentient Disease': 'Biohazards',
+  'CentCom Commander': 'CentCom',
+  'CentCom Head Intern': 'CentCom',
+  'CentCom Intern': 'CentCom',
+  'CentCom Official': 'CentCom',
+  'Central Command': 'CentCom',
   'Clown Operative': 'Clown Operatives',
   'Clown Operative Leader': 'Clown Operatives',
   'Nuclear Operative': 'Nuclear Operatives',
@@ -61,13 +68,13 @@ enum THREAT {
 export const Orbit = (props, context) => {
   return (
     <Window title="Orbit" width={400} height={550}>
-      <Window.Content>
+      <Window.Content scrollable>
         <Stack fill vertical>
           <Stack.Item mt={0}>
             <ObservableSearch />
           </Stack.Item>
           <Stack.Item mt={0.2} grow>
-            <Section fill scrollable>
+            <Section fill>
               <ObservableContent />
             </Section>
           </Stack.Item>
