@@ -41,13 +41,6 @@ GLOBAL_DATUM_INIT(orbit_menu, /datum/orbit_menu, new)
 			update_static_data(usr, ui)
 			return TRUE
 
-/datum/orbit_menu/ui_assets()
-	return list(
-		get_asset_datum(/datum/asset/simple/orbit),
-		get_asset_datum(/datum/asset/spritesheet_batched/job_icons),
-		get_asset_datum(/datum/asset/spritesheet_batched/antag_hud)
-	)
-
 /datum/asset/spritesheet_batched/job_icons
 	name = "job-icon"
 
