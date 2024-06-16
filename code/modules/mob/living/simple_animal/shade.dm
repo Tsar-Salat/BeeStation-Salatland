@@ -26,13 +26,16 @@
 	status_flags = 0
 	faction = list("cult")
 	status_flags = CANPUSH
-	is_flying_animal = TRUE
 	loot = list(/obj/item/ectoplasm)
 	del_on_death = TRUE
 	initial_language_holder = /datum/language_holder/construct
 	chat_color = "#FF6262"
 	mobchatspan = "cultmobsay"
 	discovery_points = 1000
+
+/mob/living/simple_animal/shade/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/simple_flying)
 
 /mob/living/simple_animal/shade/death()
 	deathmessage = "lets out a contented sigh as [p_their()] form unwinds."

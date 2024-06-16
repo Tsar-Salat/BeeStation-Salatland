@@ -828,6 +828,7 @@
 #include "code\datums\elements\point_of_interest.dm"
 #include "code\datums\elements\ranged_attacks.dm"
 #include "code\datums\elements\rust.dm"
+#include "code\datums\elements\simple_flying.dm"
 #include "code\datums\elements\squish.dm"
 #include "code\datums\elements\strippable.dm"
 #include "code\datums\elements\undertile.dm"

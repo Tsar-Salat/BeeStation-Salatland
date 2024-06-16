@@ -36,7 +36,6 @@
 	minbodytemp = 0
 	maxbodytemp = 1500
 	faction = list("carp")
-	is_flying_animal = TRUE
 	pressure_resistance = 200
 	gold_core_spawnable = HOSTILE_SPAWN
 
@@ -68,6 +67,7 @@
 	)
 
 /mob/living/simple_animal/hostile/carp/Initialize(mapload)
+	AddElement(/datum/element/simple_flying)
 	ADD_TRAIT(src, TRAIT_FREE_HYPERSPACE_MOVEMENT, INNATE_TRAIT)
 	if(random_color)
 		set_greyscale(new_config=/datum/greyscale_config/carp)

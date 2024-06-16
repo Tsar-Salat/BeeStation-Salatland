@@ -709,7 +709,6 @@ GLOBAL_DATUM(blackbox, /obj/machinery/smartfridge/black_box)
 	health = 2
 	friendly = "mends"
 	density = FALSE
-	is_flying_animal = TRUE
 	pass_flags = PASSTABLE | PASSGRILLE | PASSMOB
 	ventcrawler = VENTCRAWLER_ALWAYS
 	mob_size = MOB_SIZE_TINY
@@ -734,6 +733,7 @@ GLOBAL_DATUM(blackbox, /obj/machinery/smartfridge/black_box)
 
 /mob/living/simple_animal/hostile/lightgeist/Initialize(mapload)
 	. = ..()
+	AddElement(/datum/element/simple_flying)
 	remove_verb(/mob/living/verb/pulled)
 	remove_verb(/mob/verb/me_verb)
 	var/datum/atom_hud/medsensor = GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]
