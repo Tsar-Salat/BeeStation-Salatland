@@ -70,7 +70,6 @@
 	speed = 3
 	maxHealth = 1
 	health = 1
-	is_flying_animal = TRUE
 	melee_damage = 2
 	attacktext = "slashes"
 	speak_emote = list("telepathically cries")
@@ -84,6 +83,8 @@
 /mob/living/simple_animal/hostile/asteroid/hivelordbrood/Initialize(mapload)
 	. = ..()
 	addtimer(CALLBACK(src, PROC_REF(death)), 100)
+	AddElement(/datum/element/simple_flying)
+	AddComponent(/datum/component/swarming)
 
 //Legion
 /mob/living/simple_animal/hostile/asteroid/hivelord/legion

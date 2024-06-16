@@ -40,7 +40,6 @@
 	status_flags = 0
 	wander = FALSE
 	density = FALSE
-	is_flying_animal = TRUE
 	move_resist = MOVE_FORCE_OVERPOWERING
 	mob_size = MOB_SIZE_TINY
 	pass_flags = PASSTABLE | PASSMOB
@@ -71,6 +70,7 @@
 
 /mob/living/simple_animal/revenant/Initialize(mapload)
 	. = ..()
+	AddElement(/datum/element/simple_flying)
 	// more rev abilities are in 'revenant_abilities.dm'
 	AddSpell(new /obj/effect/proc_holder/spell/targeted/night_vision/revenant(null))
 	AddSpell(new /obj/effect/proc_holder/spell/self/revenant_phase_shift(null))

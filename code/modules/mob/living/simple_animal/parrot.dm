@@ -62,7 +62,6 @@
 	attacktext = "chomps"
 	friendly = "grooms"
 	mob_size = MOB_SIZE_SMALL
-	is_flying_animal = TRUE
 	gold_core_spawnable = FRIENDLY_SPAWN
 	chat_color = "#A6E398"
 	mobchatspan = "curator"
@@ -124,6 +123,7 @@
 			  /mob/living/simple_animal/parrot/proc/toggle_mode,
 			  /mob/living/simple_animal/parrot/proc/perch_mob_player))
 	AddElement(/datum/element/strippable, GLOB.strippable_parrot_items)
+	AddElement(/datum/element/simple_flying)
 
 /mob/living/simple_animal/parrot/examine(mob/user)
 	. = ..()

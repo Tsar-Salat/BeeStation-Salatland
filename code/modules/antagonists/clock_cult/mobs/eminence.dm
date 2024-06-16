@@ -24,7 +24,6 @@
 	status_flags = 0
 	wander = FALSE
 	density = FALSE
-	is_flying_animal = TRUE
 	move_resist = MOVE_FORCE_OVERPOWERING
 	mob_size = MOB_SIZE_TINY
 	pass_flags = PASSTABLE | PASSGRILLE | PASSMOB
@@ -45,6 +44,10 @@
 	var/obj/effect/proc_holder/spell/targeted/eminence/mass_recall/mass_recall
 	var/obj/effect/proc_holder/spell/targeted/eminence/linked_abscond/linked_abscond
 	var/obj/effect/proc_holder/spell/targeted/eminence/trigger_event/trigger_event
+
+/mob/living/simple_animal/eminence/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/simple_flying)
 
 /mob/living/simple_animal/eminence/ClickOn(atom/A, params)
 	. = ..()
