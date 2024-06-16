@@ -65,8 +65,12 @@
 			orbiter.orbiting.end_orbit(orbiter)
 	current_orbiters[orbiter] = TRUE
 	orbiter.orbiting = src
+
+	ADD_TRAIT(orbiter, TRAIT_NO_FLOATING_ANIM, ORBITING_TRAIT)
 	RegisterSignal(orbiter, COMSIG_MOVABLE_MOVED, PROC_REF(orbiter_move_react))
+
 	SEND_SIGNAL(parent, COMSIG_ATOM_ORBIT_BEGIN, orbiter)
+
 	var/matrix/initial_transform = matrix(orbiter.transform)
 	current_orbiters[orbiter] = initial_transform
 
@@ -99,6 +103,9 @@
 	current_orbiters -= orbiter
 	orbiter.stop_orbit(src)
 	orbiter.orbiting = null
+
+	REMOVE_TRAIT(orbiter, TRAIT_NO_FLOATING_ANIM, ORBITING_TRAIT)
+
 	if(!refreshing && !length(current_orbiters) && !QDELING(src))
 		qdel(src)
 
@@ -155,6 +162,14 @@
 	if(orbiter.loc == get_turf(parent))
 		return
 	end_orbit(orbiter)
+
+/*
+/datum/component/orbiter/proc/orbiter_glide_size_update(datum/source, target)
+	SIGNAL_HANDLER
+	for(var/orbiter in orbiter_list)
+		var/atom/movable/movable_orbiter = orbiter
+		movable_orbiter.glide_size = target
+*/
 
 /////////////////////
 
