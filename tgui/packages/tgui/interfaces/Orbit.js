@@ -1,11 +1,11 @@
 import { createSearch } from 'common/string';
+import { multiline } from 'common/string';
 import { resolveAsset } from '../assets';
-import { Box, Button, Input, Icon, Section, Flex } from '../components';
+import { Box, Button, Divider, Input, Icon, Section, Flex } from '../components';
 import { Window } from '../layouts';
 import { useBackend, useLocalState } from '../backend';
 import { CollapsibleSection } from 'tgui/components/CollapsibleSection';
 
-const PATTERN_DESCRIPTOR = / \[(?:ghost|dead)\]$/;
 const PATTERN_NUMBER = / \(([0-9]+)\)$/;
 
 const searchFor = (searchText) => createSearch(searchText, (thing) => thing.name);
@@ -48,7 +48,7 @@ const OrbitSection = (props, context) => {
             <Button
               key={thing.name}
               color={color}
-              content={thing.name.replace(PATTERN_DESCRIPTOR, '')}
+              content={thing.name}
               onClick={() =>
                 act('orbit', {
                   ref: thing.ref,
@@ -109,7 +109,7 @@ const OrbitedButton = (props, context) => {
 
 export const Orbit = (props, context) => {
   const { act, data } = useBackend(context);
-  const { alive, antagonists, dead, ghosts, misc, npcs } = data;
+  const { alive, antagonists, auto_observe, dead, ghosts, misc, npcs } = data;
 
   const [searchText, setSearchText] = useLocalState(context, 'searchText', '');
 
@@ -151,8 +151,28 @@ export const Orbit = (props, context) => {
                 fluid
                 value={searchText}
                 onInput={(_, value) => setSearchText(value)}
-                onEnter={(_, value) => orbitMostRelevant(value)}
-              />
+                onEnter={(_, value) => orbitMostRelevant(value)} />
+            </Flex.Item>
+            <Flex.Item>
+              <Divider vertical />
+            </Flex.Item>
+            <Flex.Item>
+              <Button
+                inline
+                color="transparent"
+                tooltip={multiline`Toggle Auto-Observe. When active, you'll
+                see the UI / full inventory of whoever you're orbiting. Neat!`}
+                tooltipPosition="bottom-left"
+                selected={auto_observe}
+                icon={auto_observe ? "toggle-on" : "toggle-off"}
+                onClick={() => act("toggle_observe")} />
+              <Button
+                inline
+                color="transparent"
+                tooltip="Refresh"
+                tooltipPosition="bottom-left"
+                icon="sync-alt"
+                onClick={() => act("refresh")} />
             </Flex.Item>
           </Flex>
         </Section>
@@ -164,7 +184,7 @@ export const Orbit = (props, context) => {
           </CollapsibleSection>
         )}
 
-        <OrbitSection title="Alive" source={alive} searchText={searchText} color="good" />
+        <OrbitSection title="{`Alive - (${alive.length})`}" source={alive} searchText={searchText} color="good" />
 
         <Section title="Ghosts">
           {ghosts
