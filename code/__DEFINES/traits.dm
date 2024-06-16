@@ -254,28 +254,48 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_CRYING			"crying"
 #define TRAIT_NOBLOCK			"noblock"
 #define TRAIT_NANITECOMPATIBLE	"nanitecompatible"
-#define TRAIT_WARDED       		"curse_immune"
-#define TRAIT_NONECRODISEASE	"nonecrodisease"
-#define TRAIT_NICE_SHOT			"nice_shot" //hnnnnnnnggggg..... you're pretty good....
-#define TRAIT_ALWAYS_STUBS      "always_stubs_toe" //you will always stub your toe on tables, even if you're wearing shoes
-#define TRAIT_NAIVE				"naive" //All dead people will appear as sleeping.
-#define TRAIT_DROPS_ITEMS_ON_DEATH "drops_items_on_death" //used for battle royale
-#define TRAIT_DRINKSBLOOD		"drinks_blood"
-#define TRAIT_MINDSWAPPED		"mindswapped"
-#define TRAIT_SOMMELIER			"sommelier"  // shows different booze power flavor texts
-#define TRAIT_BARMASTER			"bar_master" // always can identify reagents
-#define TRAIT_HIVE_BURNT		 "hive-burnt"
-#define TRAIT_MOTH_BURNT		"moth_burnt"
-#define TRAIT_SPECIAL_TRAUMA_BOOST "special_trauma_boost" ///Increases chance of getting special traumas, makes them harder to cure
-#define TRAIT_METALANGUAGE_KEY_ALLOWED "metalanguage_key_allowed" // you can use language key for metalanguage (,`) and but also you see lang icon
-#define TRAIT_HYPERSPACED "hyperspaced" // Sanity trait to keep track of when we're in hyperspace and add the appropriate element if we werent
-#define TRAIT_FREE_HYPERSPACE_MOVEMENT "free_hyperspace_movement" // Gives the movable free hyperspace movement without being pulled during shuttle transit
-#define TRAIT_FAST_CUFF_REMOVAL "fast_cuff_removal" // Faster cuff removal
+#define TRAIT_WARDED "curse_immune"
+#define TRAIT_NONECRODISEASE "nonecrodisease"
+//hnnnnnnnggggg..... you're pretty good....
+#define TRAIT_NICE_SHOT "nice_shot"
+//you will always stub your toe on tables, even if you're wearing shoes
+#define TRAIT_ALWAYS_STUBS "always_stubs_toe"
+//All dead people will appear as sleeping.
+#define TRAIT_NAIVE "naive"
+//used for battle royale
+#define TRAIT_DROPS_ITEMS_ON_DEATH "drops_items_on_death"
+#define TRAIT_DRINKSBLOOD "drinks_blood"
+#define TRAIT_MINDSWAPPED "mindswapped"
+// shows different booze power flavor texts
+#define TRAIT_SOMMELIER "sommelier"
+// always can identify reagents
+#define TRAIT_BARMASTER "bar_master"
+#define TRAIT_HIVE_BURNT "hive-burnt"
+#define TRAIT_MOTH_BURNT "moth_burnt"
+///Increases chance of getting special traumas, makes them harder to cure
+#define TRAIT_SPECIAL_TRAUMA_BOOST "special_trauma_boost"
+// you can use language key for metalanguage (,`) and but also you see lang icon
+#define TRAIT_METALANGUAGE_KEY_ALLOWED "metalanguage_key_allowed"
+// Sanity trait to keep track of when we're in hyperspace and add the appropriate element if we werent
+#define TRAIT_HYPERSPACED "hyperspaced"
+// Gives the movable free hyperspace movement without being pulled during shuttle transit
+#define TRAIT_FREE_HYPERSPACE_MOVEMENT "free_hyperspace_movement"
+// Faster cuff removal
+#define TRAIT_FAST_CUFF_REMOVAL "fast_cuff_removal"
 
 // You can stare into the abyss, but it does not stare back.
 // You're immune to the hallucination effect of the supermatter, either
 // through force of will, or equipment.
 #define TRAIT_MADNESS_IMMUNE "supermatter_madness_immune"
+
+///Movement type traits for movables. See elements/movetype_handler.dm
+#define TRAIT_MOVE_GROUND "move_ground"
+#define TRAIT_MOVE_FLYING "move_flying"
+#define TRAIT_MOVE_VENTCRAWLING "move_ventcrawling"
+#define TRAIT_MOVE_FLOATING "move_floating"
+#define TRAIT_MOVE_PHASING "move_phasing"
+/// Disables the floating animation. See above.
+#define TRAIT_NO_FLOATING_ANIM		"no-floating-animation"
 
 //non-mob traits
 /// Used for limb-based paralysis, where replacing the limb will fix it.
@@ -454,6 +474,12 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define BATTLE_ROYALE_TRAIT "battleroyale_trait"
 #define MADE_UNCLONEABLE "made-uncloneable"
 #define TRAIT_JAWS_OF_LIFE "jaws-of-life"
+#define LIFECANDLE_TRAIT "lifecandle"
+#define VENTCRAWLING_TRAIT "ventcrawling"
+#define SPECIES_FLIGHT_TRAIT "species-flight"
+#define FROSTMINER_ENRAGE_TRAIT "frostminer-enrage"
+#define NO_GRAVITY_TRAIT "no-gravity"
+#define LEAPER_BUBBLE_TRAIT "leaper-bubble"
 #define STICKY_NODROP "sticky-nodrop" //sticky nodrop sounds like a good soundcloud rapper's name
 //#define SKILLCHIP_TRAIT "skillchip"
 #define BUSY_FLOORBOT_TRAIT "busy-floorbot"
