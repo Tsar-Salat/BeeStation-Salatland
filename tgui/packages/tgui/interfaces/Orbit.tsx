@@ -1,218 +1,317 @@
-import { createSearch } from 'common/string';
-import { multiline } from 'common/string';
-import { resolveAsset } from '../assets';
-import { Box, Button, Divider, Input, Icon, Section, Flex } from '../components';
-import { Window } from '../layouts';
 import { useBackend, useLocalState } from '../backend';
-import { CollapsibleSection } from 'tgui/components/CollapsibleSection';
+import { filter, sortBy } from 'common/collections';
+import { multiline } from 'common/string';
+import { Button, Collapsible, Icon, Input, Section, Stack } from '../components';
+import { Window } from '../layouts';
+import { flow } from 'common/fp';
+import { logger } from '../logging';
 
-const PATTERN_NUMBER = / \(([0-9]+)\)$/;
+type AntagGroup = [string, Observable[]];
 
-const searchFor = (searchText) => createSearch(searchText, (thing) => thing.name);
-
-const compareString = (a, b) => (a < b ? -1 : a > b);
-
-const compareNumberedText = (a, b) => {
-  const aName = a.name;
-  const bName = b.name;
-
-  // Check if aName and bName are the same except for a number at the end
-  // e.g. Medibot (2) and Medibot (3)
-  const aNumberMatch = aName.match(PATTERN_NUMBER);
-  const bNumberMatch = bName.match(PATTERN_NUMBER);
-
-  if (aNumberMatch && bNumberMatch && aName.replace(PATTERN_NUMBER, '') === bName.replace(PATTERN_NUMBER, '')) {
-    const aNumber = parseInt(aNumberMatch[1], 10);
-    const bNumber = parseInt(bNumberMatch[1], 10);
-
-    return aNumber - bNumber;
-  }
-
-  return compareString(aName, bName);
+type Data = {
+  alive: Observable[];
+  antagonists: Observable[];
+  dead: Observable[];
+  ghosts: Observable[];
+  misc: Observable[];
+  npcs: Observable[];
 };
 
-const OrbitSection = (props, context) => {
-  const { act } = useBackend(context);
-  const { searchText, source, title, autoObserve, color, basic } = props;
-  const things = source.filter(searchFor(searchText));
-  things.sort(compareNumberedText);
+type Observable = {
+  ref: string;
+  antag?: string;
+  name: string;
+  orbiters?: number;
+};
+
+type SectionProps = {
+  color?: string;
+  section: Observable[];
+  title: string;
+};
+
+const ANTAG2COLOR = {
+  'Abductors': 'pink',
+  'Ash Walkers': 'olive',
+  'Biohazards': 'brown',
+} as const;
+
+const ANTAG2GROUP = {
+  'Abductor Agent': 'Abductors',
+  'Abductor Scientist': 'Abductors',
+  'Ash Walker': 'Ash Walkers',
+  'Blob': 'Biohazards',
+  'Sentient Disease': 'Biohazards',
+  'Clown Operative': 'Clown Operatives',
+  'Clown Operative Leader': 'Clown Operatives',
+  'Nuclear Operative': 'Nuclear Operatives',
+  'Nuclear Operative Leader': 'Nuclear Operatives',
+  'Space Wizard': 'Wizard Federation',
+  'Wizard Apprentice': 'Wizard Federation',
+  'Wizard Minion': 'Wizard Federation',
+} as const;
+
+enum THREAT {
+  None,
+  Small = 'teal',
+  Medium = 'blue',
+  Large = 'violet',
+}
+
+export const Orbit = (props, context) => {
   return (
-    source.length > 0 && (
-      <CollapsibleSection
-        sectionKey={title}
-        title={`${title} - (${source.length})`}
-        forceOpen={things.length && searchText}
-        showButton={!searchText}>
-        {things.map((thing) =>
-          basic ? (
-            <Button
-              key={thing.name}
-              color={color}
-              content={thing.name}
-              onClick={() =>
-                act('orbit', {
-                  ref: thing.ref,
-                  auto_observe: autoObserve,
-                })
-              }
-            />
-          ) : (
-            <OrbitedButton key={thing.name} color={color} thing={thing} job={thing.role_icon} antag={thing.antag_icon} />
-          )
-        )}
-      </CollapsibleSection>
-    )
+    <Window title="Orbit" width={400} height={550}>
+      <Window.Content>
+        <Stack fill vertical>
+          <Stack.Item mt={0}>
+            <ObservableSearch />
+          </Stack.Item>
+          <Stack.Item mt={0.2} grow>
+            <Section fill scrollable>
+              <ObservableContent />
+            </Section>
+          </Stack.Item>
+        </Stack>
+      </Window.Content>
+    </Window>
   );
 };
 
-const OrbitedButton = (props, context) => {
-  const { act } = useBackend(context);
-  const { color, thing, autoObserve, job, antag } = props;
+/** Controls filtering out the list of observables via search */
+const ObservableSearch = (props, context) => {
+  const { act, data } = useBackend<Data>(context);
+  const {
+    alive = [],
+    antagonists = [],
+    dead = [],
+    ghosts = [],
+    misc = [],
+    npcs = [],
+  } = data;
+  const [autoObserve, setAutoObserve] = useLocalState<boolean>(
+    context,
+    'autoObserve',
+    false
+  );
+  const [searchQuery, setSearchQuery] = useLocalState<string>(
+    context,
+    'searchQuery',
+    ''
+  );
+  /** Gets a list of Observable[], then filters the most relevant to orbit */
+  const orbitMostRelevant = (searchQuery: string): void => {
+    /** Returns the most orbited observable that matches the search. */
+    const mostRelevant: Observable = flow([
+      // Filters out anything that doesn't match search
+      filter<Observable>((observable) =>
+        observable.name?.toLowerCase().includes(searchQuery?.toLowerCase())
+      ),
+      // Sorts descending by orbiters
+      sortBy<Observable>((poi) => -(poi.orbiters || 0)),
+      // Makes a single Observable[] list for an easy search
+    ])([alive, antagonists, dead, ghosts, misc, npcs].flat())[0];
+    logger.log(mostRelevant);
+    if (mostRelevant !== undefined) {
+      act('orbit', {
+        ref: mostRelevant.ref,
+        auto_observe: autoObserve,
+      });
+    }
+  };
+
+  return (
+    <Section>
+      <Stack>
+        <Stack.Item>
+          <Icon name="search" />
+        </Stack.Item>
+        <Stack.Item grow>
+          <Input
+            autoFocus
+            fluid
+            onEnter={(e, value) => orbitMostRelevant(value)}
+            onInput={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search..."
+            value={searchQuery}
+          />
+        </Stack.Item>
+        <Stack.Divider />
+        <Stack.Item>
+          <Button
+            color={autoObserve ? 'good' : 'transparent'}
+            icon={autoObserve ? 'toggle-on' : 'toggle-off'}
+            onClick={() => setAutoObserve(!autoObserve)}
+            tooltip={multiline`Toggle Auto-Observe. When active, you'll
+            see the UI / full inventory of whoever you're orbiting. Neat!`}
+            tooltipPosition="bottom-start"
+          />
+        </Stack.Item>
+        <Stack.Item>
+          <Button
+            inline
+            color="transparent"
+            tooltip="Refresh"
+            tooltipPosition="bottom-start"
+            icon="sync-alt"
+            onClick={() => act('refresh')}
+          />
+        </Stack.Item>
+      </Stack>
+    </Section>
+  );
+};
+
+/**
+ * The primary content display for points of interest.
+ * Renders a scrollable section replete with subsections for each
+ * observable group.
+ */
+const ObservableContent = (props, context) => {
+  const { data } = useBackend<Data>(context);
+  const {
+    alive = [],
+    antagonists = [],
+    dead = [],
+    ghosts = [],
+    misc = [],
+    npcs = [],
+  } = data;
+  let collatedAntagonists: AntagGroup[] = [];
+  if (antagonists.length) {
+    collatedAntagonists = collateAntagonists(antagonists);
+  }
+
+  return (
+    <Stack vertical>
+      {collatedAntagonists?.map(([name, antag]) => {
+        return (
+          <ObservableSection
+            color={ANTAG2COLOR[name] || 'bad'}
+            key={name}
+            section={antag}
+            title={name}
+          />
+        );
+      })}
+      <ObservableSection color="good" section={alive} title="Alive" />
+      <ObservableSection section={dead} title="Dead" />
+      <ObservableSection section={ghosts} title="Ghosts" />
+      <ObservableSection section={misc} title="Misc" />
+      <ObservableSection section={npcs} title="NPCs" />
+    </Stack>
+  );
+};
+
+/**
+ * Displays a collapsible with a map of observable items.
+ * Filters the results if there is a provided search query.
+ */
+const ObservableSection = (props: SectionProps, context) => {
+  const { color = 'grey', section = [], title } = props;
+  if (!section.length) {
+    return null;
+  }
+  const [searchQuery, setSearchQuery] = useLocalState<string>(
+    context,
+    'searchQuery',
+    ''
+  );
+  const filteredSection: Observable[] = flow([
+    filter<Observable>((poi) =>
+      poi.name?.toLowerCase().includes(searchQuery?.toLowerCase())
+    ),
+    sortBy<Observable>((poi) => poi.name.toLowerCase()),
+  ])(section);
+  if (!filteredSection.length) {
+    return null;
+  }
+
+  return (
+    <Stack.Item>
+      <Collapsible
+        bold
+        color={color}
+        open={color !== 'grey'}
+        title={title + ` - (${filteredSection.length})`}>
+        {filteredSection.map((poi, index) => {
+          return <ObservableItem color={color} item={poi} key={index} />;
+        })}
+      </Collapsible>
+    </Stack.Item>
+  );
+};
+
+/** Renders an observable button */
+const ObservableItem = (
+  props: { color: string; item: Observable },
+  context
+) => {
+  const { act } = useBackend<Data>(context);
+  const {
+    color,
+    item: { name, orbiters, ref },
+  } = props;
+  const [autoObserve, setAutoObserve] = useLocalState<boolean>(
+    context,
+    'autoObserve',
+    false
+  );
+  const threat = getThreat(orbiters || 0);
 
   return (
     <Button
-      color={color}
-      style={{ 'line-height': '24px' }}
-      onClick={() =>
-        act('orbit', {
-          ref: thing.ref,
-          auto_observe: autoObserve,
-        })
-      }>
-      {job && (
-        <Box
-          inline
-          mr={0.5}
-          ml={-0.5}
-          style={{ 'transform': 'translateY(18.75%)' }}
-          className={`job-icon16x16 job-icon-${job}`}
-        />
-      )}
-      {antag && (
-        <Box
-          inline
-          mr={0.5}
-          ml={job ? -0.25 : -0.5}
-          style={{ 'transform': 'translateY(18.75%)' }}
-          className={`antag-hud16x16 antag-hud-${antag}`}
-        />
-      )}
-      {thing.name}
-      {thing.orbiters && (
-        <Box inline ml={1}>
-          {'('}
-          {thing.orbiters} <Box as="img" src={resolveAsset('ghost.png')} opacity={0.7} />
-          {')'}
-        </Box>
+      color={threat || color}
+      onClick={() => act('orbit', { auto_observe: autoObserve, ref: ref })}>
+      {nameToUpper(name).slice(0, 44) /** prevents it from overflowing */}
+      {!!orbiters && (
+        <>
+          {' '}
+          ({orbiters?.toString()}{' '}
+          <Icon mr={0} name={threat === THREAT.Large ? 'skull' : 'ghost'} />)
+        </>
       )}
     </Button>
   );
 };
 
-export const Orbit = (props, context) => {
-  const { act, data } = useBackend(context);
-  const { alive, antagonists, dead, ghosts, misc, npcs } = data;
-
-  const [searchText, setSearchText] = useLocalState(context, 'searchText', '');
-  const [autoObserve, setAutoObserve] = useLocalState(context, 'autoObserve', false);
-
+/**
+ * Collates antagonist groups into their own separate sections.
+ * Some antags are grouped together lest they be listed separately,
+ * ie: Nuclear Operatives. See: ANTAG_GROUPS.
+ */
+const collateAntagonists = (antagonists: Observable[]): AntagGroup[] => {
   const collatedAntagonists = {};
   for (const antagonist of antagonists) {
-    if (collatedAntagonists[antagonist.antag] === undefined) {
-      collatedAntagonists[antagonist.antag] = [];
+    const { antag } = antagonist;
+    const resolvedName = ANTAG2GROUP[antag!] || antag;
+    if (collatedAntagonists[resolvedName] === undefined) {
+      collatedAntagonists[resolvedName] = [];
     }
-    collatedAntagonists[antagonist.antag].push(antagonist);
+    collatedAntagonists[resolvedName].push(antagonist);
   }
-
-  const sortedAntagonists = Object.entries(collatedAntagonists);
-  sortedAntagonists.sort((a, b) => {
-    return compareString(a[0], b[0]);
-  });
-
-  const orbitMostRelevant = (searchText) => {
-    for (const source of [sortedAntagonists.map(([_, antags]) => antags), alive, ghosts, dead, npcs, misc]) {
-      const member = source.filter(searchFor(searchText)).sort(compareNumberedText)[0];
-      if (member !== undefined) {
-        act('orbit', {
-          ref: member.ref,
-          auto_observe: autoObserve,
-        });
-        break;
-      }
-    }
-  };
-
-  return (
-    <Window theme="generic" width={350} height={700}>
-      <Window.Content scrollable>
-        <Section>
-          <Flex>
-            <Flex.Item>
-              <Icon name="search" mr={1} />
-            </Flex.Item>
-            <Flex.Item grow={1}>
-              <Input
-                placeholder="Search..."
-                autoFocus
-                fluid
-                value={searchText}
-                onInput={(_, value) => setSearchText(value)}
-                onEnter={(_, value) => orbitMostRelevant(value)} />
-            </Flex.Item>
-            <Flex.Item>
-              <Divider vertical />
-            </Flex.Item>
-            <Flex.Item>
-              <Button
-                inline
-                color="transparent"
-                tooltip={multiline`Toggle Auto-Observe. When active, you'll
-                see the UI / full inventory of whoever you're orbiting. Neat!`}
-                tooltipPosition="bottom-left"
-                selected={autoObserve}
-                icon={autoObserve ? "toggle-on" : "toggle-off"}
-                onClick={() => setAutoObserve(!autoObserve)} />
-            </Flex.Item>
-            <Flex.Item>
-              <Button
-                inline
-                color="transparent"
-                tooltip="Refresh"
-                tooltipPosition="bottom-start"
-                icon="sync-alt"
-                onClick={() => act("refresh")} />
-            </Flex.Item>
-          </Flex>
-        </Section>
-        {antagonists.length > 0 && (
-          <CollapsibleSection title="Ghost-Visible Antagonists" sectionKey="Ghost-Visible Antagonists" forceOpen={searchText}>
-            {sortedAntagonists.map(([name, antags]) => (
-              <OrbitSection key={name} title={name} source={antags} searchText={searchText} color="bad" autoObserve={autoObserve} />
-            ))}
-          </CollapsibleSection>
-        )}
-
-        <OrbitSection title="{`Alive - (${alive.length})`}" source={alive} searchText={searchText} color="good" />
-
-        <Section title="Ghosts">
-          {ghosts
-            .filter(searchFor(searchText))
-            .sort(compareNumberedText)
-            .map(thing => (
-              <OrbitedButton
-                key={thing.name}
-                color="grey"
-                thing={thing}
-                autoObserve={autoObserve} />
-            ))}
-        </Section>
-
-        <OrbitSection title="Dead" source={dead} searchText={searchText} autoObserve={autoObserve} basic />
-
-        <OrbitSection title="NPCs" source={npcs} searchText={searchText} autoObserve={autoObserve} basic />
-
-        <OrbitSection title="Misc" source={misc} searchText={searchText} autoObserve={autoObserve} basic />
-      </Window.Content>
-    </Window>
+  const sortedAntagonists = sortBy<AntagGroup>((antagonist) => antagonist[0])(
+    Object.entries(collatedAntagonists)
   );
+
+  return sortedAntagonists;
 };
+
+/** Takes the amount of orbiters and returns some style options */
+const getThreat = (orbiters: number): THREAT => {
+  if (!orbiters || orbiters <= 2) {
+    return THREAT.None;
+  } else if (orbiters === 3) {
+    return THREAT.Small;
+  } else if (orbiters <= 6) {
+    return THREAT.Medium;
+  } else {
+    return THREAT.Large;
+  }
+};
+
+/**
+ * Returns a string with the first letter in uppercase.
+ * Unlike capitalize(), has no effect on the other letters
+ */
+const nameToUpper = (name: string): string =>
+  name.replace(/^\w/, (c) => c.toUpperCase());
