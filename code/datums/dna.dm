@@ -365,15 +365,28 @@
 	return dna
 
 
-/mob/living/carbon/human/proc/hardset_dna(ui, list/mutation_index, newreal_name, newblood_type, datum/species/mrace, newfeatures, list/mutations, force_transfer_mutations, list/default_mutation_genes)
+/// Sets the DNA of the mob to the given DNA.
+/mob/living/carbon/human/proc/hardset_dna(unique_identity, list/mutation_index, list/default_mutation_genes, newreal_name, newblood_type, datum/species/mrace, newfeatures, list/mutations, force_transfer_mutations)
 //Do not use force_transfer_mutations for stuff like cloners without some precautions, otherwise some conditional mutations could break (timers, drill hat etc)
 	if(newfeatures)
 		dna.features = newfeatures
+		//dna.generate_unique_features()
 
 	if(mrace)
 		var/datum/species/newrace = new mrace.type
 		newrace.copy_properties_from(mrace)
 		set_species(newrace, icon_update=0)
+
+	if(newreal_name)
+		real_name = newreal_name
+		dna.generate_unique_enzymes()
+
+	if(newblood_type)
+		dna.blood_type = newblood_type
+
+	//if(unique_identity)
+	//	dna.unique_identity = unique_identity
+	//	updateappearance(icon_update = 0)
 
 	if(LAZYLEN(mutation_index))
 		dna.mutation_index = mutation_index.Copy()
@@ -383,18 +396,7 @@
 			dna.default_mutation_genes = mutation_index.Copy()
 		domutcheck()
 
-	if(newreal_name)
-		real_name = newreal_name
-		dna.generate_unique_enzymes()
-
-	if(newblood_type)
-		dna.blood_type = newblood_type
-
-	if(ui)
-		dna.uni_identity = ui
-		updateappearance(icon_update=0)
-
-	if(mrace || newfeatures || ui)
+	if(mrace || newfeatures || unique_identity)
 		update_body()
 		update_hair()
 		update_body_parts()

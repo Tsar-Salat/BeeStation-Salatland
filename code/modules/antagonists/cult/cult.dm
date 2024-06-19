@@ -306,10 +306,10 @@
 /datum/objective/sacrifice/proc/make_image()
 	var/icon/reshape
 	if(target)
-		for(var/datum/data/record/R as() in GLOB.data_core.locked)
-			var/datum/mind/M = R.fields["mindref"]
+		for(var/datum/record/crew/R as anything in GLOB.manifest.locked)
+			var/datum/mind/M = R.mindref
 			if(target == M)
-				reshape = R.fields["character_appearance"]
+				reshape = R.character_appearance
 				break
 	if(!reshape)
 		reshape = icon('icons/mob/mob.dmi', "ghost", SOUTH)

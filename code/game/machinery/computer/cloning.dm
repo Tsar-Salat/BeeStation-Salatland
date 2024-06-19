@@ -67,8 +67,8 @@
 			else if(!. && pod.is_operational && !(pod.occupant || pod.mess) && pod.efficiency > 5)
 				. = pod
 
-/proc/grow_clone_from_record(obj/machinery/clonepod/pod, datum/data/record/R, experimental)
-	return pod.growclone(R.fields["name"], R.fields["UI"], R.fields["SE"], R.fields["mindref"], R.fields["last_death"], R.fields["mrace"], R.fields["features"], R.fields["factions"], R.fields["bank_account"], R.fields["traumas"], R.fields["body_only"], experimental)
+/proc/grow_clone_from_record(obj/machinery/clonepod/pod, datum/record/crew/R, experimental)
+	return pod.growclone(R.name, R.UI, R.SE, R.mindref, R.last_death, R.mrace, R.features, R.factions, R.bank_account, R.traumas, R.body_only, experimental)
 
 /obj/machinery/computer/cloning/process()
 	if(!(scanner && LAZYLEN(pods) && autoprocess))
@@ -78,8 +78,8 @@
 		scan_occupant(scanner.occupant)
 		ui_update()
 
-	for(var/datum/data/record/R in records)
-		var/obj/machinery/clonepod/pod = GetAvailableEfficientPod(R.fields["mindref"])
+	for(var/datum/record/crew/R in records)
+		var/obj/machinery/clonepod/pod = GetAvailableEfficientPod(R.mindref)
 
 		if(!pod)
 			return
@@ -89,8 +89,8 @@
 
 		var/result = grow_clone_from_record(pod, R, experimental)
 		if(result & CLONING_SUCCESS)
-			temp = "[R.fields["name"]] => Cloning cycle in progress..."
-			log_cloning("Cloning of [key_name(R.fields["mindref"])] automatically started via autoprocess - [src] at [AREACOORD(src)]. Pod: [pod] at [AREACOORD(pod)].")
+			temp = "[R.name] => Cloning cycle in progress..."
+			log_cloning("Cloning of [key_name(R.mindref)] automatically started via autoprocess - [src] at [AREACOORD(src)]. Pod: [pod] at [AREACOORD(pod)].")
 			SStgui.update_uis(src)
 		if(result & CLONING_DELETE_RECORD)
 			records -= R
@@ -201,9 +201,9 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 		. = TRUE
 
 /obj/machinery/computer/cloning/proc/Save(mob/user, target)
-	var/datum/data/record/GRAB = null
-	for(var/datum/data/record/record in records)
-		if(record.fields["id"] == target)
+	var/datum/record/crew/GRAB = null
+	for(var/datum/record/crew/record in records)
+		if(record.id == target)
 			GRAB = record
 			break
 		else
@@ -223,9 +223,9 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 	return TRUE
 
 /obj/machinery/computer/cloning/proc/DeleteRecord(mob/user, target)
-	var/datum/data/record/GRAB = null
-	for(var/datum/data/record/record in records)
-		if(record.fields["id"] == target)
+	var/datum/record/crew/GRAB = null
+	for(var/datum/record/crew/record in records)
+		if(record.id == target)
 			GRAB = record
 			break
 		else
@@ -251,11 +251,11 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 		scantemp = "Failed loading: Load error."
 		playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
 		return
-	for(var/datum/data/record/R in records)
+	for(var/datum/record/crew/R in records)
 		if(R.fields["id"] == diskette.fields["id"])
 			scantemp = "Failed loading: Data already exists!"
 			return FALSE
-	var/datum/data/record/R = new(src)
+	var/datum/record/crew/R = new(src)
 	for(var/each in diskette.fields)
 		R.fields[each] = diskette.fields[each]
 
@@ -267,7 +267,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 	return TRUE
 
 /obj/machinery/computer/cloning/proc/Clone(mob/user, target)
-	var/datum/data/record/C = find_record("id", target, records)
+	var/datum/record/crew/C = find_record("id", target, records)
 	//Look for that player! They better be dead!
 	if(C)
 		var/obj/machinery/clonepod/pod = GetAvailablePod()
@@ -582,7 +582,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 	if(!can_scan(dna, mob_occupant, has_bank_account, body_only))
 		return
 
-	var/datum/data/record/R = new()
+	var/datum/record/crew/R = new()
 	if(dna.species)
 		// We store the instance rather than the path, because some
 		// species (abductors, slimepeople) store state in their
@@ -634,7 +634,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 			imp.implant(mob_occupant)
 		R.fields["imp"] = "[REF(imp)]"
 
-	var/datum/data/record/old_record = find_record("id", R.fields["id"], records)
+	var/datum/record/crew/old_record = find_record(R.id)
 	if(old_record)
 		records -= old_record
 		scantemp = "Record updated."

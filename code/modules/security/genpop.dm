@@ -584,13 +584,13 @@
 	user.log_message("[key_name(user)] created a prisoner ID with sentence: [desired_sentence / 600] for [desired_sentence / 600] min", LOG_ATTACK)
 
 	if(desired_crime)
-		var/datum/data/record/R = find_record("name", desired_name, GLOB.data_core.general)
-		if(R)
-			R.fields["criminal"] = "Incarcerated"
-			var/crime = GLOB.data_core.createCrimeEntry(desired_crime, null, user.real_name, station_time_timestamp())
-			GLOB.data_core.addCrime(R.fields["id"], crime)
-			investigate_log("New Crime: <strong>[desired_crime]</strong> | Added to [R.fields["name"]] by [key_name(user)]", INVESTIGATE_RECORDS)
-			say("Criminal record for [R.fields["name"]] successfully updated.")
+		var/datum/record/crew/target = find_record(desired_name)
+		if(target)
+			target.wanted_status = WANTED_PRISONER
+			var/datum/crime/crime = new(desired_crime, null, user.real_name, station_time_timestamp())
+			target.id.crimes += crime
+			investigate_log("New Crime: <strong>[desired_crime]</strong> | Added to [target.name] by [key_name(user)]", INVESTIGATE_RECORDS)
+			say("Criminal record for [target.name] successfully updated.")
 			playsound(loc, 'sound/machines/ping.ogg', 50, 1)
 
 	var/obj/item/card/id/id = new /obj/item/card/id/prisoner(get_turf(src), desired_sentence * 0.1, desired_crime, desired_name)
@@ -731,9 +731,9 @@ GLOBAL_LIST_EMPTY(prisoner_ids)
 		update_label(registered_name, assignment)
 		playsound(loc, 'sound/machines/ping.ogg', 50, 1)
 
-		var/datum/data/record/R = find_record("name", registered_name, GLOB.data_core.general)
-		if(R)
-			R.fields["criminal"] = "Discharged"
+		var/datum/record/crew/target = find_record(registered_name)
+		if(target)
+			target.wanted_status = WANTED_DISCHARGED
 
 		if(isliving(loc))
 			to_chat(loc, "<span class='boldnotice'>You have served your sentence! You may now exit prison through the turnstiles and collect your belongings.</span>")
