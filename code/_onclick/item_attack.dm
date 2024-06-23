@@ -110,7 +110,7 @@
 	if(item_flags & NOBLUDGEON)
 		nonharmfulhit = TRUE
 
-	if(force && HAS_TRAIT(user, TRAIT_PACIFISM) && !nonharmfulhit)
+	if((force && HAS_TRAIT(user, TRAIT_PACIFISM) && !nonharmfulhit) &! target == user)
 		to_chat(user, "<span class='warning'>You don't want to harm other living beings!</span>")
 		nonharmfulhit = TRUE
 
