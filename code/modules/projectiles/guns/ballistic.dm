@@ -2,7 +2,7 @@
 	desc = "Now comes in flavors like GUN. Uses 10mm ammo, for some reason."
 	name = "projectile gun"
 	icon_state = "pistol"
-	w_class = WEIGHT_CLASS_LARGE
+	w_class = WEIGHT_CLASS_NORMAL
 
 	//sound info vars
 	var/load_sound = "gun_insert_full_magazine"
@@ -529,7 +529,7 @@
 		else
 			name = "sawn-off [src.name]"
 		desc = sawn_desc
-		w_class = WEIGHT_CLASS_LARGE
+		w_class = WEIGHT_CLASS_NORMAL
 		if (sawn_item_state)
 			item_state = sawn_item_state
 		else

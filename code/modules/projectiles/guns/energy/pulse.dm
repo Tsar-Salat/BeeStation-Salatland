@@ -33,7 +33,7 @@
 /obj/item/gun/energy/pulse/carbine
 	name = "pulse carbine"
 	desc = "A compact variant of the pulse rifle with less firepower but easier storage."
-	w_class = WEIGHT_CLASS_LARGE
+	w_class = WEIGHT_CLASS_NORMAL
 	slot_flags = ITEM_SLOT_BELT
 	icon_state = "pulse_carbine"
 	worn_icon_state = "gun"
@@ -53,7 +53,7 @@
 /obj/item/gun/energy/pulse/carbine/cyborg
 	name = "pulse carbine"
 	desc = "A compact, cyborg variant of the commonly used pulse carbine."
-	w_class = WEIGHT_CLASS_LARGE
+	w_class = WEIGHT_CLASS_NORMAL
 	slot_flags = ITEM_SLOT_BELT
 	icon_state = "pulse_carbine"
 	item_state = null

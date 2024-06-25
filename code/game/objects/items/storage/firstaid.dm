@@ -20,7 +20,7 @@
 	righthand_file = 'icons/mob/inhands/equipment/medical_righthand.dmi'
 	throw_speed = 3
 	throw_range = 7
-	w_class = WEIGHT_CLASS_LARGE
+	w_class = WEIGHT_CLASS_NORMAL
 	var/skin_type = MEDBOT_SKIN_DEFAULT
 	var/empty = FALSE
 
@@ -377,7 +377,7 @@
 /obj/item/storage/firstaid/tactical/ComponentInitialize()
 	. = ..()
 	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
-	STR.max_w_class = WEIGHT_CLASS_LARGE
+	STR.max_w_class = WEIGHT_CLASS_NORMAL
 	STR.max_items = 7
 	STR.max_combined_w_class = 56 //any combination of allowed items
 

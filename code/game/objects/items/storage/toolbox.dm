@@ -11,7 +11,7 @@
 	throwforce = 12
 	throw_speed = 2
 	throw_range = 7
-	w_class = WEIGHT_CLASS_BULKY
+	w_class = WEIGHT_CLASS_NORMAL
 	item_flags = ISWEAPON
 	attack_verb = list("robusted")
 	hitsound = 'sound/weapons/smash.ogg'

@@ -18,7 +18,7 @@
 	direct_loading = TRUE
 	semi_auto = FALSE
 	rack_delay = 4
-	w_class = WEIGHT_CLASS_LARGE
+	w_class = WEIGHT_CLASS_NORMAL
 	zoomable = TRUE
 	zoom_amt = 10 //Long range, enough to see in front of you, but no tiles behind you.
 	zoom_out_amt = 5

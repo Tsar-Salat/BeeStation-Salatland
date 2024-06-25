@@ -77,7 +77,7 @@
 
 /datum/component/storage/concrete/pockets/holster
 	max_items = 2
-	max_w_class = WEIGHT_CLASS_LARGE
+	max_w_class = WEIGHT_CLASS_NORMAL
 	var/atom/original_parent
 
 /datum/component/storage/concrete/pockets/holster/Initialize()

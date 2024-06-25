@@ -77,8 +77,11 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	///Whether or not we use stealthy audio levels for this item's attack sounds
 	var/stealthy_audio = FALSE
 
-	/// The weight class of an object. Used to determine tons of things, like if it's too cumbersome for you to drag, if it can fit in certain storage items, how long it takes to burn, and more. See _DEFINES/inventory.dm to see all weight classes.
+	/// Weight class for how much storage capacity it uses and how big it physically is meaning storages can't hold it if their maximum weight class isn't as high as it.
 	var/w_class = WEIGHT_CLASS_NORMAL
+	/// Volume override for the item, otherwise automatically calculated from w_class.
+	var/w_volume
+
 	/// This is used to determine on which inventory slots an item can fit.
 	var/slot_flags = 0
 
@@ -1056,6 +1059,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		openToolTip(user,src,params,title = name,content = "[desc]<br><b>Force:</b> [force_string]",theme = "")
 
 /obj/item/MouseEntered(location, control, params)
+	SEND_SIGNAL(src, COMSIG_ITEM_MOUSE_ENTER, location, control, params)
 	if((item_flags & PICKED_UP || item_flags & IN_STORAGE) && usr.client.prefs.read_player_preference(/datum/preference/toggle/enable_tooltips) && !QDELETED(src))
 		var/timedelay = usr.client.prefs.read_player_preference(/datum/preference/numeric/tooltip_delay)/100
 		var/user = usr
@@ -1070,7 +1074,8 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	. = ..()
 	remove_outline()
 
-/obj/item/MouseExited()
+/obj/item/MouseExited(location,control,params)
+	SEND_SIGNAL(src, COMSIG_ITEM_MOUSE_EXIT, location, control, params)
 	deltimer(tip_timer)//delete any in-progress timer if the mouse is moved off the item before it finishes
 	closeToolTip(usr)
 	remove_outline()
@@ -1175,6 +1180,11 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 			plane = initial(plane)
 			dropped(M, FALSE)
 	return ..()
+
+/// Get an item's volume that it uses when being stored.
+/obj/item/proc/get_w_volume()
+	// if w_volume is 0 you fucked up.
+	return w_volume || AUTO_SCALE_VOLUME(w_class)
 
 /obj/item/proc/embedded(atom/embedded_target)
 
@@ -1420,8 +1430,8 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		if(WEIGHT_CLASS_SMALL)
 			w_class = WEIGHT_CLASS_NORMAL
 		if(WEIGHT_CLASS_NORMAL)
-			w_class = WEIGHT_CLASS_LARGE
-		if(WEIGHT_CLASS_LARGE)
+			w_class = WEIGHT_CLASS_NORMAL
+		if(WEIGHT_CLASS_NORMAL)
 			w_class = WEIGHT_CLASS_BULKY
 		if(WEIGHT_CLASS_BULKY)
 			w_class = WEIGHT_CLASS_HUGE
@@ -1438,10 +1448,10 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 			w_class = WEIGHT_CLASS_TINY
 		if(WEIGHT_CLASS_NORMAL)
 			w_class = WEIGHT_CLASS_SMALL
-		if(WEIGHT_CLASS_LARGE)
+		if(WEIGHT_CLASS_NORMAL)
 			w_class = WEIGHT_CLASS_NORMAL
 		if(WEIGHT_CLASS_BULKY)
-			w_class = WEIGHT_CLASS_LARGE
+			w_class = WEIGHT_CLASS_NORMAL
 		if(WEIGHT_CLASS_HUGE)
 			w_class = WEIGHT_CLASS_BULKY
 		if(WEIGHT_CLASS_GIGANTIC)

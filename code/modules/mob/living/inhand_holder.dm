@@ -7,6 +7,8 @@
 	icon_state = null
 	slot_flags = NONE
 	clothing_flags = NOTCONSUMABLE
+	w_class = WEIGHT_CLASS_BULKY
+	w_volume = ITEM_VOLUME_MOB// so that only one can fit in a duffel bag
 	var/mob/living/held_mob
 	var/can_head = TRUE
 	///We are currently releasing the mob held in holder

@@ -414,7 +414,7 @@ Congratulations! You are now trained for invasive xenobiology research!"}
 	worn_icon_state = "classic_baton"
 	slot_flags = ITEM_SLOT_BELT
 	force = 7
-	w_class = WEIGHT_CLASS_LARGE
+	w_class = WEIGHT_CLASS_NORMAL
 	actions_types = list(/datum/action/item_action/toggle_mode)
 	//The mob we are currently incapacitating.
 	var/mob/current_target

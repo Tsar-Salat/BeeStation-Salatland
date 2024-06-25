@@ -77,7 +77,7 @@
 	desc = "This is an expensive, modern recreation of an antique laser gun. This gun has several unique firemodes, but lacks the ability to recharge over time."
 	gun_charge = 1200
 	icon_state = "hoslaser"
-	w_class = WEIGHT_CLASS_LARGE
+	w_class = WEIGHT_CLASS_NORMAL
 	force = 10
 	automatic = 1
 	fire_rate = 3
@@ -97,7 +97,7 @@
 	ammo_type = list(/obj/item/ammo_casing/energy/net, /obj/item/ammo_casing/energy/trap)
 	ammo_x_offset = 1
 	fire_rate = 1.5
-	w_class = WEIGHT_CLASS_LARGE
+	w_class = WEIGHT_CLASS_NORMAL
 
 /obj/item/gun/energy/e_gun/dragnet/add_seclight_point()
 	return

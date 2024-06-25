@@ -13,7 +13,7 @@
 	slot_flags = ITEM_SLOT_BELT
 	item_flags = SLOWS_WHILE_IN_HAND
 	custom_materials = list(/datum/material/iron=2000)
-	w_class = WEIGHT_CLASS_LARGE
+	w_class = WEIGHT_CLASS_NORMAL
 	throwforce = 5
 	throw_speed = 3
 	throw_range = 5

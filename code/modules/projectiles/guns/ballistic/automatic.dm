@@ -1,5 +1,5 @@
 /obj/item/gun/ballistic/automatic
-	w_class = WEIGHT_CLASS_LARGE
+	w_class = WEIGHT_CLASS_NORMAL
 	var/select = 1
 	can_suppress = TRUE
 	actions_types = list(/datum/action/item_action/toggle_firemode)

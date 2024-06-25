@@ -209,25 +209,24 @@
 		user.swap_hand(held_index)
 	return TRUE
 
-/atom/movable/screen/close
-	name = "close"
+///atom/movable/screen/close
+//	name = "close"
+//	plane = ABOVE_HUD_PLANE
+//	icon_state = "backpack_close"
 
-	plane = ABOVE_HUD_PLANE
-	icon_state = "backpack_close"
+//	/// A reference to the object in the slot. Grabs or items, generally.
+//	var/datum/component/storage/master = null
 
-	/// A reference to the object in the slot. Grabs or items, generally.
-	var/datum/component/storage/master = null
+///atom/movable/screen/close/Initialize(mapload, new_master)
+//	. = ..()
+//	master = new_master
+//	if (master && !istype(master))
+//		CRASH("Attempting to create a backpack close without referencing a storage concrete component.")
 
-/atom/movable/screen/close/Initialize(mapload, new_master)
-	. = ..()
-	master = new_master
-	if (master && !istype(master))
-		CRASH("Attempting to create a backpack close without referencing a storage concrete component.")
-
-/atom/movable/screen/close/Click()
-	var/datum/component/storage/S = master
-	S.hide_from(usr)
-	return TRUE
+///atom/movable/screen/close/Click()
+//	var/datum/component/storage/S = master
+//	S.hide_from(usr)
+//	return TRUE
 
 /atom/movable/screen/drop
 	name = "drop"
@@ -412,6 +411,7 @@
 		icon_state = "act_rest0"
 	return ..()
 
+/*
 /atom/movable/screen/storage
 	name = "storage"
 	icon_state = "block"
@@ -429,6 +429,7 @@
 /atom/movable/screen/storage/attackby(obj/item/W, mob/user, params)
 	master.attackby(src, W, user, params)
 	return TRUE
+*/
 
 /atom/movable/screen/throw_catch
 	name = "throw/catch"

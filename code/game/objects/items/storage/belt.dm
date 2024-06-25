@@ -2,7 +2,7 @@
 	name = "belt"
 	desc = "Can hold various things."
 	icon = 'icons/obj/clothing/belts.dmi'
-	w_class = WEIGHT_CLASS_BULKY
+	w_class = WEIGHT_CLASS_NORMAL
 	icon_state = "utilitybelt"
 	item_state = "utility"
 	worn_icon_state = "utility"
@@ -30,7 +30,7 @@
 /obj/item/storage/belt/ComponentInitialize()
 	. = ..()
 	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
-	STR.max_w_class = WEIGHT_CLASS_LARGE
+	STR.max_w_class = WEIGHT_CLASS_NORMAL
 	STR.max_items = 7
 	STR.max_combined_w_class = 56
 
