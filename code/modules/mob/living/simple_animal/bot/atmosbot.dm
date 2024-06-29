@@ -99,7 +99,7 @@
 
 /mob/living/simple_animal/bot/atmosbot/on_emag(mob/user)
 	. = ..()
-	if(emagged == 2)
+	if(emagged)
 		audible_message("<span class='danger'>[src] whirs ominously.</span>")
 		playsound(src, "sparks", 75, TRUE)
 
@@ -137,7 +137,7 @@
 				action = ATMOSBOT_TEMPERATURE_CONTROL
 				try_speak("The atmospheric temperature in [get_area(src)] exceeds allowed operating limits.")
 			if(ATMOSBOT_AREA_STABLE)
-				if(emagged == 2)
+				if(emagged)
 					if(prob(20))
 						target = get_vent_turf()
 						action = ATMOSBOT_VENT_AIR
@@ -213,7 +213,7 @@
 
 		if(pressure_delta > 0)
 			var/transfer_moles = pressure_delta*environment.return_volume()/(T20C * R_IDEAL_GAS_EQUATION)
-			if(emagged == 2)
+			if(emagged)
 				environment.adjust_moles(GAS_CO2, transfer_moles)
 			else
 				environment.adjust_moles(GAS_N2, transfer_moles * 0.7885)
@@ -245,7 +245,7 @@
 	if(gas_mix.return_pressure() < breached_pressure)
 		return ATMOSBOT_CHECK_BREACH
 	//Toxins in the air
-	if(emagged != 2)
+	if(!emagged)
 		for(var/G in gasses)
 			if(gasses[G] && gas_mix.get_moles(G) > 0.2)
 				return ATMOSBOT_HIGH_TOXINS
@@ -357,7 +357,7 @@
 	update_icon()
 
 /mob/living/simple_animal/bot/atmosbot/update_icon()
-	if(action == ATMOSBOT_VENT_AIR && emagged == 2)
+	if(action == ATMOSBOT_VENT_AIR && emagged)
 		icon_state = "atmosbot[on][on?"_5":""]"
 		return
 	icon_state = "atmosbot[on][on?"_[action]":""]"
