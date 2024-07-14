@@ -493,14 +493,16 @@
 		return
 	var/turf/A = get_release_turf()
 	use_power(power)
+
 	materials.use_materials(materials_used)
+
 	if(is_stack)
 		var/obj/item/stack/N = new being_built.build_path(A, multiplier, FALSE)
-		N.update_icon()
+		N.update_appearance()
 	else
 		for(var/i in 1 to multiplier)
-			var/obj/item/new_item = new being_built.build_path(A)
-
+			var/obj/item/new_item = new being_built.build_path(null)
+			new_item.forceMove(A)
 			if(length(picked_materials))
 				new_item.set_custom_materials(picked_materials, 1 / multiplier) //Ensure we get the non multiplied amount
 	being_built = null

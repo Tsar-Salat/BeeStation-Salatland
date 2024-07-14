@@ -49,24 +49,20 @@
 		return
 	if(get_active_held_item())
 		return
-	if(!(mobility_flags & MOBILITY_MOVE))
-		return
-	if(restrained())
+	if(HAS_TRAIT(src, TRAIT_HANDS_BLOCKED))
 		return
 	return TRUE
 
 /mob/living/carbon/hitby(atom/movable/AM, skipcatch, hitpush = TRUE, blocked = FALSE, datum/thrownthing/throwingdatum)
-	if(!skipcatch)	//ugly, but easy
-		if(can_catch_item())
-			if(istype(AM, /obj/item))
-				var/obj/item/I = AM
-				if(isturf(I.loc))
-					I.attack_hand(src)
-					if(get_active_held_item() == I) //if our attack_hand() picks up the item...
-						visible_message("<span class='warning'>[src] catches [I]!</span>", \
-										"<span class='userdanger'>You catch [I] in mid-air!</span>")
-						throw_mode_off(THROW_MODE_TOGGLE)
-						return 1
+	if(!skipcatch && can_catch_item() && isitem(AM))
+		var/obj/item/I = AM
+		if(isturf(I.loc))
+			I.attack_hand(src)
+			if(get_active_held_item() == I) //if our attack_hand() picks up the item...
+				visible_message("<span class='warning'>[src] catches [I]!</span>", \
+						"<span class='userdanger'>You catch [I] in mid-air!</span>")
+				throw_mode_off(THROW_MODE_TOGGLE)
+				return TRUE
 	..(AM, skipcatch, hitpush, blocked, throwingdatum)
 
 
@@ -202,6 +198,32 @@
 		return affecting.body_zone
 	return dam_zone
 
+/**
+ * Attempt to disarm the target mob.
+ * Will shove the target mob back, and drop them if they're in front of something dense
+ * or another carbon.
+*/
+/mob/living/carbon/proc/disarm(mob/living/carbon/target)
+	do_attack_animation(target, ATTACK_EFFECT_DISARM)
+	playsound(target, 'sound/weapons/thudswoosh.ogg', 50, TRUE, -1)
+	if (ishuman(target))
+		var/mob/living/carbon/human/human_target = target
+		human_target.w_uniform?.add_fingerprint(src)
+
+	SEND_SIGNAL(target, COMSIG_HUMAN_DISARM_HIT, src, get_combat_bodyzone(target))
+	target.disarm_effect(src)
+
+/mob/living/carbon/is_shove_knockdown_blocked() //If you want to add more things that block shove knockdown, extend this
+	for (var/obj/item/clothing/clothing in get_equipped_items())
+		if(clothing.blocks_shove_knockdown)
+			return TRUE
+	return FALSE
+
+/mob/living/carbon/proc/clear_shove_slowdown()
+	remove_movespeed_modifier(/datum/movespeed_modifier/shove)
+	var/active_item = get_active_held_item()
+	if(is_type_in_typecache(active_item, GLOB.shove_disarming_types))
+		visible_message("<span class='warning'>[name] regains their grip on \the [active_item]!</span>", "<span class='warning'>You regain your grip on \the [active_item].</span>", null, COMBAT_MESSAGE_RANGE)
 
 /mob/living/carbon/blob_act(obj/structure/blob/B)
 	if (stat == DEAD)
@@ -304,7 +326,6 @@
 	else if(M.is_zone_selected(BODY_ZONE_HEAD))
 		M.visible_message("<span class='notice'>[M] pats [src] on the head.</span>", \
 					"<span class='notice'>You pat [src] on the head.</span>")
-		SEND_SIGNAL(src, COMSIG_ADD_MOOD_EVENT, "headpat", /datum/mood_event/headpat, M)
 		for(var/datum/brain_trauma/trauma in M.get_traumas())
 			trauma.on_hug(M, src)
 	else if((M.is_zone_selected(BODY_ZONE_L_ARM)) || (M.is_zone_selected(BODY_ZONE_R_ARM)))
@@ -323,11 +344,11 @@
 	AdjustImmobilized(-60)
 	set_resting(FALSE)
 
-	playsound(loc, 'sound/weapons/thudswoosh.ogg', 50, 1, -1)
+	playsound(loc, 'sound/weapons/thudswoosh.ogg', 50, TRUE, -1)
 
 /// Check ourselves to see if we've got any shrapnel, return true if we do. This is a much simpler version of what humans do, we only indicate we're checking ourselves if there's actually shrapnel
 /mob/living/carbon/proc/check_self_for_injuries()
-	if(stat == DEAD || stat == UNCONSCIOUS)
+	if(stat >= UNCONSCIOUS)
 		return
 
 	var/embeds = FALSE

@@ -32,6 +32,7 @@
 	AddComponent(/datum/component/personal_crafting)
 	AddComponent(/datum/component/bloodysoles/feet)
 	AddElement(/datum/element/strippable, GLOB.strippable_human_items, TYPE_PROC_REF(/mob/living/carbon/human, should_strip), GLOB.strippable_human_layout)
+	AddElement(/datum/element/footstep, FOOTSTEP_MOB_HUMAN, 1, -6)
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = PROC_REF(on_entered),
 	)
@@ -520,7 +521,7 @@
 		threatcount -= 5
 
 	//individuals wearing tinfoil hats are 30% more likely to be criminals
-	if(istype(get_item_by_slot(ITEM_SLOT_HEAD), /obj/item/clothing/head/foilhat))
+	if(istype(get_item_by_slot(ITEM_SLOT_HEAD), /obj/item/clothing/head/costume/foilhat))
 		threatcount += 2
 	return threatcount
 
@@ -588,8 +589,9 @@
 			to_chat(C, "<span class='unconscious'>You feel a breath of fresh air, which is a sensation you don't recognise.</span>")
 
 /mob/living/carbon/human/cuff_resist(obj/item/I)
-	if(dna && dna.check_mutation(HULK))
-		say(pick(";RAAAAAAAARGH!", ";HNNNNNNNNNGGGGGGH!", ";GWAAAAAAAARRRHHH!", "NNNNNNNNGGGGGGGGHH!", ";AAAAAAARRRGH!" ), forced = "hulk")
+	if(HAS_TRAIT(src, TRAIT_FAST_CUFF_REMOVAL))
+		if(dna && dna.check_mutation(HULK))
+			say(pick(";RAAAAAAAARGH!", ";HNNNNNNNNNGGGGGGH!", ";GWAAAAAAAARRRHHH!", "NNNNNNNNGGGGGGGGHH!", ";AAAAAAARRRGH!" ), forced = "hulk")
 		if(..(I, cuff_break = FAST_CUFFBREAK))
 			dropItemToGround(I)
 	else
@@ -790,6 +792,8 @@
 	for(var/datum/mutation/HM as() in dna.mutations)
 		if(HM.quality != POSITIVE)
 			dna.remove_mutation(HM.name)
+	coretemperature = get_body_temp_normal(apply_change=FALSE)
+	heat_exposure_stacks = 0
 	..()
 
 /mob/living/carbon/human/check_weakness(obj/item/weapon, mob/living/attacker)
@@ -1101,21 +1105,6 @@
 		riding_datum.unequip_buckle_inhands(target)
 		riding_datum.restore_position(target)
 		to_chat(src, "<span class='warning'>You seem to be unable to carry [target]!</span>")
-
-/mob/living/carbon/human/is_shove_knockdown_blocked() //If you want to add more things that block shove knockdown, extend this
-	var/list/body_parts = list(head, wear_mask, wear_suit, w_uniform, back, gloves, shoes, belt, s_store, glasses, ears, wear_id) //Everything but pockets. Pockets are l_store and r_store. (if pockets were allowed, putting something armored, gloves or hats for example, would double up on the armor)
-	for(var/bp in body_parts)
-		if(isclothing(bp))
-			var/obj/item/clothing/C = bp
-			if(C.blocks_shove_knockdown)
-				return TRUE
-	return FALSE
-
-/mob/living/carbon/human/proc/clear_shove_slowdown()
-	remove_movespeed_modifier(/datum/movespeed_modifier/shove)
-	var/active_item = get_active_held_item()
-	if(is_type_in_typecache(active_item, GLOB.shove_disarming_types))
-		visible_message("<span class='warning'>[src.name] regains their grip on \the [active_item]!</span>", "<span class='warning'>You regain your grip on \the [active_item].</span>", null, COMBAT_MESSAGE_RANGE)
 
 /mob/living/carbon/human/updatehealth()
 	. = ..()
