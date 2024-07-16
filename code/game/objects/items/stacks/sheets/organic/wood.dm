@@ -18,7 +18,7 @@ Woods Sheets
 	icon = 'icons/obj/stacks/organic.dmi'
 	mats_per_unit = list(/datum/material/wood=MINERAL_MATERIAL_AMOUNT)
 	sheettype = "wood"
-	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 0, STAMINA = 0)
+	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 0, STAMINA = 0, BLEED = 0)
 	resistance_flags = FLAMMABLE
 	merge_type = /obj/item/stack/sheet/wood
 	material_type = /datum/material/wood
@@ -39,7 +39,7 @@ Woods Sheets
 	icon = 'icons/obj/stacks/organic.dmi'
 	force = 10
 	throwforce = 10
-	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 0, STAMINA = 0)
+	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 0, STAMINA = 0, BLEED = 0)
 	resistance_flags = FLAMMABLE
 	merge_type = /obj/item/stack/sheet/bamboo
 	grind_results = list("carbon" = 5)
@@ -68,6 +68,11 @@ Woods Sheets
 	merge_type = /obj/item/stack/sheet/paperframes
 	resistance_flags = FLAMMABLE
 	merge_type = /obj/item/stack/sheet/paperframes
+
+/obj/item/stack/sheet/paperframes/Initialize(mapload, new_amount, merge = TRUE, list/mat_override=null, mat_amt=1)
+	. = ..()
+	pixel_x = 0
+	pixel_y = 0
 
 /obj/item/stack/sheet/paperframes/get_recipes()
 	return GLOB.paperframe_recipes

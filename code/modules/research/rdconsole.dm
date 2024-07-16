@@ -498,18 +498,19 @@ Nothing else in the console has ID requirements.
 
 /obj/machinery/computer/rdconsole/proc/check_canprint(datum/design/D, buildtype)
 	var/amount = 50
+	var/list/cached_mats = D.materials
 	if(buildtype == IMPRINTER)
 		if(QDELETED(linked_imprinter))
 			return FALSE
-		for(var/M in D.materials + D.reagents_list)
-			amount = min(amount, linked_imprinter.check_mat(D, M))
+		for(var/material in cached_mats)
+			amount = min(amount, linked_imprinter.check_material_req(D, material))
 			if(amount < 1)
 				return FALSE
 	else if(buildtype == PROTOLATHE)
 		if(QDELETED(linked_lathe))
 			return FALSE
-		for(var/M in D.materials + D.reagents_list)
-			amount = min(amount, linked_lathe.check_mat(D, M))
+		for(var/material in cached_mats)
+			amount = min(amount, linked_lathe.check_material_req(D, material))
 			if(amount < 1)
 				return FALSE
 	else

@@ -33,7 +33,7 @@ GLOBAL_LIST_INIT(marker_beacon_colors, sort_list(list(
 /obj/item/stack/marker_beacon/thirty //and they're bought in stacks 30
 	amount = 30
 
-/obj/item/stack/marker_beacon/Initialize(mapload)
+/obj/item/stack/marker_beacon/Initialize(mapload, new_amount, merge = TRUE, list/mat_override=null, mat_amt=1)
 	. = ..()
 	update_icon()
 
@@ -74,7 +74,7 @@ GLOBAL_LIST_INIT(marker_beacon_colors, sort_list(list(
 	icon = 'icons/obj/lighting.dmi'
 	icon_state = "markerrandom"
 	layer = BELOW_OPEN_DOOR_LAYER
-	armor = list(MELEE = 50,  BULLET = 75, LASER = 75, ENERGY = 75, BOMB = 25, BIO = 100, RAD = 100, FIRE = 25, ACID = 0, STAMINA = 0)
+	armor = list(MELEE = 50,  BULLET = 75, LASER = 75, ENERGY = 75, BOMB = 25, BIO = 100, RAD = 100, FIRE = 25, ACID = 0, STAMINA = 0, BLEED = 0)
 	max_integrity = 50
 	anchored = TRUE
 	light_range = 2

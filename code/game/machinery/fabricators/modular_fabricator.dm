@@ -67,9 +67,11 @@
 
 /obj/machinery/modular_fabricator/Initialize(mapload)
 	if(remote_materials)
-		AddComponent(/datum/component/remote_materials, "modfab", mapload, TRUE, auto_link)
+		//We think its a protolathe/mechfab. Connectable to Ore Silo
+		AddComponent(/datum/component/remote_materials, "modfab", mapload, TRUE, auto_link, mat_container_flags=BREAKDOWN_FLAGS_LATHE)
 	else
-		AddComponent(/datum/component/material_container, SSmaterials.materialtypes_by_category[MAT_CATEGORY_RIGID], 0, TRUE, null, null, CALLBACK(src, PROC_REF(AfterMaterialInsert)))
+		//We think its a autolathe. NO Ore Silo Connection
+		AddComponent(/datum/component/material_container, SSmaterials.materials_by_category[MAT_CATEGORY_RIGID], 0, MATCONTAINER_EXAMINE, _after_insert = CALLBACK(src, PROC_REF(AfterMaterialInsert)))
 	. = ..()
 	stored_research = new stored_research_type
 
@@ -361,10 +363,10 @@
 	return T
 
 /obj/machinery/modular_fabricator/on_deconstruction()
-	var/datum/component/material_container/materials = get_material_container()
+	var/datum/component/material_container/materials = GetComponent(/datum/component/material_container)
 	materials.retrieve_all()
 
-/obj/machinery/modular_fabricator/proc/AfterMaterialInsert(item_inserted, id_inserted, amount_inserted)
+/obj/machinery/modular_fabricator/proc/AfterMaterialInsert(obj/item/item_inserted, id_inserted, amount_inserted)
 	if(istype(item_inserted, /obj/item/stack/ore/bluespace_crystal))
 		use_power(MINERAL_MATERIAL_AMOUNT / 10)
 	else
@@ -491,15 +493,16 @@
 		return
 	var/turf/A = get_release_turf()
 	use_power(power)
+
 	materials.use_materials(materials_used)
+
 	if(is_stack)
-		var/obj/item/stack/N = new being_built.build_path(null, multiplier)
-		N.forceMove(A)
-		N.update_icon()
+		var/obj/item/stack/N = new being_built.build_path(src.loc, multiplier, FALSE)
+		N.update_appearance()
 	else
 		for(var/i in 1 to multiplier)
-			var/obj/item/new_item = new being_built.build_path(null)
-			new_item.forceMove(A)
+			var/obj/item/new_item = new being_built.build_path(src.loc)
+			new_item.forceMove(A) //Forcemove to the release turf to trigger ZFall
 			if(length(picked_materials))
 				new_item.set_custom_materials(picked_materials, 1 / multiplier) //Ensure we get the non multiplied amount
 	being_built = null
