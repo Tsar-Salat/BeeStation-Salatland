@@ -3,6 +3,7 @@
 	desc = "Someone should clean that up."
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "shards"
+	beauty = -50
 
 /obj/effect/decal/cleanable/ash
 	name = "ashes"
@@ -10,6 +11,7 @@
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "ash"
 	mergeable_decal = FALSE
+	beauty = -50
 
 /obj/effect/decal/cleanable/ash/Initialize(mapload)
 	. = ..()
@@ -24,6 +26,7 @@
 /obj/effect/decal/cleanable/ash/large
 	name = "large pile of ashes"
 	icon_state = "big_ash"
+	beauty = -100
 
 /obj/effect/decal/cleanable/ash/large/Initialize(mapload)
 	. = ..()
@@ -34,6 +37,7 @@
 	desc = "Back to sand."
 	icon = 'icons/obj/shards.dmi'
 	icon_state = "tiny"
+	beauty = -100
 
 /obj/effect/decal/cleanable/glass/Initialize(mapload)
 	. = ..()
@@ -55,6 +59,7 @@
 	smoothing_groups = list(SMOOTH_GROUP_CLEANABLE_DIRT)
 	canSmoothWith = list(SMOOTH_GROUP_WALLS, SMOOTH_GROUP_CLEANABLE_DIRT)
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	beauty = -75
 
 /obj/effect/decal/cleanable/dirt/Initialize(mapload)
 	. = ..()
@@ -79,6 +84,7 @@
 	light_power = 3
 	light_range = 2
 	light_color = LIGHT_COLOR_GREEN
+	beauty = -300
 
 /obj/effect/decal/cleanable/greenglow/ex_act()
 	return
@@ -99,6 +105,7 @@
 	layer = WALL_OBJ_LAYER
 	icon_state = "cobweb1"
 	resistance_flags = FLAMMABLE
+	beauty = -100
 	clean_type = CLEAN_TYPE_HARD_DECAL
 
 /obj/effect/decal/cleanable/cobweb/cobweb2
@@ -111,11 +118,13 @@
 	icon = 'icons/effects/effects.dmi'
 	icon_state = "molten"
 	mergeable_decal = FALSE
+	beauty = -150
 	clean_type = CLEAN_TYPE_HARD_DECAL
 
 /obj/effect/decal/cleanable/molten_object/large
 	name = "big gooey grey mass"
 	icon_state = "big_molten"
+	beauty = -300
 
 //Vomit (sorry)
 /obj/effect/decal/cleanable/vomit

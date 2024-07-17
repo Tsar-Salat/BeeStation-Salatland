@@ -37,6 +37,10 @@
 	var/lightswitch = TRUE
 	var/vacuum = null
 
+	var/totalbeauty = 0 //All beauty in this area combined, only includes indoor area.
+	var/beauty = 0 // Beauty average per open turf in the area
+	var/beauty_threshold = 150 //If a room is too big it doesn't have beauty.
+
 	/// For space, the asteroid, lavaland, etc. Used with blueprints or with weather to determine if we are adding a new area (vs editing a station room)
 	var/outdoors = FALSE
 
@@ -232,6 +236,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
   */
 /area/LateInitialize()
 	power_change()		// all machines set to current power level, also updates icon
+	update_beauty()
 
 /**
  * Performs initial setup of the lighting overlays.
@@ -551,6 +556,16 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 	switch(chan)
 		if(AREA_USAGE_DYNAMIC_START to AREA_USAGE_DYNAMIC_END)
 			power_usage[chan] += amount
+
+///Divides total beauty in the room by roomsize to allow us to get an average beauty per tile.
+/area/proc/update_beauty()
+	if(!areasize)
+		beauty = 0
+		return FALSE
+	if(areasize >= beauty_threshold)
+		beauty = 0
+		return FALSE //Too big
+	beauty = totalbeauty / areasize
 
 /**
   * Call back when an atom enters an area

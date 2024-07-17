@@ -9,6 +9,7 @@
 	bloodiness = BLOOD_AMOUNT_PER_DECAL
 	blood_state = BLOOD_STATE_XENO
 	clean_type = CLEAN_TYPE_BLOOD
+	beauty = -250
 
 /obj/effect/decal/cleanable/xenoblood/Initialize(mapload)
 	. = ..()
