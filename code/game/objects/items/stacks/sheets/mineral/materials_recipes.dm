@@ -62,7 +62,6 @@ STACKSIZE_MACRO(/obj/item/stack/sheet/mineral/silver)
 GLOBAL_LIST_INIT(copper_recipes, list ( \
 	new/datum/stack_recipe("Copper Door", /obj/structure/mineral_door/copper, 10, one_per_turf = TRUE, on_floor = TRUE), \
 	new/datum/stack_recipe("Copper Tile", /obj/item/stack/tile/mineral/copper, 1, 4, 20), \
-	new/datum/stack_recipe("Quartermaster Statue", /obj/structure/statue/copper/dimas, 10, one_per_turf = TRUE, on_floor = TRUE), \
 	))
 
 STACKSIZE_MACRO(/obj/item/stack/sheet/mineral/copper)

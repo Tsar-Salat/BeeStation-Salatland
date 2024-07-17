@@ -26,7 +26,7 @@
 /obj/structure/statue/proc/can_be_rotated(mob/user)
 	if(!anchored)
 		return TRUE
-	to_chat(user, span_warning("It's bolted to the floor, you'll need to unwrench it first."))
+	to_chat(user, "<span class='warning'>It's bolted to the floor, you'll need to unwrench it first.</span>")
 
 /obj/structure/statue/proc/can_user_rotate(mob/user)
 	return user.canUseTopic(src, BE_CLOSE, NO_DEXTERITY, FALSE, !iscyborg(user))
@@ -245,10 +245,10 @@
 
 /obj/item/chisel
 	name = "chisel"
-	desc = "breaking and making art since 4000 BC. This one uses advanced technology to allow creation of lifelike moving statues."
+	desc = "Breaking and making art since 4000 BC. This one uses advanced technology to allow the creation of lifelike moving statues."
 	icon = 'icons/obj/statue.dmi'
 	icon_state = "chisel"
-	inhand_icon_state = "screwdriver_nuke"
+	item_state = "screwdriver_nuke"
 	lefthand_file = 'icons/mob/inhands/equipment/tools_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/tools_righthand.dmi'
 	flags_1 = CONDUCT_1
@@ -259,14 +259,15 @@
 	throw_speed = 3
 	throw_range = 5
 	custom_materials = list(/datum/material/iron=75)
-	attack_verb_continuous = list("stabs")
-	attack_verb_simple = list("stab")
+	attack_verb = list("stabs")
+	//attack_verb_simple = list("stab")
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	usesound = list('sound/items/screwdriver.ogg', 'sound/items/screwdriver2.ogg')
 	drop_sound = 'sound/items/handling/screwdriver_drop.ogg'
 	pickup_sound =  'sound/items/handling/screwdriver_pickup.ogg'
-	item_flags = EYE_STAB
-	sharpness = SHARP_POINTY
+	sharpness = IS_SHARP
+	tool_behaviour = TOOL_RUSTSCRAPER
+	toolspeed = 3 // You're gonna have a bad time
 
 	/// Block we're currently carving in
 	var/obj/structure/carving_block/prepared_block
@@ -281,10 +282,10 @@
 	return ..()
 
 /*
- Hit the block to start
- Point with the chisel at the target to choose what to sculpt or hit block to choose from preset statue types.
- Hit block again to start sculpting.
- Moving interrupts
+Hit the block to start
+Point with the chisel at the target to choose what to sculpt or hit block to choose from preset statue types.
+Hit block again to start sculpting.
+Moving interrupts
 */
 /obj/item/chisel/pre_attack(atom/A, mob/living/user, params)
 	. = ..()
@@ -373,6 +374,7 @@
 	icon_state = "block"
 	material_flags = MATERIAL_COLOR | MATERIAL_AFFECT_STATISTICS | MATERIAL_ADD_PREFIX
 	density = TRUE
+	material_modifier = 0.5 //50% effectiveness of materials
 
 	/// The thing it will look like - Unmodified resulting statue appearance
 	var/current_target
@@ -384,8 +386,6 @@
 	var/completion = 0
 	/// Greyscaled target with cutout filter
 	var/mutable_appearance/target_appearance_with_filters
-	/// Cutout filter for main block sprite
-	var/partial_uncover_filter
 	/// HSV color filters parameters
 	var/static/list/greyscale_with_value_bump = list(0,0,0, 0,0,0, 0,0,1, 0,0,-0.05)
 
@@ -398,7 +398,11 @@
 	if(!is_viable_target(target))
 		to_chat(user,"You won't be able to carve that.")
 		return
-	current_target = target.appearance
+	if(istype(target,/obj/structure/statue/custom))
+		var/obj/structure/statue/custom/original = target
+		current_target = original.content_ma
+	else
+		current_target = target.appearance
 	var/mutable_appearance/ma = current_target
 	to_chat(user,"<span class='notice'>You decide to sculpt [src] into [ma.name].</span>",type=MESSAGE_TYPE_INFO)
 
@@ -409,10 +413,11 @@
 
 /obj/structure/carving_block/update_overlays()
 	. = ..()
-	if(target_appearance_with_filters)
-		//We're only keeping one instance here that changes in the middle so we have to clone it to avoid managed overlay issues
-		var/mutable_appearance/clone = new(target_appearance_with_filters)
-		. += clone
+	if(!target_appearance_with_filters)
+		return
+	//We're only keeping one instance here that changes in the middle so we have to clone it to avoid managed overlay issues
+	var/mutable_appearance/clone = new(target_appearance_with_filters)
+	. += clone
 
 /obj/structure/carving_block/proc/is_viable_target(atom/movable/target)
 	//Only things on turfs
@@ -443,23 +448,23 @@
 		return
 	if(!target_appearance_with_filters)
 		target_appearance_with_filters = new(current_target)
-		target_appearance_with_filters.appearance_flags |= KEEP_TOGETHER
+		// KEEP_APART in case carving block gets KEEP_TOGETHER from somewhere like material texture filters.
+		target_appearance_with_filters.appearance_flags |= KEEP_TOGETHER | KEEP_APART
+		//Doesn't use filter helpers because MAs aren't atoms
 		target_appearance_with_filters.filters = filter(type="color",color=greyscale_with_value_bump,space=FILTER_COLOR_HSV)
 	completion = value
 	var/static/icon/white = icon('icons/effects/alphacolors.dmi', "white")
 	switch(value)
 		if(0)
 			//delete uncovered and reset filters
-			filters -= partial_uncover_filter
+			remove_filter("partial_uncover")
 			target_appearance_with_filters = null
 		else
 			var/mask_offset = min(world.icon_size,round(completion * world.icon_size))
-			if(partial_uncover_filter)
-				filters -= partial_uncover_filter
-			partial_uncover_filter = filter(type="alpha",icon=white,y=-mask_offset)
-			filters += partial_uncover_filter
+			remove_filter("partial_uncover")
+			add_filter("partial_uncover", 1, alpha_mask_filter(icon = white, y = -mask_offset))
 			target_appearance_with_filters.filters = filter(type="alpha",icon=white,y=-mask_offset,flags=MASK_INVERSE)
-	update_icon()
+	update_appearance()
 
 
 /// Returns a list of preset statues carvable from this block depending on the custom materials
@@ -501,13 +506,16 @@
 	return ..()
 
 /obj/structure/statue/custom/proc/set_visuals(model_appearance)
+	if(content_ma)
+		QDEL_NULL(content_ma)
 	content_ma = new
 	content_ma.appearance = model_appearance
 	content_ma.pixel_x = 0
 	content_ma.pixel_y = 0
 	content_ma.alpha = 255
+	content_ma.appearance_flags &= ~KEEP_APART //Don't want this
 	content_ma.filters = filter(type="color",color=greyscale_with_value_bump,space=FILTER_COLOR_HSV)
-	update_icon()
+	update_appearance()
 
 /obj/structure/statue/custom/update_overlays()
 	. = ..()
