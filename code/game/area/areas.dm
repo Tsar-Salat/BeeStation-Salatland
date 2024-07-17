@@ -560,7 +560,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 /**
   * Call back when an atom enters an area
   *
-  * Sends signals COMSIG_AREA_ENTERED and COMSIG_MOVABLE_ENTERED_AREA (to the atom)
+  * Sends signals COMSIG_AREA_ENTERED and COMSIG_ENTER_AREA (to the atom)
   *
   * If the area has ambience, then it plays some ambience music to the ambience channel
   */
@@ -571,7 +571,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 		return
 	for(var/atom/movable/recipient as anything in arrived.important_recursive_contents[RECURSIVE_CONTENTS_AREA_SENSITIVE])
 		SEND_SIGNAL(recipient, COMSIG_ENTER_AREA, src)
-	SEND_SIGNAL(arrived, COMSIG_MOVABLE_ENTERED_AREA, src) //The atom that enters the area
+	SEND_SIGNAL(arrived, COMSIG_ENTER_AREA, src) //The atom that enters the area
 
 ///Divides total beauty in the room by roomsize to allow us to get an average beauty per tile.
 /area/proc/update_beauty()
