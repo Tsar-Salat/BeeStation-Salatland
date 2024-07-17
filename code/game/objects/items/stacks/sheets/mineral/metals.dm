@@ -80,10 +80,12 @@ Metals Sheets
 	singular_name = "runed metal sheet"
 	icon_state = "sheet-runed"
 	item_state = "sheet-runed"
+	mats_per_unit = list(/datum/material/runedmetal = MINERAL_MATERIAL_AMOUNT)
 	//icon = 'icons/obj/stacks/mineral.dmi'
 	sheettype = "runed"
 	merge_type = /obj/item/stack/sheet/runed_metal
 	grind_results = list(/datum/reagent/iron = 5, /datum/reagent/blood = 15)
+	material_type = /datum/material/runedmetal
 
 /obj/item/stack/sheet/runed_metal/ratvar_act()
 	new /obj/item/stack/sheet/brass(loc, amount)
@@ -146,7 +148,9 @@ Metals Sheets
 	singular_name = "bronze sheet"
 	icon_state = "sheet-brass"
 	item_state = "sheet-brass"
+	mats_per_unit = list(/datum/material/bronze = MINERAL_MATERIAL_AMOUNT)
 	resistance_flags = FIRE_PROOF | ACID_PROOF
+	sheettype = "bronze"
 	throwforce = 10
 	max_amount = 50
 	throw_speed = 1
@@ -155,6 +159,8 @@ Metals Sheets
 	grind_results = list(/datum/reagent/iron = 5, /datum/reagent/copper = 3) //we have no "tin" reagent so this is the closest thing
 	merge_type = /obj/item/stack/sheet/bronze
 	tableVariant = /obj/structure/table/bronze
+	material_type = /datum/material/bronze
+	walltype = /turf/closed/wall/mineral/bronze
 
 /obj/item/stack/sheet/bronze/attack_self(mob/living/user)
 	if(is_servant_of_ratvar(user))

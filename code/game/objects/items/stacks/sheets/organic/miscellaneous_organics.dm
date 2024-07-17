@@ -26,6 +26,7 @@
 	name = "bones"
 	icon_state = "bone"
 	item_state = "sheet-bone"
+	mats_per_unit = list(/datum/material/bone = MINERAL_MATERIAL_AMOUNT)
 	icon = 'icons/obj/stacks/organic.dmi'
 	singular_name = "bone"
 	desc = "Someone's been drinking their milk."
@@ -37,6 +38,7 @@
 	throw_range = 3
 	grind_results = list(/datum/reagent/carbon = 10)
 	merge_type = /obj/item/stack/sheet/bone
+	material_type = /datum/material/bone
 
 /* Sinew */
 

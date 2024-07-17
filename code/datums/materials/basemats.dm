@@ -227,3 +227,156 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	categories = list(MAT_CATEGORY_ORE = TRUE, MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_BASE_RECIPES = TRUE)
 	sheet_type = /obj/item/stack/sheet/mineral/copper
 	beauty_modifier = 0.05
+
+//I don't like sand. It's coarse, and rough, and irritating, and it gets everywhere.
+/datum/material/sand
+	name = "sand"
+	desc = "You know, it's amazing just how structurally sound sand can be."
+	color = "#EDC9AF"
+	greyscale_colors = "#EDC9AF"
+	categories = list(MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_ITEM_MATERIAL=TRUE)
+	sheet_type = /obj/item/stack/sheet/sandblock
+	value_per_unit = 0.001
+	strength_modifier = 0.5
+	integrity_modifier = 0.1
+	//armor_modifiers = list(MELEE = 0.25, BULLET = 0.25, LASER = 1.25, ENERGY = 0.25, BOMB = 0.25, BIO = 0.25, RAD = 1.5, FIRE = 1.5, ACID = 1.5)
+	beauty_modifier = 0.25
+	turf_sound_override = FOOTSTEP_SAND
+	texture_layer_icon_state = "sand"
+
+/datum/material/sand/on_accidental_mat_consumption(mob/living/carbon/victim, obj/item/source_item)
+	victim.adjust_disgust(17)
+	return TRUE
+
+//And now for our lavaland dwelling friends, sand, but in stone form! Truly revolutionary.
+/datum/material/sandstone
+	name = "sandstone"
+	desc = "Bialtaakid 'ant taerif ma hdha."
+	color = "#B77D31"
+	greyscale_colors = "#B77D31"
+	categories = list(MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_ITEM_MATERIAL=TRUE)
+	sheet_type = /obj/item/stack/sheet/mineral/sandstone
+	value_per_unit = 0.0025
+	//armor_modifiers = list(MELEE = 0.5, BULLET = 0.5, LASER = 1.25, ENERGY = 0.5, BOMB = 0.5, BIO = 0.25, RAD = 1.5, FIRE = 1.5, ACID = 1.5)
+	beauty_modifier = 0.3
+	turf_sound_override = FOOTSTEP_WOOD
+	texture_layer_icon_state = "brick"
+
+/datum/material/snow
+	name = "snow"
+	desc = "There's no business like snow business."
+	color = "#FFFFFF"
+	greyscale_colors = "#FFFFFF"
+	categories = list(MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_ITEM_MATERIAL=TRUE)
+	sheet_type = /obj/item/stack/sheet/snow
+	value_per_unit = 0.0025
+	//armor_modifiers = list(MELEE = 0.25, BULLET = 0.25, LASER = 0.25, ENERGY = 0.25, BOMB = 0.25, BIO = 0.25, RAD = 1.5, FIRE = 0.25, ACID = 1.5)
+	beauty_modifier = 0.3
+	turf_sound_override = FOOTSTEP_SAND
+	texture_layer_icon_state = "sand"
+
+/datum/material/snow/on_accidental_mat_consumption(mob/living/carbon/victim, obj/item/source_item)
+	victim.reagents.add_reagent(/datum/reagent/water, rand(5, 10))
+	return TRUE
+
+/datum/material/runedmetal
+	name = "runed metal"
+	desc = "Mir'ntrath barhah Nar'sie."
+	color = "#3C3434"
+	greyscale_colors = "#3C3434"
+	categories = list(MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_ITEM_MATERIAL=TRUE)
+	sheet_type = /obj/item/stack/sheet/runed_metal
+	value_per_unit = 0.75
+	//armor_modifiers = list(MELEE = 1.2, BULLET = 1.2, LASER = 1, ENERGY = 1, BOMB = 1.2, BIO = 1.2, RAD = 1.5, FIRE = 1.5, ACID = 1.5)
+	beauty_modifier = -0.15
+	texture_layer_icon_state = "runed"
+
+/datum/material/runedmetal/on_accidental_mat_consumption(mob/living/carbon/victim, obj/item/source_item)
+	victim.reagents.add_reagent(/datum/reagent/fuel/unholywater, rand(8, 12))
+	victim.apply_damage(10, BRUTE, BODY_ZONE_HEAD)
+	return TRUE
+
+/datum/material/bronze
+	name = "bronze"
+	desc = "Clock Cult? Never heard of it."
+	color = "#92661A"
+	greyscale_colors = "#92661A"
+	categories = list(MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_ITEM_MATERIAL=TRUE)
+	sheet_type = /obj/item/stack/sheet/bronze
+	value_per_unit = 0.025
+	//armor_modifiers = list(MELEE = 1, BULLET = 1, LASER = 1, ENERGY = 1, BOMB = 1, BIO = 1, RAD = 1.5, FIRE = 1.5, ACID = 1.5)
+	beauty_modifier = 0.2
+
+/datum/material/paper
+	name = "paper"
+	desc = "Ten thousand folds of pure starchy power."
+	color = "#E5DCD5"
+	greyscale_colors = "#E5DCD5"
+	categories = list(MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_ITEM_MATERIAL=TRUE)
+	sheet_type = /obj/item/stack/sheet/paperframes
+	value_per_unit = 0.0025
+	//armor_modifiers = list(MELEE = 0.1, BULLET = 0.1, LASER = 0.1, ENERGY = 0.1, BOMB = 0.1, BIO = 0.1, RAD = 1.5, FIRE = 0, ACID = 1.5)
+	beauty_modifier = 0.3
+	turf_sound_override = FOOTSTEP_SAND
+	texture_layer_icon_state = "paper"
+
+/datum/material/paper/on_applied_obj(obj/source, amount, material_flags)
+	. = ..()
+	if(material_flags & MATERIAL_AFFECT_STATISTICS)
+		var/obj/paper = source
+		paper.resistance_flags |= FLAMMABLE
+		paper.obj_flags |= UNIQUE_RENAME
+
+/datum/material/paper/on_removed_obj(obj/source, amount, material_flags)
+	if(material_flags & MATERIAL_AFFECT_STATISTICS)
+		var/obj/paper = source
+		paper.resistance_flags &= ~FLAMMABLE
+	return ..()
+
+/datum/material/cardboard
+	name = "cardboard"
+	desc = "They say cardboard is used by hobos to make incredible things."
+	color = "#5F625C"
+	greyscale_colors = "#5F625C"
+	categories = list(MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_ITEM_MATERIAL=TRUE)
+	sheet_type = /obj/item/stack/sheet/cardboard
+	value_per_unit = 0.003
+	//armor_modifiers = list(MELEE = 0.25, BULLET = 0.25, LASER = 0.25, ENERGY = 0.25, BOMB = 0.25, BIO = 0.25, RAD = 1.5, FIRE = 0, ACID = 1.5)
+	beauty_modifier = -0.1
+
+/datum/material/cardboard/on_applied_obj(obj/source, amount, material_flags)
+	. = ..()
+	if(material_flags & MATERIAL_AFFECT_STATISTICS)
+		var/obj/cardboard = source
+		cardboard.resistance_flags |= FLAMMABLE
+		cardboard.obj_flags |= UNIQUE_RENAME
+
+/datum/material/cardboard/on_removed_obj(obj/source, amount, material_flags)
+	if(material_flags & MATERIAL_AFFECT_STATISTICS)
+		var/obj/cardboard = source
+		cardboard.resistance_flags &= ~FLAMMABLE
+	return ..()
+
+/datum/material/bone
+	name = "bone"
+	desc = "Man, building with this will make you the coolest caveman on the block."
+	color = "#e3dac9"
+	greyscale_colors = "#e3dac9"
+	categories = list(MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_ITEM_MATERIAL=TRUE)
+	sheet_type = /obj/item/stack/sheet/bone
+	value_per_unit = 0.05
+	//armor_modifiers = list(MELEE = 1.2, BULLET = 0.75, LASER = 0.75, ENERGY = 1.2, BOMB = 1, BIO = 1, RAD = 1.5, FIRE = 1.5, ACID = 1.5)
+	beauty_modifier = -0.2
+
+/datum/material/bamboo
+	name = "bamboo"
+	desc = "If it's good enough for pandas, it's good enough for you."
+	color = "#339933"
+	greyscale_colors = "#339933"
+	categories = list(MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_ITEM_MATERIAL=TRUE)
+	sheet_type = /obj/item/stack/sheet/bamboo
+	value_per_unit = 0.0025
+	//armor_modifiers = list(MELEE = 0.5, BULLET = 0.5, LASER = 0.5, ENERGY = 0.5, BOMB = 0.5, BIO = 0.51, RAD = 1.5, FIRE = 0.5, ACID = 1.5)
+	beauty_modifier = 0.2
+	turf_sound_override = FOOTSTEP_WOOD
+	texture_layer_icon_state = "bamboo"

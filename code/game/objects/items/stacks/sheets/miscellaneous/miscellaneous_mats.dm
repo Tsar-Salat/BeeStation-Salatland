@@ -67,12 +67,15 @@ GLOBAL_LIST_INIT(sandbag_recipes, list ( \
 	name = "snow"
 	icon_state = "sheet-snow"
 	item_state = "sheet-snow"
+	mats_per_unit = list(/datum/material/snow = MINERAL_MATERIAL_AMOUNT)
 	icon = 'icons/obj/stacks/minerals.dmi'
 	singular_name = "snow block"
 	force = 1
 	throwforce = 2
 	grind_results = list(/datum/reagent/consumable/ice = 20)
 	merge_type = /obj/item/stack/sheet/snow
+	walltype = /turf/closed/wall/mineral/snow
+	material_type = /datum/material/snow
 
 /obj/item/stack/sheet/snow/get_recipes()
 	return GLOB.snow_recipes
@@ -85,7 +88,7 @@ GLOBAL_LIST_INIT(sandbag_recipes, list ( \
 	singular_name = "plastic sheet"
 	icon_state = "sheet-plastic"
 	item_state = "sheet-plastic"
-	custom_materials = list(/datum/material/plastic=MINERAL_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/plastic=MINERAL_MATERIAL_AMOUNT)
 	throwforce = 7
 	merge_type = /obj/item/stack/sheet/plastic
 	material_type = /datum/material/plastic
@@ -102,10 +105,12 @@ GLOBAL_LIST_INIT(sandbag_recipes, list ( \
 	icon = 'icons/obj/stacks/miscellaneous.dmi'
 	icon_state = "sheet-card"
 	item_state = "sheet-card"
+	mats_per_unit = list(/datum/material/cardboard = MINERAL_MATERIAL_AMOUNT)
 	resistance_flags = FLAMMABLE
 	force = 0
 	throwforce = 0
 	merge_type = /obj/item/stack/sheet/cardboard
+	material_type = /datum/material/cardboard
 
 /obj/item/stack/sheet/cardboard/get_recipes()
 	return GLOB.cardboard_recipes
@@ -149,3 +154,37 @@ GLOBAL_LIST_INIT(sandbag_recipes, list ( \
 
 /obj/item/stack/sheet/meat/get_recipes()
 	return GLOB.meat_recipes
+
+/obj/item/stack/sheet/pizza
+	name = "pepperoni sheetzzas"
+	desc = "It's a delicious pepperoni sheetzza!"
+	singular_name = "pepperoni sheetzza"
+	icon_state = "sheet-pizza"
+	mats_per_unit = list(/datum/material/pizza = MINERAL_MATERIAL_AMOUNT)
+	merge_type = /obj/item/stack/sheet/pizza
+	material_type = /datum/material/pizza
+	material_modifier = 1
+
+/obj/item/stack/sheet/pizza/fifty
+	amount = 50
+/obj/item/stack/sheet/pizza/twenty
+	amount = 20
+/obj/item/stack/sheet/pizza/five
+	amount = 5
+
+/obj/item/stack/sheet/sandblock
+	name = "blocks of sand"
+	desc = "You're too old to be playing with sandcastles. Now you build... sandstations."
+	singular_name = "block of sand"
+	icon_state = "sheet-sandstone"
+	mats_per_unit = list(/datum/material/sand = MINERAL_MATERIAL_AMOUNT)
+	merge_type = /obj/item/stack/sheet/sandblock
+	material_type = /datum/material/sand
+	material_modifier = 1
+
+/obj/item/stack/sheet/sandblock/fifty
+	amount = 50
+/obj/item/stack/sheet/sandblock/twenty
+	amount = 20
+/obj/item/stack/sheet/sandblock/five
+	amount = 5
