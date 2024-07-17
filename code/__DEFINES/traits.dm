@@ -286,6 +286,12 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 //Used for limb-based paralysis, where replacing the limb will fix it
 #define TRAIT_PARALYSIS "paralysis"
 
+/*
+ * Used for movables that need to be updated, via COMSIG_ENTER_AREA and COMSIG_EXIT_AREA, when transitioning areas.
+ * Use [/atom/movable/proc/become_area_sensitive(trait_source)] to properly enable it. How you remove it isn't as important.
+ */
+#define TRAIT_AREA_SENSITIVE "area-sensitive"
+
 ///Used for managing KEEP_TOGETHER in [appearance_flags]
 #define TRAIT_KEEP_TOGETHER 	"keep-together"
 
@@ -471,6 +477,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define EXPERIMENTAL_SURGERY_TRAIT "experimental_surgery"
 #define NINJA_KIDNAPPED_TRAIT "ninja_kidnapped"
 #define TABLE_TRAIT "table_trait"
+/// Self-explainatory.
+#define BEAUTY_ELEMENT_TRAIT "beauty_element"
+#define MOOD_COMPONENT_TRAIT "mood_component"
 
 ///Traits given by station traits
 #define STATION_TRAIT_BANANIUM_SHIPMENTS "station_trait_bananium_shipments"
