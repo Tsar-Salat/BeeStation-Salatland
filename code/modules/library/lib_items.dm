@@ -26,7 +26,6 @@
 	max_integrity = 200
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 0, STAMINA = 0, CONSUME = 0, BLEED = 0)
 	var/state = BOOKCASE_UNANCHORED
-	var/list/allowed_books = list(/obj/item/book, /obj/item/spellbook, /obj/item/storage/book, /obj/item/codex_cicatrix) //Things allowed in the bookcase
 	/// When enabled, books_to_load number of random books will be generated for this bookcase when first interacted with.
 	var/load_random_books = FALSE
 	/// The category of books to pick from when populating random books.
@@ -101,7 +100,7 @@
 
 		if(BOOKCASE_FINISHED)
 			var/datum/component/storage/STR = I.GetComponent(/datum/component/storage)
-			if(is_type_in_list(I, allowed_books))
+			if(isbook(I))
 				if(!user.transferItemToLoc(I, src))
 					return
 				update_appearance()
@@ -115,7 +114,7 @@
 				if(!user.is_literate())
 					to_chat(user, "<span class='notice'>You scribble illegibly on the side of [src]!</span>")
 					return
-				var/newname = stripped_input(user, "What would you like to title this bookshelf?")
+				var/newname = tgui_input_text(user, "What would you like to title this bookshelf?", "Bookshelf Renaming")
 				if(!user.canUseTopic(src, BE_CLOSE))
 					return
 				if(!newname)
@@ -141,22 +140,22 @@
 		return
 	if(!istype(user))
 		return
-	if(!length(contents))
-		return
 	if(load_random_books)
 		create_random_books(books_to_load, src, FALSE, random_category)
 		load_random_books = FALSE
-	if(contents.len)
-		var/obj/item/book/choice = input(user, "Which book would you like to remove from the shelf?") as null|obj in sort_names(contents.Copy())
-		if(choice)
-			if(!(user.mobility_flags & MOBILITY_USE) || user.stat != CONSCIOUS || HAS_TRAIT(user, TRAIT_HANDS_BLOCKED) || !in_range(loc, user))
-				return
-			if(ishuman(user))
-				if(!user.get_active_held_item())
-					user.put_in_hands(choice)
-			else
-				choice.forceMove(drop_location())
-			update_icon()
+	if(!length(contents))
+		return
+	var/obj/item/book/choice = tgui_input_list(user, "Remove from shelf", "Remove Book", sort_names(contents.Copy()))
+	if(isnull(choice))
+		return
+	if(!(user.mobility_flags & MOBILITY_USE) || user.stat != CONSCIOUS || HAS_TRAIT(user, TRAIT_HANDS_BLOCKED) || !in_range(loc, user))
+		return
+	if(ishuman(user))
+		if(!user.get_active_held_item())
+			user.put_in_hands(choice)
+	else
+		choice.forceMove(drop_location())
+	update_appearance()
 
 /obj/structure/bookcase/deconstruct(disassembled = TRUE)
 	var/atom/Tsec = drop_location()
@@ -261,12 +260,14 @@
 		if(!literate)
 			to_chat(user, "<span class='notice'>You scribble illegibly on the cover of [src]!</span>")
 			return
-		var/choice = input("What would you like to change?") in list("Title", "Contents", "Author", "Cancel")
+		var/choice = tgui_input_list(usr, "What is to be modified?", "Modify Book Details", list("Title", "Contents", "Author", "Cancel"))
+		if(isnull(choice))
+			return
 		if(!user.canUseTopic(src, BE_CLOSE, literate))
 			return
 		switch(choice)
 			if("Title")
-				var/newtitle = reject_bad_text(stripped_input(user, "Write a new title:"))
+				var/newtitle = reject_bad_text(tgui_input_text(user, "Write a new title", "Book Title", max_length = 50))
 				if(!user.canUseTopic(src, BE_CLOSE, literate))
 					return
 				if (length(newtitle) > 50)
@@ -279,7 +280,7 @@
 					name = newtitle
 					title = newtitle
 			if("Contents")
-				var/content = stripped_input(user, "Write your book's contents (HTML NOT allowed):","","",8192)
+				var/content = tgui_input_text(user, "Write your book's contents (HTML NOT allowed)", "Book Contents", max_length = 8192, multiline = TRUE)
 				if(!user.canUseTopic(src, BE_CLOSE, literate))
 					return
 				if(!content)
@@ -288,14 +289,12 @@
 				else
 					dat += content
 			if("Author")
-				var/newauthor = stripped_input(user, "Write the author's name:")
+				var/newauthor = tgui_input_text(user, "Write the author's name", "Author Name", max_length = 45)
 				if(!user.canUseTopic(src, BE_CLOSE, literate))
 					return
 				if(!newauthor)
 					to_chat(user, "The name is invalid.")
 					return
-				else if(length(newauthor) > 45)
-					to_chat(user, "That name is too long!")
 				else
 					author = newauthor
 			else
