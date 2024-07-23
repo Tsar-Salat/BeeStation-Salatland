@@ -7,6 +7,7 @@
 	inhand_icon_state = null
 	icon = 'icons/obj/stacks/organic.dmi'
 	novariants = TRUE
+	merge_type = /obj/item/stack/sheet/animalhide
 
 /* Generic hide */
 
@@ -15,6 +16,7 @@
 	desc = "A piece of skin."
 	singular_name = "skin piece"
 	novariants = FALSE
+	merge_type = /obj/item/stack/sheet/animalhide/generic
 
 /* Human hide */
 
@@ -23,6 +25,7 @@
 	desc = "The by-product of human farming."
 	singular_name = "human skin piece"
 	novariants = FALSE
+	merge_type = /obj/item/stack/sheet/animalhide/human
 
 /obj/item/stack/sheet/animalhide/human/get_recipes()
 	return GLOB.human_recipes
@@ -34,7 +37,8 @@
 	desc = "The by-product of corgi farming."
 	singular_name = "corgi hide piece"
 	icon_state = "sheet-corgi"
-	inhand_icon_state = null
+	inhand_icon_state = "sheet-corgi"
+	merge_type = /obj/item/stack/sheet/animalhide/corgi
 
 /obj/item/stack/sheet/animalhide/corgi/get_recipes()
 	return GLOB.corgi_recipes
@@ -46,7 +50,8 @@
 	desc = "A thin layer of mothroach hide."
 	singular_name = "mothroach hide piece"
 	icon_state = "sheet-mothroach"
-	inhand_icon_state = null
+	inhand_icon_state = "sheet-mothroach"
+	merge_type = /obj/item/stack/sheet/animalhide/mothroach
 
 /* Gondola hide */
 
@@ -55,7 +60,8 @@
 	desc = "The extremely valuable product of gondola hunting."
 	singular_name = "gondola hide piece"
 	icon_state = "sheet-gondola"
-	inhand_icon_state = null
+	inhand_icon_state = "sheet-gondola"
+	merge_type = /obj/item/stack/sheet/animalhide/gondola
 
 /obj/item/stack/sheet/animalhide/gondola/get_recipes()
 	return GLOB.gondola_recipes
@@ -67,7 +73,8 @@
 	desc = "The by-product of cat farming."
 	singular_name = "cat hide piece"
 	icon_state = "sheet-cat"
-	inhand_icon_state = null
+	inhand_icon_state = "sheet-cat"
+	merge_type = /obj/item/stack/sheet/animalhide/cat
 
 /* Monkey hide */
 
@@ -76,7 +83,8 @@
 	desc = "The by-product of monkey farming."
 	singular_name = "monkey hide piece"
 	icon_state = "sheet-monkey"
-	inhand_icon_state = null
+	icon_state = "sheet-monkey"
+	merge_type = /obj/item/stack/sheet/animalhide/monkey
 
 /obj/item/stack/sheet/animalhide/monkey/get_recipes()
 	return GLOB.monkey_recipes
@@ -88,7 +96,8 @@
 	desc = "Sssssss..."
 	singular_name = "lizard hide"
 	icon_state = "sheet-lizard"
-	inhand_icon_state = null
+	inhand_icon_state = "sheet-lizard"
+	merge_type = /obj/item/stack/sheet/animalhide/lizard
 
 /* Xeno hide */
 
@@ -114,6 +123,7 @@
 	item_flags = NOBLUDGEON
 	w_class = WEIGHT_CLASS_NORMAL
 	layer = MOB_LAYER
+	merge_type = /obj/item/stack/sheet/animalhide/ashdrake
 
 /* Goliath Plates */
 /obj/item/stack/sheet/animalhide/goliath_hide
@@ -126,6 +136,7 @@
 	item_flags = NOBLUDGEON
 	w_class = WEIGHT_CLASS_NORMAL
 	layer = MOB_LAYER
+	merge_type = /obj/item/stack/sheet/animalhide/goliath_hide
 
 /* Generic functions for hides, fun for all the family! */
 

@@ -7,6 +7,7 @@
 	icon_state = "sheet-leather"
 	inhand_icon_state = null
 	icon = 'icons/obj/stacks/organic.dmi'
+	merge_type = /obj/item/stack/sheet/leather
 
 /obj/item/stack/sheet/leather/get_recipes()
 	return GLOB.leather_recipes
@@ -18,6 +19,7 @@
 	icon_state = "sheet-hairlesshide"
 	inhand_icon_state = null
 	icon = 'icons/obj/stacks/organic.dmi'
+	merge_type = /obj/item/stack/sheet/leather/hairlesshide
 
 /obj/item/stack/sheet/leather/wetleather
 	name = "wet leather"
@@ -26,6 +28,7 @@
 	icon_state = "sheet-wetleather"
 	inhand_icon_state = null
 	icon = 'icons/obj/stacks/organic.dmi'
+	merge_type = /obj/item/stack/sheet/leather/wetleather
 	var/wetness = 30 //Reduced when exposed to high temperautres
 	var/drying_threshold_temperature = 500 //Kelvin to start drying
 

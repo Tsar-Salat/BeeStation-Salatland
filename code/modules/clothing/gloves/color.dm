@@ -93,6 +93,61 @@
 	inhand_icon_state = null
 	worn_icon_state = "deniedgloves"
 
+/obj/item/clothing/gloves/color/captain
+	desc = "Regal blue gloves, with a nice gold trim, a diamond anti-shock coating, and an integrated thermal barrier. Swanky."
+	name = "captain's gloves"
+	icon_state = "captain"
+	inhand_icon_state = "egloves"
+	worn_icon_state = "egloves"
+	siemens_coefficient = 0
+	permeability_coefficient = 0.05
+	cold_protection = HANDS
+	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
+	heat_protection = HANDS
+	max_heat_protection_temperature = GLOVES_MAX_TEMP_PROTECT
+	strip_delay = 60
+	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 70, ACID = 50, STAMINA = 0, BLEED = 0)
+
+/obj/item/clothing/gloves/color/latex
+	name = "latex gloves"
+	desc = "Cheap sterile gloves made from latex. Transfers minor paramedic knowledge to the user via budget nanochips."
+	icon_state = "latex"
+	inhand_icon_state = "latex"
+	worn_icon_state = "latex"
+	siemens_coefficient = 0.3
+	permeability_coefficient = 0.01
+	transfer_prints = TRUE
+	resistance_flags = NONE
+	var/carrytrait = TRAIT_QUICKER_CARRY
+
+/obj/item/clothing/gloves/color/latex/equipped(mob/user, slot)
+	..()
+	if(slot == ITEM_SLOT_GLOVES)
+		ADD_TRAIT(user, carrytrait, CLOTHING_TRAIT)
+
+/obj/item/clothing/gloves/color/latex/dropped(mob/user)
+	..()
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		if(H.gloves != src)
+			return
+		else
+			REMOVE_TRAIT(user, carrytrait, CLOTHING_TRAIT)
+
+/obj/item/clothing/gloves/color/latex/obj_break()
+	..()
+	if(ishuman(loc))
+		REMOVE_TRAIT(loc, carrytrait, CLOTHING_TRAIT)
+
+/obj/item/clothing/gloves/color/latex/nitrile
+	name = "nitrile gloves"
+	desc = "Pricy sterile gloves that are stronger than latex. Transfers intimate paramedic knowledge into the user via nanochips."
+	icon_state = "nitrile"
+	inhand_icon_state = "nitrilegloves"
+	worn_icon_state = "nitrilegloves"
+	transfer_prints = FALSE
+	carrytrait = TRAIT_QUICKER_CARRY
+
 /obj/item/clothing/gloves/color/white
 	name = "white gloves"
 	desc = "These look pretty fancy."

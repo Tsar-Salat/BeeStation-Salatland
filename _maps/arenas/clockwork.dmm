@@ -1,21 +1,9 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
-"a" = (
-/obj/item/stack/tile/bronze/ten,
-/turf/open/floor/clockwork/reebe,
-/area/tdome/arena)
-"c" = (
-/obj/item/stack/tile/bronze,
-/turf/open/floor/clockwork/reebe,
-/area/tdome/arena)
 "d" = (
 /turf/open/floor/clockwork/reebe,
 /area/tdome/arena)
 "e" = (
 /obj/item/clockwork/alloy_shards,
-/turf/open/floor/clockwork/reebe,
-/area/tdome/arena)
-"f" = (
-/obj/item/stack/tile/bronze/twenty,
 /turf/open/floor/clockwork/reebe,
 /area/tdome/arena)
 "g" = (
@@ -49,20 +37,6 @@
 /obj/item/wrench/brass,
 /turf/open/floor/clockwork/reebe,
 /area/tdome/arena)
-"o" = (
-/obj/item/banhammer{
-	desc = "A very REAL ratvarian spear.";
-	icon = 'icons/obj/clockwork_objects.dmi';
-	icon_state = "ratvarian_spear";
-	inhand_icon_state = "ratvarian_spear";
-	lefthand_file = 'icons/mob/inhands/antag/clockwork_lefthand.dmi';
-	name = "toy spear";
-	righthand_file = 'icons/mob/inhands/antag/clockwork_righthand.dmi'
-	},
-/obj/structure/table/bronze,
-/obj/item/toy/clockwork_watch,
-/turf/open/floor/clockwork/reebe,
-/area/tdome/arena)
 "p" = (
 /obj/item/crowbar/brass,
 /turf/open/floor/clockwork/reebe,
@@ -77,6 +51,32 @@
 /area/tdome/arena)
 "s" = (
 /obj/item/clothing/shoes/bronze,
+/turf/open/floor/clockwork/reebe,
+/area/tdome/arena)
+"z" = (
+/obj/item/banhammer{
+	desc = "A very REAL ratvarian spear.";
+	icon = 'icons/obj/clockwork_objects.dmi';
+	icon_state = "ratvarian_spear";
+	inhand_icon_state = "ratvarian_spear";
+	lefthand_file = 'icons/mob/inhands/antag/clockwork_lefthand.dmi';
+	name = "toy spear";
+	righthand_file = 'icons/mob/inhands/antag/clockwork_righthand.dmi'
+	},
+/obj/structure/table/bronze,
+/obj/item/toy/clockwork_watch,
+/turf/open/floor/clockwork/reebe,
+/area/tdome/arena)
+"A" = (
+/obj/item/stack/tile/mineral/bronze,
+/turf/open/floor/clockwork/reebe,
+/area/tdome/arena)
+"G" = (
+/obj/item/stack/tile/mineral/bronze/twenty,
+/turf/open/floor/clockwork/reebe,
+/area/tdome/arena)
+"P" = (
+/obj/item/stack/tile/mineral/bronze/ten,
 /turf/open/floor/clockwork/reebe,
 /area/tdome/arena)
 
@@ -112,7 +112,7 @@ h
 "}
 (4,1,1) = {"
 h
-c
+A
 d
 d
 d
@@ -127,7 +127,7 @@ h
 i
 i
 h
-c
+A
 h
 "}
 (6,1,1) = {"
@@ -155,7 +155,7 @@ h
 d
 h
 m
-o
+z
 h
 s
 h
@@ -182,7 +182,7 @@ h
 "}
 (11,1,1) = {"
 h
-f
+G
 h
 i
 i
@@ -195,7 +195,7 @@ h
 d
 d
 d
-a
+P
 d
 d
 h
