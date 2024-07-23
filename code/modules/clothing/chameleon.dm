@@ -527,7 +527,7 @@
 	name = "insulated gloves"
 	icon_state = "yellow"
 	inhand_icon_state = "ygloves"
-	worn_icon_state = "ygloves"
+	greyscale_colors = null
 
 	resistance_flags = NONE
 	armor = list(MELEE = 10,  BULLET = 10, LASER = 10, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 50, STAMINA = 10, BLEED = 10)
@@ -574,6 +574,7 @@
 	icon_state = "black"
 	greyscale_colors = "#2f2e31"
 	worn_icon_state = null
+	inhand_icon_state = null
 	siemens_coefficient = 0
 	permeability_coefficient = 0.05
 	strip_delay = 80
