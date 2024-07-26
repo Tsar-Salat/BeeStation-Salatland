@@ -13,7 +13,7 @@
 	name = "chain of command"
 	desc = "A tool used by great men to placate the frothing masses."
 	icon_state = "chain"
-	item_state = "chain"
+	inhand_icon_state = "chain"
 	worn_icon_state = "whip"
 	lefthand_file = 'icons/mob/inhands/weapons/melee_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/melee_righthand.dmi'
@@ -35,7 +35,7 @@
 	desc = "A grotesque blade that on closer inspection seems made of synthetic flesh, it still feels like it would hurt very badly as a weapon."
 	icon = 'icons/obj/changeling_items.dmi'
 	icon_state = "arm_blade"
-	item_state = "arm_blade"
+	inhand_icon_state = "arm_blade"
 	lefthand_file = 'icons/mob/inhands/antag/changeling_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/antag/changeling_righthand.dmi'
 	w_class = WEIGHT_CLASS_HUGE
@@ -55,7 +55,7 @@
 	name = "officer's sabre"
 	desc = "An elegant weapon, its monomolecular edge is capable of cutting through flesh and bone with ease."
 	icon_state = "sabre"
-	item_state = "sabre"
+	inhand_icon_state = "sabre"
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
 	flags_1 = CONDUCT_1
@@ -142,9 +142,6 @@
 	desc = "An elegant weapon, it has an inscription on it that says:  \"La Gluten Gutter\"."
 	force = 18
 	icon_state = "rapier"
-	item_state = "rapier"
-	lefthand_file = null
-	righthand_file = null
 	block_power = 60
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
 
@@ -163,7 +160,7 @@
 	desc = "A wooden truncheon for beating criminal scum."
 	icon = 'icons/obj/items_and_weapons.dmi'
 	icon_state = "baton"
-	item_state = "classic_baton"
+	inhand_icon_state = "classic_baton"
 	worn_icon_state = "classic_baton"
 	lefthand_file = 'icons/mob/inhands/equipment/security_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/security_righthand.dmi'
@@ -184,7 +181,7 @@
 
 	var/on_icon_state // What is our sprite when turned on
 	var/off_icon_state // What is our sprite when turned off
-	var/on_item_state // What is our in-hand sprite when turned on
+	var/on_inhand_icon_state // What is our in-hand sprite when turned on
 	var/force_on // Damage when on - not stunning
 	var/force_off // Damage when off - not stunning
 	var/weight_class_on // What is the new size class when turned on
@@ -346,7 +343,7 @@
 	name = "Police Tonfa"
 	desc = "Favored by hot headed Security Officers who don't want to get in trouble with CentCom but still want to get that nostalgic feeling of beating some criminal scum upside the head with a chunk of wood."
 	icon_state = "beater"
-	item_state = "beater"
+	inhand_icon_state = "beater"
 	lefthand_file = 'icons/mob/inhands/equipment/security_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/security_righthand.dmi'
 	force = 8
@@ -527,7 +524,7 @@
 	righthand_file = 'icons/mob/inhands/weapons/melee_righthand.dmi'
 	stamina_damage = 0
 	stun_animation = FALSE
-	item_state = null
+	inhand_icon_state = null
 	slot_flags = ITEM_SLOT_BELT
 	w_class = WEIGHT_CLASS_SMALL
 	item_flags = ISWEAPON
@@ -537,7 +534,7 @@
 
 	on_icon_state = "telebaton_1"
 	off_icon_state = "telebaton_0"
-	on_item_state = "nullrod"
+	on_inhand_icon_state = "nullrod"
 	force_on = 0
 	force_off = 0
 	weight_class_on = WEIGHT_CLASS_BULKY
@@ -572,14 +569,14 @@
 	if(on)
 		to_chat(user, desc["local_on"])
 		icon_state = on_icon_state
-		item_state = on_item_state
+		inhand_icon_state = on_inhand_icon_state
 		w_class = weight_class_on
 		force = force_on
 		attack_verb = list("smacked", "struck", "cracked", "beaten")
 	else
 		to_chat(user, desc["local_off"])
 		icon_state = off_icon_state
-		item_state = null //no sprite for concealment even when in hand
+		inhand_icon_state = null //no sprite for concealment even when in hand
 		slot_flags = ITEM_SLOT_BELT
 		w_class = WEIGHT_CLASS_SMALL
 		force = force_off
@@ -595,7 +592,7 @@
 	lefthand_file = 'icons/mob/inhands/weapons/melee_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/melee_righthand.dmi'
 	block_flags = BLOCKING_ACTIVE | BLOCKING_NASTY
-	item_state = null
+	inhand_icon_state = null
 	slot_flags = ITEM_SLOT_BELT
 	w_class = WEIGHT_CLASS_SMALL
 	item_flags = ISWEAPON
@@ -614,7 +611,7 @@
 
 	on_icon_state = "contractor_baton_1"
 	off_icon_state = "contractor_baton_0"
-	on_item_state = "contractor_baton"
+	on_inhand_icon_state = "contractor_baton"
 	force_on = 10
 	force_off = 5
 	weight_class_on = WEIGHT_CLASS_NORMAL
@@ -633,14 +630,14 @@
 	if(on)
 		to_chat(user, desc["local_on"])
 		icon_state = on_icon_state
-		item_state = on_item_state
+		inhand_icon_state = on_inhand_icon_state
 		w_class = weight_class_on
 		force = force_on
 		attack_verb = list("smacked", "struck", "cracked", "beaten")
 	else
 		to_chat(user, desc["local_off"])
 		icon_state = off_icon_state
-		item_state = null //no sprite for concealment even when in hand
+		inhand_icon_state = null //no sprite for concealment even when in hand
 		slot_flags = ITEM_SLOT_BELT
 		w_class = WEIGHT_CLASS_SMALL
 		force = force_off
@@ -780,7 +777,7 @@
 	desc = "In a station full of bad ideas, this might just be the worst."
 	icon = 'icons/obj/items_and_weapons.dmi'
 	icon_state = "supermatter_sword"
-	item_state = "supermatter_sword"
+	inhand_icon_state = "supermatter_sword"
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
 	slot_flags = null
@@ -885,7 +882,7 @@
 	name = "curator's whip"
 	desc = "Somewhat eccentric and outdated, it still stings like hell to be hit by."
 	icon_state = "whip"
-	item_state = "chain"
+	inhand_icon_state = "chain"
 	lefthand_file = 'icons/mob/inhands/weapons/melee_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/melee_righthand.dmi'
 	worn_icon_state = "whip"
@@ -940,7 +937,7 @@
 	name = "advanced roasting stick"
 	desc = "A telescopic roasting stick with a miniature shield generator designed to ensure entry into various high-tech shielded cooking ovens and firepits."
 	icon_state = "roastingstick_0"
-	item_state = null
+	inhand_icon_state = null
 	worn_icon_state = "tele_baton"
 	slot_flags = ITEM_SLOT_BELT
 	w_class = WEIGHT_CLASS_SMALL
@@ -1000,13 +997,13 @@
 /obj/item/melee/roastingstick/proc/extend(user)
 	to_chat(user, "<span class='warning'>You extend [src].</span>")
 	icon_state = "roastingstick_1"
-	item_state = "nullrod"
+	inhand_icon_state = "nullrod"
 	w_class = WEIGHT_CLASS_BULKY
 
 /obj/item/melee/roastingstick/proc/retract(user)
 	to_chat(user, "<span class='notice'>You collapse [src].</span>")
 	icon_state = "roastingstick_0"
-	item_state = null
+	inhand_icon_state = null
 	w_class = WEIGHT_CLASS_SMALL
 
 /obj/item/melee/roastingstick/handle_atom_del(atom/target)
@@ -1050,7 +1047,7 @@
 	desc = "An portable anti-gravity generator which knocks people back upon contact."
 	icon = 'icons/obj/items_and_weapons.dmi'
 	icon_state = "telebaton_1"
-	item_state = "nullrod"
+	inhand_icon_state = "classic_baton"
 	worn_icon_state = "tele_baton"
 	lefthand_file = 'icons/mob/inhands/equipment/security_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/security_righthand.dmi'

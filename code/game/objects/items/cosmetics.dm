@@ -4,6 +4,7 @@
 	desc = "A generic brand of lipstick."
 	icon = 'icons/obj/items_and_weapons.dmi'
 	icon_state = "lipstick"
+	inhand_icon_state = "lipstick"
 	w_class = WEIGHT_CLASS_TINY
 	var/colour = "red"
 	var/open = FALSE

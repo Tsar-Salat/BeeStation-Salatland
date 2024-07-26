@@ -25,9 +25,9 @@ effective or pretty fucking useless.
 	throw_speed = 3
 	throw_range = 7
 	flags_1 = CONDUCT_1
-	item_state = "electronic"
-	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	inhand_icon_state = "electronic"
+	lefthand_file = 'icons/mob/inhands/items/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 
 	var/times_used = 0 //Number of times it's been used.
 	var/max_uses = 2
@@ -190,8 +190,10 @@ effective or pretty fucking useless.
 	name = "cloaker belt"
 	desc = "Makes you invisible for short periods of time. Recharges in darkness."
 	icon = 'icons/obj/clothing/belts.dmi'
-	icon_state = "utilitybelt"
-	item_state = "utility"
+	icon_state = "utility"
+	inhand_icon_state = "utility"
+	lefthand_file = 'icons/mob/inhands/equipment/belt_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/equipment/belt_righthand.dmi'
 	worn_icon_state = "utility"
 	slot_flags = ITEM_SLOT_BELT
 	attack_verb = list("whipped", "lashed", "disciplined")
@@ -254,10 +256,10 @@ effective or pretty fucking useless.
 	name = "magician's cape"
 	desc = "A magician never reveals his secrets."
 	icon = 'icons/obj/beds_chairs/beds.dmi'
-	lefthand_file = 'icons/mob/inhands/misc/bedsheet_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/bedsheet_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/bedsheet_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/bedsheet_righthand.dmi'
 	icon_state = "sheetmagician"
-	item_state = "sheetmagician"
+	inhand_icon_state = "sheetmagician"
 	worn_icon_state = "sheetblack"
 	slot_flags = ITEM_SLOT_NECK
 	layer = MOB_LAYER

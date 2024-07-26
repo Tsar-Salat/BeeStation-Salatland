@@ -14,8 +14,8 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	name = "item"
 	icon = 'icons/obj/items_and_weapons.dmi'
 	blocks_emissive = EMISSIVE_BLOCK_GENERIC
-	/// The icon state for the icons that appear in the players hand while holding it. Gotten from /client/var/lefthand_file and /client/var/righthand_file
-	var/item_state = null
+	///icon state for inhand overlays, if null the normal icon_state will be used.
+	var/inhand_icon_state = null
 	/// The icon for holding in hand icon states for the left hand.
 	var/lefthand_file = 'icons/mob/inhands/items_lefthand.dmi'
 	/// The icon for holding in hand icon states for the right hand.
@@ -40,7 +40,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	//Not on /clothing because for some reason any /obj/item can technically be "worn" with enough fuckery.
 	/// If this is set, update_icons() will find on mob (WORN, NOT INHANDS) states in this file instead, primary use: badminnery/events
 	var/icon/worn_icon = null
-	//Icon state for mob worn overlays. If not set falls back to item_state, then icon_state
+	//Icon state for mob worn overlays. If not set falls back to inhand_icon_state, then icon_state
 	var/worn_icon_state
 	/// If this is set, update_icons() will force the on mob state (WORN, NOT INHANDS) onto this layer, instead of it's default
 	var/alternate_worn_layer
@@ -292,6 +292,9 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 
 	if(sharpness) //give sharp objects butchering functionality, for consistency
 		AddComponent(/datum/component/butchering, 80 * toolspeed)
+
+	if(!greyscale_config && greyscale_colors && (greyscale_config_worn || greyscale_config_belt || greyscale_config_inhand_right || greyscale_config_inhand_left))
+		update_greyscale()
 
 //user: The mob that is suiciding
 //damagetype: The type of damage the item will inflict on the user

@@ -6,7 +6,7 @@
 	name = "\improper CentCom hat"
 	icon_state = "centcom"
 	desc = "It's good to be emperor."
-	item_state = "that"
+	inhand_icon_state = "that"
 	flags_inv = NONE
 	armor = list(MELEE = 30,  BULLET = 15, LASER = 30, ENERGY = 10, BOMB = 25, BIO = 0, RAD = 0, FIRE = 50, ACID = 50, STAMINA = 30)
 	strip_delay = 80
@@ -16,7 +16,7 @@
 	name = "\improper CentCom commander cap"
 	icon_state = "centcom_cap"
 	desc = "Worn by the finest of CentCom commanders. Inside the lining of the cap, lies two faint initials."
-	item_state = "that"
+	inhand_icon_state = "that"
 	flags_inv = 0
 	armor = list(MELEE = 30,  BULLET = 15, LASER = 30, ENERGY = 10, BOMB = 25, BIO = 0, RAD = 0, FIRE = 50, ACID = 50, STAMINA = 30)
 	strip_delay = (8 SECONDS)
@@ -25,7 +25,7 @@
 	name = "striped red tophat"
 	desc = "It smells like fresh donut holes. / <i>Il sent comme des trous de beignets frais.</i>"
 	icon_state = "canada"
-	item_state = null
+	inhand_icon_state = null
 
 /obj/item/clothing/head/costume/redcoat
 	name = "redcoat's hat"
@@ -56,14 +56,14 @@
 	name = "bowler-hat"
 	desc = "Gentleman, elite aboard!"
 	icon_state = "bowler"
-	item_state = null
+	inhand_icon_state = null
 	dynamic_hair_suffix = ""
 
 /obj/item/clothing/head/costume/bearpelt
 	name = "bear pelt hat"
 	desc = "Fuzzy."
 	icon_state = "bearpelt"
-	item_state = "bearpelt"
+	inhand_icon_state = "bearpelt"
 
 /obj/item/clothing/head/flatcap
 	name = "flat cap"
@@ -71,13 +71,13 @@
 	icon = 'icons/obj/clothing/head/beret.dmi'
 	worn_icon = 'icons/mob/clothing/head/beret.dmi'
 	icon_state = "flat_cap"
-	item_state = null
+	inhand_icon_state = null
 
 /obj/item/clothing/head/costume/santa
 	name = "santa hat"
 	desc = "On the first day of christmas my employer gave to me!"
 	icon_state = "santahatnorm"
-	item_state = "that"
+	inhand_icon_state = "that"
 	cold_protection = HEAD
 	min_cold_protection_temperature = FIRE_HELM_MIN_TEMP_PROTECT
 	dog_fashion = /datum/dog_fashion/head/santa
@@ -127,13 +127,13 @@
 	name = "\improper CentCom Head Intern beancap"
 	desc = "A horrifying mix of beanie and softcap in CentCom green. You'd have to be pretty desperate for power over your peers to agree to wear this."
 	icon_state = "intern_hat"
-	item_state = null
+	inhand_icon_state = null
 
 /obj/item/clothing/head/costume/ushanka
 	name = "ushanka"
 	desc = "Perfect for winter in Siberia, da?"
 	icon_state = "ushankadown"
-	item_state = null
+	inhand_icon_state = null
 	flags_inv = HIDEEARS|HIDEHAIR
 	cold_protection = HEAD
 	min_cold_protection_temperature = FIRE_HELM_MIN_TEMP_PROTECT
@@ -144,11 +144,11 @@
 /obj/item/clothing/head/costume/ushanka/attack_self(mob/user)
 	if(earflaps_down)
 		icon_state = "ushankaup"
-		item_state = "ushankaup"
+		inhand_icon_state = "ushankaup"
 		earflaps_down = FALSE
 		to_chat(user, "<span class='notice'>You raise the ear flaps on the ushanka.</span>")
 	else
 		icon_state = initial(icon_state)
-		item_state = initial(item_state)
+		inhand_icon_state = initial(inhand_icon_state)
 		earflaps_down = TRUE
 		to_chat(user, "<span class='notice'>You lower the ear flaps on the ushanka.</span>")

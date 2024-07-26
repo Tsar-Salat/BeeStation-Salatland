@@ -7,7 +7,7 @@
 	desc = "It's a gun. It's pretty terrible, though."
 	icon = 'icons/obj/guns/projectile.dmi'
 	icon_state = "detective"
-	item_state = "gun"
+	inhand_icon_state = "gun"
 	worn_icon_state = "gun"
 	flags_1 =  CONDUCT_1
 	slot_flags = ITEM_SLOT_BELT
@@ -37,7 +37,7 @@
 	var/can_sawoff = FALSE
 	var/sawn_name = null				//used if gun has a special sawn-off rename
 	var/sawn_desc = null				//description change if weapon is sawn-off
-	var/sawn_item_state = null			//used if gun has a special sawn-off in-hand sprite
+	var/sawn_inhand_icon_state = null			//used if gun has a special sawn-off in-hand sprite
 	var/sawn_off = FALSE
 	var/burst_size = 1					//how large a burst is
 	var/fire_delay = 0					//rate of fire for burst firing and semi auto

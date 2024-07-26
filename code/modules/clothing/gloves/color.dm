@@ -1,86 +1,8 @@
-/obj/item/clothing/gloves/color
-
-/obj/item/clothing/gloves/color/yellow
-	desc = "These gloves provide protection against electric shock."
-	name = "insulated gloves"
-	icon_state = "yellow"
-	item_state = "ygloves"
-	worn_icon_state = "ygloves"
-	siemens_coefficient = 0
-	permeability_coefficient = 0.05
-	resistance_flags = NONE
-	cut_type = /obj/item/clothing/gloves/cut
-
-/obj/item/clothing/gloves/color/black/equipped(mob/user, slot)
-	. = ..()
-	if((slot == ITEM_SLOT_GLOVES) && (user.mind?.assigned_role in GLOB.security_positions))
-		SEND_SIGNAL(user, COMSIG_ADD_MOOD_EVENT, "sec_black_gloves", /datum/mood_event/sec_black_gloves)
-
-/obj/item/clothing/gloves/color/black/dropped(mob/living/carbon/user)
-	..()
-	if(user.gloves != src)
-		return
-	if(user.mind?.assigned_role in GLOB.security_positions)
-		SEND_SIGNAL(user, COMSIG_CLEAR_MOOD_EVENT, "sec_black_gloves")
-
-/obj/item/clothing/gloves/color/yellow/equipped(mob/user, slot)
-	. = ..()
-	if(slot == ITEM_SLOT_GLOVES)
-		if(user.mind?.assigned_role == JOB_NAME_ASSISTANT)
-			SEND_SIGNAL(user, COMSIG_ADD_MOOD_EVENT, "assistant_insulated_gloves", /datum/mood_event/assistant_insulated_gloves)
-		if(user.mind?.assigned_role in GLOB.security_positions)
-			SEND_SIGNAL(user, COMSIG_ADD_MOOD_EVENT, "sec_insulated_gloves", /datum/mood_event/sec_insulated_gloves)
-
-/obj/item/clothing/gloves/color/yellow/dropped(mob/living/carbon/user)
-	..()
-	if(user.gloves != src)
-		return
-	if(user.mind?.assigned_role == JOB_NAME_ASSISTANT)
-		SEND_SIGNAL(user, COMSIG_CLEAR_MOOD_EVENT, "assistant_insulated_gloves")
-	if(user.mind?.assigned_role in GLOB.security_positions)
-		SEND_SIGNAL(user, COMSIG_CLEAR_MOOD_EVENT, "sec_insulated_gloves")
-
-
-/obj/item/clothing/gloves/color/fyellow                             //Cheap Chinese Crap
-	desc = "These gloves are cheap knockoffs of the coveted ones - no way this can end badly."
-	name = "budget insulated gloves"
-	icon_state = "yellow"
-	item_state = "ygloves"
-	worn_icon_state = "ygloves"
-	siemens_coefficient = 1			//Set to a default of 1, gets overridden in Initialize()
-	permeability_coefficient = 0.05
-	resistance_flags = NONE
-	cut_type = /obj/item/clothing/gloves/cut
-
-/obj/item/clothing/gloves/color/fyellow/Initialize(mapload)
-	. = ..()
-	siemens_coefficient = pick(0,0.5,0.5,0.5,0.5,0.75,1.5)
-
-/obj/item/clothing/gloves/color/fyellow/old
-	desc = "Old and worn out insulated gloves, hopefully they still work."
-	name = "worn out insulated gloves"
-
-/obj/item/clothing/gloves/color/fyellow/old/Initialize(mapload)
-	. = ..()
-	siemens_coefficient = pick(0,0,0,0.5,0.5,0.5,0.75)
-
-/obj/item/clothing/gloves/cut
-	desc = "These gloves would protect the wearer from electric shock... if the fingers were covered."
-	name = "fingerless insulated gloves"
-	icon_state = "yellowcut"
-	item_state = "ygloves"
-	worn_icon_state = "ygloves"
-	transfer_prints = TRUE
-
-/obj/item/clothing/gloves/cut/heirloom
-	desc = "The old gloves your great grandfather stole from Engineering, many moons ago. They've seen some tough times recently."
-
 /obj/item/clothing/gloves/color/black
 	desc = "These gloves are fire-resistant."
 	name = "black gloves"
 	icon_state = "black"
-	item_state = "blackgloves"
-	worn_icon_state = "blackgloves"
+	greyscale_colors = "#2f2e31"
 	cold_protection = HANDS
 	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
 	heat_protection = HANDS
@@ -88,19 +10,31 @@
 	resistance_flags = NONE
 	cut_type = /obj/item/clothing/gloves/fingerless
 
+/obj/item/clothing/gloves/fingerless
+	name = "fingerless gloves"
+	desc = "Plain black gloves without fingertips for the hard working."
+	icon_state = "fingerless"
+	greyscale_colors = "#2f2e31"
+	transfer_prints = TRUE
+	strip_delay = 40
+	equip_delay_other = 20
+	cold_protection = HANDS
+	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
+	custom_price = 10
+	undyeable = TRUE
+
 /obj/item/clothing/gloves/color/orange
 	name = "orange gloves"
 	desc = "A pair of gloves, they don't look special in any way."
 	icon_state = "orange"
-	item_state = "orangegloves"
-	worn_icon_state = "orangegloves"
+	greyscale_colors = "#ff9300"
 
 /obj/item/clothing/gloves/color/red
 	name = "red gloves"
 	desc = "A pair of gloves, they don't look special in any way."
 	icon_state = "red"
-	item_state = "redgloves"
-	worn_icon_state = "redgloves"
+	icon_state = "red"
+	greyscale_colors = "#da0000"
 
 /obj/item/clothing/gloves/color/red/insulated
 	name = "insulated gloves"
@@ -113,63 +47,57 @@
 	name = "rainbow gloves"
 	desc = "A pair of gloves, they don't look special in any way."
 	icon_state = "rainbow"
-	item_state = "rainbowgloves"
-	worn_icon_state = "rainbowgloves"
+	inhand_icon_state = "rainbow_gloves"
+	greyscale_colors = null
 
 /obj/item/clothing/gloves/color/blue
 	name = "blue gloves"
 	desc = "A pair of gloves, they don't look special in any way."
 	icon_state = "blue"
-	item_state = "bluegloves"
-	worn_icon_state = "bluegloves"
+	greyscale_colors = "#00b7ef"
 
 /obj/item/clothing/gloves/color/purple
 	name = "purple gloves"
 	desc = "A pair of gloves, they don't look special in any way."
 	icon_state = "purple"
-	item_state = "purplegloves"
-	worn_icon_state = "purplegloves"
+	greyscale_colors = "#cc33ff"
 
 /obj/item/clothing/gloves/color/green
 	name = "green gloves"
 	desc = "A pair of gloves, they don't look special in any way."
 	icon_state = "green"
-	item_state = "greengloves"
-	worn_icon_state = "greengloves"
+	greyscale_colors = "#a8e61d"
 
 /obj/item/clothing/gloves/color/grey
 	name = "grey gloves"
 	desc = "A pair of gloves, they don't look special in any way."
 	icon_state = "gray"
-	item_state = "graygloves"
-	worn_icon_state = "graygloves"
+	greyscale_colors = "#999999"
 
 /obj/item/clothing/gloves/color/light_brown
 	name = "light brown gloves"
 	desc = "A pair of gloves, they don't look special in any way."
 	icon_state = "lightbrown"
-	item_state = "lightbrowngloves"
-	worn_icon_state = "lightbrowngloves"
+	greyscale_colors = "#c09f72"
 
 /obj/item/clothing/gloves/color/brown
 	name = "brown gloves"
 	desc = "A pair of gloves, they don't look special in any way."
 	icon_state = "brown"
-	item_state = "browngloves"
-	worn_icon_state = "browngloves"
+	greyscale_colors = "#83613d"
 
 /obj/item/clothing/gloves/color/denied
 	name = "ERROR gloves"
-	desc = "With these gloves you will be like the legendary Midas. Except instead of turning to gold everthing you touch will become -REDACTED-."
+	desc = "With these gloves you will be like the legendary Midas. Except instead of turning to gold everything you touch will become -REDACTED-."
 	icon_state = "denied"
-	item_state = "redgloves"
+	inhand_icon_state = null
 	worn_icon_state = "deniedgloves"
 
 /obj/item/clothing/gloves/color/captain
 	desc = "Regal blue gloves, with a nice gold trim, a diamond anti-shock coating, and an integrated thermal barrier. Swanky."
 	name = "captain's gloves"
 	icon_state = "captain"
-	item_state = "egloves"
+	inhand_icon_state = "egloves"
 	worn_icon_state = "egloves"
 	siemens_coefficient = 0
 	permeability_coefficient = 0.05
@@ -184,7 +112,7 @@
 	name = "latex gloves"
 	desc = "Cheap sterile gloves made from latex. Transfers minor paramedic knowledge to the user via budget nanochips."
 	icon_state = "latex"
-	item_state = "latex"
+	inhand_icon_state = "latex"
 	worn_icon_state = "latex"
 	siemens_coefficient = 0.3
 	permeability_coefficient = 0.01
@@ -215,7 +143,7 @@
 	name = "nitrile gloves"
 	desc = "Pricy sterile gloves that are stronger than latex. Transfers intimate paramedic knowledge into the user via nanochips."
 	icon_state = "nitrile"
-	item_state = "nitrilegloves"
+	inhand_icon_state = "nitrilegloves"
 	worn_icon_state = "nitrilegloves"
 	transfer_prints = FALSE
 	carrytrait = TRAIT_QUICKER_CARRY
@@ -224,16 +152,13 @@
 	name = "white gloves"
 	desc = "These look pretty fancy."
 	icon_state = "white"
-	item_state = "wgloves"
-	worn_icon_state = "wgloves"
+	greyscale_colors = "#ffffff"
 
 /obj/item/clothing/gloves/color/color_yellow
 	name = "yellow gloves"
 	desc = "A pair of gloves, they don't look special in any way."
 	icon_state = "white"
-	item_state = "wgloves"
-	worn_icon_state = "wgloves"
-	color = "#ffe14d"
+	greyscale_colors = "#ffe14d"
 
 /obj/effect/spawner/lootdrop/gloves
 	name = "random gloves"
@@ -256,5 +181,5 @@
 	name = "maid arm covers"
 	desc = "Cylindrical looking tubes that go over your arm, weird."
 	icon_state = "maid_arms"
-	item_state = "maid_arms"
-	worn_icon_state = "maid_arms"
+	inhand_icon_state = null
+	greyscale_colors = null

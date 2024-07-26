@@ -94,6 +94,8 @@
 	icon_state = "sword0"
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
+	//Temporary, snowflake code modifies this. Transformation component will fix it in the future
+	inhand_icon_state = null
 	force = 3
 	throwforce = 5
 	throwforce_on = 35	//Does a lot of damage on throw, but will embed
@@ -284,4 +286,4 @@
 	name = "hardlight blade"
 	desc = "An extremely sharp blade made out of hard light. Packs quite a punch."
 	icon_state = "lightblade"
-	item_state = "lightblade"
+	inhand_icon_state = "lightblade"

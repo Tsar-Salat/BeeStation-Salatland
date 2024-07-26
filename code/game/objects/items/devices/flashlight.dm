@@ -4,10 +4,10 @@
 	custom_price = 10
 	icon = 'icons/obj/lighting.dmi'
 	icon_state = "flashlight"
-	item_state = "flashlight"
+	inhand_icon_state = "flashlight"
 	worn_icon_state = "flashlight"
-	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 	w_class = WEIGHT_CLASS_SMALL
 	flags_1 = CONDUCT_1
 	slot_flags = ITEM_SLOT_BELT
@@ -176,7 +176,7 @@
 	name = "penlight"
 	desc = "A pen-sized light, used by medical staff. It can also be used to create a hologram to alert people of incoming medical assistance."
 	icon_state = "penlight"
-	item_state = ""
+	inhand_icon_state = ""
 	worn_icon_state = "pen"
 	flags_1 = CONDUCT_1
 	light_range = 2
@@ -211,7 +211,7 @@
 	name = "seclite"
 	desc = "A robust flashlight used by security."
 	icon_state = "seclite"
-	item_state = "seclite"
+	inhand_icon_state = "seclite"
 	worn_icon_state = "seclite"
 	lefthand_file = 'icons/mob/inhands/equipment/security_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/security_righthand.dmi'
@@ -224,7 +224,7 @@
 	name = "desk lamp"
 	desc = "A desk lamp with an adjustable mount."
 	icon_state = "lamp"
-	item_state = "lamp"
+	inhand_icon_state = "lamp"
 	lefthand_file = 'icons/mob/inhands/items_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/items_righthand.dmi'
 	force = 10
@@ -239,7 +239,7 @@
 /obj/item/flashlight/lamp/green
 	desc = "A classic green-shaded desk lamp."
 	icon_state = "lampgreen"
-	item_state = "lampgreen"
+	inhand_icon_state = "lampgreen"
 
 
 
@@ -256,7 +256,6 @@
 	name = "banana lamp"
 	desc = "Only a clown would think to make a ghetto banana-shaped lamp. Even has a goofy pullstring."
 	icon_state = "bananalamp"
-	item_state = "bananalamp"
 
 // FLARES
 
@@ -266,7 +265,7 @@
 	w_class = WEIGHT_CLASS_SMALL
 	light_range = 7 // Pretty bright.
 	icon_state = "flare"
-	item_state = "flare"
+	inhand_icon_state = "flare"
 	actions_types = list()
 	/// How many seconds of fuel we have left
 	var/fuel = 0
@@ -343,7 +342,7 @@
 	w_class = WEIGHT_CLASS_BULKY
 	light_range = 4
 	icon_state = "torch"
-	item_state = "torch"
+	inhand_icon_state = "torch"
 	lefthand_file = 'icons/mob/inhands/items_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/items_righthand.dmi'
 	light_color = LIGHT_COLOR_ORANGE
@@ -353,7 +352,7 @@
 /obj/item/flashlight/lantern
 	name = "lantern"
 	icon_state = "lantern"
-	item_state = "lantern"
+	inhand_icon_state = "lantern"
 	lefthand_file = 'icons/mob/inhands/equipment/mining_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/mining_righthand.dmi'
 	desc = "A mining lantern."
@@ -368,7 +367,7 @@
 	name = "suspicious lantern"
 	desc = "A suspicious looking lantern."
 	icon_state = "syndilantern"
-	item_state = "syndilantern"
+	inhand_icon_state = "syndilantern"
 	light_range = 10
 
 /obj/item/flashlight/slime
@@ -377,7 +376,7 @@
 	desc = "Extract from a yellow slime. It emits a strong light when squeezed."
 	icon = 'icons/obj/lighting.dmi'
 	icon_state = "slime"
-	item_state = "slime"
+	inhand_icon_state = null
 	w_class = WEIGHT_CLASS_SMALL
 	slot_flags = ITEM_SLOT_BELT
 	custom_materials = null
@@ -447,7 +446,7 @@
 	light_range = 4
 	color = LIGHT_COLOR_GREEN
 	icon_state = "glowstick"
-	item_state = "glowstick"
+	inhand_icon_state = null
 	grind_results = list(/datum/reagent/phenol = 15, /datum/reagent/hydrogen = 10, /datum/reagent/oxygen = 5) //Meth-in-a-stick
 	var/burn_pickup = FALSE	//If true, fuel will only decrease after being picked up or used in hand (Useful for mapping)
 	var/fuel = 0 // How many seconds of fuel we have left
@@ -475,7 +474,7 @@
 	update_icon()
 
 /obj/item/flashlight/glowstick/update_icon()
-	item_state = "glowstick"
+	inhand_icon_state = "glowstick"
 	cut_overlays()
 	if(fuel <= 0)
 		icon_state = "glowstick-empty"
@@ -485,7 +484,7 @@
 		var/mutable_appearance/glowstick_overlay = mutable_appearance(icon, "glowstick-glow")
 		glowstick_overlay.color = color
 		add_overlay(glowstick_overlay)
-		item_state = "glowstick-on"
+		inhand_icon_state = "glowstick-on"
 		set_light_on(TRUE)
 	else
 		icon_state = "glowstick"
@@ -603,7 +602,7 @@
 	name = "flashdark"
 	desc = "A strange device manufactured with mysterious elements that somehow emits darkness. Or maybe it just sucks in light? Nobody knows for sure."
 	icon_state = "flashdark"
-	item_state = "flashdark"
+	inhand_icon_state = "flashdark"
 	light_system = STATIC_LIGHT //The overlay light component is not yet ready to produce darkness.
 	light_range = 0
 	///Variable to preserve old lighting behavior in flashlights, to handle darkness.

@@ -7,8 +7,8 @@
 	name = "broken tile"
 	singular_name = "broken tile"
 	desc = "A broken tile. This should not exist."
-	lefthand_file = 'icons/mob/inhands/misc/tiles_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/tiles_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/items/tiles_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/tiles_righthand.dmi'
 	icon = 'icons/obj/tiles.dmi'
 	w_class = WEIGHT_CLASS_NORMAL
 	force = 1
@@ -107,7 +107,7 @@
 	singular_name = "grass floor tile"
 	desc = "A patch of grass like they use on space golf courses."
 	icon_state = "tile_grass"
-	item_state = "tile-grass"
+	inhand_icon_state = "tile-grass"
 	turf_type = /turf/open/floor/grass
 	resistance_flags = FLAMMABLE
 	merge_type = /obj/item/stack/tile/grass
@@ -130,7 +130,6 @@
 	singular_name = "fairygrass floor tile"
 	desc = "A patch of odd, glowing blue grass."
 	icon_state = "tile_fairygrass"
-	item_state = "tile-fairygrass"
 	turf_type = /turf/open/floor/grass/fairy
 	resistance_flags = FLAMMABLE
 	merge_type = /obj/item/stack/tile/fairygrass
@@ -213,7 +212,7 @@
 	singular_name = "wood floor tile"
 	desc = "An easy to fit wood floor tile."
 	icon_state = "tile-wood"
-	item_state = "tile-wood"
+	inhand_icon_state = "tile-wood"
 	turf_type = /turf/open/floor/wood
 	resistance_flags = FLAMMABLE
 	merge_type = /obj/item/stack/tile/wood
@@ -224,7 +223,7 @@
 	singular_name = "bamboo mat piece"
 	desc = "A piece of a bamboo mat with a decorative trim."
 	icon_state = "tile-bamboo"
-	item_state = "tile-bamboo"
+	inhand_icon_state = "tile-bamboo"
 	turf_type = /turf/open/floor/bamboo
 	merge_type = /obj/item/stack/tile/bamboo
 	resistance_flags = FLAMMABLE
@@ -235,7 +234,7 @@
 	singular_name = "basalt floor tile"
 	desc = "Artificially made ashy soil themed on a hostile environment."
 	icon_state = "tile_basalt"
-	item_state = "tile-basalt"
+	inhand_icon_state = "tile-basalt"
 	turf_type = /turf/open/floor/grass/fakebasalt
 	merge_type = /obj/item/stack/tile/basalt
 
@@ -245,7 +244,7 @@
 	singular_name = "carpet"
 	desc = "A piece of carpet. It is the same size as a floor tile."
 	icon_state = "tile-carpet"
-	item_state = "tile-carpet"
+	inhand_icon_state = "tile-carpet"
 	turf_type = /turf/open/floor/carpet
 	resistance_flags = FLAMMABLE
 	tableVariant = /obj/structure/table/wood/fancy
@@ -276,7 +275,7 @@
 /obj/item/stack/tile/carpet/black
 	name = "black carpet"
 	icon_state = "tile-carpet-black"
-	item_state = "tile-carpet-black"
+	inhand_icon_state = "tile-carpet-black"
 	merge_type = /obj/item/stack/tile/carpet/black
 	turf_type = /turf/open/floor/carpet/black
 	tableVariant = /obj/structure/table/wood/fancy/black
@@ -284,7 +283,7 @@
 /obj/item/stack/tile/carpet/blue
 	name = "blue carpet"
 	icon_state = "tile-carpet-blue"
-	item_state = "tile-carpet-blue"
+	inhand_icon_state = "tile-carpet-blue"
 	merge_type = /obj/item/stack/tile/carpet/blue
 	turf_type = /turf/open/floor/carpet/blue
 	tableVariant = /obj/structure/table/wood/fancy/blue
@@ -295,7 +294,7 @@
 /obj/item/stack/tile/carpet/cyan
 	name = "cyan carpet"
 	icon_state = "tile-carpet-cyan"
-	item_state = "tile-carpet-cyan"
+	inhand_icon_state = "tile-carpet-cyan"
 	merge_type = /obj/item/stack/tile/carpet/cyan
 	turf_type = /turf/open/floor/carpet/cyan
 	tableVariant = /obj/structure/table/wood/fancy/cyan
@@ -306,7 +305,7 @@
 /obj/item/stack/tile/carpet/green
 	name = "green carpet"
 	icon_state = "tile-carpet-green"
-	item_state = "tile-carpet-green"
+	inhand_icon_state = "tile-carpet-green"
 	merge_type = /obj/item/stack/tile/carpet/green
 	turf_type = /turf/open/floor/carpet/green
 	tableVariant = /obj/structure/table/wood/fancy/green
@@ -314,7 +313,7 @@
 /obj/item/stack/tile/carpet/orange
 	name = "orange carpet"
 	icon_state = "tile-carpet-orange"
-	item_state = "tile-carpet-orange"
+	inhand_icon_state = "tile-carpet-orange"
 	merge_type = /obj/item/stack/tile/carpet/orange
 	turf_type = /turf/open/floor/carpet/orange
 	tableVariant = /obj/structure/table/wood/fancy/orange
@@ -322,7 +321,7 @@
 /obj/item/stack/tile/carpet/purple
 	name = "purple carpet"
 	icon_state = "tile-carpet-purple"
-	item_state = "tile-carpet-purple"
+	inhand_icon_state = "tile-carpet-purple"
 	merge_type = /obj/item/stack/tile/carpet/purple
 	turf_type = /turf/open/floor/carpet/purple
 	tableVariant = /obj/structure/table/wood/fancy/purple
@@ -330,7 +329,7 @@
 /obj/item/stack/tile/carpet/red
 	name = "red carpet"
 	icon_state = "tile-carpet-red"
-	item_state = "tile-carpet-red"
+	inhand_icon_state = "tile-carpet-red"
 	merge_type = /obj/item/stack/tile/carpet/red
 	turf_type = /turf/open/floor/carpet/red
 	tableVariant = /obj/structure/table/wood/fancy/red
@@ -338,7 +337,7 @@
 /obj/item/stack/tile/carpet/royalblack
 	name = "royal black carpet"
 	icon_state = "tile-carpet-royalblack"
-	item_state = "tile-carpet-royalblack"
+	inhand_icon_state = "tile-carpet-royalblack"
 	merge_type = /obj/item/stack/tile/carpet/royalblack
 	turf_type = /turf/open/floor/carpet/royalblack
 	tableVariant = /obj/structure/table/wood/fancy/royalblack
@@ -346,7 +345,7 @@
 /obj/item/stack/tile/carpet/royalblue
 	name = "royal blue carpet"
 	icon_state = "tile-carpet-royalblue"
-	item_state = "tile-carpet-royalblue"
+	inhand_icon_state = "tile-carpet-royalblue"
 	merge_type = /obj/item/stack/tile/carpet/royalblue
 	turf_type = /turf/open/floor/carpet/royalblue
 	tableVariant = /obj/structure/table/wood/fancy/royalblue
@@ -356,7 +355,8 @@
 	singular_name = "grimy carpet floor tile"
 	desc = "A piece of carpet that feels more like floor tiles, sure it feels hard to the touch for being carpet..."
 	icon_state = "tile-carpet-grimy"
-	item_state = "tile-carpet-grimy"
+	// PestoVerde's sin!
+	//inhand_icon_state = "tile-carpet-grimy"
 	merge_type = /obj/item/stack/tile/carpet/grimy
 	turf_type = /turf/open/floor/carpet/grimy
 
@@ -417,7 +417,7 @@
 	singular_name = "astral carpet"
 	desc = "A piece of carpet with a convincing star pattern."
 	icon_state = "tile_space"
-	item_state = "tile-space"
+	inhand_icon_state = "tile-space"
 	turf_type = /turf/open/floor/fakespace
 	resistance_flags = FLAMMABLE
 	merge_type = /obj/item/stack/tile/fakespace
@@ -430,7 +430,7 @@
 	singular_name = "fake pit"
 	desc = "A piece of carpet with a forced perspective illusion of a pit. No way this could fool anyone!"
 	icon_state = "tile_pit"
-	item_state = "tile-basalt"
+	inhand_icon_state = "tile-basalt"
 	turf_type = /turf/open/floor/fakepit
 	resistance_flags = FLAMMABLE
 	merge_type = /obj/item/stack/tile/fakepit
@@ -444,7 +444,7 @@
 	singular_name = "high-traction floor tile"
 	desc = "A high-traction floor tile. It feels rubbery in your hand."
 	icon_state = "tile_noslip"
-	item_state = "tile-noslip"
+	inhand_icon_state = "tile-noslip"
 	turf_type = /turf/open/floor/noslip
 	merge_type = /obj/item/stack/tile/noslip
 
@@ -505,7 +505,7 @@
 	singular_name = "blue circuit tile"
 	desc = "A blue circuit tile."
 	icon_state = "tile_bcircuit"
-	item_state = "tile-bcircuit"
+	inhand_icon_state = "tile-bcircuit"
 	turf_type = /turf/open/floor/circuit
 	merge_type = /obj/item/stack/tile/circuit
 
@@ -514,7 +514,7 @@
 	singular_name = "green circuit tile"
 	desc = "A green circuit tile."
 	icon_state = "tile_gcircuit"
-	item_state = "tile-gcircuit"
+	inhand_icon_state = "tile-gcircuit"
 	turf_type = /turf/open/floor/circuit/green
 	merge_type = /obj/item/stack/tile/circuit/green
 
@@ -527,7 +527,7 @@
 	singular_name = "red circuit tile"
 	desc = "A red circuit tile."
 	icon_state = "tile_rcircuit"
-	item_state = "tile-rcircuit"
+	inhand_icon_state = "tile-rcircuit"
 	turf_type = /turf/open/floor/circuit/red
 	merge_type = /obj/item/stack/tile/circuit/red
 
@@ -541,7 +541,7 @@
 	singular_name = "pod floor tile"
 	desc = "A grooved floor tile."
 	icon_state = "tile_pod"
-	item_state = "tile-pod"
+	inhand_icon_state = "tile-pod"
 	turf_type = /turf/open/floor/pod
 	merge_type = /obj/item/stack/tile/pod
 	tile_reskin_types = list(
@@ -648,7 +648,7 @@
 	desc = "Glass window floors, to let you see... Whatever that is down there."
 	icon_state = "tile_glass"
 	turf_type = /turf/open/floor/glass
-	item_state = "tile-glass"
+	inhand_icon_state = "tile-glass"
 	merge_type = /obj/item/stack/tile/glass
 	mats_per_unit = list(/datum/material/glass=MINERAL_MATERIAL_AMOUNT * 0.25) // 4 tiles per sheet
 	replace_plating = TRUE
@@ -661,7 +661,7 @@
 	singular_name = "reinforced glass floor tile"
 	desc = "Reinforced glass window floors. These bad boys are 50% stronger than their predecessors!"
 	icon_state = "tile_rglass"
-	item_state = "tile-rglass"
+	inhand_icon_state = "tile-rglass"
 	turf_type = /turf/open/floor/glass/reinforced
 	merge_type = /obj/item/stack/tile/rglass
 	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125, /datum/material/glass=MINERAL_MATERIAL_AMOUNT * 0.25) // 4 tiles per sheet
@@ -758,7 +758,7 @@
 	singular_name = "catwalk floor tile"
 	desc = "Flooring that shows its contents underneath. Engineers love it!"
 	icon_state = "maint_catwalk"
-	item_state = "tile-catwalk"
+	inhand_icon_state = "tile-catwalk"
 	turf_type = /turf/open/floor/catwalk_floor
 	merge_type = /obj/item/stack/tile/catwalk_tile //Just to be cleaner, these all stack with eachother
 	tile_reskin_types = list(

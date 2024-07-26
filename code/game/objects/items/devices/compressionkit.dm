@@ -3,9 +3,9 @@
 	desc = "An illegally modified BSRPED, capable of reducing the size of most items."
 	icon = 'icons/obj/tools.dmi'
 	icon_state = "compression_c"
-	item_state = "RPED"
-	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	inhand_icon_state = "RPED"
+	lefthand_file = 'icons/mob/inhands/items/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 	w_class = WEIGHT_CLASS_NORMAL
 	var/charges = 5
 	// var/damage_multiplier = 0.2 Not in use yet.

@@ -3,8 +3,10 @@
 	name = "pressure plate"
 	desc = "An electronic device that triggers when stepped on."
 	icon = 'icons/obj/device.dmi'
-	item_state = "flash"
 	icon_state = "pressureplate"
+	inhand_icon_state = "flashtool"
+	lefthand_file = 'icons/mob/inhands/equipment/security_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/equipment/security_righthand.dmi'
 	var/trigger_mob = TRUE
 	var/trigger_item = FALSE
 	var/trigger_silent = FALSE
