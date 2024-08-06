@@ -164,6 +164,7 @@
 	icon_state = "diagnostichud"
 	emissive_state = "hud_emissive"
 	hud_type = DATA_HUD_DIAGNOSTIC_BASIC
+	hud_trait = TRAIT_DIAGNOSTIC_HUD
 	glass_colour_type = /datum/client_colour/glass_colour/lightorange
 
 /obj/item/clothing/glasses/hud/diagnostic/night
@@ -377,7 +378,7 @@
 	darkness_view = 8
 	flash_protect = 2
 	vision_correction = 1
-	clothing_flags = SCAN_REAGENTS | SCAN_BOOZEPOWER
+	clothing_traits = list(TRAIT_BOOZE_SLIDER, TRAIT_REAGENT_SCANNER)
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	hud_type = list(DATA_HUD_MEDICAL_ADVANCED, DATA_HUD_DIAGNOSTIC_ADVANCED, DATA_HUD_SECURITY_ADVANCED)
 	resistance_flags = INDESTRUCTIBLE

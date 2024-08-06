@@ -1066,6 +1066,10 @@
 	crate_name = "space shelter crate"
 	crate_type = /obj/structure/closet/crate/engineering/electrical
 
+/obj/item/stock_parts/cell/crystal_cell/wizard
+	desc = "A very high power cell made from crystallized magic."
+	chargerate = 5000
+
 /obj/item/stock_parts/cell/inducer_supply
 	maxcharge = 5000
 	charge = 5000
@@ -1803,7 +1807,7 @@
 					/obj/item/reagent_containers/medspray/sterilizine,
 					/obj/item/rollerbed)
 	crate_name = "surgical supplies crate"
-	
+
 /datum/supply_pack/medical/implants
 	name = "Surplus Implants Crate"
 	desc = "Do you want implants, but those R&D folks hasn't learnt how to do their job? Just get started with this crate containing several of our dusty surplus implants. (Surgical tools not included)"
@@ -2050,6 +2054,18 @@
 					/obj/item/circuitboard/machine/monkey_recycler,
 					/obj/item/circuitboard/machine/processor/slime)
 	crate_name = "xenobiology starter crate"
+	crate_type = /obj/structure/closet/crate/secure/science
+
+/datum/supply_pack/science/mod_core
+	name = "MOD core Crate"
+	desc = "Three cores, perfect for any MODsuit construction! Naturally harvested™, of course."
+	cost = CARGO_CRATE_VALUE * 3
+	access = ACCESS_ROBOTICS
+	access_budget = ACCESS_ROBOTICS
+	contains = list(/obj/item/mod/construction/core,
+		/obj/item/mod/construction/core,
+		/obj/item/mod/construction/core)
+	crate_name = "MOD core crate"
 	crate_type = /obj/structure/closet/crate/secure/science
 
 //////////////////////////////////////////////////////////////////////////////
