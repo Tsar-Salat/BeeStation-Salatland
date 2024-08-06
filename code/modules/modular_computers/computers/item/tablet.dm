@@ -329,6 +329,8 @@
 		var/mob/living/silicon/robot/robo = borgo
 		robo.lamp_color = COLOR_RED //Syndicate likes it red
 
+GLOBAL_LIST_EMPTY(PDAs)
+
 // Round start tablets
 
 /obj/item/modular_computer/tablet/pda
@@ -406,3 +408,20 @@
 		inserted_item = new insert_type(src)
 		// show the inserted item
 		update_icon()
+
+/// Return a list of types you want to pregenerate and use later
+/// Do not pass in things that care about their init location, or expect extra input
+/// Also as a courtesy to me, don't pass in any bombs
+/obj/item/modular_computer/tablet/pda/proc/get_types_to_preload()
+	var/list/preload = list()
+	//preload += default_cartridge
+	preload += insert_type
+	return preload
+
+/// Callbacks for preloading pdas
+/obj/item/modular_computer/tablet/pda/proc/display_pda()
+	GLOB.PDAs += src
+
+/// See above, we don't want jerry from accounting to try and message nullspace his new bike
+/obj/item/modular_computer/tablet/pda/proc/cloak_pda()
+	GLOB.PDAs -= src
