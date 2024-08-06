@@ -78,6 +78,12 @@ GLOBAL_VAR(medibot_unique_id_gen)
 	heal_threshold = 0
 	declare_crit = 0
 
+/mob/living/simple_animal/bot/medbot/filled
+	skin = MEDBOT_SKIN_ADVANCED
+	heal_threshold = 30
+	declare_crit = TRUE
+	reagent_glass = new /obj/item/reagent_containers/glass/beaker/large/kelobic
+
 /mob/living/simple_animal/bot/medbot/update_icon()
 	cut_overlays()
 	if(skin)
@@ -85,7 +91,7 @@ GLOBAL_VAR(medibot_unique_id_gen)
 	if(!on)
 		icon_state = "medibot0"
 		return
-	if(IsStun() || IsParalyzed())
+	if(HAS_TRAIT(src, TRAIT_INCAPACITATED))
 		icon_state = "medibota"
 		return
 	if(mode == BOT_HEALING)
@@ -97,6 +103,14 @@ GLOBAL_VAR(medibot_unique_id_gen)
 		icon_state = "medibot2"
 	else
 		icon_state = "medibot1"
+
+/mob/living/simple_animal/bot/medbot/proc/rename_bot()
+	var/t = sanitize_name(stripped_input(usr, "Enter new robot name", name, name,MAX_NAME_LEN))
+	if(!t)
+		return
+	if(!in_range(src, usr) && loc != usr)
+		return
+	name = t
 
 /mob/living/simple_animal/bot/medbot/Initialize(mapload, new_skin)
 	. = ..()
@@ -114,10 +128,6 @@ GLOBAL_VAR(medibot_unique_id_gen)
 		GLOB.medibot_unique_id_gen = 0
 	medibot_counter = GLOB.medibot_unique_id_gen
 	GLOB.medibot_unique_id_gen++
-
-/mob/living/simple_animal/bot/medbot/update_mobility()
-	. = ..()
-	update_icon()
 
 /mob/living/simple_animal/bot/medbot/bot_reset()
 	..()
@@ -258,11 +268,38 @@ GLOBAL_VAR(medibot_unique_id_gen)
 		show_controls(user)
 		update_icon()
 
+	if(istype(W, /obj/item/pen)&&!locked)
+		rename_bot()
+		return
+	if(istype(W,/obj/item/toy/crayon/spraycan))
+		playsound(user.loc, 'sound/effects/spray.ogg', 5, 1, 5)
+		reskin(user)
+
 	else
 		var/current_health = health
 		..()
 		if(health < current_health) //if medbot took some damage
 			step_to(src, (get_step_away(src,user)))
+
+/mob/living/simple_animal/bot/medbot/proc/reskin(mob/M)
+	var/skinlist = list(
+		MEDBOT_SKIN_DEFAULT = image(icon = 'icons/mob/aibots.dmi', icon_state = "firstaid_arm"),
+		MEDBOT_SKIN_BRUTE= image(icon = 'icons/mob/aibots.dmi', icon_state = "kit_skin_brute"),
+		MEDBOT_SKIN_BURN= image(icon = 'icons/mob/aibots.dmi', icon_state = "kit_skin_burn"),
+		MEDBOT_SKIN_TOXIN= image(icon = 'icons/mob/aibots.dmi', icon_state = "kit_skin_tox"),
+		MEDBOT_SKIN_OXY= image(icon = 'icons/mob/aibots.dmi', icon_state = "kit_skin_oxy"),
+		MEDBOT_SKIN_SURGERY= image(icon = 'icons/mob/aibots.dmi', icon_state = "kit_skin_surgery"),
+		MEDBOT_SKIN_ADVANCED= image(icon = 'icons/mob/aibots.dmi', icon_state = "kit_skin_advanced"),
+		MEDBOT_SKIN_RADIATION= image(icon = 'icons/mob/aibots.dmi', icon_state = "kit_skin_rad")
+	)
+	if(emagged)
+		skinlist +=list(MEDBOT_SKIN_SYNDI= image(icon = 'icons/mob/aibots.dmi', icon_state = "kit_skin_syndi"),
+			MEDBOT_SKIN_BEZERK= image(icon = 'icons/mob/aibots.dmi', icon_state = "medskin_bezerk")
+			)
+	var/choice = show_radial_menu(M, src, skinlist, radius = 42, require_near = TRUE)
+	if(choice && !M.incapacitated() && in_range(M,src))
+		skin = choice
+		update_icon()
 
 /mob/living/simple_animal/bot/medbot/on_emag(atom/target, mob/user)
 	..()
@@ -296,7 +333,7 @@ GLOBAL_VAR(medibot_unique_id_gen)
 		return
 
 /mob/living/simple_animal/bot/medbot/proc/tip_over(mob/user)
-	mobility_flags &= ~MOBILITY_MOVE
+	ADD_TRAIT(src, TRAIT_IMMOBILIZED, BOT_TIPPED_OVER)
 	playsound(src, 'sound/machines/warning-buzzer.ogg', 50)
 	user.visible_message("<span class='danger'>[user] tips over [src]!</span>", "<span class='danger'>You tip [src] over!</span>")
 	tipped = TRUE
@@ -305,7 +342,7 @@ GLOBAL_VAR(medibot_unique_id_gen)
 	tipper_name = user.name
 
 /mob/living/simple_animal/bot/medbot/proc/set_right(mob/user)
-	mobility_flags &= MOBILITY_MOVE
+	REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, BOT_TIPPED_OVER)
 	var/list/messagevoice
 
 	if(user)
@@ -360,6 +397,8 @@ GLOBAL_VAR(medibot_unique_id_gen)
 
 /mob/living/simple_animal/bot/medbot/examine(mob/user)
 	. = ..()
+	if(in_range(user, src))
+		. += "<span class='notice'>Use a spraycan to change its colour, or a pen to change its name if unlocked.</span>"
 	if(tipped_status == MEDBOT_PANIC_NONE)
 		return
 
@@ -529,6 +568,8 @@ GLOBAL_VAR(medibot_unique_id_gen)
 		..()
 
 /mob/living/simple_animal/bot/medbot/UnarmedAttack(atom/A)
+	if(HAS_TRAIT(src, TRAIT_HANDS_BLOCKED))
+		return
 	if(iscarbon(A))
 		var/mob/living/carbon/C = A
 		set_patient(C)
@@ -666,21 +707,6 @@ GLOBAL_VAR(medibot_unique_id_gen)
 
 /obj/machinery/bot_core/medbot
 	req_one_access = list(ACCESS_MEDICAL, ACCESS_ROBOTICS)
-
-/mob/living/simple_animal/bot/medbot/attackby(obj/item/I, mob/user, params)
-	..()
-	if(istype(I, /obj/item/pen)&&!locked)
-		rename_bot()
-		return
-
-/mob/living/simple_animal/bot/medbot/proc/rename_bot()
-	var/t = sanitize_name(stripped_input(usr, "Enter new robot name", name, name,MAX_NAME_LEN))
-	if(!t)
-		return
-	if(!in_range(src, usr) && loc != usr)
-		return
-	name = t
-
 #undef MEDBOT_PANIC_NONE
 #undef MEDBOT_PANIC_LOW
 #undef MEDBOT_PANIC_MED
