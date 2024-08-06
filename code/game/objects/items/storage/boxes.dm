@@ -159,8 +159,11 @@
 //Parent box to accomodate station trait and apply unique restrictions
 /obj/item/storage/box/survival
 	name = "survival box"
-	illustration = "survival"
 	desc = "A compact box that is designed to hold specific emergency supplies"
+	illustration = "survival"
+	var/mask_type = /obj/item/clothing/mask/breath
+	var/internal_type = /obj/item/tank/internals/emergency_oxygen
+	var/medipen_type = /obj/item/reagent_containers/hypospray/medipen
 	w_class = WEIGHT_CLASS_SMALL //So the roundstart box takes up less space.
 
 /obj/item/storage/box/survival/Initialize(mapload)
@@ -181,6 +184,15 @@
 	STR.exception_hold = exception_hold
 
 /obj/item/storage/box/survival/PopulateContents()
+	if(!isplasmaman(loc))
+		new mask_type(src)
+		new internal_type(src)
+	else
+		new /obj/item/tank/internals/plasmaman/belt(src)
+
+	if(!isnull(medipen_type))
+		new medipen_type(src)
+
 	if(HAS_TRAIT(SSstation, STATION_TRAIT_PREMIUM_INTERNALS))
 		new /obj/item/flashlight/flare(src)
 		new /obj/item/radio/off(src)
