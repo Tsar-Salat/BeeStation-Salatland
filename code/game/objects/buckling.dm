@@ -19,7 +19,7 @@
 	if(.)
 		return
 	if(can_buckle && has_buckled_mobs())
-		if(buckled_mobs.len > 1)
+		if(length(buckled_mobs) > 1)
 			var/mob/living/unbuckled = tgui_input_list(user, "Who do you wish to unbuckle?", "Unbuckle", sort_names(buckled_mobs))
 			if(isnull(unbuckled))
 				return
@@ -27,11 +27,11 @@
 		else
 			return user_unbuckle_mob(buckled_mobs[1], user)
 
-/atom/movable/attackby(obj/item/W, mob/user, params)
-	if(!can_buckle || !istype(W, /obj/item/riding_offhand) || !user.Adjacent(src))
+/atom/movable/attackby(obj/item/attacking_item, mob/user, params)
+	if(!can_buckle || !istype(attacking_item, /obj/item/riding_offhand) || !user.Adjacent(src))
 		return ..()
 
-	var/obj/item/riding_offhand/riding_item = W
+	var/obj/item/riding_offhand/riding_item = attacking_item
 	var/mob/living/carried_mob = riding_item.rider
 	if(carried_mob == user) //Piggyback user.
 		return
@@ -45,15 +45,13 @@
 	if(.)
 		return
 	if(Adjacent(user) && can_buckle && has_buckled_mobs())
-		if(buckled_mobs.len > 1)
+		if(length(buckled_mobs) > 1)
 			var/mob/living/unbuckled = tgui_input_list(user, "Who do you wish to unbuckle?", "Unbuckle", sort_names(buckled_mobs))
 			if(isnull(unbuckled))
 				return
-			if(user_unbuckle_mob(unbuckled,user))
-				return TRUE
+			return user_unbuckle_mob(unbuckled,user)
 		else
-			if(user_unbuckle_mob(buckled_mobs[1],user))
-				return TRUE
+			return user_unbuckle_mob(buckled_mobs[1], user)
 
 /atom/movable/MouseDrop_T(mob/living/M, mob/living/user)
 	. = ..()
@@ -70,6 +68,9 @@
 	if(can_buckle && istype(M) && istype(user))
 		return user_buckle_mob(M, user, check_loc = FALSE)
 
+/**
+  * Returns TRUE if there are mobs buckled to this atom and FALSE otherwise
+  */
 /atom/movable/proc/has_buckled_mobs()
 	if(!buckled_mobs)
 		return FALSE
@@ -243,6 +244,7 @@
   * Simple helper proc that runs a suite of checks to test whether it is possible or not for user to buckle target mob to src.
   *
   * Returns FALSE if any conditions that should prevent buckling are satisfied. Returns TRUE otherwise.
+  * Called from [/atom/movable/proc/user_buckle_mob].
   * Arguments:
   * * target - Target mob to check against buckling to src.
   * * user - The mob who is attempting to buckle the target to src.
@@ -298,7 +300,7 @@
 			M.visible_message(\
 				"<span class='notice'>[M] buckles [M.p_them()]self to [src].</span>",\
 				"<span class='notice'>You buckle yourself to [src].</span>",\
-				"<span class='italics'>You hear metal clanking.</span>")
+				"<span class='hear'>You hear metal clanking.</span>")
 		else
 			M.visible_message("<span class='warning'>[user] buckles [M] to [src]!</span>",\
 				"<span class='warning'>[user] buckles you to [src]!</span>",\
@@ -320,12 +322,12 @@
 			M.visible_message(\
 				"<span class='notice'>[user] unbuckles [M] from [src].</span>",\
 				"<span class='notice'>[user] unbuckles you from [src].</span>",\
-				"<span class='italics'>You hear metal clanking.</span>")
+				"<span class='hear'>You hear metal clanking.</span>")
 		else
 			M.visible_message(\
 				"<span class='notice'>[M] unbuckles [M.p_them()]self from [src].</span>",\
 				"<span class='notice'>You unbuckle yourself from [src].</span>",\
-				"<span class='italics'>You hear metal clanking.</span>")
+				"<span class='hear'>You hear metal clanking.</span>")
 		add_fingerprint(user)
 		if(isliving(M.pulledby))
 			var/mob/living/L = M.pulledby

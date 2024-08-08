@@ -1,6 +1,10 @@
+// Checks to see if the mob is able to use their hands, or if they are blocked by cuffs or stuns
 #define AB_CHECK_HANDS_BLOCKED (1<<0)
-#define AB_CHECK_IMMOBILE (1<<1)
+// Checks to see if the mob is incapacitated by stuns or paralysis effects
+#define AB_CHECK_INCAPACITATED (1<<1)
+// Checks to see if the mob is standing
 #define AB_CHECK_LYING (1<<2)
+// Checks to see if the mob in concious
 #define AB_CHECK_CONSCIOUS (1<<3)
 
 /datum/action
@@ -108,7 +112,7 @@
 		return FALSE
 	if((check_flags & AB_CHECK_HANDS_BLOCKED) && HAS_TRAIT(owner, TRAIT_HANDS_BLOCKED))
 		return FALSE
-	if((check_flags & AB_CHECK_IMMOBILE) && HAS_TRAIT(owner, TRAIT_IMMOBILIZED))
+	if((check_flags & AB_CHECK_INCAPACITATED) && HAS_TRAIT(owner, TRAIT_INCAPACITATED))
 		return FALSE
 	if((check_flags & AB_CHECK_LYING) && isliving(owner))
 		var/mob/living/action_user = owner
@@ -155,7 +159,7 @@
 
 //Presets for item actions
 /datum/action/item_action
-	check_flags = AB_CHECK_HANDS_BLOCKED|AB_CHECK_IMMOBILE|AB_CHECK_LYING|AB_CHECK_CONSCIOUS
+	check_flags = AB_CHECK_HANDS_BLOCKED|AB_CHECK_INCAPACITATED|AB_CHECK_CONSCIOUS
 	button_icon_state = null
 	// If you want to override the normal icon being the item
 	// then change this to an icon state
@@ -291,6 +295,30 @@
 	var/obj/item/clothing/ears/headphones/H = target
 	if(istype(H))
 		H.interact(owner)
+
+/datum/action/item_action/toggle_spacesuit
+	name = "Toggle Suit Thermal Regulator"
+	icon_icon = 'icons/mob/actions/actions_spacesuit.dmi'
+	button_icon_state = "thermal_off"
+
+/datum/action/item_action/toggle_spacesuit/New(Target)
+	. = ..()
+	RegisterSignal(target, COMSIG_SUIT_SPACE_TOGGLE, PROC_REF(toggle))
+
+/datum/action/item_action/toggle_spacesuit/Destroy()
+	UnregisterSignal(target, COMSIG_SUIT_SPACE_TOGGLE)
+	return ..()
+
+/datum/action/item_action/toggle_spacesuit/Trigger()
+	var/obj/item/clothing/suit/space/suit = target
+	if(!istype(suit))
+		return
+	suit.toggle_spacesuit()
+
+/// Toggle the action icon for the space suit thermal regulator
+/datum/action/item_action/toggle_spacesuit/proc/toggle(obj/item/clothing/suit/space/suit)
+	button_icon_state = "thermal_[suit.thermal_on ? "on" : "off"]"
+	UpdateButtonIcon()
 
 /datum/action/item_action/toggle_unfriendly_fire
 	name = "Toggle Friendly Fire \[ON\]"
@@ -528,7 +556,7 @@
 /datum/action/item_action/agent_box
 	name = "Deploy Box"
 	desc = "Find inner peace, here, in the box."
-	check_flags = AB_CHECK_HANDS_BLOCKED|AB_CHECK_IMMOBILE|AB_CHECK_CONSCIOUS
+	check_flags = AB_CHECK_HANDS_BLOCKED|AB_CHECK_INCAPACITATED|AB_CHECK_CONSCIOUS
 	background_icon_state = "bg_agent"
 	icon_icon = 'icons/mob/actions/actions_items.dmi'
 	button_icon_state = "deploy_box"

@@ -408,6 +408,7 @@
 /mob/living/simple_animal/ExtinguishMob()
 	return
 
+
 /mob/living/simple_animal/revive(full_heal = 0, admin_revive = 0)
 	. = ..()
 	if(!.)
@@ -495,7 +496,7 @@
 		return
 	if(stat == DEAD)
 		sight = (SEE_TURFS|SEE_MOBS|SEE_OBJS)
-		see_in_dark = 8
+		see_in_dark = NIGHTVISION_FOV_RANGE
 		see_invisible = SEE_INVISIBLE_OBSERVER
 		return
 

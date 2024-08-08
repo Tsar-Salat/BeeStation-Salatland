@@ -198,8 +198,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_TOXINLOVER		"toxinlover"
 #define TRAIT_NOHAIRLOSS		"no_hair_loss"
 #define TRAIT_NOBREATH			"no_breath"
-#define TRAIT_ANTIMAGIC			"anti_magic"
-#define TRAIT_HOLY				"holy"
+#define TRAIT_SEE_ANTIMAGIC		"see_anti_magic"
 #define TRAIT_DEPRESSION		"depression"
 #define TRAIT_JOLLY				"jolly"
 #define TRAIT_NOCRITDAMAGE		"no_crit"
@@ -282,6 +281,10 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_FREE_HYPERSPACE_MOVEMENT "free_hyperspace_movement"
 // Faster cuff removal
 #define TRAIT_FAST_CUFF_REMOVAL "fast_cuff_removal"
+#define TRAIT_BLEED_HELD		"bleed_held" // For when a mob is holding their wounds, preventing them from bleeding further
+#define TRAIT_NO_BLOOD			"no_blood" // Bleeding heals itself and bleeding is impossible
+#define TRAIT_NO_BLEEDING		"no_bleed" // The user can acquire the bleeding status effect, but will no lose blood
+#define TRAIT_BLOOD_COOLANT		"blood_coolant" // Replaces blood with coolant, meaning we overheat instead of losing air
 
 // You can stare into the abyss, but it does not stare back.
 // You're immune to the hallucination effect of the supermatter, either
@@ -373,6 +376,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 
 /// this object has been frozen
 #define TRAIT_FROZEN "frozen"
+///Turf trait for when a turf is transparent
+#define TURF_Z_TRANSPARENT_TRAIT "turf_z_transparent"
 
 // common trait sources
 #define TRAIT_GENERIC "generic"
@@ -419,6 +424,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define CURSE_TRAIT "eldritch"
 #define STATION_TRAIT "station-trait"
 #define TRAIT_RUSTY "rust_trait"
+#define ACTION_TRAIT "action_trait"
+#define TURF_TRAIT "turf"
 
 // unique trait sources, still defines
 #define CLONING_POD_TRAIT "cloning-pod"
@@ -505,6 +512,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_PRESERVE_UI_WITHOUT_CLIENT "preserve_ui_without_client" //this mob should never close ui even if it doesn't have a client
 #define EXPERIMENTAL_SURGERY_TRAIT "experimental_surgery"
 #define NINJA_KIDNAPPED_TRAIT "ninja_kidnapped"
+#define TABLE_TRAIT "table_trait"
 
 ///Traits given by station traits
 #define STATION_TRAIT_BANANIUM_SHIPMENTS "station_trait_bananium_shipments"

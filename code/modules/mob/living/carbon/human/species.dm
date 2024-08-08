@@ -89,6 +89,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	var/obj/item/organ/lungs/mutantlungs = null
 	var/breathid = "o2"
 
+	var/list/required_organs = list()
 	var/obj/item/organ/brain/mutant_brain = /obj/item/organ/brain
 	var/obj/item/organ/heart/mutant_heart = /obj/item/organ/heart
 	var/obj/item/organ/eyes/mutanteyes = /obj/item/organ/eyes
@@ -122,6 +123,9 @@ GLOBAL_LIST_EMPTY(features_by_species)
 
 	///List of possible heights
 	var/list/species_height = SPECIES_HEIGHTS(BODY_SIZE_SHORT, BODY_SIZE_NORMAL, BODY_SIZE_TALL)
+
+	/// What bleed status effect should we apply?
+	var/bleed_effect = STATUS_EFFECT_BLEED
 
 ///////////
 // PROCS //
@@ -254,13 +258,16 @@ GLOBAL_LIST_EMPTY(features_by_species)
 
 	if(heart && (!should_have_heart || replace_current))
 		heart.Remove(C,1)
+		required_organs -= /obj/item/organ/heart
 		QDEL_NULL(heart)
 	if(should_have_heart && !heart)
 		heart = new mutant_heart()
 		heart.Insert(C)
+		required_organs |= /obj/item/organ/heart
 
 	if(lungs && (!should_have_lungs || replace_current))
 		lungs.Remove(C,1)
+		required_organs -= /obj/item/organ/lungs
 		QDEL_NULL(lungs)
 	if(should_have_lungs && !lungs)
 		if(mutantlungs)
@@ -268,9 +275,11 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		else
 			lungs = new()
 		lungs.Insert(C)
+		required_organs |= /obj/item/organ/lungs
 
 	if(liver && (!should_have_liver || replace_current))
 		liver.Remove(C,1)
+		required_organs -= /obj/item/organ/liver
 		QDEL_NULL(liver)
 	if(should_have_liver && !liver)
 		if(mutantliver)
@@ -278,9 +287,11 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		else
 			liver = new()
 		liver.Insert(C)
+		required_organs |= /obj/item/organ/liver
 
 	if(stomach && (!should_have_stomach || replace_current))
 		stomach.Remove(C,1)
+		required_organs -= /obj/item/organ/stomach
 		QDEL_NULL(stomach)
 	if(should_have_stomach && !stomach)
 		if(mutantstomach)
@@ -288,16 +299,20 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		else
 			stomach = new()
 		stomach.Insert(C)
+		required_organs |= /obj/item/organ/stomach
 
 	if(appendix && (!should_have_appendix || replace_current))
 		appendix.Remove(C,1)
+		required_organs -= /obj/item/organ/appendix
 		QDEL_NULL(appendix)
 	if(should_have_appendix && !appendix)
 		appendix = new()
 		appendix.Insert(C)
+		required_organs |= /obj/item/organ/appendix
 
 	if(tail && (!should_have_tail || replace_current))
 		tail.Remove(C,1)
+		required_organs -= /obj/item/organ/tail
 		QDEL_NULL(tail)
 	if(should_have_tail && !tail)
 		tail = new mutanttail()
@@ -307,9 +322,11 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			lizard_tail.spines = C.dna.features["spines"]
 			tail = lizard_tail
 		tail.Insert(C)
+		required_organs |= /obj/item/organ/tail
 
 	if(wings && (!should_have_wings || replace_current))
 		wings.Remove(C,1)
+		required_organs -= /obj/item/organ/wings
 		QDEL_NULL(wings)
 	if(should_have_wings && !wings)
 		wings = new mutantwings()
@@ -319,47 +336,58 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			if(locate(/datum/mutation/strongwings) in C.dna.mutations)
 				wings.flight_level = WINGS_FLYING
 		wings.Insert(C)
+		required_organs |= /obj/item/organ/wings
 
 	if(C.get_bodypart(BODY_ZONE_HEAD))
 		if(brain && (replace_current || !should_have_brain))
 			if(!brain.decoy_override)//Just keep it if it's fake
 				brain.Remove(C,TRUE,TRUE)
+				required_organs -= /obj/item/organ/brain
 				QDEL_NULL(brain)
 		if(should_have_brain && !brain)
 			brain = new mutant_brain()
 			brain.Insert(C, TRUE, TRUE)
+			required_organs |= /obj/item/organ/brain
 
 		if(eyes && (replace_current || !should_have_eyes))
 			eyes.Remove(C,1)
+			required_organs -= /obj/item/organ/eyes
 			QDEL_NULL(eyes)
 		if(should_have_eyes && !eyes)
 			eyes = new mutanteyes
 			eyes.Insert(C)
+			required_organs |= /obj/item/organ/eyes
 
 		if(ears && (replace_current || !should_have_ears))
 			ears.Remove(C,1)
+			required_organs -= /obj/item/organ/ears
 			QDEL_NULL(ears)
 		if(should_have_ears && !ears)
 			ears = new mutantears
 			ears.Insert(C)
+			required_organs |= /obj/item/organ/ears
 
 		if(tongue && (replace_current || !should_have_tongue))
 			tongue.Remove(C,1)
+			required_organs -= /obj/item/organ/tongue
 			QDEL_NULL(tongue)
 		if(should_have_tongue && !tongue)
 			tongue = new mutanttongue
 			tongue.Insert(C)
+			required_organs |= /obj/item/organ/tongue
 
 	if(old_species)
 		for(var/mutantorgan in old_species.mutant_organs)
 			var/obj/item/organ/I = C.getorgan(mutantorgan)
 			if(I)
 				I.Remove(C)
+				required_organs -= I.type
 				QDEL_NULL(I)
 
 	for(var/path in mutant_organs)
 		var/obj/item/organ/I = new path()
 		I.Insert(C)
+		required_organs |= I.type
 
 /datum/species/proc/replace_body(mob/living/carbon/C, var/datum/species/new_species)
 	new_species ||= C.dna.species //If no new species is provided, assume its src.
@@ -1491,6 +1519,10 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			to_chat(H, "<span class='danger'>Your hair starts to fall out in clumps.</span>")
 			addtimer(CALLBACK(src, PROC_REF(go_bald), H), 50)
 
+
+/datum/species/proc/handle_blood(mob/living/carbon/human/H)
+	return FALSE
+
 /datum/species/proc/go_bald(mob/living/carbon/human/H)
 	if(QDELETED(H))	//may be called from a timer
 		return
@@ -1648,13 +1680,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	if(user.loc == target.loc)
 		return FALSE
 	else
-		user.do_attack_animation(target, ATTACK_EFFECT_DISARM)
-		playsound(target, 'sound/weapons/thudswoosh.ogg', 50, TRUE, -1)
-
-		if(target.w_uniform)
-			target.w_uniform.add_fingerprint(user)
-		SEND_SIGNAL(target, COMSIG_HUMAN_DISARM_HIT, user, user.get_combat_bodyzone(target))
-		target.disarm_effect(user)
+		user.disarm(target)
 
 /datum/species/proc/spec_hitby(atom/movable/AM, mob/living/carbon/human/H)
 	return
@@ -1712,6 +1738,34 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	var/weakness = H.check_weakness(I, user)
 	apply_damage(I.force * weakness, I.damtype, def_zone, armor_block, H)
 
+	if (I.bleed_force)
+		var/armour_block = user.run_armor_check(affecting, BLEED, armour_penetration = I.armour_penetration, silent = (I.force > 0))
+		var/hit_amount = (100 - armour_block) / 100
+		H.add_bleeding(I.bleed_force * hit_amount)
+		if(IS_ORGANIC_LIMB(affecting))
+			I.add_mob_blood(H)	//Make the weapon bloody, not the person.
+			if(get_dist(user, H) <= 1)	//people with TK won't get smeared with blood
+				user.add_mob_blood(H)
+			switch(hit_area)
+				if(BODY_ZONE_HEAD)
+					if(H.wear_mask)
+						H.wear_mask.add_mob_blood(H)
+						H.update_inv_wear_mask()
+					if(H.head)
+						H.head.add_mob_blood(H)
+						H.update_inv_head()
+					if(H.glasses && prob(33))
+						H.glasses.add_mob_blood(H)
+						H.update_inv_glasses()
+
+				if(BODY_ZONE_CHEST)
+					if(H.wear_suit)
+						H.wear_suit.add_mob_blood(H)
+						H.update_inv_wear_suit()
+					if(H.w_uniform)
+						H.w_uniform.add_mob_blood(H)
+						H.update_inv_w_uniform()
+
 	H.send_item_attack_message(I, user, hit_area)
 
 	if(!I.force)
@@ -1729,48 +1783,17 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			I.add_mob_blood(H)
 			playsound(get_turf(H), I.get_dismember_sound(), 80, 1)
 
-	var/bloody = 0
-	if((I.damtype == BRUTE) && (I.force >= max(10, armor_block) || I.is_sharp()))
-		if(IS_ORGANIC_LIMB(affecting))
-			I.add_mob_blood(H)	//Make the weapon bloody, not the person.
-			if(prob(I.force * 2))	//blood spatter!
-				bloody = 1
-				var/turf/location = H.loc
-				if(istype(location))
-					H.add_splatter_floor(location)
-				if(get_dist(user, H) <= 1)	//people with TK won't get smeared with blood
-					user.add_mob_blood(H)
-
-		switch(hit_area)
-			if(BODY_ZONE_HEAD)
-				if(!I.is_sharp())
-					if(H.mind && H.stat == CONSCIOUS && H != user && (H.health - (I.force * I.attack_weight)) <= 0) // rev deconversion through blunt trauma.
-						var/datum/antagonist/rev/rev = H.mind.has_antag_datum(/datum/antagonist/rev)
-						if(rev)
-							rev.remove_revolutionary(FALSE, user)
-
-				if(bloody)	//Apply blood
-					if(H.wear_mask)
-						H.wear_mask.add_mob_blood(H)
-						H.update_inv_wear_mask()
-					if(H.head)
-						H.head.add_mob_blood(H)
-						H.update_inv_head()
-					if(H.glasses && prob(33))
-						H.glasses.add_mob_blood(H)
-						H.update_inv_glasses()
-
-			if(BODY_ZONE_CHEST)
-				if(bloody)
-					if(H.wear_suit)
-						H.wear_suit.add_mob_blood(H)
-						H.update_inv_wear_suit()
-					if(H.w_uniform)
-						H.w_uniform.add_mob_blood(H)
-						H.update_inv_w_uniform()
-
+	if(I.damtype == BRUTE && (I.force >= max(10, armor_block) && hit_area == BODY_ZONE_HEAD))
+		if(!I.is_sharp() && H.mind && H.stat == CONSCIOUS && H != user && (H.health - (I.force * I.attack_weight)) <= 0) // rev deconversion through blunt trauma.
+			var/datum/antagonist/rev/rev = H.mind.has_antag_datum(/datum/antagonist/rev)
+			if(rev)
+				rev.remove_revolutionary(FALSE, user)
 		if(Iforce > 10 || Iforce >= 5 && prob(33))
 			H.force_say(user)
+	else if (I.damtype == BURN && H.is_bleeding())
+		H.cauterise_wounds(AMOUNT_TO_BLEED_INTENSITY(I.force / 3))
+		to_chat(user, "<span class='userdanger'>The heat from [I] cauterizes your bleeding!</span>")
+		playsound(src, 'sound/surgery/cautery2.ogg', 70)
 	return TRUE
 
 /datum/species/proc/apply_damage(damage, damagetype = BRUTE, def_zone = null, blocked, mob/living/carbon/human/H, forced = FALSE)
@@ -1949,7 +1972,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		// Get the changes to the skin from the core temp
 		var/core_skin_diff = humi.coretemperature - humi.bodytemperature
 		// change rate of 0.08 to reflect temp back in to the core at the same rate as core to skin
-		var/core_skin_change = (1 + thermal_protection) * get_temp_change_amount(core_skin_diff, 0.08)
+		var/core_skin_change = (1 + thermal_protection) * get_temp_change_amount(core_skin_diff, 0.09)
 
 		// We do not want to over shoot after using protection
 		if(core_skin_diff > 0)
@@ -2231,7 +2254,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	if(H.getorgan(/obj/item/organ/wings))
 		if(wings.flight_level >= WINGS_FLYING && H.movement_type & FLYING)
 			flyslip(H)
-	. = stunmod * H.physiology.stun_mod * amount
+	. = max(stunmod + H.physiology.stun_add, 0) * H.physiology.stun_mod * amount
 
 //////////////
 //Space Move//
