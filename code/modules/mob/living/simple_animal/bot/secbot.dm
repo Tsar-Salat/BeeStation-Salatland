@@ -161,7 +161,7 @@
         final = final|JUDGE_RECORDCHECK
     if(weaponscheck)
         final = final|JUDGE_WEAPONCHECK
-    if(emagged == 2)
+    if(emagged)
         final = final|JUDGE_EMAGGED
     return final
 
@@ -187,7 +187,7 @@
 
 /mob/living/simple_animal/bot/secbot/on_emag(atom/target, mob/user)
 	..()
-	if(emagged == 2)
+	if(emagged)
 		if(user)
 			to_chat(user, "<span class='danger'>You short out [src]'s target assessment circuits.</span>")
 			oldtarget_name = user.name
