@@ -21,8 +21,11 @@
 	melee_damage = 20
 	attacktext = "blinks at"
 	attack_sound = 'sound/weapons/pierce.ogg'
-	movement_type = FLYING
 
 	faction = list("spooky")
 	del_on_death = TRUE
 	random_color = FALSE
+
+/mob/living/simple_animal/hostile/eyeball/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/simple_flying)

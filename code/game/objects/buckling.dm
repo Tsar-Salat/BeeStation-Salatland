@@ -5,7 +5,7 @@
 	var/buckle_lying = NO_BUCKLE_LYING
 	/// Require people to be handcuffed before being able to buckle. eg: pipes
 	var/buckle_requires_restraints = FALSE
-	// The mobs currently buckled to this atom
+	/// The mobs currently buckled to this atom
 	var/list/mob/living/buckled_mobs = null //list()
 	/// The maximum number of mob/livings allowed to be buckled to this atom at once
 	var/max_buckled_mobs = 1
@@ -23,11 +23,9 @@
 			var/mob/living/unbuckled = tgui_input_list(user, "Who do you wish to unbuckle?", "Unbuckle", sort_names(buckled_mobs))
 			if(isnull(unbuckled))
 				return
-			if(user_unbuckle_mob(unbuckled,user))
-				return TRUE
+			return user_unbuckle_mob(unbuckled,user)
 		else
-			if(user_unbuckle_mob(buckled_mobs[1],user))
-				return TRUE
+			return user_unbuckle_mob(buckled_mobs[1], user)
 
 /atom/movable/attackby(obj/item/attacking_item, mob/user, params)
 	if(!can_buckle || !istype(attacking_item, /obj/item/riding_offhand) || !user.Adjacent(src))
@@ -68,7 +66,7 @@
   */
 /atom/movable/proc/mouse_buckle_handling(mob/living/M, mob/living/user)
 	if(can_buckle && istype(M) && istype(user))
-		return user_buckle_mob(M, user)
+		return user_buckle_mob(M, user, check_loc = FALSE)
 
 /**
   * Returns TRUE if there are mobs buckled to this atom and FALSE otherwise
@@ -108,6 +106,10 @@
 		if (!check_loc && M.loc != loc)
 			M.forceMove(loc)
 
+	if(anchored)
+		ADD_TRAIT(M, TRAIT_NO_FLOATING_ANIM, BUCKLED_TRAIT)
+	if(!length(buckled_mobs))
+		RegisterSignal(src, COMSIG_MOVABLE_SET_ANCHORED, PROC_REF(on_set_anchored))
 	M.set_buckled(src)
 	M.setDir(dir)
 	buckled_mobs |= M
@@ -153,11 +155,28 @@
 	buckled_mob.clear_alert("buckled")
 	//buckled_mob.set_glide_size(DELAY_TO_GLIDE_SIZE(buckled_mob.total_multiplicative_slowdown()))
 	buckled_mobs -= buckled_mob
+	if(anchored)
+		REMOVE_TRAIT(buckled_mob, TRAIT_NO_FLOATING_ANIM, BUCKLED_TRAIT)
+	if(!length(buckled_mobs))
+		UnregisterSignal(src, COMSIG_MOVABLE_SET_ANCHORED, PROC_REF(on_set_anchored))
 	SEND_SIGNAL(src, COMSIG_MOVABLE_UNBUCKLE, buckled_mob, force)
 
 	post_unbuckle_mob(.)
 
+/atom/movable/proc/on_set_anchored(atom/movable/source, anchorvalue)
+	SIGNAL_HANDLER
+	for(var/_buckled_mob in buckled_mobs)
+		if(!_buckled_mob)
+			continue
+		var/mob/living/buckled_mob = _buckled_mob
+		if(anchored)
+			ADD_TRAIT(buckled_mob, TRAIT_NO_FLOATING_ANIM, BUCKLED_TRAIT)
+		else
+			REMOVE_TRAIT(buckled_mob, TRAIT_NO_FLOATING_ANIM, BUCKLED_TRAIT)
 
+/**
+  * Call [/atom/movable/proc/unbuckle_mob] for all buckled mobs
+  */
 /atom/movable/proc/unbuckle_all_mobs(force=FALSE)
 	if(!has_buckled_mobs())
 		return
@@ -167,7 +186,6 @@
 //Handle any extras after buckling
 //Called on buckle_mob()
 /atom/movable/proc/post_buckle_mob(mob/living/M)
-	M.reset_pull_offsets(M, TRUE) // This line is TEMPORARY, will be removed when update_mobility is refactored!
 
 //same but for unbuckle
 /atom/movable/proc/post_unbuckle_mob(mob/living/M)
@@ -181,7 +199,6 @@
   * * target - Target mob to check against buckling to src.
   * * force - Whether or not the buckle should be forced. If TRUE, ignores src's can_buckle var and target's can_buckle_to
   * * check_loc - TRUE if target and src have to be on the same tile, FALSE if they are allowed to just be adjacent
-  * * check_loc - Whether to do a proximity check or not. The proximity check looks for target.loc == src.loc.
   */
 /atom/movable/proc/is_buckle_possible(mob/living/target, force = FALSE, check_loc = TRUE)
 	// Make sure target is mob/living
@@ -197,7 +214,7 @@
 		return FALSE
 
 	// If we're checking the loc, make sure the target is on the thing we're bucking them to.
-	if(check_loc && target.loc != loc)
+	if(check_loc && !target.Adjacent(src))
 		return FALSE
 
 	// Make sure the target isn't already buckled to something.

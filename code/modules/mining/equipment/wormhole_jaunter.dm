@@ -20,13 +20,14 @@
 	activate(user, TRUE)
 
 /obj/item/wormhole_jaunter/proc/turf_check(mob/user)
-	var/turf/device_turf = get_turf(user)
+	var/turf/device_turf = get_turf(src)
 	if(!device_turf || is_centcom_level(device_turf.z) || is_reserved_level(device_turf.z))
-		to_chat(user, "<span class='notice'>You're having difficulties getting the [src.name] to work.</span>")
+		if(user)
+			to_chat(user, "<span class='notice'>You're having difficulties getting the [src.name] to work.</span>")
 		return FALSE
 	return TRUE
 
-/obj/item/wormhole_jaunter/proc/get_destinations(mob/user)
+/obj/item/wormhole_jaunter/proc/get_destinations()
 	var/list/destinations = list()
 
 	for(var/obj/item/beacon/B in GLOB.teleportbeacons)
@@ -36,52 +37,61 @@
 
 	return destinations
 
-/obj/item/wormhole_jaunter/proc/activate(mob/living/user, adjacent)
-	if(!turf_check(user))
-		return
+/obj/item/wormhole_jaunter/proc/can_jaunter_teleport()
+	var/list/destinations = get_destinations()
+	return destinations.len > 0
 
-	var/list/L = get_destinations(user)
-	if(!L.len)
-		to_chat(user, "<span class='notice'>The [src.name] found no beacons in the world to anchor a wormhole to.</span>")
-		return
-	var/chosen_beacon = pick(L)
-	var/obj/effect/portal/jaunt_tunnel/J = new (get_turf(src), src, 100, null, FALSE, get_turf(chosen_beacon))
-	if(adjacent)
-		try_move_adjacent(J)
-	else
-		user.Paralyze(2 SECONDS, TRUE, TRUE) //Ignore stun immunity here, for their own good
-		user.setMovetype(user.movement_type | FLOATING) //Prevents falling into chasm during delay, automatically removed upon movement
-		addtimer(CALLBACK(J, TYPE_PROC_REF(/atom, attackby), null, user), 1 SECONDS) //Forcibly teleport them away from the chasm after a brief dramatic delay
+/obj/item/wormhole_jaunter/proc/activate(mob/living/user, adjacent, teleport)
+	if(!turf_check(user))
+		return FALSE
+
+	if(!can_jaunter_teleport())
+		if(user)
+			to_chat(user, "<span class='notice'>\The [src] found no beacons in the world to anchor a wormhole to.</span>")
+		else
+			visible_message("<span class='notice'>\The [src] found no beacons in the world to anchor a wormhole to!</span>")
+		return TRUE // used for chasm code
+
+	var/list/destinations = get_destinations()
+	var/chosen_beacon = pick(destinations)
+
+	var/obj/effect/portal/jaunt_tunnel/tunnel = new (get_turf(src), 100, null, FALSE, get_turf(chosen_beacon))
+	if(teleport)
+		tunnel.teleport(user)
+	else if(adjacent)
+		try_move_adjacent(tunnel)
 	playsound(src,'sound/effects/sparks4.ogg',50,1)
 	qdel(src)
+	return FALSE // used for chasm code
 
 /obj/item/wormhole_jaunter/emp_act(power)
 	. = ..()
 	if(. & EMP_PROTECT_SELF)
 		return
 
-	var/mob/M = loc
-	if(istype(M))
-		var/triggered = FALSE
-		if(M.get_item_by_slot(ITEM_SLOT_BELT) == src)
-			if(power == 1)
-				triggered = TRUE
-			else if(power == 2 && prob(50))
-				triggered = TRUE
+	var/triggered = FALSE
+	if(power == 1)
+		triggered = TRUE
+	else if(power == 2 && prob(50))
+		triggered = TRUE
 
-		if(triggered)
-			M.visible_message("<span class='warning'>[src] overloads and activates!</span>")
-			SSblackbox.record_feedback("tally", "jaunter", 1, "EMP") // EMP accidental activation
-			activate(M)
+	var/mob/M = loc
+	if(istype(M) && triggered)
+		M.visible_message("<span class='warning'>Your [src.name] overloads and activates!</span>")
+		SSblackbox.record_feedback("tally", "jaunter", 1, "EMP") // EMP accidental activation
+		activate(M, FALSE, TRUE)
+	else if(triggered)
+		visible_message("<span class='warning'>\The [src] overloads and activates!</span>")
+		activate()
 
 /obj/item/wormhole_jaunter/proc/chasm_react(mob/user)
-	if(user.get_item_by_slot(ITEM_SLOT_BELT) == src)
-		user.visible_message("<span class='notice'>[user] is saved by their [src]!</span>", "<span class='warning'>Your [src] activates, saving you from the chasm!</span>")
+	var/fall_into_chasm = activate(user, FALSE, TRUE)
+
+	if(!fall_into_chasm)
+		user.visible_message("<span class='notice'>[user] is saved by their [src.name]!</span>", "<span class='warning'>Your [src.name] activates, saving you from the chasm!</span>")
 		SSblackbox.record_feedback("tally", "jaunter", 1, "Chasm") // chasm automatic activation
 		INVOKE_ASYNC(user.client, TYPE_PROC_REF(/client, give_award), /datum/award/achievement/misc/chasmjaunt, user)
-		activate(user, FALSE)
-	else
-		to_chat(user, "[src] is not attached to your belt, preventing it from saving you from the chasm. RIP.</span>")
+		return fall_into_chasm
 
 //jaunter tunnel
 /obj/effect/portal/jaunt_tunnel

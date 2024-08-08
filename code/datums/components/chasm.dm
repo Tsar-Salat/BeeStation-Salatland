@@ -69,7 +69,7 @@
 		return FALSE
 	if(!isliving(AM) && !isobj(AM))
 		return FALSE
-	if(is_type_in_typecache(AM, forbidden_types) || AM.throwing || (AM.movement_type & FLOATING))
+	if(is_type_in_typecache(AM, forbidden_types) || AM.throwing || (AM.movement_type & (FLOATING|FLYING)))
 		return FALSE
 	//Flies right over the chasm
 	if(ismob(AM))
@@ -78,16 +78,15 @@
 			var/mob/buckled_to = M.buckled
 			if((!ismob(M.buckled) || (buckled_to.buckled != M)) && !droppable(M.buckled))
 				return FALSE
-		if(M.is_flying())
-			return FALSE
 		if(ishuman(AM))
-			var/mob/living/carbon/human/H = AM
-			if(istype(H.belt, /obj/item/wormhole_jaunter))
-				var/obj/item/wormhole_jaunter/J = H.belt
-				//To freak out any bystanders
-				H.visible_message("<span class='boldwarning'>[H] falls into [parent]!</span>")
-				J.chasm_react(H)
-				return FALSE
+			var/mob/living/carbon/human/victim = AM
+			if(istype(victim.belt, /obj/item/wormhole_jaunter))
+				var/obj/item/wormhole_jaunter/jaunter = victim.belt
+				var/turf/chasm = get_turf(victim)
+				var/fall_into_chasm = jaunter.chasm_react(victim)
+				if(!fall_into_chasm)
+					chasm.visible_message("<span class='boldwarning'>[victim] falls into [chasm]!</span>") //To freak out any bystanders
+				return fall_into_chasm
 	return TRUE
 
 /datum/component/chasm/proc/drop(atom/movable/AM)

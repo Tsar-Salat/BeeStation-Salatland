@@ -359,7 +359,6 @@
 			new i(loc)
 
 /mob/living/simple_animal/death(gibbed)
-	movement_type &= ~FLYING
 	if(nest)
 		nest.spawned_mobs -= src
 		nest = null
@@ -409,7 +408,6 @@
 /mob/living/simple_animal/ExtinguishMob()
 	return
 
-
 /mob/living/simple_animal/revive(full_heal = 0, admin_revive = 0)
 	. = ..()
 	if(!.)
@@ -417,7 +415,6 @@
 	icon = initial(icon)
 	icon_state = icon_living
 	density = initial(density)
-	setMovetype(initial(movement_type))
 
 /mob/living/simple_animal/proc/make_babies() // <3 <3 <3
 	set waitfor = 0
