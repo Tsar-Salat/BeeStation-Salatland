@@ -443,6 +443,10 @@
 	if(organ_eyes)
 		organ_eyes.eye_color = eye_color
 		organ_eyes.old_eye_color = eye_color
+
+	//for(var/obj/item/organ/external/external_organ in internal_organs)
+	//	external_organ.mutate_feature(features, src)
+
 	if(icon_update)
 		update_body()
 		update_hair()

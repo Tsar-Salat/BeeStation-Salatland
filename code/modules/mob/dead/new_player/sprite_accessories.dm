@@ -1822,7 +1822,7 @@
 /datum/sprite_accessory/wings/angel
 	name = "Angel"
 	icon_state = "angel"
-	color_src = 0
+	color_src = FALSE
 	dimension_x = 46
 	center = TRUE
 	dimension_y = 34
@@ -1831,7 +1831,7 @@
 /datum/sprite_accessory/wings_open/angel
 	name = "Angel"
 	icon_state = "angel"
-	color_src = 0
+	color_src = FALSE
 	dimension_x = 46
 	center = TRUE
 	dimension_y = 34
@@ -1855,7 +1855,7 @@
 	name = "Bee"
 	icon = 'icons/mob/apid_accessories/apid_wings.dmi'
 	icon_state = "apid"
-	color_src = 0
+	color_src = FALSE
 	dimension_x = 32
 	center = TRUE
 	dimension_y = 32
@@ -1864,7 +1864,7 @@
 	name = "Bee"
 	icon = 'icons/mob/apid_accessories/apid_wings.dmi'
 	icon_state = "apid"
-	color_src = 0
+	color_src = FALSE
 	dimension_x = 32
 	center = TRUE
 	dimension_y = 32
@@ -1872,7 +1872,7 @@
 /datum/sprite_accessory/wings/robot
 	name = "Robot"
 	icon_state = "robo"
-	color_src = 0
+	color_src = FALSE
 	dimension_x = 46
 	center = TRUE
 	dimension_y = 34
@@ -1880,7 +1880,7 @@
 /datum/sprite_accessory/wings_open/robot
 	name = "Robot"
 	icon_state = "robo"
-	color_src = 0
+	color_src = FALSE
 	dimension_x = 46
 	center = TRUE
 	dimension_y = 34
@@ -2174,7 +2174,7 @@
 /datum/sprite_accessory/moth_wings/angel
 	name = "Angel"
 	icon_state = "angel"
-	color_src = 0
+	color_src = FALSE
 	dimension_x = 46
 	center = TRUE
 	dimension_y = 34
@@ -2346,12 +2346,12 @@
 /datum/sprite_accessory/ipc_screens/blue
 	name = "Blue"
 	icon_state = "blue"
-	color_src = 0
+	color_src = FALSE
 
 /datum/sprite_accessory/ipc_screens/bsod
 	name = "BSOD"
 	icon_state = "bsod"
-	color_src = 0
+	color_src = FALSE
 
 /datum/sprite_accessory/ipc_screens/breakout
 	name = "Breakout"
@@ -2388,7 +2388,7 @@
 /datum/sprite_accessory/ipc_screens/heart
 	name = "Heart"
 	icon_state = "heart"
-	color_src = 0
+	color_src = FALSE
 
 /datum/sprite_accessory/ipc_screens/monoeye
 	name = "Mono-eye"
@@ -2413,7 +2413,7 @@
 /datum/sprite_accessory/ipc_screens/rainbow
 	name = "Rainbow"
 	icon_state = "rainbow"
-	color_src = 0
+	color_src = FALSE
 
 /datum/sprite_accessory/ipc_screens/red
 	name = "Red"
@@ -2422,7 +2422,7 @@
 /datum/sprite_accessory/ipc_screens/redtext
 	name = "Red Text"
 	icon_state = "redtext"
-	color_src = 0
+	color_src = FALSE
 
 /datum/sprite_accessory/ipc_screens/rgb
 	name = "RGB"
@@ -2527,12 +2527,12 @@
 /datum/sprite_accessory/ipc_chassis // Used for changing limb icons, doesn't need to hold the actual icon. That's handled in ipc.dm
 	icon = null
 	icon_state = "who cares fuck you" // In order to pull the chassis correctly, we need AN icon_state(see line 36-39). It doesn't have to be useful, because it isn't used.
-	color_src = 0
+	color_src = FALSE
 
 /datum/sprite_accessory/insect_type
 	icon = null
 	icon_state = "NULL"
-	color_src = 0
+	color_src = FALSE
 
 /datum/sprite_accessory/insect_type/fly
 	name = "Common Fly"
