@@ -126,7 +126,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	///Replaces default appendix with a different organ.
 	var/obj/item/organ/appendix/mutantappendix = /obj/item/organ/appendix
 	///Replaces default wings with a different organ. (There should be no default wings, only those on moths & apids, thus null)
-	var/obj/item/organ/wings/mutantwings = null
+	var/obj/item/organ/external/wings/mutantwings = null
 	//only an honorary mutantthing because not an organ and not loaded in the same way, you've been warned to do your research
 	var/obj/item/mutanthands
 	var/override_float = FALSE
@@ -2199,7 +2199,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 
 /datum/species/proc/spec_stun(mob/living/carbon/human/H,amount)
 	if(H.movement_type & FLYING)
-		var/obj/item/organ/external/wings/wings = H.getorganslot(ORGAN_SLOT_EXTERNAL_WINGS)
+		var/obj/item/organ/external/wings/functional/wings = H.getorganslot(ORGAN_SLOT_EXTERNAL_WINGS)
 		if(wings)
 			flyslip(H)
 

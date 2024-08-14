@@ -617,20 +617,20 @@
 			return ..()
 		if(ishuman(C))
 			var/mob/living/carbon/human/H = C
-			var/obj/item/organ/wings/wings = H.getorganslot(ORGAN_SLOT_WINGS)
+			var/obj/item/organ/external/wings/wings = H.getorganslot(ORGAN_SLOT_WINGS)
 			if(H.getorgan(/obj/item/organ/wings))
 				if(wings.flight_level <= WINGS_FLIGHTLESS)
 					wings.flight_level += 1 //upgrade the flight level
 					wings.Refresh(H) //they need to insert to get the flight emote
 			else
 				if(MOB_ROBOTIC in H.mob_biotypes)
-					var/obj/item/organ/wings/cybernetic/newwings = new()
+					var/obj/item/organ/external/wings/cybernetic/newwings = new()
 					newwings.Insert(H)
 				else if(holycheck)
-					var/obj/item/organ/wings/angel/newwings = new()
+					var/obj/item/organ/external/wings/angel/newwings = new()
 					newwings.Insert(H)
 				else
-					var/obj/item/organ/wings/dragon/newwings = new()
+					var/obj/item/organ/external/wings/dragon/newwings = new()
 					newwings.Insert(H)
 				to_chat(C, "<span class='userdanger'>A terrible pain travels down your back as wings burst out!</span>")
 				playsound(C.loc, 'sound/items/poster_ripped.ogg', 50, TRUE, -1)

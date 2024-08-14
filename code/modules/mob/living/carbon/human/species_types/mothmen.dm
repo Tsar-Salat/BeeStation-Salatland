@@ -24,7 +24,7 @@
 	var/datum/action/innate/cocoon/cocoon_action
 	meat = /obj/item/food/meat/slab/human/mutant/moth
 	mutanteyes = /obj/item/organ/eyes/moth
-	mutantwings = /obj/item/organ/wings/moth
+	mutantwings = /obj/item/organ/external/wings/moth
 	mutanttongue = /obj/item/organ/tongue/moth
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | ERT_SPAWN | RACE_SWAP | SLIME_EXTRACT
 	species_language_holder = /datum/language_holder/moth
@@ -58,7 +58,7 @@
 		H.reagents.remove_reagent(chem.type, chem.metabolization_rate)
 		return FALSE
 	return ..()
-	
+
 /datum/species/moth/check_species_weakness(obj/item/weapon, mob/living/attacker)
 	if(istype(weapon, /obj/item/melee/flyswatter))
 		return 9 //flyswatters deal 10x damage to moths
@@ -93,7 +93,7 @@
 
 /datum/action/innate/cocoon/Activate()
 	var/mob/living/carbon/H = owner
-	var/obj/item/organ/wingcheck = H.getorgan(/obj/item/organ/wings/moth)
+	var/obj/item/organ/wingcheck = H.getorgan(/obj/item/organ/external/wings/moth)
 	if(!wingcheck) //This is to stop easy organ farms
 		to_chat(H, "<span class='warning'>You don't have any wings to regenerate!</span>")
 		return
@@ -142,7 +142,7 @@
 		SEND_SIGNAL(H, COMSIG_CLEAR_MOOD_EVENT, "burnt_wings")
 		if(ismoth(H) && HAS_TRAIT(H, TRAIT_MOTH_BURNT))
 			REMOVE_TRAIT(H, TRAIT_MOTH_BURNT, "fire")
-			var/obj/item/organ/wings/moth/W = H.getorgan(/obj/item/organ/wings/moth)
+			var/obj/item/organ/external/wings/moth/W = H.getorgan(/obj/item/organ/external/wings/moth)
 			if(W)
 				W.flight_level = WINGS_FLIGHTLESS//The check for wings getting burned makes them cosmetic, so this allows the burned off effect to be applied again
 				if(locate(/datum/mutation/strongwings) in H.dna.mutations)
