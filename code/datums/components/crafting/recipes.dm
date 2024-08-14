@@ -1,3 +1,7 @@
+///If the machine is used/deleted in the crafting process
+#define CRAFTING_MACHINERY_CONSUME 1
+///If the machine is only "used" i.e. it checks to see if it's nearby and allows crafting, but doesn't delete it
+#define CRAFTING_MACHINERY_USE 0
 
 /datum/crafting_recipe
 	var/name = "" //in-game display name
@@ -10,10 +14,14 @@
 	var/list/tool_paths
 	var/time = 30 //time in deciseconds
 	var/list/parts = list() //type paths of items that will be placed in the result
-	var/list/chem_catalysts = list() //like tools but for reagents
+	var/list/chem_catalysts = list() //like tool_behaviors but for reagents
 	var/category = CAT_NONE //where it shows up in the crafting UI
 	var/subcategory = CAT_NONE
 	var/always_available = TRUE //Set to FALSE if it needs to be learned first.
+	/// Additonal requirements text shown in UI
+	var/additional_req_text
+	///Required machines for the craft, set the assigned value of the typepath to CRAFTING_MACHINERY_CONSUME or CRAFTING_MACHINERY_USE. Lazy associative list: type_path key -> flag value.
+	var/list/machinery
 	var/one_per_turf = FALSE ///Should only one object exist on the same turf?
 	var/dangerous_craft = FALSE /// Should admins be notified about this getting created by a non-antagonist?
 
@@ -33,6 +41,9 @@
   */
 /datum/crafting_recipe/proc/check_requirements(mob/user, list/collected_requirements)
 	return TRUE
+
+/datum/crafting_recipe/proc/on_craft_completion(mob/user, atom/result)
+	return
 
 /datum/crafting_recipe/IED
 	name = "IED"
