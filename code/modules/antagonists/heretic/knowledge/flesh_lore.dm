@@ -145,7 +145,7 @@
 	)
 	required_atoms = list(
 		/mob/living/carbon/human = 1,
-		/obj/item/reagent_containers/food/snacks/grown/flower = 1,
+		/obj/item/food/grown/flower = 1,
 	)
 	limit = 2
 	cost = 1
@@ -306,7 +306,7 @@
 		return
 
 	var/mob/living/carbon/human/human_target = target
-	human_target.bleed_rate += 5
+	human_target.add_bleeding(BLEED_DEEP_WOUND)
 
 /datum/heretic_knowledge/summon/stalker
 	name = "Lonely Ritual"

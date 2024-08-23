@@ -19,10 +19,11 @@
 		"beaker",
 		"bucket",
 		"circuit_imprinter",
+		"conveyor_belt",
+		"conveyor_switch",
 		"design_disk",
 		"dest_tagger",
 		"destructive_analyzer",
-		"experimentor",
 		"fax",
 		"glasses_prescription",
 		"handlabel",
@@ -57,6 +58,7 @@
 		"titaniumglass",
 		"xenoa_labeler",
 		"xlarge_beaker",
+		"epaperread"
 	)
 
 /datum/techweb_node/mmi
@@ -96,7 +98,6 @@
 	display_name = "Mechanical Exosuits"
 	description = "Mechanized exosuits that are several magnitudes stronger and more powerful than the average human."
 	design_ids = list(
-		"firefighter_chassis",
 		"mech_hydraulic_clamp",
 		"mech_recharger",
 		"mecha_tracking",
@@ -154,6 +155,7 @@
 		"screwdriver",
 		"shovel",
 		"spade",
+		"stethoscope",
 		"surgical_drapes",
 		"surgicaldrill",
 		"syringe",
@@ -285,7 +287,7 @@
 		"dish_drive",
 		"fat_sucker",
 		"gibber",
-		"gibber",
+		"griddle",
 		"microwave",
 		"monkey_recycler",
 		"processor",
@@ -449,6 +451,7 @@
 		"rcd_loaded",
 		"rpd_loaded",
 		"weldingmask",
+		"sheetifier"
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 2500)
 	export_price = 5000
@@ -1320,7 +1323,7 @@
 		"med_scanner",
 		"posibrain",
 	)
-	design_ids = list("healthanalyzer_advanced")
+	design_ids = list("healthanalyzer_advanced", "extrapolator")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 5000)
 	export_price = 5000
 
@@ -1470,6 +1473,7 @@
 		"rangemod",
 		"superresonator",
 		"triggermod",
+		"mecha_kineticgun",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 2500)
 	export_price = 5000
@@ -1563,6 +1567,8 @@
 		"pepperspray",
 		"seclite",
 		"zipties",
+		"turnstile",
+		"genpop_interface",
 	)
 	prereq_ids = list("base")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 1000)
@@ -1575,8 +1581,9 @@
 	description = "Unlocks new designs that improve rapid devices."
 	design_ids = list(
 		"rcd_upgrade_frames",
+		"rcd_upgrade_furnishing",
 		"rcd_upgrade_simple_circuits",
-		"rpd_upgrade_unwrench",
+		"rpd_upgrade_unwrench"
 	)
 	prereq_ids = list("adv_engi")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 2500)
@@ -1843,6 +1850,24 @@
 		"odysseus_right_arm",
 		"odysseus_right_leg",
 		"odysseus_torso",
+	)
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 2500)
+	export_price = 5000
+
+/datum/techweb_node/clarke
+	id = "mecha_clarke"
+	tech_tier = 2
+	display_name = "EXOSUIT: Clarke"
+	description = "Clarke exosuit designs"
+	prereq_ids = list("engineering")
+	design_ids = list(
+		"clarke_chassis",
+		"clarke_torso",
+		"clarke_head",
+		"clarke_left_arm",
+		"clarke_right_arm",
+		"clarke_main",
+		"clarke_peri"
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 2500)
 	export_price = 5000
@@ -2233,7 +2258,6 @@
 	design_ids = list(
 		"blinding_nanites",
 		"hallucination_nanites",
-		"mindshield_nanites",
 		"mute_nanites",
 		"pacifying_nanites",
 		"sleep_nanites",
@@ -2241,6 +2265,22 @@
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 1000, TECHWEB_POINT_TYPE_NANITES = 1000)
 	export_price = 5000
+	
+/datum/techweb_node/nanite_cc
+	id = "nanite_cc"
+	tech_tier = 5
+	display_name = "Classified Nanites"
+	description = "Highly confidential nanite programs from CC. Report usage to your nearest administraitor."
+	prereq_ids = list(
+		"nanite_neural",
+		"neural_programming",
+	)
+	design_ids = list(
+		"mindshield_nanites",
+	)
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 1000, TECHWEB_POINT_TYPE_NANITES = 1000)
+	export_price = 5000
+	hidden = TRUE
 
 /datum/techweb_node/nanite_harmonic
 	id = "nanite_harmonic"

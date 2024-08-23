@@ -19,14 +19,24 @@
 
 	/// Active timers with this datum as the target
 	var/list/active_timers
-	/// Components attached to this datum
-	var/list/datum_components
-	/// Status traits attached to this datum
+	/// Status traits attached to this datum. associative list of the form: list(trait name (string) = list(source1, source2, source3,...))
 	var/list/status_traits
-	/// Any datum registered to receive signals from this datum is in this list
+
+	/**
+	  * Components attached to this datum
+	  *
+	  * Lazy associated list in the structure of `type:component/list of components`
+	  */
+	var/list/datum_components
+	/**
+	  * Any datum registered to receive signals from this datum is in this list
+	  *
+	  * Lazy associated list in the structure of `signal:registree/list of registrees`
+	  */
 	var/list/comp_lookup
-	/// List of callbacks for signal procs
+	/// Lazy associated list in the structure of `signals:proctype` that are run when the datum receives that signal
 	var/list/list/datum/callback/signal_procs
+
 	/// Datum level flags
 	var/datum_flags = NONE
 	/// A cached version of our \ref
@@ -107,9 +117,8 @@
 	if(dc)
 		var/all_components = dc[/datum/component]
 		if(length(all_components))
-			for(var/I in all_components)
-				var/datum/component/C = I
-				qdel(C, FALSE, TRUE)
+			for(var/datum/component/component as anything in all_components)
+				qdel(component, FALSE, TRUE)
 		else
 			var/datum/component/C = all_components
 			qdel(C, FALSE, TRUE)
@@ -128,8 +137,7 @@
 		for(var/sig in lookup)
 			var/list/comps = lookup[sig]
 			if(length(comps))
-				for(var/i in comps)
-					var/datum/component/comp = i
+				for(var/datum/component/comp as anything in comps)
 					comp.UnregisterSignal(src, sig)
 			else
 				var/datum/component/comp = comps

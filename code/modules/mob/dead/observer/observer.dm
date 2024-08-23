@@ -232,7 +232,7 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_SPIRIT)
 		if(facial_hair_style)
 			S = GLOB.facial_hair_styles_list[facial_hair_style]
 			if(S)
-				facial_hair_overlay = mutable_appearance(S.icon, "[S.icon_state]", -HAIR_LAYER)
+				facial_hair_overlay = mutable_appearance(S.icon, "[S.icon_state]", CALCULATE_MOB_OVERLAY_LAYER(HAIR_LAYER))
 				if(facial_hair_color)
 					facial_hair_overlay.color = "#" + facial_hair_color
 				facial_hair_overlay.alpha = 200
@@ -240,7 +240,7 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_SPIRIT)
 		if(hair_style)
 			S = GLOB.hair_styles_list[hair_style]
 			if(S)
-				hair_overlay = mutable_appearance(S.icon, "[S.icon_state]", -HAIR_LAYER)
+				hair_overlay = mutable_appearance(S.icon, "[S.icon_state]", CALCULATE_MOB_OVERLAY_LAYER(HAIR_LAYER))
 				if(hair_color)
 					hair_overlay.color = "#" + hair_color
 				hair_overlay.alpha = 200
@@ -450,8 +450,10 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 	orbit_menu.ui_interact(src)
 
+
 // This is the ghost's follow verb with an argument
-/mob/dead/observer/proc/ManualFollow(atom/movable/target)
+/mob/dead/observer/check_orbitable(atom/movable/target_original)
+	var/atom/movable/target = target_original.get_orbitable()
 	if (!istype(target))
 		return
 
@@ -693,7 +695,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		if(href_list["follow"])
 			var/atom/movable/target = locate(href_list["follow"])
 			if(istype(target) && (target != src))
-				ManualFollow(target)
+				check_orbitable(target)
 				return
 		if(href_list["x"] && href_list["y"] && href_list["z"])
 			var/tx = text2num(href_list["x"])
@@ -823,6 +825,9 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 /mob/dead/observer/is_literate()
 	return TRUE
 
+/mob/dead/observer/can_read(obj/O)
+	return TRUE
+
 /mob/dead/observer/vv_edit_var(var_name, var_value)
 	. = ..()
 	switch(var_name)
@@ -840,7 +845,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 				remove_verb(/mob/dead/observer/verb/boo)
 				remove_verb(/mob/dead/observer/verb/possess)
 
-/mob/dead/observer/reset_perspective(atom/A)
+/mob/dead/observer/reset_perspective(atom/new_eye)
 	if(client)
 		if(ismob(client.eye) && (client.eye != src))
 			var/mob/target = client.eye
@@ -871,7 +876,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	var/mob/mob_eye = creatures[eye_name]
 	//Istype so we filter out points of interest that are not mobs
 	if(client && mob_eye && istype(mob_eye))
-		client.eye = mob_eye
+		client.set_eye(mob_eye)
 		if(mob_eye.hud_used)
 			client.screen = list()
 			LAZYINITLIST(mob_eye.observers)

@@ -7,7 +7,7 @@
 	plural_form = "Shadowpeople"
 	id = SPECIES_SHADOWPERSON
 	sexes = 0
-	meat = /obj/item/reagent_containers/food/snacks/meat/slab/human/mutant/shadow
+	meat = /obj/item/food/meat/slab/human/mutant/shadow
 	species_traits = list(NOBLOOD,NOEYESPRITES,NOFLASH)
 	inherent_traits = list(TRAIT_RADIMMUNE,TRAIT_VIRUSIMMUNE,TRAIT_NOBREATH)
 	inherent_factions = list("faithless")
@@ -225,6 +225,7 @@
 	item_flags = ABSTRACT | DROPDEL | ISWEAPON
 	w_class = WEIGHT_CLASS_HUGE
 	sharpness = IS_SHARP
+	bleed_force = BLEED_DEEP_WOUND
 
 /obj/item/light_eater/Initialize(mapload)
 	. = ..()

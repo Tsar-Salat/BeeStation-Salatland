@@ -4,7 +4,8 @@
 	w_class = WEIGHT_CLASS_SMALL
 	zone = BODY_ZONE_CHEST
 	slot = ORGAN_SLOT_STOMACH
-	attack_verb = list("gored", "squished", "slapped", "digested")
+	attack_verb_continuous = list("gores", "squishes", "slaps", "digests")
+	attack_verb_simple = list("gore", "squish", "slap", "digest")
 	desc = "Onaka ga suite imasu."
 
 	healing_factor = STANDARD_ORGAN_HEALING
@@ -151,7 +152,8 @@
 	name = "micro-cell"
 	icon_state = "microcell"
 	w_class = WEIGHT_CLASS_NORMAL
-	attack_verb = list("assault and battery'd")
+	attack_verb_continuous = list("assault and batteries")
+	attack_verb_simple = list("assault and battery")
 	desc = "A micro-cell, for IPC use. Do not swallow."
 	status = ORGAN_ROBOTIC
 	organ_flags = ORGAN_SYNTHETIC
@@ -181,10 +183,10 @@
 	UnregisterSignal(owner, COMSIG_LIVING_ELECTROCUTE_ACT)
 	return ..()
 
-/obj/item/organ/stomach/battery/ethereal/proc/on_electrocute(datum/source, shock_damage, shock_source, siemens_coeff = 1, safety = 0, tesla_shock = 0, illusion = 0, stun = TRUE)
+/obj/item/organ/stomach/battery/ethereal/proc/on_electrocute(datum/source, shock_damage, siemens_coeff = 1, flags = NONE)
 	SIGNAL_HANDLER
 
-	if(illusion)
+	if(flags & SHOCK_ILLUSION)
 		return
 	adjust_charge(shock_damage * siemens_coeff * 20)
 	to_chat(owner, "<span class='notice'>You absorb some of the shock into your body!</span>")

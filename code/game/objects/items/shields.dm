@@ -97,8 +97,9 @@
 	throw_speed = 2
 	throw_range = 3
 	w_class = WEIGHT_CLASS_BULKY
-	materials = list(/datum/material/glass=7500, /datum/material/iron=1000)
-	attack_verb = list("shoved", "bashed")
+	custom_materials = list(/datum/material/glass=7500, /datum/material/iron=1000)
+	attack_verb_continuous = list("shoves", "bashes")
+	attack_verb_simple = list("shove", "bash")
 	var/cooldown = 0 //shield bash cooldown. based on world.time
 	transparent = TRUE
 
@@ -127,7 +128,7 @@
 	lefthand_file = 'icons/mob/inhands/equipment/shields_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/shields_righthand.dmi'
 	transparent = FALSE
-	materials = list(/datum/material/iron=8500)
+	custom_materials = list(/datum/material/iron=8500)
 	max_integrity = 65
 
 /obj/item/shield/riot/roman/fake
@@ -150,7 +151,7 @@
 	block_upgrade_walk = 1
 	lefthand_file = 'icons/mob/inhands/equipment/shields_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/shields_righthand.dmi'
-	materials = list()
+	custom_materials = list(/datum/material/wood = MINERAL_MATERIAL_AMOUNT * 10)
 	resistance_flags = FLAMMABLE
 	transparent = FALSE
 	max_integrity = 55
@@ -170,7 +171,7 @@
 	block_upgrade_walk = 1
 	lefthand_file = 'icons/mob/inhands/equipment/shields_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/shields_righthand.dmi'
-	materials = list ()
+	custom_materials = null
 	transparent = FALSE
 	block_power = 25
 	max_integrity = 70
@@ -256,7 +257,8 @@
 	lefthand_file = 'icons/mob/inhands/equipment/shields_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/shields_righthand.dmi'
 	w_class = WEIGHT_CLASS_TINY
-	attack_verb = list("shoved", "bashed")
+	attack_verb_continuous = list("shoves", "bashes")
+	attack_verb_simple = list("shove", "bash")
 	throw_range = 5
 	force = 3
 	throwforce = 3

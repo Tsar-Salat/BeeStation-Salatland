@@ -46,25 +46,25 @@
 	baseturfs = /turf/open/floor/clockwork/reebe
 	max_integrity = 1000
 	damage_deflection = 0
-	var/obj/effect/clockwork/overlay/wall/realappearance
 	var/d_state = INTACT
 	flags_1 = NOJAUNT_1
 	icon = 'icons/turf/walls/clockwork_wall.dmi'
 	icon_state = "clockwork_wall-0"
 	base_icon_state = "clockwork_wall"
+	smoothing_groups = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_BRASS_WALLS)
+	canSmoothWith = list(SMOOTH_GROUP_BRASS_WALLS)
 
 /turf/closed/wall/clockwork/Initialize(mapload)
 	. = ..()
 	new /obj/effect/temp_visual/ratvar/wall(src)
 	new /obj/effect/temp_visual/ratvar/beam(src)
-	realappearance = new /obj/effect/clockwork/overlay/wall(src)
-	realappearance.linked = src
+	if(smoothing_flags & (SMOOTH_CORNERS|SMOOTH_BITMASK))
+		QUEUE_SMOOTH_NEIGHBORS(src) //We already smooth ourself in /turf/Initialize()
 
 /turf/closed/wall/clockwork/Destroy()
-	if(realappearance)
-		qdel(realappearance)
-		realappearance = null
-	return ..()
+	. = ..()
+	if(smoothing_flags & (SMOOTH_CORNERS|SMOOTH_BITMASK))
+		QUEUE_SMOOTH_NEIGHBORS(src)
 
 /turf/closed/wall/clockwork/ReplaceWithLattice()
 	..()
@@ -145,21 +145,13 @@
 		return 1
 	return
 
-/turf/closed/wall/clockwork/mech_melee_attack(obj/mecha/M)
+/turf/closed/wall/clockwork/mech_melee_attack(obj/vehicle/sealed/mecha/M)
 	return
 
 /turf/closed/wall/clockwork/update_icon()
 	. = ..()
-	if(d_state == INTACT)
-		realappearance.icon_state = "clockwork_wall"
-		smoothing_flags = SMOOTH_BITMASK
-		QUEUE_SMOOTH_NEIGHBORS(src)
-		QUEUE_SMOOTH(src)
-	else
-		realappearance.icon_state = "clockwork_wall-[d_state]"
-		smoothing_flags = NUKE_ON_EXPLODING
-		clear_smooth_overlays()
-	realappearance.update_icon()
+	QUEUE_SMOOTH_NEIGHBORS(src)
+	QUEUE_SMOOTH(src)
 	return
 
 //=================================================
@@ -281,6 +273,8 @@
 	name = "cog lattice"
 	desc = "A lightweight support lattice. These hold the Justicar's station together."
 	icon = 'icons/obj/smooth_structures/catwalks/lattice_clockwork.dmi'
+	icon_state = "lattice_clockwork-255"
+	base_icon_state = "lattice_clockwork"
 
 /obj/structure/lattice/clockwork/Initialize(mapload)
 	. = ..()
@@ -506,13 +500,16 @@
 /obj/structure/grille/ratvar/broken
 	icon_state = "brokenratvargrille"
 	density = FALSE
-	obj_integrity = 20
 	broken = TRUE
 	rods_type = /obj/item/stack/sheet/brass
 	rods_amount = 1
 	rods_broken = FALSE
 	grille_type = /obj/structure/grille/ratvar
 	broken_type = null
+
+/obj/structure/grille/ratvar/broken/Initialize(mapload)
+	. = ..()
+	take_damage(max_integrity * 0.6)
 
 //=================================================
 //Ratvar Window: A transparent window
@@ -525,7 +522,7 @@
 	icon_state = "clockwork_window_single"
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	max_integrity = 80
-	armor = list(MELEE = 40,  BULLET = -20, LASER = 0, ENERGY = 0, BOMB = 25, BIO = 100, RAD = 100, FIRE = 80, ACID = 100, STAMINA = 0)
+	armor = list(MELEE = 40,  BULLET = -20, LASER = 0, ENERGY = 0, BOMB = 25, BIO = 100, RAD = 100, FIRE = 80, ACID = 100, STAMINA = 0, BLEED = 0)
 	explosion_block = 2 //fancy AND hard to destroy. the most useful combination.
 	decon_speed = 40
 	glass_type = /obj/item/stack/sheet/brass

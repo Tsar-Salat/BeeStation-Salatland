@@ -11,10 +11,10 @@
 	throw_speed = 2
 	throw_range = 5
 	w_class = WEIGHT_CLASS_SMALL
-	/// note %age conveted to actual charge in New
+	/// note %age converted to actual charge in New
 	var/charge = 0
 	var/maxcharge = 1000
-	materials = list(/datum/material/iron=700, /datum/material/glass=50)
+	custom_materials = list(/datum/material/iron=700, /datum/material/glass=50)
 	grind_results = list(/datum/reagent/lithium = 15, /datum/reagent/iron = 5, /datum/reagent/silicon = 5)
 	/// If the cell has been booby-trapped by injecting it with plasma. Chance on use() to explode.
 	var/rigged = FALSE
@@ -42,7 +42,7 @@
 	charge = maxcharge
 	if(ratingdesc)
 		desc += " This one has a rating of [display_energy(maxcharge)], and you should not swallow it."
-	update_icon()
+	update_appearance()
 
 /obj/item/stock_parts/cell/Destroy()
 	STOP_PROCESSING(SSobj, src)
@@ -65,18 +65,18 @@
 	else
 		return PROCESS_KILL
 
-/obj/item/stock_parts/cell/update_icon()
-	cut_overlays()
+/obj/item/stock_parts/cell/update_overlays()
+	. = ..()
 	if(grown_battery)
-		add_overlay(image('icons/obj/power.dmi',"grown_wires"))
+		. += mutable_appearance('icons/obj/power.dmi', "grown_wires")
 	if(charge < 0.01)
 		return
 	else if(charge/maxcharge >=0.995)
-		add_overlay("cell-o2")
+		. += "cell-o2"
 	else
-		add_overlay("cell-o1")
+		. += "cell-o1"
 
-/obj/item/stock_parts/cell/proc/percent()		// return % charge of cell
+/obj/item/stock_parts/cell/proc/percent() // return % charge of cell
 	return maxcharge ? 100 * charge / maxcharge : 0 //Division by 0 protection
 
 // use power from a cell
@@ -228,18 +228,18 @@
 	name = "\improper Nanotrasen brand rechargeable AA battery"
 	desc = "You can't top the plasma top." //TOTALLY TRADEMARK INFRINGEMENT
 	maxcharge = 500
-	materials = list(/datum/material/glass=40)
+	custom_materials = list(/datum/material/glass=40)
 
 /obj/item/stock_parts/cell/crap/empty/Initialize(mapload)
 	. = ..()
 	charge = 0
-	update_icon()
+	update_appearance()
 
 /obj/item/stock_parts/cell/upgraded
 	name = "upgraded power cell"
 	desc = "A power cell with a slightly higher capacity than normal!"
 	maxcharge = 2500
-	materials = list(/datum/material/glass=50)
+	custom_materials = list(/datum/material/glass=50)
 	chargerate = 1000
 
 /obj/item/stock_parts/cell/upgraded/plus
@@ -250,12 +250,12 @@
 /obj/item/stock_parts/cell/secborg
 	name = "security borg rechargeable D battery"
 	maxcharge = 600	//600 max charge / 100 charge per shot = six shots
-	materials = list(/datum/material/glass=40)
+	custom_materials = list(/datum/material/glass=40)
 
 /obj/item/stock_parts/cell/secborg/empty/Initialize(mapload)
 	. = ..()
 	charge = 0
-	update_icon()
+	update_appearance()
 
 /obj/item/stock_parts/cell/pulse //200 pulse shots
 	name = "pulse rifle power cell"
@@ -274,7 +274,7 @@
 	name = "high-capacity power cell"
 	icon_state = "hcell"
 	maxcharge = 10000
-	materials = list(/datum/material/glass=60)
+	custom_materials = list(/datum/material/glass=60)
 	chargerate = 1500
 	rating = 1
 
@@ -288,53 +288,53 @@
 /obj/item/stock_parts/cell/high/empty/Initialize(mapload)
 	. = ..()
 	charge = 0
-	update_icon()
+	update_appearance()
 
 /obj/item/stock_parts/cell/super
 	name = "super-capacity power cell"
 	icon_state = "scell"
 	maxcharge = 20000
-	materials = list(/datum/material/glass=300)
+	custom_materials = list(/datum/material/glass=300)
 	chargerate = 2000
 	rating = 2
 
 /obj/item/stock_parts/cell/super/empty/Initialize(mapload)
 	. = ..()
 	charge = 0
-	update_icon()
+	update_appearance()
 
 /obj/item/stock_parts/cell/hyper
 	name = "hyper-capacity power cell"
 	icon_state = "hpcell"
 	maxcharge = 30000
-	materials = list(/datum/material/glass=400)
+	custom_materials = list(/datum/material/glass=400)
 	chargerate = 3000
 	rating = 3
 
 /obj/item/stock_parts/cell/hyper/empty/Initialize(mapload)
 	. = ..()
 	charge = 0
-	update_icon()
+	update_appearance()
 
 /obj/item/stock_parts/cell/bluespace
 	name = "bluespace power cell"
 	desc = "A rechargeable transdimensional power cell."
 	icon_state = "bscell"
 	maxcharge = 40000
-	materials = list(/datum/material/glass=600)
+	custom_materials = list(/datum/material/glass=600)
 	chargerate = 4000
 	rating = 4
 
 /obj/item/stock_parts/cell/bluespace/empty/Initialize(mapload)
 	. = ..()
 	charge = 0
-	update_icon()
+	update_appearance()
 
 /obj/item/stock_parts/cell/infinite
 	name = "infinite-capacity power cell!"
 	icon_state = "icell"
 	maxcharge = 30000
-	materials = list(/datum/material/glass=1000)
+	custom_materials = list(/datum/material/glass=1000)
 	rating = 100
 	chargerate = 30000
 
@@ -349,8 +349,9 @@
 	maxcharge = 50000
 	ratingdesc = FALSE
 
-/obj/item/stock_parts/cell/infinite/abductor/update_icon()
-	return
+/obj/item/stock_parts/cell/infinite/abductor/ComponentInitialize()
+	. = ..()
+	AddElement(/datum/element/update_icon_blocker)
 
 
 /obj/item/stock_parts/cell/potato
@@ -360,7 +361,7 @@
 	icon_state = "potato"
 	charge = 100
 	maxcharge = 300
-	materials = list()
+	custom_materials = null
 	grown_battery = TRUE //it has the overlays for wires
 
 /obj/item/stock_parts/cell/high/slime
@@ -368,7 +369,7 @@
 	desc = "A yellow slime core infused with plasma, it crackles with power."
 	icon = 'icons/mob/slimes.dmi'
 	icon_state = "yellow slime extract"
-	materials = list()
+	custom_materials = null
 	rating = 5 //self-recharge makes these desirable
 	self_recharge = TRUE // Infused slime cores self-recharge, over time
 	chargerate = 100
@@ -383,7 +384,7 @@
 /obj/item/stock_parts/cell/emproof/empty/Initialize(mapload)
 	. = ..()
 	charge = 0
-	update_icon()
+	update_appearance()
 
 /obj/item/stock_parts/cell/emproof/empty/ComponentInitialize()
 	. = ..()
@@ -411,7 +412,7 @@
 	name = "miniature power cell"
 	desc = "A tiny power cell with a very low power capacity. Used in light fixtures to power them in the event of an outage."
 	maxcharge = 120 //Emergency lights use 0.2 W per tick, meaning ~10 minutes of emergency power from a cell
-	materials = list(/datum/material/glass = 20)
+	custom_materials = list(/datum/material/glass = 20)
 	w_class = WEIGHT_CLASS_TINY
 
 /obj/item/stock_parts/cell/emergency_light/Initialize(mapload)
