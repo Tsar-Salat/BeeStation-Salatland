@@ -273,7 +273,7 @@ SUBSYSTEM_DEF(mapping)
 			errorList |= pm.original_path
 
 	if(!silent)
-		INIT_ANNOUNCE("Loaded [name] in [(REALTIMEOFDAY - start_time)/10]s!")
+		add_startup_message("Loaded [name] in [(REALTIMEOFDAY - start_time)/10]s!") //SKYRAT EDIT CHANGE
 	return parsed_maps
 
 /datum/controller/subsystem/mapping/proc/LoadStationRooms()
@@ -309,7 +309,7 @@ SUBSYSTEM_DEF(mapping)
 
 	// load the station
 	station_start = world.maxz + 1
-	INIT_ANNOUNCE("Loading [config.map_name]...")
+	add_startup_message("Loading [config.map_name]...") // SKYRAT EDIT CHANGE
 	LoadGroup(FailedZs, "Station", config.map_path, config.map_file, config.traits, ZTRAITS_STATION, orbital_body_type = /datum/orbital_object/z_linked/station)
 
 	LoadStationRoomTemplates()

@@ -160,6 +160,8 @@ SUBSYSTEM_DEF(ticker)
 			to_chat(world, "<span class='boldnotice'>Welcome to [station_name()]!</span>")
 			send2chat(new /datum/tgs_message_content("New round starting on [SSmapping.config.map_name]!"), CONFIG_GET(string/chat_announce_new_game))
 			current_state = GAME_STATE_PREGAME
+			change_title_screen() //SKYRAT EDIT ADDITION - Title screen
+			addtimer(CALLBACK(GLOBAL_PROC, .proc/change_title_screen), 1 SECONDS) //SKYRAT EDIT ADDITION - Title screen
 			SEND_SIGNAL(src, COMSIG_TICKER_ENTER_PREGAME)
 			fire()
 		if(GAME_STATE_PREGAME)
@@ -424,6 +426,8 @@ SUBSYSTEM_DEF(ticker)
 		if(player.ready == PLAYER_READY_TO_PLAY && player.mind)
 			GLOB.joined_player_list += player.ckey
 			player.create_character(FALSE)
+		else
+			player.show_title_screen() //SKYRAT EDIT ADDITION
 		CHECK_TICK
 
 /datum/controller/subsystem/ticker/proc/collect_minds()

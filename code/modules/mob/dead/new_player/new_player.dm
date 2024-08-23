@@ -3,7 +3,7 @@
 	invisibility = INVISIBILITY_ABSTRACT
 	density = FALSE
 	stat = DEAD
-	hud_type = /datum/hud/new_player
+	//hud_type = /datum/hud/new_player SKYRAT EDIT REMOVAL
 
 	var/ready = 0
 	var/spawning = 0//Referenced when you want to delete the new_player later on in the code.
@@ -34,6 +34,7 @@
 /mob/dead/new_player/prepare_huds()
 	return
 
+/* SKYRAT EDIT REMOVAL - MOVED TO MODULAR
 /mob/dead/new_player/Topic(href, href_list[])
 	if(src != usr)
 		return 0
@@ -84,11 +85,13 @@
 	if(href_list["votepollref"])
 		var/datum/poll_question/poll = locate(href_list["votepollref"]) in GLOB.active_polls
 		vote_on_poll_handler(poll, href_list)
+*/
 
 //When you cop out of the round (NB: this HAS A SLEEP FOR PLAYER INPUT IN IT)
 /mob/dead/new_player/proc/make_me_an_observer(force_observe=FALSE)
 	if(QDELETED(src) || !src.client)
 		ready = PLAYER_NOT_READY
+		show_title_screen() // SKYRAT EDIT ADDITION
 		return FALSE
 
 	var/this_is_like_playing_right = "Yes"
@@ -97,6 +100,7 @@
 
 	if(QDELETED(src) || !src.client)
 		ready = PLAYER_NOT_READY
+		show_title_screen() // SKYRAT EDIT ADDITION
 		return FALSE
 
 	if(this_is_like_playing_right != "Yes")
@@ -372,7 +376,7 @@
 
 
 /mob/dead/new_player/proc/close_spawn_windows()
-
+	hide_title_screen() // SKYRAT EDIT ADDITION
 	src << browse(null, "window=latechoices") //closes late choices window
 	src << browse(null, "window=playersetup") //closes the player setup window
 	src << browse(null, "window=preferences") //closes job selection

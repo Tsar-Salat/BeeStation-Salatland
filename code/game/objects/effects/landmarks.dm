@@ -314,8 +314,6 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark/start/new_player)
 
 /obj/effect/landmark/start/new_player/Initialize(mapload)
 	..()
-	if (SStitle.newplayer_start_loc)
-		forceMove(SStitle.newplayer_start_loc)
 	GLOB.newplayer_start += loc
 	return INITIALIZE_HINT_QDEL
 
