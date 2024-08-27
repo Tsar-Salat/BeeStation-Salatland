@@ -7,6 +7,7 @@ GLOBAL_DATUM_INIT(is_alphanumeric, /regex, regex("\[a-z0-9]+", "i"))
 GLOBAL_DATUM_INIT(is_punctuation, /regex, regex("\[.!?]+", "i"))
 GLOBAL_DATUM_INIT(is_color, /regex, regex("^#\[0-9a-fA-F]{6}$"))
 GLOBAL_DATUM_INIT(is_color_nocrunch, /regex, regex("^\[0-9a-fA-F]{6}$"))
+GLOBAL_DATUM_INIT(is_alpha_color, /regex, regex("^#\[0-9a-fA-F]{8}$"))
 
 //All characters forbidden by filenames: ", \, \n, \t, /, ?, %, *, :, |, <, >, ..
 GLOBAL_DATUM_INIT(filename_forbidden_chars, /regex, regex(@{""|[\\\n\t/?%*:|<>]|\.\."}, "g"))
