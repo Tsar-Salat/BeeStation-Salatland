@@ -95,8 +95,7 @@
 		message_admins("<span class='notice'>[key_name_admin(usr)] has added [result] [datumname] to [target].</span>")
 
 	if(href_list[VV_HK_MODIFY_GREYSCALE] && check_rights(NONE))
-		var/datum/greyscale_modify_menu/menu = new(target, usr, SSgreyscale.configurations, vv_mode = TRUE)
-		menu.Unlock()
+		var/datum/greyscale_modify_menu/menu = new(target, usr, SSgreyscale.configurations, unlocked = TRUE)
 		menu.ui_interact(usr)
 
 	if(href_list[VV_HK_CALLPROC])
