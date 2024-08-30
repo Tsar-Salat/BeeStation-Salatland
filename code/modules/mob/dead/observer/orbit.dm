@@ -40,6 +40,13 @@ GLOBAL_DATUM_INIT(orbit_menu, /datum/orbit_menu, new)
 			update_static_data(usr, ui)
 			return TRUE
 
+/datum/orbit_menu/ui_assets()
+	return list(
+		get_asset_datum(/datum/asset/simple/orbit),
+		get_asset_datum(/datum/asset/spritesheet_batched/job_icons),
+		get_asset_datum(/datum/asset/spritesheet_batched/antag_hud)
+	)
+
 /datum/asset/spritesheet_batched/job_icons
 	name = "job-icon"
 
@@ -95,10 +102,26 @@ GLOBAL_DATUM_INIT(orbit_menu, /datum/orbit_menu, new)
 		var/datum/mind/mind = mob_poi.mind
 		var/was_antagonist = FALSE
 
+		//If we have an ID, use that
+		var/obj/item/card/id/identification_card = mob_poi.get_idcard()
+		if (identification_card)
+			serialized["role_icon"] = "hud[ckey(identification_card.GetJobIcon())]"
+		else if(SSjob.name_occupations[mind.assigned_role])
+			//If we have no ID, use the mind job
+			var/datum/job/located_job = SSjob.GetJob(mind.assigned_role)
+			if (located_job)
+				serialized["role_icon"] = "hud[ckey(located_job.title)]"
+
 		for(var/datum/antagonist/antag_datum as anything in mind.antag_datums)
 			if (antag_datum.show_to_ghosts)
 				was_antagonist = TRUE
-				serialized["antag"] = antag_datum.name
+				var/datum/team/antag_team = antag_datum.get_team()
+				if(antag_team)
+					serialized["antag"] = antag_team.get_team_name()
+				else
+					serialized["antag"] = antag_datum.get_antag_name()
+				if(mind.antag_hud_icon_state)
+					serialized["antag_icon"] = mind.antag_hud_icon_state
 				antagonists += list(serialized)
 				break
 
