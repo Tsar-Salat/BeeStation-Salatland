@@ -27,13 +27,15 @@
 /obj/structure/scanner_gate_shell/wrench_act(mob/living/user, obj/item/tool)
 	if(locked)
 		return
-	default_unfasten_wrench(user, tool)
+	anchored = !anchored
+	tool.play_tool_sound(src)
+	balloon_alert(user, "You [anchored?"secure":"unsecure"] [src].")
 	return TRUE
 
-/obj/structure/scanner_gate_shell/proc/on_entered(atom/movable/source, atom/movable/entered)
+/obj/structure/scanner_gate_shell/proc/on_entered(atom/movable/AM)
 	SIGNAL_HANDLER
 	set_scanline("scanning", 10)
-	SEND_SIGNAL(src, COMSIG_SCANGATE_SHELL_PASS, entered)
+	SEND_SIGNAL(src, COMSIG_SCANGATE_SHELL_PASS, AM)
 
 /obj/structure/scanner_gate_shell/proc/set_scanline(type, duration)
 	cut_overlays()

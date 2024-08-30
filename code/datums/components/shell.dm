@@ -121,7 +121,8 @@
  */
 /datum/component/shell/proc/on_unfasten(atom/source, anchored)
 	SIGNAL_HANDLER
-	attached_circuit?.set_on(anchored)
+	attached_circuit?.on = anchored
+	
 /**
  * Called when an item hits the parent. This is the method to add the circuitboard to the component.
  */
