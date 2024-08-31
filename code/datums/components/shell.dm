@@ -16,7 +16,7 @@
 
 	var/locked = FALSE
 
-/datum/component/shell/Initialize(unremovable_circuit_components, capacity, shell_flags)
+/datum/component/shell/Initialize(unremovable_circuit_components, capacity, shell_flags, starting_circuit)
 	. = ..()
 	if(!ismovable(parent))
 		return COMPONENT_INCOMPATIBLE
@@ -24,6 +24,9 @@
 	src.shell_flags = shell_flags || src.shell_flags
 	src.capacity = capacity || src.capacity
 	set_unremovable_circuit_components(unremovable_circuit_components)
+
+	if(starting_circuit)
+		attach_circuit(starting_circuit)
 
 /datum/component/shell/RegisterWithParent()
 	RegisterSignal(parent, COMSIG_PARENT_ATTACKBY, PROC_REF(on_attack_by))
@@ -110,7 +113,7 @@
 	var/obj/item/stock_parts/cell/cell = attached_circuit.cell
 	examine_text += "<span class='notice'>The charge meter reads [cell ? round(cell.percent(), 1) : 0]%.</span>"
 	if((shell_flags & SHELL_FLAG_REQUIRE_ANCHOR) && !source.anchored)
-		examine_text += span_notice("The integrated circuit is non-functional whilst the shell is unanchored.")
+		examine_text += "<span class='notice'>The integrated circuit is non-functional whilst the shell is unanchored.</span>"
 
 	if (shell_flags & SHELL_FLAG_USB_PORT)
 		examine_text += "<span class='notice'>There is a <b>USB port</b> on the front.</span>"
