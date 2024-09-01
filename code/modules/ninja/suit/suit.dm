@@ -7,17 +7,12 @@ Contents:
 
 */
 
-
-// /obj/item/clothing/suit/space/space_ninja
-
-
 /obj/item/clothing/suit/space/space_ninja
 	name = "ninja suit"
 	desc = "A unique, vacuum-proof suit of nano-enhanced armor designed specifically for Spider Clan assassins."
 	icon_state = "s-ninja"
 	item_state = "s-ninja_suit"
 	allowed = list(/obj/item/gun, /obj/item/ammo_box, /obj/item/ammo_casing, /obj/item/melee/baton, /obj/item/restraints/handcuffs, /obj/item/tank/internals, /obj/item/stock_parts/cell)
-	slowdown = 1
 	resistance_flags = LAVA_PROOF | ACID_PROOF
 	armor = list(MELEE = 60,  BULLET = 50, LASER = 30, ENERGY = 15, BOMB = 30, BIO = 30, RAD = 30, FIRE = 100, ACID = 100, STAMINA = 60, BLEED = 60)
 	strip_delay = 12
@@ -101,6 +96,21 @@ Contents:
 	var/mob/living/carbon/human/user = src.loc
 	if(!user || !ishuman(user) || !(user.wear_suit == src))
 		return
+
+	// Check for energy usage
+	if(s_initialized)
+		if(!affecting)
+			terminate() // Kills the suit and attached objects.
+		else if(cell.charge > 0)
+			if(s_coold)
+				s_coold-- // Checks for ability s_cooldown first.
+			cell.charge -= s_cost // s_cost is the default energy cost each ntick, usually 5.
+			if(stealth) // If stealth is active.
+				cell.charge -= s_acost
+		else
+			cell.charge = 0
+			cancel_stealth()
+
 	user.adjust_bodytemperature(BODYTEMP_NORMAL - user.bodytemperature)
 
 /obj/item/clothing/suit/space/space_ninja/Destroy()
@@ -160,7 +170,6 @@ Contents:
 		return FALSE
 	affecting = H
 	ADD_TRAIT(src, TRAIT_NODROP, NINJA_SUIT_TRAIT)
-	slowdown = 0
 	n_hood = H.head
 	ADD_TRAIT(n_hood, TRAIT_NODROP, NINJA_SUIT_TRAIT)
 	n_shoes = H.shoes
@@ -180,7 +189,6 @@ Contents:
 /obj/item/clothing/suit/space/space_ninja/proc/unlock_suit()
 	affecting = null
 	REMOVE_TRAIT(src, TRAIT_NODROP, NINJA_SUIT_TRAIT)
-	slowdown = 1
 	icon_state = "s-ninja"
 	if(n_hood)//Should be attached, might not be attached.
 		REMOVE_TRAIT(n_hood, TRAIT_NODROP, NINJA_SUIT_TRAIT)
