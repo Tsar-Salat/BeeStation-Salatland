@@ -8,6 +8,12 @@ SUBSYSTEM_DEF(icon_smooth)
 	var/list/blueprint_queue = list()
 	var/list/smooth_queue = list()
 	var/list/deferred = list()
+	/// An associative list matching atom types to their typecaches of connector exceptions. Their no_connector_typecache var is overridden to the
+	/// element in this list associated with their type; if no such element exists, and their no_connector_typecache is nonempty, the typecache is created
+	/// according to the type's default value for no_connector_typecache, that typecache is added to this list, and the variable is set to that typecache.
+	var/list/type_no_connector_typecaches = list()
+
+
 /datum/controller/subsystem/icon_smooth/fire()
 	var/list/smooth_queue_cache = smooth_queue
 	while(length(smooth_queue_cache))
@@ -67,3 +73,12 @@ SUBSYSTEM_DEF(icon_smooth)
 	if(blueprint_queue)
 		blueprint_queue -= thing
 	deferred -= thing
+
+/datum/controller/subsystem/icon_smooth/proc/get_no_connector_typecache(cache_key, list/no_connector_types, connector_strict_typing)
+	var/list/cached_typecache = type_no_connector_typecaches[cache_key]
+	if(cached_typecache)
+		return cached_typecache
+
+	var/list/new_typecache = typecacheof(no_connector_types, only_root_path = connector_strict_typing)
+	type_no_connector_typecaches[cache_key] = new_typecache
+	return new_typecache

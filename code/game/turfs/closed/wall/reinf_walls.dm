@@ -1,7 +1,7 @@
 /turf/closed/wall/r_wall
 	name = "reinforced wall"
 	desc = "A huge chunk of reinforced metal used to separate rooms."
-	icon = 'icons/turf/walls/reinforced_wall.dmi'
+	icon = 'icons/turf/walls/rwalls/reinforced_wall.dmi'
 	icon_state = "reinforced_wall-0"
 	base_icon_state = "reinforced_wall"
 	smoothing_flags = SMOOTH_BITMASK
@@ -23,6 +23,10 @@
 
 /turf/closed/wall/r_wall/get_armour_list()
 	return list(MELEE = 30,  BULLET = 30, LASER = 20, ENERGY = 20, BOMB = 10, BIO = 100, RAD = 100, FIRE = 80, ACID = 70, STAMINA = 0, BLEED = 0)
+
+/turf/closed/wall/r_wall/yesdiag
+	icon_state = "reinforced_wall-255"
+	smoothing_flags = SMOOTH_BITMASK | SMOOTH_DIAGONAL_CORNERS
 
 /turf/closed/wall/r_wall/deconstruction_hints(mob/user)
 	switch(d_state)
@@ -194,15 +198,22 @@
 /turf/closed/wall/r_wall/update_icon(updates=ALL)
 	. = ..()
 	if(d_state != INTACT)
-		icon_state = "r_wall-[d_state]"
-		smoothing_flags = NONE
-		return
-	if (!(updates & UPDATE_SMOOTHING))
-		return
-	smoothing_flags = SMOOTH_BITMASK
-	icon_state = "[base_icon_state]-[smoothing_junction]"
-	QUEUE_SMOOTH_NEIGHBORS(src)
-	QUEUE_SMOOTH(src)
+		base_icon_state = "reinforced_wall"
+		switch(d_state)
+			if(SUPPORT_LINES, COVER)
+				icon = 'icons/turf/walls/rwalls/reinforced_wall_2.dmi'
+			if(CUT_COVER)
+				icon = 'icons/turf/walls/rwalls/reinforced_wall_3.dmi'
+			if(ANCHOR_BOLTS, SUPPORT_RODS)
+				icon = 'icons/turf/walls/rwalls/reinforced_wall_4.dmi'
+			if(SHEATH)
+				icon = 'icons/turf/walls/rwalls/reinforced_wall_5.dmi'
+	else
+		icon = initial(icon)
+		base_icon_state = initial(base_icon_state)
+		icon_state = "[base_icon_state]-[smoothing_junction]"
+	//QUEUE_SMOOTH_NEIGHBORS(src)
+	//QUEUE_SMOOTH(src)
 
 /turf/closed/wall/r_wall/update_icon_state()
 	if(d_state != INTACT)

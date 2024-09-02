@@ -282,6 +282,7 @@ DEFINE_BITFIELD(smoothing_junction, list(
 */
 /atom/proc/bitmask_smooth()
 	var/new_junction = NONE
+	var/new_conn_junction = NONE
 
 	// cache for sanic speed
 	var/canSmoothWith = src.canSmoothWith
@@ -308,7 +309,8 @@ DEFINE_BITFIELD(smoothing_junction, list(
 						for(var/target in canSmoothWith) { \
 							if(canSmoothWith[target] & neighbor_smoothing_groups[target]) { \
 								EXTRA_CHECKS(neighbor); \
-								new_junction |= direction_flag; \
+								new_junction |=  direction_flag; \
+								new_conn_junction |= direction_flag; \
 								break set_adj_in_dir; \
 							}; \
 						}; \
@@ -323,6 +325,9 @@ DEFINE_BITFIELD(smoothing_junction, list(
 								if(canSmoothWith[target] & thing_smoothing_groups[target]) { \
 									EXTRA_CHECKS(thing); \
 									new_junction |= direction_flag; \
+									if(!is_type_in_typecache(neighbor, no_connector_typecache)) { \
+										new_conn_junction |= direction_flag; \
+									}; \
 									break set_adj_in_dir; \
 								}; \
 							}; \
@@ -330,6 +335,9 @@ DEFINE_BITFIELD(smoothing_junction, list(
 					}; \
 				} else if (smooth_border) { \
 					new_junction |= direction_flag; \
+						if(!is_type_in_typecache(smooth_border, no_connector_typecache)) { \
+							new_conn_junction |= direction_flag; \
+						}; \
 				}; \
 			} while(FALSE) \
 		}
@@ -339,6 +347,8 @@ DEFINE_BITFIELD(smoothing_junction, list(
 
 	if(skip_corners || !(new_junction & (NORTH|SOUTH)) || !(new_junction & (EAST|WEST)))
 		set_smoothed_icon_state(new_junction)
+		if(smoothing_flags & SMOOTH_CONNECTORS)
+			set_connector_overlay(new_conn_junction)
 		return
 
 	if(new_junction & NORTH_JUNCTION)
@@ -356,6 +366,16 @@ DEFINE_BITFIELD(smoothing_junction, list(
 			SET_ADJ_IN_DIR(SOUTHEAST, SOUTHEAST_JUNCTION)
 
 	set_smoothed_icon_state(new_junction)
+	if(smoothing_flags & SMOOTH_CONNECTORS)
+		if(new_conn_junction & NORTH_JUNCTION)
+			new_conn_junction |= new_junction & (NORTHEAST_JUNCTION | NORTHWEST_JUNCTION)
+		if(new_conn_junction & SOUTH_JUNCTION)
+			new_conn_junction |= new_junction & (SOUTHEAST_JUNCTION | SOUTHWEST_JUNCTION)
+		if(new_conn_junction & EAST_JUNCTION)
+			new_conn_junction |= new_junction & (NORTHEAST_JUNCTION | SOUTHEAST_JUNCTION)
+		if(new_conn_junction & WEST_JUNCTION)
+			new_conn_junction |= new_junction & (NORTHWEST_JUNCTION | SOUTHWEST_JUNCTION)
+		set_connector_overlay(new_conn_junction)
 
 	#undef SET_ADJ_IN_DIR
 	#undef EXTRA_CHECKS
@@ -366,6 +386,18 @@ DEFINE_BITFIELD(smoothing_junction, list(
 	smoothing_junction = new_junction
 	icon_state = "[base_icon_state]-[smoothing_junction]"
 
+/atom/proc/set_connector_overlay(new_conn_junction)
+	if(new_conn_junction == connector_junction)
+		return
+	cut_overlay(connector_overlay)
+
+	connector_junction = new_conn_junction
+	if(!connector_junction)
+		connector_overlay = null
+		return
+
+	connector_overlay = iconstate2appearance(connector_icon, "[connector_icon_state]-[connector_junction]")
+	add_overlay(connector_overlay)
 
 /turf/closed/set_smoothed_icon_state(new_junction)
 	// Avoid calling ..() here to avoid setting icon_state twice, which is expensive given how hot this proc is

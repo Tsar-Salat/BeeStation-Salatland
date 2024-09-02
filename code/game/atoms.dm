@@ -115,6 +115,20 @@
 	var/list/canSmoothWith = null
 	///What directions this is currently smoothing with. IMPORTANT: This uses the smoothing direction flags as defined in icon_smoothing.dm, instead of the BYOND flags.
 	var/smoothing_junction = null //This starts as null for us to know when it's first set, but after that it will hold a 8-bit mask ranging from 0 to 255.
+	/// The icon file of the connector to use when smoothing.
+	/// Use of connectors requires the smoothing flags SMOOTH_BITMASK and SMOOTH_CONNECTORS.
+	var/connector_icon = null
+	/// The icon state prefix used for connectors. Equivalent to the base_icon_state.
+	var/connector_icon_state = null
+	/// Typecache of atom types that this wall will NOT form connector overlays into when smoothing.
+	/// Types should set this equal to a list; this list is, on init, used to create a typecache that is itself cached by SSicon_smooth.
+	var/list/no_connector_typecache = null
+	/// If true, the typecache constructed for no_connector_typecache will NOT include subtypes.
+	var/connector_strict_typing = FALSE
+	/// The current connector junction, saved to stop overlay changes if none are necessary.
+	var/connector_junction = null
+	/// The current connector overlay appearance. Saved so that it can be cut when necessary.
+	var/connector_overlay
 
 	///The config type to use for greyscaled sprites. Both this and greyscale_colors must be assigned to work.
 	var/greyscale_config
@@ -248,6 +262,8 @@
 		if(canSmoothWith[length(canSmoothWith)] > MAX_S_TURF) //If the last element is higher than the maximum turf-only value, then it must scan turf contents for smoothing targets.
 			smoothing_flags |= SMOOTH_OBJ
 		SET_BITFLAG_LIST(canSmoothWith)
+	if (length(no_connector_typecache))
+		no_connector_typecache = SSicon_smooth.get_no_connector_typecache(src.type, no_connector_typecache, connector_strict_typing)
 
 	return INITIALIZE_HINT_NORMAL
 

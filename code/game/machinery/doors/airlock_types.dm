@@ -155,7 +155,7 @@
 
 /obj/machinery/door/airlock/copper
 	name = "copper airlock"
-	icon = 'icons/obj/doors/airlocks/station/copper.dmi'
+	icon = 'icons/obj/doors/airlocks/station/gold.dmi'
 	assemblytype = /obj/structure/door_assembly/door_assembly_copper
 
 /obj/machinery/door/airlock/copper/glass
@@ -355,7 +355,7 @@
 
 /obj/machinery/door/airlock/arrivals_external
 	name = "arrivals airlock"
-	icon = 'icons/obj/doors/airlocks/external/arrivals_external.dmi'
+	icon = 'icons/obj/doors/airlocks/external/external.dmi'
 	overlays_file = 'icons/obj/doors/airlocks/external/overlays.dmi'
 	note_overlay_file = 'icons/obj/doors/airlocks/external/overlays.dmi'
 	protected_door = TRUE

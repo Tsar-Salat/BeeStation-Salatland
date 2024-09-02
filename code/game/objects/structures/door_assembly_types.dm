@@ -169,7 +169,7 @@
 
 /obj/structure/door_assembly/door_assembly_copper
 	name = "copper airlock assembly"
-	icon = 'icons/obj/doors/airlocks/station/copper.dmi'
+	icon = 'icons/obj/doors/airlocks/station/gold.dmi'
 	base_name = "copper airlock"
 	airlock_type = /obj/machinery/door/airlock/copper
 	mineral = "copper"

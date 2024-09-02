@@ -6,15 +6,18 @@
 /// Atom has diagonal corners, with underlays under them.
 #define SMOOTH_DIAGONAL_CORNERS	(1<<2)
 /// Atom will smooth with the borders of the map.
-#define SMOOTH_BORDER	(1<<3)
+#define SMOOTH_BORDER (1<<3)
 /// Atom is currently queued to smooth.
-#define SMOOTH_QUEUED	(1<<4)
+#define SMOOTH_QUEUED (1<<4)
 /// Smooths with objects, and will thus need to scan turfs for contents.
-#define SMOOTH_OBJ		(1<<5)
+#define SMOOTH_OBJ (1<<5)
 /// Smooths with atoms facing the same direction only
 #define SMOOTH_DIRECTIONAL (1<<6)
 /// Skips the corner step of bitmask smoothing (does nothing without SMOOTH_BITMASK)
 #define SMOOTH_BITMASK_SKIP_CORNERS (1<<7)
+/// When smoothing, this atom will also use "connectors" if the atom being smoothed into is not one of a set of approved types.
+/// Only works when SMOOTH_BITMASK is also set.
+#define SMOOTH_CONNECTORS (1<<8)
 
 DEFINE_BITFIELD(smoothing_flags, list(
 	"SMOOTH_CORNERS" = SMOOTH_CORNERS,
@@ -25,6 +28,7 @@ DEFINE_BITFIELD(smoothing_flags, list(
 	"SMOOTH_OBJ" = SMOOTH_OBJ,
 	"SMOOTH_DIRECTIONAL" = SMOOTH_DIRECTIONAL,
 	"SMOOTH_BITMASK_SKIP_CORNERS" = SMOOTH_BITMASK_SKIP_CORNERS,
+	"SMOOTH_CONNECTORS" = SMOOTH_CONNECTORS,
 ))
 
 

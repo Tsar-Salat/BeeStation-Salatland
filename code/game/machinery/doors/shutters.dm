@@ -2,10 +2,9 @@
 	gender = PLURAL
 	name = "shutters"
 	desc = "Heavy duty metal shutters that open mechanically."
-	icon = 'icons/obj/doors/blastdoors/shutters.dmi'
-	layer = SHUTTER_LAYER
-	closingLayer = SHUTTER_LAYER
+	icon = 'icons/obj/doors/shutters.dmi'
 	damage_deflection = 20
+	smoothing_groups = list(SMOOTH_GROUP_AIRLOCK)
 	recipe_type = /datum/crafting_recipe/shutters
 	base_state = "shut"
 	icon_state = "shut_closed"
