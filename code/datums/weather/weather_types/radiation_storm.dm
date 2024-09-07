@@ -22,7 +22,7 @@
 	/area/security/prison/asteroid/service, /area/space/nearstation, /area/solar, /area/security/prison, /area/holodeck/prison)
 	target_trait = ZTRAIT_STATION
 
-	immunity_type = RAD
+	immunity_type = TRAIT_RADSTORM_IMMUNE
 
 /datum/weather/rad_storm/telegraph()
 	..()

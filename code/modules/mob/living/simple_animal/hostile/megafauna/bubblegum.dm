@@ -315,7 +315,7 @@ Difficulty: Hard
 	if(BUBBLEGUM_IS_ENRAGED)
 		return TRUE
 	return isliving(target) && HAS_TRAIT(target, TRAIT_INCAPACITATED)
-	
+
 
 /mob/living/simple_animal/hostile/megafauna/bubblegum/proc/get_retreat_distance()
 	return (be_aggressive() ? null : initial(retreat_distance))
@@ -575,7 +575,7 @@ Difficulty: Hard
 	color = "#C80000"
 	density = FALSE
 	faction = list("mining", "boss")
-	weather_immunities = list("lava","ash")
+	weather_immunities = list(TRAIT_LAVA_IMMUNE,TRAIT_ASHSTORM_IMMUNE)
 
 /mob/living/simple_animal/hostile/asteroid/hivelordbrood/slaughter/CanAllowThrough(atom/movable/mover, turf/target)
 	. = ..()

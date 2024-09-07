@@ -45,6 +45,7 @@ Difficulty: Medium
 	attack_action_types = list(/datum/action/innate/megafauna_attack/create_skull,
 							   /datum/action/innate/megafauna_attack/charge_target)
 	small_sprite_type = /datum/action/small_sprite/megafauna/legion
+	weather_immunities = list(TRAIT_LAVA_IMMUNE,TRAIT_ASHSTORM_IMMUNE)
 
 /datum/action/innate/megafauna_attack/create_skull
 	name = "Create Legion Skull"
@@ -177,9 +178,14 @@ Difficulty: Medium
 	force = 15
 	damtype = BURN
 	hitsound = 'sound/weapons/sear.ogg'
+	resistance_flags = LAVA_PROOF | FIRE_PROOF | ACID_PROOF
 	var/storm_type = /datum/weather/ash_storm
 	var/storm_cooldown = 0
 	var/static/list/allowed_areas = list(/area/lavaland/surface/outdoors, /area/lavaland/surface/outdoors/explored)
+
+/obj/item/staff/storm/examine(mob/user)
+	. = ..()
+	. += "<span class='notice'>It has a cooldown of [storm_cooldown].</span>"
 
 /obj/item/staff/storm/attack_self(mob/user)
 	if(storm_cooldown > world.time)

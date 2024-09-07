@@ -8,7 +8,6 @@
 	initial_language_holder = /datum/language_holder/synthetic
 	see_in_dark = NIGHTVISION_FOV_RANGE
 	bubble_icon = "machine"
-	weather_immunities = list("ash")
 	possible_a_intents = list(INTENT_HELP, INTENT_HARM)
 	mob_biotypes = list(MOB_ROBOTIC)
 	flags_1 = PREVENT_CONTENTS_EXPLOSION_1
@@ -66,6 +65,10 @@
 		diag_hud.add_to_hud(src)
 	diag_hud_set_status()
 	diag_hud_set_health()
+	add_sensors()
+	ADD_TRAIT(src, TRAIT_NOFIRE_SPREAD, ROUNDSTART_TRAIT)
+	ADD_TRAIT(src, TRAIT_ASHSTORM_IMMUNE, ROUNDSTART_TRAIT)
+
 	create_access_card(default_access_list)
 	default_access_list = null
 

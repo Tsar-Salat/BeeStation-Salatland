@@ -185,6 +185,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_PIERCEIMMUNE		"pierce_immunity"
 #define TRAIT_NODISMEMBER		"dismember_immunity"
 #define TRAIT_NOFIRE			"nonflammable"
+#define TRAIT_NOFIRE_SPREAD "no_fire_spreading"
 #define TRAIT_NOGUNS			"no_guns"
 #define TRAIT_NOHUNGER			"no_hunger"
 #define TRAIT_NOMETABOLISM		"no_metabolism"
@@ -256,7 +257,10 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_NANITECOMPATIBLE	"nanitecompatible"
 #define TRAIT_WARDED       		"curse_immune"
 #define TRAIT_NONECRODISEASE	"nonecrodisease"
-#define TRAIT_NICE_SHOT			"nice_shot" //hnnnnnnnggggg..... you're pretty good....
+/// hnnnnnnnggggg..... you're pretty good....
+#define TRAIT_NICE_SHOT "nice_shot"
+/// overrides the update_fire proc to always add fire (for lava)
+#define TRAIT_PERMANENTLY_ONFIRE "permanently_onfire"
 #define TRAIT_ALWAYS_STUBS      "always_stubs_toe" //you will always stub your toe on tables, even if you're wearing shoes
 #define TRAIT_NAIVE				"naive" //All dead people will appear as sleeping.
 #define TRAIT_DROPS_ITEMS_ON_DEATH "drops_items_on_death" //used for battle royale
@@ -268,8 +272,10 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_MOTH_BURNT		"moth_burnt"
 #define TRAIT_SPECIAL_TRAUMA_BOOST "special_trauma_boost" ///Increases chance of getting special traumas, makes them harder to cure
 #define TRAIT_METALANGUAGE_KEY_ALLOWED "metalanguage_key_allowed" // you can use language key for metalanguage (,`) and but also you see lang icon
-#define TRAIT_HYPERSPACED "hyperspaced" // Sanity trait to keep track of when we're in hyperspace and add the appropriate element if we werent
-#define TRAIT_FREE_HYPERSPACE_MOVEMENT "free_hyperspace_movement" // Gives the movable free hyperspace movement without being pulled during shuttle transit
+/// Sanity trait to keep track of when we're in hyperspace and add the appropriate element if we werent
+#define TRAIT_HYPERSPACED "hyperspaced"
+///Gives the movable free hyperspace movement without being pulled during shuttle transit
+#define TRAIT_FREE_HYPERSPACE_MOVEMENT "free_hyperspace_movement"
 #define TRAIT_FAST_CUFF_REMOVAL "fast_cuff_removal" // Faster cuff removal
 #define TRAIT_BLEED_HELD		"bleed_held" // For when a mob is holding their wounds, preventing them from bleeding further
 #define TRAIT_NO_BLOOD			"no_blood" // Bleeding heals itself and bleeding is impossible
@@ -280,6 +286,14 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 // You're immune to the hallucination effect of the supermatter, either
 // through force of will, or equipment.
 #define TRAIT_MADNESS_IMMUNE "supermatter_madness_immune"
+
+/// Weather immunities, also protect mobs inside them.
+#define TRAIT_LAVA_IMMUNE "lava_immune" //Used by lava turfs and The Floor Is Lava.
+#define TRAIT_ASHSTORM_IMMUNE "ashstorm_immune"
+#define TRAIT_SNOWSTORM_IMMUNE "snowstorm_immune"
+#define TRAIT_RADSTORM_IMMUNE "radstorm_immune"
+#define TRAIT_VOIDSTORM_IMMUNE "voidstorm_immune"
+#define TRAIT_WEATHER_IMMUNE "weather_immune" //Immune to ALL weather effects.
 
 //non-mob traits
 /// Used for limb-based paralysis, where replacing the limb will fix it.
@@ -539,4 +553,5 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define SPECIES_FLIGHT_TRAIT "species-flight"
 #define NO_GRAVITY_TRAIT "no-gravity"
 #define LIFECANDLE_TRAIT "lifecandle"
+#define LEAPING_TRAIT "leaping"
 #define LEAPER_BUBBLE_TRAIT "leaper-bubble"

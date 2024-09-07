@@ -67,8 +67,8 @@
 			if(fireproof)
 				ADD_TRAIT(M, TRAIT_RESISTHEAT, DISEASE_TRAIT)
 				ADD_TRAIT(M, TRAIT_RESISTHIGHPRESSURE, DISEASE_TRAIT)
-				M.weather_immunities |= "ash"
-				M.weather_immunities |= "lava"
+				ADD_TRAIT(M, TRAIT_ASHSTORM_IMMUNE, DISEASE_TRAIT)
+				ADD_TRAIT(M, TRAIT_LAVA_IMMUNE, DISEASE_TRAIT)
 			if(HAS_TRAIT(M, TRAIT_NECROPOLIS_INFECTED))
 				REMOVE_TRAIT(M, TRAIT_NECROPOLIS_INFECTED, "legion_core_trait")
 				if(M.stat != DEAD)
@@ -108,8 +108,8 @@
 	if(fireproof)
 		REMOVE_TRAIT(M, TRAIT_RESISTHIGHPRESSURE, DISEASE_TRAIT)
 		REMOVE_TRAIT(M, TRAIT_RESISTHEAT, DISEASE_TRAIT)
-		M.weather_immunities -= "ash"
-		M.weather_immunities -= "lava"
+		REMOVE_TRAIT(M, TRAIT_ASHSTORM_IMMUNE, DISEASE_TRAIT)
+		REMOVE_TRAIT(M, TRAIT_LAVA_IMMUNE, DISEASE_TRAIT)
 
 /datum/symptom/necroseed/OnDeath(datum/disease/advance/A)
 	if(!..())

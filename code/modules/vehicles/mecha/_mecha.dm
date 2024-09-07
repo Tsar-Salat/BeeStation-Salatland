@@ -210,6 +210,7 @@
 	update_appearance()
 
 	become_hearing_sensitive(trait_source = ROUNDSTART_TRAIT)
+	ADD_TRAIT(src, TRAIT_ASHSTORM_IMMUNE, ROUNDSTART_TRAIT) //protects pilots from ashstorms.
 	update_step_speed()
 
 //separate proc so that the ejection mechanism can be easily triggered by other things, such as admins

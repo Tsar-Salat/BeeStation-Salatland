@@ -318,12 +318,12 @@
 /obj/item/borg/upgrade/lavaproof/action(mob/living/silicon/robot/R, user = usr)
 	. = ..()
 	if(.)
-		R.weather_immunities += "lava"
+		ADD_TRAIT(src, TRAIT_LAVA_IMMUNE, type)
 
 /obj/item/borg/upgrade/lavaproof/deactivate(mob/living/silicon/robot/R, user = usr)
 	. = ..()
 	if (.)
-		R.weather_immunities -= "lava"
+		REMOVE_TRAIT(src, TRAIT_LAVA_IMMUNE, type)
 
 /obj/item/borg/upgrade/selfrepair
 	name = "self-repair module"

@@ -259,11 +259,11 @@
 
 /datum/species/golem/titanium/on_species_gain(mob/living/carbon/C, datum/species/old_species)
 	. = ..()
-	C.weather_immunities |= "ash"
+	ADD_TRAIT(C, TRAIT_ASHSTORM_IMMUNE, SPECIES_TRAIT)
 
 /datum/species/golem/titanium/on_species_loss(mob/living/carbon/C)
 	. = ..()
-	C.weather_immunities -= "ash"
+	REMOVE_TRAIT(C, TRAIT_ASHSTORM_IMMUNE, SPECIES_TRAIT)
 
 //Immune to ash storms and lava
 /datum/species/golem/plastitanium
@@ -278,13 +278,13 @@
 
 /datum/species/golem/plastitanium/on_species_gain(mob/living/carbon/C, datum/species/old_species)
 	. = ..()
-	C.weather_immunities |= "lava"
-	C.weather_immunities |= "ash"
+	ADD_TRAIT(C, TRAIT_LAVA_IMMUNE, SPECIES_TRAIT)
+	ADD_TRAIT(C, TRAIT_ASHSTORM_IMMUNE, SPECIES_TRAIT)
 
 /datum/species/golem/plastitanium/on_species_loss(mob/living/carbon/C)
 	. = ..()
-	C.weather_immunities -= "ash"
-	C.weather_immunities -= "lava"
+	REMOVE_TRAIT(C, TRAIT_LAVA_IMMUNE, SPECIES_TRAIT)
+	REMOVE_TRAIT(C, TRAIT_ASHSTORM_IMMUNE, SPECIES_TRAIT)
 
 //Fast and regenerates... but can only speak like an abductor
 /datum/species/golem/alloy
@@ -1199,7 +1199,7 @@
 
 /datum/species/golem/snow/on_species_gain(mob/living/carbon/C, datum/species/old_species)
 	. = ..()
-	C.weather_immunities |= "snow"
+	ADD_TRAIT(C, TRAIT_SNOWSTORM_IMMUNE, SPECIES_TRAIT)
 	ball = new
 	ball.charge_counter = 0
 	ball.start_recharge()
@@ -1211,7 +1211,7 @@
 
 /datum/species/golem/snow/on_species_loss(mob/living/carbon/C)
 	. = ..()
-	C.weather_immunities -= "snow"
+	REMOVE_TRAIT(C, TRAIT_SNOWSTORM_IMMUNE, SPECIES_TRAIT)
 	if(ball)
 		C.RemoveSpell(ball)
 	if(cryo)
