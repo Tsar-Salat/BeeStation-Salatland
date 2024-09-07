@@ -419,7 +419,14 @@ GLOBAL_LIST_INIT(available_random_trauma_list, list(
 #define PULL_PRONE_SLOWDOWN 1.5
 #define HUMAN_CARRY_SLOWDOWN 0.35
 
-#define SLEEP_CHECK_DEATH(X) sleep(X); if(QDELETED(src) || stat == DEAD) return;
+#define SLEEP_CHECK_DEATH(X, A) \
+	sleep(X); \
+	if(QDELETED(A)) return; \
+	if(ismob(A)) { \
+		var/mob/sleep_check_death_mob = A; \
+		if(sleep_check_death_mob.stat == DEAD) return; \
+	}
+	
 #define INTERACTING_WITH(X, Y) (Y in X.do_afters)
 
 #define SILENCE_RANGED_MESSAGE (1<<0)

@@ -106,6 +106,7 @@ GLOBAL_LIST_INIT(admin_verbs_fun, list(
 	/client/proc/show_tip,
 	/client/proc/smite,
 	/client/proc/admin_away,
+	/client/proc/add_mob_ability,
 	/client/proc/load_circuit,
 	/client/proc/healall,
 	/client/proc/spawn_floor_cluwne,

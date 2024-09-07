@@ -71,3 +71,39 @@
 		throw_alert("temp", /atom/movable/screen/alert/hot, 3)
 	else
 		clear_alert("temp")
+
+//Not placeable
+/obj/projectile/colossus/frost_orb
+	name = "frost orb"
+	icon_state = "ice_1"
+	damage = 20
+	armour_penetration = 100
+	speed = 10
+	homing_turn_speed = 30
+	damage_type = BURN
+
+/obj/projectile/colossus/frost_orb/on_hit(atom/target, blocked = FALSE)
+	. = ..()
+	if(isturf(target) || isobj(target))
+		EX_ACT(target, EXPLODE_HEAVY)
+
+/obj/projectile/colossus/snowball
+	name = "machine-gun snowball"
+	icon_state = "nuclear_particle"
+	damage = 5
+	armour_penetration = 100
+	speed = 3
+	damage_type = BRUTE
+
+/obj/projectile/colossus/ice_blast
+	name = "ice blast"
+	icon_state = "ice_2"
+	damage = 15
+	armour_penetration = 100
+	speed = 3
+	damage_type = BRUTE
+
+/obj/projectile/colossus/ice_blast/on_hit(atom/target, blocked = FALSE)
+	. = ..()
+	if(isturf(target) || isobj(target))
+		EX_ACT(target, EXPLODE_HEAVY)

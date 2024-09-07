@@ -45,6 +45,11 @@
 #define COOLDOWN_MECHA_MELEE_ATTACK "mecha_melee"
 #define COOLDOWN_MECHA_SMOKE "mecha_smoke"
 
+//Shared cooldowns for actions
+#define MOB_SHARED_COOLDOWN_1 "mob_shared_cooldown_1"
+#define MOB_SHARED_COOLDOWN_2 "mob_shared_cooldown_2"
+#define MOB_SHARED_COOLDOWN_3 "mob_shared_cooldown_3"
+
 //TIMER COOLDOWN MACROS
 
 #define COMSIG_CD_STOP(cd_index) "cooldown_[cd_index]"

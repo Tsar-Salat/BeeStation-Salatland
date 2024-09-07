@@ -194,7 +194,7 @@ Difficulty: Very Hard
 	return spiral_shoot()
 
 /mob/living/simple_animal/hostile/megafauna/colossus/proc/double_spiral()
-	SLEEP_CHECK_DEATH(10)
+	SLEEP_CHECK_DEATH(10, src)
 	INVOKE_ASYNC(src, PROC_REF(spiral_shoot), FALSE, 16)
 	spiral_shoot(FALSE, 8)
 
