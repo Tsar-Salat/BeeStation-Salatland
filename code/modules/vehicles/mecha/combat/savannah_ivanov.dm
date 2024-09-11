@@ -22,6 +22,8 @@
 	icon = 'icons/mecha/coop_mech.dmi'
 	base_icon_state = "savannah_ivanov"
 	icon_state = "savannah_ivanov_0_0"
+	//does not include mmi compatibility
+	mecha_flags = ADDING_ACCESS_POSSIBLE | CANSTRAFE | IS_ENCLOSED | HAS_LIGHTS
 	movedelay = 3
 	dir_in = 2 //Facing South.
 	max_integrity = 450 //really tanky, like damn
@@ -185,7 +187,7 @@
 			crushed_wall.ScrapeAway()
 		if(isobj(thing))
 			var/obj/crushed_object = thing
-			if(crushed_object == src)
+			if(crushed_object == src || crushed_object.loc == src)
 				continue
 			crushed_object.take_damage(150) //same as a hulk punch, makes sense to me
 		if(isliving(thing))
@@ -370,6 +372,9 @@
 
 /obj/effect/skyfall_landingzone/Initialize(mapload, obj/vehicle/sealed/mecha/combat/mecha)
 	. = ..()
+	if(!mecha)
+		stack_trace("Skyfall landing zone created without mecha")
+		return INITIALIZE_HINT_QDEL
 	src.mecha = mecha
 	animate(src, alpha = 255, TOTAL_SKYFALL_LEAP_TIME/2, easing = CIRCULAR_EASING|EASE_OUT)
 	RegisterSignal(mecha, COMSIG_MOVABLE_MOVED, .proc/follow)

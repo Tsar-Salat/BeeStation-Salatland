@@ -65,7 +65,7 @@
 	///Whether the mechs maintenance protocols are on or off
 	var/construction_state = MECHA_LOCKED
 	///Contains flags for the mecha
-	var/mecha_flags = ADDING_ACCESS_POSSIBLE | CANSTRAFE | IS_ENCLOSED | HAS_LIGHTS
+	var/mecha_flags = ADDING_ACCESS_POSSIBLE | CANSTRAFE | IS_ENCLOSED | HAS_LIGHTS | MMI_COMPATIBLE
 
 	///Spark effects are handled by this datum
 	var/datum/effect_system/spark_spread/spark_system = new
@@ -538,7 +538,7 @@
 	if(completely_disabled || is_currently_ejecting || (mecha_flags & CANNOT_INTERACT))
 		return
 	var/list/mouse_control = params2list(params)
-	if(isAI(user) == !mouse_control["middle"])//BASICALLY if a human uses MMB, or an AI doesn't, then do nothing.
+	if(isAI(user) == !LAZYACCESS(modifiers, MIDDLE_CLICK))//BASICALLY if a human uses MMB, or an AI doesn't, then do nothing.
 		return
 	if(phasing)
 		balloon_alert(user, "not while [phasing]!")
@@ -589,6 +589,7 @@
 		return
 	if(internal_damage & MECHA_INT_CONTROL_LOST)
 		target = pick(oview(1,src))
+
 	if(force)
 		target.mech_melee_attack(src, user)
 		TIMER_COOLDOWN_START(src, COOLDOWN_MECHA_MELEE_ATTACK, melee_cooldown)
@@ -986,9 +987,13 @@
 		SEND_SOUND(newoccupant, sound('sound/mecha/nominal.ogg',volume=50))
 	return TRUE
 
-/obj/vehicle/sealed/mecha/proc/mmi_move_inside(obj/item/mmi/M, mob/user)
-	if(!M.brain_check(user))
+/obj/vehicle/sealed/mecha/proc/mmi_move_inside(obj/item/mmi/brain_obj, mob/user)
+	if(!(mecha_flags & MMI_COMPATIBLE))
+		to_chat(user, "<span class='warning'>This mecha is not compatible with MMIs!</span>")
 		return FALSE
+	if(!brain_obj.brain_check(user))
+		return FALSE
+	var/mob/living/brain/brain_mob = brain_obj.brainmob
 	if(LAZYLEN(occupants) >= max_occupants)
 		to_chat(user, "<span class='warning'>It's full!</span>")
 		return FALSE
@@ -998,7 +1003,7 @@
 		to_chat(user, "<span class='notice'>You stop inserting the MMI.</span>")
 		return FALSE
 	if(LAZYLEN(occupants) < max_occupants)
-		return mmi_moved_inside(M, user)
+		return mmi_moved_inside(brain_obj, user)
 	to_chat(user, "<span class='warning'>Maximum occupants exceeded!</span>")
 	return FALSE
 
@@ -1010,7 +1015,7 @@
 
 	var/mob/living/brain/brain_mob = brain_obj.brainmob
 	if(!user.transferItemToLoc(brain_obj, src))
-		to_chat(user, "<span class='warning'>\the [brain_obj] is stuck to your hand, you cannot put it in \the [src]!</span>")
+		to_chat(user, "<span class='warning'>[brain_obj] is stuck to your hand, you cannot put it in [src]!</span>")
 		return FALSE
 
 
