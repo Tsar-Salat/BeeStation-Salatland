@@ -14,7 +14,7 @@
 #define HAS_LIGHTS (1<<6)
 #define QUIET_STEPS (1<<7)
 #define QUIET_TURNS (1<<8)
-//#define CANNOT_INTERACT (1<<9)
+#define CANNOT_INTERACT (1<<9)
 /// posibrains can drive this mecha (savanna ivanov for later)
 //#define MMI_COMPATIBLE (1<<10)
 /// Can click from any direction and perform stuff

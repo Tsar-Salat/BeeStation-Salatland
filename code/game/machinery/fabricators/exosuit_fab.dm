@@ -25,6 +25,7 @@
 		"Durand",
 		"H.O.N.K",
 		"Phazon",
+		"Savannah-Ivanov",
 		"Exosuit Equipment",
 		"Cyborg Upgrade Modules",
 		"IPC Components",

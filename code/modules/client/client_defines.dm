@@ -13,13 +13,14 @@
 
 	/// The admin state of the client. If this is null, the client is not an admin.
 	var/datum/admins/holder = null
-	var/datum/click_intercept = null // Needs to implement InterceptClickOn(user,params,atom) proc
-
 	/// Acts the same way holder does towards admin: it holds the mentor datum. if set, the client is a mentor.
 	var/datum/mentors/mentor_datum = null
 
+	var/datum/click_intercept = null // Needs to implement InterceptClickOn(user,params,atom) proc
+	///Time when the click was intercepted
+	var/click_intercept_time = 0
 	/// Whether the client has ai interacting as a ghost enabled or not
-	var/AI_Interact		= 0
+	var/AI_Interact = 0
 
 	/// Used to cache this client's bans to save on DB queries
 	var/ban_cache = null
@@ -82,6 +83,8 @@
 	var/mouse_up_icon = null
 	/// Mouse icon while clicking
 	var/mouse_down_icon = null
+	///used to override the mouse cursor so it doesnt get reset
+	var/mouse_override_icon = null
 
 	var/ip_intel = "Disabled"
 

@@ -559,7 +559,8 @@
 		else if(picking_dropoff_turf)
 			owner_client.mouse_up_icon = 'icons/effects/supplypod_pickturf.dmi' //Icon for when mouse is released
 			owner_client.mouse_down_icon = 'icons/effects/supplypod_pickturf_down.dmi' //Icon for when mouse is pressed
-		owner_client.mouse_pointer_icon = owner_client.mouse_up_icon //Icon for idle mouse (same as icon for when released)
+		owner_client.mouse_override_icon = owner_client.mouse_up_icon //Icon for idle mouse (same as icon for when released)
+		owner_client.mouse_pointer_icon = owner_client.mouse_override_icon
 		owner_client.click_intercept = src //Create a click_intercept so we know where the user is clicking
 	else
 		var/mob/owner_client_mob = owner_client.mob
