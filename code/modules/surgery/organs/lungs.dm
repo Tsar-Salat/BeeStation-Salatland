@@ -1,3 +1,7 @@
+// / Breathing types. Lungs can access either by these or by a string, which will be considered a gas ID.
+#define BREATH_OXY		/datum/breathing_class/oxygen
+#define BREATH_PLASMA	/datum/breathing_class/plasma
+
 /obj/item/organ/lungs
 	var/failed = FALSE
 	var/operated = FALSE	//whether we can still have our damages fixed through surgery
@@ -363,6 +367,8 @@
 		failed = FALSE
 	return
 
+/obj/item/organ/lungs/get_availability(datum/species/S)
+	return !(TRAIT_NOBREATH in S.species_traits)
 
 /obj/item/organ/lungs/plasmaman
 	name = "plasma filter"
@@ -430,3 +436,6 @@
 	)
 #undef PP
 #undef PP_MOLES
+
+#undef BREATH_OXY
+#undef BREATH_PLASMA
