@@ -145,6 +145,8 @@
 /mob/living/simple_animal/bot/honkbot/UnarmedAttack(atom/A)
 	if(!on)
 		return
+	if(HAS_TRAIT(src, TRAIT_HANDS_BLOCKED))
+		return
 	if(iscarbon(A))
 		var/mob/living/carbon/C = A
 		if (emagged <= 1)
@@ -211,7 +213,7 @@
 				threatlevel = 6 // will never let you go
 			addtimer(CALLBACK(src, PROC_REF(spam_flag_false)), cooldowntime)
 
-			log_combat(src,C,"honked")
+			log_combat(src,C,"honked", src)
 
 			C.visible_message("<span class='danger'>[src] has honked [C]!</span>",\
 					"<span class='userdanger'>[src] has honked you!</span>")
@@ -251,7 +253,7 @@
 						if(threatlevel >= 6)
 							set waitfor = 0
 							stun_attack(target)
-							anchored = FALSE
+							set_anchored(FALSE)
 							target_lastloc = target.loc
 					return
 
@@ -352,12 +354,12 @@
 			if(!istype(C) || !C || in_range(src, target))
 				return
 			C.visible_message("<span class='warning'>[pick( \
-						  	"[C] dives out of [src]'s way!", \
-						  	"[C] stumbles over [src]!", \
-						  	"[C] jumps out of [src]'s path!", \
-						  	"[C] trips over [src] and falls!", \
-						  	"[C] topples over [src]!", \
-						  	"[C] leaps out of [src]'s way!")]</span>")
+								"[C] dives out of [src]'s way!", \
+								"[C] stumbles over [src]!", \
+								"[C] jumps out of [src]'s path!", \
+								"[C] trips over [src] and falls!", \
+								"[C] topples over [src]!", \
+								"[C] leaps out of [src]'s way!")]</span>")
 			C.Paralyze(10)
 			playsound(loc, 'sound/misc/sadtrombone.ogg', 50, 1, -1)
 			if(!client)

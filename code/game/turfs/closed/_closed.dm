@@ -1,3 +1,5 @@
+CREATION_TEST_IGNORE_SELF(/turf/closed)
+
 /turf/closed
 	layer = CLOSED_TURF_LAYER
 	opacity = TRUE
@@ -171,6 +173,12 @@ INITIALIZE_IMMEDIATE(/turf/closed/indestructible/splashscreen)
 	desc = "Extremely densely-packed sheets of ice and rock, forged over the years of the harsh cold."
 	icon = 'icons/turf/walls.dmi'
 	icon_state = "icerock"
+
+/turf/closed/indestructible/rock/bedrock
+	name = "bedrock rock"
+	desc = "An extremely densely-packed rock, most mining tools or explosives would never get through this."
+	icon = 'icons/turf/mining.dmi'
+	icon_state = "rock_dense"
 
 /turf/closed/indestructible/paper
 	name = "thick paper wall"
