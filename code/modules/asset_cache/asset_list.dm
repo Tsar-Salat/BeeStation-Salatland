@@ -387,7 +387,7 @@ GLOBAL_LIST_EMPTY(asset_datums)
 	return mappings
 
 /// Override this in order to start the creation of the spritehseet.
-/// This is where all your Insert, InsertAll, etc calls should be inside.
+/// This is where all your Insert, InsertAll, etc calls should be inside. //These procs are deprecated/no longer exist. Update your comments.
 /datum/asset/spritesheet/proc/create_spritesheets()
 	SHOULD_CALL_PARENT(FALSE)
 	CRASH("create_spritesheets() not implemented for [type]!")

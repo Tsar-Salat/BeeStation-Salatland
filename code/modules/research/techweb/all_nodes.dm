@@ -2008,7 +2008,6 @@
 	)
 	design_ids = list(
 		"mech_ccw_armor",
-		"mech_energy_relay",
 		"mech_generator_nuclear",
 		"mech_proj_armor",
 	)

@@ -39,48 +39,6 @@
 	chassis.log_message("Now taking air from [chassis.use_internal_tank?"internal airtank":"environment"].", LOG_MECHA)
 	UpdateButtonIcon()
 
-/datum/action/vehicle/sealed/mecha/mech_cycle_equip
-	name = "Cycle Equipment"
-	button_icon_state = "mech_cycle_equip_off"
-
-/datum/action/vehicle/sealed/mecha/mech_cycle_equip/Trigger()
-	if(!owner || !chassis || !(owner in chassis.occupants))
-		return
-
-	var/list/available_equipment = list()
-	for(var/e in chassis.equipment)
-		var/obj/item/mecha_parts/mecha_equipment/equipment = e
-		if(equipment.selectable)
-			available_equipment += equipment
-
-	if(available_equipment.len == 0)
-		chassis.balloon_alert(owner, "No equipment available.")
-		return
-	if(!chassis.selected)
-		chassis.selected = available_equipment[1]
-		chassis.balloon_alert(owner, "[chassis.selected] selected.")
-		send_byjax(chassis.occupants,"exosuit.browser","eq_list",chassis.get_equipment_list())
-		button_icon_state = "mech_cycle_equip_on"
-		UpdateButtonIcon()
-		return
-	var/number = 0
-	for(var/equipment in available_equipment)
-		number++
-		if(equipment != chassis.selected)
-			continue
-		if(available_equipment.len == number)
-			chassis.selected = null
-			chassis.balloon_alert(owner, "Switched to no equipment.")
-			button_icon_state = "mech_cycle_equip_off"
-		else
-			chassis.selected = available_equipment[number+1]
-			chassis.balloon_alert(owner, "Switched to [chassis.selected].")
-			button_icon_state = "mech_cycle_equip_on"
-		send_byjax(chassis.occupants,"exosuit.browser","eq_list",chassis.get_equipment_list())
-		UpdateButtonIcon()
-		return
-
-
 /datum/action/vehicle/sealed/mecha/mech_toggle_lights
 	name = "Toggle Lights"
 	button_icon_state = "mech_lights_off"
@@ -108,10 +66,7 @@
 /datum/action/vehicle/sealed/mecha/mech_view_stats/Trigger()
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
-	var/datum/browser/popup = new(owner , "exosuit")
-	popup.set_content(chassis.get_stats_html(owner))
-	popup.open()
-
+	chassis.ui_interact(owner)
 
 /datum/action/vehicle/sealed/mecha/strafe
 	name = "Toggle Strafing. Disabled when Alt is held."

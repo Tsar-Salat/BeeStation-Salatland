@@ -24,22 +24,17 @@
 	mecha_attacker.do_attack_animation(src)
 	var/play_soundeffect = 0
 	var/mech_damtype = mecha_attacker.damtype
-	if(mecha_attacker.selected)
-		mech_damtype = mecha_attacker.selected.damtype
-		play_soundeffect = 1
-	else
-		switch(mecha_attacker.damtype)
-			if(BRUTE)
-				playsound(src, 'sound/weapons/punch4.ogg', 50, TRUE)
-			if(BURN)
-				playsound(src, 'sound/items/welder.ogg', 50, TRUE)
-			if(TOX)
-				playsound(src, 'sound/effects/spray2.ogg', 50, TRUE)
-				return 0
-			else
-				return 0
+	switch(mecha_attacker.damtype)
+		if(BRUTE)
+			playsound(src, 'sound/weapons/punch4.ogg', 50, TRUE)
+		if(BURN)
+			playsound(src, 'sound/items/welder.ogg', 50, TRUE)
+		if(TOX)
+			playsound(src, 'sound/effects/spray2.ogg', 50, TRUE)
+		else
+			return 0
 	mecha_attacker.visible_message("<span class='danger'>[mecha_attacker.name] hits [src]!</span>", "<span class='danger'>You hit [src]!</span>", null, COMBAT_MESSAGE_RANGE)
-	return take_damage(mecha_attacker.force * 3, mech_damtype, "melee", play_soundeffect, get_dir(src, mecha_attacker)) // multiplied by 3 so we can hit objs hard but not be overpowered against mobs.
+	return take_damage(mecha_attacker.force * 3, mecha_attacker.damtype, "melee", FALSE, get_dir(src, mecha_attacker)) // multiplied by 3 so we can hit objs hard but not be overpowered against mobs.
 
 /obj/structure/window/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker)
 	if(!can_be_reached())
