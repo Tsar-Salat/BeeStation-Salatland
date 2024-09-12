@@ -22,8 +22,6 @@
 
 /obj/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker)
 	mecha_attacker.do_attack_animation(src)
-	var/play_soundeffect = 0
-	var/mech_damtype = mecha_attacker.damtype
 	switch(mecha_attacker.damtype)
 		if(BRUTE)
 			playsound(src, 'sound/weapons/punch4.ogg', 50, TRUE)

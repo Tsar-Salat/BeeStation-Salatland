@@ -55,6 +55,11 @@
 
 	return UI_INTERACTIVE
 
+/// Returns a UI status such that those without blocked hands will be able to interact,
+/// but everyone else can only watch.
+/proc/ui_status_user_has_free_hands(mob/user, atom/source)
+	return HAS_TRAIT(user, TRAIT_HANDS_BLOCKED) ? UI_UPDATE : UI_INTERACTIVE
+
 /// Returns a UI status such that advanced tool users will be able to update,
 /// but everyone else can only watch.
 /proc/ui_status_user_is_advanced_tool_user(mob/user, atom/source)

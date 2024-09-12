@@ -270,13 +270,13 @@
 			mode = MODE_DECONSTRUCT
 		switch(mode)
 			if(MODE_DECONSTRUCT)
-				to_chat(chassis.occupants, "[icon2html(src, chassis.occupants)][span_notice("Switched RCD to Deconstruct.")]")
+				to_chat(chassis.occupants, "[icon2html(src, chassis.occupants)]["<span class='notice'>Switched RCD to Deconstruct.</span>"]")
 				energy_drain = initial(energy_drain)
 			if(MODE_WALL)
-				to_chat(chassis.occupants, "[icon2html(src, chassis.occupants)][span_notice("Switched RCD to Construct Walls and Flooring.")]")
+				to_chat(chassis.occupants, "[icon2html(src, chassis.occupants)]["<span class='notice'>Switched RCD to Construct Walls and Flooring.</span>"]")
 				energy_drain = 2*initial(energy_drain)
 			if(MODE_AIRLOCK)
-				to_chat(chassis.occupants, "[icon2html(src, chassis.occupants)][span_notice("Switched RCD to Construct Airlock.")]")
+				to_chat(chassis.occupants, "[icon2html(src, chassis.occupants)]["<span class='notice'>Switched RCD to Construct Airlock.</span>"]")
 				energy_drain = 2*initial(energy_drain)
 		return TRUE
 

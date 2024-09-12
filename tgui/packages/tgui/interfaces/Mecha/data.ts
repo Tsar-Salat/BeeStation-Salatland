@@ -77,10 +77,11 @@ export type OperatorData = {
   port_connected: boolean | null;
   cabin_pressure: number;
   cabin_temp: number;
-  dna_lock: string | null;
+  // dna_lock: string | null;
   mech_electronics: MechElectronics;
   right_arm_weapon: MechWeapon | null;
   left_arm_weapon: MechWeapon | null;
+  weapons_safety: boolean;
   mech_equipment: string[];
   mech_view: string;
   mineral_material_amount: number;

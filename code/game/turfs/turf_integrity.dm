@@ -332,8 +332,8 @@
 			playsound(src, 'sound/effects/spray2.ogg', 50, 1)
 		else
 			return FALSE
-	M.visible_message("<span class='danger'>[M.name] hits [src]!</span>", "<span class='danger'>You hit [src]!</span>", null, COMBAT_MESSAGE_RANGE)
-	return take_damage(M.force*3, mecha_attacker.damtype, MELEE, FALSE, get_dir(src, M)) // multiplied by 3 so we can hit objs hard but not be overpowered against mobs.
+	mecha_attacker.visible_message("<span class='danger'>[mecha_attacker.name] hits [src]!</span>", "<span class='danger'>You hit [src]!</span>", null, COMBAT_MESSAGE_RANGE)
+	return take_damage(mecha_attacker.force*3, mecha_attacker.damtype, MELEE, FALSE, get_dir(src, mecha_attacker)) // multiplied by 3 so we can hit objs hard but not be overpowered against mobs.
 
 //====================================
 // Singularity

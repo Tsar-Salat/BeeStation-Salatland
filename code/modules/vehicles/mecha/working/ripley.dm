@@ -187,7 +187,7 @@
 		var/obj/crate = locate(params["cargoref"]) in miner.cargo
 		if(!crate)
 			return FALSE
-		to_chat(miner.occupants, "[icon2html(src,  miner.occupants)][span_notice("You unload [crate].")]")
+		to_chat(miner.occupants, "[icon2html(src,  miner.occupants)]["<span class='notice'>You unload [crate].</span>"]")
 		crate.forceMove(drop_location())
 		LAZYREMOVE(miner.cargo, crate)
 		if(crate == miner.box)

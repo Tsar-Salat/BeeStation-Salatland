@@ -53,7 +53,7 @@
 	)
 
 /obj/vehicle/sealed/mecha/ui_assets(mob/user)
-	return list(get_asset_datum(/datum/asset/spritesheet/mechaarmor))
+	return list(get_asset_datum(/datum/asset/spritesheet_batched/mechaarmor))
 
 /obj/vehicle/sealed/mecha/ui_static_data(mob/user)
 	var/list/data = list()
@@ -92,7 +92,7 @@
 		data["operation_req_access"] = list()
 		data["idcard_access"] = list()
 		for(var/code in operation_req_access)
-			data["operation_req_access"] += list(list("name" = SSid_access.get_access_desc(code), "number" = code))
+			data["operation_req_access"] += list(list("name" = get_access_desc(code), "number" = code))
 		if(!isliving(user))
 			return data
 		var/mob/living/living_user = user
@@ -102,7 +102,7 @@
 		for(var/idcode in card.access)
 			if(idcode in operation_req_access)
 				continue
-			var/accessname = SSid_access.get_access_desc(idcode)
+			var/accessname = get_access_desc(idcode)
 			if(!accessname)
 				continue //there's some strange access without a name
 			data["idcard_access"] += list(list("name" = accessname, "number" = idcode))
@@ -110,18 +110,19 @@
 	ui_view.appearance = appearance
 	var/datum/gas_mixture/int_tank_air= internal_tank?.return_air()
 	data["name"] = name
-	data["integrity"] = atom_integrity/max_integrity
+	data["integrity"] = obj_integrity/max_integrity
 	data["power_level"] = cell?.charge
 	data["power_max"] = cell?.maxcharge
 	data["mecha_flags"] = mecha_flags
 	data["internal_damage"] = internal_damage
 	data["air_source"] = use_internal_tank ? "Internal Airtank" : "Environment"
 	data["airtank_pressure"] = int_tank_air ? round(int_tank_air.return_pressure(), 0.01) : null
-	data["airtank_temp"] = int_tank_air?.temperature
+	data["airtank_temp"] = int_tank_air?.return_temperature()
 	data["port_connected"] = internal_tank?.connected_port ? TRUE : FALSE
 	data["cabin_pressure"] = round(return_pressure(), 0.01)
 	data["cabin_temp"] = return_temperature()
-	data["dna_lock"] = dna_lock
+	//data["dna_lock"] = dna_lock
+	data["weapons_safety"] = weapons_safety
 	data["mech_view"] = ui_view.assigned_map
 	if(radio)
 		data["mech_electronics"] = list(
@@ -211,10 +212,10 @@
 					return FALSE
 				if(construction_state == MECHA_LOCKED)
 					construction_state = MECHA_SECURE_BOLTS
-					to_chat(usr, span_notice("The securing bolts are now exposed."))
+					to_chat(usr, "<span class='warning'>The securing bolts are now exposed.</span>")
 				else if(construction_state == MECHA_SECURE_BOLTS)
 					construction_state = MECHA_LOCKED
-					to_chat(usr, span_notice("The securing bolts are now hidden."))
+					to_chat(usr, "<span class='warning'>The securing bolts are now hidden.</span>")
 			if("drop_cell")
 				if(construction_state != MECHA_OPEN_HATCH)
 					return
@@ -235,7 +236,7 @@
 				if(isnull(new_pressure) || !construction_state)
 					return
 				internal_tank_valve = new_pressure
-				to_chat(usr, span_notice("The internal pressure valve has been set to [internal_tank_valve]kPa."))
+				to_chat(usr, "<span class='notice'>The internal pressure valve has been set to [internal_tank_valve]kPa.</span>")
 			if("add_req_access")
 				if(!(mecha_flags & ADDING_ACCESS_POSSIBLE))
 					return
@@ -262,10 +263,8 @@
 			var/userinput = tgui_input_text(usr, "Choose a new exosuit name", "Rename exosuit", max_length = MAX_NAME_LEN)
 			if(!userinput)
 				return
-			if(is_ic_filtered(userinput) || is_soft_ic_filtered(userinput))
-				tgui_alert(usr, "You cannot set a name that contains a word prohibited in IC chat!")
-				return
 			name = userinput
+		/*
 		if("dna_lock")
 			var/mob/living/carbon/user = usr
 			if(!istype(user) || !user.dna)
@@ -278,6 +277,7 @@
 		if("view_dna")
 			tgui_alert(usr, "Enzymes detected: " + dna_lock)
 			return FALSE
+		*/
 		if("toggle_airsource")
 			use_internal_tank = !use_internal_tank
 			balloon_alert(usr, "taking air from [use_internal_tank ? "internal airtank" : "environment"]")
@@ -285,20 +285,20 @@
 		if("toggle_port")
 			if(internal_tank.connected_port)
 				if(internal_tank.disconnect())
-					to_chat(occupants, "[icon2html(src, occupants)][span_notice("Disconnected from the air system port.")]")
+					to_chat(occupants, "[icon2html(src, occupants)]["<span class='notice'>Disconnected from the air system port.</span>"]")
 					log_message("Disconnected from gas port.", LOG_MECHA)
 					return TRUE
-				to_chat(occupants, "[icon2html(src, occupants)][span_warning("Unable to disconnect from the air system port!")]")
+				to_chat(occupants, "[icon2html(src, occupants)]["<span class='warning'>Unable to disconnect from the air system port!</span>"]")
 				return
 			var/obj/machinery/atmospherics/components/unary/portables_connector/possible_port = locate() in loc
 			if(internal_tank.connect(possible_port))
-				to_chat(occupants, "[icon2html(src, occupants)][span_notice("Connected to the air system port.")]")
+				to_chat(occupants, "[icon2html(src, occupants)]["<span class='notice'>Connected to the air system port.</span>"]")
 				log_message("Connected to gas port.", LOG_MECHA)
 				return TRUE
-			to_chat(occupants, "[icon2html(src, occupants)][span_warning("Unable to connect with air system port!")]")
+			to_chat(occupants, "[icon2html(src, occupants)]["<span class='warning'>Unable to connect with air system port!</span>"]")
 		if("toggle_maintenance")
 			if(construction_state)
-				to_chat(occupants, "[icon2html(src, occupants)][span_danger("Maintenance protocols in effect")]")
+				to_chat(occupants, "[icon2html(src, occupants)]["<span class='danger'>Maintenance protocols in effect.</span>"]")
 				return
 			mecha_flags ^= ADDING_MAINT_ACCESS_POSSIBLE
 		if("toggle_id_panel")
