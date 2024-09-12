@@ -27,6 +27,7 @@
 		"Phazon",
 		"Savannah-Ivanov",
 		"Exosuit Equipment",
+		"Exosuit Ammunition",
 		"Cyborg Upgrade Modules",
 		"IPC Components",
 		"Cybernetics",
