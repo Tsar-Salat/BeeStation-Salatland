@@ -158,11 +158,10 @@
 	name = "exosuit mining scanner"
 	desc = "Equipment for working exosuits. It will automatically check surrounding rock for useful minerals."
 	icon_state = "mecha_analyzer"
-	selectable = 0
 	equip_cooldown = 15
 	equipment_slot = MECHA_UTILITY
-	var/scanning_time = 0
 	mech_flags = EXOSUIT_MODULE_RIPLEY
+	var/scanning_time = 0
 
 /obj/item/mecha_parts/mecha_equipment/mining_scanner/Initialize(mapload)
 	. = ..()

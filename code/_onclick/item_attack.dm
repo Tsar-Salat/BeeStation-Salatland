@@ -45,46 +45,64 @@
 	return FALSE //return TRUE to avoid calling attackby after this proc does stuff
 
 /**
-  * Called on an object being hit by an item
-  *
-  * Arguments:
-  * * obj/item/W - The item hitting this atom
-  * * mob/user - The wielder of this item
-  * * params - click params such as alt/shift etc
-  *
-  * See: [/obj/item/proc/melee_attack_chain]
-  */
-/atom/proc/attackby(obj/item/W, mob/user, params)
-	if(SEND_SIGNAL(src, COMSIG_PARENT_ATTACKBY, W, user, params) & COMPONENT_NO_AFTERATTACK)
+ * Called on an object being hit by an item
+ *
+ * Arguments:
+ * * obj/item/attacking_item - The item hitting this atom
+ * * mob/user - The wielder of this item
+ * * params - click params such as alt/shift etc
+ *
+ * See: [/obj/item/proc/melee_attack_chain]
+ */
+/atom/proc/attackby(obj/item/attacking_item, mob/user, params)
+	if(SEND_SIGNAL(src, COMSIG_PARENT_ATTACKBY, attacking_item, user, params) & COMPONENT_NO_AFTERATTACK)
 		return TRUE
 	return FALSE
 
-/obj/attackby(obj/item/I, mob/living/user, params)
-	return ..() || ((obj_flags & CAN_BE_HIT) && I.attack_obj(src, user))
+/**
+ * Called on an object being right-clicked on by an item
+ *
+ * Arguments:
+ * * obj/item/weapon - The item hitting this atom
+ * * mob/user - The wielder of this item
+ * * params - click params such as alt/shift etc
+ *
+ * See: [/obj/item/proc/melee_attack_chain]
+ */
+/atom/proc/attackby_secondary(obj/item/weapon, mob/user, params)
+	var/signal_result = SEND_SIGNAL(src, COMSIG_PARENT_ATTACKBY_SECONDARY, weapon, user, params)
 
-/mob/living/attackby(obj/item/I, mob/living/user, params)
+	if(signal_result & COMPONENT_SECONDARY_CANCEL_ATTACK_CHAIN)
+		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+
+	if(signal_result & COMPONENT_SECONDARY_CONTINUE_ATTACK_CHAIN)
+		return SECONDARY_ATTACK_CONTINUE_CHAIN
+
+	return SECONDARY_ATTACK_CALL_NORMAL
+
+/obj/attackby(obj/item/attacking_item, mob/user, params)
+	return ..() || ((obj_flags & CAN_BE_HIT) && attacking_item.attack_obj(src, user, params))
+
+/mob/living/attackby(obj/item/attacking_item, mob/living/user, params)
 	if(..())
 		return TRUE
 	user.changeNext_move(CLICK_CD_MELEE)
-	if(user.a_intent == INTENT_HARM && stat == DEAD && (butcher_results || guaranteed_butcher_results)) //can we butcher it?
-		var/datum/component/butchering/butchering = I.GetComponent(/datum/component/butchering)
-		if(butchering?.butchering_enabled)
-			to_chat(user, "<span class='notice'>You begin to butcher [src]...</span>")
-			playsound(loc, butchering.butcher_sound, 50, TRUE, -1)
-			if(do_after(user, butchering.speed, src) && Adjacent(I))
-				butchering.Butcher(user, src)
-			return 1
-		else if(I.is_sharp() && !butchering) //give sharp objects butchering functionality, for consistency
-			I.AddComponent(/datum/component/butchering, 80 * I.toolspeed)
-			attackby(I, user, params) //call the attackby again to refresh and do the butchering check again
-			return
-	return I.attack(src, user)
+	return attacking_item.attack(src, user, params)
+
+/mob/living/attackby_secondary(obj/item/weapon, mob/living/user, params)
+	var/result = weapon.attack_secondary(src, user, params)
+
+	// Normal attackby updates click cooldown, so we have to make up for it
+	if (result != SECONDARY_ATTACK_CALL_NORMAL)
+		user.changeNext_move(CLICK_CD_MELEE)
+
+	return result
 
 /**
  * Called from [/mob/living/proc/attackby]
  *
  * Arguments:
- * * mob/living/target_mob - The mob being hit by this item
+ * * mob/living/M - The mob being hit by this item
  * * mob/living/user - The mob hitting with this item
  * * params - Click params of this attack
  */
@@ -138,6 +156,17 @@
 	log_combat(user, M, "[nonharmfulhit ? "poked" : "attacked"]", src, "(INTENT: [uppertext(user.a_intent)]) (DAMTYPE: [uppertext(damtype)])", important = !nonharmfulhit)
 	add_fingerprint(user)
 
+/// The equivalent of [/obj/item/proc/attack] but for alternate attacks, AKA right clicking
+/obj/item/proc/attack_secondary(mob/living/victim, mob/living/user, params)
+	var/signal_result = SEND_SIGNAL(src, COMSIG_ITEM_ATTACK_SECONDARY, victim, user, params)
+
+	if(signal_result & COMPONENT_SECONDARY_CANCEL_ATTACK_CHAIN)
+		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+
+	if(signal_result & COMPONENT_SECONDARY_CONTINUE_ATTACK_CHAIN)
+		return SECONDARY_ATTACK_CONTINUE_CHAIN
+
+	return SECONDARY_ATTACK_CALL_NORMAL
 
 /// The equivalent of the standard version of [/obj/item/proc/attack] but for object targets.
 /obj/item/proc/attack_obj(obj/O, mob/living/user)
