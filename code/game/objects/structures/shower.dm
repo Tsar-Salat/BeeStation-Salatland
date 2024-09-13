@@ -4,6 +4,7 @@
 #define SHOWER_NORMAL_TEMP 300
 #define SHOWER_BOILING "boiling"
 #define SHOWER_BOILING_TEMP 400
+#define SHOWER_REACTION_MULTIPLIER 0.05
 
 /obj/machinery/shower
 	name = "shower"
@@ -135,7 +136,7 @@
 		wash_atom(loc)
 		for(var/am in loc)
 			var/atom/movable/movable_content = am
-			reagents.reaction(movable_content, TOUCH, 5) //There's not many reagents leaving the sink at once!
+			reagents.reaction(movable_content, TOUCH, SHOWER_REACTION_MULTIPLIER) //There's not many reagents leaving the sink at once! This should make for a 10 unit reaction
 			if(!ismopable(movable_content)) // Mopables will be cleaned anyways by the turf wash above
 				wash_atom(movable_content)
 	else
@@ -200,3 +201,4 @@
 #undef SHOWER_FREEZING
 #undef SHOWER_NORMAL
 #undef SHOWER_BOILING
+#undef SHOWER_REACTION_MULTIPLIER
