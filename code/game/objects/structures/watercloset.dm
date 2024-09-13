@@ -246,6 +246,8 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/urinal, 32)
 	var/has_water_reclaimer = TRUE
 	///Has the water reclamation begun?
 	var/reclaiming = FALSE
+	///Units of water to reclaim per second
+	var/reclaim_rate = 0.5
 
 /obj/structure/sink/Initialize(mapload, bolt)
 	. = ..()
@@ -274,7 +276,6 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/urinal, 32)
 	if(busy)
 		to_chat(user, "<span class='notice'>Someone's already washing here.</span>")
 		return
-	process_check()
 	var/washing_face = user.is_zone_selected(BODY_ZONE_HEAD)
 	user.visible_message("<span class='notice'>[user] starts washing [user.p_their()] [washing_face ? "face" : "hands"]...</span>", \
 						"<span class='notice'>You start washing your [washing_face ? "face" : "hands"]...</span>")
@@ -286,8 +287,8 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/urinal, 32)
 
 	busy = FALSE
 	reagents.remove_any(5)
-	reagents.reaction(user, TOUCH)
-
+	reagents.reaction(user, TOUCH) //TODO acid component https://github.com/tgstation/tgstation/pull/53273
+	begin_reclamation()
 	if(washing_face)
 		SEND_SIGNAL(user, COMSIG_COMPONENT_CLEAN_FACE_ACT, CLEAN_WASH)
 		user.drowsyness = max(user.drowsyness - rand(2,3), 0) //Washing your face wakes you up if you're falling asleep
@@ -309,13 +310,13 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/urinal, 32)
 
 	if(istype(O, /obj/item/reagent_containers))
 		var/obj/item/reagent_containers/RG = O
-		process_check()
 		if(reagents.total_volume <= 0)
 			to_chat(user, "<span class='notice'>\The [src] is dry.</span>")
 			return FALSE
 		if(RG.is_refillable())
 			if(!RG.reagents.holder_full())
 				reagents.trans_to(RG, RG.amount_per_transfer_from_this, transfered_by = user)
+				begin_reclamation()
 				to_chat(user, "<span class='notice'>You fill [RG] from [src].</span>")
 				return TRUE
 			to_chat(user, "<span class='notice'>\The [RG] is full.</span>")
@@ -340,6 +341,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/urinal, 32)
 			to_chat(user, "<span class='notice'>\The [src] is dry.</span>")
 			return FALSE
 		reagents.trans_to(O, 5, transfered_by = user)
+		begin_reclamation()
 		to_chat(user, "<span class='notice'>You wet [O] in [src].</span>")
 		playsound(loc, 'sound/effects/slosh.ogg', 25, TRUE)
 		return
@@ -387,10 +389,11 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/urinal, 32)
 				new M.sheet_type(loc, FLOOR(custom_materials[M] / MINERAL_MATERIAL_AMOUNT, 1))
 	..()
 
-/obj/structure/sink/process()
+/obj/structure/sink/process(delta_time)
 	if(has_water_reclaimer && reagents.total_volume < reagents.maximum_volume)
-		reagents.add_reagent(dispensedreagent, 1)
+		reagents.add_reagent(dispensedreagent, reclaim_rate * delta_time)
 	else
+		reclaiming = FALSE
 		return PROCESS_KILL
 
 /obj/structure/sink/proc/drop_materials()
@@ -401,11 +404,10 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/urinal, 32)
 			var/datum/material/M = i
 			new M.sheet_type(loc, FLOOR(custom_materials[M] / MINERAL_MATERIAL_AMOUNT, 1))
 
-/obj/structure/sink/proc/process_check()
+/obj/structure/sink/proc/begin_reclamation()
 	if(!reclaiming)
 		reclaiming = TRUE
 		START_PROCESSING(SSfluids, src)
-		process()
 
 /obj/structure/sink/kitchen
 	name = "kitchen sink"
