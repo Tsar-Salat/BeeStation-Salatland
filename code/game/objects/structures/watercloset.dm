@@ -147,9 +147,11 @@
 	var/exposed = 0 // can you currently put an item inside
 	var/obj/item/hiddenitem = null // what's in the urinal
 
+MAPPING_DIRECTIONAL_HELPERS(/obj/structure/urinal, 32)
+
 /obj/structure/urinal/Initialize(mapload)
 	. = ..()
-	hiddenitem = new /obj/item/reagent_containers/food/snacks/urinalcake
+	hiddenitem = new /obj/item/food/urinalcake
 
 /obj/structure/urinal/attack_hand(mob/user)
 	. = ..()
@@ -209,16 +211,16 @@
 	return TRUE
 
 
-/obj/item/reagent_containers/food/snacks/urinalcake
+/obj/item/food/urinalcake
 	name = "urinal cake"
 	desc = "The noble urinal cake, protecting the station's pipes from the station's pee. Do not eat."
 	icon = 'icons/obj/items_and_weapons.dmi'
 	icon_state = "urinalcake"
 	w_class = WEIGHT_CLASS_TINY
-	list_reagents = list(/datum/reagent/chlorine = 3, /datum/reagent/ammonia = 1)
-	foodtype = TOXIC | GROSS
+	food_reagents = list(/datum/reagent/chlorine = 3, /datum/reagent/ammonia = 1)
+	foodtypes = TOXIC | GROSS
 
-/obj/item/reagent_containers/food/snacks/urinalcake/attack_self(mob/living/user)
+/obj/item/food/urinalcake/attack_self(mob/living/user)
 	user.visible_message("<span class='notice'>[user] squishes [src]!</span>", "<span class='notice'>You squish [src].</span>", "<i>You hear a squish.</i>")
 	icon_state = "urinalcake_squish"
 	addtimer(VARSET_CALLBACK(src, icon_state, "urinalcake"), 8)
@@ -229,6 +231,7 @@
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "rubberducky"
 	item_state = "rubberducky"
+	worn_icon_state = "duck"
 
 
 /obj/structure/sink
@@ -237,14 +240,14 @@
 	icon_state = "sink"
 	desc = "A sink used for washing one's hands and face. Passively reclaims water over time."
 	anchored = TRUE
+	layer = ABOVE_OBJ_LAYER
+	pixel_z = 1
 	///Something's being washed at the moment
 	var/busy = FALSE
 	///What kind of reagent is produced by this sink by default? (We now have actual plumbing, Arcane, August 2020)
 	var/dispensedreagent = /datum/reagent/water
 	///Material to drop when broken or deconstructed.
-	var/dispensedreagent = /datum/reagent/water // for whenever plumbing happens
-	///Material to drop when broken or deconstructed.
-	var/buildstacktype = /obj/item/stack/sheet/metal
+	var/buildstacktype = /obj/item/stack/sheet/iron
 	///Number of sheets of material to drop when broken or deconstructed.
 	var/buildstackamount = 1
 	///Does the sink have a water recycler to recollect it's water supply?
@@ -281,7 +284,6 @@
 	if(busy)
 		to_chat(user, "<span class='notice'>Someone's already washing here.</span>")
 		return
-	process_check()
 	var/washing_face = user.is_zone_selected(BODY_ZONE_HEAD)
 	user.visible_message("<span class='notice'>[user] starts washing [user.p_their()] [washing_face ? "face" : "hands"]...</span>", \
 						"<span class='notice'>You start washing your [washing_face ? "face" : "hands"]...</span>")
@@ -464,10 +466,7 @@
 	if(busy)
 		to_chat(user, "<span class='warning'>Someone's already washing here!</span>")
 		return
-	var/selected_area = parse_zone(user.zone_selected)
-	var/washing_face = FALSE
-	if(selected_area in list(BODY_ZONE_HEAD, BODY_ZONE_PRECISE_MOUTH, BODY_ZONE_PRECISE_EYES))
-		washing_face = TRUE
+	var/washing_face = user.is_zone_selected(BODY_ZONE_HEAD)
 	user.visible_message("<span class='notice'>[user] starts washing [user.p_their()] [washing_face ? "face" : "hands"]...</span>", \
 						"<span class='notice'>You start washing your [washing_face ? "face" : "hands"]...</span>")
 	busy = TRUE
@@ -508,16 +507,18 @@
 			return FALSE
 
 	if(istype(O, /obj/item/melee/baton))
-		var/obj/item/melee/baton/baton = O
-		if(baton.cell && baton.cell.charge && baton.turned_on)
-			flick("baton_active", src)
-			user.Paralyze(baton.stun_time)
-			user.stuttering = baton.stun_time * 0.05
-			baton.deductcharge(baton.cell_hit_cost)
-			user.visible_message("<span class='warning'>[user] shocks [user.p_them()]self while attempting to wash the active [baton.name]!</span>", \
-								"<span class='userdanger'>You unwisely attempt to wash [baton] while it's still on.</span>")
-			playsound(src, baton.stun_sound, 50, TRUE)
-			return
+		var/obj/item/melee/baton/B = O
+		if(B.cell)
+			if(B.cell.charge > 0 && B.turned_on)
+				flick("baton_active", src)
+				var/stunforce = B.stunforce
+				user.Paralyze(stunforce)
+				user.stuttering = stunforce/20
+				B.deductcharge(B.hitcost)
+				user.visible_message("<span class='warning'>[user] shocks [user.p_them()]self while attempting to wash the active [B.name]!</span>", \
+									"<span class='userdanger'>You unwisely attempt to wash [B] while it's still on.</span>")
+				playsound(src, "sparks", 50, 1)
+				return
 
 	if(istype(O, /obj/item/mop))
 		O.reagents.add_reagent(dispensedreagent, 5)
@@ -533,7 +534,7 @@
 		return
 
 	if(istype(O, /obj/item/stack/ore/glass))
-		new /obj/item/stack/sheet/sandblock(loc)
+		new /obj/item/stack/sheet/mineral/sandstone(loc)
 		to_chat(user, "<span class='notice'>You wet the sand and form it into a block.</span>")
 		O.use(1)
 		return
@@ -552,7 +553,7 @@
 		O.acid_level = 0
 		create_reagents(5)
 		reagents.add_reagent(dispensedreagent, 5)
-		reagents.expose(O, TOUCH)
+		reagents.reaction(O, TOUCH)
 		user.visible_message("<span class='notice'>[user] washes [O] using [src].</span>", \
 							"<span class='notice'>You wash [O] using [src].</span>")
 		return TRUE
@@ -667,13 +668,13 @@
 	alpha = 255
 
 /obj/structure/curtain/proc/toggle(mob/M)
-    if (check(M))
-        open = !open
-        playsound(loc, 'sound/effects/curtain.ogg', 50, 1)
-        update_appearance()
+	if (check(M))
+		open = !open
+		playsound(loc, 'sound/effects/curtain.ogg', 50, 1)
+		update_appearance()
 
 /obj/structure/curtain/proc/check(mob/M)
-    return TRUE
+	return TRUE
 
 /obj/structure/curtain/directional
 	icon_type = "bounty"

@@ -12,6 +12,11 @@
 	resistance_flags = ACID_PROOF
 	circuit = /obj/item/circuitboard/computer/pandemic
 
+	base_icon_state = null
+	smoothing_flags = NONE
+	smoothing_groups = null
+	canSmoothWith = null
+
 	var/wait
 	var/datum/symptom/selected_symptom
 	var/obj/item/reagent_containers/beaker
@@ -262,3 +267,6 @@
 /obj/machinery/computer/pandemic/on_deconstruction()
 	eject_beaker()
 	. = ..()
+
+#undef MAIN_SCREEN
+#undef SYMPTOM_DETAILS

@@ -6,29 +6,54 @@
 	pixel_z = 8
 	obj_flags = CAN_BE_HIT | UNIQUE_RENAME
 	circuit = /obj/item/circuitboard/machine/hydroponics
-	var/waterlevel = 100	//The amount of water in the tray (max 100)
-	var/maxwater = 100		//The maximum amount of water in the tray
-	var/nutrilevel = 10		//The amount of nutrient in the tray (max 10)
-	var/maxnutri = 10		//The maximum nutrient of water in the tray
-	var/pestlevel = 0		//The amount of pests in the tray (max 10)
-	var/weedlevel = 0		//The amount of weeds in the tray (max 10)
-	var/yieldmod = 1		//Nutriment's effect on yield
-	var/mutmod = 1			//Nutriment's effect on mutations
-	var/toxic = 0			//Toxicity in the tray?
-	var/age = 0				//Current age
-	var/dead = 0			//Is it dead?
-	var/plant_health		//Its health
-	var/lastproduce = 0		//Last time it was harvested
-	var/lastcycle = 0		//Used for timing of cycles.
-	var/cycledelay = 200	//About 10 seconds / cycle
-	var/harvest = 0			//Ready to harvest?
-	var/obj/item/seeds/myseed = null	//The currently planted seed
+	///The amount of water in the tray (max 100)
+	var/waterlevel = 100
+	///The maximum amount of water in the tray
+	var/maxwater = 100
+	///The amount of nutrient in the tray (max 10)
+	var/nutrilevel = 10
+	///The maximum nutrient reagent container size of the tray.
+	var/maxnutri = 20
+	///The amount of pests in the tray (max 10)
+	var/pestlevel = 0
+	///The amount of weeds in the tray (max 10)
+	var/weedlevel = 0
+	///Nutriment's effect on yield
+	var/yieldmod = 1
+	///Nutriment's effect on mutations
+	var/mutmod = 1
+	///Toxicity in the tray?
+	var/toxic = 0
+	///Current age
+	var/age = 0
+	///Is it dead?
+	var/dead = 0
+	///Its health
+	var/plant_health
+	///Last time it was harvested
+	var/lastproduce = 0
+	///Used for timing of cycles.
+	var/lastcycle = 0
+	///About 10 seconds per cycle
+	var/cycledelay = 200
+	///Ready to harvest?
+	var/harvest = 0
+	///The currently planted seed
+	var/obj/item/seeds/myseed = null
+	///Obtained from the quality of the parts used in the tray, determines nutrient drain rate.
 	var/rating = 1
-	var/unwrenchable = 1
-	var/recent_bee_visit = FALSE //Have we been visited by a bee recently, so bees dont overpollinate one plant
-	var/self_sufficiency_req = 20 //Required total dose to make a self-sufficient hydro tray. 1:1 with earthsblood.
+	///Can it be unwrenched to move?
+	var/unwrenchable = TRUE
+	///Have we been visited by a bee recently, so bees dont overpollinate one plant
+	var/recent_bee_visit = FALSE
+	///The last user to add a reagent to the tray, mostly for logging purposes.
+	var/datum/weakref/lastuser
+	///Required total dose to make a self-sufficient hydro tray. 1:1 with earthsblood.
+	var/self_sufficiency_req = 20
+	///Progress to self-sufficient hydro tray
 	var/self_sufficiency_progress = 0
-	var/self_sustaining = FALSE //If the tray generates nutrients and water on its own
+	///If the tray generates nutrients and water on its own
+	var/self_sustaining = FALSE
 
 
 /obj/machinery/hydroponics/constructable
@@ -263,22 +288,13 @@
 		update_icon_lights()
 
 	if(!self_sustaining)
-		if(myseed && myseed.get_gene(/datum/plant_gene/trait/glow))
+		if(myseed?.get_gene(/datum/plant_gene/trait/glow))
 			var/datum/plant_gene/trait/glow/G = myseed.get_gene(/datum/plant_gene/trait/glow)
 			set_light(G.glow_range(myseed), G.glow_power(myseed), G.glow_color)
 		else
 			set_light(0)
 	update_name()
 	return
-
-/obj/machinery/hydroponics/proc/update_icon_hoses()
-	var/n = 0
-	for(var/Dir in GLOB.cardinals)
-		var/obj/machinery/hydroponics/t = locate() in get_step(src,Dir)
-		if(t && t.using_irrigation && using_irrigation)
-			n += Dir
-
-	icon_state = "hoses-[n]"
 
 /obj/machinery/hydroponics/proc/update_icon_plant()
 	var/mutable_appearance/plant_overlay = mutable_appearance(myseed.growing_icon, layer = OBJ_LAYER + 0.01)
@@ -713,10 +729,6 @@
 		var/transfer_amount
 
 		if(IS_EDIBLE(reagent_source) || istype(reagent_source, /obj/item/reagent_containers/pill))
-			if(istype(reagent_source, /obj/item/reagent_containers/food/snacks))
-				var/obj/item/reagent_containers/food/snacks/R = reagent_source
-				if (R.trash)
-					R.generate_trash(get_turf(user))
 			visi_msg="[user] composts [reagent_source], spreading it through [target]"
 			transfer_amount = reagent_source.reagents.total_volume
 			SEND_SIGNAL(reagent_source, COMSIG_ITEM_ON_COMPOSTED, user)

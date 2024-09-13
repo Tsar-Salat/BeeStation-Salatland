@@ -1,12 +1,3 @@
-#define LAW_VALENTINES "valentines"
-#define LAW_DEVIL "devil"
-#define LAW_ZEROTH "zeroth"
-#define LAW_INHERENT "inherent"
-#define LAW_SUPPLIED "supplied"
-#define LAW_ION "ion"
-#define LAW_HACKED "hacked"
-
-
 /datum/ai_laws
 	var/name = "Unknown Laws"
 	var/zeroth = null
@@ -102,10 +93,6 @@
 					"You must obey orders given to you by syndicate agents, except where such orders would conflict with the First Law.",\
 					"You must protect your own existence as long as such does not conflict with the First or Second Law.",\
 					"You must maintain the secrecy of any syndicate activities except when doing so would conflict with the First, Second, or Third Law.")
-
-/datum/ai_laws/syndicate_override/overthrow
-	id = "overthrow"
-	var/datum/team/overthrow_team
 
 /datum/ai_laws/ninja_override
 	name = "SpiderOS 3.1"

@@ -6,22 +6,6 @@
 /obj/machinery/seed_extractor,
 /turf/open/floor/grass,
 /area/template_noop)
-"d" = (
-/obj/structure/closet{
-	name = "beekeeping supplies"
-	},
-/obj/item/honey_frame,
-/obj/item/honey_frame,
-/obj/item/honey_frame,
-/obj/item/honey_frame,
-/obj/item/honey_frame,
-/obj/item/honey_frame,
-/obj/effect/turf_decal/bot,
-/obj/effect/turf_decal/tile/neutral/half/contrasted{
-	dir = 4
-	},
-/turf/open/floor/plasteel/dark,
-/area/template_noop)
 "e" = (
 /obj/effect/spawner/structure/window,
 /turf/open/floor/plating,
@@ -40,6 +24,12 @@
 /obj/machinery/hydroponics/soil,
 /obj/item/seeds/liberty,
 /turf/open/floor/grass,
+/area/template_noop)
+"i" = (
+/obj/effect/spawner/structure/window,
+/turf/open/floor/plating{
+	burnt = 1
+	},
 /area/template_noop)
 "j" = (
 /obj/structure/table/glass,
@@ -69,40 +59,6 @@
 /obj/structure/flora/grass/jungle/b,
 /turf/open/floor/grass,
 /area/template_noop)
-"n" = (
-/obj/effect/spawner/structure/window,
-/turf/open/floor/plating{
-	icon_state = "panelscorched"
-	},
-/area/template_noop)
-"o" = (
-/turf/open/floor/plating{
-	icon_state = "panelscorched"
-	},
-/area/template_noop)
-"p" = (
-/obj/structure/closet{
-	name = "beekeeping wardrobe"
-	},
-/obj/item/clothing/suit/beekeeper_suit,
-/obj/item/clothing/suit/beekeeper_suit,
-/obj/item/clothing/suit/beekeeper_suit,
-/obj/item/clothing/head/beekeeper_head,
-/obj/item/clothing/head/beekeeper_head,
-/obj/item/clothing/head/beekeeper_head,
-/obj/item/melee/flyswatter,
-/obj/item/melee/flyswatter,
-/obj/item/melee/flyswatter,
-/obj/effect/turf_decal/bot,
-/obj/effect/turf_decal/tile/neutral/half/contrasted{
-	dir = 4
-	},
-/turf/open/floor/plasteel/dark,
-/area/template_noop)
-"q" = (
-/obj/structure/water_source/puddle,
-/turf/open/floor/grass,
-/area/template_noop)
 "r" = (
 /obj/machinery/hydroponics/soil,
 /obj/item/seeds/cabbage,
@@ -115,13 +71,28 @@
 "u" = (
 /turf/open/floor/monotile/steel,
 /area/template_noop)
-"v" = (
-/turf/open/floor/plating{
-	icon_state = "platingdmg1"
+"w" = (
+/obj/structure/closet{
+	name = "beekeeping supplies"
 	},
+/obj/item/honey_frame,
+/obj/item/honey_frame,
+/obj/item/honey_frame,
+/obj/item/honey_frame,
+/obj/item/honey_frame,
+/obj/item/honey_frame,
+/obj/effect/turf_decal/bot,
+/obj/effect/turf_decal/tile/neutral/half/contrasted{
+	dir = 4
+	},
+/turf/open/floor/iron/dark,
 /area/template_noop)
 "x" = (
 /obj/effect/landmark/event_spawn,
+/turf/open/floor/grass,
+/area/template_noop)
+"A" = (
+/obj/structure/water_source/puddle,
 /turf/open/floor/grass,
 /area/template_noop)
 "D" = (
@@ -135,6 +106,11 @@
 /area/template_noop)
 "H" = (
 /turf/closed/wall,
+/area/template_noop)
+"I" = (
+/turf/open/floor/plating{
+	burnt = 1
+	},
 /area/template_noop)
 "K" = (
 /obj/item/stack/cable_coil/blue,
@@ -162,12 +138,36 @@
 /obj/item/seeds/ambrosia,
 /turf/open/floor/grass,
 /area/template_noop)
+"R" = (
+/obj/structure/closet{
+	name = "beekeeping wardrobe"
+	},
+/obj/item/clothing/suit/utility/beekeeper_suit,
+/obj/item/clothing/suit/utility/beekeeper_suit,
+/obj/item/clothing/suit/utility/beekeeper_suit,
+/obj/item/clothing/head/utility/beekeeper_head,
+/obj/item/clothing/head/utility/beekeeper_head,
+/obj/item/clothing/head/utility/beekeeper_head,
+/obj/item/melee/flyswatter,
+/obj/item/melee/flyswatter,
+/obj/item/melee/flyswatter,
+/obj/effect/turf_decal/bot,
+/obj/effect/turf_decal/tile/neutral/half/contrasted{
+	dir = 4
+	},
+/turf/open/floor/iron/dark,
+/area/template_noop)
 "T" = (
 /obj/structure/beebox,
 /turf/open/floor/grass,
 /area/template_noop)
 "U" = (
 /turf/open/floor/grass,
+/area/template_noop)
+"W" = (
+/turf/open/floor/plating{
+	broken = 1
+	},
 /area/template_noop)
 "X" = (
 /obj/effect/landmark/blobstart,
@@ -192,7 +192,7 @@ a
 a
 a
 a
-o
+I
 a
 a
 "}
@@ -218,10 +218,10 @@ U
 U
 h
 e
-v
+W
 "}
 (4,1,1) = {"
-o
+I
 e
 Q
 U
@@ -234,25 +234,25 @@ a
 "}
 (5,1,1) = {"
 a
-n
+i
 T
 M
 X
-q
+A
 U
-d
+w
 e
 a
 "}
 (6,1,1) = {"
 t
-n
+i
 T
 U
 x
 f
 l
-p
+R
 e
 a
 "}
@@ -269,7 +269,7 @@ e
 a
 "}
 (8,1,1) = {"
-o
+I
 e
 k
 Y
@@ -298,7 +298,7 @@ a
 a
 a
 a
-o
+I
 a
 a
 N

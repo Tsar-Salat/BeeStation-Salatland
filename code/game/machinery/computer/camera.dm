@@ -33,7 +33,7 @@
 	// Convert networks to lowercase
 	for(var/i in network)
 		network -= i
-		network += lowertext(i)
+		network += LOWER_TEXT(i)
 	// Initialize map objects
 	cam_screen = new
 	cam_screen.name = "screen"
@@ -213,7 +213,7 @@
 
 	//these muthafuckas arent supposed to smooth
 	base_icon_state = null
-	smoothing_flags = null
+	smoothing_flags = NONE
 	smoothing_groups = null
 	canSmoothWith = null
 
@@ -263,7 +263,7 @@
 
 	//these muthafuckas arent supposed to smooth
 	base_icon_state = null
-	smoothing_flags = null
+	smoothing_flags = NONE
 	smoothing_groups = null
 	canSmoothWith = null
 
@@ -292,6 +292,8 @@
 	long_ranged = TRUE
 	var/icon_state_off = "entertainment_blank"
 	var/icon_state_on = "entertainment"
+
+MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/computer/security/telescreen/entertainment, 32)
 
 //Can use this telescreen at long range.
 /obj/machinery/computer/security/telescreen/entertainment/ui_state(mob/user)

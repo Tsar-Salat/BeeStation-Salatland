@@ -19,6 +19,10 @@
 	desc = "Gambling for the antisocial."
 	icon = 'icons/obj/economy.dmi'
 	icon_state = "slots1"
+	base_icon_state = null
+	smoothing_flags = NONE
+	smoothing_groups = null
+	canSmoothWith = null
 	density = TRUE
 	use_power = IDLE_POWER_USE
 	idle_power_usage = 50
@@ -346,11 +350,12 @@
 
 	return amount
 
-#undef SEVEN
-#undef SPIN_TIME
-#undef JACKPOT
-#undef BIG_PRIZE
-#undef SMALL_PRIZE
 #undef SPIN_PRICE
+#undef SMALL_PRIZE
+#undef BIG_PRIZE
+#undef JACKPOT
+#undef SPIN_TIME
+#undef REEL_DEACTIVATE_DELAY
+#undef SEVEN
 #undef HOLOCHIP
 #undef COIN

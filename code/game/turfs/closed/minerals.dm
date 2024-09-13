@@ -308,6 +308,24 @@
 		/turf/closed/mineral/gibtonite/volcanic = 2,
 		/obj/item/stack/ore/iron = 95,
 	)
+/turf/closed/mineral/random/air
+	turf_type = /turf/open/floor/plating/asteroid
+	baseturfs = /turf/open/floor/plating/asteroid //the asteroid floor has air
+	defer_change = 1
+
+/turf/closed/mineral/random/air/mineral_chances()
+	return list(
+		/obj/item/stack/ore/iron = 70,
+		/obj/item/stack/ore/silver = 40,
+		/obj/item/stack/ore/copper = 40,
+		/obj/item/stack/ore/plasma = 35,
+		/obj/item/stack/ore/gold = 35,
+		/obj/item/stack/ore/titanium = 35,
+		/obj/item/stack/ore/uranium = 35,
+		/obj/item/stack/ore/diamond = 30,
+		/obj/item/stack/ore/bluespace_crystal = 5,
+		/turf/closed/mineral/bananium = 1,
+	)
 
 // Subtypes for mappers placing ores manually.
 
@@ -457,7 +475,7 @@
 
 /turf/closed/mineral/ash_rock //wall piece
 	name = "rock"
-	icon = MAP_SWITCH('icons/turf/walls/icerock_wall.dmi', 'icons/turf/mining.dmi')
+	icon = MAP_SWITCH('icons/turf/walls/rock_wall.dmi', 'icons/turf/mining.dmi')
 	icon_state = "rock2"
 	base_icon_state = "rock_wall"
 	smoothing_flags = SMOOTH_BITMASK | SMOOTH_BORDER
@@ -502,10 +520,6 @@
 	var/activated_ckey = null //These are to track who triggered the gibtonite deposit for logging purposes
 	var/activated_name = null
 	var/mutable_appearance/activated_overlay
-
-/turf/closed/mineral/gibtonite/Initialize(mapload)
-	det_time = rand(8,10) //So you don't know exactly when the hot potato will explode
-	. = ..()
 
 /turf/closed/mineral/gibtonite/attackby(obj/item/I, mob/user, params)
 	if(istype(I, /obj/item/mining_scanner) || istype(I, /obj/item/t_scanner/adv_mining_scanner) && stage == 1)

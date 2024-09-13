@@ -19,6 +19,10 @@
 		/turf/open/floor/dock,
 		/turf/open/floor/plating/snowed,
 		/turf/open/floor/plating/ice,
+		/turf/open/floor/plating/grass,
+		/turf/open/floor/plating/dirt/planetary,
+		/turf/open/floor/plating/beach,
+
 	)
 	var/designate_time = 50
 	var/turf/designating_target_loc
@@ -27,6 +31,8 @@
 	var/datum/action/innate/camera_multiz_up/move_up_action = new
 	///Camera action button to move down a Z level
 	var/datum/action/innate/camera_multiz_down/move_down_action = new
+
+CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/computer/shuttle_flight)
 
 /obj/machinery/computer/shuttle_flight/Initialize(mapload, obj/item/circuitboard/C)
 	. = ..()
@@ -357,6 +363,8 @@
 	use_static = FALSE
 	var/list/placement_images = list()
 	var/list/placed_images = list()
+
+CREATION_TEST_IGNORE_SUBTYPES(/mob/camera/ai_eye/remote/shuttle_docker)
 
 /mob/camera/ai_eye/remote/shuttle_docker/Initialize(mapload, obj/machinery/computer/camera_advanced/origin)
 	src.origin = origin

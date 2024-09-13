@@ -87,15 +87,6 @@
 	color = "#1eff00"
 	},
 /area/ruin/powered/clownplanet)
-"as" = (
-/obj/structure/water_source/puddle,
-/turf/open/floor/grass{
-	color = "#1eff00"
-	},
-/area/ruin/powered/clownplanet)
-"at" = (
-/turf/open/floor/plasteel/bluespace,
-/area/ruin/powered/clownplanet)
 "au" = (
 /obj/structure/flora/ausbushes/brflowers,
 /turf/open/floor/grass{
@@ -108,14 +99,6 @@
 "aw" = (
 /obj/machinery/door/airlock/bananium,
 /turf/open/floor/grass,
-/area/ruin/powered/clownplanet)
-"ax" = (
-/obj/item/assembly/mousetrap/armed,
-/turf/open/floor/plasteel/bluespace,
-/area/ruin/powered/clownplanet)
-"ay" = (
-/obj/structure/flora/tree/jungle,
-/turf/open/floor/plasteel/bluespace,
 /area/ruin/powered/clownplanet)
 "az" = (
 /obj/structure/signpost,
@@ -375,6 +358,23 @@
 /obj/structure/barricade/wooden/crude,
 /turf/open/floor/plating/asteroid,
 /area/ruin/powered/clownplanet)
+"cK" = (
+/obj/structure/water_source/puddle,
+/turf/open/floor/grass{
+	color = "#1eff00"
+	},
+/area/ruin/powered/clownplanet)
+"oV" = (
+/obj/item/assembly/mousetrap/armed,
+/turf/open/floor/iron/bluespace,
+/area/ruin/powered/clownplanet)
+"FK" = (
+/turf/open/floor/iron/bluespace,
+/area/ruin/powered/clownplanet)
+"Ht" = (
+/obj/structure/flora/tree/jungle,
+/turf/open/floor/iron/bluespace,
+/area/ruin/powered/clownplanet)
 
 (1,1,1) = {"
 aa
@@ -414,8 +414,8 @@ ae
 ae
 ae
 aZ
-ax
-ax
+oV
+oV
 bb
 ae
 ae
@@ -440,8 +440,8 @@ ao
 aj
 aj
 ba
-at
-at
+FK
+FK
 aL
 aj
 bf
@@ -461,13 +461,13 @@ aa
 ae
 ae
 ao
-as
+cK
 aj
 aj
 aS
 aW
-at
-at
+FK
+FK
 bc
 aE
 aB
@@ -517,10 +517,10 @@ ao
 aj
 aj
 aU
-at
+FK
 av
-at
-at
+FK
+FK
 aL
 aj
 bj
@@ -569,10 +569,10 @@ ap
 aj
 aS
 aW
-at
-at
-at
-at
+FK
+FK
+FK
+FK
 bc
 aE
 aj
@@ -594,12 +594,12 @@ aj
 aj
 aj
 aT
-at
+FK
 av
 av
 av
 av
-at
+FK
 aL
 aj
 ab
@@ -620,12 +620,12 @@ aE
 ak
 aj
 aU
-at
+FK
 av
-at
-ay
+FK
+Ht
 av
-at
+FK
 aL
 au
 ab
@@ -646,12 +646,12 @@ aR
 aj
 aj
 aU
-at
+FK
 av
 av
 av
 av
-at
+FK
 aL
 az
 ab
@@ -672,12 +672,12 @@ aL
 aj
 an
 aU
-at
-at
-at
-at
-at
-at
+FK
+FK
+FK
+FK
+FK
+FK
 aL
 aj
 ab
@@ -698,12 +698,12 @@ aL
 aj
 aj
 aU
-at
+FK
 av
 av
 av
 av
-at
+FK
 aL
 aj
 aq
@@ -724,12 +724,12 @@ aL
 au
 aj
 aU
-at
-at
+FK
+FK
 av
-at
-at
-at
+FK
+FK
+FK
 aL
 aj
 aj
@@ -750,12 +750,12 @@ aP
 aj
 ar
 aU
-at
-at
-at
+FK
+FK
+FK
 av
-at
-at
+FK
+FK
 aL
 aj
 aQ
@@ -776,12 +776,12 @@ aj
 aj
 aj
 aU
-at
+FK
 av
 av
 av
 av
-at
+FK
 aL
 aB
 ab
@@ -803,10 +803,10 @@ ap
 aj
 aV
 aX
-at
-at
-at
-at
+FK
+FK
+FK
+FK
 bd
 aP
 aj
@@ -855,10 +855,10 @@ ao
 aj
 aj
 aU
-at
+FK
 av
-at
-at
+FK
+FK
 aL
 aK
 aj
@@ -882,7 +882,7 @@ ak
 aj
 aU
 av
-at
+FK
 av
 av
 aL
@@ -903,13 +903,13 @@ aa
 ae
 ae
 ao
-as
+cK
 aj
 aj
 aY
 aX
-at
-at
+FK
+FK
 bd
 be
 aj
@@ -934,8 +934,8 @@ ao
 aj
 aj
 aU
-at
-at
+FK
+FK
 aL
 aj
 bg
@@ -960,8 +960,8 @@ ae
 ae
 ae
 aZ
-ax
-ax
+oV
+oV
 bb
 ae
 ae
