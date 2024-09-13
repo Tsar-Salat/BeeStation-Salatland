@@ -533,7 +533,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/urinal, 32)
 		return
 
 	if(istype(O, /obj/item/stack/ore/glass))
-		new /obj/item/stack/sheet/sandblock(loc)
+		new /obj/item/stack/sheet/mineral/sandstone(loc)
 		to_chat(user, "<span class='notice'>You wet the sand and form it into a block.</span>")
 		O.use(1)
 		return
@@ -552,7 +552,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/urinal, 32)
 		O.acid_level = 0
 		create_reagents(5)
 		reagents.add_reagent(dispensedreagent, 5)
-		reagents.expose(O, TOUCH)
+		reagents.reaction(O, TOUCH)
 		user.visible_message("<span class='notice'>[user] washes [O] using [src].</span>", \
 							"<span class='notice'>You wash [O] using [src].</span>")
 		return TRUE
