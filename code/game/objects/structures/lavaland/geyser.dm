@@ -57,12 +57,28 @@
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "plunger"
 
-	var/plunge_mod = 1 //time*plunge_mod = total time we take to plunge an object
-	var/reinforced = FALSE //whether we do heavy duty stuff like geysers
+	///time*plunge_mod = total time we take to plunge an object
+	var/plunge_mod = 1
+	///whether we do heavy duty stuff like geysers
+	var/reinforced = FALSE
+	///alt sprite for the toggleable layer change mode
+	var/layer_mode_sprite = "plunger_layer"
+	///Wheter we're in layer mode
+	var/layer_mode = FALSE
+	///What layer we set it to
+	var/target_layer = DUCT_LAYER_DEFAULT
+
+	///Assoc list for possible layers
+	var/list/layers = list("First Layer" = FIRST_DUCT_LAYER, "Second Layer" = SECOND_DUCT_LAYER, "Default Layer" = DUCT_LAYER_DEFAULT,
+		"Fourth Layer" = FOURTH_DUCT_LAYER, "Fifth Layer" = FIFTH_DUCT_LAYER)
 
 /obj/item/plunger/attack_obj(obj/O, mob/living/user)
-	if(!O.plunger_act(src, user, reinforced))
+	if(layer_mode)
+		SEND_SIGNAL(O, COMSIG_MOVABLE_CHANGE_DUCT_LAYER, O, target_layer)
 		return ..()
+	else
+		if(!O.plunger_act(src, user, reinforced))
+			return ..()
 
 /obj/item/plunger/reinforced
 	name = "reinforced plunger"
@@ -71,3 +87,25 @@
 
 	reinforced = TRUE
 	plunge_mod = 0.8
+
+/obj/item/plunger/attack_self(mob/user)
+	. = ..()
+
+	layer_mode = !layer_mode
+
+	if(!layer_mode)
+		icon_state = initial(icon_state)
+		to_chat(user, "<span class='notice'>You set the plunger to 'Plunger Mode'.</span>")
+	else
+		icon_state = layer_mode_sprite
+		to_chat(user, "<span class='notice'>You set the plunger to 'Layer Mode'.</span>")
+
+	playsound(src, 'sound/machines/click.ogg', 10, TRUE)
+
+/obj/item/plunger/AltClick(mob/user)
+	if(!istype(user) || !user.canUseTopic(src, BE_CLOSE))
+		return
+
+	var/new_layer = input("Select a layer", "Layer") as null|anything in layers
+	if(new_layer)
+		target_layer = layers[new_layer]

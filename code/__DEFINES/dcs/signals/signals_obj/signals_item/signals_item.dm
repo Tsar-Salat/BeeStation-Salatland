@@ -97,3 +97,6 @@
 
 /// Sent to a beam when any turf the beam covers changes: (list/datum/callback/post_change_callbacks)
 #define COMSIG_BEAM_TURFS_CHANGED "beam_turfs_changed"
+
+///Called when a movable is hit by a plunger in layer mode, from /obj/item/plunger/attack_obj()
+#define COMSIG_MOVABLE_CHANGE_DUCT_LAYER "movable_change_duct_layer"
