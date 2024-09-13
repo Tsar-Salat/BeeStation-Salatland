@@ -70,12 +70,15 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/duct)
 
 ///start looking around us for stuff to connect to
 /obj/machinery/duct/proc/attempt_connect()
-
 	for(var/atom/movable/AM in loc)
-		var/datum/component/plumbing/P = AM.GetComponent(/datum/component/plumbing)
-		if(P?.active)
-			disconnect_duct() //let's not built under plumbing machinery
-			return
+		for(var/plumber in AM.GetComponents(/datum/component/plumbing))
+			if(!plumber) //apparently yes it will be null hahahaasahsdvashufv
+				continue
+			var/datum/component/plumbing/plumb = plumber
+			if(plumb.active)
+				disconnect_duct() //let's not built under plumbing machinery
+				return
+
 	for(var/D in GLOB.cardinals)
 		if(dumb && !(D & connects))
 			continue
@@ -185,10 +188,11 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/duct)
 				duct.add_duct(D)
 				D.reconnect()
 		else
-			var/datum/component/plumbing/P = AM.GetComponent(/datum/component/plumbing)
 			if(AM in get_step(src, neighbours[AM])) //did we move?
-				if(P)
-					connect_plumber(P, neighbours[AM])
+				for(var/plumber in AM.GetComponents(/datum/component/plumbing))
+					if(!plumber) //apparently yes it will be null hahahaasahsdvashufv
+						return
+					connect_plumber(plumber, neighbours[AM])
 			else
 				neighbours -= AM //we moved
 
@@ -336,54 +340,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/duct)
 	connect_network(D, direction, TRUE)
 	update_icon()
 
-///has a total of 5 layers and doesnt give a shit about color. its also dumb so doesnt autoconnect.
-/obj/machinery/duct/multilayered
-	name = "duct layer-manifold"
-	icon = 'icons/obj/2x2.dmi'
-	icon_state = "multiduct"
-	pixel_x = -15
-	pixel_y = -15
-
-	color_to_color_support = FALSE
-	duct_layer = FIRST_DUCT_LAYER | SECOND_DUCT_LAYER | THIRD_DUCT_LAYER | FOURTH_DUCT_LAYER | FIFTH_DUCT_LAYER
-	drop_on_wrench = null
-
-	lock_connects = TRUE
-	lock_layers = TRUE
-	ignore_colors = TRUE
-	dumb = TRUE
-
-	active = FALSE
-	anchored = FALSE
-
-CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/duct/multilayered)
-
-/obj/machinery/duct/multilayered/Initialize(mapload, no_anchor, color_of_duct, layer_of_duct = DUCT_LAYER_DEFAULT, force_connects)
-	. = ..()
-	update_connects()
-
-/obj/machinery/duct/multilayered/update_icon()
-	return
-
-/obj/machinery/duct/multilayered/wrench_act(mob/living/user, obj/item/I)
-	. = ..()
-	update_connects()
-
-/obj/machinery/duct/multilayered/proc/update_connects()
-	if(dir & NORTH || dir & SOUTH)
-		connects = NORTH | SOUTH
-	else
-		connects = EAST | WEST
-
-///don't connect to other multilayered stuff because honestly it shouldn't be done and I dont wanna deal with it
-/obj/machinery/duct/multilayered/connect_duct(obj/machinery/duct/D, direction, ignore_color)
-	if(istype(D, /obj/machinery/duct/multilayered))
-		return
-	return ..()
-
-/obj/machinery/duct/multilayered/handle_layer()
-	return
-
 /obj/item/stack/ducts
 	name = "stack of duct"
 	desc = "A stack of fluid ducts."
@@ -400,8 +356,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/duct/multilayered)
 	///Default layer of our duct
 	var/duct_layer = "Default Layer"
 	///Assoc index with all the available layers. yes five might be a bit much. Colors uses a global by the way
-	var/list/layers = list("First Layer" = FIRST_DUCT_LAYER, "Second Layer" = SECOND_DUCT_LAYER, "Default Layer" = DUCT_LAYER_DEFAULT,
-		"Fourth Layer" = FOURTH_DUCT_LAYER, "Fifth Layer" = FIFTH_DUCT_LAYER)
+	var/list/layers = list("Second Layer" = SECOND_DUCT_LAYER, "Default Layer" = DUCT_LAYER_DEFAULT, "Fourth Layer" = FOURTH_DUCT_LAYER)
 
 /obj/item/stack/ducts/examine(mob/user)
 	. = ..()

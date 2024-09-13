@@ -1004,13 +1004,16 @@ GLOBAL_VAR_INIT(icon_holographic_window, init_holographic_window())
 	///index, used in the attack self to get the type. stored here since it doesnt change
 	var/list/choices = list()
 	///index, used in the attack self to get the type. stored here since it doesnt change
+	var/list/name_to_type = list()
+	///All info for construction
+	var/list/machinery_data = list("cost" = list())
+	///index, used in the attack self to get the type. stored here since it doesnt change
 	///This list that holds all the plumbing design types the plumberer can construct. Its purpose is to make it easy to make new plumberer subtypes with a different selection of machines.
 	var/list/static/plumbing_design_types
-
-	var/list/name_to_type = list()
-	///
-	var/list/machinery_data = list("cost" = list(), "delay" = list())
-
+	///Possible layers to pick from
+	var/static/list/layers = list("Second Layer" = SECOND_DUCT_LAYER, "Default Layer" = DUCT_LAYER_DEFAULT, "Fourth Layer" = FOURTH_DUCT_LAYER)
+	///Current selected layer
+	var/current_layer = "Default Layer"
 
 /obj/item/construction/plumbing/Initialize(mapload)
 	. = ..()
@@ -1024,6 +1027,7 @@ GLOBAL_VAR_INIT(icon_holographic_window, init_holographic_window())
 	/obj/machinery/plumbing/tank = 20,
 	/obj/machinery/plumbing/synthesizer = 15,
 	/obj/machinery/plumbing/reaction_chamber = 15,
+	/obj/machinery/plumbing/layer_manifold = 5,
 	//Above are the most common machinery which is shown on the first cycle. Keep new additions below THIS line, unless they're probably gonna be needed alot
 	/obj/machinery/plumbing/acclimator = 10,
 	/obj/machinery/plumbing/disposer = 10,
@@ -1064,7 +1068,7 @@ GLOBAL_VAR_INIT(icon_holographic_window, init_holographic_window())
 				useResource(machinery_data["cost"][blueprint], user)
 				activate()
 				playsound(src.loc, 'sound/machines/click.ogg', 50, TRUE)
-				new blueprint (A, FALSE, FALSE)
+				new blueprint (A, FALSE, layers[current_layer])
 				return TRUE
 
 /obj/item/construction/plumbing/proc/canPlace(turf/T)
@@ -1089,6 +1093,20 @@ GLOBAL_VAR_INIT(icon_holographic_window, init_holographic_window())
 			playsound(get_turf(src), 'sound/machines/click.ogg', 50, TRUE) //this is just such a great sound effect
 	else
 		create_machine(A, user)
+
+/obj/item/construction/plumbing/AltClick(mob/user)
+	if(!istype(user) || !user.canUseTopic(src, BE_CLOSE))
+		return
+
+	//this is just cycling options through a list
+	var/current_loc = layers.Find(current_layer) + 1
+
+	if(current_loc > layers.len)
+		current_loc = 1
+
+	//We want the key (the define), not the index (the string)
+	current_layer = layers[current_loc]
+	to_chat(user, "<span class='notice'>You switch [src] to [current_layer].</span>")
 
 /obj/item/rcd_upgrade
 	name = "RCD advanced design disk"

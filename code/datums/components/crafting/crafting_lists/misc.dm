@@ -254,14 +254,6 @@
 	)
 	category = CAT_MISC
 
-/datum/crafting_recipe/multiduct
-	name = "Multi-layer duct"
-	result = /obj/machinery/duct/multilayered
-	time = 2.5 SECONDS
-	tools = list(TOOL_WELDER)
-	reqs = list(/obj/item/stack/ducts = 5)
-	category = CAT_MISC
-
 /datum/crafting_recipe/upgraded_gauze
 	name = "Improved Gauze"
 	result = /obj/item/stack/medical/gauze/adv/one
