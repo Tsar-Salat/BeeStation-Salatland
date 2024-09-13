@@ -17123,7 +17123,7 @@
 	alpha = 100;
 	dir = 10
 	},
-/obj/structure/sink/puddle{
+/obj/structure/water_source/puddle{
 	pixel_x = 5;
 	pixel_y = 4
 	},
@@ -20460,7 +20460,7 @@
 /turf/open/floor/iron/grid/steel,
 /area/medical/patients_rooms)
 "kdO" = (
-/obj/structure/sink/puddle,
+/obj/structure/water_source/puddle,
 /turf/open/floor/plating/grass,
 /area/asteroid/paradise/surface)
 "kef" = (
