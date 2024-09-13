@@ -1,6 +1,6 @@
 /datum/component/plumbing/reaction_chamber
-	demand_connects = WEST
-	supply_connects = EAST
+	demand_connects = NORTH
+	supply_connects = SOUTH
 
 /datum/component/plumbing/reaction_chamber/Initialize(start=TRUE, _ducting_layer, _turn_connects=TRUE, datum/reagents/custom_receiver)
 	. = ..()
@@ -10,7 +10,7 @@
 /datum/component/plumbing/reaction_chamber/can_give(amount, reagent)
 	. = ..()
 	var/obj/machinery/plumbing/reaction_chamber/RC = parent
-	if(!. || !RC.emptying)
+	if(!. || !RC.emptying || reagents.is_reacting == TRUE)
 		return FALSE
 
 /datum/component/plumbing/reaction_chamber/send_request(dir)
