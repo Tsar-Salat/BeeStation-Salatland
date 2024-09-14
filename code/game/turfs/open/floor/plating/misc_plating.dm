@@ -1,15 +1,14 @@
 
 /turf/open/floor/plating/airless
-	icon_state = "plating"
 	initial_gas_mix = AIRLESS_ATMOS
 
 /turf/open/floor/plating/lavaland
-	icon_state = "plating"
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
 
 /turf/open/floor/plating/abductor
 	name = "alien floor"
 	icon_state = "alienpod1"
+	base_icon_state = "alienpod1"
 	tiled_dirt = FALSE
 	max_integrity = 1800
 
@@ -21,6 +20,7 @@
 /turf/open/floor/plating/abductor2
 	name = "alien plating"
 	icon_state = "alienplating"
+	base_icon_state = "alienplating"
 	tiled_dirt = FALSE
 	max_integrity = 1800
 
@@ -90,6 +90,7 @@
 	name = "wet rocky ground"
 	icon = 'icons/turf/mining.dmi'
 	icon_state = "wateryrock"
+	base_icon_state = "wateryrock"
 	smoothing_flags = NONE
 	canSmoothWith = null
 	base_icon_state = null
@@ -157,6 +158,7 @@
 	name = "sand"
 	desc = "Surf's up."
 	icon_state = "sand"
+	base_icon_state = "sand"
 	baseturfs = /turf/open/floor/plating/beach/sand
 
 /turf/open/floor/plating/beach/water
@@ -164,6 +166,7 @@
 	name = "water"
 	desc = "Ocean waves: Salty breeze, briny depths, endless blue expanse."
 	icon_state = "water"
+	base_icon_state = "water"
 	baseturfs = /turf/open/floor/plating/beach/water
 	slowdown = 3
 	bullet_sizzle = TRUE
@@ -292,11 +295,13 @@
 	name = "coastline"
 	desc = "Tide's high tonight. Charge your batons."
 	icon_state = "sandwater_t"
+	base_icon_state = "sandwater_t"
 	baseturfs = /turf/open/floor/plating/beach/coastline_t
 
 /turf/open/floor/plating/beach/coastline_b
 	name = "coastline"
 	icon_state = "sandwater_b"
+	base_icon_state = "sandwater_b"
 	desc = "Tide's high tonight. Charge your batons."
 	baseturfs = /turf/open/floor/plating/beach/coastline_b
 
@@ -308,6 +313,7 @@
 	gender = PLURAL
 	name = "iron sand"
 	desc = "Like sand, but more <i>iron</i>."
+	base_icon_state = "ironsand1"
 	footstep = FOOTSTEP_SAND
 	barefootstep = FOOTSTEP_SAND
 	clawfootstep = FOOTSTEP_SAND
@@ -328,6 +334,7 @@
 	desc = "A sheet of solid ice. Looks slippery."
 	icon = 'icons/turf/floors/ice_turf.dmi'
 	icon_state = "ice-0"
+	base_icon_state = "ice-0"
 	initial_gas_mix = FROZEN_ATMOS
 	initial_temperature = 180
 	planetary_atmos = TRUE
@@ -377,6 +384,7 @@
 	desc = "A section of heated plating, helps keep the snow from stacking up too high."
 	icon = 'icons/turf/snow.dmi'
 	icon_state = "snowplating"
+	base_icon_state = "snowplating"
 	initial_gas_mix = FROZEN_ATMOS
 	initial_temperature = 180
 	attachment_holes = FALSE

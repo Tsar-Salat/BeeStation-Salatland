@@ -22,7 +22,6 @@
 
 	overfloor_placed = TRUE
 
-	var/icon_plating = "plating"
 	/// Path of the tile that this floor drops
 	var/floor_tile = null
 

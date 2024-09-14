@@ -4,6 +4,7 @@
 	desc = "Upon closer examination, it's still dirt."
 	icon = 'icons/turf/floors.dmi'
 	icon_state = "dirt"
+	base_icon_state = "dirt"
 	initial_gas_mix = OPENTURF_LOW_PRESSURE
 	planetary_atmos = TRUE
 	attachment_holes = FALSE
@@ -31,6 +32,7 @@
 
 /turf/open/floor/plating/dirt/dark
 	icon_state = "greenerdirt"
+	base_icon_state = "greenerdirt"
 
 /turf/open/floor/plating/dirt/try_replace_tile(obj/item/stack/tile/T, mob/user, params)
 	return
@@ -41,12 +43,14 @@
 
 /turf/open/floor/plating/dirt/jungle/dark
 	icon_state = "greenerdirt"
+	base_icon_state = "greenerdirt"
 
 /turf/open/floor/plating/dirt/jungle/wasteland //Like a more fun version of living in Arizona.
 	name = "cracked earth"
 	desc = "Looks a bit dry."
 	icon = 'icons/turf/floors.dmi'
 	icon_state = "wasteland"
+	base_icon_state = "wasteland"
 	variants = list("wasteland", "wasteland0", "wasteland1", "wasteland2", "wasteland3", "wasteland4", "wasteland5", "wasteland6", "wasteland7", "wasteland8", "wasteland9", "wasteland10", "wasteland11", "wasteland12")
 	slowdown = 1
 	var/floor_variance = 15

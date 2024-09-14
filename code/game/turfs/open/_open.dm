@@ -8,8 +8,6 @@ CREATION_TEST_IGNORE_SELF(/turf/open)
 	)
 	var/slowdown = 0 //negative for faster, positive for slower
 
-	var/postdig_icon_change = FALSE
-	var/postdig_icon
 	var/wet
 
 	var/footstep = null

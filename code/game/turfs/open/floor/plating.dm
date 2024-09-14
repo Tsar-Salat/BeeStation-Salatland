@@ -6,6 +6,7 @@
 /turf/open/floor/plating
 	name = "plating"
 	icon_state = "plating"
+	base_icon_state = "plating"
 	overfloor_placed = FALSE
 	underfloor_accessibility = UNDERFLOOR_INTERACTABLE
 	baseturfs = /turf/baseturf_bottom
@@ -40,19 +41,6 @@
 		. += "<span class='notice'>There are a few attachment holes for a new <i>tile</i>, reinforcement <i>sheets</i> or catwalk <i>rods</i>.</span>"
 	else
 		. += "<span class='notice'>You might be able to build ontop of it with some <i>tiles</i>...</span>"
-
-/turf/open/floor/plating/Initialize(mapload)
-	. = ..()
-	if(!attachment_holes || (!broken && !burnt))
-		icon_plating = icon_state
-	else
-		icon_plating = initial(icon_state)
-
-/turf/open/floor/plating/update_icon()
-	if(!..())
-		return
-	if(!broken && !burnt)
-		icon_state = icon_plating //Because asteroids are 'platings' too.
 
 /turf/open/floor/plating/attackby(obj/item/C, mob/user, params)
 	if(..())
@@ -118,7 +106,7 @@
 /turf/open/floor/plating/welder_act(mob/living/user, obj/item/I)
 	if((broken || burnt) && I.use_tool(src, user, 0, volume=80))
 		to_chat(user, "<span class='danger'>You fix some dents on the broken plating.</span>")
-		icon_state = icon_plating
+		icon_state = base_icon_state
 		burnt = FALSE
 		broken = FALSE
 

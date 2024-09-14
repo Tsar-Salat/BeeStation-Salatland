@@ -6,19 +6,22 @@
 	name = "asteroid sand"
 	icon = 'icons/turf/floors.dmi'
 	icon_state = "asteroid"
-	icon_plating = "asteroid"
+	base_icon_state = "asteroid"
 	resistance_flags = INDESTRUCTIBLE
-	postdig_icon_change = TRUE
 	footstep = FOOTSTEP_SAND
 	barefootstep = FOOTSTEP_SAND
 	clawfootstep = FOOTSTEP_SAND
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
 	damage_deflection = 0
-	var/environment_type = "asteroid"
-	var/turf_type = /turf/open/floor/plating/asteroid //Because caves do whacky shit to revert to normal
+	/// Base turf type to be created by the tunnel
+	var/turf_type = /turf/open/floor/plating/asteroid
 	attachment_holes = FALSE
 	var/obj/item/stack/digResult = /obj/item/stack/ore/glass/basalt
+	/// Whether the turf has been dug or not
 	var/dug
+	/// Whether to change the turf's icon_state to "[base_icon_state]_dug" when its dugged up
+	var/postdig_icon_change = TRUE
+	/// The states
 	var/available_states = 12
 
 /turf/open/floor/plating/asteroid/Initialize(mapload)
@@ -27,12 +30,10 @@
 	return ..()
 
 /turf/open/floor/plating/asteroid/proc/getDug()
+	dug = TRUE
 	new digResult(src, 5)
 	if(postdig_icon_change)
-		if(!postdig_icon)
-			icon_plating = "[environment_type]_dug"
-			icon_state = "[environment_type]_dug"
-	dug = TRUE
+		icon_state = "[base_icon_state]_dug"
 
 /turf/open/floor/plating/asteroid/proc/can_dig(mob/user)
 	if(!dug)
@@ -106,8 +107,7 @@
 	baseturfs = /turf/open/floor/plating/asteroid/basalt
 	icon = 'icons/turf/floors.dmi'
 	icon_state = "basalt"
-	icon_plating = "basalt"
-	environment_type = "basalt"
+	base_icon_state = "basalt"
 	available_states = 12
 	digResult = /obj/item/stack/ore/glass/basalt
 
@@ -168,9 +168,8 @@
 	icon = 'icons/turf/snow.dmi'
 	baseturfs = /turf/open/floor/plating/asteroid/snow
 	icon_state = "snow"
-	icon_plating = "snow"
+	base_icon_state = "snow"
 	initial_gas_mix = FROZEN_ATMOS
-	environment_type = "snow"
 	flags_1 = NONE
 	planetary_atmos = TRUE
 	use_burnt_literal = TRUE
@@ -197,8 +196,7 @@
 	initial_gas_mix = "n2=82;plasma=24;TEMP=120"
 	available_states = 0
 	icon_state = "snow-ice"
-	icon_plating = "snow-ice"
-	environment_type = "snow_cavern"
+	base_icon_state = "snow-ice"
 	footstep = FOOTSTEP_FLOOR
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
 	clawfootstep = FOOTSTEP_HARD_CLAW
