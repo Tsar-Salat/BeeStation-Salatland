@@ -26,21 +26,24 @@
 	var/demand_color = COLOR_RED
 	///What color is our supply connect?
 	var/supply_color = COLOR_BLUE
+	///Extend the pipe to the edge for wall-mounted plumbed devices, like sinks and showers
+	var/extend_pipe_to_edge = FALSE
 
 ///turn_connects is for wheter or not we spin with the object to change our pipes
-/datum/component/plumbing/Initialize(start=TRUE, _ducting_layer, _turn_connects=TRUE, datum/reagents/custom_receiver)
+/datum/component/plumbing/Initialize(start=TRUE, ducting_layer, turn_connects=TRUE, datum/reagents/custom_receiver, extend_pipe_to_edge = FALSE)
 	if(!ismovable(parent))
 		return COMPONENT_INCOMPATIBLE
 
-	if(_ducting_layer)
-		ducting_layer = _ducting_layer
+	if(ducting_layer)
+		src.ducting_layer = ducting_layer
 
 	var/atom/movable/parent_movable = parent
 	if(!parent_movable.reagents && !custom_receiver)
 		return COMPONENT_INCOMPATIBLE
 
 	reagents = parent_movable.reagents
-	turn_connects = _turn_connects
+	src.turn_connects = turn_connects
+	src.extend_pipe_to_edge = extend_pipe_to_edge
 
 	set_recipient_reagents_holder(custom_receiver ? custom_receiver : parent_movable.reagents)
 
@@ -54,12 +57,12 @@
 	RegisterSignal(parent, COMSIG_OBJ_DEFAULT_UNFASTEN_WRENCH, PROC_REF(toggle_active))
 	RegisterSignal(parent, COMSIG_OBJ_HIDE, PROC_REF(hide))
 	RegisterSignal(parent, COMSIG_ATOM_UPDATE_OVERLAYS, PROC_REF(create_overlays)) //create overlays also gets called after init (no idea by what it just happens)
+	RegisterSignal(parent, COMSIG_ATOM_DIR_CHANGE, PROC_REF(on_parent_dir_change)) //called when placed on a shuttle and it moves, and other edge cases
 	RegisterSignal(parent, COMSIG_MOVABLE_CHANGE_DUCT_LAYER, PROC_REF(change_ducting_layer))
 
-	if(start)
-		//timer 0 so it can finish returning initialize, after which we're added to the parent.
-		//Only then can we tell the duct next to us they can connect, because only then is the component really added. this was a fun one
-		addtimer(CALLBACK(src, PROC_REF(enable)), 0)
+/datum/component/plumbing/UnregisterFromParent()
+	UnregisterSignal(parent, list(COMSIG_MOVABLE_MOVED, COMSIG_PARENT_QDELETING, COMSIG_OBJ_DEFAULT_UNFASTEN_WRENCH, COMSIG_OBJ_HIDE, \
+	COMSIG_ATOM_UPDATE_OVERLAYS, COMSIG_ATOM_DIR_CHANGE, COMSIG_MOVABLE_CHANGE_DUCT_LAYER, COMSIG_COMPONENT_ADDED))
 
 /datum/component/plumbing/Destroy()
 	ducts = null
@@ -146,9 +149,10 @@
 		if(FIFTH_DUCT_LAYER)
 			offset = 10
 
-	var/duct_x = offset
-	var/duct_y = offset
-
+	var/duct_x = offset - parent_movable.pixel_x - parent_movable.pixel_w
+	var/duct_y = offset - parent_movable.pixel_y - parent_movable.pixel_z
+	var/duct_layer = PLUMBING_PIPE_VISIBILE_LAYER + ducting_layer * 0.0003
+	var/extension_handled = FALSE
 
 	for(var/direction in GLOB.cardinals)
 		var/color
@@ -160,7 +164,6 @@
 			continue
 
 		var/direction_text = dir2text(direction)
-		var/duct_layer = PLUMBING_PIPE_VISIBILE_LAYER + ducting_layer * 0.0003
 
 		var/image/overlay
 		if(turn_connects)
@@ -174,6 +177,17 @@
 		overlay.pixel_y = duct_y
 
 		overlays += overlay
+
+		// This is a little wiggley extension to make wallmounts like sinks and showers visually link to the pipe
+		if(extend_pipe_to_edge && !extension_handled)
+			var/image/edge_overlay = image('icons/obj/plumbing/connects.dmi', "edge-extension", layer = duct_layer)
+			edge_overlay.dir = parent_movable.dir
+			edge_overlay.color = color
+			edge_overlay.pixel_x = -parent_movable.pixel_x - parent_movable.pixel_w
+			edge_overlay.pixel_y = -parent_movable.pixel_y - parent_movable.pixel_z
+			overlays += edge_overlay
+			// only show extension for the first pipe. This means we'll only reflect that color.
+			extension_handled = TRUE
 
 ///we stop acting like a plumbing thing and disconnect if we are, so we can safely be moved and stuff
 /datum/component/plumbing/proc/disable()
@@ -225,6 +239,10 @@
 /// Toggle our machinery on or off. This is called by a hook from default_unfasten_wrench with anchored as only param, so we dont have to copypaste this on every object that can move
 /datum/component/plumbing/proc/toggle_active(obj/parent_obj, new_state)
 	SIGNAL_HANDLER
+	// Follow atmos's rule of exposing the connection if you unwrench it and only hiding again if tile is placed back down.
+	if(tile_covered)
+		tile_covered = FALSE
+		parent_obj.update_appearance()
 
 	if(new_state)
 		enable()
@@ -274,10 +292,13 @@
 /datum/component/plumbing/proc/hide(atom/movable/parent_obj, underfloor_accessibility)
 	SIGNAL_HANDLER
 
-	var/should_hide = !underfloor_accessibility
+	// If machine is unanchored, keep connector visible.
+	// This doesn't necessary map to `active`, so check parent.
+	var/atom/movable/parent_movable = parent
 
-	tile_covered = should_hide
-	parent_obj.update_appearance()
+	if(parent_movable.anchored || !should_hide)
+		tile_covered = should_hide
+		parent_obj.update_appearance()
 
 /datum/component/plumbing/proc/change_ducting_layer(obj/caller, obj/changer, new_layer = DUCT_LAYER_DEFAULT)
 	SIGNAL_HANDLER
@@ -302,6 +323,24 @@
 
 	recipient_reagents_holder = receiver
 
+/datum/component/plumbing/proc/handle_reagent_del(datum/source)
+	SIGNAL_HANDLER
+	if(source == reagents)
+		reagents = null
+	if(source == recipient_reagents_holder)
+		set_recipient_reagents_holder(null)
+
+/**
+ * Called when the dir changes. Need to adjust positioning of pipes.
+ */
+/datum/component/plumbing/proc/on_parent_dir_change(atom/movable/parent_obj, old_dir, new_dir)
+	SIGNAL_HANDLER
+
+	if(old_dir == new_dir)
+		return
+
+	// Defer to later frame because pixel_* is actually updated after all callbacks
+	addtimer(CALLBACK(parent_obj, /atom/.proc/update_appearance), 1)
 
 ///has one pipe input that only takes, example is manual output pipe
 /datum/component/plumbing/simple_demand
