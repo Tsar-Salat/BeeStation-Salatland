@@ -206,12 +206,16 @@
 			if(istype(T, /turf/open/floor/engine/cult))
 				cultturfs |= T
 				continue
-			var/static/list/blacklisted_pylon_turfs = typecacheof(list(
-				/turf/closed,
-				/turf/open/floor/engine/cult,
-				/turf/open/space,
-				/turf/open/lava,
-				/turf/open/chasm))
+			var/static/list/blacklisted_pylon_turfs = typecacheof(
+				list(
+					/turf/closed,
+					/turf/open/floor/engine/cult,
+					/turf/open/space,
+					/turf/open/lava,
+					/turf/open/chasm,
+					/turf/open/misc/asteroid,
+					)
+				)
 			if(is_type_in_typecache(T, blacklisted_pylon_turfs))
 				continue
 			else

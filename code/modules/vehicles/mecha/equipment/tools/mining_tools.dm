@@ -80,10 +80,10 @@
 	drill.log_message("[user] drilled through [src]", LOG_MECHA)
 	drill.move_ores()
 
-/turf/open/floor/plating/asteroid/drill_act(obj/item/mecha_parts/mecha_equipment/drill/drill)
+/turf/open/misc/asteroid/drill_act(obj/item/mecha_parts/mecha_equipment/drill/drill)
 	var/turf/T = get_turf(drill.chassis)
-	for(var/turf/open/floor/plating/asteroid/M in RANGE_TURFS(1, T))
-		if((get_dir(drill.chassis,M)&drill.chassis.dir) && !M.dug)
+	for(var/turf/open/misc/asteroid/M in RANGE_TURFS(1, T))
+		if((get_dir(drill.chassis,M) & drill.chassis.dir) && !M.dug)
 			M.getDug()
 	drill.log_message("Drilled through [src]", LOG_MECHA)
 	drill.move_ores()

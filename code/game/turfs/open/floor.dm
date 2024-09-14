@@ -10,6 +10,9 @@
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
 	clawfootstep = FOOTSTEP_HARD_CLAW
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
+
+	flags_1 = CAN_BE_DIRTY_1 | IS_SOLID_1
+
 	smoothing_groups = list(SMOOTH_GROUP_TURF_OPEN, SMOOTH_GROUP_OPEN_FLOOR)
 	canSmoothWith = list(SMOOTH_GROUP_TURF_OPEN, SMOOTH_GROUP_OPEN_FLOOR)
 
@@ -47,12 +50,20 @@
 	for(var/obj/structure/A in contents)
 		return 1
 
-/turf/open/floor/update_icon()
-	. = ..()
-	update_visuals()
-
 /turf/open/floor/attack_paw(mob/user)
 	return attack_hand(user)
+
+/turf/open/floor/break_tile()
+	if(broken)
+		return
+	broken = TRUE
+	update_appearance()
+
+/turf/open/floor/burn_tile()
+	if(burnt)
+		return
+	burnt = TRUE
+	update_appearance()
 
 /turf/open/floor/after_damage(damage_amount, damage_type, damage_flag)
 	if (broken || burnt)

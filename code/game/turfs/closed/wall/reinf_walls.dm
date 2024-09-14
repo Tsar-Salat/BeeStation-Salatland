@@ -4,6 +4,7 @@
 	icon = 'icons/turf/walls/reinforced_wall.dmi'
 	icon_state = "reinforced_wall-0"
 	base_icon_state = "reinforced_wall"
+	flags_1 = IS_SOLID_1
 	smoothing_flags = SMOOTH_BITMASK
 	opacity = TRUE
 	density = TRUE

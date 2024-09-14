@@ -36,9 +36,9 @@
 		var/rock_value = (distance / max_radius) + weight_offset + 0.1
 		var/sand_value = (distance / max_radius) + weight_offset
 		if(noise_at_coord >= rock_value && closed)
-			T.ChangeTurf(/turf/closed/mineral/random, list(/turf/open/floor/plating/asteroid/airless), CHANGETURF_IGNORE_AIR)
+			T.ChangeTurf(/turf/closed/mineral/random, list(/turf/open/misc/asteroid/airless), CHANGETURF_IGNORE_AIR)
 		else if(noise_at_coord >= sand_value)
-			var/turf/newT = T.ChangeTurf(/turf/open/floor/plating/asteroid/airless, flags = CHANGETURF_IGNORE_AIR)
+			var/turf/newT = T.ChangeTurf(/turf/open/misc/asteroid/airless, flags = CHANGETURF_IGNORE_AIR)
 			if(noise_at_coord >= plant_value)
 				high_value_turfs += newT
 				//Cave plants

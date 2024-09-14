@@ -4,6 +4,7 @@
 	icon = 'icons/turf/walls/cult_wall.dmi'
 	icon_state = "cult_wall-0"
 	base_icon_state = "cult_wall"
+	flags_1 = IS_SOLID_1
 	smoothing_flags = SMOOTH_BITMASK
 	canSmoothWith = null
 	sheet_type = /obj/item/stack/sheet/runed_metal
@@ -46,6 +47,7 @@
 	icon = 'icons/turf/walls.dmi'
 	icon_state = "rockvault"
 	base_icon_state = "rockvault"
+	flags_1 = IS_SOLID_1
 	smoothing_flags = NONE
 	canSmoothWith = null
 	smoothing_groups = null
@@ -71,6 +73,7 @@
 	base_icon_state = "icedmetal_wall"
 	smoothing_flags = SMOOTH_BITMASK
 	desc = "A wall covered in a thick sheet of ice."
+	flags_1 = IS_SOLID_1
 	canSmoothWith = null
 	rcd_memory = null
 	hardness = 35
@@ -123,6 +126,7 @@
 	icon = 'icons/turf/walls/clockwork_wall.dmi'
 	icon_state = "clockwork_wall-0"
 	base_icon_state = "clockwork_wall"
+	flags_1 = IS_SOLID_1
 	sheet_type = /obj/item/stack/sheet/bronze
 	sheet_amount = 2
 	girder_type = /obj/structure/girder/bronze

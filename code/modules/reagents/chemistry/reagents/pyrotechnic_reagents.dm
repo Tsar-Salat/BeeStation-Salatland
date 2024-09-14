@@ -49,23 +49,22 @@
 	..()
 	return TRUE
 
-/datum/reagent/clf3/reaction_turf(turf/T, reac_volume)
-	if(isplatingturf(T))
-		var/turf/open/floor/plating/F = T
-		if(prob(10 + F.burnt + 5*F.broken)) //broken or burnt plating is more susceptible to being destroyed
-			EX_ACT(F, EXPLODE_DEVASTATE)
-	if(isfloorturf(T))
-		var/turf/open/floor/F = T
-		if(prob(reac_volume))
-			F.make_plating()
-		else if(prob(reac_volume))
-			F.burn_tile()
-		if(isfloorturf(F))
-			for(var/turf/open/turf in RANGE_TURFS(1,F))
-				if(!locate(/obj/effect/hotspot) in turf)
-					new /obj/effect/hotspot(F)
-	if(iswallturf(T))
-		var/turf/closed/wall/W = T
+/datum/reagent/clf3/reaction_turf(turf/exposed_turf, reac_volume)
+	if(isplatingturf(exposed_turf))
+		var/turf/open/floor/plating/target_plating = exposed_turf
+		if(prob(10 + target_plating.burnt + 5*target_plating.broken)) //broken or burnt plating is more susceptible to being destroyed
+			EX_ACT(target_plating, EXPLODE_DEVASTATE)
+	if(isfloorturf(exposed_turf) && prob(reac_volume))
+		var/turf/open/floor/target_floor = exposed_turf
+		target_floor.make_plating()
+	else if(prob(reac_volume))
+		exposed_turf.burn_tile()
+	if(isfloorturf(exposed_turf))
+		for(var/turf/nearby_turf in RANGE_TURFS(1, exposed_turf))
+			if(!locate(/obj/effect/hotspot) in nearby_turf)
+				new /obj/effect/hotspot(nearby_turf)
+	if(iswallturf(exposed_turf))
+		var/turf/closed/wall/W = exposed_turf
 		if(prob(reac_volume))
 			EX_ACT(W, EXPLODE_DEVASTATE)
 

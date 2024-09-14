@@ -40,17 +40,21 @@ DEFINE_BITFIELD(smoothing_flags, list(
  * * Matched with the `list/canSmoothWith` variable to check whether smoothing is possible or not.
  */
 #define S_TURF(num) (num) //Not any different from the number itself, but kept this way in case someone wants to expand it by adding stuff before it.
+
 /* /turf only */
-#define SMOOTH_GROUP_TURF_OPEN S_TURF(0)				///turf/open
-#define SMOOTH_GROUP_TURF_CHASM S_TURF(1)				///turf/open/chasm, /turf/open/floor/fakepit
-#define SMOOTH_GROUP_FLOOR_LAVA S_TURF(2)				///turf/open/lava/smooth
-#define SMOOTH_GROUP_FLOOR_TRANSPARENT_GLASS S_TURF(3)	///turf/open/floor/glass
-#define SMOOTH_GROUP_OPEN_FLOOR S_TURF(4)				///turf/open/floor
-#define SMOOTH_GROUP_FLOOR_GRASS S_TURF(5)				///turf/open/floor/plating/grass
-#define SMOOTH_GROUP_FLOOR_ASH S_TURF(6)				///turf/open/floor/plating/ashplanet/ash
-#define SMOOTH_GROUP_FLOOR_ASH_ROCKY S_TURF(7)			///turf/open/floor/plating/ashplanet/rocky
-#define SMOOTH_GROUP_FLOOR_ICE S_TURF(8)				///turf/open/floor/plating/ice
-#define SMOOTH_GROUP_FLOOR_SNOWED S_TURF(9)				///turf/open/floor/plating/snowed
+#define SMOOTH_GROUP_TURF_OPEN S_TURF(0) ///turf/open
+#define SMOOTH_GROUP_TURF_CHASM S_TURF(1) ///turf/open/chasm, /turf/open/floor/fakepit
+#define SMOOTH_GROUP_FLOOR_LAVA S_TURF(2) ///turf/open/lava/smooth
+#define SMOOTH_GROUP_FLOOR_TRANSPARENT_GLASS S_TURF(3) ///turf/open/floor/glass
+
+#define SMOOTH_GROUP_OPEN_FLOOR S_TURF(4) ///turf/open/floor
+
+#define SMOOTH_GROUP_FLOOR_GRASS S_TURF(5) ///turf/open/misc/grass
+#define SMOOTH_GROUP_FLOOR_ASH S_TURF(6) ///turf/open/misc/ashplanet/ash
+#define SMOOTH_GROUP_FLOOR_ASH_ROCKY S_TURF(7) ///turf/open/misc/ashplanet/rocky
+#define SMOOTH_GROUP_FLOOR_ICE S_TURF(8) ///turf/open/misc/ice
+#define SMOOTH_GROUP_FLOOR_SNOWED S_TURF(9) ///turf/open/floor/plating/snowed
+
 #define SMOOTH_GROUP_CARPET S_TURF(10)					///turf/open/floor/carpet
 #define SMOOTH_GROUP_CARPET_BLACK S_TURF(11)			///turf/open/floor/carpet/black
 #define SMOOTH_GROUP_CARPET_BLUE S_TURF(12)				///turf/open/floor/carpet/blue
@@ -62,7 +66,8 @@ DEFINE_BITFIELD(smoothing_flags, list(
 #define SMOOTH_GROUP_CARPET_ROYAL_BLACK S_TURF(18)		///turf/open/floor/carpet/royalblack
 #define SMOOTH_GROUP_CARPET_ROYAL_BLUE S_TURF(19)		///turf/open/floor/carpet/royalblue
 #define SMOOTH_GROUP_CARPET_GRIMY S_TURF(20)			///turf/open/floor/carpet/grimy
-#define SMOOTH_GROUP_BAMBOO_FLOOR S_TURF(21) 			//![/turf/open/floor/bamboo]
+#define SMOOTH_GROUP_BAMBOO_FLOOR S_TURF(52) //![/turf/open/floor/bamboo]
+
 #define SMOOTH_GROUP_CLOSED_TURFS S_TURF(24)			///turf/closed
 #define SMOOTH_GROUP_MATERIAL_WALLS S_TURF(25)			///turf/closed/wall/material
 #define SMOOTH_GROUP_SYNDICATE_WALLS S_TURF(26)			///turf/closed/wall/r_wall/syndicate, /turf/closed/indestructible/syndicate
@@ -72,9 +77,12 @@ DEFINE_BITFIELD(smoothing_flags, list(
 #define SMOOTH_GROUP_SURVIVAL_TITANIUM_WALLS S_TURF(30)	///turf/closed/wall/mineral/titanium/survival
 #define SMOOTH_GROUP_ELEVATED_PLASTEEL S_TURF(31)
 #define SMOOTH_GROUP_LOWERED_PLASTEEL S_TURF(32)
+
 #define MAX_S_TURF SMOOTH_GROUP_LOWERED_PLASTEEL //Always match this value with the one above it.
+
 #define S_OBJ(num) (MAX_S_TURF + 1 + num)
 /* /obj included */
+
 #define SMOOTH_GROUP_WALLS S_OBJ(0)						///turf/closed/wall, /obj/structure/falsewall
 #define SMOOTH_GROUP_URANIUM_WALLS S_OBJ(1)				///turf/closed/wall/mineral/uranium, /obj/structure/falsewall/uranium
 #define SMOOTH_GROUP_GOLD_WALLS S_OBJ(2)				///turf/closed/wall/mineral/gold, /obj/structure/falsewall/gold

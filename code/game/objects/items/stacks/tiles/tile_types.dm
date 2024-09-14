@@ -238,7 +238,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/stack/tile)
 	desc = "Artificially made ashy soil themed on a hostile environment."
 	icon_state = "tile_basalt"
 	item_state = "tile-basalt"
-	turf_type = /turf/open/floor/grass/fakebasalt
+	turf_type = /turf/open/floor/fakebasalt
 	merge_type = /obj/item/stack/tile/basalt
 
 //Carpets

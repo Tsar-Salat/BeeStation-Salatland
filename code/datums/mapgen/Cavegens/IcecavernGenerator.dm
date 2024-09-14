@@ -1,5 +1,5 @@
 /datum/map_generator/cave_generator/iceland
-	weighted_open_turf_types = list(/turf/open/floor/plating/asteroid/snow = 15, /turf/open/floor/plating/ice/smooth = 2)
+	weighted_open_turf_types = list(/turf/open/misc/asteroid/snow = 15, /turf/open/misc/ice/smooth = 2)
 	weighted_closed_turf_types =  list(/turf/closed/mineral/random/snowmountain/cavern = 1)
 	blacklisted_turf_types = list(/turf/open/lava) // Don't override lava rivers
 

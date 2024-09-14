@@ -29,17 +29,17 @@
 
 //jungle
 /datum/biome/mudlands
-	turf_type = /turf/open/floor/plating/dirt/jungle/dark
+	turf_type = /turf/open/misc/dirt/jungle/dark
 	flora_types = list(/obj/structure/flora/grass/jungle,/obj/structure/flora/grass/jungle/b, /obj/structure/flora/rock/jungle, /obj/structure/flora/rock/pile/largejungle)
 	flora_density = 3
 
 /datum/biome/plains
-	turf_type = /turf/open/floor/grass/jungle
+	turf_type = /turf/open/misc/grass/jungle
 	flora_types = list(/obj/structure/flora/grass/jungle,/obj/structure/flora/grass/jungle/b, /obj/structure/flora/tree/jungle, /obj/structure/flora/rock/jungle, /obj/structure/flora/junglebush, /obj/structure/flora/junglebush/b, /obj/structure/flora/junglebush/c, /obj/structure/flora/junglebush/large, /obj/structure/flora/rock/pile/largejungle)
 	flora_density = 15
 
 /datum/biome/jungle
-	turf_type = /turf/open/floor/grass/jungle
+	turf_type = /turf/open/misc/grass/jungle
 	flora_types = list(/obj/structure/flora/grass/jungle,/obj/structure/flora/grass/jungle/b, /obj/structure/flora/tree/jungle, /obj/structure/flora/rock/jungle, /obj/structure/flora/junglebush, /obj/structure/flora/junglebush/b, /obj/structure/flora/junglebush/c, /obj/structure/flora/junglebush/large, /obj/structure/flora/rock/pile/largejungle)
 	flora_density = 40
 
@@ -47,7 +47,7 @@
 	flora_density = 65
 
 /datum/biome/wasteland
-	turf_type = /turf/open/floor/plating/dirt/jungle/wasteland
+	turf_type = /turf/open/misc/dirt/jungle/wasteland
 
 /datum/biome/water
 	turf_type = /turf/open/water/air
@@ -57,21 +57,21 @@
 
 //tundra
 /datum/biome/frostwastes
-	turf_type = /turf/open/floor/plating/asteroid/snow
+	turf_type = /turf/open/misc/asteroid/snow
 	flora_types = list(/obj/structure/flora/rock/pile/icy, /obj/structure/flora/rock/icy,  /obj/structure/flora/grass/brown)
 	flora_density = 5
 
 /datum/biome/frostplains
-	turf_type = /turf/open/floor/plating/asteroid/snow
+	turf_type = /turf/open/misc/asteroid/snow
 	flora_types = list(/obj/structure/flora/grass/green, /obj/structure/flora/grass/brown,  /obj/structure/flora/grass/both)
 	flora_density = 15
 
 /datum/biome/frostlake
-	turf_type = /turf/open/floor/plating/ice/smooth
+	turf_type = /turf/open/misc/ice/smooth
 
 
 /datum/biome/frostforest
-	turf_type = /turf/open/floor/plating/asteroid/snow
+	turf_type = /turf/open/misc/asteroid/snow
 	flora_types = list(/obj/structure/flora/grass/green, /obj/structure/flora/grass/brown,  /obj/structure/flora/bush, /obj/structure/flora/grass/both,  /obj/structure/flora/tree/dead,  /obj/structure/flora/tree/pine)
 	flora_density = 30
 
@@ -79,7 +79,7 @@
 	flora_density = 60
 
 /datum/biome/frostswamp //screw logic
-	turf_type = /turf/open/floor/plating/ice/smooth
+	turf_type = /turf/open/misc/ice/smooth
 	flora_types = list(/obj/structure/flora/tree/dead,  /obj/structure/flora/tree/pine)
 	flora_density = 20
 

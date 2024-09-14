@@ -419,6 +419,9 @@
 /turf/proc/burn_tile()
 	return
 
+/turf/proc/break_tile()
+	return
+
 //====================================
 // Rust
 //====================================

@@ -1592,10 +1592,9 @@
 	taste_description = "carpet" // Your tongue feels furry.
 	var/carpet_type = /turf/open/floor/carpet
 
-/datum/reagent/carpet/reaction_turf(turf/T, reac_volume)
-	if(isplatingturf(T) || istype(T, /turf/open/floor/iron))
-		var/turf/open/floor/F = T
-		F.PlaceOnTop(carpet_type, flags = CHANGETURF_INHERIT_AIR)
+/datum/reagent/carpet/reaction_turf(turf/exposed_turf, reac_volume)
+	if(isopenturf(exposed_turf) && exposed_turf.flags_1 & IS_SOLID_1 && !istype(exposed_turf, /turf/open/floor/carpet))
+		exposed_turf.PlaceOnTop(carpet_type, flags = CHANGETURF_INHERIT_AIR)
 	..()
 
 /datum/reagent/carpet/black

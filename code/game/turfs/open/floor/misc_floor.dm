@@ -163,7 +163,7 @@
 	floor_tile = /obj/item/stack/tile/sepia
 
 /turf/open/floor/sepia/planetary
-	baseturfs = /turf/open/floor/plating/asteroid
+	baseturfs = /turf/open/misc/asteroid
 	planetary_atmos = TRUE
 
 
