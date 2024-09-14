@@ -107,7 +107,6 @@
 			return TRUE
 
 		update_active_camera_screen()
-
 		return TRUE
 
 /datum/computer_file/program/secureye/on_ui_close(mob/user, datum/tgui/tgui)

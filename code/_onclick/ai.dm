@@ -11,7 +11,7 @@
 		return
 
 	if(ismob(A))
-		ai_tracking_tool.set_tracked_mob(src, A.name)
+		ai_tracking_tool.track_mob(src, A)
 	else if(!ismachinery(A))	//Getting the camera moved just because you double click on something to interact with it is annoying as hell
 		eyeobj.move_camera_by_click(A)
 
