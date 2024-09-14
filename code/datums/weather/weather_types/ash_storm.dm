@@ -83,6 +83,14 @@
 		return
 	L.adjustFireLoss(4)
 
+/datum/weather/ash_storm/end()
+	. = ..()
+	for(var/turf/open/floor/plating/asteroid/basalt/basalt as anything in GLOB.dug_up_basalt)
+		if(!(basalt.loc in impacted_areas) || !(basalt.z in impacted_z_levels))
+			continue
+		GLOB.dug_up_basalt -= basalt
+		basalt.dug = FALSE
+		basalt.icon_state = "[basalt.base_icon_state]"
 
 //Emberfalls are the result of an ash storm passing by close to the playable area of lavaland. They have a 10% chance to trigger in place of an ash storm.
 /datum/weather/ash_storm/emberfall
