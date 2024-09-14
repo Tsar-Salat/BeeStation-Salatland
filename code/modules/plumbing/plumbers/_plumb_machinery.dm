@@ -121,7 +121,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/plumbing/tank)
 /obj/machinery/plumbing/layer_manifold/Initialize(mapload, bolt, layer)
 	. = ..()
 
+	AddComponent(/datum/component/plumbing/manifold, bolt, FIRST_DUCT_LAYER)
 	AddComponent(/datum/component/plumbing/manifold, bolt, SECOND_DUCT_LAYER)
 	AddComponent(/datum/component/plumbing/manifold, bolt, THIRD_DUCT_LAYER)
 	AddComponent(/datum/component/plumbing/manifold, bolt, FOURTH_DUCT_LAYER)
+	AddComponent(/datum/component/plumbing/manifold, bolt, FIFTH_DUCT_LAYER)
 	update_appearance() //so the input/output pipes will overlay properly during init
