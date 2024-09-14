@@ -17,16 +17,12 @@
 	if("[old_icon]_death_transition" in icon_states(icon))
 		flick("[old_icon]_death_transition", src)
 
-	if(ai_tracking_target)
-		ai_stop_tracking()
-
 	anchored = FALSE //unbolt floorbolts
 	move_resist = MOVE_FORCE_NORMAL
 
 	if(eyeobj)
 		eyeobj.setLoc(get_turf(src))
 		set_eyeobj_visible(FALSE)
-
 
 	GLOB.shuttle_caller_list -= src
 	SSshuttle.autoEvac()

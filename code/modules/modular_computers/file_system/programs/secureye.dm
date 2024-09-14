@@ -80,7 +80,7 @@
 /datum/computer_file/program/secureye/ui_static_data()
 	var/list/data = list()
 	data["mapRef"] = map_name
-	var/list/cameras = get_available_cameras()
+	var/list/cameras = get_camera_list(network)
 	data["cameras"] = list()
 	for(var/i in cameras)
 		var/obj/machinery/camera/C = cameras[i]
@@ -97,7 +97,7 @@
 
 	if(action == "switch_camera")
 		var/c_tag = params["name"]
-		var/list/cameras = get_available_cameras()
+		var/list/cameras = get_camera_list(network)
 		var/obj/machinery/camera/selected_camera = cameras[c_tag]
 		active_camera = selected_camera
 		ui_update()
@@ -107,7 +107,6 @@
 			return TRUE
 
 		update_active_camera_screen()
-
 		return TRUE
 
 /datum/computer_file/program/secureye/on_ui_close(mob/user, datum/tgui/tgui)
@@ -171,19 +170,5 @@
 	cam_screen.vis_contents.Cut()
 	cam_background.icon_state = "scanline2"
 	cam_background.fill_rect(1, 1, DEFAULT_MAP_SIZE, DEFAULT_MAP_SIZE)
-
-// Returns the list of cameras accessible from this computer
-/datum/computer_file/program/secureye/proc/get_available_cameras()
-	var/list/camlist = list()
-	for(var/obj/machinery/camera/cam as() in GLOB.cameranet.cameras)
-		if(!is_station_level(cam.z))//Only show station cameras.
-			continue
-		if(!islist(cam.network))
-			stack_trace("Camera in a cameranet has invaid camera network")
-			continue
-		if(!length(cam.network & network))
-			continue
-		camlist["[cam.c_tag]"] = cam
-	return camlist
 
 #undef DEFAULT_MAP_SIZE
