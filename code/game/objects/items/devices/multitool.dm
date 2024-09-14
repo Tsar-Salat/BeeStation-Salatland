@@ -118,10 +118,6 @@
 
 /obj/item/multitool/ai_detect/proc/multitool_detect()
 	var/turf/our_turf = get_turf(src)
-	for(var/mob/living/silicon/ai/AI as anything in GLOB.ai_list)
-		if(AI.ai_tracking_target == src)
-			detect_state = PROXIMITY_ON_SCREEN
-			return
 
 	for(var/mob/camera/ai_eye/AI_eye as anything in GLOB.ai_eyes)
 		if(!AI_eye.ai_detector_visible)

@@ -67,7 +67,8 @@
 	var/camera_light_on = FALSE
 	var/list/obj/machinery/camera/lit_cameras = list()
 
-	var/datum/trackable/track = new
+	///The internal tool used to track players visible through cameras.
+	var/datum/trackable/ai_tracking_tool
 
 	var/last_tablet_note_seen = null
 	var/can_shunt = TRUE
@@ -180,6 +181,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/silicon/ai)
 	builtInCamera = new (src)
 	builtInCamera.network = list("ss13")
 
+	ai_tracking_tool = new(src)
+	RegisterSignal(src, COMSIG_TRACKABLE_TRACKING_TARGET, PROC_REF(on_track_target))
+
 	ADD_TRAIT(src, TRAIT_PULL_BLOCKED, ROUNDSTART_TRAIT)
 	ADD_TRAIT(src, TRAIT_HANDS_BLOCKED, ROUNDSTART_TRAIT)
 
@@ -193,6 +197,8 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/silicon/ai)
 	switch(_key)
 		if("`", "0")
 			if(cam_prev)
+				if(ai_tracking_tool.tracking)
+					ai_tracking_tool.set_tracking(FALSE)
 				eyeobj.setLoc(cam_prev)
 			return
 		if("1", "2", "3", "4", "5", "6", "7", "8", "9")
@@ -203,6 +209,8 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/silicon/ai)
 				return
 			if(cam_hotkeys[_key]) //if this is false, no hotkey for this slot exists.
 				cam_prev = eyeobj.loc
+				if(ai_tracking_tool.tracking)
+					ai_tracking_tool.set_tracking(FALSE)
 				eyeobj.setLoc(cam_hotkeys[_key])
 				return
 	return ..()
@@ -217,6 +225,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/silicon/ai)
 	QDEL_NULL(doomsday_device)
 	QDEL_NULL(aiMulti)
 	QDEL_NULL(alert_control)
+	QDEL_NULL(ai_tracking_tool)
 	malfhack = null
 	current_holopad = null
 	//bot_ref = null
@@ -343,6 +352,20 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/silicon/ai)
 /mob/living/silicon/ai/cancel_camera()
 	view_core()
 
+/mob/living/silicon/ai/verb/ai_camera_track()
+	set name = "track"
+	set hidden = TRUE //Don't display it on the verb lists. This verb exists purely so you can type "track Oldman Robustin" and follow his ass
+
+	ai_tracking_tool.set_tracked_mob(src)
+
+///Called when an AI finds their tracking target.
+/mob/living/silicon/ai/proc/on_track_target(datum/trackable/source, mob/living/target)
+	SIGNAL_HANDLER
+	if(eyeobj)
+		eyeobj.setLoc(get_turf(target))
+	else
+		view_core()
+
 /mob/living/silicon/ai/verb/wipe_core()
 	set name = "Wipe Core"
 	set category = "OOC"
@@ -399,9 +422,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/silicon/ai)
 	// the message in the [] will change depending whether or not the AI is anchored
 
 /mob/living/silicon/ai/cancel_camera()
-	..()
-	if(ai_tracking_target)
-		ai_stop_tracking()
+	view_core()
 
 /mob/living/silicon/ai/proc/ai_cancel_call()
 	set category = "Malfunction"
@@ -449,23 +470,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/silicon/ai)
 		else
 			to_chat(src, "<span class='notice'>Unable to locate the holopad.</span>")
 	if(href_list["track"])
-		var/string = href_list["track"]
-		trackable_mobs()
-		var/list/trackeable = list()
-		trackeable += track.humans + track.others
-		var/list/target = list()
-		for(var/I in trackeable)
-			var/datum/weakref/to_resolve = trackeable[I]
-			var/mob/to_track = to_resolve.resolve()
-			if(!to_track || to_track.name != string)
-				continue
-			target += to_track
-		if(name == string)
-			target += src
-		if(target.len)
-			attempt_track(pick(target))
-		else
-			to_chat(src, "Target is not on or near any active cameras on the station.")
+		ai_tracking_tool.set_tracked_mob(src, href_list["track"])
 		return
 	if (href_list["ai_take_control"]) //Mech domination
 		var/obj/vehicle/sealed/mecha/M = locate(href_list["ai_take_control"]) in GLOB.mechas_list
@@ -503,12 +508,13 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/silicon/ai)
 	if(QDELETED(C))
 		return FALSE
 
-	if(ai_tracking_target)
-		ai_stop_tracking()
-
 	if(QDELETED(eyeobj))
 		view_core()
 		return
+
+	if(ai_tracking_tool.tracking)
+		ai_tracking_tool.set_tracking(FALSE)
+
 	// ok, we're alive, camera is good and in our network...
 	eyeobj.setLoc(get_turf(C))
 	return TRUE
@@ -577,6 +583,8 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/silicon/ai)
 	set category = "AI Commands"
 	set name = "Jump To Network"
 	unset_machine()
+	if(ai_tracking_tool.tracking)
+		ai_tracking_tool.set_tracking(FALSE)
 	var/cameralist[0]
 
 	if(incapacitated())
@@ -586,6 +594,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/silicon/ai)
 
 	for (var/obj/machinery/camera/C in GLOB.cameranet.cameras)
 		var/list/tempnetwork = C.network
+
 		if(!(is_station_level(C.z) || is_mining_level(C.z) || ("ss13" in tempnetwork)))
 			continue
 		if(!C.can_use())
@@ -596,9 +605,8 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/silicon/ai)
 			for(var/i in C.network)
 				cameralist[i] = i
 	var/old_network = network
-	network = input(U, "Which network would you like to view?") as null|anything in sort_list(cameralist)
-	if(ai_tracking_target)
-		ai_stop_tracking()
+	network = tgui_input_list(U, "Which network would you like to view?", "Camera Network", sort_list(cameralist))
+
 	if(!U.eyeobj)
 		U.view_core()
 		return
@@ -1070,6 +1078,14 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/silicon/ai/spawned)
 	else if(.)
 		REMOVE_TRAIT(src, TRAIT_INCAPACITATED, POWER_LACK_TRAIT)
 
+mob/living/silicon/ai/proc/show_camera_list()
+	var/list/cameras = get_camera_list(network)
+	var/camera = tgui_input_list(src, "Choose which camera you want to view", "Cameras", cameras)
+	if(isnull(camera))
+		return
+	if(isnull(cameras[camera]))
+		return
+	switchCamera(cameras[camera])
 
 /mob/living/silicon/on_handsblocked_start()
 	return // AIs have no hands

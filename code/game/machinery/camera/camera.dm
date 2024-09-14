@@ -199,6 +199,13 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/camera)
 		return
 	..()
 
+/obj/machinery/camera/attack_ai(mob/living/silicon/ai/user)
+	if (!istype(user))
+		return
+	if (!can_use())
+		return
+	user.switchCamera(src)
+
 /obj/machinery/camera/proc/setViewRange(num = 7)
 	src.view_range = num
 	GLOB.cameranet.updateVisibility(src, 0)

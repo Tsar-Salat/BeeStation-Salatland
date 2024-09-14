@@ -30,11 +30,11 @@
 	icon_state = "track"
 
 /atom/movable/screen/ai/camera_track/Click()
-	if(..())
+	. = ..()
+	if(.)
 		return
 	var/mob/living/silicon/ai/AI = usr
-	var/target_name = input(AI, "Choose who you want to track", "Tracking") as null|anything in AI.trackable_mobs()
-	AI.ai_camera_track(target_name)
+	AI.ai_camera_track()
 
 /atom/movable/screen/ai/camera_light
 	name = "Toggle Camera Light"
