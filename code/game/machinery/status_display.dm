@@ -13,6 +13,7 @@
 	desc = null
 	icon = 'icons/obj/status_display.dmi'
 	icon_state = "frame"
+	base_icon_state = "unanchoredstatusdisplay"
 	verb_say = "beeps"
 	verb_ask = "beeps"
 	verb_exclaim = "beeps"
@@ -36,9 +37,52 @@
 //makes it go on the wall when built
 CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/status_display)
 
+/obj/item/wallframe/status_display
+	name = "status display frame"
+	desc = "Used to build status displays, just secure to the wall."
+	icon_state = "unanchoredstatusdisplay"
+	custom_materials = list(/datum/material/iron=14000, /datum/material/glass=8000)
+	result_path = /obj/machinery/status_display/evac
+	pixel_shift = 32
+
+//makes it go on the wall when built
 /obj/machinery/status_display/Initialize(mapload, ndir, building)
 	. = ..()
 	update_appearance()
+
+/obj/machinery/status_display/wrench_act(mob/living/user, obj/item/tool)
+	. = ..()
+	balloon_alert(user, "[anchored ? "un" : ""]securing...")
+	tool.play_tool_sound(src)
+	if(tool.use_tool(src, user, 6 SECONDS))
+		playsound(loc, 'sound/items/deconstruct.ogg', 50, TRUE)
+		balloon_alert(user, "[anchored ? "un" : ""]secured")
+		deconstruct()
+		return TRUE
+
+/obj/machinery/status_display/welder_act(mob/living/user, obj/item/tool)
+	if(user.a_intent == INTENT_HARM)
+		return
+	if(obj_integrity >= max_integrity)
+		balloon_alert(user, "it doesn't need repairs!")
+		return TRUE
+	user.balloon_alert_to_viewers("repairing display...", "repairing...")
+	if(!tool.use_tool(src, user, 4 SECONDS, amount = 0, volume=50))
+		return TRUE
+	balloon_alert(user, "repaired")
+	obj_integrity = max_integrity
+	set_machine_stat(machine_stat & ~BROKEN)
+	update_appearance()
+	return TRUE
+
+/obj/machinery/status_display/deconstruct(disassembled = TRUE)
+	if(!disassembled)
+		new /obj/item/stack/sheet/iron(drop_location(), 2)
+		new /obj/item/shard(drop_location())
+		new /obj/item/shard(drop_location())
+	else
+		new /obj/item/wallframe/status_display(drop_location())
+	qdel(src)
 
 /// Immediately change the display to the given picture.
 /obj/machinery/status_display/proc/set_picture(state)

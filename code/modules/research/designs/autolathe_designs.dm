@@ -721,6 +721,14 @@
 	build_path = /obj/item/wallframe/newscaster
 	category = list("initial", "Construction")
 
+/datum/design/status_display_frame
+	name = "Status Display Frame"
+	id = "status_display_frame"
+	build_type = AUTOLATHE
+	materials = list(/datum/material/iron = 14000, /datum/material/glass = 8000)
+	build_path = /obj/item/wallframe/status_display
+	category = list("initial", "Construction")
+
 /datum/design/syringe
 	name = "Syringe"
 	id = "syringe"
