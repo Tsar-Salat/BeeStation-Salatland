@@ -161,7 +161,7 @@
 			to_chat(owner, "<span class='notice'>You ignite yourself!</span>")
 		else
 			to_chat(owner, "<span class='warning'>You try to ignite yourself, but fail!</span>")
-		H.IgniteMob() //firestacks are already there passively
+		H.ignite_mob() //firestacks are already there passively
 
 //Harder to hurt
 /datum/species/golem/diamond

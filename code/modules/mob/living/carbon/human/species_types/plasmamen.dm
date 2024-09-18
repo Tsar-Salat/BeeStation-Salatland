@@ -58,9 +58,9 @@
 					H.adjust_fire_stacks(0.5)
 					if(!H.on_fire && H.fire_stacks > 0)
 						H.visible_message("<span class='danger'>[H]'s body reacts with the atmosphere and bursts into flames!</span>","<span class='userdanger'>Your body reacts with the atmosphere and bursts into flame!</span>")
-					H.IgniteMob()
+					H.ignite_mob()
 					internal_fire = TRUE
-	else if(H.fire_stacks)
+	else if(H.fire_stacks > 0)
 		var/obj/item/clothing/under/plasmaman/P = H.w_uniform
 		if(istype(P))
 			P.Extinguish(H)

@@ -115,7 +115,7 @@
 		return
 	if(user.is_mouth_covered())
 		user.adjust_fire_stacks(2)
-		user.IgniteMob()
+		user.ignite_mob()
 		to_chat(user, "<span class='warning'>Something in front of your mouth caught fire!</span>")
 		return FALSE
 

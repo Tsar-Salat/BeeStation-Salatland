@@ -95,7 +95,7 @@
 	if(isliving(target) && get_dist(target, X.loc || user) <= 1)
 		var/mob/living/victim = target
 		victim.adjust_fire_stacks(5*(X.charge/X.charge_req))
-		victim.IgniteMob()
+		victim.ignite_mob()
 		return
 	//otherwise shoot laser
 	var/obj/projectile/A

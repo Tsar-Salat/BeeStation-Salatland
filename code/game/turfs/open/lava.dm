@@ -40,7 +40,9 @@
 	. = ..()
 	if(isliving(gone))
 		var/mob/living/L = gone
-		if(!islava(get_step(src, direction)) && !L.on_fire)
+		if(!islava(get_step(src, direction)))
+			REMOVE_TRAIT(L, TRAIT_PERMANENTLY_ONFIRE, TURF_TRAIT)
+		if(!L.on_fire)
 			L.update_fire()
 
 /turf/open/lava/hitby(atom/movable/AM, skipcatch, hitpush, blocked, datum/thrownthing/throwingdatum)
@@ -153,7 +155,7 @@
 			L.adjustFireLoss(20 * delta_time)
 			if(L) //mobs turning into object corpses could get deleted here.
 				L.adjust_fire_stacks(20 * delta_time)
-				L.IgniteMob()
+				L.ignite_mob()
 
 /turf/open/lava/smooth
 	name = "lava"

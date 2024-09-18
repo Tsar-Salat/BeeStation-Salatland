@@ -62,7 +62,7 @@
 /obj/effect/particle_effect/foam/firefighting/foam_mob(mob/living/L)
 	if(!istype(L))
 		return
-	L.adjust_fire_stacks(-2)
+	L.adjust_wet_stacks(2)
 
 /obj/effect/particle_effect/foam/firefighting/temperature_expose(datum/gas_mixture/air, exposed_temperature, exposed_volume)
 	return

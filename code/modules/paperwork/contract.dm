@@ -108,7 +108,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/paper/contract/infernal)
 		H.say("OH GREAT INFERNO!  I DEMAND YOU COLLECT YOUR BOUNTY IMMEDIATELY!", forced = "infernal contract suicide")
 		H.visible_message("<span class='suicide'>[H] holds up a contract claiming [user.p_their()] soul, then immediately catches fire.  It looks like [user.p_theyre()] trying to commit suicide!</span>")
 		H.adjust_fire_stacks(20)
-		H.IgniteMob()
+		H.ignite_mob()
 		return(FIRELOSS)
 	else
 		..()
@@ -242,9 +242,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/paper/contract/infernal)
 			H.revive(1,0)
 			log_combat(user, H, "infernally revived via contract")
 			user.visible_message("<span class='notice'>With a sudden blaze, [H] stands back up.</span>")
-			H.fakefire()
 			fulfillContract(H, 1)//Revival contracts are always signed in blood
-			addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living/carbon/human, fakefireextinguish)), 5, TIMER_UNIQUE)
 		addtimer(CALLBACK(src, "resetcooldown"), 300, TIMER_UNIQUE)
 	else
 		..()

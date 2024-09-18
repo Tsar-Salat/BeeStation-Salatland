@@ -1207,7 +1207,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/hallucination/danger/chasm)
 	set waitfor = FALSE
 	..()
 	target.set_fire_stacks(max(target.fire_stacks, 0.1)) //Placebo flammability
-	fire_overlay = image('icons/mob/OnFire.dmi', target, "Standing", ABOVE_MOB_LAYER)
+	fire_overlay = image('icons/mob/onfire.dmi', target, "human_burning", ABOVE_MOB_LAYER)
 	if(target.client)
 		target.client.images += fire_overlay
 	to_chat(target, "<span class='userdanger'>You're set on fire!</span>")

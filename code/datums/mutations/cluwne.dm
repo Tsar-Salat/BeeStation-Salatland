@@ -45,7 +45,7 @@
 
 /datum/mutation/cluwne/on_losing(mob/living/carbon/owner)
 	owner.adjust_fire_stacks(1)
-	owner.IgniteMob()
+	owner.ignite_mob()
 	owner.dna.add_mutation(CLUWNEMUT)
 
 /mob/living/carbon/proc/cluwneify()

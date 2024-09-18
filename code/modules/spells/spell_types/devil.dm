@@ -119,14 +119,12 @@
 				return ..()
 		else
 			user.notransform = TRUE
-			user.fakefire()
 			to_chat(src, "<span class='warning'>You begin to phase back into sinful flames.</span>")
 			if(do_after(user, 15 SECONDS))
 				user.infernalphaseout()
 			else
 				to_chat(user, "<span class='warning'>You must remain still while exiting.</span>")
 				user.notransform = FALSE
-				user.fakefireextinguish()
 		start_recharge()
 		return
 	revert_cast()
@@ -150,18 +148,15 @@
 	forceMove(holder)
 	holder = holder
 	notransform = FALSE
-	fakefireextinguish()
 
 /mob/living/proc/infernalphasein()
 	if(notransform)
 		to_chat(src, "<span class='warning'>You're too busy to jaunt in.</span>")
 		return FALSE
-	fakefire()
 	forceMove(drop_location())
 	client.set_eye(src)
 	visible_message("<span class='warning'><B>[src] appears in a fiery blaze!</B></span>")
 	playsound(get_turf(src), 'sound/magic/exit_blood.ogg', 100, 1, -1)
-	addtimer(CALLBACK(src, PROC_REF(fakefireextinguish)), 15, TIMER_UNIQUE)
 
 /obj/effect/proc_holder/spell/targeted/sintouch
 	name = "Sin Touch"

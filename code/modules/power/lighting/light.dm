@@ -160,7 +160,7 @@
 
 	if(on && turning_on)
 		return
-		
+
 	var/area/local_area = get_area(src)
 	if(emergency_mode || (local_area?.fire))
 		. += mutable_appearance(overlayicon, "[base_state]_emergency")
@@ -618,7 +618,7 @@
 		explosion(src,0,0,1, adminlog = 0)
 		for(var/mob/living/L in range(3, src))
 			L.set_fire_stacks(max(L.fire_stacks, 3))
-			L.IgniteMob()
+			L.ignite_mob()
 			L.electrocute_act(0, "Tesla Light Zap", flags = SHOCK_TESLA)
 		qdel(src)
 	else

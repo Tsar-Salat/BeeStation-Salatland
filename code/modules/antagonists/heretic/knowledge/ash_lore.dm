@@ -199,7 +199,7 @@
 		return
 
 	target.adjust_fire_stacks(1)
-	target.IgniteMob()
+	target.ignite_mob()
 
 /datum/heretic_knowledge/spell/flame_birth
 	name = "Nightwatcher's Rebirth"

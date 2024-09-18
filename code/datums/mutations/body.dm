@@ -236,7 +236,7 @@
 /datum/mutation/fire/on_life()
 	if(prob((1+(100-dna.stability)/10)) * GET_MUTATION_SYNCHRONIZER(src))
 		owner.adjust_fire_stacks(2 * GET_MUTATION_POWER(src))
-		owner.IgniteMob()
+		owner.ignite_mob()
 
 /datum/mutation/fire/on_acquiring(mob/living/carbon/owner)
 	if(..())

@@ -73,7 +73,7 @@
 	if(istype(M))
 		if(method != INGEST && method != INJECT)
 			M.adjust_fire_stacks(min(reac_volume/5, 10))
-			M.IgniteMob()
+			M.ignite_mob()
 			if(!locate(/obj/effect/hotspot) in M.loc)
 				new /obj/effect/hotspot(M.loc)
 
@@ -165,7 +165,7 @@
 	M.adjust_fire_stacks(1)
 	var/burndmg = max(0.3*M.fire_stacks, 0.3)
 	M.adjustFireLoss(burndmg, 0)
-	M.IgniteMob()
+	M.ignite_mob()
 	..()
 
 /datum/reagent/phlogiston/on_mob_life(mob/living/carbon/M)

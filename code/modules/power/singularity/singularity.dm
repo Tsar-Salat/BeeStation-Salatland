@@ -382,7 +382,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/anomaly/singularity)
 		C.visible_message("<span class='warning'>[C]'s skin bursts into flame!</span>", \
 							"<span class='userdanger'>You feel an inner fire as your skin bursts into flames!</span>")
 		C.adjust_fire_stacks(5)
-		C.IgniteMob()
+		C.ignite_mob()
 	return
 
 

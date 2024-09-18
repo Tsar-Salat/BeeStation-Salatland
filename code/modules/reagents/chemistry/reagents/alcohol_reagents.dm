@@ -2288,7 +2288,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	M.adjust_bodytemperature(25 * TEMPERATURE_DAMAGE_COEFFICIENT)
 	if (prob(5))
 		M.adjust_fire_stacks(1)
-		M.IgniteMob()
+		M.ignite_mob()
 	..()
 
 /datum/reagent/consumable/ethanol/painkiller
@@ -2334,7 +2334,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 
 /datum/reagent/consumable/ethanol/plasmaflood/on_mob_life(mob/living/M)
 	if(prob(80))
-		M.IgniteMob()
+		M.ignite_mob()
 		M.adjust_fire_stacks(10)
 
 	if(M.fire_stacks > 9)

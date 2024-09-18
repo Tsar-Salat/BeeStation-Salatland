@@ -246,7 +246,6 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 	if(fire_stacks <= 0)
 		visible_message("<span class='danger'>[src] has successfully extinguished [p_them()]self!</span>", \
 			"<span class='notice'>You extinguish yourself.</span>")
-		extinguish_mob()
 	return
 
 /mob/living/carbon/resist_restraints()
@@ -863,16 +862,6 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 		I.extinguish() //extinguishes our clothes
 	..()
 
-/mob/living/carbon/fakefire(var/fire_icon = "Generic_mob_burning")
-	var/mutable_appearance/new_fire_overlay = mutable_appearance('icons/mob/OnFire.dmi', fire_icon, CALCULATE_MOB_OVERLAY_LAYER(FIRE_LAYER))
-	new_fire_overlay.appearance_flags = RESET_COLOR
-	new_fire_overlay.overlays.Add(emissive_appearance('icons/mob/OnFire.dmi', fire_icon, CALCULATE_MOB_OVERLAY_LAYER(FIRE_LAYER), filters = src.filters))
-	overlays_standing[FIRE_LAYER] = new_fire_overlay
-	apply_overlay(FIRE_LAYER)
-
-/mob/living/carbon/fakefireextinguish()
-	remove_overlay(FIRE_LAYER)
-
 /mob/living/carbon/proc/create_bodyparts()
 	var/l_arm_index_next = -1
 	var/r_arm_index_next = 0
@@ -1205,3 +1194,27 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 		set_lying_angle(pick(90, 270))
 	else
 		set_lying_angle(new_lying_angle)
+
+/mob/living/carbon/update_fire_overlay(stacks, on_fire, last_icon_state, suffix = "")
+	var/fire_icon = "generic_burning[suffix]"
+
+	if(!GLOB.fire_appearances[fire_icon])
+		var/mutable_appearance/new_fire_overlay = mutable_appearance('icons/mob/onfire.dmi', fire_icon, -FIRE_LAYER)
+		new_fire_overlay.appearance_flags = RESET_COLOR
+		GLOB.fire_appearances[fire_icon] = new_fire_overlay
+
+	if((stacks > 0 && on_fire) || HAS_TRAIT(src, TRAIT_PERMANENTLY_ONFIRE))
+		if(fire_icon == last_icon_state)
+			return last_icon_state
+
+		remove_overlay(FIRE_LAYER)
+		overlays_standing[FIRE_LAYER] = GLOB.fire_appearances[fire_icon]
+		apply_overlay(FIRE_LAYER)
+		return fire_icon
+
+	if(!last_icon_state)
+		return last_icon_state
+
+	remove_overlay(FIRE_LAYER)
+	apply_overlay(FIRE_LAYER)
+	return null

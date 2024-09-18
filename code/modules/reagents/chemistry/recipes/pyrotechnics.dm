@@ -85,7 +85,7 @@
 			to_chat(C, "<span class='userdanger'>The divine explosion sears you!</span>")
 			C.Paralyze(40)
 			C.adjust_fire_stacks(5)
-			C.IgniteMob()
+			C.ignite_mob()
 
 /datum/chemical_reaction/plasma
 	name = "Plasma Flash"

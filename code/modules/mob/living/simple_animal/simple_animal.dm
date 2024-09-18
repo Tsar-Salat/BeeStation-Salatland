@@ -138,6 +138,7 @@
 	if(!loc)
 		stack_trace("Simple animal being instantiated in nullspace")
 	update_simplemob_varspeed()
+	ADD_TRAIT(src, TRAIT_NOFIRE_SPREAD, ROUNDSTART_TRAIT)
 
 	if(footstep_type)
 		AddElement(/datum/element/footstep, footstep_type)
@@ -447,10 +448,7 @@
 			return FALSE
 	return TRUE
 
-/mob/living/simple_animal/handle_fire()
-	return TRUE
-
-/mob/living/simple_animal/IgniteMob()
+/mob/living/simple_animal/ignite_mob()
 	return FALSE
 
 /mob/living/simple_animal/extinguish_mob()
