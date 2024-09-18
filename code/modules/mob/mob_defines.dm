@@ -1,3 +1,5 @@
+CREATION_TEST_IGNORE_SELF(/mob)
+
 /**
   * The mob, usually meant to be a creature of some type
   *
@@ -93,6 +95,9 @@
 
 	/// Default body temperature
 	var/bodytemperature = BODYTEMP_NORMAL	//310.15K / 98.6F
+	/// Our body temperatue as of the last process, prevents pointless work when handling alerts
+	var/old_bodytemperature = 0
+
 	/// Drowsyness level of the mob
 	var/drowsyness = 0//Carbon
 	/// Dizziness level of the mob
@@ -119,8 +124,6 @@
 
 	/// The atom that this mob is currently buckled to
 	var/atom/movable/buckled = null//Living
-	/// The movable atom that we are currently in the process of buckling to, but haven't buckled with yet.
-	var/atom/movable/buckling
 
 	//Hands
 	///What hand is the active hand
@@ -158,9 +161,6 @@
 
 	/// Can this mob enter shuttles
 	var/move_on_shuttle = 1
-
-	///A weakref to the last mob/living/carbon to push/drag/grab this mob (exclusively used by slimes friend recognition)
-	var/datum/weakref/LAssailant = null
 
 	/**
 	  * construct spells and mime spells.

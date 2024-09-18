@@ -48,7 +48,7 @@ GLOBAL_VAR(restart_counter)
 
 	make_datum_references_lists()	//initialises global lists for referencing frequently used datums (so that we only ever do it once)
 
-	GLOB.config_error_log = GLOB.world_manifest_log = GLOB.world_pda_log = GLOB.world_job_debug_log = GLOB.sql_error_log = GLOB.world_href_log = GLOB.world_runtime_log = GLOB.world_attack_log = GLOB.world_game_log = "data/logs/config_error.[GUID()].log" //temporary file used to record errors with loading config, moved to log directory once logging is set bl
+	GLOB.config_error_log = GLOB.world_manifest_log = GLOB.world_pda_log = GLOB.world_job_debug_log = GLOB.sql_error_log = GLOB.world_href_log = GLOB.world_runtime_log = GLOB.world_attack_log = GLOB.world_game_log = GLOB.world_econ_log = "data/logs/config_error.[GUID()].log" //temporary file used to record errors with loading config, moved to log directory once logging is set bl
 
 	config.Load(params[OVERRIDE_CONFIG_DIRECTORY_PARAMETER])
 
@@ -144,6 +144,7 @@ GLOBAL_VAR(restart_counter)
 	GLOB.world_mecha_log = "[GLOB.log_directory]/mecha.log"
 	GLOB.world_virus_log = "[GLOB.log_directory]/virus.log"
 	GLOB.world_cloning_log = "[GLOB.log_directory]/cloning.log"
+	GLOB.world_econ_log = "[GLOB.log_directory]/econ.log"
 	GLOB.world_id_log = "[GLOB.log_directory]/id.log"
 	GLOB.world_asset_log = "[GLOB.log_directory]/asset.log"
 	GLOB.world_attack_log = "[GLOB.log_directory]/attack.log"
@@ -162,7 +163,7 @@ GLOBAL_VAR(restart_counter)
 	GLOB.tgui_log = "[GLOB.log_directory]/tgui.log"
 	GLOB.prefs_log = "[GLOB.log_directory]/preferences.log"
 
-#ifdef UNIT_TESTS
+#if defined(UNIT_TESTS) || defined(SPACEMAN_DMM)
 	GLOB.test_log = file("[GLOB.log_directory]/tests.log")
 	start_log(GLOB.test_log)
 #endif
@@ -172,6 +173,7 @@ GLOBAL_VAR(restart_counter)
 #endif
 	start_log(GLOB.world_game_log)
 	start_log(GLOB.world_attack_log)
+	start_log(GLOB.world_econ_log)
 	start_log(GLOB.world_pda_log)
 	start_log(GLOB.world_telecomms_log)
 	start_log(GLOB.world_manifest_log)
@@ -319,7 +321,7 @@ GLOBAL_VAR(restart_counter)
 	#ifdef UNIT_TESTS
 	FinishTestRun()
 	return
-	#endif
+	#else
 
 	if(TgsAvailable())
 		var/do_hard_reboot
@@ -346,6 +348,7 @@ GLOBAL_VAR(restart_counter)
 	shutdown_logging() // Past this point, no logging procs can be used, at risk of data loss.
 	AUXTOOLS_SHUTDOWN(AUXMOS)
 	..()
+	#endif
 
 /world/Del()
 	shutdown_logging() // makes sure the thread is closed before end, else we terminate
@@ -370,7 +373,7 @@ GLOBAL_VAR(restart_counter)
 		popcaptext = "/[popcap]"
 
 	// Determine our character usage
-	var/character_usage = 86	// Base character usage
+	var/character_usage = 92	// Base character usage
 	// Discord URL is needed
 	if (discordurl)
 		character_usage += length(discordurl)
@@ -397,24 +400,24 @@ GLOBAL_VAR(restart_counter)
 		// Station name is going to be truncated with ...
 		if (discordurl)
 			if (server_name)
-				s += "<a href='[discordurl]'><b>[server_name] - [copytext(station_name, 1, station_name_limit - 3)]...</b></a><br>"
+				s += "<a href='[discordurl]'><b>[server_name]</b> - <b>[copytext(station_name, 1, station_name_limit - 3)]...</b></a><br>"
 			else
 				s += "<a href='[discordurl]'><b>[copytext(station_name, 1, station_name_limit - 3)]...</b></a><br>"
 		else
 			if (server_name)
-				s += "<b>[server_name] - [copytext(station_name, 1, station_name_limit - 3)]...</b><br>"
+				s += "<b>[server_name]</b> - <b>[copytext(station_name, 1, station_name_limit - 3)]...</b><br>"
 			else
 				s += "<b>[copytext(station_name, 1, station_name_limit - 3)]...</b><br>"
 	else
 		// Station name can be displayed in full
 		if (discordurl)
 			if (server_name)
-				s += "<a href='[discordurl]'><b>[server_name] - [station_name]</b></a><br>"
+				s += "<a href='[discordurl]'><b>[server_name]</b> - <b>[station_name]</b></a><br>"
 			else
 				s += "<a href='[discordurl]'><b>[station_name]</b></a><br>"
 		else
 			if (server_name)
-				s += "<b>[server_name] - [station_name]</b><br>"
+				s += "<b>[server_name]</b> - <b>[station_name]</b><br>"
 			else
 				s += "<b>[station_name]</b><br>"
 
@@ -481,3 +484,5 @@ GLOBAL_VAR(restart_counter)
 	var/init_result = LIBCALL(library, "init")("block")
 	if (init_result != "0")
 		CRASH("Error initializing byond-tracy: [init_result]")
+
+#undef RESTART_COUNTER_PATH
