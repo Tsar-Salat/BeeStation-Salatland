@@ -1,21 +1,39 @@
-//Status effects are used to apply temporary or permanent effects to mobs. Mobs are aware of their status effects at all times.
-//This file contains their code, plus code for applying and removing them.
-//When making a new status effect, add a define to status_effects.dm in __DEFINES for ease of use!
-
+/// Status effects are used to apply temporary or permanent effects to mobs.
+/// This file contains their code, plus code for applying and removing them.
 /datum/status_effect
-	var/id = "effect" //Used for screen alerts.
-	var/duration = -1 //How long the status effect lasts in DECISECONDS. Enter -1 for an effect that never ends unless removed through some means.
-	var/tick_interval = 10 //How many deciseconds between ticks, approximately. Leave at 10 for every second. Setting this to -1 will stop processing if duration is also unlimited.
-	var/mob/living/owner //The mob affected by the status effect.
-	var/status_type = STATUS_EFFECT_UNIQUE //How many of the effect can be on one mob, and what happens when you try to add another
-	var/on_remove_on_mob_delete = FALSE //if we call on_remove() when the mob is deleted
-	var/examine_text //If defined, this text will appear when the mob is examined - to use he, she etc. use "SUBJECTPRONOUN" and replace it in the examines themselves
-	var/alert_type = /atom/movable/screen/alert/status_effect //the alert thrown by the status effect, contains name and description
-	var/atom/movable/screen/alert/status_effect/linked_alert = null //the alert itself, if it exists
+	/// The ID of the effect. ID is used in adding and removing effects to check for duplicates, among other things.
+	var/id = "effect"
+	/// When set initially / in on_creation, this is how long the status effect lasts in deciseconds.
+	/// While processing, this becomes the world.time when the status effect will expire.
+	/// -1 = infinite duration.
+	var/duration = -1
+	/// When set initially / in on_creation, this is how long between [proc/tick] calls in deciseconds.
+	/// While processing, this becomes the world.time when the next tick will occur.
+	/// -1 = will stop processing, if duration is also unlimited (-1).
+	var/tick_interval = 1 SECONDS
+	/// The mob affected by the status effect.
+	var/mob/living/owner
+	/// How many of the effect can be on one mob, and/or what happens when you try to add a duplicate.
+	var/status_type = STATUS_EFFECT_UNIQUE
+	/// If TRUE, we call [proc/on_remove] when owner is deleted. Otherwise, we call [proc/be_replaced].
+	var/on_remove_on_mob_delete = FALSE
+	/// If defined, this text will appear when the mob is examined
+	/// To use he, she etc. use "SUBJECTPRONOUN" and replace it in the examines themselves
+	var/examine_text
+	/// The typepath to the alert thrown by the status effect when created.
+	/// Status effect "name"s and "description"s are shown to the owner here.
+	var/alert_type = /atom/movable/screen/alert/status_effect
+	/// The alert itself, created in [proc/on_creation] (if alert_type is specified).
+	var/atom/movable/screen/alert/status_effect/linked_alert
+	/// Used to define if the status effect should be using SSfastprocess or SSprocessing
+	var/processing_speed = STATUS_EFFECT_FAST_PROCESS
 
 /datum/status_effect/New(list/arguments)
 	on_creation(arglist(arguments))
 
+/// Called from New() with any supplied status effect arguments.
+/// Not guaranteed to exist by the end.
+/// Returning FALSE from on_apply will stop on_creation and self-delete the effect.
 /datum/status_effect/proc/on_creation(mob/living/new_owner, ...)
 	if(new_owner)
 		owner = new_owner
