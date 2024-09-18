@@ -1113,9 +1113,9 @@
 	else
 		return ..()
 
-/obj/machinery/door/airlock/try_to_weld(obj/item/weldingtool/W, mob/user)
+/obj/machinery/door/airlock/try_to_weld(obj/item/weldingtool/W, mob/living/user)
 	if(!operating && density)
-		if(user.a_intent != INTENT_HELP)
+		if(user.combat_mode)
 			if(protected_door || !W.tool_start_check(user, amount=0))
 				return
 			user.visible_message("[user] is [welded ? "unwelding":"welding"] the airlock.", \

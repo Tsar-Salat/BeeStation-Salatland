@@ -117,38 +117,17 @@
 	user.mob?.a_intent_change(intent)
 	return TRUE
 
-
-/datum/keybinding/living/select_intent/help
-	keys = list("1")
-	name = "select_help_intent"
-	full_name = "Select help intent"
-	description = ""
-	keybind_signal = COMSIG_KB_LIVING_SELECTHELPINTENT_DOWN
-	intent = INTENT_HELP
+/datum/keybinding/living/toggle_combat_mode
+	keys = list("F", "4")
+	name = "toggle_combat_mode"
+	full_name = "Toggle Combat Mode"
+	description = "Toggles combat mode. Like Help/Harm but cooler."
+	keybind_signal = COMSIG_KB_LIVING_TOGGLE_COMBAT_DOWN
 
 
-/datum/keybinding/living/select_intent/disarm
-	keys = list("2")
-	name = "select_disarm_intent"
-	full_name = "Select disarm intent"
-	description = ""
-	keybind_signal = COMSIG_KB_LIVING_SELECTDISARMINTENT_DOWN
-	intent = INTENT_DISARM
-
-
-/datum/keybinding/living/select_intent/grab
-	keys = list("3")
-	name = "select_grab_intent"
-	full_name = "Select grab intent"
-	description = ""
-	keybind_signal = COMSIG_KB_LIVING_SELECTGRABINTENT_DOWN
-	intent = INTENT_GRAB
-
-
-/datum/keybinding/living/select_intent/harm
-	keys = list("4")
-	name = "select_harm_intent"
-	full_name = "Select harm intent"
-	description = ""
-	keybind_signal = COMSIG_KB_LIVING_SELECTHARMINTENT_DOWN
-	intent = INTENT_HARM
+/datum/keybinding/living/toggle_combat_mode/down(client/user)
+	. = ..()
+	if(.)
+		return
+	var/mob/living/user_mob = user.mob
+	user_mob.set_combat_mode(!user_mob.combat_mode, FALSE)

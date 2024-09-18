@@ -66,7 +66,7 @@
 	if(.)
 		return
 	var/mob/living/silicon/robot/M = user.mob
-	M.a_intent_change(INTENT_HOTKEY_LEFT)
+	M.set_combat_mode(!R.combat_mode)
 	return TRUE
 
 

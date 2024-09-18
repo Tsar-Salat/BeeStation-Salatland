@@ -45,7 +45,7 @@
 			I.forceMove(loc)
 	qdel(src)
 
-/obj/structure/filingcabinet/attackby(obj/item/P, mob/user, params)
+/obj/structure/filingcabinet/attackby(obj/item/P, mob/living/user, params)
 	if(istype(P, /obj/item/paper) || istype(P, /obj/item/folder) || istype(P, /obj/item/photo) || istype(P, /obj/item/documents))
 		if(!user.transferItemToLoc(P, src))
 			return
@@ -59,7 +59,7 @@
 		if(P.use_tool(src, user, 20, volume=50))
 			to_chat(user, "<span class='notice'>You successfully [anchored ? "unwrench" : "wrench"] [src].</span>")
 			set_anchored(!anchored)
-	else if(user.a_intent != INTENT_HARM)
+	else if(!user.combat_mode)
 		to_chat(user, "<span class='warning'>You can't put [P] in [src]!</span>")
 	else
 		return ..()

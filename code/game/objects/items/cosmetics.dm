@@ -124,7 +124,7 @@
 	playsound(loc, 'sound/items/welder2.ogg', 20, 1)
 
 
-/obj/item/razor/attack(mob/M, mob/user)
+/obj/item/razor/attack(mob/M, mob/living/user)
 	if(!ishuman(M) || extended != 1 || user.a_intent == INTENT_HARM)
 		return ..()
 	var/mob/living/carbon/human/H = M
@@ -148,7 +148,7 @@
 		to_chat(user, "<span class='warning'>[src] is too far away!</span>")
 		return
 	if(location == BODY_ZONE_PRECISE_MOUTH)
-		if(user.a_intent == INTENT_HELP)
+		if(!user.combat_mode)
 			if(H.gender == MALE)
 				INVOKE_ASYNC(src, PROC_REF(new_facial_hairstyle), H, user, mirror)
 				return
@@ -181,7 +181,7 @@
 					shave(H, location)
 
 	else if(location == BODY_ZONE_HEAD)
-		if(user.a_intent == INTENT_HELP)
+		if(!user.combat_mode)
 			INVOKE_ASYNC(src, PROC_REF(new_hairstyle), H, user)
 			return
 		else

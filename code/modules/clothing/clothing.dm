@@ -123,9 +123,9 @@
 	else
 		qdel(src)
 
-/obj/item/clothing/attack(mob/attacker, mob/user, params)
-	if(user.a_intent == INTENT_HARM)
-		return //Harm intent does not eat
+/obj/item/clothing/attack(mob/attacker, mob/living/user, params)
+	if(!user.combat_mode)
+		return //combat mode does not eat
 	var/obj/item/organ/tongue/tongue = attacker.getorganslot(ORGAN_SLOT_TONGUE)
 	if(!istype(tongue, /obj/item/organ/tongue/moth) && !istype(tongue, /obj/item/organ/tongue/psyphoza))
 		return ..() //Not a clotheater tongue? No Clotheating!

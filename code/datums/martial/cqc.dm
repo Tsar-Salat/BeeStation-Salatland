@@ -131,11 +131,7 @@
 	return TRUE
 
 /datum/martial_art/cqc/grab_act(mob/living/carbon/human/A, mob/living/carbon/human/D)
-	if(!can_use(A))
-		return FALSE
-	if(A==D)
-		return FALSE //prevents grabbing yourself
-	if(A.a_intent == INTENT_GRAB)
+	if(A!=D && can_use(A)) // A!=D prevents grabbing yourself
 		add_to_streak("G",D)
 		if(check_streak(A,D)) //doing combos is prioritized over upgrading grabs
 			return TRUE
@@ -147,9 +143,9 @@
 			D.visible_message("<span class='warning'>[A] violently grabs [D]!</span>", \
 							"<span class='userdanger'>You're grabbed violently by [A]!</span>", "<span class='hear'>You hear sounds of aggressive fondling!</span>", COMBAT_MESSAGE_RANGE, A)
 			to_chat(A, "<span class='danger'>You violently grab [D]!</span>")
+		return TRUE
 	else
-		D.grabbedby(A, 1)
-	return TRUE
+		return FALSE
 
 /datum/martial_art/cqc/harm_act(mob/living/carbon/human/A, mob/living/carbon/human/D)
 	var/def_check = D.getarmor(BODY_ZONE_CHEST, MELEE)

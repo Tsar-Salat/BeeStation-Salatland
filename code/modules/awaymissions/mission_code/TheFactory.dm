@@ -238,7 +238,7 @@
 	footstep_type = FOOTSTEP_MOB_SHOE
 	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
 	search_objects = 1
-	a_intent = INTENT_HARM
+	combat_mode = TRUE
 	attack_sound = 'sound/weapons/cqchit2.ogg'
 	attack_verb_continuous = "punches"
 	attack_verb_simple = "punch"
@@ -631,7 +631,7 @@
 	attack_sound = null
 	del_on_death = TRUE
 	stat_attack = HARD_CRIT
-	a_intent = INTENT_HARM
+	combat_mode = TRUE
 	var/det_time = 30
 	var/active = 0
 	var/cooldown = 0

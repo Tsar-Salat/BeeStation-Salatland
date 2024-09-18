@@ -85,6 +85,20 @@
 		else
 				return 0
 
+/mob/living/proc/set_combat_mode(new_mode, silent = TRUE)
+	if(combat_mode == new_mode)
+		return
+	. = combat_mode
+	combat_mode = new_mode
+	if(hud_used?.action_intent)
+		hud_used.action_intent.update_icon()
+	if(silent || !(client?.prefs.toggles & SOUND_COMBATMODE))
+		return
+	if(combat_mode)
+		playsound_local(src, 'sound/misc/ui_togglecombat.ogg', 25, FALSE, pressure_affected = FALSE) //Sound from interbay!
+	else
+		playsound_local(src, 'sound/misc/ui_toggleoffcombat.ogg', 25, FALSE, pressure_affected = FALSE) //Slightly modified version of the above
+
 /mob/living/hitby(atom/movable/AM, skipcatch, hitpush = TRUE, blocked = FALSE, datum/thrownthing/throwingdatum)
 	if(istype(AM, /obj/item))
 		var/obj/item/I = AM
@@ -174,9 +188,6 @@
 			if(!do_after(user, grab_upgrade_time, src))
 				return FALSE
 			if(!user.pulling || user.pulling != src || user.grab_state != old_grab_state)
-				return FALSE
-			if(user.a_intent != INTENT_GRAB)
-				to_chat(user, "<span class='notice'>You must be on grab intent to upgrade your grab further!</span>")
 				return FALSE
 		user.setGrabState(user.grab_state + 1)
 		switch(user.grab_state)

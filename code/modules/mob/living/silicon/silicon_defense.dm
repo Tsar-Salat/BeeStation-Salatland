@@ -54,7 +54,7 @@
 	return attack_hand(user)
 
 /mob/living/silicon/attack_larva(mob/living/carbon/alien/larva/L)
-	if(L.a_intent == INTENT_HELP)
+	if(!L.combat_mode)
 		visible_message("[L.name] rubs its head against [src].")
 
 /mob/living/silicon/attack_hulk(mob/living/carbon/human/user, does_attack_animation = 0)
@@ -69,37 +69,25 @@
 	return 0
 
 //ATTACK HAND IGNORING PARENT RETURN VALUE
-/mob/living/silicon/attack_hand(mob/living/carbon/human/M)
+/mob/living/silicon/attack_hand(mob/living/carbon/human/M, modifiers)
 	. = FALSE
 	if(SEND_SIGNAL(src, COMSIG_ATOM_ATTACK_HAND, M) & COMPONENT_CANCEL_ATTACK_CHAIN)
 		. = TRUE
-	switch(M.a_intent)
-		if ("help")
-			visible_message("<span class='notice'>[M] pets [src].</span>", \
-							"<span class='notice'>[M] pets you.</span>", null, null, M)
-			to_chat(M, "<span class='notice'>You pet [src].</span>")
-		if("grab")
-			grabbedby(M)
-		else
-			if(HAS_TRAIT(M, TRAIT_PACIFISM))
-				to_chat(M, "<span class='notice'>You don't want to hurt [src]!</span>")
-				return
-			if(M.dna.species.punchdamage >= 10)
-				adjustBruteLoss(M.dna.species.punchdamage)
-				playsound(loc, "punch", 25, 1, -1)
-				visible_message("<span class='danger'>[M] punches [src]!</span>", \
-					"<span class='userdanger'>[M] punches you!</span>", null, COMBAT_MESSAGE_RANGE)
-				log_combat(M, src, "attacked", M)
-				return
-			M.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
-			playsound(src.loc, 'sound/effects/bang.ogg', 10, 1)
-			visible_message("<span class='danger'>[M] punches [src], but doesn't leave a dent!</span>", \
-							"<span class='warning'>[M] punches you, but doesn't leave a dent!</span>", null, COMBAT_MESSAGE_RANGE, M)
-			to_chat(M, "<span class='danger'>You punch [src], but don't leave a dent!</span>")
-			log_combat(M, src, "tried to punch", important = FALSE)
+	if(M.combat_mode)
+		M.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
+		playsound(src.loc, 'sound/effects/bang.ogg', 10, TRUE)
+		visible_message("<span class='danger'>[M] punches [src], but doesn't leave a dent!</span>", \
+						"<span class='warning'>[M] punches you, but doesn't leave a dent!</span>", null, COMBAT_MESSAGE_RANGE, M)
+		to_chat(M, "<span class='danger'>You punch [src], but don't leave a dent!</span>")
+	else
+		visible_message("<span class='notice'>[M] pets [src].</span>", \
+						"<span class='notice'>[M] pets you.</span>", null, null, M)
+		to_chat(M, "<span class='notice'>You pet [src].</span>")
+		SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT_RND, "pet_borg", /datum/mood_event/pet_borg)
+		log_combat(M, src, "tried to punch", important = FALSE)
 
 /mob/living/silicon/attack_drone(mob/living/simple_animal/drone/M)
-	if(M.a_intent == INTENT_HARM)
+	if(M.combat_mode)
 		return
 	return ..()
 

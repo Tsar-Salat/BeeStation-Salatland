@@ -15,7 +15,7 @@
 	flags_1 = PREVENT_CONTENTS_EXPLOSION_1 // So our equipment doesn't go poof
 	mouse_opacity = MOUSE_OPACITY_ICON
 	faction = list("neutral")
-	a_intent = INTENT_HARM
+	combat_mode = TRUE
 	hud_type = /datum/hud/minebot
 	// Atmos
 	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
@@ -195,7 +195,7 @@
 /mob/living/simple_animal/hostile/mining_drone/attackby(obj/item/item, mob/user, params)
 	if(user == src)
 		return TRUE // Returning true in most cases prevents afterattacks from going off and whacking/shooting the minebot
-	if(user.a_intent != INTENT_HELP)
+	if(!M.combat_mode)
 		return ..() // For smacking
 	if(istype(item, /obj/item/minebot_upgrade))
 		if(!do_after(user, 20, src))

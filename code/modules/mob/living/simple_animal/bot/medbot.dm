@@ -552,8 +552,8 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/bot/medbot)
 
 	return FALSE // we shouldn't get random TRUE cases
 
-/mob/living/simple_animal/bot/medbot/attack_hand(mob/living/carbon/human/H)
-	if(H.a_intent == INTENT_DISARM && !tipped)
+/mob/living/simple_animal/bot/medbot/attack_hand(mob/living/carbon/human/H, modifiers)
+	if(modifiers && modifiers["right"] && !tipped)
 		H.visible_message("<span class='danger'>[H] begins tipping over [src].</span>", "<span class='warning'>You begin tipping over [src]...</span>")
 
 		if(world.time > last_tipping_action_voice + 15 SECONDS)
@@ -566,7 +566,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/bot/medbot)
 		if(do_after(H, 3 SECONDS, target=src))
 			tip_over(H)
 
-	else if(H.a_intent == INTENT_HELP && tipped)
+	else if(!H.combat_mode && tipped)
 		H.visible_message("<span class='notice'>[H] begins righting [src].</span>", "<span class='notice'>You begin righting [src]...</span>")
 		if(do_after(H, 3 SECONDS, target=src))
 			set_right(H)

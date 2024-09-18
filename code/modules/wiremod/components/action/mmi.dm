@@ -150,11 +150,12 @@
 /obj/item/circuit_component/mmi/proc/handle_mmi_attack(mob/living/source, atom/target, list/mods)
 	SIGNAL_HANDLER
 
-	if(source.a_intent == INTENT_HARM)
+	var/list/modifiers = params2list(mods)
+	if(modifiers[RIGHT_CLICK])
 		clicked_atom.set_output(target)
 		secondary_attack.set_output(COMPONENT_SIGNAL)
 		. = COMSIG_MOB_CANCEL_CLICKON
-	else
+	else if(modifiers[LEFT_CLICK] && !modifiers[SHIFT_CLICK] && !modifiers[ALT_CLICK] && !modifiers[CTRL_CLICK])
 		clicked_atom.set_output(target)
 		attack.set_output(COMPONENT_SIGNAL)
 		. = COMSIG_MOB_CANCEL_CLICKON

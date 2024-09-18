@@ -61,13 +61,16 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 	else
 		mode() // Activate held item
 
-/mob/living/carbon/attackby(obj/item/I, mob/user, params)
+/mob/living/carbon/attackby(obj/item/I, mob/living/user, params)
 	for(var/datum/surgery/S in surgeries)
 		if(body_position == LYING_DOWN || !S.lying_required)
-			if((S.self_operable || user != src) && (user.a_intent == INTENT_HELP || user.a_intent == INTENT_DISARM))
-				if(S.next_step(user,user.a_intent))
-					return TRUE
-	return ..()
+			var/list/modifiers = params2list(params)
+			if((S.self_operable || user != src) && !user.combat_mode)
+				if(S.next_step(user, modifiers))
+					return 1
+
+	if(!all_wounds || !(!user.combat_mode || user == src))
+		return ..()
 
 /mob/living/carbon/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
 	var/hurt = TRUE
@@ -397,7 +400,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 	..()
 	add_abilities_to_panel()
 
-/mob/living/carbon/attack_ui(slot)
+/mob/living/carbon/attack_ui(slot, params)
 	if(!has_hand_for_held_index(active_hand_index))
 		return 0
 	return ..()

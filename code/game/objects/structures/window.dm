@@ -159,7 +159,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 		return 1
 	. = ..()
 
-/obj/structure/window/attack_hand(mob/user)
+/obj/structure/window/attack_hand(mob/living/user)
 	. = ..()
 	if(.)
 		return
@@ -185,7 +185,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 
 	add_fingerprint(user)
 
-	if(I.tool_behaviour == TOOL_WELDER && user.a_intent == INTENT_HELP)
+	if(I.tool_behaviour == TOOL_WELDER && !user.combat_mode)
 		if(obj_integrity < max_integrity)
 			if(!I.tool_start_check(user, amount=0))
 				return
@@ -698,12 +698,12 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 	for (var/i in 1 to rand(1,4))
 		. += new /obj/item/paper/natural(location)
 
-/obj/structure/window/paperframe/attack_hand(mob/user)
+/obj/structure/window/paperframe/attack_hand(mob/living/user)
 	. = ..()
 	if(.)
 		return
 	add_fingerprint(user)
-	if(user.a_intent != INTENT_HARM)
+	if(user.combat_mode)
 		user.changeNext_move(CLICK_CD_MELEE)
 		user.visible_message("[user] knocks on [src].")
 		playsound(src, "pageturn", 50, 1)
@@ -726,11 +726,11 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 	QUEUE_SMOOTH(src)
 
 
-/obj/structure/window/paperframe/attackby(obj/item/W, mob/user)
+/obj/structure/window/paperframe/attackby(obj/item/W, mob/living/user)
 	if(W.is_hot())
 		fire_act(W.is_hot())
 		return
-	if(user.a_intent == INTENT_HARM)
+	if(user.combat_mode)
 		return ..()
 	if(istype(W, /obj/item/paper) && obj_integrity < max_integrity)
 		user.visible_message("[user] starts to patch the holes in \the [src].")

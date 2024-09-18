@@ -510,7 +510,7 @@
 	if(!istype(owner, /mob/living/simple_animal/hostile/poison/giant_spider))
 		return
 	if(owner.a_intent == INTENT_HELP)
-		owner.a_intent = INTENT_HARM
+		owner.combat_mode = TRUE
 		owner.visible_message("<span class='notice'>[owner] widens its stance and blocks passage around it.</span>","<span class='notice'>You are now blocking others from passing around you.</span>")
 	else
 		owner.a_intent = INTENT_HELP

@@ -63,7 +63,7 @@
 		display_results(user, target, "<span class='notice'>You successfully augment [target]'s [parse_zone(surgery.location)].</span>",
 			"[user] successfully augments [target]'s [parse_zone(surgery.location)] with [tool]!",
 			"[user] successfully augments [target]'s [parse_zone(surgery.location)]!")
-		log_combat(user, target, "augmented", addition="by giving him new [parse_zone(surgery.location)] INTENT: [uppertext(user.a_intent)]")
+		log_combat(user, target, "augmented", addition="by giving him new [parse_zone(surgery.location)] COMBAT MODE: [uppertext(user.combat_mode)]")
 	else
 		to_chat(user, "<span class='warning'>[target] has no organic [parse_zone(surgery.location)] there!</span>")
 	return TRUE
