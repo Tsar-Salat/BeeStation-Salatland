@@ -39,7 +39,7 @@
 
 
 /mob/living/carbon/monkey/update_fire()
-	..("Monkey_burning")
+	..("monkey")
 
 /mob/living/carbon/monkey/update_inv_legcuffed()
 	remove_overlay(LEGCUFF_LAYER)
