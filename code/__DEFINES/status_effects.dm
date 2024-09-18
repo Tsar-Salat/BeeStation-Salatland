@@ -82,6 +82,13 @@
 #define STATUS_EFFECT_CONVULSING /datum/status_effect/convulsing
 
 #define STATUS_EFFECT_NECROPOLIS_CURSE /datum/status_effect/necropolis_curse
+
+///Processing flags - used to define the speed at which the status will work
+///This is fast - 0.2s between ticks (I believe!)
+#define STATUS_EFFECT_FAST_PROCESS 0
+///This is slower and better for more intensive status effects - 1s between ticks
+#define STATUS_EFFECT_NORMAL_PROCESS 1
+
 #define CURSE_BLINDING	1 //! makes the edges of the target's screen obscured
 #define CURSE_SPAWNING	2 //! spawns creatures that attack the target only
 #define CURSE_WASTING	4 //! causes gradual damage

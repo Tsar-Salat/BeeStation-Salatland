@@ -42,19 +42,31 @@
 		return
 	if(owner)
 		LAZYADD(owner.status_effects, src)
+
 	if(duration != -1)
 		duration = world.time + duration
 	tick_interval = world.time + tick_interval
+
 	if(alert_type)
-		var/atom/movable/screen/alert/status_effect/A = owner.throw_alert(id, alert_type)
-		A.attached_effect = src //so the alert can reference us, if it needs to
-		linked_alert = A //so we can reference the alert, if we need to
+		var/atom/movable/screen/alert/status_effect/new_alert = owner.throw_alert(id, alert_type)
+		new_alert.attached_effect = src //so the alert can reference us, if it needs to
+		linked_alert = new_alert //so we can reference the alert, if we need to
+
 	if(duration > 0 || initial(tick_interval) > 0) //don't process if we don't care
-		START_PROCESSING(SSfastprocess, src)
+		switch(processing_speed)
+			if(STATUS_EFFECT_FAST_PROCESS)
+				START_PROCESSING(SSfastprocess, src)
+			if (STATUS_EFFECT_NORMAL_PROCESS)
+				START_PROCESSING(SSprocessing, src)
+
 	return TRUE
 
 /datum/status_effect/Destroy()
-	STOP_PROCESSING(SSfastprocess, src)
+	switch(processing_speed)
+		if(STATUS_EFFECT_FAST_PROCESS)
+			STOP_PROCESSING(SSfastprocess, src)
+		if (STATUS_EFFECT_NORMAL_PROCESS)
+			STOP_PROCESSING(SSprocessing, src)
 	if(owner)
 		linked_alert = null
 		owner.clear_alert(id)
@@ -63,8 +75,11 @@
 		owner = null
 	return ..()
 
-/datum/status_effect/process()
-	if(!owner)
+// Status effect process. Handles adjusting it's duration and ticks.
+// If you're adding processed effects, put them in [proc/tick]
+// instead of extending / overriding ththe process() proc.
+/datum/status_effect/process(delta_time)
+	if(QDELETED(owner))
 		qdel(src)
 		return
 	if(tick_interval < world.time)
@@ -73,20 +88,39 @@
 	if(duration != -1 && duration < world.time)
 		qdel(src)
 
-/datum/status_effect/proc/on_apply() //Called whenever the buff is applied; returning FALSE will cause it to autoremove itself.
+/// Called whenever the effect is applied in on_created
+/// Returning FALSE will cause it to delete itself during creation instead.
+/datum/status_effect/proc/on_apply()
 	return TRUE
-/datum/status_effect/proc/tick() //Called every tick.
-/datum/status_effect/proc/on_remove() //Called whenever the buff expires or is removed; do note that at the point this is called, it is out of the owner's status_effects but owner is not yet null
-/datum/status_effect/proc/be_replaced() //Called instead of on_remove when a status effect is replaced by itself or when a status effect with on_remove_on_mob_delete = FALSE has its mob deleted
+
+/// Called every tick from process().
+/datum/status_effect/proc/tick()
+	return
+
+/// Called whenever the buff expires or is removed (qdeleted)
+/// Note that at the point this is called, it is out of the
+/// owner's status_effects list, but owner is not yet null
+/datum/status_effect/proc/on_remove()
+	return
+
+/// Called instead of on_remove when a status effect
+/// of status_type STATUS_EFFECT_REPLACE is replaced by itself,
+/// or when a status effect with on_remove_on_mob_delete
+/// set to FALSE has its mob deleted
+/datum/status_effect/proc/be_replaced()
 	owner.clear_alert(id)
 	LAZYREMOVE(owner.status_effects, src)
 	owner = null
 	qdel(src)
 
-/datum/status_effect/proc/before_remove() //! Called before being removed; returning FALSE will cancel removal
+/// Called before being fully removed (before on_remove)
+/// Returning FALSE will cancel removal
+/datum/status_effect/proc/before_remove()
 	return TRUE
 
-/datum/status_effect/proc/refresh()
+/// Called when a status effect of status_type STATUS_EFFECT_REFRESH
+/// has its duration refreshed in apply_status_effect - is passed New() args
+/datum/status_effect/proc/refresh(effect, ...)
 	var/original_duration = initial(duration)
 	if(original_duration == -1)
 		return
@@ -96,95 +130,25 @@
 /datum/status_effect/proc/merge(...)
 	return
 
-/datum/status_effect/proc/get_examine_text() //Called when the owner is examined
+//Called when the owner is examined
+/datum/status_effect/proc/get_examine_text()
 	return examine_text
 
-//clickdelay/nextmove modifiers!
+/// Adds nextmove modifier multiplicatively to the owner while applied
 /datum/status_effect/proc/nextmove_modifier()
 	return 1
 
+/// Adds nextmove adjustment additiviely to the owner while applied
 /datum/status_effect/proc/nextmove_adjust()
 	return 0
 
-////////////////
-// ALERT HOOK //
-////////////////
-
+/// Alert base type for status effect alerts
 /atom/movable/screen/alert/status_effect
 	name = "Curse of Mundanity"
 	desc = "You don't feel any different..."
+	/// The status effect we're linked to
 	var/datum/status_effect/attached_effect
 
 /atom/movable/screen/alert/status_effect/Destroy()
 	attached_effect = null //Don't keep a ref now
 	return ..()
-
-//////////////////
-// HELPER PROCS //
-//////////////////
-
-/mob/living/proc/apply_status_effect(effect, ...) //applies a given status effect to this mob, returning the effect if it was successful
-	. = FALSE
-	var/datum/status_effect/S1 = effect
-	LAZYINITLIST(status_effects)
-	for(var/datum/status_effect/S in status_effects)
-		if(S.id == initial(S1.id) && S.status_type)
-			if(S.status_type == STATUS_EFFECT_REPLACE)
-				S.be_replaced()
-			else if(S.status_type == STATUS_EFFECT_REFRESH)
-				S.refresh()
-				return
-			else if (S.status_type == STATUS_EFFECT_MERGE)
-				S.merge(arglist(args.Copy(2)))
-				return
-			else
-				return
-	var/list/arguments = args.Copy()
-	arguments[1] = src
-	S1 = new effect(arguments)
-	. = S1
-
-/mob/living/proc/remove_status_effect(effect, ...) //removes all of a given status effect from this mob, returning TRUE if at least one was removed
-	. = FALSE
-	var/list/arguments = args.Copy(2)
-	if(status_effects)
-		var/datum/status_effect/S1 = effect
-		for(var/datum/status_effect/S in status_effects)
-			if(initial(S1.id) == S.id && S.before_remove(arguments))
-				qdel(S)
-				. = TRUE
-
-/mob/living/proc/has_status_effect(effect) //returns the effect if the mob calling the proc owns the given status effect
-	. = FALSE
-	if(status_effects)
-		var/datum/status_effect/S1 = effect
-		for(var/datum/status_effect/S in status_effects)
-			if(initial(S1.id) == S.id)
-				return S
-
-/mob/living/proc/has_status_effect_list(effect) //returns a list of effects with matching IDs that the mod owns; use for effects there can be multiple of
-	. = list()
-	if(status_effects)
-		var/datum/status_effect/S1 = effect
-		for(var/datum/status_effect/S in status_effects)
-			if(initial(S1.id) == S.id)
-				. += S
-
-/// Status effect from multiple sources, when all sources are removed, so is the effect
-/datum/status_effect/grouped
-	status_type = STATUS_EFFECT_MULTIPLE //! Adds itself to sources and destroys itself if one exists already, there are never multiple
-	var/list/sources = list()
-
-/datum/status_effect/grouped/on_creation(mob/living/new_owner, source)
-	var/datum/status_effect/grouped/existing = new_owner.has_status_effect(type)
-	if(existing)
-		existing.sources |= source
-		qdel(src)
-		return FALSE
-	else
-		sources |= source
-		return ..()
-
-/datum/status_effect/grouped/before_remove(source)
-	sources -= source
-	return !length(sources)
