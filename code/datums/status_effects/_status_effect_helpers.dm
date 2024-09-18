@@ -38,7 +38,7 @@
 					return
 				// Refresh the existing type, then early return
 				if(STATUS_EFFECT_MERGE)
-					S.merge(arglist(args.Copy(2)))
+					existing_effect.merge(arglist(args.Copy(2)))
 					return
 
 	// Create the status effect with our mob + our arguments
@@ -64,37 +64,35 @@
 
 	return .
 
-/mob/living/proc/has_status_effect(effect) //returns the effect if the mob calling the proc owns the given status effect
-	. = FALSE
-	if(status_effects)
-		var/datum/status_effect/S1 = effect
-		for(var/datum/status_effect/S in status_effects)
-			if(initial(S1.id) == S.id)
-				return S
+/**
+ * Checks if this mob has a status effect that shares the passed effect's ID
+ *
+ * checked_effect - TYPEPATH of a status effect to check for. Checks for its ID, not it's typepath
+ *
+ * Returns an instance of a status effect, or NULL if none were found.
+ */
+/mob/living/proc/has_status_effect(datum/status_effect/checked_effect)
+	RETURN_TYPE(/datum/status_effect)
 
-/mob/living/proc/has_status_effect_list(effect) //returns a list of effects with matching IDs that the mod owns; use for effects there can be multiple of
-	. = list()
-	if(status_effects)
-		var/datum/status_effect/S1 = effect
-		for(var/datum/status_effect/S in status_effects)
-			if(initial(S1.id) == S.id)
-				. += S
+	for(var/datum/status_effect/present_effect as anything in status_effects)
+		if(present_effect.id == initial(checked_effect.id))
+			return present_effect
 
-/// Status effect from multiple sources, when all sources are removed, so is the effect
-/datum/status_effect/grouped
-	status_type = STATUS_EFFECT_MULTIPLE //! Adds itself to sources and destroys itself if one exists already, there are never multiple
-	var/list/sources = list()
+	return null
 
-/datum/status_effect/grouped/on_creation(mob/living/new_owner, source)
-	var/datum/status_effect/grouped/existing = new_owner.has_status_effect(type)
-	if(existing)
-		existing.sources |= source
-		qdel(src)
-		return FALSE
-	else
-		sources |= source
-		return ..()
+/**
+ * Re-returns a list of all status effects that share the passed effect type's ID
+ *
+ * checked_effect - TYPEPATH of a status effect to check for. Checks for its ID, not it's typepath
+ *
+ * Returns a list
+ */
+/mob/living/proc/has_status_effect_list(datum/status_effect/checked_effect)
+	RETURN_TYPE(/list)
 
-/datum/status_effect/grouped/before_remove(source)
-	sources -= source
-	return !length(sources)
+	var/list/effects_found = list()
+	for(var/datum/status_effect/present_effect as anything in status_effects)
+		if(present_effect.id == initial(checked_effect.id))
+			effects_found += present_effect
+
+	return effects_found
