@@ -85,8 +85,6 @@
 
 	var/atom/food = parent
 
-	var/atom/food = parent
-
 	if(QDELETED(stored_item))
 		return
 

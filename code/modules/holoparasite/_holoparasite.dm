@@ -264,7 +264,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/hostile/holoparasite)
 
 /mob/living/simple_animal/hostile/holoparasite/CtrlClickOn(atom/target)
 	. = ..()
-	if(a_intent != INTENT_HELP && is_manifested() && isobj(target) && Adjacent(target))
+	if(combat_mode && is_manifested() && isobj(target) && Adjacent(target))
 		if(target.ui_interact(src) != FALSE) // unimplemented ui_interact returns FALSE, while implemented typically just returns... nothing.
 			to_chat(src, "<span class='notice'>You take a closer look at [costly_icon2html(target, src)] [target]...</span>")
 			return

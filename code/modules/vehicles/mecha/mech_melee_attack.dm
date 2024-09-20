@@ -115,6 +115,6 @@
 		visible_message("<span class='danger'>[mecha_attacker.name] hits [src]!</span>", \
 						"<span class='userdanger'>[mecha_attacker.name] hits you!</span>", "<span class='hear'>You hear a sickening sound of flesh hitting flesh!</span>", COMBAT_MESSAGE_RANGE, list(mecha_attacker))
 		to_chat(mecha_attacker, "<span class='danger'>You hit [src]!</span>")
-		log_combat(user, src, "attacked", mecha_attacker, "(COMBAT MODE: [uppertext(source.combat_mode)] (DAMTYPE: [uppertext(mecha_attacker.damtype)])")
+		log_combat(user, src, "attacked", mecha_attacker, "(COMBAT MODE: [uppertext(attacker.combat_mode)] (DAMTYPE: [uppertext(mecha_attacker.damtype)])")
 	else
 		return ..()

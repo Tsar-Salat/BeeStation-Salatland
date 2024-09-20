@@ -69,7 +69,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 				if(S.next_step(user, modifiers))
 					return 1
 
-	if(!all_wounds || !(!user.combat_mode || user == src))
+	if(!(!user.combat_mode || user == src))
 		return ..()
 
 /mob/living/carbon/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)

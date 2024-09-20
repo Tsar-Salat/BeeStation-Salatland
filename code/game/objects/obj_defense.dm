@@ -117,7 +117,7 @@
 	return 150 //the damage hulks do on punches to this object, is affected by melee armor
 
 /obj/attack_hulk(mob/living/carbon/human/user, does_attack_animation = 0)
-	if(user.a_intent == INTENT_HARM)
+	if(user.combat_mode)
 		..(user, 1)
 		if(density)
 			playsound(src, 'sound/effects/meteorimpact.ogg', 100, 1)

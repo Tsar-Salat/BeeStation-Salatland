@@ -149,11 +149,11 @@
 	if(!ishuman(user))
 		return
 	var/mob/living/carbon/human/apc_interactor = user
-	var/obj/item/organ/stomach/ethereal/maybe_ethereal_stomach = apc_interactor.getorganslot(ORGAN_SLOT_STOMACH)
+	var/obj/item/organ/stomach/battery/ethereal/maybe_ethereal_stomach = apc_interactor.getorganslot(ORGAN_SLOT_STOMACH)
 	if(!istype(maybe_ethereal_stomach))
 		togglelock(user)
 	else
-		if(maybe_ethereal_stomach.crystal_charge >= ETHEREAL_CHARGE_NORMAL)
+		if(maybe_ethereal_stomach.charge >= ETHEREAL_CHARGE_NORMAL)
 			togglelock(user)
 		ethereal_interact(user,modifiers)
 	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
@@ -164,23 +164,23 @@
 	var/mob/living/carbon/human/ethereal = user
 	var/obj/item/organ/stomach/maybe_stomach = ethereal.getorganslot(ORGAN_SLOT_STOMACH)
 
-	if(!istype(maybe_stomach, /obj/item/organ/stomach/ethereal))
+	if(!istype(maybe_stomach, /obj/item/organ/stomach/battery/ethereal))
 		return
 	var/charge_limit = ETHEREAL_CHARGE_DANGEROUS - APC_POWER_GAIN
-	var/obj/item/organ/stomach/ethereal/stomach = maybe_stomach
+	var/obj/item/organ/stomach/battery/ethereal/stomach = maybe_stomach
 	if(!((stomach?.drain_time < world.time) && LAZYACCESS(modifiers, RIGHT_CLICK)))
 		return
 	if(ethereal.combat_mode)
 		if(cell.charge <= (cell.maxcharge / 2)) // ethereals can't drain APCs under half charge, this is so that they are forced to look to alternative power sources if the station is running low
 			to_chat(ethereal, span_warning("The APC's syphon safeties prevent you from draining power!"))
 			return
-		if(stomach.crystal_charge > charge_limit)
+		if(stomach.charge > charge_limit)
 			to_chat(ethereal, span_warning("Your charge is full!"))
 			return
 		stomach.drain_time = world.time + APC_DRAIN_TIME
 		to_chat(ethereal, span_notice("You start channeling some power through the APC into your body."))
 		if(do_after(user, APC_DRAIN_TIME, target = src))
-			if(cell.charge <= (cell.maxcharge / 2) || (stomach.crystal_charge > charge_limit))
+			if(cell.charge <= (cell.maxcharge / 2) || (stomach.charge > charge_limit))
 				return
 			to_chat(ethereal, span_notice("You receive some charge from the APC."))
 			stomach.adjust_charge(APC_POWER_GAIN)
@@ -197,7 +197,7 @@
 	to_chat(ethereal, span_notice("You start channeling power through your body into the APC."))
 	if(!do_after(user, APC_DRAIN_TIME, target = src))
 		return
-	if((cell.charge >= (cell.maxcharge - APC_POWER_GAIN)) || (stomach.crystal_charge < APC_POWER_GAIN))
+	if((cell.charge >= (cell.maxcharge - APC_POWER_GAIN)) || (stomach.charge < APC_POWER_GAIN))
 		to_chat(ethereal, span_warning("You can't transfer power to the APC!"))
 		return
 	if(istype(stomach))

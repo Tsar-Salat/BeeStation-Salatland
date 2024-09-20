@@ -55,7 +55,7 @@
 
 	if(suiciding)
 		O.set_suicide(suiciding)
-	O.a_intent = INTENT_HARM
+	O.combat_mode = TRUE
 
 	//keep viruses?
 	if (tr_flags & TR_KEEPVIRUS)
@@ -205,7 +205,7 @@
 
 	if(suiciding)
 		O.set_suicide(suiciding)
-	O.a_intent = INTENT_HARM
+	O.combat_mode = TRUE
 
 	//keep viruses?
 	if (tr_flags & TR_KEEPVIRUS)
@@ -450,7 +450,7 @@
 		else
 			O.set_species(/datum/species/human)
 
-	O.a_intent = INTENT_HELP
+	O.combat_mode = FALSE
 	if (tr_flags & TR_DEFAULTMSG)
 		to_chat(O, "<B>You are now \a [O.dna.species]].</B>")
 
@@ -642,7 +642,7 @@
 	if(pre_transform())
 		return
 	var/mob/living/simple_animal/hostile/gorilla/rabid/new_gorilla = new (get_turf(src))
-	new_gorilla.a_intent = INTENT_HARM
+	new_gorilla.combat_mode = TRUE
 	var/datum/atom_hud/H = GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]
 	H.add_hud_to(new_gorilla)
 	if(mind)

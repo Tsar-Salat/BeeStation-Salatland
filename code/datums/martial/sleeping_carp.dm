@@ -116,10 +116,10 @@
 		return 1
 	return basic_hit(A,D)
 
-/datum/martial_art/the_sleeping_carp/grab_act(mob/living/carbon/human/A, mob/living/carbon/human/D)
+/datum/martial_art/the_sleeping_carp/grab_act(mob/living/carbon/human/A, mob/living/carbon/human/D, grab_attack)
 	if(A==D)
 		return 0 //prevents grabbing yourself
-	if(A.a_intent == INTENT_GRAB)
+	if(grab_act)
 		add_to_streak("G",D)
 		if(check_streak(A,D)) //doing combos is prioritized over upgrading grabs
 			return 1

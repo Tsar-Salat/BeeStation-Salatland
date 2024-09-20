@@ -99,24 +99,6 @@
 	L.dna.species.primary_species_action()
 	return TRUE
 
-/datum/keybinding/living/select_intent
-	/// The intent this keybinding will switch to.
-	var/intent
-
-/datum/keybinding/living/select_intent/can_use(client/user)
-	. = ..()
-	var/mob/living/user_mob = user.mob
-	if(!. || !istype(user_mob))
-		return
-	return !iscyborg(user_mob) && (intent in user_mob.possible_a_intents) && (locate(/atom/movable/screen/act_intent) in user_mob.hud_used?.static_inventory) // The cyborg check is because cyborgs have their own swap intent hotkey, and we don't want to mess that up.
-
-/datum/keybinding/living/select_intent/down(client/user)
-	. = ..()
-	if(.)
-		return
-	user.mob?.a_intent_change(intent)
-	return TRUE
-
 /datum/keybinding/living/toggle_combat_mode
 	keys = list("F", "4")
 	name = "toggle_combat_mode"

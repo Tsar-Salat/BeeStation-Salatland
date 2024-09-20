@@ -287,7 +287,7 @@
 		return
 	if(!isliving(target))
 		return
-	if (user.a_intent == INTENT_HARM)
+	if (user.combat_mode)
 		if(!..())
 			return
 		if(!iscyborg(target))
@@ -378,12 +378,12 @@
 	if(!isliving(target))
 		return
 	if(iscyborg(target))
-		if (user.a_intent != INTENT_HARM)
+		if (!user.combat_mode)
 			playsound(get_turf(src), on_stun_sound, 75, 1, -1)
 			user.do_attack_animation(target) // The attacker cuddles the Cyborg, awww. No damage here.
 			return
 		return ..()
-	if (user.a_intent == INTENT_HARM)
+	if (user.combat_mode)
 		if(!..())
 			target.apply_damage(force, STAMINA, blocked = def_check)
 			return
@@ -679,7 +679,7 @@
 		return
 	if(iscyborg(target))
 		// We don't stun if we're on harm.
-		if (user.a_intent != INTENT_HARM)
+		if (!user.combat_mode)
 			if (affect_silicon)
 				var/list/desc = get_silicon_stun_description(target, user)
 
@@ -699,7 +699,7 @@
 		return
 	if(!isliving(target))
 		return
-	if (user.a_intent == INTENT_HARM)
+	if (user.combat_mode)
 		if(!..())
 			return
 		if(!iscyborg(target))

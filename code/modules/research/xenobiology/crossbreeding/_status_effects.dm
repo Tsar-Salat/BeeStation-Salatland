@@ -938,7 +938,6 @@
 	var/obj/item/slimecross/stabilized/gold/linked = linked_extract
 	if(QDELETED(familiar))
 		familiar = new linked.mob_type(get_turf(owner.loc))
-		familiar.combat_mode == TRUE
 		ADD_TRAIT(familiar, TRAIT_PACIFISM, "stabilizedgold")
 		familiar.melee_damage = 0
 		familiar.remove_verb(/mob/living/simple_animal/parrot/proc/toggle_mode) // just in case

@@ -392,7 +392,7 @@
 
 
 /mob/living/simple_animal/bot/cleanbot/larry/attackby(obj/item/I, mob/living/user)
-	if(user.a_intent == INTENT_HELP)
+	if(!user.combat_mode)
 		if(istype(I, /obj/item/knife) && !knife) //Is it a knife?
 			var/obj/item/knife/newknife = I
 			knife = newknife

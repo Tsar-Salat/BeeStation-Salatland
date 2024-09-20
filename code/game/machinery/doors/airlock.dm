@@ -913,7 +913,7 @@
 	else
 		updateDialog()
 
-/obj/machinery/door/airlock/attackby(obj/item/C, mob/user, params)
+/obj/machinery/door/airlock/attackby(obj/item/C, mob/living/user, params)
 	if(!issilicon(user) && !IsAdminGhost(user))
 		if(isElectrified() && C?.siemens_coefficient)
 			if(shock(user, 75))
@@ -1083,7 +1083,7 @@
 		user.visible_message("<span class='notice'>[user] pins [C] to [src].</span>", "<span class='notice'>You pin [C] to [src].</span>")
 		note = C
 		update_icon()
-	else if(HAS_TRAIT(C, TRAIT_DOOR_PRYER) && user.a_intent != INTENT_HARM)
+	else if(HAS_TRAIT(C, TRAIT_DOOR_PRYER) && !user.combat_mode)
 		if(isElectrified() && C?.siemens_coefficient)
 			shock(user,100)
 

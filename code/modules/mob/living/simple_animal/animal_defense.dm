@@ -28,8 +28,8 @@
 						"<span class='notice'>[M] [response_help_continuous] you.</span>", null, null, M)
 		to_chat(M, "<span class='notice'>You [response_help_simple] [src].</span>")
 		playsound(loc, 'sound/weapons/thudswoosh.ogg', 50, TRUE, -1)
-		if(pet_bonus)
-			funpet(M)
+		//if(pet_bonus)
+		//	funpet(M)
 	else
 		if(HAS_TRAIT(M, TRAIT_PACIFISM))
 			to_chat(M, "<span class='warning'>You don't want to hurt [src]!</span>")
@@ -45,7 +45,7 @@
 		return TRUE
 
 /mob/living/simple_animal/attack_hulk(mob/living/carbon/human/user, does_attack_animation = 0)
-	if(user.a_intent == INTENT_HARM)
+	if(user.combat_mode)
 		if(HAS_TRAIT(user, TRAIT_PACIFISM))
 			to_chat(user, "<span class='notice'>You don't want to hurt [src]!</span>")
 			return FALSE

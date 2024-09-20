@@ -37,12 +37,11 @@
 	. = ..()
 	cargo_holder = null
 
-/obj/item/mecha_parts/mecha_equipment/hydraulic_clamp/action(mob/source, atom/target, params)
+/obj/item/mecha_parts/mecha_equipment/hydraulic_clamp/action(mob/living/source, atom/target, params)
 	if(!action_checks(target))
 		return
 	if(!cargo_holder)
 		return
-
 	else if(isobj(target))
 		var/obj/clamptarget = target
 		if(istype(clamptarget, /obj/machinery/door/firedoor))
@@ -78,8 +77,6 @@
 		var/mob/living/M = target
 		if(M.stat == DEAD)
 			return
-
-		var/list/modifiers = params2list(params)
 
 		if(!source.combat_mode)
 			step_away(M,chassis)
@@ -123,7 +120,7 @@
 		target.visible_message("<span class='danger'>[chassis] squeezes [target]!</span>", \
 							"<span class='userdanger'>[chassis] squeezes you!</span>",\
 							"<span class='hear'>You hear something crack.</span>")
-		log_combat(source, M, "attacked", "[name]", "(INTENT: [uppertext(source.a_intent)]) (DAMTYPE: [uppertext(damtype)])")
+		log_combat(source, M, "attacked", "[name]", "(Combat mode: [attacker.combat_mode ? "On" : "Off"]) (DAMTYPE: [uppertext(damtype)])")
 	return ..()
 
 //This is pretty much just for the death-ripley

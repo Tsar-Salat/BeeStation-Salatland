@@ -157,7 +157,7 @@
 /mob/living/simple_animal/parrot/get_stat_tab_status()
 	var/list/tab_data = ..()
 	tab_data["Held Item"] = GENERATE_STAT_TEXT("[held_item]")
-	tab_data["Combat Mode"] = GENERATE_STAT_TEXT("[ombat_mode ? "On" : "Off"]")
+	tab_data["Combat Mode"] = GENERATE_STAT_TEXT("[combat_mode ? "On" : "Off"]")
 	return tab_data
 
 /mob/living/simple_animal/parrot/Hear(message, atom/movable/speaker, message_langs, raw_message, radio_freq, list/spans, list/message_mods = list())

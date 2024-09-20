@@ -5,7 +5,6 @@
 
 	action_intent = new /atom/movable/screen/act_intent()
 	action_intent.icon = ui_style
-	action_intent.icon_state = mymob.combat_mode
 	action_intent.screen_loc = ui_acti
 	action_intent.hud = src
 	static_inventory += action_intent

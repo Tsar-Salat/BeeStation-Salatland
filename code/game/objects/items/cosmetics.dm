@@ -125,7 +125,7 @@
 
 
 /obj/item/razor/attack(mob/M, mob/living/user)
-	if(!ishuman(M) || extended != 1 || user.a_intent == INTENT_HARM)
+	if(!ishuman(M) || extended != 1 || user.combat_mode)
 		return ..()
 	var/mob/living/carbon/human/H = M
 	// Must be targetting the head
@@ -140,7 +140,7 @@
 	var/datum/task/select_bodyzone = user.select_bodyzone(M, TRUE, BODYZONE_STYLE_DEFAULT, override_zones = list(BODY_ZONE_HEAD, BODY_ZONE_PRECISE_MOUTH))
 	select_bodyzone.continue_with(CALLBACK(src, PROC_REF(razor_action), H, user, mirror))
 
-/obj/item/razor/proc/razor_action(mob/living/carbon/human/H, mob/user, mirror, location)
+/obj/item/razor/proc/razor_action(mob/living/carbon/human/H, mob/living/user, mirror, location)
 	if (!user.can_interact_with(H, TRUE))
 		to_chat(user, "<span class='warning'>[H] is too far away!</span>")
 		return

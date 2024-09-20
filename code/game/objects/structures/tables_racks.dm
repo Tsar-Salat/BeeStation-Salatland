@@ -100,7 +100,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 					if(GRAB_AGGRESSIVE)
 						tablepush(user, pushed_mob)
 					if(GRAB_NECK to GRAB_KILL)
-						tablelimbsmash(user, pushed_mob)
+						tableheadsmash(user, pushed_mob)
 			else
 				pushed_mob.visible_message("<span class='notice'>[user] begins to place [pushed_mob] onto [src]...</span>", \
 									"<span class='userdanger'>[user] begins to place [pushed_mob] onto [src]...</span>")
@@ -182,13 +182,13 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 	var/list/modifiers = params2list(params)
 
 	if(!(flags_1 & NODECONSTRUCT_1) && modifiers && modifiers["right"])
-		if(I.tool_behaviour == TOOL_SCREWDRIVER && deconstruction_ready && user.a_intent != INTENT_HELP)
+		if(I.tool_behaviour == TOOL_SCREWDRIVER && deconstruction_ready && user.combat_mode)
 			to_chat(user, "<span class='notice'>You start disassembling [src]...</span>")
 			if(I.use_tool(src, user, 20, volume=50))
 				deconstruct(TRUE)
 			return
 
-		if(I.tool_behaviour == TOOL_WRENCH && deconstruction_ready && user.a_intent != INTENT_HELP)
+		if(I.tool_behaviour == TOOL_WRENCH && deconstruction_ready && user.combat_mode)
 			to_chat(user, "<span class='notice'>You start deconstructing [src]...</span>")
 			if(I.use_tool(src, user, 40, volume=50))
 				playsound(src.loc, 'sound/items/deconstruct.ogg', 50, 1)
@@ -210,7 +210,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 			return
 		if(user.combat_mode)
 			user.unbuckle_mob(carried_mob)
-			tablelimbsmash(user, carried_mob)
+			tableheadsmash(user, carried_mob)
 		else
 			var/tableplace_delay = 3.5 SECONDS
 			var/skills_space = ""
@@ -225,7 +225,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 			if(do_after(user, tableplace_delay, target = carried_mob))
 				user.unbuckle_mob(carried_mob)
 				tableplace(user, carried_mob)
-	return TRUE
+		return TRUE
 
 	if(!user.combat_mode && !(I.item_flags & ABSTRACT))
 		if(user.transferItemToLoc(I, drop_location(), silent = FALSE))

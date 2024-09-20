@@ -234,7 +234,7 @@
 /mob/living/simple_animal/UnarmedAttack(atom/A, proximity, modifiers)
 	if(HAS_TRAIT(src, TRAIT_HANDS_BLOCKED))
 		return
-	if(!dextrous || a_intent == INTENT_HARM)
+	if(!dextrous || combat_mode)
 		return ..()
 	if(!ismob(A))
 		A.attack_hand(src, modifiers)

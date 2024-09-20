@@ -58,7 +58,7 @@
 		visible_message("[L.name] rubs its head against [src].")
 
 /mob/living/silicon/attack_hulk(mob/living/carbon/human/user, does_attack_animation = 0)
-	if(user.a_intent == INTENT_HARM)
+	if(user.combat_mode)
 		..(user, 1)
 		adjustBruteLoss(rand(10, 15))
 		playsound(loc, "punch", 25, 1, -1)
@@ -83,7 +83,7 @@
 		visible_message("<span class='notice'>[M] pets [src].</span>", \
 						"<span class='notice'>[M] pets you.</span>", null, null, M)
 		to_chat(M, "<span class='notice'>You pet [src].</span>")
-		SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT_RND, "pet_borg", /datum/mood_event/pet_borg)
+		//SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT_RND, "pet_borg", /datum/mood_event/pet_borg)
 		log_combat(M, src, "tried to punch", important = FALSE)
 
 /mob/living/silicon/attack_drone(mob/living/simple_animal/drone/M)

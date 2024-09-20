@@ -48,23 +48,22 @@
 	heal_amt = CEILING(max(master_stats.potential * 0.8, 2) + 3, 0.5)
 	effect_heal_amt = CEILING(max(master_stats.potential * 0.85, 1), 1)
 	purge_amt = CEILING((master_stats.potential + master_stats.defense) * 0.55 * REAGENTS_EFFECT_MULTIPLIER, 0.5)
-	owner.possible_a_intents = list(INTENT_HELP, INTENT_HARM)
 
 /datum/holoparasite_ability/major/healing/remove()
 	..()
 	var/datum/atom_hud/medsensor = GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]
 	medsensor.remove_hud_from(owner)
-	owner.possible_a_intents = null
 
 /datum/holoparasite_ability/major/healing/register_signals()
 	..()
-	RegisterSignal(owner, COMSIG_HOLOPARA_SETUP_HUD, PROC_REF(on_hud_setup))
+	//RegisterSignal(owner, COMSIG_HOLOPARA_SETUP_HUD, PROC_REF(on_hud_setup))
 	RegisterSignal(owner, COMSIG_HOSTILE_ATTACKINGTARGET, PROC_REF(on_attack))
 
 /datum/holoparasite_ability/major/healing/unregister_signals()
 	..()
 	UnregisterSignal(owner, list(COMSIG_HOLOPARA_SETUP_HUD, COMSIG_HOSTILE_ATTACKINGTARGET))
 
+/*
 /datum/holoparasite_ability/major/healing/proc/on_hud_setup(datum/_source, datum/hud/holoparasite/hud, list/huds_to_add)
 	SIGNAL_HANDLER
 	// too lazy to make this code better, this still works. dextrous can use more intents, so our 2-intent hud is just worse.
@@ -72,8 +71,9 @@
 		return
 	hud.action_intent = new /atom/movable/screen/act_intent/holopara_healer
 	hud.action_intent.icon = hud.ui_style
-	hud.action_intent.icon_state = owner.a_intent
+	hud.action_intent.icon_state = owner.a_inten
 	huds_to_add += hud.action_intent
+*/
 
 /**
  * Handles healing a target whenever attacking them.
@@ -81,7 +81,7 @@
 /datum/holoparasite_ability/major/healing/proc/on_attack(datum/_source, atom/target)
 	SIGNAL_HANDLER
 	ASSERT_ABILITY_USABILITY
-	if(owner.a_intent == INTENT_HELP)
+	if(!owner.combat_mode)
 		if(owner.has_matching_summoner(target, include_summoner = FALSE))
 			to_chat(owner, "<span class='danger bold'>You can't heal yourself!</span>")
 			owner.balloon_alert(owner, "cannot heal self", show_in_chat = FALSE)

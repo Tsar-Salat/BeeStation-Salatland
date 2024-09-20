@@ -108,5 +108,5 @@
 	if(user.combat_mode || !contents.len || !stacked)
 		return ..()
 	var/obj/item/item = contents[contents.len]
-	. = O.attack(M, user, params, FALSE)
+	. = item.attack(target, user, params, FALSE)
 	update_appearance()
