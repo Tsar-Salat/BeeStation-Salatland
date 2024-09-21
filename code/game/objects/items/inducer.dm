@@ -22,8 +22,8 @@
 	var/totransfer = min(cell.charge,(powertransfer * coefficient))
 	var/transferred = target.give(totransfer)
 	cell.use(transferred)
-	cell.update_icon()
-	target.update_icon()
+	cell.update_appearance()
+	target.update_appearance()
 
 /obj/item/inducer/get_cell()
 	return cell
@@ -59,20 +59,20 @@
 		return TRUE
 	return FALSE
 
+/obj/item/inducer/screwdriver_act(mob/living/user, obj/item/tool)
+	tool.play_tool_sound(src)
+	if(!opened)
+		to_chat(user, "<span class='notice'>You unscrew the battery compartment.</span>")
+		opened = TRUE
+		update_appearance()
+		return
+	else
+		to_chat(user, "<span class='notice'>You close the battery compartment.</span>")
+		opened = FALSE
+		update_appearance()
+		return
 
 /obj/item/inducer/attackby(obj/item/W, mob/user)
-	if(W.tool_behaviour == TOOL_SCREWDRIVER)
-		W.play_tool_sound(src)
-		if(!opened)
-			to_chat(user, "<span class='notice'>You unscrew the battery compartment.</span>")
-			opened = TRUE
-			update_icon()
-			return
-		else
-			to_chat(user, "<span class='notice'>You close the battery compartment.</span>")
-			opened = FALSE
-			update_icon()
-			return
 	if(istype(W, /obj/item/stock_parts/cell))
 		if(opened)
 			if(!cell)
@@ -80,7 +80,7 @@
 					return
 				to_chat(user, "<span class='notice'>You insert [W] into [src].</span>")
 				cell = W
-				update_icon()
+				update_appearance()
 				return
 			else
 				to_chat(user, "<span class='notice'>[src] already has \a [cell] installed!</span>")
@@ -137,7 +137,7 @@
 					induce(C, coefficient)
 				do_sparks(1, FALSE, A)
 				if(O)
-					O.update_icon()
+					O.update_appearance()
 			else
 				break
 		if(done_any) // Only show a message if we succeeded at least once
@@ -162,10 +162,10 @@
 /obj/item/inducer/attack_self(mob/user)
 	if(opened && cell)
 		user.visible_message("[user] removes [cell] from [src]!","<span class='notice'>You remove [cell].</span>")
-		cell.update_icon()
+		cell.update_appearance()
 		user.put_in_hands(cell)
 		cell = null
-		update_icon()
+		update_appearance()
 	if(!opened)
 		recharge(user, user)
 
@@ -182,10 +182,7 @@
 /obj/item/inducer/update_overlays()
 	. = ..()
 	if(opened)
-		if(!cell)
-			. += "inducer-nobat"
-		else
-			. += "inducer-bat"
+		. += "inducer-[cell ? "bat" : "nobat"]"
 
 ///Starts empty for engineering protolathe
 /obj/item/inducer/eng
@@ -195,7 +192,7 @@
 
 /obj/item/inducer/eng/Initialize(mapload)
 	. = ..()
-	update_icon()
+	update_appearance()
 
 /obj/item/inducer/sci
 	name = "inducer"
@@ -208,4 +205,4 @@
 
 /obj/item/inducer/sci/Initialize(mapload)
 	. = ..()
-	update_icon()
+	update_appearance()
