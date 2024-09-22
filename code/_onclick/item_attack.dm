@@ -66,7 +66,7 @@
 	if(..())
 		return TRUE
 	user.changeNext_move(CLICK_CD_MELEE)
-	if(user.a_intent == INTENT_HARM && stat == DEAD && (butcher_results || guaranteed_butcher_results)) //can we butcher it?
+	if(user.combat_mode && stat == DEAD && (butcher_results || guaranteed_butcher_results)) //can we butcher it?
 		var/datum/component/butchering/butchering = I.GetComponent(/datum/component/butchering)
 		if(butchering?.butchering_enabled)
 			to_chat(user, "<span class='notice'>You begin to butcher [src]...</span>")
@@ -78,7 +78,7 @@
 			I.AddComponent(/datum/component/butchering, 80 * I.toolspeed)
 			attackby(I, user, params) //call the attackby again to refresh and do the butchering check again
 			return
-	return I.attack(src, user)
+	return I.attack(src, user, params)
 
 /**
  * Called from [/mob/living/proc/attackby]
@@ -100,8 +100,9 @@
 
 	var/nonharmfulhit = FALSE
 
-	if(user.a_intent == INTENT_HELP && !(item_flags & ISWEAPON))
+	if(!(user.combat_mode) && !(item_flags & ISWEAPON))
 		nonharmfulhit = TRUE
+
 	for(var/datum/surgery/S in M.surgeries)
 		if(S.failed_step)
 			nonharmfulhit = FALSE //No freebies, if you fail a surgery step you should hit your patient
@@ -135,7 +136,7 @@
 		user.time_of_last_attack_dealt = time
 		user.check_for_accidental_attack()
 
-	log_combat(user, M, "[nonharmfulhit ? "poked" : "attacked"]", src, "(INTENT: [uppertext(user.a_intent)]) (DAMTYPE: [uppertext(damtype)])", important = !nonharmfulhit)
+	log_combat(user, M, "[nonharmfulhit ? "poked" : "attacked"]", src, "(COMBAT MODE: [uppertext(user.combat_mode)]) (DAMTYPE: [uppertext(damtype)])", important = !nonharmfulhit)
 	add_fingerprint(user)
 
 

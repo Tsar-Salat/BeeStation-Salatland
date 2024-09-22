@@ -249,7 +249,7 @@ AIMING_DROP_WEAPON means they selected the "drop your weapon" command
 					to_chat(user, "<span class='warning>You fail to grab [target]!</span>")
 					return
 				var/mob/living/carbon/human/H = user
-				user.a_intent = INTENT_GRAB
+				//user.a_intent = INTENT_GRAB
 				H.dna.species.spec_attack_hand(user, target)
 				return
 			if(user.grab_state < GRAB_AGGRESSIVE)
@@ -259,7 +259,7 @@ AIMING_DROP_WEAPON means they selected the "drop your weapon" command
 					to_chat(user, "<span class='warning>You fail to strengthen your grip on [target]!</span>")
 					return
 				var/mob/living/carbon/human/H = user
-				user.a_intent = INTENT_GRAB
+				//user.a_intent = INTENT_GRAB
 				H.dna.species.spec_attack_hand(user, target)
 				return
 			if(user.pulling != target)

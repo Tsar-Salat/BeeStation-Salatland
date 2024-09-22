@@ -1,17 +1,17 @@
-/mob/living/silicon/robot/attackby(obj/item/I, mob/living/user)
-	if(I.slot_flags & ITEM_SLOT_HEAD && hat_offset != INFINITY && user.a_intent == INTENT_HELP && !is_type_in_typecache(I, blacklisted_hats))
-		to_chat(user, "<span class='notice'>You begin to place [I] on [src]'s head...</span>")
-		to_chat(src, "<span class='notice'>[user] is placing [I] on your head...</span>")
+/mob/living/silicon/robot/attackby(obj/item/W, mob/living/user, params)
+	if(W.slot_flags & ITEM_SLOT_HEAD && hat_offset != INFINITY && !user.combat_mode && !is_type_in_typecache(W, blacklisted_hats))
+		to_chat(user, "<span class='notice'>You begin to place [W] on [src]'s head...</span>")
+		to_chat(src, "<span class='notice'>[user] is placing [W] on your head...</span>")
 		if(do_after(user, 30, target = src))
-			if (user.temporarilyRemoveItemFromInventory(I, TRUE))
-				place_on_head(I)
+			if (user.temporarilyRemoveItemFromInventory(W, TRUE))
+				place_on_head(W)
 		return
-	if(I.force && I.damtype != STAMINA && stat != DEAD) //only sparks if real damage is dealt.
+	if(W.force && W.damtype != STAMINA && stat != DEAD) //only sparks if real damage is dealt.
 		spark_system.start()
 	return ..()
 
-/mob/living/silicon/robot/attack_alien(mob/living/carbon/alien/humanoid/M)
-	if (M.a_intent == INTENT_DISARM)
+/mob/living/silicon/robot/attack_alien(mob/living/carbon/alien/humanoid/M, modifiers)
+	if (LAZYACCESS(modifiers, RIGHT_CLICK))
 		if(body_position == STANDING_UP)
 			M.do_attack_animation(src, ATTACK_EFFECT_DISARM)
 			var/obj/item/I = get_active_held_item()

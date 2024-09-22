@@ -32,7 +32,7 @@
 /datum/element/pet_bonus/proc/on_attack_hand(mob/living/pet, mob/living/petter)
 	SIGNAL_HANDLER
 
-	if(pet.stat != CONSCIOUS || petter.a_intent != INTENT_HELP)
+	if(pet.stat != CONSCIOUS || petter.combat_mode)
 		return
 
 	new /obj/effect/temp_visual/heart(pet.loc)

@@ -116,12 +116,13 @@
 		return 1
 	return basic_hit(A,D)
 
-/datum/martial_art/the_sleeping_carp/grab_act(mob/living/carbon/human/A, mob/living/carbon/human/D)
+/datum/martial_art/the_sleeping_carp/grab_act(mob/living/carbon/human/A, mob/living/carbon/human/D, grab_attack)
 	if(A==D)
 		return 0 //prevents grabbing yourself
-	if(A.a_intent == INTENT_GRAB)
-		add_to_streak("G",D)
-		if(check_streak(A,D)) //doing combos is prioritized over upgrading grabs
+	/*
+	//if(grab_act)
+	add_to_streak("G",D)
+	if(check_streak(A,D)) //doing combos is prioritized over upgrading grabs
 			return 1
 		D.grabbedby(A, 1)
 		if(A.grab_state == GRAB_PASSIVE)
@@ -134,6 +135,7 @@
 	else
 		D.grabbedby(A, 1)
 	return 1
+	*/
 
 /datum/martial_art/the_sleeping_carp/harm_act(mob/living/carbon/human/A, mob/living/carbon/human/D)
 	var/def_check = D.getarmor(BODY_ZONE_CHEST, MELEE)
@@ -196,7 +198,7 @@
 	icon_state = "bostaff0"
 	..()
 
-/obj/item/staff/bostaff/attack(mob/target, mob/living/user)
+/obj/item/staff/bostaff/attack(mob/target, mob/living/user, params)
 	add_fingerprint(user)
 	if((HAS_TRAIT(user, TRAIT_CLUMSY)) && prob(50))
 		to_chat(user, "<span class ='warning'>You club yourself over the head with [src].</span>")
@@ -215,7 +217,8 @@
 	if(C.stat)
 		to_chat(user, "<span class='warning'>It would be dishonorable to attack a foe while they cannot retaliate.</span>")
 		return
-	if(user.a_intent == INTENT_DISARM)
+	var/list/modifiers = params2list(params)
+	if(modifiers && modifiers["right"])
 		if(!ISWIELDED(src))
 			return ..()
 		if(!ishuman(target))

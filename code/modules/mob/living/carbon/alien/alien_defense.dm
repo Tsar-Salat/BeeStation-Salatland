@@ -12,39 +12,34 @@
 As such, they can either help or harm other aliens. Help works like the human help command while harm is a simple nibble.
 In all, this is a lot like the monkey code. /N
 */
-/mob/living/carbon/alien/attack_alien(mob/living/carbon/alien/M)
+/mob/living/carbon/alien/attack_alien(mob/living/carbon/alien/M, modifiers)
 	if(isturf(loc) && istype(loc.loc, /area/start))
 		to_chat(M, "No attacking people at spawn, you jackass.")
 		return
 
-	switch(M.a_intent)
-		if("help")
-			if(M == src && check_self_for_injuries())
-				return
-			set_resting(FALSE)
-			AdjustStun(-60)
-			AdjustKnockdown(-60)
-			AdjustImmobilized(-60)
-			AdjustParalyzed(-60)
-			AdjustUnconscious(-60)
-			AdjustSleeping(-100)
-			visible_message("<span class='notice'>[M.name] nuzzles [src] trying to wake [p_them()] up!</span>")
+	if(M.combat_mode)
+		if(M == src && check_self_for_injuries())
+			return
+		set_resting(FALSE)
+		AdjustStun(-60)
+		AdjustKnockdown(-60)
+		AdjustImmobilized(-60)
+		AdjustParalyzed(-60)
+		AdjustUnconscious(-60)
+		AdjustSleeping(-100)
+		visible_message("<span class='notice'>[M.name] nuzzles [src] trying to wake [p_them()] up!</span>")
 
-		if("grab")
-			grabbedby(M)
-
-		else
-			if(health > 1)
-				M.do_attack_animation(src, ATTACK_EFFECT_BITE)
-				playsound(loc, 'sound/weapons/bite.ogg', 50, 1, -1)
-				visible_message("<span class='danger'>[M.name] playfully bites [src]!</span>", \
-						"<span class='userdanger'>[M.name] playfully bites you!</span>", null, COMBAT_MESSAGE_RANGE)
-				to_chat(M, "<span class='danger'>You playfully bite [src]!</span>")
-				adjustBruteLoss(1)
-				log_combat(M, src, "attacked", M)
-				updatehealth()
-			else
-				to_chat(M, "<span class='warning'>[name] is too injured for that.</span>")
+	else if(health > 0)
+		M.do_attack_animation(src, ATTACK_EFFECT_BITE)
+		playsound(loc, 'sound/weapons/bite.ogg', 50, 1, -1)
+		visible_message("<span class='danger'>[M.name] playfully bites [src]!</span>", \
+				"<span class='userdanger'>[M.name] playfully bites you!</span>", null, COMBAT_MESSAGE_RANGE)
+		to_chat(M, "<span class='danger'>You playfully bite [src]!</span>")
+		adjustBruteLoss(1)
+		log_combat(M, src, "attacked", M)
+		updatehealth()
+	else
+		to_chat(M, "<span class='warning'>[name] is too injured for that.</span>")
 
 
 /mob/living/carbon/alien/attack_larva(mob/living/carbon/alien/larva/L)
@@ -57,30 +52,19 @@ In all, this is a lot like the monkey code. /N
 		var/obj/item/bodypart/affecting = get_bodypart(ran_zone(M.get_combat_bodyzone(src)))
 		apply_damage(rand(3), BRUTE, affecting)
 
-/mob/living/carbon/alien/attack_hand(mob/living/carbon/human/M)
-	if(..())	//to allow surgery to return properly.
-		return
+/mob/living/carbon/alien/attack_hand(mob/living/carbon/human/M, modifiers)
+	. = ..()
+	if(.) //to allow surgery to return properly.
+		return FALSE
 
-	switch(M.a_intent)
-		if("harm", "disarm") //harm and disarm will do the same, I doubt trying to shove a xeno would go well for you
-			if(HAS_TRAIT(M, TRAIT_PACIFISM))
-				to_chat(M, "<span class='notice'>You don't want to hurt [src]!</span>")
-				return
-			playsound(loc, "punch", 25, 1, -1)
-			visible_message("<span class='danger'>[M] punches [src]!</span>", \
-					"<span class='userdanger'>[M] punches you!</span>", null, COMBAT_MESSAGE_RANGE)
-			var/obj/item/bodypart/affecting = get_bodypart(ran_zone(M.get_combat_bodyzone(src)))
-			apply_damage(M.dna.species.punchdamage, BRUTE, affecting)
-			log_combat(M, src, "attacked", M)
-			M.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
-
-		if("help")
-			M.visible_message("<span class='notice'>[M] hugs [src] to make [src.p_them()] feel better!</span>", \
-								"<span class='notice'>You hug [src] to make [src.p_them()] feel better!</span>")
-			playsound(M.loc, 'sound/weapons/thudswoosh.ogg', 50, 1, -1)
-
-		if("grab")
-			grabbedby(M)
+	if(M.combat_mode)
+		if(LAZYACCESS(modifiers, RIGHT_CLICK))
+			M.do_attack_animation(src, ATTACK_EFFECT_DISARM)
+			return TRUE
+		M.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
+		return TRUE
+	else
+		help_shake_act(M)
 
 /mob/living/carbon/alien/attack_animal(mob/living/simple_animal/M)
 	if(!..())

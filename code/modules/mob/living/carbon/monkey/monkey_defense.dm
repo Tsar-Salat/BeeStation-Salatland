@@ -31,7 +31,7 @@
 	if(..())	//To allow surgery to return properly.
 		return
 
-	switch(M.a_intent)
+	switch(M.combat_mode)
 		if("help")
 			help_shake_act(M)
 		if("grab")
@@ -54,7 +54,7 @@
 
 /mob/living/carbon/monkey/attack_alien(mob/living/carbon/alien/humanoid/M)
 	if(..()) //if harm or disarm intent.
-		if (M.a_intent == INTENT_HARM)
+		if(M.combat_mode)
 			if ((prob(95) && health > 0))
 				playsound(loc, 'sound/weapons/slice.ogg', 25, 1, -1)
 				var/damage = rand(15, 30)
@@ -84,7 +84,7 @@
 								"<span class='danger'>You avoid [M]'s lunge!</span>", "<span class='hear'>You hear a swoosh!</span>", COMBAT_MESSAGE_RANGE, M)
 				to_chat(M, "<span class='warning'>Your lunge misses [name]!</span>")
 
-		if (M.a_intent == INTENT_DISARM)
+		if(M.combat_mode)
 			var/obj/item/I = null
 			playsound(loc, 'sound/weapons/pierce.ogg', 25, 1, -1)
 			if(prob(95))
