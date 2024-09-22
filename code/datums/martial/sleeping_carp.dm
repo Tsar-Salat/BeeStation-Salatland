@@ -119,9 +119,10 @@
 /datum/martial_art/the_sleeping_carp/grab_act(mob/living/carbon/human/A, mob/living/carbon/human/D, grab_attack)
 	if(A==D)
 		return 0 //prevents grabbing yourself
-	if(grab_act)
-		add_to_streak("G",D)
-		if(check_streak(A,D)) //doing combos is prioritized over upgrading grabs
+	/*
+	//if(grab_act)
+	add_to_streak("G",D)
+	if(check_streak(A,D)) //doing combos is prioritized over upgrading grabs
 			return 1
 		D.grabbedby(A, 1)
 		if(A.grab_state == GRAB_PASSIVE)
@@ -134,6 +135,7 @@
 	else
 		D.grabbedby(A, 1)
 	return 1
+	*/
 
 /datum/martial_art/the_sleeping_carp/harm_act(mob/living/carbon/human/A, mob/living/carbon/human/D)
 	var/def_check = D.getarmor(BODY_ZONE_CHEST, MELEE)

@@ -92,7 +92,7 @@
 	combat_mode = new_mode
 	if(hud_used?.action_intent)
 		hud_used.action_intent.update_icon()
-	if(silent || !(client?.prefs.toggles & SOUND_COMBATMODE))
+	if(silent /*|| !(client?.prefs.toggles & SOUND_COMBATMODE)*/)
 		return
 	if(combat_mode)
 		playsound_local(src, 'sound/misc/ui_togglecombat.ogg', 25, FALSE, pressure_affected = FALSE) //Sound from interbay!

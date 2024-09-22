@@ -67,7 +67,7 @@
 			playsound(loc, 'sound/weapons/thudswoosh.ogg', 50, TRUE, -1)
 
 
-/mob/living/basic/attack_alien(mob/living/carbon/alien/adult/user, list/modifiers)
+/mob/living/basic/attack_alien(mob/living/carbon/alien/humanoid/user, list/modifiers)
 	. = ..()
 	if(!.)
 		return

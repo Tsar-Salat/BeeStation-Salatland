@@ -263,7 +263,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/atom/movable/screen/close)
 
 /atom/movable/screen/combattoggle
 	name = "toggle combat mode"
-	icon = 'icons/mob/screen_midnight.dmi'
+	icon = 'icons/hud/style/screen_midnight.dmi'
 	icon_state = "combat_off"
 	screen_loc = ui_combat_toggle
 
@@ -297,12 +297,12 @@ CREATION_TEST_IGNORE_SUBTYPES(/atom/movable/screen/close)
 
 	if(user.combat_mode)
 		if(!flashy)
-			flashy = mutable_appearance('icons/mob/screen_gen.dmi', "togglefull_flash")
+			flashy = mutable_appearance('icons/hud/screen_gen.dmi', "togglefull_flash")
 			flashy.color = "#C62727"
 		. += flashy
 
 /atom/movable/screen/combattoggle/robot
-	icon = 'icons/mob/screen_cyborg.dmi'
+	icon = 'icons/hud/screen_cyborg.dmi'
 	screen_loc = ui_borg_intents
 
 /atom/movable/screen/internals

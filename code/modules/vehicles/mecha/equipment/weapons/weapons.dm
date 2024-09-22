@@ -21,7 +21,7 @@
 		return TRUE
 	return FALSE
 
-/obj/item/mecha_parts/mecha_equipment/weapon/action(mob/source, atom/target, params)
+/obj/item/mecha_parts/mecha_equipment/weapon/action(mob/source, atom/target, list/modifiers)
 	if(!action_checks(target))
 		return FALSE
 	var/newtonian_target = turn(chassis.dir,180)
@@ -38,7 +38,7 @@
 
 		var/obj/projectile/A = new projectile(get_turf(src))
 		A.firer = chassis
-		A.preparePixelProjectile(target, source, params, spread)
+		A.preparePixelProjectile(target, source, modifiers, spread)
 
 		A.fire()
 		if(!A.suppressed && firing_effect_type)
@@ -186,7 +186,7 @@
 		return FALSE
 
 
-/obj/item/mecha_parts/mecha_equipment/weapon/honker/action(mob/source, atom/target, params)
+/obj/item/mecha_parts/mecha_equipment/weapon/honker/action(mob/source, atom/target, list/modifiers)
 	if(!action_checks(target))
 		return
 	playsound(chassis, 'sound/items/airhorn.ogg', 100, 1)
@@ -257,7 +257,7 @@
 	if (href_list["rearm"])
 		rearm()
 
-/obj/item/mecha_parts/mecha_equipment/weapon/ballistic/action(mob/source, atom/target, params)
+/obj/item/mecha_parts/mecha_equipment/weapon/ballistic/action(mob/source, atom/target, list/modifiers)
 	if(..())
 		projectiles -= projectiles_per_shot
 		send_byjax(chassis.occupants,"exosuit.browser","[REF(src)]",src.get_equip_info())
@@ -328,7 +328,7 @@
 	var/missile_range = 30
 	var/diags_first = FALSE
 
-/obj/item/mecha_parts/mecha_equipment/weapon/ballistic/launcher/action(mob/source, atom/target, params)
+/obj/item/mecha_parts/mecha_equipment/weapon/ballistic/launcher/action(mob/source, atom/target, list/modifiers)
 	if(!action_checks(target))
 		return
 	var/obj/O = new projectile(chassis.loc)
@@ -432,7 +432,7 @@
 			return 1
 	return 0
 
-/obj/item/mecha_parts/mecha_equipment/weapon/ballistic/launcher/punching_glove/action(target)
+/obj/item/mecha_parts/mecha_equipment/weapon/ballistic/launcher/punching_glove/action(mob/source, atom/target, list/modifiers)
 	. = ..()
 	if(.)
 		to_chat(usr, "[icon2html(src, usr)]<font color='red' size='5'>HONK</font>")

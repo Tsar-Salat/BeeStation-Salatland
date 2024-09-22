@@ -140,89 +140,65 @@
 	else
 		return ..()
 
-/obj/machinery/power/apc/attack_hand_secondary(mob/user, list/modifiers)
-	. = ..()
-	if(!can_interact(user))
-		return
-	if(!user.canUseTopic(src, !issilicon(user)) || !isturf(loc))
-		return
-	if(!ishuman(user))
-		return
-	var/mob/living/carbon/human/apc_interactor = user
-	var/obj/item/organ/stomach/battery/ethereal/maybe_ethereal_stomach = apc_interactor.getorganslot(ORGAN_SLOT_STOMACH)
-	if(!istype(maybe_ethereal_stomach))
-		togglelock(user)
-	else
-		if(maybe_ethereal_stomach.charge >= ETHEREAL_CHARGE_NORMAL)
-			togglelock(user)
-		ethereal_interact(user,modifiers)
-	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
-
-/obj/machinery/power/apc/proc/ethereal_interact(mob/living/user,list/modifiers)
-	if(!ishuman(user))
-		return
-	var/mob/living/carbon/human/ethereal = user
-	var/obj/item/organ/stomach/maybe_stomach = ethereal.getorganslot(ORGAN_SLOT_STOMACH)
-
-	if(!istype(maybe_stomach, /obj/item/organ/stomach/battery/ethereal))
-		return
-	var/charge_limit = ETHEREAL_CHARGE_DANGEROUS - APC_POWER_GAIN
-	var/obj/item/organ/stomach/battery/ethereal/stomach = maybe_stomach
-	if(!((stomach?.drain_time < world.time) && LAZYACCESS(modifiers, RIGHT_CLICK)))
-		return
-	if(ethereal.combat_mode)
-		if(cell.charge <= (cell.maxcharge / 2)) // ethereals can't drain APCs under half charge, this is so that they are forced to look to alternative power sources if the station is running low
-			to_chat(ethereal, span_warning("The APC's syphon safeties prevent you from draining power!"))
-			return
-		if(stomach.charge > charge_limit)
-			to_chat(ethereal, span_warning("Your charge is full!"))
-			return
-		stomach.drain_time = world.time + APC_DRAIN_TIME
-		to_chat(ethereal, span_notice("You start channeling some power through the APC into your body."))
-		if(do_after(user, APC_DRAIN_TIME, target = src))
-			if(cell.charge <= (cell.maxcharge / 2) || (stomach.charge > charge_limit))
-				return
-			to_chat(ethereal, span_notice("You receive some charge from the APC."))
-			stomach.adjust_charge(APC_POWER_GAIN)
-			cell.use(APC_POWER_GAIN)
-		return
-
-	if(cell.charge >= cell.maxcharge - APC_POWER_GAIN)
-		to_chat(ethereal, span_warning("The APC can't receive anymore power!"))
-		return
-	if(stomach.crystal_charge < APC_POWER_GAIN)
-		to_chat(ethereal, span_warning("Your charge is too low!"))
-		return
-	stomach.drain_time = world.time + APC_DRAIN_TIME
-	to_chat(ethereal, span_notice("You start channeling power through your body into the APC."))
-	if(!do_after(user, APC_DRAIN_TIME, target = src))
-		return
-	if((cell.charge >= (cell.maxcharge - APC_POWER_GAIN)) || (stomach.charge < APC_POWER_GAIN))
-		to_chat(ethereal, span_warning("You can't transfer power to the APC!"))
-		return
-	if(istype(stomach))
-		to_chat(ethereal, span_notice("You transfer some power to the APC."))
-		stomach.adjust_charge(-APC_POWER_GAIN)
-		cell.give(APC_POWER_GAIN)
-	else
-		to_chat(ethereal, span_warning("You can't transfer power to the APC!"))
-
 // attack with hand - remove cell (if cover open) or interact with the APC
 
-// attack with hand - remove cell (if cover open) or interact with the APC
 /obj/machinery/power/apc/attack_hand(mob/user, list/modifiers)
 	. = ..()
 	if(.)
 		return
 
+	if(isethereal(user))
+		var/mob/living/carbon/human/H = user
+		var/datum/species/ethereal/E = H.dna.species
+		var/obj/item/organ/stomach/battery/stomach = H.getorganslot(ORGAN_SLOT_STOMACH)
+		if((E.drain_time < world.time) && LAZYACCESS(modifiers, RIGHT_CLICK) && stomach)
+			if(H.combat_mode)
+				if(cell.charge <= (cell.maxcharge / 2)) // ethereals can't drain APCs under half charge, this is so that they are forced to look to alternative power sources if the station is running low
+					to_chat(H, "<span class='warning'>The APC's syphon safeties prevent you from draining power!</span>")
+					return
+				E.drain_time = world.time + APC_DRAIN_TIME
+				to_chat(H, "<span class='notice'>You start channeling some power through the APC into your body.</span>")
+				while(do_after(user, APC_DRAIN_TIME, target = src))
+				E.drain_time = world.time + APC_DRAIN_TIME
+				if(do_after(user, APC_DRAIN_TIME, target = src))
+					if(cell.charge <= (cell.maxcharge / 2))
+						return
+					if(istype(stomach))
+						to_chat(H, "<span class='notice'>You receive some charge from the APC.</span>")
+						stomach.adjust_charge(APC_POWER_GAIN)
+						cell.charge -= APC_POWER_GAIN
+					else
+						to_chat(H, "<span class='warning'>You can't receive charge from the APC!</span>")
+				return
+			else
+				if(cell.charge >= cell.maxcharge - APC_POWER_GAIN)
+					to_chat(H, "<span class='warning'>The APC can't receive anymore power!</span>")
+					return
+				if(stomach.charge < APC_POWER_GAIN)
+					to_chat(H, "<span class='warning'>Your charge is too low!</span>")
+					return
+				E.drain_time = world.time + APC_DRAIN_TIME
+				to_chat(H, "<span class='notice'>You start channeling power through your body into the APC.</span>")
+				if(do_after(user, APC_DRAIN_TIME, target = src))
+					if((cell.charge >= (cell.maxcharge - APC_POWER_GAIN)) || (stomach.charge < APC_POWER_GAIN))
+						to_chat(H, "<span class='warning'>You can't transfer power to the APC!</span>")
+						return
+					if(istype(stomach))
+						to_chat(H, "<span class='notice'>You transfer some power to the APC.</span>")
+						stomach.adjust_charge(-APC_POWER_GAIN)
+						cell.charge += APC_POWER_GAIN
+					else
+						to_chat(H, "<span class='warning'>You can't transfer power to the APC!</span>")
+				return
+
 	if(opened && (!issilicon(user)))
 		if(cell)
-			user.visible_message(span_notice("[user] removes \the [cell] from [src]!"), span_notice("You remove \the [cell]."))
+			user.visible_message("[user] removes \the [cell] from [src]!","<span class='notice'>You remove \the [cell].</span>")
 			user.put_in_hands(cell)
 			cell.update_appearance()
-			cell = null
+			src.cell = null
 			charging = APC_NOT_CHARGING
-			update_appearance()
+			src.update_appearance()
 		return
 	if((machine_stat & MAINT) && !opened) //no board; no interface
 		return
