@@ -76,14 +76,23 @@
 #define ORGAN_ORGANIC   1
 #define ORGAN_ROBOTIC   2
 
-
-//Bodytype defines for how things can be worn.
-#define BODYTYPE_ORGANIC		(1<<0)
-#define BODYTYPE_ROBOTIC		(1<<1)
-#define BODYTYPE_HUMANOID		(1<<2) //Everything that isnt Grod
-#define BODYTYPE_BOXHEAD		(1<<3) //TV Head
-#define BODYTYPE_DIGITIGRADE	(1<<4) //Cancer
-#define NUMBER_OF_BODYTYPES	5 //KEEP THIS UPDATED OR SHIT WILL BREAK
+//Bodytype defines for how things can be worn, surgery, and other misc things.
+///The limb is organic.
+#define BODYTYPE_ORGANIC (1<<0)
+///The limb is robotic.
+#define BODYTYPE_ROBOTIC (1<<1)
+///The limb fits the human mold. This is not meant to be literal, if the sprite "fits" on a human, it is "humanoid", regardless of origin.
+#define BODYTYPE_HUMANOID (1<<2)
+///The limb fits the monkey mold.
+#define BODYTYPE_MONKEY (1<<3)
+///The limb is IPC-specific
+#define BODYTYPE_BOXHEAD (1<<4)
+///The limb is digitigrade.
+#define BODYTYPE_DIGITIGRADE (1<<5)
+///A placeholder bodytype for xeno larva, so their limbs cannot be attached to anything.
+#define BODYTYPE_LARVA_PLACEHOLDER (1<<6)
+///The limb is from a xenomorph.
+#define BODYTYPE_ALIEN (1<<7)
 
 #define DEFAULT_BODYPART_ICON_ORGANIC 'icons/mob/human_parts_greyscale.dmi'
 #define DEFAULT_BODYPART_ICON_ROBOTIC 'icons/mob/augmentation/augments.dmi'
@@ -100,6 +109,12 @@
 //Species gib types
 #define GIB_TYPE_HUMAN "human"
 #define GIB_TYPE_ROBOTIC "robotic"
+
+// Like species IDs, but not specifically attached a species.
+#define BODYPART_ID_ALIEN "alien"
+#define BODYPART_ID_ROBOTIC "robotic"
+#define BODYPART_ID_DIGITIGRADE "digitigrade"
+#define BODYPART_ID_LARVA "larva"
 
 #define DIGITIGRADE_NEVER 0
 #define DIGITIGRADE_OPTIONAL 1

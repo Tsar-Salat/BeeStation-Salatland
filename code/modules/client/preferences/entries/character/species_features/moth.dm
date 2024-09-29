@@ -12,7 +12,7 @@
 	for (var/antennae_name in GLOB.moth_antennae_roundstart_list)
 		var/datum/sprite_accessory/antennae = GLOB.moth_antennae_roundstart_list[antennae_name]
 
-		var/datum/universal_icon/icon_with_antennae = uni_icon('icons/mob/species/moth/bodyparts.dmi', "moth_head", dir = SOUTH)
+		var/datum/universal_icon/icon_with_antennae = uni_icon('icons/mob/human/species/moth/bodyparts.dmi', "moth_head", dir = SOUTH)
 		icon_with_antennae.blend_icon(uni_icon(antennae.icon, "m_moth_antennae_[antennae.icon_state]_FRONT", dir = SOUTH), ICON_OVERLAY)
 		icon_with_antennae.scale(64, 64)
 		icon_with_antennae.crop(15, 64 - 31, 15 + 31, 64)
@@ -45,7 +45,7 @@
 
 	for (var/body_part in body_parts)
 		var/gender = body_part == "chest" ? "_m" : ""
-		moth_body.blend_icon(uni_icon('icons/mob/species/moth/bodyparts.dmi', "moth_[body_part][gender]", dir = SOUTH), ICON_OVERLAY)
+		moth_body.blend_icon(uni_icon('icons/mob/human/species/moth/bodyparts.dmi', "moth_[body_part][gender]", dir = SOUTH), ICON_OVERLAY)
 
 	for (var/markings_name in GLOB.moth_markings_roundstart_list)
 		var/datum/sprite_accessory/markings = GLOB.moth_markings_roundstart_list[markings_name]

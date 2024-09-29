@@ -8,27 +8,27 @@
 /datum/species/debug/get_custom_icons(var/part)
 	switch(part)
 		if("uniform")
-			return 'icons/mob/species/debug/debug_all.dmi'
+			return 'icons/mob/human/species/debug/debug_all.dmi'
 		if("gloves")
-			return 'icons/mob/species/debug/debug_all.dmi'
+			return 'icons/mob/human/species/debug/debug_all.dmi'
 		if("glasses")
-			return 'icons/mob/species/debug/debug_all.dmi'
+			return 'icons/mob/human/species/debug/debug_all.dmi'
 		if("ears")
-			return 'icons/mob/species/debug/debug_all.dmi'
+			return 'icons/mob/human/species/debug/debug_all.dmi'
 		if("shoes")
-			return 'icons/mob/species/debug/debug_all.dmi'
+			return 'icons/mob/human/species/debug/debug_all.dmi'
 		if("head")
-			return 'icons/mob/species/debug/debug_all.dmi'
+			return 'icons/mob/human/species/debug/debug_all.dmi'
 		if("belt")
-			return 'icons/mob/species/debug/debug_all.dmi'
+			return 'icons/mob/human/species/debug/debug_all.dmi'
 		if("suit")
-			return 'icons/mob/species/debug/debug_all.dmi'
+			return 'icons/mob/human/species/debug/debug_all.dmi'
 		if("mask")
-			return 'icons/mob/species/debug/debug_all.dmi'
+			return 'icons/mob/human/species/debug/debug_all.dmi'
 		if("back")
-			return 'icons/mob/species/debug/debug_all.dmi'
+			return 'icons/mob/human/species/debug/debug_all.dmi'
 		if("generic")
-			return 'icons/mob/species/debug/debug_all.dmi'
+			return 'icons/mob/human/species/debug/debug_all.dmi'
 		else
 			return
 

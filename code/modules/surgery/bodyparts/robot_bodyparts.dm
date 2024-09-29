@@ -13,7 +13,7 @@
 /obj/item/bodypart/l_arm/robot
 	name = "cyborg left arm"
 	desc = "A skeletal limb wrapped in pseudomuscles, with a low-conductivity case."
-	limb_id = "robotic"
+	limb_id = BODYPART_ID_ROBOTIC
 	attack_verb_continuous = list("slaps", "punches")
 	attack_verb_simple = list("slap", "punch")
 	item_state = "buildpipe"
@@ -25,6 +25,7 @@
 	should_draw_greyscale = FALSE
 	bodytype = BODYTYPE_HUMANOID | BODYTYPE_ROBOTIC
 	change_exempt_flags = BP_BLOCK_CHANGE_SPECIES
+	dmg_overlay_type = "robotic"
 
 	brute_reduction = 5
 	burn_reduction = 4
@@ -45,13 +46,14 @@
 	item_state = "buildpipe"
 	static_icon = 'icons/mob/augmentation/augments.dmi'
 	icon = 'icons/mob/augmentation/augments.dmi'
-	limb_id = "robotic"
+	limb_id = BODYPART_ID_ROBOTIC
 	flags_1 = CONDUCT_1
 	icon_state = "borg_r_arm"
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
 	bodytype = BODYTYPE_HUMANOID | BODYTYPE_ROBOTIC
 	change_exempt_flags = BP_BLOCK_CHANGE_SPECIES
+	dmg_overlay_type = "robotic"
 
 	brute_reduction = 5
 	burn_reduction = 4
@@ -72,13 +74,14 @@
 	item_state = "buildpipe"
 	static_icon = 'icons/mob/augmentation/augments.dmi'
 	icon = 'icons/mob/augmentation/augments.dmi'
-	limb_id = "robotic"
+	limb_id = BODYPART_ID_ROBOTIC
 	flags_1 = CONDUCT_1
 	icon_state = "borg_l_leg"
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
 	bodytype = BODYTYPE_HUMANOID | BODYTYPE_ROBOTIC
 	change_exempt_flags = BP_BLOCK_CHANGE_SPECIES
+	dmg_overlay_type = "robotic"
 
 	brute_reduction = 5
 	burn_reduction = 4
@@ -99,13 +102,14 @@
 	item_state = "buildpipe"
 	static_icon = 'icons/mob/augmentation/augments.dmi'
 	icon = 'icons/mob/augmentation/augments.dmi'
-	limb_id = "robotic"
+	limb_id = BODYPART_ID_ROBOTIC
 	flags_1 = CONDUCT_1
 	icon_state = "borg_r_leg"
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
 	bodytype = BODYTYPE_HUMANOID | BODYTYPE_ROBOTIC
 	change_exempt_flags = BP_BLOCK_CHANGE_SPECIES
+	dmg_overlay_type = "robotic"
 
 	brute_reduction = 5
 	burn_reduction = 4
@@ -124,13 +128,14 @@
 	item_state = "buildpipe"
 	static_icon = 'icons/mob/augmentation/augments.dmi'
 	icon = 'icons/mob/augmentation/augments.dmi'
-	limb_id = "robotic"
+	limb_id = BODYPART_ID_ROBOTIC
 	flags_1 = CONDUCT_1
 	icon_state = "borg_chest"
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
 	bodytype = BODYTYPE_HUMANOID | BODYTYPE_ROBOTIC
 	change_exempt_flags = BP_BLOCK_CHANGE_SPECIES
+	dmg_overlay_type = "robotic"
 
 	brute_reduction = 5
 	burn_reduction = 4
@@ -230,7 +235,7 @@
 	desc = "A standard reinforced braincase, with spine-plugged neural socket and sensor gimbals."
 	item_state = "buildpipe"
 	static_icon = 'icons/mob/augmentation/augments.dmi'
-	limb_id = "robotic"
+	limb_id = BODYPART_ID_ROBOTIC
 	icon = null
 	flags_1 = CONDUCT_1
 	icon_state = "borg_head"
@@ -238,6 +243,7 @@
 	should_draw_greyscale = FALSE
 	bodytype = BODYTYPE_HUMANOID | BODYTYPE_ROBOTIC
 	change_exempt_flags = BP_BLOCK_CHANGE_SPECIES
+	dmg_overlay_type = "robotic"
 
 	brute_reduction = 5
 	burn_reduction = 4

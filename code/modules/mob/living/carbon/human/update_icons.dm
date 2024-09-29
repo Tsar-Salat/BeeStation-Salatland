@@ -155,19 +155,35 @@ There are several things that need to be remembered:
 
 		if(dna?.species.sexes)
 			if(dna.features["body_model"] == FEMALE && U.female_sprite_flags != NO_FEMALE_UNIFORM)
-				uniform_overlay = U.build_worn_icon(src, default_layer = UNIFORM_LAYER, default_icon_file = 'icons/mob/clothing/under/default.dmi', isinhands = FALSE, femaleuniform = U.female_sprite_flags, override_state = target_overlay)
+				uniform_overlay = U.build_worn_icon(
+					src,
+					default_layer = UNIFORM_LAYER,
+					default_icon_file = 'icons/mob/clothing/under/default.dmi',
+					isinhands = FALSE,
+					femaleuniform = U.female_sprite_flags,
+					override_state = target_overlay
+				)
 
 		//Change check_adjustable_clothing.dm if you change this
 		var/icon_file = 'icons/mob/clothing/under/default.dmi'
 		if(!uniform_overlay)
+
+			//Species handling START
 			if(U.sprite_sheets & (dna?.species.bodyflag))
 				icon_file = dna.species.get_custom_icons("uniform")
-			//Currently doesn't work with GAGS
-			//if((dna?.species.bodytype & BODYTYPE_DIGITIGRADE) && (U.supports_variations & DIGITIGRADE_VARIATION))
-			//	icon_file = 'icons/mob/species/misc/digitigrade.dmi'
-			uniform_overlay = U.build_worn_icon(src, default_layer = UNIFORM_LAYER, default_icon_file = icon_file, isinhands = FALSE, override_state = target_overlay)
 
+			if((dna?.species.bodytype & BODYTYPE_DIGITIGRADE) && (U.supports_variations_flags & CLOTHING_DIGITIGRADE_VARIATION))
+				icon_file = 'icons/mob/human/species/misc/digitigrade.dmi'
 
+			//Species handling FINISH
+
+			uniform_overlay = U.build_worn_icon(
+				src,
+				default_layer = UNIFORM_LAYER,
+				default_icon_file = icon_file,
+				isinhands = FALSE,
+				override_state = target_overlay
+			)
 
 		if(OFFSET_UNIFORM in dna.species.offset_features)
 			uniform_overlay.pixel_x += dna.species.offset_features[OFFSET_UNIFORM][1]
@@ -176,7 +192,6 @@ There are several things that need to be remembered:
 
 	apply_overlay(UNIFORM_LAYER)
 	update_mutant_bodyparts()
-
 
 /mob/living/carbon/human/update_inv_wear_id()
 	remove_overlay(ID_LAYER)
@@ -355,8 +370,8 @@ There are several things that need to be remembered:
 				icon_file = dna.species.get_custom_icons("shoes")
 
 			if(dna?.species.bodytype & BODYTYPE_DIGITIGRADE)
-				if(S.supports_variations & DIGITIGRADE_VARIATION)
-					icon_file = 'icons/mob/species/misc/digitigrade_shoes.dmi'
+				if(S.supports_variations & CLOTHING_DIGITIGRADE_VARIATION)
+					icon_file = 'icons/mob/human/species/misc/digitigrade_shoes.dmi'
 
 		shoes.screen_loc = ui_shoes					//move the item to the appropriate screen loc
 		if(client && hud_used && hud_used.hud_shown)
@@ -372,6 +387,7 @@ There are several things that need to be remembered:
 
 	apply_overlay(SHOES_LAYER)
 
+	update_body_parts()
 
 /mob/living/carbon/human/update_inv_s_store()
 	remove_overlay(SUIT_STORE_LAYER)
@@ -470,8 +486,8 @@ There are several things that need to be remembered:
 			icon_file = dna.species.get_custom_icons("suit")
 
 		if(dna?.species.bodytype & BODYTYPE_DIGITIGRADE)
-			if(S.supports_variations & DIGITIGRADE_VARIATION)
-				icon_file = 'icons/mob/species/misc/digitigrade_suits.dmi'
+			if(S.supports_variations & CLOTHING_DIGITIGRADE_VARIATION)
+				icon_file = 'icons/mob/human/species/misc/digitigrade_suits.dmi'
 
 		wear_suit.screen_loc = ui_oclothing
 		if(client && hud_used && hud_used.hud_shown)

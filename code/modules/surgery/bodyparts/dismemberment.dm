@@ -3,7 +3,7 @@
 	if(dismemberable)
 		return TRUE
 
-//Dismember a limb
+///Remove target limb from it's owner, with side effects.
 /obj/item/bodypart/proc/dismember(dam_type = BRUTE)
 	if(!owner)
 		return FALSE
@@ -171,8 +171,9 @@
 		..()
 
 /obj/item/bodypart/r_arm/drop_limb(special)
+	. = ..()
+
 	var/mob/living/carbon/C = owner
-	..()
 	if(C && !special)
 		if(C.handcuffed)
 			C.handcuffed.forceMove(drop_location())
@@ -190,7 +191,7 @@
 
 /obj/item/bodypart/l_arm/drop_limb(special)
 	var/mob/living/carbon/C = owner
-	..()
+	. = ..()
 	if(C && !special)
 		if(C.handcuffed)
 			C.handcuffed.forceMove(drop_location())
@@ -215,7 +216,7 @@
 			owner.update_inv_legcuffed()
 		if(owner.shoes)
 			owner.dropItemToGround(owner.shoes, TRUE)
-	..()
+	return ..()
 
 /obj/item/bodypart/l_leg/drop_limb(special) //copypasta
 	if(owner && !special)
@@ -226,7 +227,7 @@
 			owner.update_inv_legcuffed()
 		if(owner.shoes)
 			owner.dropItemToGround(owner.shoes, TRUE)
-	..()
+	return ..()
 
 /obj/item/bodypart/head/drop_limb(special)
 	if(!special)
@@ -246,7 +247,7 @@
 			pill.forceMove(src)
 
 	name = owner ? "[owner.real_name]'s head" : "unknown [limb_id] head"
-	..()
+	return ..()
 
 //Attach a limb to a human and drop any existing limb of that type.
 /obj/item/bodypart/proc/replace_limb(mob/living/carbon/C, special, is_creating = FALSE)
@@ -258,6 +259,7 @@
 	if(O)
 		O.drop_limb(1)
 
+///Try to attach this bodypart to a mob, while replacing one if it exists, does nothing if it fails.
 /obj/item/bodypart/head/replace_limb(mob/living/carbon/C, special, is_creating = FALSE)
 	if(!istype(C))
 		return
@@ -267,6 +269,7 @@
 	if(O)
 		O.drop_limb(1)
 
+///Attach src to target mob if able.
 /obj/item/bodypart/proc/attach_limb(mob/living/carbon/C, special, is_creating = FALSE)
 	//if(SEND_SIGNAL(C, COMSIG_CARBON_ATTACH_LIMB, src, special) & COMPONENT_NO_ATTACH)
 	//	return FALSE
