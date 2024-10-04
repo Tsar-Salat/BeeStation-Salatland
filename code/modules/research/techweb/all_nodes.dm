@@ -32,6 +32,7 @@
 		"light_replacer",
 		"mechfab",
 		"micro_mani",
+		"oven_tray",
 		"package_wrap",
 		"paystand",
 		"plasmaglass",
@@ -291,6 +292,7 @@
 		"griddle",
 		"microwave",
 		"monkey_recycler",
+		"oven",
 		"processor",
 		"reagentgrinder",
 		"smartfridge",
@@ -1234,6 +1236,7 @@
 		"night_visision_goggles",
 		"nvgmesons",
 		"security_hud_night",
+		"scigoggles_night",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 5000)
 	export_price = 5000
