@@ -126,22 +126,24 @@
 	ears = null
 	tongue = null
 
-/obj/item/bodypart/head/update_limb(dropping_limb, mob/living/carbon/source, is_creating)
-	var/mob/living/carbon/C
-	if(source)
-		C = source
-	else
-		C = owner
+	return ..()
 
-	real_name = C.real_name
-	if(HAS_TRAIT(C, TRAIT_HUSK))
+/obj/item/bodypart/head/update_limb(dropping_limb, mob/living/carbon/source, is_creating)
+	var/mob/living/carbon/head_owner
+	if(source)
+		head_owner = source
+	else
+		head_owner = owner
+
+	real_name = head_owner.real_name
+	if(HAS_TRAIT(head_owner, TRAIT_HUSK))
 		real_name = "Unknown"
 		hair_style = "Bald"
 		facial_hair_style = "Shaved"
 		lip_style = null
 
-	else if(ishuman(C))
-		var/mob/living/carbon/human/H = C
+	else if(ishuman(head_owner))
+		var/mob/living/carbon/human/H = head_owner
 		var/datum/species/S = H.dna.species
 
 		//Facial hair
