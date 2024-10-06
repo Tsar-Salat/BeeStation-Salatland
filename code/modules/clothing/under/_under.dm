@@ -8,17 +8,29 @@
 	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 0, ACID = 0, STAMINA = 0, BLEED = 10)
 	drop_sound = 'sound/items/handling/cloth_drop.ogg'
 	pickup_sound =  'sound/items/handling/cloth_pickup.ogg'
+
+	var/freshly_laundered = FALSE
+
+	// Alt style handling
+	/// Can this suit be adjustd up or down to an alt style
+	var/can_adjust = TRUE
+	/// If adjusted what style are we currently using?
+	var/adjusted = NORMAL_STYLE
+	/// For adjusted/rolled-down jumpsuits. FALSE = exposes chest and arms, TRUE = exposes arms only
+	var/alt_covers_chest = FALSE
 	/// The variable containing the flags for how the woman uniform cropping is supposed to interact with the sprite.
 	var/female_sprite_flags = FEMALE_UNIFORM_FULL
-	var/has_sensor = HAS_SENSORS // For the crew computer
+
+	// Sensor handling
+	/// Does this undersuit have suit sensors in general
+	var/has_sensor = HAS_SENSORS
+	/// Does this undersuit spawn with a random sensor value
 	var/random_sensor = TRUE
+	/// What is the active sensor mode of this udnersuit
 	var/sensor_mode = NO_SENSORS
-	var/can_adjust = TRUE
-	var/adjusted = NORMAL_STYLE
-	var/alt_covers_chest = FALSE // for adjusted/rolled-down jumpsuits, FALSE = exposes chest and arms, TRUE = exposes arms only
+	
 	var/obj/item/clothing/accessory/attached_accessory
 	var/mutable_appearance/accessory_overlay
-	var/freshly_laundered = FALSE
 	dying_key = DYE_REGISTRY_UNDER
 
 /obj/item/clothing/under/worn_overlays(mutable_appearance/standing, isinhands = FALSE, icon_file, item_layer, atom/origin)

@@ -519,15 +519,17 @@
 /obj/item/bodypart/proc/update_limb(dropping_limb, mob/living/carbon/source, is_creating = FALSE)
 	SHOULD_CALL_PARENT(TRUE)
 
+	var/mob/living/carbon/limb_owner
 	if(source)
-		C = source
+		limb_owner = source
 		if(!original_owner)
 			original_owner = WEAKREF(source)
-	else if(original_owner && !IS_WEAKREF_OF(owner, original_owner)) //Foreign limb
-		no_update = TRUE
 	else
-		C = owner
-		no_update = FALSE
+		limb_owner = owner
+		if(original_owner && !IS_WEAKREF_OF(owner, original_owner)) //Foreign limb
+			no_update = TRUE
+		else
+			no_update = FALSE
 
 	if(IS_ORGANIC_LIMB(src))
 		if(owner && HAS_TRAIT(owner, TRAIT_HUSK))
