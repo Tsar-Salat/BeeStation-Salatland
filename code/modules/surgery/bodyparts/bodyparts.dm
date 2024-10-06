@@ -500,7 +500,6 @@
 /obj/item/bodypart/proc/update_limb(dropping_limb, mob/living/carbon/source, is_creating = FALSE)
 	SHOULD_CALL_PARENT(TRUE)
 
-	var/mob/living/carbon/C
 	if(source)
 		C = source
 		if(!original_owner)
@@ -688,11 +687,6 @@
 	max_damage = 500
 	//acceptable_bodytype = BODYTYPE_HUMANOID
 
-/obj/item/bodypart/chest/devil
-	dismemberable = 0
-	max_damage = 5000
-	//animal_origin = DEVIL_BODYPART
-
 /obj/item/bodypart/chest/larva
 	icon = 'icons/mob/animal_parts.dmi'
 	icon_static = 'icons/mob/animal_parts.dmi'
@@ -809,12 +803,6 @@
 	max_damage = 100
 	should_draw_greyscale = FALSE
 
-/obj/item/bodypart/l_arm/devil
-	dismemberable = FALSE
-	can_be_disabled = FALSE
-	max_damage = 5000
-	//animal_origin = DEVIL_BODYPART
-
 /obj/item/bodypart/r_arm
 	name = "right arm"
 	desc = "Over 87% of humans are right handed. That figure is much lower \
@@ -919,12 +907,6 @@
 	max_damage = 100
 	should_draw_greyscale = FALSE
 
-/obj/item/bodypart/r_arm/devil
-	dismemberable = FALSE
-	can_be_disabled = FALSE
-	max_damage = 5000
-	//animal_origin = DEVIL_BODYPART
-
 /obj/item/bodypart/l_leg
 	name = "left leg"
 	desc = "Some athletes prefer to tie their left shoelaces first for good \
@@ -1017,12 +999,6 @@
 	can_be_disabled = FALSE
 	max_damage = 100
 	should_draw_greyscale = FALSE
-
-/obj/item/bodypart/l_leg/devil
-	dismemberable = FALSE
-	can_be_disabled = FALSE
-	max_damage = 5000
-	//animal_origin = DEVIL_BODYPART
 
 /obj/item/bodypart/r_leg
 	name = "right leg"
@@ -1120,12 +1096,6 @@
 	can_be_disabled = FALSE
 	max_damage = 100
 	should_draw_greyscale = FALSE
-
-/obj/item/bodypart/r_leg/devil
-	dismemberable = FALSE
-	can_be_disabled = FALSE
-	max_damage = 5000
-	//animal_origin = DEVIL_BODYPART
 
 ///A multi-purpose setter for all things immediately important to the icon and iconstate of the limb.
 /obj/item/bodypart/proc/change_appearance(icon, id, greyscale, dimorphic)

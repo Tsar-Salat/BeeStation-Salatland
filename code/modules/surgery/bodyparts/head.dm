@@ -276,11 +276,6 @@
 	max_damage = 500
 	bodytype = BODYTYPE_HUMANOID | BODYTYPE_ALIEN | BODYTYPE_ORGANIC
 
-/obj/item/bodypart/head/devil
-	dismemberable = 0
-	max_damage = 5000
-	//animal_origin = DEVIL_BODYPART
-
 /obj/item/bodypart/head/larva
 	icon = 'icons/mob/animal_parts.dmi'
 	icon_static = 'icons/mob/animal_parts.dmi'
