@@ -17,8 +17,8 @@
 	attack_verb_continuous = list("slaps", "punches")
 	attack_verb_simple = list("slap", "punch")
 	item_state = "buildpipe"
-	static_icon = 'icons/mob/augmentation/augments.dmi'
 	icon = 'icons/mob/augmentation/augments.dmi'
+	icon_static = 'icons/mob/augmentation/augments.dmi'
 	flags_1 = CONDUCT_1
 	icon_state = "borg_l_arm"
 	is_dimorphic = FALSE
@@ -44,7 +44,7 @@
 	attack_verb_continuous = list("slaps", "punches")
 	attack_verb_simple = list("slap", "punch")
 	item_state = "buildpipe"
-	static_icon = 'icons/mob/augmentation/augments.dmi'
+	icon_static = 'icons/mob/augmentation/augments.dmi'
 	icon = 'icons/mob/augmentation/augments.dmi'
 	limb_id = BODYPART_ID_ROBOTIC
 	flags_1 = CONDUCT_1
@@ -72,7 +72,7 @@
 	attack_verb_continuous = list("kicks", "stomps")
 	attack_verb_simple = list("kick", "stomp")
 	item_state = "buildpipe"
-	static_icon = 'icons/mob/augmentation/augments.dmi'
+	icon_static = 'icons/mob/augmentation/augments.dmi'
 	icon = 'icons/mob/augmentation/augments.dmi'
 	limb_id = BODYPART_ID_ROBOTIC
 	flags_1 = CONDUCT_1
@@ -100,7 +100,7 @@
 	attack_verb_continuous = list("kicks", "stomps")
 	attack_verb_simple = list("kick", "stomp")
 	item_state = "buildpipe"
-	static_icon = 'icons/mob/augmentation/augments.dmi'
+	icon_static = 'icons/mob/augmentation/augments.dmi'
 	icon = 'icons/mob/augmentation/augments.dmi'
 	limb_id = BODYPART_ID_ROBOTIC
 	flags_1 = CONDUCT_1
@@ -126,7 +126,7 @@
 	name = "cyborg torso"
 	desc = "A heavily reinforced case containing cyborg logic boards, with space for a standard power cell."
 	item_state = "buildpipe"
-	static_icon = 'icons/mob/augmentation/augments.dmi'
+	icon_static = 'icons/mob/augmentation/augments.dmi'
 	icon = 'icons/mob/augmentation/augments.dmi'
 	limb_id = BODYPART_ID_ROBOTIC
 	flags_1 = CONDUCT_1
@@ -234,7 +234,7 @@
 	name = "cyborg head"
 	desc = "A standard reinforced braincase, with spine-plugged neural socket and sensor gimbals."
 	item_state = "buildpipe"
-	static_icon = 'icons/mob/augmentation/augments.dmi'
+	icon_static = 'icons/mob/augmentation/augments.dmi'
 	limb_id = BODYPART_ID_ROBOTIC
 	icon = null
 	flags_1 = CONDUCT_1
@@ -336,7 +336,7 @@
 /obj/item/bodypart/l_arm/robot/surplus
 	name = "surplus prosthetic left arm"
 	desc = "A skeletal, robotic limb. Outdated and fragile, but it's still better than nothing."
-	static_icon =  'icons/mob/augmentation/surplus_augments.dmi'
+	icon_static =  'icons/mob/augmentation/surplus_augments.dmi'
 	brute_reduction = 0
 	burn_reduction = 0
 	max_damage = 20
@@ -344,7 +344,7 @@
 /obj/item/bodypart/r_arm/robot/surplus
 	name = "surplus prosthetic right arm"
 	desc = "A skeletal, robotic limb. Outdated and fragile, but it's still better than nothing."
-	static_icon =  'icons/mob/augmentation/surplus_augments.dmi'
+	icon_static =  'icons/mob/augmentation/surplus_augments.dmi'
 	brute_reduction = 0
 	burn_reduction = 0
 	max_damage = 20
@@ -352,7 +352,7 @@
 /obj/item/bodypart/l_leg/robot/surplus
 	name = "surplus prosthetic left leg"
 	desc = "A skeletal, robotic limb. Outdated and fragile, but it's still better than nothing."
-	static_icon =  'icons/mob/augmentation/surplus_augments.dmi'
+	icon_static =  'icons/mob/augmentation/surplus_augments.dmi'
 	brute_reduction = 0
 	burn_reduction = 0
 	max_damage = 20
@@ -360,7 +360,7 @@
 /obj/item/bodypart/r_leg/robot/surplus
 	name = "surplus prosthetic right leg"
 	desc = "A skeletal, robotic limb. Outdated and fragile, but it's still better than nothing."
-	static_icon =  'icons/mob/augmentation/surplus_augments.dmi'
+	icon_static =  'icons/mob/augmentation/surplus_augments.dmi'
 	brute_reduction = 0
 	burn_reduction = 0
 	max_damage = 20

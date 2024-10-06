@@ -4,21 +4,20 @@
 	desc = "Why is it detached..."
 	force = 3
 	throwforce = 3
-	icon = 'icons/mob/human_parts_greyscale.dmi'
+	icon = 'icons/mob/human_parts.dmi'
+	icon_state = "" //Leave this blank! Bodyparts are built using overlays
 	/// The icon for Organic limbs using greyscale
-	//VAR_PROTECTED/icon_greyscale = DEFAULT_BODYPART_ICON_ORGANIC
+	VAR_PROTECTED/icon_greyscale = DEFAULT_BODYPART_ICON_ORGANIC
 	///The icon for non-greyscale limbs
 	VAR_PROTECTED/icon_static = 'icons/mob/human_parts.dmi'
 	///The icon for husked limbs
-	//VAR_PROTECTED/icon_husk = 'icons/mob/human_parts.dmi'
-	var/husk_icon = 'icons/mob/human_parts.dmi'
+	VAR_PROTECTED/icon_husk = 'icons/mob/human_parts.dmi'
 	var/husk_type = "humanoid"
-	var/static_icon = 'icons/mob/human_parts.dmi' //Uncolorable sprites
-	icon_state = ""
 	layer = BELOW_MOB_LAYER //so it isn't hidden behind objects when on the floor
 	var/mob/living/carbon/owner = null
 	var/datum/weakref/original_owner = null
 	var/needs_processing = FALSE
+
 	///If you'd like to know if a bodypart is organic, please use is_organic_limb()
 	var/bodytype = BODYTYPE_HUMANOID | BODYTYPE_ORGANIC //List of bodytypes flags, important for fitting clothing.
 	var/change_exempt_flags //Defines when a bodypart should not be changed. Example: BP_BLOCK_CHANGE_SPECIES prevents the limb from being overwritten on species gain
@@ -617,7 +616,7 @@
 	. += limb
 
 	if(is_husked)
-		limb.icon = husk_icon
+		limb.icon = icon_husk
 		limb.icon_state = "[husk_type]_husk_[body_zone]"
 		. += emissive_blocker(limb.icon, limb.icon_state, limb.layer, limb.alpha)
 		if(aux_zone) //Hand shit
@@ -627,10 +626,9 @@
 		return
 
 	////This is the MEAT of limb icon code
-	if(!should_draw_greyscale || !icon)
-		limb.icon = static_icon
-	else
-		limb.icon = icon
+	limb.icon = icon_greyscale
+	if(!should_draw_greyscale || !icon_greyscale)
+		limb.icon = icon_static
 
 	///The icon_state overlay for the limb
 	limb.icon_state = "[limb_id]_[body_zone][is_dimorphic ? "_[limb_gender]" : ""]"
@@ -662,7 +660,7 @@
 /obj/item/bodypart/chest
 	name = BODY_ZONE_CHEST
 	desc = "It's impolite to stare at a person's chest."
-	//icon_state = "default_human_chest"
+	icon_state = "default_human_chest"
 	max_damage = 200
 	body_zone = BODY_ZONE_CHEST
 	body_part = CHEST
@@ -1131,7 +1129,7 @@
 /obj/item/bodypart/proc/change_appearance(icon, id, greyscale, dimorphic)
 	var/icon_holder
 	if(greyscale)
-		//icon_greyscale = icon
+		icon_greyscale = icon
 		icon_holder = icon
 		should_draw_greyscale = TRUE
 	else
