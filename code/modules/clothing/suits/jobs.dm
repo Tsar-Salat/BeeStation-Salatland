@@ -78,7 +78,7 @@
 	armor = list(MELEE = 25,  BULLET = 10, LASER = 25, ENERGY = 10, BOMB = 0, BIO = 0, RAD = 0, FIRE = 0, ACID = 45, STAMINA = 40, BLEED = 30)
 	cold_protection = CHEST|GROIN|ARMS
 	heat_protection = CHEST|GROIN|ARMS
-	supports_variations = DIGITIGRADE_VARIATION_NO_NEW_ICON
+	supports_variations = CLOTHING_DIGITIGRADE_VARIATION_NO_NEW_ICON
 	allowed = list(/obj/item/tank/internals, /obj/item/melee/classic_baton) //Trench coats are a little more apt at carrying larger objects.
 
 /obj/item/clothing/suit/jacket/det_suit/Initialize(mapload)

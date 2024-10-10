@@ -23,6 +23,8 @@
 /datum/mutation/hulk/on_acquiring(mob/living/carbon/human/owner)
 	if(..())
 		return
+	for(var/obj/item/bodypart/part as anything in owner.bodyparts)
+		part.variable_color = COLOR_DARK_LIME
 	SEND_SIGNAL(owner, COMSIG_ADD_MOOD_EVENT, "hulk", /datum/mood_event/hulk)
 	RegisterSignal(owner, COMSIG_MOB_SAY, PROC_REF(handle_speech))
 	owner.update_body_parts()
@@ -39,6 +41,8 @@
 /datum/mutation/hulk/on_losing(mob/living/carbon/human/owner)
 	if(..())
 		return
+	for(var/obj/item/bodypart/part as anything in owner.bodyparts)
+		part.variable_color = null
 	SEND_SIGNAL(owner, COMSIG_CLEAR_MOOD_EVENT, "hulk")
 	owner.update_body_parts()
 	UnregisterSignal(owner, COMSIG_MOB_SAY)

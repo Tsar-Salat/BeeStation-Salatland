@@ -146,6 +146,8 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	var/sprite_sheets = null
 	///A bitfield of species that the item cannot be worn by.
 	var/species_restricted = null
+	///This is a bitfield that defines what variations exist for bodyparts like Digi legs. See: code\_DEFINES\inventory.dm
+	var/supports_variations_flags = NONE
 	///A weakref to the mob who threw the item
 	var/datum/weakref/thrownby = null
 

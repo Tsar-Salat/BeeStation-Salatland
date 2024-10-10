@@ -61,7 +61,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	var/attack_type = BRUTE //Type of damage attack does
 	var/punchdamage = 7      //highest possible punch damage
 	var/siemens_coeff = 1 //base electrocution coefficient
-	var/damage_overlay_type = "human" //what kind of damage overlays (if any) appear on our species when wounded?
 	var/fixed_mut_color = "" //to use MUTCOLOR with a fixed color that's independent of dna.feature["mcolor"]
 	var/inert_mutation 	= DWARFISM //special mutation that can be found in the genepool. Dont leave empty or changing species will be a headache
 	var/deathsound //used to set the mobs deathsound on species change
@@ -931,28 +930,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			bodyparts_to_add -= "diona_pbody"
 
 
-	////PUT ALL YOUR WEIRD ASS REAL-LIMB HANDLING HERE
-	///Digi handling
-	if(H.dna.species.bodytype & BODYTYPE_DIGITIGRADE)
-		var/uniform_compatible = FALSE
-		var/suit_compatible = FALSE
-		if(!(H.w_uniform) || (H.w_uniform.supports_variations & DIGITIGRADE_VARIATION) || (H.w_uniform.supports_variations & DIGITIGRADE_VARIATION_NO_NEW_ICON)) //Checks uniform compatibility
-			uniform_compatible = TRUE
-		if((!H.wear_suit) || (H.wear_suit.supports_variations & DIGITIGRADE_VARIATION) || !(H.wear_suit.body_parts_covered & LEGS) || (H.wear_suit.supports_variations & DIGITIGRADE_VARIATION_NO_NEW_ICON)) //Checks suit compatability
-			suit_compatible = TRUE
-
-		if((uniform_compatible && suit_compatible) || (suit_compatible && H.wear_suit?.flags_inv & HIDEJUMPSUIT)) //If the uniform is hidden, it doesnt matter if its compatible
-			for(var/obj/item/bodypart/BP as() in H.bodyparts)
-				if(BP.bodytype & BODYTYPE_DIGITIGRADE)
-					BP.limb_id = "digitigrade"
-
-		else
-			for(var/obj/item/bodypart/BP as() in H.bodyparts)
-				if(BP.bodytype & BODYTYPE_DIGITIGRADE)
-					BP.limb_id = "lizard"
-	///End digi handling
-
-
 	////END REAL-LIMB HANDLING
 	H.update_body_parts()
 
@@ -1195,10 +1172,11 @@ GLOBAL_LIST_EMPTY(features_by_species)
 				return FALSE
 			if(H.num_legs < 2)
 				return FALSE
-			if((bodytype & BODYTYPE_DIGITIGRADE) && !(I.supports_variations & DIGITIGRADE_VARIATION))
-				if(!disable_warning)
-					to_chat(H, "<span class='warning'>The footwear around here isn't compatible with your feet!</span>")
-				return FALSE
+			if((bodytype & BODYTYPE_DIGITIGRADE) && !(I.supports_variations & CLOTHING_DIGITIGRADE_VARIATION))
+				if(!(I.supports_variations_flags & (CLOTHING_DIGITIGRADE_VARIATION|CLOTHING_DIGITIGRADE_VARIATION_NO_NEW_ICON)))
+					if(!disable_warning)
+						to_chat(H, "<span class='warning'>The footwear around here isn't compatible with your feet!</span>")
+					return FALSE
 			return equip_delay_self_check(I, H, bypass_equip_delay_self)
 		if(ITEM_SLOT_BELT)
 			if(H.belt)
@@ -2371,27 +2349,27 @@ GLOBAL_LIST_EMPTY(features_by_species)
 /datum/species/teshari/get_custom_icons(var/part)
 	switch(part)
 		if("uniform")
-			return 'icons/mob/species/teshari/tesh_uniforms.dmi'
+			return 'icons/mob/human/species/teshari/tesh_uniforms.dmi'
 		if("gloves")
-			return 'icons/mob/species/teshari/tesh_gloves.dmi'
+			return 'icons/mob/human/species/teshari/tesh_gloves.dmi'
 		if("glasses")
-			return 'icons/mob/species/teshari/tesh_glasses.dmi'
+			return 'icons/mob/human/species/teshari/tesh_glasses.dmi'
 		if("ears")
-			return 'icons/mob/species/teshari/tesh_ears.dmi'
+			return 'icons/mob/human/species/teshari/tesh_ears.dmi'
 		if("shoes")
-			return 'icons/mob/species/teshari/tesh_shoes.dmi'
+			return 'icons/mob/human/species/teshari/tesh_shoes.dmi'
 		if("head")
-			return 'icons/mob/species/teshari/tesh_head.dmi'
+			return 'icons/mob/human/species/teshari/tesh_head.dmi'
 		if("belt")
-			return 'icons/mob/species/teshari/tesh_belts.dmi'
+			return 'icons/mob/human/species/teshari/tesh_belts.dmi'
 		if("suit")
-			return 'icons/mob/species/teshari/tesh_suits.dmi'
+			return 'icons/mob/human/species/teshari/tesh_suits.dmi'
 		if("mask")
-			return 'icons/mob/species/teshari/tesh_masks.dmi'
+			return 'icons/mob/human/species/teshari/tesh_masks.dmi'
 		if("back")
-			return 'icons/mob/species/teshari/tesh_back.dmi'
+			return 'icons/mob/human/species/teshari/tesh_back.dmi'
 		if("generic")
-			return 'icons/mob/species/teshari/tesh_generic.dmi'
+			return 'icons/mob/human/species/teshari/tesh_generic.dmi'
 		else
 			return
 */

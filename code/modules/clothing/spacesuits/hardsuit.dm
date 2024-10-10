@@ -365,7 +365,7 @@
 	item_state = "mining_hardsuit"
 	max_heat_protection_temperature = FIRE_SUIT_MAX_TEMP_PROTECT
 	resistance_flags = FIRE_PROOF
-	supports_variations = DIGITIGRADE_VARIATION
+	supports_variations = CLOTHING_DIGITIGRADE_VARIATION
 	armor = list(MELEE = 30,  BULLET = 5, LASER = 10, ENERGY = 20, BOMB = 50, BIO = 100, RAD = 50, FIRE = 50, ACID = 75, STAMINA = 40, BLEED = 70)
 	allowed = list(/obj/item/flashlight, /obj/item/tank/internals, /obj/item/storage/bag/ore, /obj/item/pickaxe)
 	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/mining
@@ -535,7 +535,7 @@
 	item_state = "syndie_hardsuit"
 	hardsuit_type = "syndi"
 	w_class = WEIGHT_CLASS_NORMAL
-	supports_variations = DIGITIGRADE_VARIATION
+	supports_variations = CLOTHING_DIGITIGRADE_VARIATION
 	armor = list(MELEE = 40,  BULLET = 50, LASER = 30, ENERGY = 55, BOMB = 35, BIO = 100, RAD = 50, FIRE = 50, ACID = 90, STAMINA = 60, BLEED = 70)
 	allowed = list(/obj/item/gun, /obj/item/ammo_box,/obj/item/ammo_casing, /obj/item/melee/baton, /obj/item/melee/transforming/energy/sword/saber, /obj/item/restraints/handcuffs, /obj/item/tank/internals)
 	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/syndi
@@ -701,7 +701,7 @@
 	name = "medical hardsuit"
 	desc = "A special suit that protects against hazardous, low pressure environments. Built with lightweight materials for easier movement."
 	item_state = "medical_hardsuit"
-	supports_variations = DIGITIGRADE_VARIATION
+	supports_variations = CLOTHING_DIGITIGRADE_VARIATION
 	allowed = list(/obj/item/flashlight, /obj/item/tank/internals, /obj/item/storage/firstaid, /obj/item/healthanalyzer, /obj/item/stack/medical)
 	armor = list(MELEE = 30,  BULLET = 5, LASER = 10, ENERGY = 15, BOMB = 10, BIO = 100, RAD = 60, FIRE = 60, ACID = 75, STAMINA = 20, BLEED = 70)
 	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/medical
@@ -753,7 +753,7 @@
 	name = "prototype hardsuit"
 	desc = "A prototype suit that protects against hazardous, low pressure environments. Fitted with extensive plating for handling explosives and dangerous research materials."
 	item_state = "hardsuit-rd"
-	supports_variations = DIGITIGRADE_VARIATION
+	supports_variations = CLOTHING_DIGITIGRADE_VARIATION
 	resistance_flags = ACID_PROOF | FIRE_PROOF
 	max_heat_protection_temperature = FIRE_SUIT_MAX_TEMP_PROTECT //Same as an emergency firesuit. Not ideal for extended exposure.
 	allowed = list(/obj/item/flashlight, /obj/item/tank/internals, /obj/item/gun/energy/wormhole_projector,
@@ -781,7 +781,7 @@
 	name = "security hardsuit"
 	desc = "A bulky, armored suit designed to protect security personnel in low pressure environments."
 	item_state = "sec_hardsuit"
-	supports_variations = DIGITIGRADE_VARIATION
+	supports_variations = CLOTHING_DIGITIGRADE_VARIATION
 	armor = list(MELEE = 35,  BULLET = 35, LASER = 30, ENERGY = 50, BOMB = 40, BIO = 100, RAD = 50, FIRE = 75, ACID = 75, STAMINA = 50, BLEED = 70)
 	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/security
 
@@ -801,7 +801,7 @@
 /obj/item/clothing/suit/space/hardsuit/security/head_of_security
 	icon_state = "hardsuit-hos"
 	name = "head of security's hardsuit"
-	supports_variations = DIGITIGRADE_VARIATION
+	supports_variations = CLOTHING_DIGITIGRADE_VARIATION
 	desc = "A bulky, armored suit designed to protect security personnel in low pressure environments. This one has markings for the head of security."
 	armor = list(MELEE = 35,  BULLET = 35, LASER = 30, ENERGY = 50, BOMB = 40, BIO = 100, RAD = 50, FIRE = 75, ACID = 75, STAMINA = 50, BLEED = 70)
 	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/security/hos
@@ -911,7 +911,7 @@
 	icon_state = "hardsuit-hos"
 	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/security/hos
 	allowed = null
-	supports_variations = DIGITIGRADE_VARIATION
+	supports_variations = CLOTHING_DIGITIGRADE_VARIATION
 	armor = list(MELEE = 30,  BULLET = 15, LASER = 30, ENERGY = 40, BOMB = 10, BIO = 100, RAD = 50, FIRE = 100, ACID = 100, STAMINA = 60, BLEED = 70)
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	/// How many charges total the shielding has

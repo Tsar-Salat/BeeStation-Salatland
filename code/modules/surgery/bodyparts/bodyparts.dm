@@ -4,15 +4,20 @@
 	desc = "Why is it detached..."
 	force = 3
 	throwforce = 3
-	icon = 'icons/mob/human_parts_greyscale.dmi'
-	var/husk_icon = 'icons/mob/human_parts.dmi'
+	icon = 'icons/mob/human_parts.dmi'
+	icon_state = "" //Leave this blank! Bodyparts are built using overlays
+	/// The icon for Organic limbs using greyscale
+	VAR_PROTECTED/icon_greyscale = DEFAULT_BODYPART_ICON_ORGANIC
+	///The icon for non-greyscale limbs
+	VAR_PROTECTED/icon_static = 'icons/mob/human_parts.dmi'
+	///The icon for husked limbs
+	VAR_PROTECTED/icon_husk = 'icons/mob/human_parts.dmi'
 	var/husk_type = "humanoid"
-	var/static_icon = 'icons/mob/human_parts.dmi' //Uncolorable sprites
-	icon_state = ""
 	layer = BELOW_MOB_LAYER //so it isn't hidden behind objects when on the floor
 	var/mob/living/carbon/owner = null
 	var/datum/weakref/original_owner = null
 	var/needs_processing = FALSE
+
 	///If you'd like to know if a bodypart is organic, please use is_organic_limb()
 	var/bodytype = BODYTYPE_HUMANOID | BODYTYPE_ORGANIC //List of bodytypes flags, important for fitting clothing.
 	var/change_exempt_flags //Defines when a bodypart should not be changed. Example: BP_BLOCK_CHANGE_SPECIES prevents the limb from being overwritten on species gain
@@ -61,17 +66,17 @@
 	var/skin_tone = ""
 	var/should_draw_greyscale = TRUE //Limbs need this information as a back-up incase they are generated outside of a carbon (limbgrower)
 	var/species_color = ""
-	var/mutation_color = ""
+	var/variable_color = ""
 	var/no_update = 0
 
-	var/animal_origin = null //for nonhuman bodypart (e.g. monkey)
 	var/dismemberable = 1 //whether it can be dismembered with a weapon.
 
 	var/px_x = 0
 	var/px_y = 0
 
 	var/species_flags_list = list()
-	var/dmg_overlay_type //the type of damage overlay (if any) to use when this bodypart is bruised/burned.
+	///the type of damage overlay (if any) to use when this bodypart is bruised/burned.
+	var/dmg_overlay_type = "human"
 
 	//Damage messages used by help_shake_act()
 	var/light_brute_msg = "bruised"
@@ -109,11 +114,15 @@
 	return ..()
 
 /obj/item/bodypart/forceMove(atom/destination) //Please. Never forcemove a limb if its's actually in use. This is only for borgs.
+	SHOULD_CALL_PARENT(TRUE)
+
 	. = ..()
 	if(isturf(destination))
 		update_icon_dropped()
 
 /obj/item/bodypart/examine(mob/user)
+	SHOULD_CALL_PARENT(TRUE)
+
 	. = ..()
 	if(brute_dam >= DAMAGE_PRECISION)
 		. += "<span class='warning'>This limb has [brute_dam > 30 ? "severe" : "minor"] bruising.</span>"
@@ -122,34 +131,49 @@
 	if(limb_id)
 		. += "<span class='notice'>It is a [limb_id] [parse_zone(body_zone)].</span>"
 
-/obj/item/bodypart/blob_act()
-	take_damage(max_damage)
+	/* Wounds
+	if(locate(/datum/wound/blunt) in wounds)
+		. += span_warning("The bones in this limb appear badly cracked.")
+	if(locate(/datum/wound/slash) in wounds)
+		. += span_warning("The flesh on this limb appears badly lacerated.")
+	if(locate(/datum/wound/pierce) in wounds)
+		. += span_warning("The flesh on this limb appears badly perforated.")
+	if(locate(/datum/wound/burn) in wounds)
+		. += span_warning("The flesh on this limb appears badly cooked.")
+	*/
 
-/obj/item/bodypart/attack(mob/living/carbon/C, mob/user)
-	if(ishuman(C))
-		var/mob/living/carbon/human/H = C
-		if(HAS_TRAIT(C, TRAIT_LIMBATTACHMENT))
-			if(!H.get_bodypart(body_zone) && !animal_origin)
+/obj/item/bodypart/blob_act()
+	receive_damage(max_damage)
+
+/obj/item/bodypart/attack(mob/living/carbon/victim, mob/user)
+	SHOULD_CALL_PARENT(TRUE)
+
+	if(ishuman(victim))
+		var/mob/living/carbon/human/human_victim = victim
+		if(HAS_TRAIT(victim, TRAIT_LIMBATTACHMENT))
+			if(!human_victim.get_bodypart(body_zone))
 				user.temporarilyRemoveItemFromInventory(src, TRUE)
-				if(!attach_limb(C))
-					to_chat(user, "<span class='warning'>[H]'s body rejects [src]!</span>")
-					forceMove(H.loc)
-				if(H == user)
-					H.visible_message("<span class='warning'>[H] jams [src] into [H.p_their()] empty socket!</span>",\
+				if(!attach_limb(victim))
+					to_chat(user, "<span class='warning'>[human_victim]'s body rejects [src]!</span>")
+					forceMove(human_victim.loc)
+				if(human_victim == user)
+					human_victim.visible_message("<span class='warning'>[human_victim] jams [src] into [human_victim.p_their()] empty socket!</span>",\
 					"<span class='notice'>You force [src] into your empty socket, and it locks into place!</span>")
 				else
-					H.visible_message("<span class='warning'>[user] jams [src] into [H]'s empty socket!</span>",\
+					human_victim.visible_message("<span class='warning'>[user] jams [src] into [human_victim]'s empty socket!</span>",\
 					"<span class='notice'>[user] forces [src] into your empty socket, and it locks into place!</span>")
 				return
 	..()
 
 /obj/item/bodypart/attackby(obj/item/W, mob/user, params)
+	SHOULD_CALL_PARENT(TRUE)
+
 	if(W.is_sharp())
 		add_fingerprint(user)
 		if(!contents.len)
 			to_chat(user, "<span class='warning'>There is nothing left inside [src]!</span>")
 			return
-		playsound(loc, 'sound/weapons/slice.ogg', 50, 1, -1)
+		playsound(loc, 'sound/weapons/slice.ogg', 50, TRUE, -1)
 		user.visible_message("<span class='warning'>[user] begins to cut open [src].</span>",\
 			"<span class='notice'>You begin to cut open [src]...</span>")
 		if(do_after(user, 54, target = src))
@@ -158,6 +182,8 @@
 		return ..()
 
 /obj/item/bodypart/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+	SHOULD_CALL_PARENT(TRUE)
+
 	..()
 	if(IS_ORGANIC_LIMB(src))
 		playsound(get_turf(src), 'sound/misc/splort.ogg', 50, TRUE, -1)
@@ -166,6 +192,8 @@
 
 //empties the bodypart from its organs and other things inside it
 /obj/item/bodypart/proc/drop_organs(mob/user, violent_removal)
+	SHOULD_CALL_PARENT(TRUE)
+
 	var/turf/T = get_turf(src)
 	if(IS_ORGANIC_LIMB(src))
 		playsound(T, 'sound/misc/splort.ogg', 50, 1, -1)
@@ -205,9 +233,8 @@
 	if(!brute && !burn && !stamina)
 		return FALSE
 
-	switch(animal_origin)
-		if(ALIEN_BODYPART,LARVA_BODYPART) //aliens take double burn //nothing can burn with so much snowflake code around
-			burn *= 2
+	if(bodytype & (BODYTYPE_ALIEN|BODYTYPE_LARVA_PLACEHOLDER)) //aliens take double burn //nothing can burn with so much snowflake code around
+		burn *= 2
 
 	var/can_inflict = (max_damage * 2) - get_damage()
 	if(can_inflict <= 0)
@@ -489,30 +516,30 @@
 //we inform the bodypart of the changes that happened to the owner, or give it the informations from a source mob.
 //set is_creating to true if you want to change the appearance of the limb outside of mutation changes or forced changes.
 /obj/item/bodypart/proc/update_limb(dropping_limb, mob/living/carbon/source, is_creating = FALSE)
-	var/mob/living/carbon/C
+	SHOULD_CALL_PARENT(TRUE)
+
+	var/mob/living/carbon/limb_owner
 	if(source)
-		C = source
+		limb_owner = source
 		if(!original_owner)
 			original_owner = WEAKREF(source)
-	else if(original_owner && !IS_WEAKREF_OF(owner, original_owner)) //Foreign limb
-		no_update = TRUE
 	else
-		C = owner
-		no_update = FALSE
+		limb_owner = owner
+		if(original_owner && !IS_WEAKREF_OF(owner, original_owner)) //Foreign limb
+			no_update = TRUE
+		else
+			no_update = FALSE
 
-	if(HAS_TRAIT(C, TRAIT_HUSK) && IS_ORGANIC_LIMB(src))
-		dmg_overlay_type = "" //no damage overlay shown when husked
-		is_husked = TRUE
-	else
-		is_husked = FALSE
+	if(IS_ORGANIC_LIMB(src))
+		if(owner && HAS_TRAIT(owner, TRAIT_HUSK))
+			dmg_overlay_type = "" //no damage overlay shown when husked
+			is_husked = TRUE
+		else
+			dmg_overlay_type = initial(dmg_overlay_type)
+			is_husked = FALSE
 
-	if(!dropping_limb && C.dna?.check_mutation(HULK)) //Please remove hulk from the game. I beg you.
-		mutation_color = "00aa00"
-	else
-		mutation_color = null
-
-	if(mutation_color) //I hate mutations
-		draw_color = mutation_color
+	if(variable_color)
+		draw_color = variable_color
 	else if(should_draw_greyscale)
 		draw_color = (species_color) || (skin_tone && skintone2hex(skin_tone, include_tag = FALSE))
 	else
@@ -521,47 +548,42 @@
 	if(no_update)
 		return
 
-	if(!is_creating)
+	if(!is_creating || !owner)
 		return
 
-	if(!animal_origin && ishuman(C))
-		var/mob/living/carbon/human/H = C
+	// There should technically to be an ishuman(owner) check here, but it is absent because no basetype carbons use bodyparts
+	// No, xenos don't actually use bodyparts. Don't ask.
+	var/mob/living/carbon/human/human_owner = owner
 
-		var/datum/species/S = H.dna.species
-		species_flags_list = H.dna.species.species_traits //Literally only exists for a single use of NOBLOOD, but, no reason to remove it i guess...?
-		limb_gender = (H.dna.features["body_model"] == MALE) ? "m" : "f"
-		if(S.use_skintones)
-			skin_tone = H.skin_tone
+	var/datum/species/owner_species = human_owner.dna.species
+	species_flags_list = owner_species.species_traits //Literally only exists for a single use of NOBLOOD, but, no reason to remove it i guess...?
+	limb_gender = (human_owner.dna.features["body_model"] == MALE) ? "m" : "f"
+
+	if(owner_species.use_skintones)
+		skin_tone = human_owner.skin_tone
+	else
+		skin_tone = ""
+
+	if(((MUTCOLORS in owner_species.species_traits) || (DYNCOLORS in owner_species.species_traits)) && uses_mutcolor) //Ethereal code. Motherfuckers.
+		if(owner_species.fixed_mut_color)
+			species_color = owner_species.fixed_mut_color
 		else
-			skin_tone = ""
+			species_color = human_owner.dna.features["mcolor"]
+	else
+		species_color = null
 
-		if(((MUTCOLORS in S.species_traits) || (DYNCOLORS in S.species_traits)) && uses_mutcolor) //Ethereal code. Motherfuckers.
-			if(S.fixed_mut_color)
-				species_color = S.fixed_mut_color
-			else
-				species_color = H.dna.features["mcolor"]
-		else
-			species_color = null
+	draw_color = variable_color
+	if(should_draw_greyscale) //Should the limb be colored?
+		draw_color ||= (species_color) || (skin_tone && skintone2hex(skin_tone, include_tag = FALSE))
 
-		draw_color = mutation_color
-		if(should_draw_greyscale) //Should the limb be colored?
-			draw_color ||= (species_color) || (skin_tone && skintone2hex(skin_tone, include_tag = FALSE))
-
-		dmg_overlay_type = S.damage_overlay_type
-
-	else if(animal_origin == MONKEY_BODYPART) //currently monkeys are the only non human mob to have damage overlays.
-		dmg_overlay_type = animal_origin
-
-	if(!IS_ORGANIC_LIMB(src))
-		dmg_overlay_type = "robotic"
-
-	if(dropping_limb)
-		no_update = TRUE //when attached, the limb won't be affected by the appearance changes of its mob owner.
+	return TRUE
 
 //to update the bodypart's icon when not attached to a mob
 /obj/item/bodypart/proc/update_icon_dropped()
+	SHOULD_CALL_PARENT(TRUE)
+
 	cut_overlays()
-	var/list/standing = get_limb_icon(1)
+	var/list/standing = get_limb_icon(TRUE)
 	if(!standing.len)
 		icon_state = initial(icon_state)//no overlays found, we default back to initial icon.
 		return
@@ -572,6 +594,9 @@
 
 
 /obj/item/bodypart/proc/get_limb_icon(dropped)
+	SHOULD_CALL_PARENT(TRUE)
+	RETURN_TYPE(/list)
+
 	icon_state = "" //to erase the default sprite, we're building the visual aspects of the bodypart through overlays alone.
 
 	. = list()
@@ -590,21 +615,8 @@
 	var/image/aux
 	. += limb
 
-	if(animal_origin) //Cringe ass animal-specific code.
-		if(IS_ORGANIC_LIMB(src))
-			limb.icon = 'icons/mob/animal_parts.dmi'
-			if(is_husked)
-				limb.icon_state = "[animal_origin]_husk_[body_zone]"
-			else
-				limb.icon_state = "[animal_origin]_[body_zone]"
-		else
-			limb.icon = 'icons/mob/augmentation/augments.dmi'
-			limb.icon_state = "[animal_origin]_[body_zone]"
-		. += emissive_blocker(limb.icon, limb.icon_state, limb.layer, limb.alpha)
-		return
-
 	if(is_husked)
-		limb.icon = husk_icon
+		limb.icon = icon_husk
 		limb.icon_state = "[husk_type]_husk_[body_zone]"
 		. += emissive_blocker(limb.icon, limb.icon_state, limb.layer, limb.alpha)
 		if(aux_zone) //Hand shit
@@ -614,10 +626,9 @@
 		return
 
 	////This is the MEAT of limb icon code
-	if(!should_draw_greyscale || !icon)
-		limb.icon = static_icon
-	else
-		limb.icon = icon
+	limb.icon = icon_greyscale
+	if(!should_draw_greyscale || !icon_greyscale)
+		limb.icon = icon_static
 
 	///The icon_state overlay for the limb
 	limb.icon_state = "[limb_id]_[body_zone][is_dimorphic ? "_[limb_gender]" : ""]"
@@ -631,7 +642,7 @@
 		. += aux
 		. += emissive_blocker(limb.icon, "[limb_id]_[aux_zone]", CALCULATE_MOB_OVERLAY_LAYER(aux_layer), image_dir)
 
-	draw_color = mutation_color
+	draw_color = variable_color
 	if(should_draw_greyscale) //Should the limb be colored?
 		draw_color ||= (species_color) || (skin_tone && skintone2hex(skin_tone, include_tag = FALSE))
 
@@ -641,13 +652,15 @@
 			aux.color = "#[draw_color]"
 
 /obj/item/bodypart/deconstruct(disassembled = TRUE)
+	SHOULD_CALL_PARENT(TRUE)
+
 	drop_organs()
-	qdel(src)
+	return ..()
 
 /obj/item/bodypart/chest
 	name = BODY_ZONE_CHEST
 	desc = "It's impolite to stare at a person's chest."
-	//icon_state = "default_human_chest"
+	icon_state = "default_human_chest"
 	max_damage = 200
 	body_zone = BODY_ZONE_CHEST
 	body_part = CHEST
@@ -676,33 +689,40 @@
 
 /obj/item/bodypart/chest/monkey
 	icon = 'icons/mob/animal_parts.dmi'
+	icon_static = 'icons/mob/animal_parts.dmi'
 	icon_state = "default_monkey_chest"
 	limb_id = SPECIES_MONKEY
-	animal_origin = MONKEY_BODYPART
+	is_dimorphic = FALSE
+	dmg_overlay_type = SPECIES_MONKEY
 
 /obj/item/bodypart/chest/monkey/teratoma
 	icon_state = "teratoma_chest"
 	limb_id = "teratoma"
-	animal_origin = TERATOMA_BODYPART
+	//animal_origin = TERATOMA_BODYPART
 
 /obj/item/bodypart/chest/alien
 	icon = 'icons/mob/animal_parts.dmi'
+	icon_static = 'icons/mob/animal_parts.dmi'
 	icon_state = "alien_chest"
+	limb_id = BODYPART_ID_ALIEN
+	bodytype = BODYTYPE_HUMANOID | BODYTYPE_ALIEN | BODYTYPE_ORGANIC
+	is_dimorphic = FALSE
+	should_draw_greyscale = FALSE
 	dismemberable = 0
 	max_damage = 500
-	animal_origin = ALIEN_BODYPART
-
-/obj/item/bodypart/chest/devil
-	dismemberable = 0
-	max_damage = 5000
-	animal_origin = DEVIL_BODYPART
+	//acceptable_bodytype = BODYTYPE_HUMANOID
 
 /obj/item/bodypart/chest/larva
 	icon = 'icons/mob/animal_parts.dmi'
+	icon_static = 'icons/mob/animal_parts.dmi'
 	icon_state = "larva_chest"
+	limb_id = BODYPART_ID_LARVA
+	is_dimorphic = FALSE
+	should_draw_greyscale = FALSE
 	dismemberable = 0
 	max_damage = 50
-	animal_origin = LARVA_BODYPART
+	bodytype = BODYTYPE_LARVA_PLACEHOLDER | BODYTYPE_ORGANIC
+	//acceptable_bodytype = BODYTYPE_LARVA_PLACEHOLDER
 
 /obj/item/bodypart/l_arm
 	name = "left arm"
@@ -785,31 +805,29 @@
 
 /obj/item/bodypart/l_arm/monkey
 	icon = 'icons/mob/animal_parts.dmi'
+	icon_static = 'icons/mob/animal_parts.dmi'
 	icon_state = "default_monkey_l_arm"
 	limb_id = SPECIES_MONKEY
-	animal_origin = MONKEY_BODYPART
 	px_x = -5
 	px_y = -3
+	dmg_overlay_type = SPECIES_MONKEY
 
 /obj/item/bodypart/l_arm/monkey/teratoma
 	icon_state = "teratoma_l_arm"
-	animal_origin = TERATOMA_BODYPART
+	//animal_origin = TERATOMA_BODYPART
 
 /obj/item/bodypart/l_arm/alien
 	icon = 'icons/mob/animal_parts.dmi'
+	icon_static = 'icons/mob/animal_parts.dmi'
 	icon_state = "alien_l_arm"
+	limb_id = BODYPART_ID_ALIEN
+	bodytype = BODYTYPE_HUMANOID | BODYTYPE_ALIEN | BODYTYPE_ORGANIC
 	px_x = 0
 	px_y = 0
 	dismemberable = FALSE
 	can_be_disabled = FALSE
 	max_damage = 100
-	animal_origin = ALIEN_BODYPART
-
-/obj/item/bodypart/l_arm/devil
-	dismemberable = FALSE
-	can_be_disabled = FALSE
-	max_damage = 5000
-	animal_origin = DEVIL_BODYPART
+	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/r_arm
 	name = "right arm"
@@ -890,32 +908,31 @@
 
 /obj/item/bodypart/r_arm/monkey
 	icon = 'icons/mob/animal_parts.dmi'
+	icon_static = 'icons/mob/animal_parts.dmi'
 	icon_state = "default_monkey_r_arm"
 	limb_id = SPECIES_MONKEY
-	animal_origin = MONKEY_BODYPART
+	should_draw_greyscale = FALSE
 	px_x = 5
 	px_y = -3
+	dmg_overlay_type = SPECIES_MONKEY
 
 /obj/item/bodypart/r_arm/monkey/teratoma
 	icon_state = "teratoma_r_arm"
 	limb_id = "teratoma"
-	animal_origin = TERATOMA_BODYPART
+	//animal_origin = TERATOMA_BODYPART
 
 /obj/item/bodypart/r_arm/alien
 	icon = 'icons/mob/animal_parts.dmi'
+	icon_static = 'icons/mob/animal_parts.dmi'
 	icon_state = "alien_r_arm"
+	limb_id = BODYPART_ID_ALIEN
+	bodytype = BODYTYPE_HUMANOID | BODYTYPE_ALIEN | BODYTYPE_ORGANIC
 	px_x = 0
 	px_y = 0
 	dismemberable = FALSE
 	can_be_disabled = FALSE
 	max_damage = 100
-	animal_origin = ALIEN_BODYPART
-
-/obj/item/bodypart/r_arm/devil
-	dismemberable = FALSE
-	can_be_disabled = FALSE
-	max_damage = 5000
-	animal_origin = DEVIL_BODYPART
+	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/l_leg
 	name = "left leg"
@@ -988,31 +1005,28 @@
 
 /obj/item/bodypart/l_leg/monkey
 	icon = 'icons/mob/animal_parts.dmi'
+	icon_static = 'icons/mob/animal_parts.dmi'
 	icon_state = "default_monkey_l_leg"
 	limb_id = SPECIES_MONKEY
-	animal_origin = MONKEY_BODYPART
 	px_y = 4
 
 /obj/item/bodypart/l_leg/monkey/teratoma
 	icon_state = "teratoma_l_leg"
 	limb_id = "teratoma"
-	animal_origin = TERATOMA_BODYPART
+	//animal_origin = TERATOMA_BODYPART
 
 /obj/item/bodypart/l_leg/alien
 	icon = 'icons/mob/animal_parts.dmi'
+	icon_static = 'icons/mob/animal_parts.dmi'
 	icon_state = "alien_l_leg"
+	limb_id = BODYPART_ID_ALIEN
+	bodytype = BODYTYPE_HUMANOID | BODYTYPE_ALIEN | BODYTYPE_ORGANIC
 	px_x = 0
 	px_y = 0
 	dismemberable = FALSE
 	can_be_disabled = FALSE
 	max_damage = 100
-	animal_origin = ALIEN_BODYPART
-
-/obj/item/bodypart/l_leg/devil
-	dismemberable = FALSE
-	can_be_disabled = FALSE
-	max_damage = 5000
-	animal_origin = DEVIL_BODYPART
+	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/r_leg
 	name = "right leg"
@@ -1087,28 +1101,67 @@
 
 /obj/item/bodypart/r_leg/monkey
 	icon = 'icons/mob/animal_parts.dmi'
+	icon_static = 'icons/mob/animal_parts.dmi'
 	icon_state = "default_monkey_r_leg"
 	limb_id = SPECIES_MONKEY
-	animal_origin = MONKEY_BODYPART
 	px_y = 4
+	dmg_overlay_type = SPECIES_MONKEY
 
 /obj/item/bodypart/r_leg/monkey/teratoma
 	icon_state = "teratoma_r_leg"
 	limb_id = "teratoma"
-	animal_origin = TERATOMA_BODYPART
+	//animal_origin = TERATOMA_BODYPART
 
 /obj/item/bodypart/r_leg/alien
 	icon = 'icons/mob/animal_parts.dmi'
+	icon_static = 'icons/mob/animal_parts.dmi'
 	icon_state = "alien_r_leg"
+	limb_id = BODYPART_ID_ALIEN
+	bodytype = BODYTYPE_HUMANOID | BODYTYPE_ALIEN | BODYTYPE_ORGANIC
 	px_x = 0
 	px_y = 0
 	dismemberable = FALSE
 	can_be_disabled = FALSE
 	max_damage = 100
-	animal_origin = ALIEN_BODYPART
+	should_draw_greyscale = FALSE
 
-/obj/item/bodypart/r_leg/devil
-	dismemberable = FALSE
-	can_be_disabled = FALSE
-	max_damage = 5000
-	animal_origin = DEVIL_BODYPART
+///A multi-purpose setter for all things immediately important to the icon and iconstate of the limb.
+/obj/item/bodypart/proc/change_appearance(icon, id, greyscale, dimorphic)
+	var/icon_holder
+	if(greyscale)
+		icon_greyscale = icon
+		icon_holder = icon
+		should_draw_greyscale = TRUE
+	else
+		icon_static = icon
+		icon_holder = icon
+		should_draw_greyscale = FALSE
+
+	if(id) //limb_id should never be falsey
+		limb_id = id
+
+	if(!isnull(dimorphic))
+		is_dimorphic = dimorphic
+
+	if(owner)
+		owner.update_body_parts()
+	else
+		update_icon_dropped()
+
+	//This foot gun needs a safety
+	if(!icon_exists(icon_holder, "[limb_id]_[body_zone][is_dimorphic ? "_[limb_gender]" : ""]"))
+		reset_appearance()
+		stack_trace("change_appearance([icon], [id], [greyscale], [dimorphic]) generated null icon")
+
+///Resets the base appearance of a limb to it's default values.
+/obj/item/bodypart/proc/reset_appearance()
+	icon_static = initial(icon_static)
+	icon = initial(icon)
+	limb_id = initial(limb_id)
+	is_dimorphic = initial(is_dimorphic)
+	should_draw_greyscale = initial(should_draw_greyscale)
+
+	if(owner)
+		owner.update_body_parts()
+	else
+		update_icon_dropped()
