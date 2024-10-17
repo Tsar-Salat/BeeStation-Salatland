@@ -87,10 +87,6 @@
 	allowed = list(/obj/item/flashlight, /obj/item/tank/internals, /obj/item/resonator, /obj/item/mining_scanner, /obj/item/t_scanner/adv_mining_scanner, /obj/item/gun/energy/kinetic_accelerator, /obj/item/pickaxe)
 	high_pressure_multiplier = 0.6
 
-/obj/item/clothing/suit/space/hostile_environment/Initialize(mapload)
-	. = ..()
-	AddComponent(/datum/component/spraycan_paintable)
-
 /obj/item/clothing/suit/space/hostile_environment/process(delta_time)
 	. = ..()
 	var/mob/living/carbon/C = loc
@@ -117,7 +113,6 @@
 
 /obj/item/clothing/head/helmet/space/hostile_environment/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/spraycan_paintable)
 	update_icon()
 
 /obj/item/clothing/head/helmet/space/hostile_environment/update_icon()

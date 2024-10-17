@@ -48,14 +48,16 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define ADMIN_SPAWNED_1 (1<<9)
 /// should not get harmed if this gets caught by an explosion?
 #define PREVENT_CONTENTS_EXPLOSION_1 (1<<10)
+/// Should this object be paintable with very dark colors?
+#define ALLOW_DARK_PAINTS_1 (1<<11)
 /// Should this object be unpaintable?
-#define UNPAINTABLE_1 (1<<11)
+#define UNPAINTABLE_1 (1<<12)
 /// Is this atom on top of another atom, and as such has click priority?
-#define IS_ONTOP_1 (1<<12)
+#define IS_ONTOP_1 (1<<13)
 /// Should we use the initial icon for display? Mostly used by overlay only objects
-#define HTML_USE_INITAL_ICON_1 (1<<13)
+#define HTML_USE_INITAL_ICON_1 (1<<14)
 /// Prevents direct access for anything in the contents of this atom.
-#define NO_DIRECT_ACCESS_FROM_CONTENTS_1 (1<<14)
+#define NO_DIRECT_ACCESS_FROM_CONTENTS_1 (1<<15)
 
 //turf-only flags. These use flags_1 too.
 // These exist to cover /turf and /area at the same time

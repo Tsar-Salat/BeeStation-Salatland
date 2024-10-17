@@ -357,6 +357,11 @@
 		if(!do_after(user, wait_time, target = target))
 			return
 
+var/charges_used = use_charges(user, cost)
+	if(!charges_used)
+		return
+	. = charges_used
+
 	if(length(text_buffer))
 		drawing = text_buffer[1]
 
@@ -401,12 +406,8 @@
 	if(post_noise)
 		audible_message("<span class='notice'>You hear spraying.</span>")
 		playsound(user.loc, 'sound/effects/spray.ogg', 5, 1, 5)
-	// hippie start -- using changes moved to the end of the proc, so it won't use charges if the spraying fails for any reason.
-	var/charges_used = use_charges(user, cost)
-	if(!charges_used)
+	if(check_empty(user, cost))
 		return
-	. = charges_used
-	// hippie end
 	var/fraction = min(1, . / reagents.maximum_volume)
 	if(affected_turfs.len)
 		fraction /= affected_turfs.len
@@ -697,30 +698,28 @@
 
 	if(isobj(target) && !(target.flags_1 & UNPAINTABLE_1))
 		if(actually_paints)
-			if(is_color_dark_without_saturation(paint_color, 33) && !istype(target, /obj/structure/window)) //Colors too dark are rejected
-				if(isclothing(target))
-					var/obj/item/clothing/C = target
-					if(((C.flags_cover & HEADCOVERSEYES) || (C.flags_cover & MASKCOVERSEYES) || (C.flags_cover & GLASSESCOVERSEYES)) && !HAS_TRAIT(C, TRAIT_SPRAYPAINTED))
-						C.flash_protect += 1
-						C.tint += 2
-						to_chat(usr, "<span class='warning'>You spray the [C] down, making it harder to see through!</span>")
-						ADD_TRAIT(C, TRAIT_SPRAYPAINTED, CRAYON_TRAIT)
-						if(ishuman(usr))
-							var/mob/living/carbon/human/H = usr
-							H.update_tint()
-					else
-						to_chat(usr, "<span class='warning'>A colour that dark on an object like this? Surely not...</span>")
-						return FALSE
-				else
-					to_chat(usr, "<span class='warning'>A colour that dark on an object like this? Surely not...</span>")
+			var/color_is_dark = is_color_dark_without_saturation(paint_color)
+
+			if(isclothing(target))
+				var/obj/item/clothing/C = target
+				//code nested here sucks. Do this better, coder of the future
+				if(((C.flags_cover & HEADCOVERSEYES) || (C.flags_cover & MASKCOVERSEYES) || (C.flags_cover & GLASSESCOVERSEYES)) && !HAS_TRAIT(C, TRAIT_SPRAYPAINTED))
+					C.flash_protect += 1
+					C.tint += 2
+					to_chat(usr, "<span class='warning'>You spray the [C] down, making it harder to see through!</span>")
+					ADD_TRAIT(C, TRAIT_SPRAYPAINTED, CRAYON_TRAIT)
+					if(ishuman(usr))
+						var/mob/living/carbon/human/H = usr
+						H.update_tint()
+				else if (color_is_dark && !(target.flags_1 & ALLOW_DARK_PAINTS_1))
+					to_chat(user, "<span class='warning'>A color that dark on an object like this? Surely not...</span>")
 					return FALSE
+			else if (color_is_dark && !(target.flags_1 & ALLOW_DARK_PAINTS_1))
+				to_chat(user, "<span class='warning'>A color that dark on an object like this? Surely not...</span>")
+				return FALSE
 
 			target.add_atom_colour(paint_color, WASHABLE_COLOUR_PRIORITY)
-			if(istype(target, /obj/structure/window))
-				if(is_color_dark_without_saturation(paint_color, 50))
-					target.set_opacity(255)
-				else
-					target.set_opacity(initial(target.opacity))
+			SEND_SIGNAL(target, COMSIG_OBJ_PAINTED, color_is_dark)
 
 		. = use_charges(user, 2)
 		if(!.)

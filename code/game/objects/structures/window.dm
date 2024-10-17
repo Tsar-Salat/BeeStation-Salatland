@@ -69,6 +69,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 	real_explosion_block = explosion_block
 	explosion_block = EXPLOSION_BLOCK_PROC
 
+	flags_1 |= ALLOW_DARK_PAINTS_1
+	RegisterSignal(src, COMSIG_OBJ_PAINTED, .proc/on_painted)
+
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_EXIT = PROC_REF(on_exit),
 	)
@@ -321,6 +324,14 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 /obj/structure/window/proc/after_rotation(mob/user,rotation_type)
 	ini_dir = dir
 	add_fingerprint(user)
+
+/obj/structure/window/proc/on_painted(is_dark_color)
+	SIGNAL_HANDLER
+
+	if (is_dark_color)
+		set_opacity(255)
+	else
+		set_opacity(initial(opacity))
 
 /obj/structure/window/Destroy()
 	set_density(FALSE)
