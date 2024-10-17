@@ -74,7 +74,7 @@
 
 /// it checks if a color is dark, but without saturation value.
 /// This uses Brightness only, without Saturation from HSV
-/proc/is_color_dark_without_saturation(color, threshold = 25)
+/proc/is_color_dark_without_saturation(color, threshold = 35)
 	return get_color_brightness_from_hex(color) < threshold
 
 /// returns HSV brightness 0 to 100 by color hex

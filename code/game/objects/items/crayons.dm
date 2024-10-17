@@ -364,7 +364,7 @@
 		if(!do_after(user, wait_time, target = target))
 			return
 
-var/charges_used = use_charges(user, cost)
+	var/charges_used = use_charges(user, cost)
 	if(!charges_used)
 		return
 	. = charges_used
@@ -709,7 +709,7 @@ var/charges_used = use_charges(user, cost)
 
 			if(isclothing(target))
 				var/obj/item/clothing/C = target
-				//code nested here sucks. Do this better, coder of the future
+				//code nested under this sucks. Do this better, coder of the future
 				if(((C.flags_cover & HEADCOVERSEYES) || (C.flags_cover & MASKCOVERSEYES) || (C.flags_cover & GLASSESCOVERSEYES)) && !HAS_TRAIT(C, TRAIT_SPRAYPAINTED))
 					C.flash_protect += 1
 					C.tint += 2
@@ -743,7 +743,7 @@ var/charges_used = use_charges(user, cost)
 		reagents.trans_to(target, ., volume_multiplier, transfered_by = user)
 
 		if(pre_noise || post_noise)
-			playsound(user.loc, 'sound/effects/spray.ogg', 5, 1, 5)
+			playsound(user.loc, 'sound/effects/spray.ogg', 5, TRUE, 5)
 		user.visible_message("[user] coats [target] with spray paint!", "<span class='notice'>You coat [target] with spray paint.</span>")
 		return FALSE
 
