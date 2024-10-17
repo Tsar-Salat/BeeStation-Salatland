@@ -17,9 +17,9 @@
 
 CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/plumbing/reaction_chamber)
 
-/obj/machinery/plumbing/reaction_chamber/Initialize(mapload, bolt)
+/obj/machinery/plumbing/reaction_chamber/Initialize(mapload, bolt, layer)
 	. = ..()
-	AddComponent(/datum/component/plumbing/reaction_chamber, bolt)
+	AddComponent(/datum/component/plumbing/reaction_chamber, bolt, layer)
 	update_appearance() //so the input/output pipes will overlay properly during init
 
 /obj/machinery/plumbing/reaction_chamber/on_reagent_change()

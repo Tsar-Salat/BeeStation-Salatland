@@ -75,9 +75,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/plumbing)
 
 CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/plumbing/input)
 
-/obj/machinery/plumbing/input/Initialize(mapload, bolt)
+/obj/machinery/plumbing/input/Initialize(mapload, bolt, layer)
 	. = ..()
-	AddComponent(/datum/component/plumbing/simple_supply, bolt)
+	AddComponent(/datum/component/plumbing/simple_supply, bolt, layer)
 	update_appearance() //so the input/output pipes will overlay properly during init
 
 ///We can fill beakers in here and everything. we dont inheret from input because it has nothing that we need
@@ -91,9 +91,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/plumbing/input)
 
 CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/plumbing/output)
 
-/obj/machinery/plumbing/output/Initialize(mapload, bolt)
+/obj/machinery/plumbing/output/Initialize(mapload, bolt, layer)
 	. = ..()
-	AddComponent(/datum/component/plumbing/simple_demand, bolt)
+	AddComponent(/datum/component/plumbing/simple_demand, bolt, layer)
 	update_appearance() //so the input/output pipes will overlay properly during init
 
 /obj/machinery/plumbing/tank
@@ -106,7 +106,24 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/plumbing/output)
 
 CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/plumbing/tank)
 
-/obj/machinery/plumbing/tank/Initialize(mapload, bolt)
+/obj/machinery/plumbing/tank/Initialize(mapload, bolt, layer)
 	. = ..()
-	AddComponent(/datum/component/plumbing/tank, bolt)
+	AddComponent(/datum/component/plumbing/tank, bolt, layer)
+	update_appearance() //so the input/output pipes will overlay properly during init
+
+///Layer manifold machine that connects a bunch of layers
+/obj/machinery/plumbing/layer_manifold
+	name = "layer manifold"
+	desc = "A plumbing manifold for layers."
+	icon_state = "manifold"
+	density = FALSE
+
+/obj/machinery/plumbing/layer_manifold/Initialize(mapload, bolt, layer)
+	. = ..()
+
+	AddComponent(/datum/component/plumbing/manifold, bolt, FIRST_DUCT_LAYER)
+	AddComponent(/datum/component/plumbing/manifold, bolt, SECOND_DUCT_LAYER)
+	AddComponent(/datum/component/plumbing/manifold, bolt, THIRD_DUCT_LAYER)
+	AddComponent(/datum/component/plumbing/manifold, bolt, FOURTH_DUCT_LAYER)
+	AddComponent(/datum/component/plumbing/manifold, bolt, FIFTH_DUCT_LAYER)
 	update_appearance() //so the input/output pipes will overlay properly during init

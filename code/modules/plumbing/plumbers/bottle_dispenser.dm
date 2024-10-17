@@ -10,9 +10,9 @@
 
 CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/plumbing/bottle_dispenser)
 
-/obj/machinery/plumbing/bottle_dispenser/Initialize(mapload, bolt)
+/obj/machinery/plumbing/bottle_dispenser/Initialize(mapload, bolt, layer)
 	. = ..()
-	AddComponent(/datum/component/plumbing/simple_demand, bolt)
+	AddComponent(/datum/component/plumbing/simple_demand, bolt, layer)
 	update_appearance() //so the input/output pipes will overlay properly during init
 
 /obj/machinery/plumbing/bottle_dispenser/attackby(obj/item/C, mob/user)

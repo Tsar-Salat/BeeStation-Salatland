@@ -31,9 +31,9 @@
 
 CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/plumbing/acclimator)
 
-/obj/machinery/plumbing/acclimator/Initialize(mapload, bolt)
+/obj/machinery/plumbing/acclimator/Initialize(mapload, bolt, layer)
 	. = ..()
-	AddComponent(/datum/component/plumbing/acclimator, bolt)
+	AddComponent(/datum/component/plumbing/acclimator, bolt, layer)
 	update_appearance() //so the input/output pipes will overlay properly during init
 
 /obj/machinery/plumbing/acclimator/process(delta_time)

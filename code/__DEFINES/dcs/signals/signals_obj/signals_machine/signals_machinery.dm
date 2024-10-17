@@ -19,6 +19,11 @@
 ///from /obj/machinery/proc/use_power(): (power_used)
 #define COMSIG_MACHINERY_POWER_USED "machinery_power_used"
 
+///from obj/machinery/iv_drip/IV_attach(target, usr) : (attachee)
+#define COMSIG_IV_ATTACH "iv_attach"
+///from obj/machinery/iv_drip/IV_detach() : (detachee)
+#define COMSIG_IV_DETACH "iv_detach"
+
 // /obj/machinery/atmospherics/components/unary/cryo_cell signals
 
 /// from /obj/machinery/atmospherics/components/unary/cryo_cell/set_on(bool): (on)

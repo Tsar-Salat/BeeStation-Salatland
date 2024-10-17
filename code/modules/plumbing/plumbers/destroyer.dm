@@ -8,9 +8,9 @@
 
 CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/plumbing/disposer)
 
-/obj/machinery/plumbing/disposer/Initialize(mapload, bolt)
+/obj/machinery/plumbing/disposer/Initialize(mapload, bolt, layer)
 	. = ..()
-	AddComponent(/datum/component/plumbing/simple_demand, bolt)
+	AddComponent(/datum/component/plumbing/simple_demand, bolt, layer)
 	update_appearance() //so the input/output pipes will overlay properly during init
 
 /obj/machinery/plumbing/disposer/process(delta_time)

@@ -54,9 +54,9 @@
 
 CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/plumbing/synthesizer)
 
-/obj/machinery/plumbing/synthesizer/Initialize(mapload, bolt)
+/obj/machinery/plumbing/synthesizer/Initialize(mapload, bolt, layer)
 	. = ..()
-	AddComponent(/datum/component/plumbing/simple_supply, bolt)
+	AddComponent(/datum/component/plumbing/simple_supply, bolt, layer)
 	update_appearance() //so the input/output pipes will overlay properly during init
 
 /obj/machinery/plumbing/synthesizer/process(delta_time)

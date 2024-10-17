@@ -18,9 +18,9 @@
 
 CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/plumbing/filter)
 
-/obj/machinery/plumbing/filter/Initialize(mapload, bolt)
+/obj/machinery/plumbing/filter/Initialize(mapload, bolt, layer)
 	. = ..()
-	AddComponent(/datum/component/plumbing/filter, bolt)
+	AddComponent(/datum/component/plumbing/filter, bolt, layer)
 	update_appearance() //so the input/output pipes will overlay properly during init
 
 

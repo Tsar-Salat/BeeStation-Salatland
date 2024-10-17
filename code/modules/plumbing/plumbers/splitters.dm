@@ -20,9 +20,9 @@
 
 CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/plumbing/splitter)
 
-/obj/machinery/plumbing/splitter/Initialize(mapload, bolt)
+/obj/machinery/plumbing/splitter/Initialize(mapload, bolt, layer)
 	. = ..()
-	AddComponent(/datum/component/plumbing/splitter, bolt)
+	AddComponent(/datum/component/plumbing/splitter, bolt, layer)
 	update_appearance() //so the input/output pipes will overlay properly during init
 
 

@@ -110,8 +110,7 @@ GLOBAL_LIST_INIT(metal_recipes, list ( \
 	new/datum/stack_recipe("desk bell", 								/obj/structure/desk_bell, 2, time = 3 SECONDS), \
 	new/datum/stack_recipe("filing cabinet", 							/obj/structure/filingcabinet, 2, one_per_turf = TRUE, on_floor = TRUE, time = 10 SECONDS), \
 	new/datum/stack_recipe("floodlight frame",							/obj/structure/floodlight_frame, 5, one_per_turf = TRUE, on_floor = TRUE), \
-	new/datum/stack_recipe("shower frame",								/obj/structure/showerframe, 2, time = 2 SECONDS), \
-	new/datum/stack_recipe("sink frame",								/obj/structure/sinkframe, 2, time = 2 SECONDS), \
+	new/datum/stack_recipe("shower frame", /obj/structure/showerframe, 2, time= 2 SECONDS)
 ))
 
 STACKSIZE_MACRO(/obj/item/stack/sheet/iron)
