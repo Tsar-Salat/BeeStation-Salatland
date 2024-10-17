@@ -670,7 +670,7 @@ var/charges_used = use_charges(user, cost)
 	if(is_capped)
 		if(is_type_in_typecache(target, spraycan_touch_normally) || target.GetComponent(/datum/component/storage))
 			return ..()
-		to_chat(user, "<span class='warning'>Take the cap off first!</span>")
+		balloon_alert(user, "take the cap off first!")
 		return
 
 	if(check_empty(user))
@@ -725,6 +725,12 @@ var/charges_used = use_charges(user, cost)
 				return FALSE
 
 			target.add_atom_colour(paint_color, WASHABLE_COLOUR_PRIORITY)
+			if(isliving(target.loc))
+				var/mob/living/holder = target.loc
+				if(holder.is_holding(target))
+					holder.update_inv_hands()
+				else
+					holder.regenerate_icons()
 			SEND_SIGNAL(target, COMSIG_OBJ_PAINTED, color_is_dark)
 
 		. = use_charges(user, 2, requires_full = FALSE)
