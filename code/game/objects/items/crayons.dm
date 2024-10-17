@@ -77,6 +77,7 @@
 
 /obj/item/toy/crayon/suicide_act(mob/living/user)
 	user.visible_message("<span class='suicide'>[user] is jamming [src] up [user.p_their()] nose and into [user.p_their()] brain. It looks like [user.p_theyre()] trying to commit suicide!</span>")
+	user.add_atom_colour(paint_color)
 	return (BRUTELOSS|OXYLOSS)
 
 /obj/item/toy/crayon/Initialize(mapload)
@@ -246,7 +247,7 @@
 				else
 					. = FALSE
 		if("enter_text")
-			var/txt = input(usr, "Choose what to write.", "Scribbles", text_buffer) as text|null
+			var/txt = tgui_input_text(usr, "Choose what to write", "Scribbles", text_buffer)
 			if(isnull(txt))
 				return
 			txt = crayon_text_strip(txt)
@@ -725,12 +726,13 @@ var/charges_used = use_charges(user, cost)
 				return FALSE
 
 			target.add_atom_colour(paint_color, WASHABLE_COLOUR_PRIORITY)
-			if(isliving(target.loc))
+			if(isitem(target) && isliving(target.loc))
+				var/obj/item/target_item = target
 				var/mob/living/holder = target.loc
-				if(holder.is_holding(target))
+				if(holder.is_holding(target_item))
 					holder.update_inv_hands()
 				else
-					holder.regenerate_icons()
+					holder.update_clothing(target_item.slot_flags)
 			SEND_SIGNAL(target, COMSIG_OBJ_PAINTED, color_is_dark)
 
 		. = use_charges(user, 2, requires_full = FALSE)
