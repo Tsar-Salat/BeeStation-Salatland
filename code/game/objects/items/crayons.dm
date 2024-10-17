@@ -721,7 +721,7 @@ var/charges_used = use_charges(user, cost)
 			target.add_atom_colour(paint_color, WASHABLE_COLOUR_PRIORITY)
 			SEND_SIGNAL(target, COMSIG_OBJ_PAINTED, color_is_dark)
 
-		. = use_charges(user, 2)
+		. = use_charges(user, 2, requires_full = FALSE)
 		if(!.)
 			return FALSE
 		var/fraction = min(1, . / reagents.maximum_volume)
