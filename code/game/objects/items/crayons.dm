@@ -246,9 +246,14 @@
 				else
 					. = FALSE
 		if("enter_text")
-			var/txt = stripped_input(usr,"Choose what to write.",
-				"Scribbles",default = text_buffer)
-			text_buffer = crayon_text_strip(txt)
+			var/txt = input(usr, "Choose what to write.", "Scribbles", text_buffer) as text|null
+			if(isnull(txt))
+				return
+			txt = crayon_text_strip(txt)
+			if(text_buffer == txt)
+				return // No valid changes.
+			text_buffer = txt
+
 			. = TRUE
 			paint_mode = PAINT_NORMAL
 			drawtype = "a"
@@ -257,8 +262,9 @@
 		update_icon()
 
 /obj/item/toy/crayon/proc/crayon_text_strip(text)
-	var/static/regex/crayon_r = new /regex(@"[^\w!?,.=%#&+\/\-]")
-	return replacetext(LOWER_TEXT(text), crayon_r, "")
+	text = copytext(text, 1, MAX_MESSAGE_LEN)
+	var/static/regex/crayon_regex = new /regex(@"[^\w!?,.=&%#+/\-]", "ig")
+	return lowertext(crayon_regex.Replace(text, ""))
 
 /obj/item/toy/crayon/afterattack(atom/target, mob/user, proximity, params)
 	. = ..()
