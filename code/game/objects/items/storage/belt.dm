@@ -92,8 +92,8 @@
 	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
 	var/static/list/can_hold = typecacheof(list(
 		/obj/item/reagent_containers/spray,
-		/obj/item/reagent_containers/glass/beaker,//those will usually be used for fertilizer
-		/obj/item/reagent_containers/glass/bottle,//fertilizer bottles
+		/obj/item/reagent_containers/cup/beaker,//those will usually be used for fertilizer
+		/obj/item/reagent_containers/cup/bottle,//fertilizer bottles
 		/obj/item/reagent_containers/syringe,//blood samples for pod cloning
 		/obj/item/reagent_containers/dropper,//on request by forums users
 		/obj/item/plant_analyzer,
@@ -147,6 +147,23 @@
 	new /obj/item/multitool(src)
 	new /obj/item/stack/cable_coil(src,MAXCOIL,pick("red","yellow","orange"))
 
+/obj/item/storage/belt/utility/full/powertools/PopulateContents()
+	new /obj/item/powertool/hand_drill(src)
+	new /obj/item/powertool/jaws_of_life(src)
+	new /obj/item/weldingtool/experimental(src)
+	new /obj/item/multitool(src)
+	new /obj/item/holosign_creator/atmos(src)
+	new /obj/item/extinguisher/mini(src)
+	new /obj/item/stack/cable_coil(src)
+
+/obj/item/storage/belt/utility/full/powertools/rcd/PopulateContents()
+	new /obj/item/powertool/hand_drill(src)
+	new /obj/item/powertool/jaws_of_life(src)
+	new /obj/item/weldingtool/experimental(src)
+	new /obj/item/multitool(src)
+	new /obj/item/construction/rcd/loaded(src)
+	new /obj/item/extinguisher/mini(src)
+	new /obj/item/stack/cable_coil(src)
 
 /obj/item/storage/belt/utility/atmostech/PopulateContents()
 	new /obj/item/screwdriver(src)
@@ -228,8 +245,8 @@
 		/obj/item/healthanalyzer,
 		/obj/item/dnainjector,
 		/obj/item/reagent_containers/dropper,
-		/obj/item/reagent_containers/glass/beaker,
-		/obj/item/reagent_containers/glass/bottle,
+		/obj/item/reagent_containers/cup/beaker,
+		/obj/item/reagent_containers/cup/bottle,
 		/obj/item/reagent_containers/pill,
 		/obj/item/reagent_containers/syringe,
 		/obj/item/reagent_containers/medspray,
@@ -392,7 +409,7 @@
 		/obj/item/stack/sheet/bone,
 		/obj/item/lighter,
 		/obj/item/storage/fancy/cigarettes,
-		/obj/item/reagent_containers/food/drinks/bottle,
+		/obj/item/reagent_containers/cup/glass/bottle,
 		/obj/item/stack/medical,
 		/obj/item/knife/combat/survival,
 		/obj/item/tank/internals/emergency_oxygen,
@@ -404,7 +421,8 @@
 		/obj/item/reagent_containers/pill,
 		/obj/item/storage/pill_bottle,
 		/obj/item/stack/ore,
-		/obj/item/reagent_containers/food/drinks,
+		/obj/item/reagent_containers/cup/glass,
+		/obj/item/reagent_containers/cup/glass/bottle,
 		/obj/item/organ/regenerative_core,
 		/obj/item/wormhole_jaunter,
 		/obj/item/storage/bag/plants,
@@ -516,7 +534,7 @@
 	STR.max_w_class = WEIGHT_CLASS_SMALL
 	var/static/list/can_hold = typecacheof(list(
 		/obj/item/food,
-		/obj/item/reagent_containers/food/drinks
+		/obj/item/reagent_containers/cup/glass
 		))
 	STR.can_hold = can_hold
 	var/amount = 5
@@ -524,27 +542,27 @@
 	while(contents.len <= amount)
 		rig_snacks = pick(list(
 		/obj/item/food/candy,
-		/obj/item/reagent_containers/food/drinks/dry_ramen,
+		/obj/item/food/cheesiehonkers,
+		/obj/item/food/cheesynachos,
+		/obj/item/food/cubannachos,
 		/obj/item/food/chips,
+		/obj/item/food/donkpocket,
 		/obj/item/food/sosjerky,
 		/obj/item/food/syndicake,
 		/obj/item/food/spacetwinkie,
-		/obj/item/food/cheesiehonkers,
 		/obj/item/food/nachos,
-		/obj/item/food/cheesynachos,
-		/obj/item/food/cubannachos,
 		/obj/item/food/nugget,
 		/obj/item/food/spaghetti/pastatomato,
 		/obj/item/food/rofflewaffles,
-		/obj/item/food/donkpocket,
-		/obj/item/reagent_containers/food/drinks/soda_cans/cola,
-		/obj/item/reagent_containers/food/drinks/soda_cans/space_mountain_wind,
-		/obj/item/reagent_containers/food/drinks/soda_cans/dr_gibb,
-		/obj/item/reagent_containers/food/drinks/soda_cans/starkist,
-		/obj/item/reagent_containers/food/drinks/soda_cans/space_up,
-		/obj/item/reagent_containers/food/drinks/soda_cans/pwr_game,
-		/obj/item/reagent_containers/food/drinks/soda_cans/lemon_lime,
-		/obj/item/reagent_containers/food/drinks/drinkingglass/filled/nuka_cola
+		/obj/item/reagent_containers/cup/glass/drinkingglass/filled/nuka_cola,
+		/obj/item/reagent_containers/cup/glass/dry_ramen,
+		/obj/item/reagent_containers/cup/soda_cans/cola,
+		/obj/item/reagent_containers/cup/soda_cans/dr_gibb,
+		/obj/item/reagent_containers/cup/soda_cans/lemon_lime,
+		/obj/item/reagent_containers/cup/soda_cans/pwr_game,
+		/obj/item/reagent_containers/cup/soda_cans/space_mountain_wind,
+		/obj/item/reagent_containers/cup/soda_cans/space_up,
+		/obj/item/reagent_containers/cup/soda_cans/starkist,
 		))
 		new rig_snacks(src)
 
@@ -600,7 +618,7 @@
 		/obj/item/screwdriver,
 		/obj/item/lighter,
 		/obj/item/multitool,
-		/obj/item/reagent_containers/food/drinks/bottle/molotov,
+		/obj/item/reagent_containers/cup/glass/bottle/molotov,
 		/obj/item/grenade/plastic/c4,
 		/obj/item/food/grown/cherry_bomb,
 		/obj/item/food/grown/firelemon

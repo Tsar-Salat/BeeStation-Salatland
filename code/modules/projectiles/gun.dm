@@ -516,7 +516,7 @@
 			return ..()
 	return
 
-/obj/item/gun/attack_obj(obj/O, mob/user)
+/obj/item/gun/attack_atom(obj/O, mob/living/user, params)
 	if(user.a_intent == INTENT_HARM)
 		if(bayonet)
 			O.attackby(bayonet, user)
@@ -675,7 +675,7 @@
 	button_icon_state = "sniper_zoom"
 	var/obj/item/gun/gun = null
 
-/datum/action/toggle_scope_zoom/Trigger()
+/datum/action/toggle_scope_zoom/Trigger(trigger_flags)
 	gun.zoom(owner, owner.dir)
 
 /datum/action/toggle_scope_zoom/IsAvailable()

@@ -24,7 +24,6 @@
 	var/moduleselect_icon = "nomod"
 
 	var/can_be_pushed = TRUE
-	var/magpulsing = FALSE
 	var/clean_on_move = FALSE
 
 	var/did_feedback = FALSE
@@ -338,7 +337,6 @@
 		/obj/item/stack/sheet/brass/cyborg)
 	cyborg_base_icon = "engineer"
 	moduleselect_icon = "engineer"
-	magpulsing = TRUE
 	hat_offset = -4
 
 /obj/item/robot_module/deathsquad
@@ -444,7 +442,7 @@
 		/obj/item/melee/flyswatter,
 		/obj/item/extinguisher/mini,
 		/obj/item/mop/cyborg,
-		/obj/item/reagent_containers/glass/bucket,
+		/obj/item/reagent_containers/cup/bucket,
 		/obj/item/paint/paint_remover,
 		/obj/item/lightreplacer/cyborg,
 		/obj/item/holosign_creator/janibarrier,
@@ -537,7 +535,7 @@
 
 /obj/item/robot_module/butler/respawn_consumable(mob/living/silicon/robot/R, coeff = 1)
 	..()
-	var/obj/item/reagent_containers/O = locate(/obj/item/reagent_containers/food/condiment/enzyme) in basic_modules
+	var/obj/item/reagent_containers/O = locate(/obj/item/reagent_containers/condiment/enzyme) in basic_modules
 	if(O)
 		O.reagents.add_reagent(/datum/reagent/consumable/enzyme, 2 * coeff)
 
@@ -722,7 +720,7 @@
 	cyborg_base_icon = "synd_engi"
 	moduleselect_icon = "malf"
 	can_be_pushed = FALSE
-	magpulsing = TRUE
+	//module_traits = list(TRAIT_PUSHIMMUNE, TRAIT_NEGATES_GRAVITY)
 	hat_offset = -4
 	canDispose = TRUE
 

@@ -41,7 +41,7 @@
 		to_chat(user, "<span class='warning'>There's already someone inside!</span>")
 		return
 
-	if(obj_integrity <= integrity_failure)
+	if(atom_integrity <= integrity_failure)
 		to_chat(user, "<span class='warning'>The [src] is too damaged to hold anyone inside!</span>")
 		return
 
@@ -176,7 +176,7 @@
 			return TRUE
 		return FALSE
 
-/datum/action/item_action/pull_string/Trigger()
+/datum/action/item_action/pull_string/Trigger(trigger_flags)
 	if(cake.used_string)
 		to_chat(usr, "<span class='notice'>The string is loose, it's already been used!</span>")
 		return

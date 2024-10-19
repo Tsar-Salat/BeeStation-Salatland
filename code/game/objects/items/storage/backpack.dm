@@ -420,7 +420,7 @@
 		/obj/item/mail,
 		/obj/item/small_delivery,
 		/obj/item/paper,
-		/obj/item/reagent_containers/food/condiment/milk,
+		/obj/item/reagent_containers/condiment/milk,
 		/obj/item/food/bread/plain
 		)
 	)
@@ -727,11 +727,11 @@
 	new /obj/item/flamethrower/full/tank(src)
 	new /obj/item/tank/internals/plasma(src)
 	new /obj/item/tank/internals/plasma(src)
-	new /obj/item/clothing/suit/space/hardsuit/syndi/elite(src)
+	new /obj/item/mod/control/pre_equipped/elite/flamethrower(src)
 	new /obj/item/gun/ballistic/automatic/pistol/APS(src)
 	new /obj/item/ammo_box/magazine/pistolm9mm(src)
 	new /obj/item/ammo_box/magazine/pistolm9mm(src)
-	new /obj/item/reagent_containers/food/drinks/bottle/vodka/badminka(src)
+	new /obj/item/reagent_containers/cup/glass/bottle/vodka/badminka(src)
 	new /obj/item/reagent_containers/hypospray/medipen/stimulants(src)
 	new /obj/item/storage/firstaid/tactical(src)
 
