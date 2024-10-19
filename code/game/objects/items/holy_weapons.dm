@@ -84,7 +84,7 @@
 	icon_state = "studentuni"
 	item_state = "studentuni"
 	body_parts_covered = ARMS|CHEST
-	allowed = list(/obj/item/storage/book/bible, /obj/item/nullrod, /obj/item/reagent_containers/food/drinks/bottle/holywater, /obj/item/storage/fancy/candle_box, /obj/item/candle, /obj/item/tank/internals/emergency_oxygen, /obj/item/tank/internals/plasmaman)
+	allowed = list(/obj/item/storage/book/bible, /obj/item/nullrod, /obj/item/reagent_containers/cup/glass/bottle/holywater, /obj/item/storage/fancy/candle_box, /obj/item/candle, /obj/item/tank/internals/emergency_oxygen, /obj/item/tank/internals/plasmaman)
 
 /obj/item/storage/box/holy/sentinel
 	name = "Stone Sentinel Kit"
@@ -399,8 +399,8 @@
 	name = "light energy sword"
 	desc = "If you strike me down, I shall become more robust than you can possibly imagine."
 	icon = 'icons/obj/transforming_energy.dmi'
-	icon_state = "swordblue"
-	item_state = "swordblue"
+	icon_state = "e_sword_on_blue"
+	item_state = "e_sword_on_blue"
 	worn_icon_state = "swordblue"
 	slot_flags = ITEM_SLOT_BELT
 	hitsound = 'sound/weapons/blade1.ogg'
@@ -408,16 +408,16 @@
 /obj/item/nullrod/claymore/saber/red
 	name = "dark energy sword"
 	desc = "Woefully ineffective when used on steep terrain." //Anakin used his BLUE lightsaber in episode IV, FOOL
-	icon_state = "swordred"
-	item_state = "swordred"
+	icon_state = "e_sword_on_red"
+	item_state = "e_sword_on_red"
 	worn_icon_state = "swordred"
 
 /obj/item/nullrod/claymore/saber/pirate
 	name = "nautical energy sword"
-	icon_state = "cutlass1"
-	item_state = "cutlass1"
-	worn_icon_state = "swordred"
 	desc = "Convincing HR that your religion involved piracy was no mean feat."
+	icon_state = "e_cutlass_on"
+	item_state = "e_cutlass_on"
+	worn_icon_state = "swordred"
 
 /obj/item/nullrod/sord
 	name = "\improper UNREAL SORD"

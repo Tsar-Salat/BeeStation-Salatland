@@ -14,7 +14,7 @@
 	box = /obj/item/storage/box/debugtools
 	back = /obj/item/storage/backpack/debug
 	backpack_contents = list(/obj/item/gun/magic/wand/resurrection/debug=1,\
-		/obj/item/melee/transforming/energy/axe=1,\
+		/obj/item/melee/energy/axe=1,\
 		/obj/item/storage/part_replacer/bluespace/tier4=1,\
 		/obj/item/debug/human_spawner=1,\
 		/obj/item/debug/omnitool=1,\
@@ -79,7 +79,7 @@
 	suit = null
 	head = null
 	r_hand = /obj/item/mop
-	l_hand = /obj/item/reagent_containers/glass/bucket
+	l_hand = /obj/item/reagent_containers/cup/bucket
 	r_pocket = /obj/item/grenade/chem_grenade/cleaner
 	l_pocket = /obj/item/grenade/chem_grenade/cleaner
 	backpack_contents = list(/obj/item/stack/tile/iron=6)
@@ -88,7 +88,7 @@
 	if(visualsOnly)
 		return
 
-	var/obj/item/reagent_containers/glass/bucket/bucket = H.get_item_for_held_index(1)
+	var/obj/item/reagent_containers/cup/bucket/bucket = H.get_item_for_held_index(1)
 	bucket.reagents.add_reagent(/datum/reagent/water,70)
 
 /datum/outfit/laser_tag
@@ -201,7 +201,7 @@
 	gloves = /obj/item/clothing/gloves/color/black
 	ears = /obj/item/radio/headset
 	glasses = /obj/item/clothing/glasses/sunglasses/advanced
-	l_pocket = /obj/item/melee/transforming/energy/sword/saber
+	l_pocket = /obj/item/melee/energy/sword/saber
 	l_hand = /obj/item/storage/secure/briefcase
 	id = /obj/item/card/id/syndicate
 	belt = /obj/item/modular_computer/tablet/pda/heads

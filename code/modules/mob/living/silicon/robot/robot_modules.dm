@@ -252,7 +252,7 @@
 		/obj/item/soap/nanotrasen,
 		/obj/item/borg/cyborghug,
 		/obj/item/instrument/piano_synth)
-	emag_modules = list(/obj/item/melee/transforming/energy/sword/cyborg)
+	emag_modules = list(/obj/item/melee/energy/sword/cyborg)
 	ratvar_modules = list(
 		/obj/item/clock_module/abscond,
 		/obj/item/clock_module/kindle,
@@ -351,7 +351,7 @@
 		/obj/item/weldingtool/cyborg/mini,
 		/obj/item/shield/riot/tele,
 		/obj/item/gun/energy/disabler/cyborg,
-		/obj/item/melee/transforming/energy/sword/cyborg,
+		/obj/item/melee/energy/sword/cyborg,
 		/obj/item/gun/energy/pulse/carbine/cyborg,
 		/obj/item/clothing/mask/gas/sechailer/cyborg)
 	emag_modules = list(/obj/item/gun/energy/laser/cyborg)
@@ -444,7 +444,7 @@
 		/obj/item/melee/flyswatter,
 		/obj/item/extinguisher/mini,
 		/obj/item/mop/cyborg,
-		/obj/item/reagent_containers/glass/bucket,
+		/obj/item/reagent_containers/cup/bucket,
 		/obj/item/paint/paint_remover,
 		/obj/item/lightreplacer/cyborg,
 		/obj/item/holosign_creator/janibarrier,
@@ -537,7 +537,7 @@
 
 /obj/item/robot_module/butler/respawn_consumable(mob/living/silicon/robot/R, coeff = 1)
 	..()
-	var/obj/item/reagent_containers/O = locate(/obj/item/reagent_containers/food/condiment/enzyme) in basic_modules
+	var/obj/item/reagent_containers/O = locate(/obj/item/reagent_containers/condiment/enzyme) in basic_modules
 	if(O)
 		O.reagents.add_reagent(/datum/reagent/consumable/enzyme, 2 * coeff)
 
@@ -639,7 +639,7 @@
 	name = "Syndicate Assault"
 	basic_modules = list(
 		/obj/item/assembly/flash/cyborg,
-		/obj/item/melee/transforming/energy/sword/cyborg,
+		/obj/item/melee/energy/sword/cyborg,
 		/obj/item/gun/energy/printer,
 		/obj/item/gun/ballistic/revolver/grenadelauncher/cyborg,
 		/obj/item/card/emag,
@@ -678,7 +678,7 @@
 		/obj/item/cautery,
 		/obj/item/surgicaldrill,
 		/obj/item/scalpel,
-		/obj/item/melee/transforming/energy/sword/cyborg/saw,
+		/obj/item/melee/energy/sword/cyborg/saw,
 		/obj/item/rollerbed/robo,
 		/obj/item/card/emag,
 		/obj/item/crowbar/cyborg,

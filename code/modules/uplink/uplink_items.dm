@@ -522,7 +522,7 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	name = "Bananium Energy Sword"
 	desc = "An energy sword that deals no damage, but will slip anyone it contacts, be it by melee attack, thrown \
 	impact, or just stepping on it. Beware friendly fire, as even anti-slip shoes will not protect against it."
-	item = /obj/item/melee/transforming/energy/sword/bananium
+	item = /obj/item/melee/energy/sword/bananium
 	cost = 3
 	surplus = 0
 	purchasable_from = UPLINK_CLOWN_OPS
@@ -585,7 +585,7 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	name = "Energy Sword"
 	desc = "The energy sword is an edged weapon with a blade of pure energy. The sword is small enough to be \
 			pocketed when inactive. Activating it produces a loud, distinctive noise."
-	item = /obj/item/melee/transforming/energy/sword/saber
+	item = /obj/item/melee/energy/sword/saber
 	cost = 8
 	purchasable_from = ~UPLINK_CLOWN_OPS
 
@@ -2295,7 +2295,7 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	name = "Bananium Energy Sword"
 	desc = "An energy sword that deals no damage, but will slip anyone it contacts, be it by melee attack, thrown \
 	impact, or just stepping on it. Beware friendly fire, as even anti-slip shoes will not protect against it."
-	item = /obj/item/melee/transforming/energy/sword/bananium
+	item = /obj/item/melee/energy/sword/bananium
 	cost = 5
 	surplus = 0
 	restricted_roles = list(JOB_NAME_CLOWN)
@@ -2379,7 +2379,7 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	name = "Spanish Flu Culture"
 	desc = "A bottle of cursed blood, full of angry spirits which will burn all the heretics with the fires of hell. \
 			At least, that's what the label says"
-	item = /obj/item/reagent_containers/glass/bottle/fluspanish
+	item = /obj/item/reagent_containers/cup/bottle/fluspanish
 	cost = 12
 	restricted_roles = list(JOB_NAME_CHAPLAIN, JOB_NAME_VIROLOGIST)
 
@@ -2387,7 +2387,7 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	name = "Retrovirus Culture Bottle"
 	desc = "A bottle of contagious DNA bugs, which will manually rearrange the DNA of hosts. \
 			At least, that's what the label says."
-	item = /obj/item/reagent_containers/glass/bottle/retrovirus
+	item = /obj/item/reagent_containers/cup/bottle/retrovirus
 	cost = 12
 	restricted_roles = list(JOB_NAME_VIROLOGIST, JOB_NAME_GENETICIST)
 
@@ -2395,7 +2395,7 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	name = "Anxiety Culture Bottle"
 	desc = "A bottle of contagious anxiety-inducing virus. \
 			At least, that's what the label says"
-	item = /obj/item/reagent_containers/glass/bottle/anxiety
+	item = /obj/item/reagent_containers/cup/bottle/anxiety
 	cost = 4
 	restricted_roles = list(JOB_NAME_VIROLOGIST)
 
@@ -2467,7 +2467,7 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	name = "Energy Saw"
 	desc = "A deadly energy saw. Comes in a slick black finish."
 	cost = 5
-	item = /obj/item/melee/transforming/energy/sword/esaw
+	item = /obj/item/melee/energy/sword/esaw
 	restricted_roles = list("Medical Doctor", "Chief Medical Officer", "Paramedic", "Brig Physician")
 
 /datum/uplink_item/role_restricted/esaw_arm
@@ -2576,7 +2576,7 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	name = "Syndicate Beer"
 	desc = "Syndicate brand 'beer' designed to flush toxins out of your system. \
 			Warning: Do not consume more than one!"
-	item = /obj/item/reagent_containers/food/drinks/syndicatebeer
+	item = /obj/item/reagent_containers/cup/glass/bottle/beer/syndicate
 	cost = 4
 	illegal_tech = FALSE
 
