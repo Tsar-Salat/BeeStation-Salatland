@@ -314,7 +314,7 @@
   * Mostly tries to put the item into the slot if possible, or call attack hand
   * on the item in the slot if the users active hand is empty
   */
-/mob/proc/attack_ui(slot)
+/mob/proc/attack_ui(slot, params)
 	if(world.time <= usr.next_move)
 		return FALSE
 	if(HAS_TRAIT(usr, TRAIT_HANDS_BLOCKED))
@@ -330,7 +330,8 @@
 		// Activate the item
 		var/obj/item/I = get_item_by_slot(slot)
 		if(istype(I))
-			I.attack_hand(src)
+			var/list/modifiers = params2list(params)
+			I.attack_hand(src, modifiers)
 
 	return FALSE
 

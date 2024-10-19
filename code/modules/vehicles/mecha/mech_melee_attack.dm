@@ -46,7 +46,7 @@
 		return
 	return ..()
 
-/mob/living/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/user)
+/mob/living/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
 	if(user.a_intent == INTENT_HARM)
 		if(HAS_TRAIT(user, TRAIT_PACIFISM))
 			to_chat(user, "<span class='warning'>You don't want to harm other living beings!</span>")
@@ -78,9 +78,11 @@
 						"<span class='warning'>[mecha_attacker] pushes you out of the way.</span>", "<span class='hear'>You hear aggressive shuffling!</span>", 5, list(mecha_attacker))
 		to_chat(mecha_attacker, "<span class='danger'>You push [src] out of the way.</span>")
 
-/mob/living/carbon/human/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/user)
+/mob/living/carbon/human/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
 	if(!user)
 		stack_trace("Warning: [src] had mech_melee_attack called on them with no mob?")
+	if(!isliving(user))
+		return ..()
 	if(user.a_intent == INTENT_HARM)
 		if(HAS_TRAIT(user, TRAIT_PACIFISM))
 			to_chat(user, "<span class='warning'>You don't want to harm other living beings!</span>")

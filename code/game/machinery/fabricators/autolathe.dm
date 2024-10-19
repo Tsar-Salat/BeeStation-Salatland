@@ -81,7 +81,7 @@
 			security_interface_locked = TRUE
 			. = TRUE
 
-/obj/machinery/modular_fabricator/autolathe/attackby(obj/item/O, mob/user, params)
+/obj/machinery/modular_fabricator/autolathe/attackby(obj/item/O, mob/living/user, params)
 
 	if((ACCESS_SECURITY in O.GetAccess()) && !(obj_flags & EMAGGED))
 		security_interface_locked = !security_interface_locked

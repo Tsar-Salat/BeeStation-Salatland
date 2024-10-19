@@ -109,7 +109,7 @@
 		storedid = null
 		update_icon()
 
-/obj/machinery/pdapainter/attackby(obj/item/O, mob/user, params)
+/obj/machinery/pdapainter/attackby(obj/item/O, mob/living/user, params)
 	if(default_unfasten_wrench(user, O))
 		power_change()
 		return

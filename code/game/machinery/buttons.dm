@@ -58,7 +58,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/button)
 		else
 			icon_state = skin
 
-/obj/machinery/button/attackby(obj/item/W, mob/user, params)
+/obj/machinery/button/attackby(obj/item/W, mob/living/user, params)
 	if(W.tool_behaviour == TOOL_SCREWDRIVER)
 		if(panel_open || allowed(user))
 			default_deconstruction_screwdriver(user, "button-open", "[skin]",W)

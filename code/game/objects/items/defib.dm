@@ -432,7 +432,7 @@
 	listeningTo = null
 	defib.update_power()
 
-/obj/item/shockpaddles/attack(mob/M, mob/user)
+/obj/item/shockpaddles/attack(mob/M, mob/living/user, params)
 	if(busy)
 		return
 	if(req_defib && !defib.powered)

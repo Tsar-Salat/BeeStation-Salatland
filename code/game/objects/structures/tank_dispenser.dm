@@ -34,7 +34,7 @@
 		if(5 to TANK_DISPENSER_CAPACITY)
 			add_overlay("plasma-5")
 
-/obj/structure/tank_dispenser/attackby(obj/item/I, mob/user, params)
+/obj/structure/tank_dispenser/attackby(obj/item/I, mob/living/user, params)
 	var/full
 	if(istype(I, /obj/item/tank/internals/plasma))
 		if(plasmatanks < TANK_DISPENSER_CAPACITY)

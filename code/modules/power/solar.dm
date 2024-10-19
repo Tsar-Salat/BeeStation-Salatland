@@ -417,7 +417,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/power/solar)
 			set_panels(currentdir)
 			. = TRUE
 
-/obj/machinery/power/solar_control/attackby(obj/item/I, mob/user, params)
+/obj/machinery/power/solar_control/attackby(obj/item/I, mob/living/user, params)
 	if(I.tool_behaviour == TOOL_SCREWDRIVER)
 		if(I.use_tool(src, user, 20, volume=50))
 			if (src.machine_stat & BROKEN)

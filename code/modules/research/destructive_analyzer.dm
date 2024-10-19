@@ -31,7 +31,7 @@ Note: Must be placed within 3 tiles of the R&D Console
 	linked_console.linked_destroy = null
 	..()
 
-/obj/machinery/rnd/destructive_analyzer/Insert_Item(obj/item/O, mob/user)
+/obj/machinery/rnd/destructive_analyzer/Insert_Item(obj/item/O, mob/living/user)
 	if(user.a_intent != INTENT_HARM)
 		. = 1
 		if(!is_insertion_ready(user))

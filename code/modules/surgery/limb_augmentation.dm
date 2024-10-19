@@ -51,7 +51,7 @@
 
 //SURGERY STEP SUCCESSES
 
-/datum/surgery_step/replace_limb/success(mob/user, mob/living/carbon/target, obj/item/bodypart/tool, datum/surgery/surgery)
+/datum/surgery_step/replace_limb/success(mob/living/user, mob/living/carbon/target, obj/item/bodypart/tool, datum/surgery/surgery)
 	if(L)
 		if(istype(tool, /obj/item/organ_storage))
 			tool.icon_state = initial(tool.icon_state)

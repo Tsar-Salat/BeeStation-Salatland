@@ -37,7 +37,7 @@
 	. = ..()
 	cargo_holder = null
 
-/obj/item/mecha_parts/mecha_equipment/hydraulic_clamp/action(mob/source, atom/target, params)
+/obj/item/mecha_parts/mecha_equipment/hydraulic_clamp/action(mob/living/source, atom/target, params)
 	if(!action_checks(target))
 		return
 	if(!cargo_holder)

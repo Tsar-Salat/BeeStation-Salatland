@@ -138,7 +138,7 @@
 	AddComponent(/datum/component/udder)
 	. = ..()
 
-/mob/living/simple_animal/cow/attack_hand(mob/living/carbon/M)
+/mob/living/simple_animal/cow/attack_hand(mob/living/carbon/M, modifiers)
 	if(!stat && M.a_intent == INTENT_DISARM && icon_state != icon_dead)
 		M.visible_message("<span class='warning'>[M] tips over [src].</span>",
 			"<span class='notice'>You tip over [src].</span>")

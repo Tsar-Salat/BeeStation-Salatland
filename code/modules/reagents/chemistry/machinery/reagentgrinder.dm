@@ -124,7 +124,7 @@
 	update_appearance()
 	return TRUE
 
-/obj/machinery/reagentgrinder/attackby(obj/item/I, mob/user, params)
+/obj/machinery/reagentgrinder/attackby(obj/item/I, mob/living/user, params)
 	//You can only screw open empty grinder
 	if(!beaker && !length(holdingitems) && default_deconstruction_screwdriver(user, icon_state, icon_state, I))
 		return

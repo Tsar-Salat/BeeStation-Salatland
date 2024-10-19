@@ -4,7 +4,7 @@
 
 	Otherwise pretty standard.
 */
-/mob/living/carbon/human/UnarmedAttack(atom/A, proximity)
+/mob/living/carbon/human/UnarmedAttack(atom/A, proximity, modifiers)
 	if(HAS_TRAIT(src, TRAIT_HANDS_BLOCKED))
 		if(src == A)
 			check_self_for_injuries()
@@ -33,8 +33,8 @@
 	if(override)
 		return
 
-	SEND_SIGNAL(src, COMSIG_HUMAN_MELEE_UNARMED_ATTACK, A)
-	A.attack_hand(src)
+	SEND_SIGNAL(src, COMSIG_HUMAN_MELEE_UNARMED_ATTACK, A, proximity, modifiers)
+	A.attack_hand(src, modifiers)
 
 /// Return TRUE to cancel other attack hand effects that respect it.
 /atom/proc/attack_hand(mob/user)
@@ -118,23 +118,23 @@
 /*
 	Animals & All Unspecified
 */
-/mob/living/UnarmedAttack(atom/A)
+/mob/living/UnarmedAttack(atom/A, proximity, modifiers)
 	if(HAS_TRAIT(src, TRAIT_HANDS_BLOCKED))
 		return
-	A.attack_animal(src)
+	A.attack_animal(src, modifiers)
 
-/atom/proc/attack_animal(mob/user)
+/atom/proc/attack_animal(mob/user, modifiers)
 	SEND_SIGNAL(src, COMSIG_ATOM_ATTACK_ANIMAL, user)
 	return
 
-/atom/proc/attack_basic_mob(mob/user)
+/atom/proc/attack_basic_mob(mob/user, modifiers)
 	SEND_SIGNAL(src, COMSIG_ATOM_ATTACK_BASIC_MOB, user)
 	return
 
 /*
 	Monkeys
 */
-/mob/living/carbon/monkey/UnarmedAttack(atom/A, proximity)
+/mob/living/carbon/monkey/UnarmedAttack(atom/A, proximity, modifiers)
 	if(HAS_TRAIT(src, TRAIT_HANDS_BLOCKED))
 		if(a_intent != INTENT_HARM || is_muzzled())
 			return
@@ -168,12 +168,12 @@
 		return TRUE
 	return FALSE
 
-/mob/living/carbon/alien/UnarmedAttack(atom/A)
+/mob/living/carbon/alien/UnarmedAttack(atom/A, proximity, modifiers)
 	if(HAS_TRAIT(src, TRAIT_HANDS_BLOCKED))
 		return
-	A.attack_alien(src)
+	A.attack_alien(src, modifiers)
 
-/atom/proc/attack_alien(mob/living/carbon/alien/user)
+/atom/proc/attack_alien(mob/living/carbon/alien/user, modifiers)
 	attack_paw(user)
 	return
 
@@ -238,13 +238,13 @@
 	Simple animals
 */
 
-/mob/living/simple_animal/UnarmedAttack(atom/A, proximity)
+/mob/living/simple_animal/UnarmedAttack(atom/A, proximity, modifiers)
 	if(HAS_TRAIT(src, TRAIT_HANDS_BLOCKED))
 		return
 	if(!dextrous || a_intent == INTENT_HARM)
 		return ..()
 	if(!ismob(A))
-		A.attack_hand(src)
+		A.attack_hand(src, modifiers)
 		update_inv_hands()
 
 

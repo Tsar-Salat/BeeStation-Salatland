@@ -126,7 +126,7 @@
 	update_icon()
 	to_chat(user, "<span class='notice'>[icon2html(src, user)] You switch [scanning ? "on" : "off"] [src].</span>")
 
-/obj/item/geiger_counter/afterattack(atom/target, mob/user)
+/obj/item/geiger_counter/afterattack(atom/target, mob/living/user, params)
 	. = ..()
 	if(user.a_intent == INTENT_HELP)
 		if(!(obj_flags & EMAGGED))

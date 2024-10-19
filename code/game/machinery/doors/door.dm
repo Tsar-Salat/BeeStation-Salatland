@@ -213,7 +213,7 @@
 	T.ImmediateCalculateAdjacentTurfs() // alright lets put it back
 	return max_moles - min_moles > 20
 
-/obj/machinery/door/attackby(obj/item/I, mob/user, params)
+/obj/machinery/door/attackby(obj/item/I, mob/living/user, params)
 	if(user.a_intent != INTENT_HARM && (I.tool_behaviour == TOOL_CROWBAR || istype(I, /obj/item/fireaxe)))
 		try_to_crowbar(I, user)
 		return 1

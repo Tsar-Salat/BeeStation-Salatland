@@ -72,7 +72,7 @@
 		out += "<span class='notice'>[icon2html(tank, user)] It has \a [tank] mounted onto it.</span>"
 	. += out.Join("\n")
 
-/obj/item/pneumatic_cannon/attackby(obj/item/W, mob/user, params)
+/obj/item/pneumatic_cannon/attackby(obj/item/W, mob/living/user, params)
 	if(user.a_intent == INTENT_HARM)
 		return ..()
 	if(istype(W, /obj/item/tank/internals))

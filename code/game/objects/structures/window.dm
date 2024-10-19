@@ -159,7 +159,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 		return 1
 	. = ..()
 
-/obj/structure/window/attack_hand(mob/user)
+/obj/structure/window/attack_hand(mob/living/user)
 	. = ..()
 	if(.)
 		return
@@ -726,7 +726,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 	QUEUE_SMOOTH(src)
 
 
-/obj/structure/window/paperframe/attackby(obj/item/W, mob/user)
+/obj/structure/window/paperframe/attackby(obj/item/W, mob/living/user)
 	if(W.is_hot())
 		fire_act(W.is_hot())
 		return

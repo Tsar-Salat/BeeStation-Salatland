@@ -78,7 +78,7 @@
 			I.AddComponent(/datum/component/butchering, 80 * I.toolspeed)
 			attackby(I, user, params) //call the attackby again to refresh and do the butchering check again
 			return
-	return I.attack(src, user)
+	return I.attack(src, user, params)
 
 /**
  * Called from [/mob/living/proc/attackby]

@@ -28,7 +28,7 @@
 	smoke.set_up(0, src)
 	smoke.start()
 
-/obj/vehicle/ridden/secway/attackby(obj/item/W, mob/user, params)
+/obj/vehicle/ridden/secway/attackby(obj/item/W, mob/living/user, params)
 	if(W.tool_behaviour == TOOL_WELDER && user.a_intent != INTENT_HARM)
 		if(obj_integrity < max_integrity)
 			if(W.use_tool(src, user, 0, volume = 50, amount = 1))

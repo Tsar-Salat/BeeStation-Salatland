@@ -118,7 +118,7 @@
 			return inv_item.Click(location, control, params)
 
 	//Putting into something (if its not in us)
-	if(usr.attack_ui(slot_id))
+	if(usr.attack_ui(slot_id, params))
 		usr.update_inv_hands()
 	return TRUE
 
@@ -264,6 +264,51 @@ CREATION_TEST_IGNORE_SUBTYPES(/atom/movable/screen/close)
 /atom/movable/screen/drop/disappearing/update_icon_state()
 	icon_state = usr.get_active_held_item() ? "act_drop" : null
 	return ..()
+
+//Replace below with combatmode
+/*
+/atom/movable/screen/combattoggle
+	name = "toggle combat mode"
+	icon = 'icons/hud/screen_midnight.dmi'
+	icon_state = "combat_off"
+	screen_loc = ui_combat_toggle
+
+/atom/movable/screen/combattoggle/New(loc, ...)
+	. = ..()
+	update_icon()
+
+/atom/movable/screen/combattoggle/Click()
+	if(isliving(usr))
+		var/mob/living/owner = usr
+		owner.set_combat_mode(!owner.combat_mode, FALSE)
+		update_icon()
+
+/atom/movable/screen/combattoggle/update_icon_state()
+	. = ..()
+	var/mob/living/user = hud?.mymob
+	if(!istype(user) || !user.client)
+		return
+	icon_state = user.combat_mode ? "combat" : "combat_off" //Treats the combat_mode
+
+//Version of the combat toggle with the flashy overlay
+/atom/movable/screen/combattoggle/flashy
+	///Mut appearance for flashy border
+	var/mutable_appearance/flashy
+
+/atom/movable/screen/combattoggle/flashy/update_overlays()
+	. = ..()
+	var/mob/living/user = hud?.mymob
+	if(!istype(user) || !user.client)
+		return
+
+	if(user.combat_mode)
+		if(!flashy)
+			flashy = mutable_appearance('icons/hud/screen_gen.dmi', "togglefull_flash")
+			flashy.color = "#C62727"
+		. += flashy
+
+/atom/movable/screen/combattoggle/robot
+*/
 
 /atom/movable/screen/act_intent
 	name = "intent"

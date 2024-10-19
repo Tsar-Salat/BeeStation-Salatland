@@ -147,7 +147,7 @@
 	recharging = FALSE
 
 
-/obj/item/inducer/attack(mob/M, mob/user)
+/obj/item/inducer/attack(mob/M, mob/living/user)
 	if(user.a_intent == INTENT_HARM)
 		return ..()
 

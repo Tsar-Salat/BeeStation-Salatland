@@ -54,7 +54,7 @@
 	if (LAZYLEN(buckled_mobs))
 		. += "Someone appears to be strapped in. You can help them out, or you can harm them by activating the guillotine."
 
-/obj/structure/guillotine/attack_hand(mob/user)
+/obj/structure/guillotine/attack_hand(mob/living/user)
 	add_fingerprint(user)
 
 	// Currently being used by something

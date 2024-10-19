@@ -3,7 +3,7 @@
 	icon_state = "0"
 	state = 0
 
-/obj/structure/frame/computer/attackby(obj/item/P, mob/user, params)
+/obj/structure/frame/computer/attackby(obj/item/P, mob/living/user, params)
 	add_fingerprint(user)
 	switch(state)
 		if(0)

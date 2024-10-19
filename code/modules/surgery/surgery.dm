@@ -108,7 +108,7 @@
 			return TRUE
 
 
-/datum/surgery/proc/next_step(mob/user, intent)
+/datum/surgery/proc/next_step(mob/living/user, intent)
 	failed_step = FALSE
 	if(step_in_progress)
 		return TRUE

@@ -42,6 +42,7 @@
 #define COMSIG_KB_LIVING_REST_DOWN "keybinding_living_rest_down"
 #define COMSIG_KB_LIVING_LOOKUP_DOWN "keybinding_living_lookup_down"
 #define COMSIG_KB_LIVING_LOOKDOWN_DOWN "keybinding_living_lookdown_down"
+//#define COMSIG_KB_LIVING_TOGGLE_COMBAT_DOWN "keybinding_living_toggle_combat_down"
 #define COMSIG_KB_LIVING_SELECTHELPINTENT_DOWN "keybinding_living_selecthelpintent_down"
 #define COMSIG_KB_LIVING_SELECTDISARMINTENT_DOWN "keybinding_living_selectdisarmintent_down"
 #define COMSIG_KB_LIVING_SELECTGRABINTENT_DOWN "keybinding_living_selectgrabintent_down"

@@ -64,7 +64,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/reagent_containers)
 				balloon_alert(user, "Transferring [amount_per_transfer_from_this]u.")
 				return
 
-/obj/item/reagent_containers/attack(mob/M, mob/user, def_zone)
+/obj/item/reagent_containers/attack(mob/M, mob/living/user, def_zone)
 	if(user.a_intent == INTENT_HARM)
 		return ..()
 

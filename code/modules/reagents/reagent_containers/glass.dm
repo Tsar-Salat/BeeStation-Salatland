@@ -9,7 +9,7 @@
 	spillable = TRUE
 	resistance_flags = ACID_PROOF
 
-/obj/item/reagent_containers/glass/attack(mob/M, mob/user, obj/target)
+/obj/item/reagent_containers/glass/attack(mob/M, mob/living/user, obj/target)
 	if(!canconsume(M, user))
 		return
 
@@ -53,7 +53,7 @@
 			addtimer(CALLBACK(reagents, TYPE_PROC_REF(/datum/reagents, trans_to), M, 5), 5)
 			playsound(M.loc,'sound/items/drink.ogg', rand(10,50), 1)
 
-/obj/item/reagent_containers/glass/afterattack(obj/target, mob/user, proximity)
+/obj/item/reagent_containers/glass/afterattack(obj/target, mob/living/user, proximity)
 	. = ..()
 	if((!proximity) || !check_allowed_items(target,target_self=1))
 		return

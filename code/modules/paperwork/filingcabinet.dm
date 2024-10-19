@@ -45,7 +45,7 @@
 			I.forceMove(loc)
 	qdel(src)
 
-/obj/structure/filingcabinet/attackby(obj/item/P, mob/user, params)
+/obj/structure/filingcabinet/attackby(obj/item/P, mob/living/user, params)
 	if(istype(P, /obj/item/paper) || istype(P, /obj/item/folder) || istype(P, /obj/item/photo) || istype(P, /obj/item/documents))
 		if(!user.transferItemToLoc(P, src))
 			return

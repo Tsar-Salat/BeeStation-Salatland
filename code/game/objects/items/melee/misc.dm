@@ -248,7 +248,7 @@
 	name = "police baton"
 	stun_animation = TRUE
 
-/obj/item/melee/classic_baton/police/attack(mob/living/target, mob/living/user)
+/obj/item/melee/classic_baton/police/attack(mob/living/target, mob/living/user, params)
 	if(!on)
 		return ..()
 	var/def_check = target.getarmor(type = MELEE, penetration = armour_penetration)

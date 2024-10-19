@@ -10,6 +10,12 @@
 	using.hud = src
 	static_inventory += using
 	action_intent = using
+	//Replace with this combat mode hook
+	//action_intent = new /atom/movable/screen/combattoggle/flashy()
+	//action_intent.hud = src
+	//action_intent.icon = ui_style
+	//action_intent.screen_loc = ui_combat_toggle
+	//static_inventory += action_intent
 
 	healths = new /atom/movable/screen/healths/alien()
 	healths.hud = src

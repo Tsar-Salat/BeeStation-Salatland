@@ -138,7 +138,7 @@
 	else if(!open)
 		. += "[initial(icon_state)]_closed"
 
-/obj/structure/displaycase/attackby(obj/item/W, mob/user, params)
+/obj/structure/displaycase/attackby(obj/item/W, mob/living/user, params)
 	if(W.GetID() && !broken && openable)
 		if(open)	//You do not require access to close a case, only to open it.
 			to_chat(user, "<span class='notice'>You close [src].</span>")
@@ -202,7 +202,7 @@
 /obj/structure/displaycase/attack_paw(mob/user)
 	return attack_hand(user)
 
-/obj/structure/displaycase/attack_hand(mob/user)
+/obj/structure/displaycase/attack_hand(mob/living/user)
 	. = ..()
 	if(.)
 		return

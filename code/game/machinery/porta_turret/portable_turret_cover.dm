@@ -30,7 +30,7 @@
 
 	return parent_turret.attack_ai(user)
 
-/obj/machinery/porta_turret_cover/attack_hand(mob/user)
+/obj/machinery/porta_turret_cover/attack_hand(mob/user, modifiers)
 	. = ..()
 	if(.)
 		return

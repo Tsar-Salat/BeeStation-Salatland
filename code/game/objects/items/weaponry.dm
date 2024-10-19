@@ -24,7 +24,7 @@ oranges says: This is a meme relating to the english translation of the ss13 rus
 mrdoombringer sez: and remember kids, if you try and PR a fix for this item's grammar, you are admitting that you are, indeed, a newfriend.
 for further reading, please see: https://github.com/tgstation/tgstation/pull/30173 and https://translate.google.com/translate?sl=auto&tl=en&js=y&prev=_t&hl=en&ie=UTF-8&u=%2F%2Flurkmore.to%2FSS13&edit-text=&act=url
 */
-/obj/item/banhammer/attack(mob/M, mob/user)
+/obj/item/banhammer/attack(mob/M, mob/living/user)
 	if(user.is_zone_selected(BODY_ZONE_HEAD, precise_only = FALSE))
 		M.visible_message("<span class='danger'>[user] are stroking the head of [M] with a bangammer</span>", "<span class='userdanger'>[user] are stroking the head with a bangammer</span>", "you hear a bangammer stroking a head");
 	else
@@ -911,7 +911,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	name = "\improper ACME Extendo-Hand"
 	desc = "A novelty extendo-hand produced by the ACME corporation. Originally designed to knock out roadrunners."
 
-/obj/item/extendohand/attack(atom/M, mob/living/carbon/human/user)
+/obj/item/extendohand/attack(atom/M, mob/living/carbon/human/user, params)
 	var/dist = get_dist(M, user)
 	if(dist < reach)
 		to_chat(user, "<span class='warning'>[M] is too close to use [src] on.</span>")

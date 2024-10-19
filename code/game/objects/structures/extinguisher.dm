@@ -50,7 +50,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/extinguisher_cabinet)
 		stored_extinguisher = null
 		update_icon()
 
-/obj/structure/extinguisher_cabinet/attackby(obj/item/I, mob/user, params)
+/obj/structure/extinguisher_cabinet/attackby(obj/item/I, mob/living/user, params)
 	if(I.tool_behaviour == TOOL_WRENCH && !stored_extinguisher)
 		to_chat(user, "<span class='notice'>You start unsecuring [name]...</span>")
 		I.play_tool_sound(src)

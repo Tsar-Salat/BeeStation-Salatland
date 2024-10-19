@@ -34,7 +34,7 @@
 	else
 		add_overlay("[icon_state]_door")
 
-/obj/structure/guncase/attackby(obj/item/I, mob/user, params)
+/obj/structure/guncase/attackby(obj/item/I, mob/living/user, params)
 	if(iscyborg(user) || isalien(user))
 		return
 	if(istype(I, gun_category) && open)

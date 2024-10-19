@@ -142,7 +142,7 @@
 	grind_results = list(/datum/reagent/blood = 20, /datum/reagent/liquidgibs = 5)
 
 
-/obj/item/food/deadmouse/attackby(obj/item/I, mob/user, params)
+/obj/item/food/deadmouse/attackby(obj/item/I, mob/living/user, params)
 	if(I.is_sharp() && user.a_intent == INTENT_HARM)
 		if(isturf(loc))
 			new /obj/item/food/meat/slab/mouse(loc)

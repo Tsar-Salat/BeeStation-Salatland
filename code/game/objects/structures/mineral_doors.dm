@@ -120,7 +120,7 @@
 	icon_state = "[initial(icon_state)][door_opened ? "open":""]"
 	return ..()
 
-/obj/structure/mineral_door/attackby(obj/item/I, mob/user)
+/obj/structure/mineral_door/attackby(obj/item/I, mob/living/user)
 	if(pickaxe_door(user, I))
 		return
 	else if(user.a_intent != INTENT_HARM)
