@@ -122,23 +122,23 @@
 	supports_variations = DIGITIGRADE_VARIATION_NO_NEW_ICON
 	dying_key = DYE_REGISTRY_JUMPSKIRT
 
-/obj/item/clothing/under/rank/security/detective/grey
+/obj/item/clothing/under/rank/security/detective/noir
 	name = "noir suit"
 	desc = "A hard-boiled private investigator's grey suit, complete with tie clip."
-	icon_state = "greydet"
-	item_state = "greydet"
+	icon_state = "noirdet"
+	item_state = null
 	alt_covers_chest = TRUE
 
-/obj/item/clothing/under/rank/security/detective/grey/skirt
+/obj/item/clothing/under/rank/security/detective/noir/skirt
 	name = "noir suitskirt"
 	desc = "A hard-boiled private investigator's grey suitskirt, complete with tie clip."
-	icon_state = "greydet_skirt"
-	item_state = "greydet"
+	icon_state = "noirdet_skirt"
+	inhand_icon_state = null
 	body_parts_covered = CHEST|GROIN|ARMS
-	can_adjust = FALSE
-	female_sprite_flags = FEMALE_UNIFORM_TOP_ONLY
-	supports_variations = DIGITIGRADE_VARIATION_NO_NEW_ICON
 	dying_key = DYE_REGISTRY_JUMPSKIRT
+	female_sprite_flags = FEMALE_UNIFORM_TOP_ONLY
+	alt_covers_chest = TRUE
+	supports_variations = DIGITIGRADE_VARIATION_NO_NEW_ICON
 
 /*
  * Head of Security
