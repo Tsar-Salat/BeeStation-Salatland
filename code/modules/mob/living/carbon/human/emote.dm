@@ -345,44 +345,30 @@
 	if(..())
 		playsound(user.loc, 'sound/misc/sadtrombone.ogg', 50)
 
+/datum/emote/living/carbon/human/diona
+	// allow mothroach as well as human base mob - species check is done in can_run_emote
+	mob_type_allowed_typecache = list(/mob/living/carbon/human,/mob/living/simple_animal/hostile/retaliate/nymph)
 
+/datum/emote/living/carbon/human/diona/can_run_emote(mob/user, status_check = TRUE, intentional)
+	if(!..())
+		return FALSE
+	if(ishuman(user))
+		return isdiona(user)
+	return istype(user, /mob/living/simple_animal/hostile/retaliate/nymph)
 
-///Snowflake emotes only for le epic chimp
-/datum/emote/living/carbon/human/monkey
+/datum/emote/living/carbon/human/diona/chitter
+	key = "chitter"
+	key_third_person = "chitters"
+	message = "chitters"
+	emote_type = EMOTE_AUDIBLE
+	vary = TRUE
+	sound = 'sound/emotes/diona/chitter.ogg'
 
-/datum/emote/living/carbon/human/monkey/can_run_emote(mob/user, status_check = TRUE, intentional)
-	if(ismonkey(user))
-		return ..()
-	return FALSE
-
-/datum/emote/living/carbon/human/monkey/gnarl
-	key = "gnarl"
-	key_third_person = "gnarls"
-	message = "gnarls and shows its teeth..."
-
-/datum/emote/living/carbon/human/monkey/roll
-	key = "roll"
-	key_third_person = "rolls"
-	message = "rolls."
-	hands_use_check = TRUE
-
-/datum/emote/living/carbon/human/monkey/scratch
-	key = "scratch"
-	key_third_person = "scratches"
-	message = "scratches."
-	hands_use_check = TRUE
-
-/datum/emote/living/carbon/human/monkey/screech/roar
-	key = "roar"
-	key_third_person = "roars"
-	message = "roars."
-
-/datum/emote/living/carbon/human/monkey/tail
-	key = "tail"
-	message = "waves their tail."
-
-/datum/emote/living/carbon/human/monkeysign
-	key = "sign"
-	key_third_person = "signs"
-	message_param = "signs the number %t."
-	hands_use_check = TRUE
+/datum/emote/living/carbon/human/diona/cricket
+	key = "cricket"
+	key_third_person = "chirps"
+	message = "chirps"
+	emote_type = EMOTE_AUDIBLE
+	vary = TRUE
+	sound = 'sound/emotes/diona/cricket.ogg'
+	sound_volume = 30
