@@ -31,7 +31,7 @@ GLOBAL_LIST_EMPTY(announcement_systems)
 	. = ..()
 	GLOB.announcement_systems += src
 	radio = new /obj/item/radio/headset/silicon/ai(src)
-		update_appearance()
+	update_appearance()
 
 /obj/machinery/announcement_system/update_icon_state()
 	icon_state = "[base_icon_state]_[is_operational ? "On" : "Off"][panel_open ? "_Open" : null]"
