@@ -103,6 +103,18 @@
 	icon_state = "detsuit"
 	item_state = null
 
+/obj/item/clothing/suit/jacket/det_suit/kim
+	name = "aerostatic bomber jacket"
+	desc = "A jacket once worn by the revolutionary air brigades during the Antecentennial Revolution. There are quite a few pockets on the inside, mostly for storing notebooks and compasses."
+	icon_state = "aerostatic_bomber_jacket"
+	item_state = null
+
+/obj/item/clothing/suit/jacket/det_suit/disco
+	name = "disco ass blazer"
+	desc = "Looks like someone skinned this blazer off some long extinct disco-animal. It has an enigmatic white rectangle on the back and the right sleeve."
+	icon_state = "jamrock_blazer"
+	item_state = null
+
 //Brig Phys
 /obj/item/clothing/suit/hazardvest/brig_physician
 	name = "brig physician's vest"

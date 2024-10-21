@@ -65,3 +65,16 @@
 
 	chameleon_extras = /obj/item/gun/ballistic/shotgun/automatic/combat/compact
 
+/datum/outfit/job/warden/alt
+	name = "Warden (Alt)"
+
+	uniform = /obj/item/clothing/under/rank/security/warden/white
+	suit = /obj/item/clothing/suit/armor/vest/warden
+	head = /obj/item/clothing/head/hats/warden/drill
+
+/datum/outfit/job/warden/formal
+	name = "Warden (Formal)"
+
+	uniform = /obj/item/clothing/under/rank/security/warden/formal
+	suit = /obj/item/clothing/suit/jacket/warden/blue
+	head = /obj/item/clothing/head/beret/sec/navywarden

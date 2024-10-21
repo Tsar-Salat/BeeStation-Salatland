@@ -202,7 +202,7 @@
 	item_state = "r_suit"
 	female_sprite_flags = FEMALE_UNIFORM_TOP_ONLY
 
-/obj/item/clothing/under/rank/security/head_of_security/formal
+/obj/item/clothing/under/rank/security/head_of_security/blue
 	desc = "The insignia on this uniform tells you that this uniform belongs to the Head of Security."
 	name = "head of security's formal uniform"
 	icon_state = "hosblueclothes"
@@ -259,6 +259,20 @@
 	sensor_mode = SENSOR_COORDS
 	random_sensor = FALSE
 
+/obj/item/clothing/under/rank/prisoner/skirt
+	name = "prison jumpskirt"
+	desc = "It's standardised Nanotrasen prisoner-wear. Its suit sensors are stuck in the \"Fully On\" position."
+	icon_state = "jumpskirt"
+	greyscale_colors = "#ff8300"
+	greyscale_config = /datum/greyscale_config/jumpsuit_prison
+	greyscale_config_inhand_left = /datum/greyscale_config/jumpsuit_prison_inhand_left
+	greyscale_config_inhand_right = /datum/greyscale_config/jumpsuit_prison_inhand_right
+	greyscale_config_worn = /datum/greyscale_config/jumpsuit_prison_worn
+	body_parts_covered = CHEST|GROIN|ARMS
+	dying_key = DYE_REGISTRY_JUMPSKIRT
+	female_sprite_flags = FEMALE_UNIFORM_TOP_ONLY
+	supports_variations = DIGITIGRADE_VARIATION_NO_NEW_ICON
+
 /*
  * Triiodine's security uniforms
  */
@@ -274,3 +288,17 @@
 /obj/item/clothing/under/rank/security/officer/mallcop/deputy
 	name = "deputy uniform"
 	desc = "A lightly armored formal uniform fit for wannabe security members."
+
+/obj/item/clothing/under/rank/security/detective/disco
+	name = "superstar cop uniform"
+	desc = "Flare cut trousers and a dirty shirt that might have been classy before someone took a piss in the armpits. It's the dress of a superstar."
+	icon_state = "jamrock_suit"
+	item_state = null
+	can_adjust = FALSE
+
+/obj/item/clothing/under/rank/security/detective/kim
+	name = "aerostatic suit"
+	desc = "A crisp and well-pressed suit; professional, comfortable and curiously authoritative."
+	icon_state = "aerostatic_suit"
+	item_state = null
+	can_adjust = FALSE
