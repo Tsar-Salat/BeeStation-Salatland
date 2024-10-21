@@ -51,6 +51,7 @@
 	allowed = list(
 		/obj/item/kitchen,
 		/obj/item/knife/kitchen,
+		/obj/item/storage/bag/tray,
 	)
 	toggle_noun = "sleeves"
 
@@ -65,6 +66,7 @@
 	allowed = list(
 		/obj/item/kitchen,
 		/obj/item/knife/kitchen,
+		/obj/item/storage/bag/tray,
 	)
 
 //Detective
@@ -92,7 +94,7 @@
 /obj/item/clothing/suit/jacket/det_suit/dark
 	name = "noir trenchcoat"
 	desc = "A hard-boiled private investigator's grey trenchcoat."
-	icon_state = "greydet"
+	icon_state = "noirdet"
 	item_state = null
 
 /obj/item/clothing/suit/jacket/det_suit/noir
