@@ -33,6 +33,9 @@
 	icon_state = "armor"
 	item_state = "armor"
 
+/obj/item/clothing/suit/armor/vest/alt/sec
+	icon_state = "armor_sec"
+
 /obj/item/clothing/suit/armor/vest/old
 	name = "degrading armor vest"
 	desc = "Older generation Type 1 armored vest. Due to degradation over time the vest is far less maneuverable to move in."
@@ -77,6 +80,23 @@
 	item_state = "hostrench"
 	flags_inv = 0
 	strip_delay = 80
+
+/obj/item/clothing/suit/armor/hos/trenchcoat/winter
+	name = "head of security's winter trenchcoat"
+	desc = "A trenchcoat enhanced with a special lightweight kevlar, padded with wool on the collar and inside. You feel strangely lonely wearing this coat."
+	icon_state = "hoswinter"
+	min_cold_protection_temperature = FIRE_SUIT_MIN_TEMP_PROTECT
+
+/obj/item/clothing/suit/armor/hos/hos_formal
+	name = "\improper Head of Security's parade jacket"
+	desc = "For when an armoured vest isn't fashionable enough."
+	icon_state = "hosformal"
+	item_state = "hostrench"
+	body_parts_covered = CHEST|GROIN|ARMS
+
+/obj/item/clothing/suit/armor/hos/hos_formal/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/toggle_icon)
 
 /obj/item/clothing/suit/armor/vest/warden
 	name = "warden's jacket"
@@ -158,7 +178,7 @@
 	name = "bone armor"
 	desc = "A tribal armor plate, crafted from animal bone."
 	icon_state = "bonearmor"
-	item_state = "bonearmor"
+	item_state = null
 	blood_overlay_type = "armor"
 	armor = list(MELEE = 35,  BULLET = 25, LASER = 25, ENERGY = 30, BOMB = 25, BIO = 0, RAD = 0, FIRE = 50, ACID = 50, STAMINA = 20, BLEED = 50)
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS
@@ -180,15 +200,18 @@
 	icon_state = "armor_reflec"
 	item_state = "armor_reflec"
 	blood_overlay_type = "armor"
+	body_parts_covered = CHEST|GROIN|ARMS
+	cold_protection = CHEST|GROIN|ARMS
+	heat_protection = CHEST|GROIN|ARMS
 	armor = list(MELEE = 10,  BULLET = 10, LASER = 60, ENERGY = 80, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100, STAMINA = 40, BLEED = 10)
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | ACID_PROOF
-	var/hit_reflect_chance = 40
+	var/hit_reflect_chance = 50
 
 /obj/item/clothing/suit/armor/laserproof/IsReflect(def_zone)
 	if(!(def_zone in list(BODY_ZONE_CHEST, BODY_ZONE_PRECISE_GROIN))) //If not shot where ablative is covering you, you don't get the reflection bonus!
-		return 0
+		return FALSE
 	if (prob(hit_reflect_chance))
-		return 1
+		return TRUE
 
 /obj/item/clothing/suit/armor/vest/det_suit
 	name = "detective's flak vest"
@@ -259,6 +282,12 @@
 	item_state = "knight_green"
 	move_sound = null
 	slowdown = 0.08
+	allowed = list(
+		/obj/item/banner,
+		/obj/item/claymore,
+		/obj/item/nullrod,
+		/obj/item/tank/internals,
+		)
 
 /obj/item/clothing/suit/armor/riot/knight/yellow
 	icon_state = "knight_yellow"
