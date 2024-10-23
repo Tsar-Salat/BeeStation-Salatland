@@ -149,10 +149,6 @@
 	var/extended_inventory = 0
 	///Are we checking the users ID
 	var/scan_id = 1
-	///Coins that we accept?
-	var/obj/item/coin/coin
-	///Bills we accept?
-	var/obj/item/stack/spacecash/bill
 	///Default price of items if not overridden
 	var/default_price = 25
 	///Default price of premium items if not overridden
@@ -228,8 +224,6 @@
 
 /obj/machinery/vending/Destroy()
 	QDEL_NULL(wires)
-	QDEL_NULL(coin)
-	QDEL_NULL(bill)
 	return ..()
 
 /obj/machinery/vending/can_speak()
@@ -281,7 +275,7 @@
 		. += emissive_appearance(icon, light_mask, layer)
 		ADD_LUM_SOURCE(src, LUM_SOURCE_MANAGED_OVERLAY)
 
-/obj/machinery/vending/obj_break(damage_flag)
+/obj/machinery/vending/atom_break(damage_flag)
 	. = ..()
 	if(!.)
 		return
