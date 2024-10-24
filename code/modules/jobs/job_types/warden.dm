@@ -48,7 +48,7 @@
 	belt = /obj/item/storage/belt/security/full
 	ears = /obj/item/radio/headset/headset_sec/alt
 	uniform = /obj/item/clothing/under/rank/security/warden
-	shoes = /obj/item/clothing/shoes/jackboots
+	shoes = /obj/item/clothing/shoes/jackboots/sec
 	suit = /obj/item/clothing/suit/armor/vest/warden/alt
 	gloves = /obj/item/clothing/gloves/color/black
 	head = /obj/item/clothing/head/hats/warden
@@ -65,3 +65,16 @@
 
 	chameleon_extras = /obj/item/gun/ballistic/shotgun/automatic/combat/compact
 
+/datum/outfit/job/warden/alt
+	name = "Warden (Alt)"
+
+	uniform = /obj/item/clothing/under/rank/security/warden/white
+	suit = /obj/item/clothing/suit/armor/vest/warden
+	head = /obj/item/clothing/head/hats/warden/drill
+
+/datum/outfit/job/warden/formal
+	name = "Warden (Formal)"
+
+	uniform = /obj/item/clothing/under/rank/security/warden/formal
+	suit = /obj/item/clothing/suit/jacket/warden/blue
+	head = /obj/item/clothing/head/beret/sec/navywarden

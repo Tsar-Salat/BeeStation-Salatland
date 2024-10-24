@@ -2449,6 +2449,7 @@
 #include "code\modules\clothing\gloves\_gloves.dm"
 #include "code\modules\clothing\gloves\boxing.dm"
 #include "code\modules\clothing\gloves\color.dm"
+#include "code\modules\clothing\gloves\costume.dm"
 #include "code\modules\clothing\gloves\miscellaneous.dm"
 #include "code\modules\clothing\head\_head.dm"
 #include "code\modules\clothing\head\animalears.dm"

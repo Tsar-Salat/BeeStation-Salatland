@@ -70,3 +70,30 @@
 	new /obj/item/storage/box/evidence(src)
 	new /obj/item/detective_scanner(src)
 	new /obj/item/toy/crayon/white(src)
+
+
+/datum/outfit/job/detective/noir
+	name = "Detective (Noir)"
+
+	uniform = /obj/item/clothing/under/rank/security/detective/noir
+	shoes = /obj/item/clothing/shoes/sneakers/black
+	suit = /obj/item/clothing/suit/jacket/det_suit/noir
+	head = /obj/item/clothing/head/fedora/det_hat/noir
+
+/datum/outfit/job/detective/harry
+	name = "Detective (Harry)"
+
+	uniform = /obj/item/clothing/under/rank/security/detective/disco
+	neck = /obj/item/clothing/neck/tie/horrible
+	shoes = /obj/item/clothing/shoes/discoshoes
+	suit = /obj/item/clothing/suit/jacket/det_suit/disco
+	head = null
+
+/datum/outfit/job/detective/kim
+	name = "Detective (Kim)"
+
+	uniform = /obj/item/clothing/under/rank/security/detective/kim
+	neck = null
+	shoes = /obj/item/clothing/shoes/kim
+	suit = /obj/item/clothing/suit/jacket/det_suit/kim
+	head = null
