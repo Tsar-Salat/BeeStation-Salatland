@@ -18,7 +18,7 @@
 	random_sensor = FALSE
 
 /obj/item/clothing/under/rank/security/officer
-	name = "security jumpsuit"
+	name = "security uniform"
 	desc = "A tactical security jumpsuit for officers complete with Nanotrasen belt buckle."
 	icon_state = "rsecurity"
 	item_state = "r_suit"
@@ -39,8 +39,8 @@
 	can_adjust = FALSE
 
 /obj/item/clothing/under/rank/security/officer/skirt
-	name = "security jumpskirt"
-	desc = "A \"tactical\" security jumpsuit with the legs replaced by a skirt."
+	name = "security skirt"
+	desc = "A \"tactical\" security uniform with the legs replaced by a skirt."
 	icon_state = "secskirt"
 	item_state = "r_suit"
 	body_parts_covered = CHEST|GROIN|ARMS
@@ -144,7 +144,7 @@
  * Head of Security
  */
 /obj/item/clothing/under/rank/security/head_of_security
-	name = "head of security's jumpsuit"
+	name = "head of security's uniform"
 	desc = "A security jumpsuit decorated for those few with the dedication to achieve the position of Head of Security."
 	icon_state = "rhos"
 	item_state = "r_suit"
@@ -155,7 +155,7 @@
 	random_sensor = FALSE
 
 /obj/item/clothing/under/rank/security/head_of_security/skirt
-	name = "head of security's jumpskirt"
+	name = "head of security's skirt"
 	desc = "A security jumpskirt decorated for those few with the dedication to achieve the position of Head of Security."
 	icon_state = "rhos_skirt"
 	item_state = "r_suit"

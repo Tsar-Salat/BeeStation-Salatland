@@ -137,10 +137,14 @@
 	item_state = "jackboots"
 	lefthand_file = 'icons/mob/inhands/equipment/security_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/security_righthand.dmi'
+
 /obj/item/clothing/shoes/jackboots/fast
 	name = "modified jackboots"
 	desc = "Security combat boots for combat scenarios or combat situations. This pair seems to be modified with lighter materials."
 	slowdown = -1
+
+/obj/item/clothing/shoes/jackboots/sec
+	icon_state = "jackboots_sec"
 
 /obj/item/clothing/shoes/winterboots
 	name = "winter boots"
