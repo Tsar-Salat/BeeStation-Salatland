@@ -31999,10 +31999,7 @@
 /obj/machinery/light{
 	dir = 1
 	},
-/obj/structure/table,
-/obj/machinery/dish_drive{
-	pixel_y = 12
-	},
+/obj/machinery/oven,
 /turf/open/floor/iron/checker,
 /area/crew_quarters/kitchen)
 "hfu" = (
@@ -76203,7 +76200,7 @@
 	pixel_x = -26;
 	req_access_txt = "28"
 	},
-/obj/machinery/oven,
+/obj/machinery/computer/chef_order,
 /turf/open/floor/iron/checker,
 /area/crew_quarters/kitchen)
 "xlH" = (

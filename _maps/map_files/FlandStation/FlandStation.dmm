@@ -47317,6 +47317,9 @@
 /obj/item/radio/intercom{
 	pixel_x = 28
 	},
+/obj/machinery/computer/chef_order{
+	dir = 8
+	},
 /turf/open/floor/iron/dark/side{
 	dir = 4
 	},

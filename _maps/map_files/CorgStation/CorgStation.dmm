@@ -59607,8 +59607,8 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 1
 	},
-/obj/machinery/vending/dinnerware,
 /obj/machinery/camera/directional/north,
+/obj/machinery/computer/chef_order,
 /turf/open/floor/iron/white,
 /area/crew_quarters/kitchen)
 "tnM" = (
@@ -65777,6 +65777,7 @@
 /obj/effect/turf_decal/tile/red/opposingcorners{
 	dir = 1
 	},
+/obj/machinery/vending/dinnerware,
 /turf/open/floor/iron/white,
 /area/crew_quarters/kitchen/coldroom)
 "vmR" = (

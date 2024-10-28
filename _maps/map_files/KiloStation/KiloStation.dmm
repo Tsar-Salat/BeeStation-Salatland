@@ -48751,8 +48751,8 @@
 	},
 /area/maintenance/port/aft)
 "nRm" = (
-/obj/machinery/portable_thermomachine,
 /obj/effect/decal/cleanable/dirt,
+/obj/machinery/food_cart,
 /turf/open/floor/plating,
 /area/maintenance/central)
 "nRz" = (
@@ -59974,7 +59974,9 @@
 /obj/effect/turf_decal/tile/neutral/anticorner/contrasted{
 	dir = 4
 	},
-/obj/machinery/food_cart,
+/obj/machinery/computer/chef_order{
+	dir = 1
+	},
 /turf/open/floor/iron/dark,
 /area/crew_quarters/kitchen)
 "rrW" = (

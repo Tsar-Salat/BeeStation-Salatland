@@ -26438,6 +26438,10 @@
 	pixel_x = -9;
 	pixel_y = 5
 	},
+/obj/item/book/manual/chef_recipes{
+	pixel_x = -4;
+	pixel_y = 6
+	},
 /turf/open/floor/iron/white,
 /area/crew_quarters/kitchen)
 "isP" = (
@@ -33145,13 +33149,10 @@
 /turf/open/space/basic,
 /area/ai_monitored/turret_protected/ai)
 "kDA" = (
-/obj/structure/rack,
-/obj/item/hand_labeler,
-/obj/item/book/manual/chef_recipes{
-	pixel_x = -4;
-	pixel_y = 6
-	},
 /obj/machinery/firealarm/directional/west,
+/obj/machinery/computer/chef_order{
+	dir = 4
+	},
 /turf/open/floor/iron/white,
 /area/crew_quarters/kitchen)
 "kDF" = (
@@ -67568,6 +67569,7 @@
 "vzi" = (
 /obj/structure/table,
 /obj/item/knife/kitchen,
+/obj/item/hand_labeler,
 /turf/open/floor/iron/white,
 /area/crew_quarters/kitchen)
 "vzm" = (

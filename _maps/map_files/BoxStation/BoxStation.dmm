@@ -22932,6 +22932,7 @@
 "fPX" = (
 /obj/structure/ore_box,
 /obj/effect/spawner/lootdrop/glowstick,
+/obj/machinery/computer/chef_order,
 /turf/open/floor/plating,
 /area/maintenance/starboard/fore)
 "fQq" = (
@@ -37625,6 +37626,7 @@
 /area/medical/morgue)
 "lzP" = (
 /obj/machinery/firealarm/directional/east,
+/obj/structure/closet/secure_closet/freezer/kitchen,
 /turf/open/floor/iron/freezer,
 /area/crew_quarters/kitchen/coldroom)
 "lzR" = (
@@ -55236,6 +55238,10 @@
 /obj/machinery/door/firedoor,
 /turf/open/floor/iron,
 /area/hallway/primary/central)
+"sNc" = (
+/obj/machinery/computer/chef_order,
+/turf/open/floor/iron/checker,
+/area/crew_quarters/kitchen)
 "sNm" = (
 /obj/structure/disposalpipe/segment,
 /turf/open/floor/carpet/green,
@@ -108287,7 +108293,7 @@ dZF
 lzP
 aEY
 dZF
-sZa
+sNc
 kQw
 eSw
 vqg

@@ -9984,6 +9984,9 @@
 /turf/open/openspace,
 /area/engineering/hallway)
 "eQA" = (
+/obj/machinery/computer/chef_order{
+	dir = 1
+	},
 /turf/open/floor/iron/freezer,
 /area/crew_quarters/kitchen/coldroom)
 "eQB" = (
