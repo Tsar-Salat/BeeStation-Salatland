@@ -66,13 +66,16 @@ const CargoStatus = (props, context) => {
       }>
       <LabeledList>
         <LabeledList.Item label="Shuttle">
-          {(docked && !requestonly && can_send && <Button
-              color={grocery && "orange" || "green"}
+          {(docked && !requestonly && can_send && (
+            <Button
+              color={(grocery && 'orange') || 'green'}
               content={location}
-              tooltip={grocery && "The chef is waiting on their grocery supplies." || ""}
+              tooltip={(grocery && 'The chef is waiting on their grocery supplies.') || ''}
               tooltipPosition="right"
-              onClick={() => act('send')} />
-          ) || location}
+              onClick={() => act('send')}
+            />
+          )) ||
+            location}
         </LabeledList.Item>
         <LabeledList.Item label="CentCom Message">{message}</LabeledList.Item>
         {!!loan && !requestonly && (
