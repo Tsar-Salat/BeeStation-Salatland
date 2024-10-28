@@ -54,7 +54,7 @@ export const CargoContent = (props, context) => {
 
 const CargoStatus = (props, context) => {
   const { act, data } = useBackend(context);
-  const { away, docked, loan, loan_dispatched, location, message, points, requestonly, can_send } = data;
+  const { grocery, away, docked, loan, loan_dispatched, location, message, points, requestonly, can_send } = data;
   return (
     <Section
       title="Cargo"
@@ -66,7 +66,13 @@ const CargoStatus = (props, context) => {
       }>
       <LabeledList>
         <LabeledList.Item label="Shuttle">
-          {(docked && !requestonly && can_send && <Button content={location} onClick={() => act('send')} />) || location}
+          {(docked && !requestonly && can_send && <Button
+              color={grocery && "orange" || "green"}
+              content={location}
+              tooltip={grocery && "The chef is waiting on their grocery supplies." || ""}
+              tooltipPosition="right"
+              onClick={() => act('send')} />
+          ) || location}
         </LabeledList.Item>
         <LabeledList.Item label="CentCom Message">{message}</LabeledList.Item>
         {!!loan && !requestonly && (
