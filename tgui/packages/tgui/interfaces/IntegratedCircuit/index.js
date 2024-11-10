@@ -4,7 +4,7 @@ import { Component } from 'inferno';
 import { Layout, Window } from '../../layouts';
 import { resolveAsset } from '../../assets';
 import { CircuitInfo } from './CircuitInfo';
-import { NULL_REF, ABSOLUTE_Y_OFFSET, MOUSE_BUTTON_LEFT } from './constants';
+import { ABSOLUTE_Y_OFFSET, MOUSE_BUTTON_LEFT, TIME_UNTIL_PORT_RELEASE_WORKS } from './constants';
 import { Connections } from './Connections';
 import { ObjectComponent } from './ObjectComponent';
 import { VariableMenu } from './VariableMenu';
@@ -99,8 +99,7 @@ export class IntegratedCircuit extends Component {
 
     this.handlePortDrag(event);
 
-    this.timeUntilPortReleaseTimesOut
-      = Date.now() + TIME_UNTIL_PORT_RELEASE_WORKS;
+    this.timeUntilPortReleaseTimesOut = Date.now() + TIME_UNTIL_PORT_RELEASE_WORKS;
 
     window.addEventListener('mousemove', this.handlePortDrag);
     window.addEventListener('mouseup', this.handlePortRelease);
@@ -139,24 +138,19 @@ export class IntegratedCircuit extends Component {
     act('add_connection', data);
 
     const { components } = uiData;
-    const {
-      input_component_id,
-      input_port_id,
-      output_component_id,
-      output_port_id,
-    } = data;
+    const { input_component_id, input_port_id, output_component_id, output_port_id } = data;
 
-    const input_comp = components[input_component_id-1];
-    const input_port = input_comp.input_ports[input_port_id-1];
-    const output_comp = components[output_component_id-1];
-    const output_port = output_comp.output_ports[output_port_id-1];
+    const input_comp = components[input_component_id - 1];
+    const input_port = input_comp.input_ports[input_port_id - 1];
+    const output_comp = components[output_component_id - 1];
+    const output_port = output_comp.output_ports[output_port_id - 1];
     // Do not predict ports that do not match because there is no guarantee
     // that they will properly match.
     // TODO: Implement proper prediction for this
     if (!input_port || input_port.type !== output_port.type) {
       return;
     }
-    input_port.connected_to.push(isOutput? port.ref : selectedPort.ref);
+    input_port.connected_to.push(isOutput ? port.ref : selectedPort.ref);
   }
 
   handlePortDrag(event) {
@@ -261,26 +255,17 @@ export class IntegratedCircuit extends Component {
 
   handleVarDropped(event) {
     const { data, act } = useBackend(this.context);
-    const {
-      draggingVariable,
-      variableIsSetter,
-      backgroundX,
-      backgroundY,
-      zoom,
-    } = this.state;
-    const {
-      screen_x,
-      screen_y,
-    } = data;
+    const { draggingVariable, variableIsSetter, backgroundX, backgroundY, zoom } = this.state;
+    const { screen_x, screen_y } = data;
 
-    const xPos = (event.clientX - (backgroundX || screen_x));
-    const yPos = (event.clientY - (backgroundY || screen_y));
+    const xPos = event.clientX - (backgroundX || screen_x);
+    const yPos = event.clientY - (backgroundY || screen_y);
 
-    act("add_setter_or_getter", {
+    act('add_setter_or_getter', {
       variable: draggingVariable,
       is_setter: variableIsSetter,
-      rel_x: xPos*Math.pow(zoom, -1),
-      rel_y: (yPos + ABSOLUTE_Y_OFFSET)*Math.pow(zoom, -1),
+      rel_x: xPos * Math.pow(zoom, -1),
+      rel_y: (yPos + ABSOLUTE_Y_OFFSET) * Math.pow(zoom, -1),
     });
 
     this.setState({
@@ -421,25 +406,40 @@ export class IntegratedCircuit extends Component {
             />
           )}
           {!!menuOpen && (
-            <Box position="absolute" left={0} bottom={0} height="20%" minHeight="175px" minWidth="600px" width="50%" style={{ "border-radius": "0px 32px 0px 0px", "background-color": "rgba(0, 0, 0, 0.3)", "-ms-user-select": "none" }} unselectable="on" >
+            <Box
+              position="absolute"
+              left={0}
+              bottom={0}
+              height="20%"
+              minHeight="175px"
+              minWidth="600px"
+              width="50%"
+              style={{
+                'border-radius': '0px 32px 0px 0px',
+                'background-color': 'rgba(0, 0, 0, 0.3)',
+                '-ms-user-select': 'none',
+              }}
+              unselectable="on">
               <VariableMenu
                 variables={variables}
                 types={global_basic_types}
                 onClose={(event) => this.setState({ menuOpen: false })}
-                onAddVariable={(name, type, event) =>
+                onAddVariable={(name, type, asList, event) =>
                   act('add_variable', {
                     variable_name: name,
                     variable_datatype: type,
+                    is_list: asList,
                   })
                 }
                 onRemoveVariable={(name, event) =>
                   act('remove_variable', {
                     variable_name: name,
-                })}
+                  })
+                }
                 handleMouseDownSetter={this.onVarClickedSetter}
                 handleMouseDownGetter={this.onVarClickedGetter}
                 style={{
-                  "border-radius": "0px 32px 0px 0px",
+                  'border-radius': '0px 32px 0px 0px',
                 }}
               />
             </Box>

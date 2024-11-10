@@ -2,7 +2,7 @@ import { useBackend } from '../../backend';
 import { Box, Stack, Button, Dropdown } from '../../components';
 import { Component } from 'inferno';
 import { shallowDiffers } from '../../../common/react';
-import { ABSOLUTE_Y_OFFSET, MOUSE_BUTTON_LEFT, TIME_UNTIL_PORT_RELEASE_WORKS } from './constants';
+import { ABSOLUTE_Y_OFFSET } from './constants';
 import { Port } from './Port';
 
 export class ObjectComponent extends Component {

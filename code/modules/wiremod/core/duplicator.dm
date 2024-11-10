@@ -4,7 +4,6 @@
 GLOBAL_LIST_INIT(circuit_dupe_whitelisted_types, list(
 	PORT_TYPE_NUMBER,
 	PORT_TYPE_STRING,
-	PORT_TYPE_LIST,
 	PORT_TYPE_ANY,
 	PORT_TYPE_OPTION,
 ))
@@ -23,7 +22,13 @@ GLOBAL_LIST_INIT(circuit_dupe_whitelisted_types, list(
 	var/list/variable_data = general_data["variables"]
 	for(var/list/variable as anything in variable_data)
 		var/variable_name = variable["name"]
-		circuit_variables[variable_name] = new /datum/circuit_variable(variable_name, variable["datatype"])
+		var/datum/circuit_variable/variable_datum = new /datum/circuit_variable(variable_name, variable["datatype"])
+		circuit_variables[variable_name] = variable_datum
+		if(variable["is_list"])
+			list_variables[variable_name] = variable_datum
+			variable_datum.set_value(list())
+		else
+			modifiable_circuit_variables[variable_name] = variable_datum
 
 	var/list/circuit_data = general_data["components"]
 	var/list/identifiers_to_circuit = list()
@@ -175,6 +180,10 @@ GLOBAL_LIST_INIT(circuit_dupe_whitelisted_types, list(
 		var/datum/circuit_variable/variable = circuit_variables[variable_identifier]
 		new_data["name"] = variable.name
 		new_data["datatype"] = variable.datatype
+		if(variable_identifier in list_variables)
+			new_data["is_list"] = TRUE
+		else
+			new_data["is_list"] = FALSE
 		variables += list(new_data)
 	general_data["variables"] = variables
 

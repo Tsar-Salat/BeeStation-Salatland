@@ -34,7 +34,7 @@
 
 
 /obj/item/circuit_component/indexer/populate_ports()
-	list_port = add_input_port("List", PORT_TYPE_LIST)
+	list_port = add_input_port("List", PORT_TYPE_LIST(PORT_TYPE_ANY))
 	index_port = add_input_port("Index", PORT_TYPE_NUMBER)
 
 	output = add_output_port(output_name, output_port_type)

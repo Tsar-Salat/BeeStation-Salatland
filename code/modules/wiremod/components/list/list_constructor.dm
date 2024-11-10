@@ -12,7 +12,7 @@
 
 	//Takes any inputs, makes a list out of them
 	input_port_type = PORT_TYPE_ANY
-	output_port_type = PORT_TYPE_LIST
+	output_port_type = PORT_TYPE_ANY
 
 	//This can be changed to whatever value is wanted
 	input_port_amount = 4

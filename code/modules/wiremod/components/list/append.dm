@@ -17,10 +17,10 @@
 	circuit_flags = CIRCUIT_FLAG_INPUT_SIGNAL|CIRCUIT_FLAG_OUTPUT_SIGNAL
 
 /obj/item/circuit_component/append/populate_ports()
-	list_port = add_input_port("List", PORT_TYPE_LIST)
+	list_port = add_input_port("List", PORT_TYPE_LIST(PORT_TYPE_ANY))
 	value_port = add_input_port("Value", PORT_TYPE_ANY)
 
-	output = add_output_port("New List", PORT_TYPE_LIST)
+	output = add_output_port("New List", PORT_TYPE_LIST(PORT_TYPE_ANY))
 
 /obj/item/circuit_component/append/Destroy()
 	list_port = null

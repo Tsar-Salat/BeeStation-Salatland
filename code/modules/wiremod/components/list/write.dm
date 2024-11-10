@@ -12,7 +12,7 @@
 
 	/// The result from the output
 	output_name = "New List"
-	output_port_type = PORT_TYPE_LIST
+	output_port_type = PORT_TYPE_ANY
 
 /obj/item/circuit_component/indexer/write/populate_ports()
 	. = ..()

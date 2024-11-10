@@ -21,7 +21,7 @@
 
 /obj/item/circuit_component/list_length_constructor/populate_ports()
 	input_length = add_input_port("Length", PORT_TYPE_NUMBER)
-	output_port = add_output_port("Output", PORT_TYPE_LIST)
+	output_port = add_output_port("Output", PORT_TYPE_LIST(PORT_TYPE_ANY))
 
 /obj/item/circuit_component/list_length_constructor/Destroy()
 	input_length = null

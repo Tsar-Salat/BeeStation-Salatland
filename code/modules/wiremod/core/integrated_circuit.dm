@@ -46,8 +46,14 @@ GLOBAL_LIST_EMPTY_TYPED(integrated_circuits, /obj/item/integrated_circuit)
 	/// Set by the shell. Holds the reference to the owner who inserted the component into the shell.
 	var/datum/weakref/inserter_mind
 
-	/// Variables stored on this integrated circuit. with a `variable_name = value` structure
+	/// Variables stored on this integrated circuit, with a `variable_name = value` structure
 	var/list/datum/circuit_variable/circuit_variables = list()
+
+	/// Variables stored on this integrated circuit that can be set by a setter, with a `variable_name = value` structure
+	var/list/datum/circuit_variable/modifiable_circuit_variables = list()
+
+	/// List variables stored on this integrated circuit, with a `variable_name = value` structure
+	var/list/datum/circuit_variable/list_variables = list()
 
 	/// The maximum amount of setters and getters a circuit can have
 	var/max_setters_and_getters = 30
@@ -88,7 +94,8 @@ GLOBAL_LIST_EMPTY_TYPED(integrated_circuits, /obj/item/integrated_circuit)
 	for(var/obj/item/circuit_component/to_delete in attached_components)
 		remove_component(to_delete)
 		qdel(to_delete)
-	QDEL_LIST(circuit_variables)
+	QDEL_LIST_ASSOC_VAL(circuit_variables)
+	QDEL_LIST_ASSOC_VAL(list_variables)
 	attached_components.Cut()
 	shell = null
 	examined_component = null
@@ -324,6 +331,7 @@ GLOBAL_LIST_EMPTY_TYPED(integrated_circuits, /obj/item/integrated_circuit)
 				"type" = port.datatype,
 				"ref" = REF(port),
 				"color" = port.color,
+				"datatype_data" = port.datatype_ui_data(user)
 			))
 
 		component_data["name"] = component.display_name
@@ -341,8 +349,9 @@ GLOBAL_LIST_EMPTY_TYPED(integrated_circuits, /obj/item/integrated_circuit)
 		variable_data["name"] = variable.name
 		variable_data["datatype"] = variable.datatype
 		variable_data["color"] = variable.color
+		if(islist(variable.value))
+			variable_data["is_list"] = TRUE
 		.["variables"] += list(variable_data)
-
 
 	.["display_name"] = display_name
 
@@ -556,8 +565,15 @@ GLOBAL_LIST_EMPTY_TYPED(integrated_circuits, /obj/item/integrated_circuit)
 			var/variable_datatype = params["variable_datatype"]
 			if(!(variable_datatype in GLOB.wiremod_basic_types))
 				return
-
-			circuit_variables[variable_identifier] = new /datum/circuit_variable(variable_identifier, variable_datatype)
+			if(params["is_list"])
+				variable_datatype = PORT_TYPE_LIST(variable_datatype)
+			var/datum/circuit_variable/variable = new /datum/circuit_variable(variable_identifier, variable_datatype)
+			if(params["is_list"])
+				variable.set_value(list())
+				list_variables[variable_identifier] = variable
+			else
+				modifiable_circuit_variables[variable_identifier] = variable
+			circuit_variables[variable_identifier] = variable
 			. = TRUE
 		if("remove_variable")
 			var/variable_identifier = params["variable_name"]
@@ -567,25 +583,22 @@ GLOBAL_LIST_EMPTY_TYPED(integrated_circuits, /obj/item/integrated_circuit)
 			if(!variable)
 				return
 			circuit_variables -= variable_identifier
+			list_variables -= variable_identifier
+			modifiable_circuit_variables -= variable_identifier
 			qdel(variable)
 			. = TRUE
 		if("add_setter_or_getter")
 			if(setter_and_getter_count >= max_setters_and_getters)
 				balloon_alert(usr, "setter and getter count at maximum capacity")
 				return
-			var/designated_type = /obj/item/circuit_component/getter
+			var/designated_type = /obj/item/circuit_component/variable/getter
 			if(params["is_setter"])
-				designated_type = /obj/item/circuit_component/setter
-			var/obj/item/circuit_component/component = new designated_type(src)
+				designated_type = /obj/item/circuit_component/variable/setter
+			var/obj/item/circuit_component/variable/component = new designated_type(src)
 			if(!add_component(component, usr))
 				qdel(component)
 				return
-			if(params["is_setter"])
-				var/obj/item/circuit_component/setter/setter = component
-				setter.variable_name.set_input(params["variable"])
-			else
-				var/obj/item/circuit_component/getter/getter = component
-				getter.variable_name.set_input(params["variable"])
+			component.variable_name.set_input(params["variable"])
 			component.rel_x = text2num(params["rel_x"])
 			component.rel_y = text2num(params["rel_y"])
 			RegisterSignal(component, COMSIG_CIRCUIT_COMPONENT_REMOVED, .proc/clear_setter_or_getter)
