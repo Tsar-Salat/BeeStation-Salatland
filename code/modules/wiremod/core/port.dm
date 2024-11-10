@@ -168,10 +168,15 @@
 	src.connected_ports = list()
 
 /**
- * Introduces two ports to one another.
+ * Connects an input port to an output port.
+ *
+ * Arguments:
+ * * output - The output port to connect to.
  */
 /datum/port/input/proc/connect(datum/port/output/output)
-	connected_ports |= output
+	if(output in connected_ports)
+		return
+	connected_ports += output
 	RegisterSignal(output, COMSIG_PORT_SET_VALUE, PROC_REF(receive_value))
 	RegisterSignal(output, COMSIG_PORT_SET_TYPE, PROC_REF(check_type))
 	RegisterSignal(output, COMSIG_PORT_DISCONNECT, PROC_REF(disconnect))
