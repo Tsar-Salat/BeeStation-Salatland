@@ -1,11 +1,11 @@
 /**
- * # List Add Component
+ * # List Find Component
  *
- * Adds an element to a list.
+ * Finds an element in a list and returns the index.
  */
 /obj/item/circuit_component/listin
 	display_name = "Element Find"
-	desc = "Checks if an element is in a list."
+	desc = "Checks if an element is in a list and returns the index it is as if it is. Index is set to 0 on failure."
 
 	/// The list type we're checking
 	var/datum/port/input/list_type
@@ -21,6 +21,8 @@
 	var/datum/port/output/not_found
 	/// Result of the search
 	var/datum/port/output/result
+	/// Index of the element if found.
+	var/datum/port/output/index
 
 	circuit_flags = CIRCUIT_FLAG_INPUT_SIGNAL
 
@@ -34,6 +36,7 @@
 	found = add_output_port("Succeeded", PORT_TYPE_SIGNAL)
 	not_found = add_output_port("Failed", PORT_TYPE_SIGNAL)
 	result = add_output_port("Result", PORT_TYPE_NUMBER)
+	index = add_output_port("Index", PORT_TYPE_NUMBER)
 
 /obj/item/circuit_component/listin/pre_input_received(datum/port/input/port)
 	. = ..()
@@ -49,9 +52,11 @@
 	if(isdatum(data_to_check))
 		data_to_check = WEAKREF(data_to_check)
 
-	var/actual_result = (data_to_check in info)
-	if(actual_result)
+	var/actual_result = info.Find(data_to_check)
+	index.set_output(actual_result)
+	if(actual_result != 0)
+		result.set_output(TRUE)
 		found.set_output(COMPONENT_SIGNAL)
 	else
+		result.set_output(FALSE)
 		not_found.set_output(COMPONENT_SIGNAL)
-	result.set_output(actual_result)

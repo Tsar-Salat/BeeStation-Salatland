@@ -178,6 +178,8 @@
 	design_ids = list(
 		"circuit_multitool",
 		"comp_arithmetic",
+		"comp_assoc_list_remove",
+		"comp_assoc_list_set",
 		"comp_clock",
 		"comp_comparison",
 		"comp_concat_list",
