@@ -156,6 +156,21 @@
 /obj/item/radio/headset/headset_exploration,
 /turf/open/floor/mineral/titanium/yellow,
 /area/shuttle/exploration)
+"wA" = (
+/obj/effect/turf_decal/delivery,
+/obj/structure/fans/tiny,
+/obj/machinery/door/poddoor/shutters{
+	id = "exploration"
+	},
+/obj/effect/turf_decal/stripes/closeup{
+	dir = 1
+	},
+/obj/machinery/power/shieldwallgen/atmos{
+	id = 6;
+	anchored = 1
+	},
+/turf/open/floor/plating,
+/area/shuttle/exploration)
 "wE" = (
 /obj/effect/turf_decal/tile/neutral/opposingcorners,
 /turf/open/floor/mineral/plastitanium,
@@ -218,6 +233,14 @@
 /obj/effect/turf_decal/tile/blue/opposingcorners,
 /turf/open/floor/mineral/titanium/white,
 /area/shuttle/exploration)
+"Il" = (
+/obj/effect/turf_decal/tile/blue/opposingcorners,
+/obj/machinery/button/shieldwallgen/directional/west{
+	pixel_y = 8;
+	id = 6
+	},
+/turf/open/floor/mineral/titanium/white,
+/area/shuttle/exploration)
 "In" = (
 /obj/structure/table/reinforced,
 /obj/item/tank/internals/emergency_oxygen/engi{
@@ -234,6 +257,22 @@
 	dir = 4
 	},
 /turf/open/floor/mineral/plastitanium,
+/area/shuttle/exploration)
+"Ko" = (
+/obj/effect/turf_decal/delivery,
+/obj/structure/fans/tiny,
+/obj/machinery/door/poddoor/shutters{
+	id = "exploration"
+	},
+/obj/effect/turf_decal/stripes/closeup{
+	dir = 1
+	},
+/obj/machinery/power/shieldwallgen/atmos{
+	dir = 1;
+	id = 6;
+	anchored = 1
+	},
+/turf/open/floor/plating,
 /area/shuttle/exploration)
 "Mi" = (
 /obj/effect/decal/remains/human,
@@ -365,11 +404,11 @@
 NL
 AZ
 wG
-wG
 vf
+wG
+wA
 gl
-gl
-gl
+Ko
 AZ
 wG
 qZ
@@ -382,7 +421,7 @@ AZ
 AZ
 Fy
 hz
-pY
+Il
 pY
 pY
 pY
@@ -477,8 +516,8 @@ Vg
 NL
 AZ
 AZ
-wG
 vf
+wG
 AZ
 AZ
 wG

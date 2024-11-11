@@ -132,6 +132,14 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/mineral/titanium,
 /area/shuttle/exploration)
+"jM" = (
+/obj/machinery/door/firedoor/border_only{
+	dir = 1
+	},
+/obj/machinery/door/firedoor/border_only,
+/obj/effect/turf_decal/stripes/closeup,
+/turf/open/floor/iron/techmaint,
+/area/shuttle/exploration)
 "la" = (
 /obj/machinery/holopad{
 	pixel_x = -16;
@@ -164,11 +172,11 @@
 /turf/open/floor/mineral/titanium,
 /area/shuttle/exploration)
 "rT" = (
+/obj/effect/turf_decal/stripes/closeup,
 /obj/machinery/door/firedoor/border_only,
-/obj/machinery/door/airlock/shuttle/glass{
-	autoclose = 0.1
+/obj/machinery/door/firedoor/border_only{
+	dir = 1
 	},
-/obj/effect/turf_decal/stripes/line,
 /turf/open/floor/iron/techmaint,
 /area/shuttle/exploration)
 "sk" = (
@@ -280,6 +288,14 @@
 	},
 /obj/effect/turf_decal/delivery,
 /turf/open/floor/mineral/titanium,
+/area/shuttle/exploration)
+"Ft" = (
+/obj/machinery/door/firedoor/border_only{
+	dir = 1
+	},
+/obj/effect/turf_decal/stripes/closeup,
+/obj/machinery/door/firedoor/border_only,
+/turf/open/floor/iron/techmaint,
 /area/shuttle/exploration)
 "FA" = (
 /obj/structure/chair/fancy/shuttle,
@@ -417,14 +433,14 @@
 /turf/closed/wall/mineral/titanium/nodiagonal,
 /area/shuttle/exploration)
 "QO" = (
-/obj/machinery/door/firedoor/border_only,
 /obj/structure/cable/yellow{
 	icon_state = "1-2"
 	},
-/obj/effect/turf_decal/stripes/line,
-/obj/machinery/door/airlock/shuttle/glass{
-	autoclose = 0.1
+/obj/machinery/door/firedoor/border_only{
+	dir = 1
 	},
+/obj/machinery/door/firedoor/border_only,
+/obj/effect/turf_decal/stripes/closeup,
 /turf/open/floor/iron/techmaint,
 /area/shuttle/exploration)
 "Sb" = (
@@ -528,7 +544,7 @@ bM
 No
 FV
 Fh
-lq
+Ft
 SS
 Ar
 fN
@@ -603,7 +619,7 @@ ZB
 PL
 uG
 Fh
-lq
+jM
 UF
 MY
 fN
