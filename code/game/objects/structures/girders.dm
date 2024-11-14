@@ -33,6 +33,8 @@
 			. += "<span class='notice'>The bolts are <i>loosened</i>, but the <b>screws</b> are holding [src] together.</span>"
 		if(GIRDER_DISASSEMBLED)
 			. += "<span class='notice'>[src] is disassembled! You probably shouldn't be able to see this examine message.</span>"
+		if(GIRDER_TRAM)
+			. += "<span class='notice'>[src] is designed for tram usage. Deconstructed with a screwdriver!</span>"
 
 /obj/structure/girder/attackby(obj/item/W, mob/user, params)
 	add_fingerprint(user)
@@ -232,6 +234,18 @@
 		return TRUE
 
 	. = FALSE
+	if(state == GIRDER_TRAM)
+		balloon_alert(user, "disassembling frame...")
+		if(tool.use_tool(src, user, 4 SECONDS, volume=100))
+			if(state != GIRDER_TRAM)
+				return
+			state = GIRDER_DISASSEMBLED
+			var/obj/item/stack/sheet/iron/M = new (loc, 2)
+			if (!QDELETED(M))
+				M.add_fingerprint(user)
+			qdel(src)
+		return TRUE
+
 	if(state == GIRDER_DISPLACED)
 		user.visible_message("<span class='warning'>[user] disassembles [src].</span>",
 							"<span class='notice'>You start to disassemble [src]...</span>",
@@ -343,6 +357,10 @@
 	state = GIRDER_REINF
 	girderpasschance = 0
 	max_integrity = 350
+
+/obj/structure/girder/tram
+	name = "tram girder"
+	state = GIRDER_TRAM
 
 //////////////////////////////////////////// cult girders //////////////////////////////////////////////
 ///they will get a proper smoothing icon later :D, but not today, courier pigeon's word! 4/09/24

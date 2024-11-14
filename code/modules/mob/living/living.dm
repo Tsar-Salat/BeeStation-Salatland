@@ -1698,3 +1698,26 @@
 /mob/living/proc/on_handsblocked_end()
 	REMOVE_TRAIT(src, TRAIT_UI_BLOCKED, TRAIT_HANDS_BLOCKED)
 	REMOVE_TRAIT(src, TRAIT_PULL_BLOCKED, TRAIT_HANDS_BLOCKED)
+
+/**
+ * A proc triggered by callback when someone gets slammed by the tram and lands somewhere.
+ *
+ * This proc is used to force people to fall through things like lattice and unplated flooring at the expense of some
+ * extra damage, so jokers can't use half a stack of iron rods to make getting hit by the tram immediately lethal.
+ */
+/mob/living/proc/tram_slam_land()
+	if(!istype(loc, /turf/open/openspace) && !isplatingturf(loc))
+		return
+
+	if(isplatingturf(loc))
+		var/turf/open/floor/smashed_plating = loc
+		visible_message("<span class='danger'>[src] is thrown violently into [smashed_plating], smashing through it and punching straight through!</span>",
+				"<span class='userdanger'>You're thrown violently into [smashed_plating], smashing through it and punching straight through!</span>")
+		apply_damage(rand(5,20), BRUTE, BODY_ZONE_CHEST)
+		smashed_plating.ScrapeAway(1, CHANGETURF_INHERIT_AIR)
+
+	for(var/obj/structure/lattice/lattice in loc)
+		visible_message("<span class='danger'>[src] is thrown violently into [lattice], smashing through it and punching straight through!</span>",
+			"<span class='userdanger'>You're thrown violently into [lattice], smashing through it and punching straight through!</span>")
+		apply_damage(rand(5,10), BRUTE, BODY_ZONE_CHEST)
+		lattice.deconstruct(FALSE)
