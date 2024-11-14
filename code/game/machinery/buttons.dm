@@ -170,7 +170,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/button)
 	icon_state = "[skin]1"
 
 	if(device)
-		device.pulsed(user)
+		device.pulsed(pulser = user)
 
 	addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, update_icon)), 15)
 

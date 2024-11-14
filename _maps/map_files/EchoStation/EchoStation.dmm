@@ -4317,6 +4317,16 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating,
 /area/maintenance/department/bridge)
+"bVp" = (
+/obj/structure/industrial_lift,
+/obj/structure/railing{
+	dir = 4
+	},
+/obj/effect/landmark/lift_id{
+	specific_lift_id = "publicElevator"
+	},
+/turf/open/openspace,
+/area/hallway/primary/fore)
 "bVM" = (
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
 /obj/structure/cable/yellow{
@@ -6381,7 +6391,7 @@
 	},
 /obj/structure/sign/warning/fire,
 /turf/open/floor/plating/grass,
-/area/asteroid/paradise/surface)
+/area/hallway/primary/fore)
 "cZv" = (
 /obj/machinery/atmospherics/pipe/simple/yellow/visible/layer2{
 	dir = 9
@@ -6553,6 +6563,12 @@
 	},
 /turf/open/floor/iron/dark,
 /area/gateway)
+"dej" = (
+/obj/structure/fence/corner{
+	dir = 1
+	},
+/turf/open/floor/plating/dirt/planetary,
+/area/hallway/primary/fore)
 "dek" = (
 /obj/effect/turf_decal/siding/dark{
 	dir = 5
@@ -8949,6 +8965,12 @@
 "erN" = (
 /turf/open/floor/plating/beach/coastline_t,
 /area/asteroid/paradise/surface)
+"erO" = (
+/obj/effect/turf_decal/stripes/asteroid/line{
+	dir = 10
+	},
+/turf/open/floor/plating/elevatorshaft,
+/area/engine/engineering)
 "erT" = (
 /obj/structure/closet/crate/trashcart,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -10493,6 +10515,12 @@
 	},
 /turf/open/openspace,
 /area/engineering/hallway)
+"faM" = (
+/obj/effect/turf_decal/stripes/asteroid/line{
+	dir = 6
+	},
+/turf/open/floor/plating/elevatorshaft,
+/area/engine/engineering)
 "faZ" = (
 /turf/closed/wall/r_wall,
 /area/quartermaster/warehouse)
@@ -11906,7 +11934,7 @@
 	dir = 8
 	},
 /turf/open/floor/plating/dirt/planetary,
-/area/asteroid/paradise/surface)
+/area/hallway/primary/fore)
 "fMh" = (
 /obj/structure/ladder,
 /obj/structure/railing,
@@ -12436,6 +12464,10 @@
 /obj/structure/disposalpipe/segment,
 /turf/open/floor/wood,
 /area/crew_quarters/cafeteria)
+"fWu" = (
+/obj/structure/industrial_lift,
+/turf/open/openspace,
+/area/hallway/primary/fore)
 "fWF" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/cable/yellow{
@@ -12449,7 +12481,7 @@
 	},
 /obj/structure/fence,
 /turf/open/floor/plating/grass,
-/area/asteroid/paradise/surface)
+/area/hallway/primary/fore)
 "fXL" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 8
@@ -14659,7 +14691,7 @@
 /obj/structure/fence/cut/large,
 /obj/effect/decal/cleanable/greenglow,
 /turf/open/floor/plating/dirt/jungle/wasteland,
-/area/asteroid/paradise/surface)
+/area/hallway/primary/fore)
 "hdn" = (
 /obj/effect/spawner/structure/window,
 /turf/open/floor/plating,
@@ -21996,7 +22028,7 @@
 	dir = 1
 	},
 /turf/open/floor/plating/dirt/jungle/wasteland,
-/area/asteroid/paradise/surface)
+/area/hallway/primary/fore)
 "kQv" = (
 /obj/structure/lattice/catwalk/over,
 /obj/structure/chair/foldable,
@@ -23801,6 +23833,12 @@
 /obj/machinery/power/tesla_coil,
 /turf/open/floor/iron/large,
 /area/engine/engineering)
+"lNR" = (
+/obj/machinery/button/elevator/directional/south{
+	id = "publicElevator"
+	},
+/turf/open/floor/plating/asteroid/planetary,
+/area/engine/engineering)
 "lOf" = (
 /obj/structure/sign/departments/minsky/security/command,
 /turf/closed/wall/r_wall,
@@ -24731,6 +24769,9 @@
 	luminosity = 2
 	},
 /area/ai_monitored/turret_protected/ai)
+"mkb" = (
+/turf/open/floor/plating/dirt/jungle/wasteland,
+/area/hallway/primary/fore)
 "mkh" = (
 /turf/open/openspace,
 /area/engineering/hallway)
@@ -24774,6 +24815,12 @@
 	},
 /turf/open/floor/iron,
 /area/maintenance/department/chapel)
+"mlh" = (
+/obj/effect/turf_decal/stripes/asteroid/line{
+	dir = 5
+	},
+/turf/open/floor/plating/elevatorshaft,
+/area/engine/engineering)
 "mll" = (
 /turf/open/openspace,
 /area/maintenance/department/crew_quarters/bar)
@@ -24975,7 +25022,7 @@
 	dir = 8
 	},
 /turf/open/floor/plating/grass,
-/area/asteroid/paradise/surface)
+/area/hallway/primary/fore)
 "mta" = (
 /obj/structure/cable/yellow{
 	icon_state = "1-2"
@@ -28496,6 +28543,9 @@
 	},
 /turf/open/floor/iron/white,
 /area/medical/medbay/central)
+"oiB" = (
+/turf/closed/indestructible/rock/bedrock,
+/area/engine/engineering)
 "oiG" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 8
@@ -33381,6 +33431,12 @@
 	},
 /turf/open/floor/plating/asteroid/planetary,
 /area/asteroid/paradise/surface)
+"qKS" = (
+/obj/machinery/button/elevator/directional/south{
+	id = "publicElevator"
+	},
+/turf/closed/mineral/random/air,
+/area/asteroid/paradise)
 "qLd" = (
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 10
@@ -33594,7 +33650,7 @@
 	dir = 6
 	},
 /turf/open/floor/plating/dirt/jungle/wasteland,
-/area/asteroid/paradise/surface)
+/area/hallway/primary/fore)
 "qSb" = (
 /obj/structure/table/reinforced,
 /obj/structure/desk_bell{
@@ -33642,7 +33698,7 @@
 	dir = 8
 	},
 /turf/open/floor/plating/grass,
-/area/asteroid/paradise/surface)
+/area/hallway/primary/fore)
 "qSK" = (
 /obj/structure/weightmachine,
 /obj/machinery/light{
@@ -37255,6 +37311,12 @@
 /obj/item/kirbyplants/random,
 /turf/open/floor/iron/sepia,
 /area/quartermaster/storage)
+"sHp" = (
+/obj/structure/fence/corner{
+	dir = 5
+	},
+/turf/open/floor/plating/grass,
+/area/hallway/primary/fore)
 "sHr" = (
 /obj/machinery/door/airlock/maintenance_hatch{
 	name = "Maintenance Hatch";
@@ -37590,6 +37652,12 @@
 /obj/structure/flora/ausbushes/sparsegrass,
 /turf/open/floor/plating/asteroid/planetary,
 /area/quartermaster/storage)
+"sRO" = (
+/obj/machinery/button/elevator/directional/south{
+	id = "publicElevator"
+	},
+/turf/open/floor/plating/grass,
+/area/hallway/primary/fore)
 "sRW" = (
 /obj/structure/railing{
 	dir = 1
@@ -38149,7 +38217,7 @@
 	},
 /obj/structure/fence,
 /turf/open/floor/plating/dirt/jungle/wasteland,
-/area/asteroid/paradise/surface)
+/area/hallway/primary/fore)
 "tft" = (
 /obj/effect/turf_decal/siding/red{
 	alpha = 100;
@@ -39527,6 +39595,12 @@
 /obj/effect/turf_decal/sand/plating,
 /turf/open/floor/mineral/plastitanium,
 /area/asteroid/paradise/surface)
+"tMZ" = (
+/obj/effect/turf_decal/stripes/asteroid/line{
+	dir = 4
+	},
+/turf/open/floor/plating/elevatorshaft,
+/area/engine/engineering)
 "tNh" = (
 /obj/effect/landmark/xeno_spawn,
 /turf/open/floor/plating,
@@ -39820,6 +39894,9 @@
 	},
 /turf/open/floor/iron/dark,
 /area/crew_quarters/kitchen)
+"tSY" = (
+/turf/open/floor/plating/asteroid/planetary,
+/area/engine/engineering)
 "tTc" = (
 /obj/structure/railing/corner{
 	dir = 4
@@ -40808,6 +40885,13 @@
 /obj/effect/landmark/xeno_spawn,
 /turf/open/floor/plating/dirt/planetary,
 /area/asteroid/paradise/surface/grass)
+"utL" = (
+/obj/structure/industrial_lift,
+/obj/structure/railing{
+	dir = 10
+	},
+/turf/open/openspace,
+/area/hallway/primary/fore)
 "uup" = (
 /obj/structure/chair/office,
 /obj/effect/turf_decal/siding/wood{
@@ -41233,6 +41317,12 @@
 /obj/effect/landmark/xeno_spawn,
 /turf/open/floor/plating,
 /area/maintenance/department/bridge)
+"uGI" = (
+/obj/effect/turf_decal/stripes/asteroid/line{
+	dir = 8
+	},
+/turf/open/floor/plating/elevatorshaft,
+/area/engine/engineering)
 "uHF" = (
 /obj/structure/cable/yellow{
 	icon_state = "2-8"
@@ -42384,7 +42474,7 @@
 	},
 /obj/structure/sign/warning/explosives/alt,
 /turf/open/floor/plating/dirt/planetary,
-/area/asteroid/paradise/surface)
+/area/hallway/primary/fore)
 "vcB" = (
 /obj/effect/turf_decal/siding/yellow,
 /obj/effect/turf_decal/trimline/yellow/warning,
@@ -43234,6 +43324,13 @@
 	},
 /turf/open/floor/carpet/orange,
 /area/quartermaster/qm)
+"vzc" = (
+/obj/structure/industrial_lift,
+/obj/structure/railing{
+	dir = 6
+	},
+/turf/open/openspace,
+/area/hallway/primary/fore)
 "vzo" = (
 /obj/structure/railing{
 	dir = 1
@@ -44122,7 +44219,7 @@
 	dir = 8
 	},
 /turf/open/floor/plating/grass,
-/area/asteroid/paradise/surface)
+/area/hallway/primary/fore)
 "vZw" = (
 /obj/structure/flora/rock/pile,
 /obj/machinery/atmospherics/pipe/simple/scrubbers/hidden{
@@ -44589,6 +44686,9 @@
 	},
 /turf/open/floor/plating,
 /area/maintenance/department/cargo)
+"wkV" = (
+/turf/open/floor/plating/grass,
+/area/hallway/primary/fore)
 "wld" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -46157,6 +46257,12 @@
 	},
 /turf/open/floor/iron,
 /area/science/mixing)
+"xby" = (
+/obj/effect/turf_decal/stripes/asteroid/line{
+	dir = 9
+	},
+/turf/open/floor/plating/elevatorshaft,
+/area/engine/engineering)
 "xbL" = (
 /obj/effect/spawner/structure/window/reinforced,
 /obj/structure/cable/yellow,
@@ -46858,6 +46964,18 @@
 	},
 /turf/open/floor/iron/grid/steel,
 /area/janitor)
+"xuS" = (
+/obj/structure/industrial_lift{
+	lift_id = "bases"
+	},
+/obj/structure/railing{
+	dir = 8
+	},
+/obj/machinery/elevator_control_panel{
+	linked_elevator_id = "publicElevator"
+	},
+/turf/open/openspace,
+/area/hallway/primary/fore)
 "xuT" = (
 /obj/structure/railing/corner{
 	dir = 1
@@ -48471,7 +48589,7 @@
 	},
 /obj/structure/fence/door,
 /turf/open/floor/plating/dirt/jungle/wasteland,
-/area/asteroid/paradise/surface)
+/area/hallway/primary/fore)
 "ykT" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer4,
@@ -55108,7 +55226,7 @@ vqI
 vqI
 vqI
 vqI
-vqI
+qKS
 vqI
 vqI
 vqI
@@ -58716,13 +58834,13 @@ rRV
 jOo
 jOo
 vqI
-vqI
-vqI
-vqI
-jsp
-jsp
-jsp
-jsp
+muJ
+muJ
+muJ
+tSY
+tSY
+oiB
+oiB
 jsp
 vqI
 vqI
@@ -58973,13 +59091,13 @@ jOo
 jOo
 jOo
 vqI
-vqI
-vqI
-vqI
-jsp
-jsp
-jsp
-jsp
+muJ
+tSY
+tSY
+tSY
+tSY
+tSY
+oiB
 jsp
 vqI
 vqI
@@ -59230,13 +59348,13 @@ jOo
 jOo
 jOo
 vqI
-vqI
-vqI
-vqI
-vqI
-jsp
-jsp
-jsp
+tSY
+tSY
+tSY
+xby
+uGI
+erO
+oiB
 jsp
 vqI
 vqI
@@ -59487,13 +59605,13 @@ jOo
 jOo
 vqI
 vqI
-vqI
-vqI
-vqI
-vqI
-jsp
-jsp
-jsp
+tSY
+tSY
+tSY
+mlh
+tMZ
+faM
+oiB
 jsp
 vqI
 vqI
@@ -59744,8 +59862,8 @@ ihL
 fhM
 lCS
 lCS
-lCS
-lCS
+tSY
+lNR
 lCS
 lCS
 sXB
@@ -124769,9 +124887,9 @@ vqI
 vqI
 vqI
 vqI
-vqI
-vqI
-vqI
+bvw
+bvw
+bvw
 vqI
 vqI
 vqI
@@ -125026,9 +125144,9 @@ vqI
 vqI
 vqI
 vqI
-vqI
-vqI
-vqI
+bvw
+bvw
+bvw
 vqI
 vqI
 vqI
@@ -190305,9 +190423,9 @@ vqI
 vqI
 vqI
 vqI
-vqI
-vqI
-vqI
+bvw
+bvw
+bvw
 vqI
 vqI
 vqI
@@ -190562,9 +190680,9 @@ vqI
 vqI
 vqI
 vqI
-vqI
-vqI
-vqI
+bvw
+bvw
+bvw
 vqI
 vqI
 vqI
@@ -255583,11 +255701,11 @@ yli
 yli
 yli
 yli
-yli
-dAb
-yli
-yli
-kxS
+wkV
+wkV
+wkV
+sRO
+nZM
 kxS
 kxS
 kxS
@@ -255840,11 +255958,11 @@ yli
 yli
 yli
 yli
-yli
-dAb
-dAb
-yli
-dAb
+wkV
+fWu
+xuS
+utL
+nZM
 kxS
 kxS
 kxS
@@ -256097,11 +256215,11 @@ yli
 yli
 yli
 yli
-dAb
-dAb
-kiz
-dAb
-dAb
+mkb
+fWu
+bVp
+vzc
+nZM
 dAb
 kxS
 kxS
@@ -256358,7 +256476,7 @@ fLX
 kQs
 kQs
 kQs
-cPg
+dej
 dAb
 kxS
 kxS
@@ -256612,9 +256730,9 @@ yli
 yli
 dAb
 qSH
-aoY
-aoY
-aoY
+nku
+nku
+nku
 vcy
 dAb
 dAb
@@ -256869,9 +256987,9 @@ yli
 dAb
 dAb
 vZe
-aoY
-aoY
-aoY
+nku
+nku
+nku
 ykS
 dAb
 dAb
@@ -257126,9 +257244,9 @@ yli
 dAb
 dAb
 cZp
-aoY
-aoY
-aoY
+nku
+nku
+nku
 msV
 kiz
 dAb
@@ -257382,7 +257500,7 @@ yli
 yli
 yli
 dAb
-pdW
+sHp
 tfl
 fWU
 hcP
