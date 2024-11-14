@@ -1,8 +1,13 @@
 /datum/element/decal
 	element_flags = ELEMENT_BESPOKE|ELEMENT_DETACH
 	id_arg_index = 2
+	/// Whether this decal can be cleaned.
 	var/cleanable
+	/// A description this decal appends to the target's examine message.
 	var/description
+	/// If true this was initialized with no set direction - will follow the parent dir.
+	var/directional
+	/// The overlay applied by this decal to the target.
 	var/mutable_appearance/pic
 	/**
 	 *  A short lecture on decal element collision on rotation
@@ -19,6 +24,7 @@
 		return ELEMENT_INCOMPATIBLE
 	description = _description
 	cleanable = _cleanable
+	directional = _dir
 	rotated = _rotated
 
 	RegisterSignal(target,COMSIG_ATOM_UPDATE_OVERLAYS, PROC_REF(apply_overlay), TRUE)
@@ -37,6 +43,14 @@
 	if(_description)
 		RegisterSignal(target, COMSIG_PARENT_EXAMINE, PROC_REF(examine), TRUE)
 
+/**
+ * ## generate_appearance
+ *
+ * If the decal was not given an appearance, it will generate one based on the other given arguments.
+ * element won't be compatible if it cannot do either
+ * all args are fed into creating an image, they are byond vars for images you'll recognize in the byond docs
+ * (except source, source is the object whose appearance we're copying.)
+ */
 /datum/element/decal/proc/generate_appearance(_icon, _icon_state, _dir, _layer, _color, _alpha, source)
 	if(!_icon || !_icon_state)
 		return FALSE
@@ -51,6 +65,7 @@
 	source.update_icon()
 	if(isitem(source))
 		INVOKE_ASYNC(source, TYPE_PROC_REF(/obj/item, update_slot_icon))
+	SEND_SIGNAL(source, COMSIG_TURF_DECAL_DETACHED, description, cleanable, directional, pic)
 	return ..()
 
 /datum/element/decal/proc/late_update_icon(atom/source)

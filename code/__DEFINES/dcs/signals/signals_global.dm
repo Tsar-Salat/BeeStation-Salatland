@@ -15,7 +15,12 @@
 #define COMSIG_GLOB_MOB_CREATED "!mob_created"					//! mob was created somewhere : (mob)
 #define COMSIG_GLOB_MOB_DEATH "!mob_death"						//! mob died somewhere : (mob , gibbed)
 #define COMSIG_GLOB_LIVING_SAY_SPECIAL "!say_special"			//! global living say plug - use sparingly: (mob/speaker , message)
-#define COMSIG_GLOB_CARBON_THROW_THING	"!throw_thing"			//! a person somewhere has thrown something : (mob/living/carbon/carbon_thrower, target)
+/// a person somewhere has thrown something : (mob/living/carbon/carbon_thrower, target)
+#define COMSIG_GLOB_CARBON_THROW_THING	"!throw_thing"
+/// a trapdoor remote has sent out a signal to link with a trapdoor
+#define COMSIG_GLOB_TRAPDOOR_LINK "!trapdoor_link"
+	///successfully linked to a trapdoor!
+	#define LINKED_UP (1<<0)
 #define COMSIG_GLOB_SOUND_PLAYED "!sound_played"				//! a sound was played : (sound_player, sound_file)
 /// called by datum/cinematic/play() : (datum/cinematic/new_cinematic)
 #define COMSIG_GLOB_PLAY_CINEMATIC "!play_cinematic"
