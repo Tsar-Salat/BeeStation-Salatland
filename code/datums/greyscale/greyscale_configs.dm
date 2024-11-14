@@ -220,3 +220,23 @@
 	name = "Worn CTF Light Vest"
 	icon_file = 'icons/mob/clothing/suits/ctf.dmi'
 	json_config = 'code/datums/greyscale/json_configs/ctf_light_worn.json'
+
+/datum/greyscale_config/eth_raincoat
+	name = "Ethereal Raincoat"
+	icon_file = 'icons/obj/clothing/suits/ethereal.dmi'
+	json_config = 'code/datums/greyscale/json_configs/eth_raincoat.json'
+
+/datum/greyscale_config/eth_raincoat_worn
+	name = "Worn Ethereal Raincoat"
+	icon_file = 'icons/mob/clothing/suits/ethereal.dmi'
+	json_config = 'code/datums/greyscale/json_configs/eth_raincoat_worn.json'
+
+/datum/greyscale_config/eth_tunic
+	name = "Ethereal Tunic"
+	icon_file = 'icons/obj/clothing/under/ethereal.dmi'
+	json_config = 'code/datums/greyscale/json_configs/eth_tunic.json'
+
+/datum/greyscale_config/eth_tunic_worn
+	name = "Worn Ethereal Tunic"
+	icon_file = 'icons/mob/clothing/under/ethereal.dmi'
+	json_config = 'code/datums/greyscale/json_configs/eth_tunic_worn.json'

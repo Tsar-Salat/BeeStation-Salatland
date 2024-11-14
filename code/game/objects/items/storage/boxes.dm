@@ -1325,3 +1325,12 @@
 	new /obj/item/encryptionkey/heads/ce/fake(src)
 	new /obj/item/encryptionkey/heads/cmo/fake(src)
 	new /obj/item/encryptionkey/heads/hop/fake(src)
+
+/obj/item/storage/box/hero/etherealwarden
+	name = "Ethereal Trailwarden - 2450's."
+	desc = "Many fantastical stories are told of valiant trail wardens, even by offworlders who, thanks to their guidance, avoided an untimely demise while traveling the sometimes treacherous roads of Sprout. In truth their job entails far more walking and fixing roads than slaying dragons, but it is no less important and well respected: keeping the roads and trails safe and well maintained is for many settlements a matter of survival."
+
+/obj/item/storage/box/hero/etherealwarden/PopulateContents()
+	new /obj/item/clothing/suit/hooded/ethereal_raincoat/trailwarden(src)
+	new /obj/item/clothing/under/ethereal_tunic/trailwarden(src)
+	new /obj/item/storage/backpack/saddlepack(src)

@@ -194,7 +194,9 @@
 		/obj/item/clothing/suit/jacket/leather/overcoat = 1,
 		/obj/item/clothing/under/pants/mustangjeans = 1,
 		/obj/item/clothing/neck/necklace/dope = 3,
-		/obj/item/clothing/suit/jacket/letterman_nanotrasen = 1
+		/obj/item/clothing/suit/jacket/letterman_nanotrasen = 1,
+		/obj/item/clothing/suit/hooded/ethereal_raincoat = 3,
+		/obj/item/clothing/under/ethereal_tunic = 3,
 	)
 	refill_canister = /obj/item/vending_refill/clothing
 	default_price = PAYCHECK_MEDIUM

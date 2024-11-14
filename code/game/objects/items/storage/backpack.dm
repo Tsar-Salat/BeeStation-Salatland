@@ -269,6 +269,17 @@
 	icon_state = "runtimepack"
 	item_state = "runtimepack"
 
+/obj/item/storage/backpack/saddlepack
+	name = "saddlepack"
+	desc = "A backpack designed to be saddled on a mount or carried on your back, and switch between the two on the fly. It's quite spacious, at the cost of making you feel like a literal pack mule."
+	worn_icon = 'icons/mob/clothing/back/ethereal.dmi'
+	icon_state = "saddlepack"
+
+/obj/item/storage/backpack/saddlepack/Initialize(mapload)
+	. = ..()
+	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
+	STR.max_items = 26
+
 /*
  * Satchel Types
  */
