@@ -55,7 +55,7 @@
 	icon_state = "winterhood_captain"
 
 /obj/item/clothing/suit/hooded/wintercoat/security
-	name = "security winter coat"
+	name = "security winter jacket"
 	desc = "A thick jacket made from a light, fire-resistant kevlar-like material which provides some protection to the user. It is particularly effective against energy-based threats due to its thickness and insulation."
 	icon_state = "coatsecurity"
 	item_state = "coatsecurity"

@@ -51,7 +51,7 @@
 	belt = /obj/item/storage/belt/security/full
 	ears = /obj/item/radio/headset/heads/hos/alt
 	uniform = /obj/item/clothing/under/rank/security/head_of_security
-	shoes = /obj/item/clothing/shoes/jackboots
+	shoes = /obj/item/clothing/shoes/jackboots/sec
 	suit = /obj/item/clothing/suit/armor/hos/trenchcoat
 	gloves = /obj/item/clothing/gloves/color/black
 	head = /obj/item/clothing/head/hats/hos/beret
@@ -76,3 +76,28 @@
 	suit_store = /obj/item/tank/internals/oxygen
 	backpack_contents = list(/obj/item/melee/baton/loaded=1)
 
+/datum/outfit/job/head_of_security/turtleneck
+	name = "Head of Security (Turtleneck)"
+
+	uniform = /obj/item/clothing/under/rank/security/head_of_security/alt
+	suit = null
+
+/datum/outfit/job/head_of_security/white
+	name = "Head of Security (White)"
+
+	uniform = /obj/item/clothing/under/rank/security/head_of_security/white
+	suit = /obj/item/clothing/suit/armor/hos/trenchcoat/winter
+
+/datum/outfit/job/head_of_security/navyhos
+	name = "Head of Security (NavyHOS)"
+
+	uniform = /obj/item/clothing/under/rank/security/head_of_security/blue
+	suit = /obj/item/clothing/suit/jacket/hos/blue
+	head = /obj/item/clothing/head/beret/sec/navyhos
+
+/datum/outfit/job/head_of_security/formal
+	name = "Head of Security (Parade)"
+
+	uniform = /obj/item/clothing/under/rank/security/head_of_security/parade
+	suit = /obj/item/clothing/suit/armor/hos/hos_formal
+	head = /obj/item/clothing/head/hats/hos
