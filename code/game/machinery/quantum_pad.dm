@@ -31,7 +31,6 @@
 	))
 
 /obj/machinery/quantumpad/Destroy()
-	QDEL_NULL(wires)
 	mapped_quantum_pads -= map_pad_id
 	return ..()
 

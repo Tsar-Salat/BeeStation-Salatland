@@ -33,7 +33,6 @@
 		var/obj/structure/particle_accelerator/part = CP
 		part.master = null
 	connected_parts.Cut()
-	QDEL_NULL(wires)
 	return ..()
 
 /obj/machinery/particle_accelerator/control_box/multitool_act(mob/living/user, obj/item/I)

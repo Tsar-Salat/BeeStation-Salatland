@@ -247,7 +247,6 @@
 	if(autoclean_toggle)
 		autoclean_toggle.Remove(usr)
 	QDEL_NULL(autoclean_toggle)
-	QDEL_NULL(wires)
 	QDEL_NULL(eye_lights)
 	QDEL_NULL(inv1)
 	QDEL_NULL(inv2)

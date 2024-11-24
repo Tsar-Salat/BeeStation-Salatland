@@ -35,7 +35,6 @@
 
 /obj/item/grenade/chem_grenade/Destroy()
 	QDEL_LIST(beakers)
-	QDEL_NULL(wires)
 	return ..()
 
 /obj/item/grenade/chem_grenade/examine(mob/user)

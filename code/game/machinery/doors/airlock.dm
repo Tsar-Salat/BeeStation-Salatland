@@ -361,7 +361,6 @@
 			open()
 
 /obj/machinery/door/airlock/Destroy()
-	QDEL_NULL(wires)
 	if(charge)
 		qdel(charge)
 		charge = null

@@ -100,7 +100,6 @@
 
 /obj/item/radio/Destroy()
 	remove_radio_all(src) //Just to be sure
-	QDEL_NULL(wires)
 	QDEL_NULL(keyslot)
 	return ..()
 
@@ -510,7 +509,6 @@
 
 /obj/item/radio/Destroy()
 	remove_radio_all(src) //Just to be sure
-	QDEL_NULL(wires)
 	QDEL_NULL(keyslot)
 	return ..()
 

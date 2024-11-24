@@ -20,10 +20,6 @@
 	. = ..()
 	wires = new /datum/wires/mass_driver(src)
 
-/obj/machinery/mass_driver/Destroy()
-	QDEL_NULL(wires)
-	. = ..()
-
 /obj/machinery/mass_driver/proc/drive(amount)
 	if(machine_stat & (BROKEN|NOPOWER) || panel_open)
 		return

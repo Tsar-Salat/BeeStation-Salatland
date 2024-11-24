@@ -45,8 +45,6 @@
 /obj/machinery/microwave/Destroy()
 	eject()
 	QDEL_NULL(soundloop)
-	if(wires)
-		QDEL_NULL(wires)
 	. = ..()
 
 /obj/machinery/microwave/RefreshParts()

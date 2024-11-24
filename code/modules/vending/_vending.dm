@@ -222,9 +222,8 @@
 	else if(circuit && (circuit.onstation != onstation)) //check if they're not the same to minimize the amount of edited values.
 		onstation = circuit.onstation //if it was constructed outside mapload, sync the vendor up with the circuit's var so you can't bypass price requirements by moving / reconstructing it off station.
 
-/obj/machinery/vending/Destroy()
-	QDEL_NULL(wires)
-	return ..()
+//obj/machinery/vending/Destroy()
+	//return ..()
 
 /obj/machinery/vending/can_speak()
 	return !shut_up

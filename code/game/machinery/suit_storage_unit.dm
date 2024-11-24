@@ -180,7 +180,6 @@
 	update_appearance()
 
 /obj/machinery/suit_storage_unit/Destroy()
-	QDEL_NULL(wires)
 	dump_inventory_contents()
 	return ..()
 

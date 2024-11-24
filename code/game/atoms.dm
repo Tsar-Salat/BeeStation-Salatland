@@ -318,6 +318,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/atom)
 	if(reagents)
 		QDEL_NULL(reagents)
 
+	if(wires)
+		QDEL_NULL(wires)
+
 	orbit_datum = null // The component is attached to us normaly and will be deleted elsewhere
 
 	// Checking length(overlays) before cutting has significant speed benefits

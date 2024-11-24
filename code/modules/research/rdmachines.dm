@@ -22,10 +22,6 @@
 	. = ..()
 	wires = new /datum/wires/rnd(src)
 
-/obj/machinery/rnd/Destroy()
-	QDEL_NULL(wires)
-	return ..()
-
 /obj/machinery/rnd/proc/shock(mob/user, prb)
 	if(machine_stat & (BROKEN|NOPOWER))		// unpowered, no shock
 		return FALSE

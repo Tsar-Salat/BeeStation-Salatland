@@ -206,7 +206,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/airalarm)
 
 /obj/machinery/airalarm/Destroy()
 	SSradio.remove_object(src, frequency)
-	QDEL_NULL(wires)
 	QDEL_NULL(alarm_manager)
 	GLOB.zclear_atoms -= src
 	return ..()

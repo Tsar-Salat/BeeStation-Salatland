@@ -75,10 +75,6 @@
 	. = ..()
 	stored_research = new stored_research_type
 
-/obj/machinery/modular_fabricator/Destroy()
-	QDEL_NULL(wires)
-	return ..()
-
 /obj/machinery/modular_fabricator/proc/get_material_container()
 	var/datum/component/remote_materials/materials = GetComponent(/datum/component/remote_materials)
 	if(materials?.mat_container)

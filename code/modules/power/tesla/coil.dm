@@ -30,7 +30,6 @@
 	linked_techweb = SSresearch.science_tech
 
 /obj/machinery/power/tesla_coil/Destroy()
-	QDEL_NULL(wires)
 	linked_techweb = null //This shouldn't harddel even if not nulled but let's be tidy
 	return ..()
 

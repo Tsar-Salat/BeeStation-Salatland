@@ -89,7 +89,6 @@
 /obj/machinery/fax/Destroy()
 	GLOB.fax_machines -= src
 	QDEL_NULL(loaded_item_ref)
-	QDEL_NULL(wires)
 	QDEL_NULL(radio)
 	return ..()
 
