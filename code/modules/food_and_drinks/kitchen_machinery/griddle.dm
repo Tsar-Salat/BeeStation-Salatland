@@ -28,8 +28,8 @@
 	grill_loop = new(src, FALSE)
 	if(isnum(variant))
 		variant = rand(1,3)
-	// Add expose_reagent to add pancakes. I tried already.  https://github.com/BeeStation/BeeStation-Hornet/pull/8479
-	//RegisterSignal(src, COMSIG_ATOM_EXPOSE_REAGENT,  PROC_REF(on_expose_reagent))
+	RegisterSignal(src, COMSIG_ATOM_EXPOSE_REAGENT, PROC_REF(on_expose_reagent))
+	//RegisterSignal(src, COMSIG_STORAGE_DUMP_CONTENT, PROC_REF(on_storage_dump))
 
 /obj/machinery/griddle/Destroy()
 	QDEL_NULL(grill_loop)
@@ -43,7 +43,6 @@
 		return
 	variant = rand(1,3)
 
-/* See https://github.com/BeeStation/BeeStation-Hornet/pull/8479
 /obj/machinery/griddle/proc/on_expose_reagent(atom/parent_atom, datum/reagent/exposing_reagent, reac_volume)
 	SIGNAL_HANDLER
 
@@ -59,7 +58,6 @@
 			break
 	visible_message("<span class='notice'>[exposing_reagent] begins to cook on [src].</span>")
 	return NONE
-*/
 
 /obj/machinery/griddle/crowbar_act(mob/living/user, obj/item/I)
 	. = ..()
@@ -79,7 +77,6 @@
 		I.pixel_y = clamp(text2num(LAZYACCESS(modifiers, ICON_Y)) - 16, -(world.icon_size/2), world.icon_size/2)
 		to_chat(user, "<span class='notice'>You place [I] on [src].</span>")
 		AddToGrill(I, user)
-		update_appearance()
 	else
 		return ..()
 
@@ -98,17 +95,21 @@
 	vis_contents += item_to_grill
 	griddled_objects += item_to_grill
 	item_to_grill.flags_1 |= IS_ONTOP_1
+	item_to_grill.vis_flags |= VIS_INHERIT_PLANE
+
 	RegisterSignal(item_to_grill, COMSIG_MOVABLE_MOVED, PROC_REF(ItemMoved))
 	RegisterSignal(item_to_grill, COMSIG_GRILL_COMPLETED, PROC_REF(GrillCompleted))
 	RegisterSignal(item_to_grill, COMSIG_PARENT_QDELETING, PROC_REF(ItemRemovedFromGrill))
 	update_grill_audio()
+	update_appearance()
 
-/obj/machinery/griddle/proc/ItemRemovedFromGrill(obj/item/I)
+/obj/machinery/griddle/proc/ItemRemovedFromGrill(obj/item/ungrill)
 	SIGNAL_HANDLER
-	I.flags_1 &= ~IS_ONTOP_1
-	griddled_objects -= I
-	vis_contents -= I
-	UnregisterSignal(I, list(COMSIG_GRILL_COMPLETED, COMSIG_MOVABLE_MOVED, COMSIG_PARENT_QDELETING))
+	ungrill.flags_1 &= ~IS_ONTOP_1
+	ungrill.vis_flags &= ~VIS_INHERIT_PLANE
+	griddled_objects -= ungrill
+	vis_contents -= ungrill
+	UnregisterSignal(ungrill, list(COMSIG_GRILL_COMPLETED, COMSIG_MOVABLE_MOVED, COMSIG_PARENT_QDELETING))
 	update_grill_audio()
 
 /obj/machinery/griddle/proc/ItemMoved(obj/item/I, atom/OldLoc, Dir, Forced)
@@ -125,10 +126,10 @@
 	else
 		grill_loop.stop()
 
-/obj/machinery/griddle/wrench_act(mob/living/user, obj/item/I)
-	..()
-	default_unfasten_wrench(user, I, 2 SECONDS)
-	return TRUE
+/obj/machinery/griddle/wrench_act(mob/living/user, obj/item/tool)
+	. = ..()
+	default_unfasten_wrench(user, tool, time = 2 SECONDS)
+	return TOOL_ACT_TOOLTYPE_SUCCESS
 
 ///Override to prevent storage dumping onto the griddle until I figure out how to navigate the mess that is storage code to allow me to nicely move the dumped objects onto the griddle.
 /obj/machinery/griddle/get_dumping_location(obj/item/storage/source, mob/user)
@@ -136,8 +137,7 @@
 
 /obj/machinery/griddle/process(delta_time)
 	..()
-	for(var/i in griddled_objects)
-		var/obj/item/griddled_item = i
+	for(var/obj/item/griddled_item as anything in griddled_objects)
 		if(SEND_SIGNAL(griddled_item, COMSIG_ITEM_GRILLED, src, delta_time) & COMPONENT_HANDLED_GRILLING)
 			continue
 		griddled_item.fire_act(1000) //Hot hot hot!

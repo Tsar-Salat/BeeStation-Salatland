@@ -123,6 +123,7 @@
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN
 
 /datum/reagent/consumable/cooking_oil/expose_obj(obj/exposed_obj, reac_volume)
+	. = ..()
 	if(!holder || (holder.chem_temp <= fry_temperature))
 		return
 	if(!isitem(exposed_obj) || HAS_TRAIT(exposed_obj, TRAIT_FOOD_FRIED))
@@ -162,6 +163,7 @@
 	return TRUE
 
 /datum/reagent/consumable/cooking_oil/expose_turf(turf/open/exposed_turf, reac_volume)
+	. = ..()
 	if(!istype(exposed_turf) || isgroundlessturf(exposed_turf) || (reac_volume < 5))
 		return
 
@@ -292,6 +294,7 @@
 	..()
 
 /datum/reagent/consumable/frostoil/expose_turf(turf/T, reac_volume)
+	. = ..()
 	if(reac_volume >= 5)
 		for(var/mob/living/simple_animal/slime/M in T)
 			M.adjustToxLoss(rand(15,30))
@@ -343,6 +346,7 @@
 
 
 /datum/reagent/consumable/sodiumchloride/expose_turf(turf/T, reac_volume) //Creates an umbra-blocking salt pile
+	. = ..()
 	if(!istype(T))
 		return
 	if(reac_volume < 1)
@@ -449,6 +453,7 @@
 	taste_description = "slime"
 
 /datum/reagent/consumable/cornoil/expose_turf(turf/open/T, reac_volume)
+	. = ..()
 	if (!istype(T))
 		return
 	T.MakeSlippery(TURF_WET_LUBE, min_wet_time = 10 SECONDS, wet_time_to_add = reac_volume*2 SECONDS)
@@ -507,6 +512,7 @@
 	taste_description = "chalky wheat"
 
 /datum/reagent/consumable/flour/expose_turf(turf/T, reac_volume)
+	. = ..()
 	if(!isspaceturf(T))
 		var/obj/effect/decal/cleanable/food/flour/reagentdecal = new(T)
 		reagentdecal = locate() in T //Might have merged with flour already there.
@@ -826,15 +832,6 @@
 	taste_description = "bitter sweetness"
 	reagent_state = SOLID
 
-/datum/reagent/consumable/bbqsauce
-	name = "BBQ Sauce"
-	description = "Sweet, Smokey, Savory, and gets everywhere. Perfect for Grilling."
-	nutriment_factor = 5 * REAGENTS_METABOLISM
-	color = "#78280A" // rgb: 120 40, 10
-	chem_flags = NONE
-	taste_mult = 2.5 //sugar's 1.5, capsacin's 1.5, so a good middle ground.
-	taste_description = "smokey sweetness"
-
 /datum/reagent/consumable/char
 	name = "Char"
 	description = "Essence of the grill. Has strange properties when overdosed."
@@ -850,6 +847,30 @@
 	if(prob(10))
 		M.say(pick("I hate my wife.", "I just want to grill for God's sake.", "I wish I could just go on my lawnmower and cut the grass.", "Yep, Quake. That was a good game...", "Yeah, my PDA has wi-fi. A wife I hate."), forced = /datum/reagent/consumable/char)
 	..()
+
+/datum/reagent/consumable/bbqsauce
+	name = "BBQ Sauce"
+	description = "Sweet, Smokey, Savory, and gets everywhere. Perfect for Grilling."
+	nutriment_factor = 5 * REAGENTS_METABOLISM
+	color = "#78280A" // rgb: 120 40, 10
+	chem_flags = NONE
+	taste_mult = 2.5 //sugar's 1.5, capsacin's 1.5, so a good middle ground.
+	taste_description = "smokey sweetness"
+
+/*
+/datum/reagent/consumable/gravy
+	name = "Gravy"
+	description = "A mixture of flour, water, and the juices of cooked meat."
+	taste_description = "gravy"
+	color = "#623301"
+	taste_mult = 1.2
+*/
+
+/datum/reagent/consumable/pancakebatter
+	name = "Pancake Batter"
+	description = "A very milky batter. 5 units of this on the griddle makes a mean pancake."
+	taste_description = "milky batter"
+	color = "#fccc98"
 
 /datum/reagent/consumable/nutriment/cloth
 	name = "Cloth"

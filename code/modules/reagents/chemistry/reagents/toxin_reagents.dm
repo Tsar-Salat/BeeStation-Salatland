@@ -210,6 +210,7 @@
 	taste_mult = 1
 
 /datum/reagent/toxin/plantbgone/expose_obj(obj/O, reac_volume)
+	. = ..()
 	if(istype(O, /obj/structure/alien/weeds))
 		var/obj/structure/alien/weeds/alien_weeds = O
 		alien_weeds.take_damage(rand(15,35), BRUTE, 0) // Kills alien weeds pretty fast
@@ -220,6 +221,7 @@
 		SV.on_chem_effect(src)
 
 /datum/reagent/toxin/plantbgone/expose_mob(mob/living/M, method=TOUCH, reac_volume)
+	. = ..()
 	if(method == VAPOR)
 		if(iscarbon(M))
 			var/mob/living/carbon/C = M
@@ -804,6 +806,7 @@
 	process_flags = ORGANIC | SYNTHETIC
 
 /datum/reagent/toxin/acid/expose_mob(mob/living/carbon/C, method=TOUCH, reac_volume)
+	. = ..()
 	if(!istype(C))
 		return
 	reac_volume = round(reac_volume,0.1)
@@ -816,12 +819,14 @@
 	C.acid_act(acidpwr, reac_volume)
 
 /datum/reagent/toxin/acid/expose_obj(obj/O, reac_volume)
+	. = ..()
 	if(ismob(O.loc)) //handled in human acid_act()
 		return
 	reac_volume = round(reac_volume,0.1)
 	O.acid_act(acidpwr, reac_volume)
 
 /datum/reagent/toxin/acid/expose_turf(turf/T, reac_volume)
+	. = ..()
 	if (!istype(T))
 		return
 	reac_volume = round(reac_volume,0.1)

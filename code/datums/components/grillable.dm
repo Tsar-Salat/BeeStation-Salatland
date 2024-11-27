@@ -1,17 +1,15 @@
 /datum/component/grillable
+	dupe_mode = COMPONENT_DUPE_UNIQUE_PASSARGS
 	///Result atom type of grilling this object
 	var/atom/cook_result
 	///Amount of time required to cook the food
 	var/required_cook_time = 2 MINUTES
 	///Is this a positive grill result?
 	var/positive_result = TRUE
-
 	///Time spent cooking so far
 	var/current_cook_time = 0
-
 	///Are we currently grilling?
 	var/currently_grilling = FALSE
-
 	///Do we use the large steam sprite?
 	var/use_large_steam_sprite = FALSE
 
@@ -27,6 +25,19 @@
 
 	RegisterSignal(parent, COMSIG_ITEM_GRILLED, PROC_REF(OnGrill))
 	RegisterSignal(parent, COMSIG_PARENT_EXAMINE,  PROC_REF(on_examine))
+
+// Inherit the new values passed to the component
+/datum/component/grillable/InheritComponent(datum/component/grillable/new_comp, original, cook_result, required_cook_time, positive_result, use_large_steam_sprite)
+	if(!original)
+		return
+	if(cook_result)
+		src.cook_result = cook_result
+	if(required_cook_time)
+		src.required_cook_time = required_cook_time
+	if(positive_result)
+		src.positive_result = positive_result
+	if(use_large_steam_sprite)
+		src.use_large_steam_sprite = use_large_steam_sprite
 
 ///Ran every time an item is grilled by something
 /datum/component/grillable/proc/OnGrill(datum/source, atom/used_grill, delta_time = 1)

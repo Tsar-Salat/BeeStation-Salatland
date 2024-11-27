@@ -72,11 +72,17 @@ GLOBAL_LIST_INIT(name2reagent, build_name2reagent())
 	holder = null
 
 /// Applies this reagent to an [/atom]
-/datum/reagent/proc/expose_atom(atom/A, volume)
-	return
+/datum/reagent/proc/expose_atom(atom/exposed_atom, reac_volume)
+	SHOULD_CALL_PARENT(TRUE)
+
+	. = 0
+	. |= SEND_SIGNAL(src, COMSIG_REAGENT_EXPOSE_ATOM, exposed_atom, reac_volume)
+	. |= SEND_SIGNAL(exposed_atom, COMSIG_ATOM_EXPOSE_REAGENT, src, reac_volume)
 
 /// Applies this reagent to a [/mob/living]
 /datum/reagent/proc/expose_mob(mob/living/M, method=TOUCH, reac_volume, show_message = 1, touch_protection = 0, obj/item/bodypart/affecting)
+	//SHOULD_CALL_PARENT(TRUE)
+
 	if(!istype(M))
 		return FALSE
 	if(method == VAPOR) //smoke, foam, spray
@@ -89,11 +95,12 @@ GLOBAL_LIST_INIT(name2reagent, build_name2reagent())
 
 /// Applies this reagent to an [/obj]
 /datum/reagent/proc/expose_obj(obj/O, volume)
+	SHOULD_CALL_PARENT(TRUE)
 	return
-
 
 /// Applies this reagent to a [/turf]
 /datum/reagent/proc/expose_turf(turf/T, volume)
+	SHOULD_CALL_PARENT(TRUE)
 	return
 
 /// Called from [/datum/reagents/proc/metabolize]

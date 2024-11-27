@@ -9,6 +9,7 @@
 	process_flags = ORGANIC | SYNTHETIC
 
 /datum/reagent/thermite/expose_turf(turf/T, reac_volume)
+	. = ..()
 	if(reac_volume >= 1)
 		T.AddComponent(/datum/component/thermite, reac_volume)
 
@@ -50,6 +51,7 @@
 	return TRUE
 
 /datum/reagent/clf3/expose_turf(turf/T, reac_volume)
+	. = ..()
 	if(isplatingturf(T))
 		var/turf/open/floor/plating/F = T
 		if(prob(10 + F.burnt + 5*F.broken)) //broken or burnt plating is more susceptible to being destroyed
@@ -70,6 +72,7 @@
 			EX_ACT(W, EXPLODE_DEVASTATE)
 
 /datum/reagent/clf3/expose_mob(mob/living/M, method=TOUCH, reac_volume)
+	. = ..()
 	if(istype(M))
 		if(method != INGEST && method != INJECT)
 			M.adjust_fire_stacks(min(reac_volume/5, 10))
@@ -215,6 +218,7 @@
 	..()
 
 /datum/reagent/cryostylane/expose_turf(turf/T, reac_volume)
+	. = ..()
 	if(reac_volume >= 5)
 		for(var/mob/living/simple_animal/slime/M in T)
 			M.adjustToxLoss(rand(15,30))
@@ -307,6 +311,7 @@
 	taste_description = "the inside of a fire extinguisher"
 
 /datum/reagent/firefighting_foam/expose_turf(turf/open/T, reac_volume)
+	. = ..()
 	if (!istype(T))
 		return
 
@@ -327,9 +332,11 @@
 			qdel(hotspot)
 
 /datum/reagent/firefighting_foam/expose_obj(obj/O, reac_volume)
+	. = ..()
 	O.extinguish()
 
 /datum/reagent/firefighting_foam/expose_mob(mob/living/M, method=TOUCH, reac_volume)
+	. = ..()
 	if(method in list(VAPOR, TOUCH))
 		M.adjust_fire_stacks(-reac_volume)
 		M.ExtinguishMob()

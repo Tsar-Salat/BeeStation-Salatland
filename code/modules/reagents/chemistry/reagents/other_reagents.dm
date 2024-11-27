@@ -78,6 +78,7 @@
 			. += D
 
 /datum/reagent/blood/expose_turf(turf/T, reac_volume)//splash the blood all over the place
+	. = ..()
 	if(!istype(T))
 		return
 	if(reac_volume < 3)
@@ -173,6 +174,7 @@
  */
 
 /datum/reagent/water/expose_turf(turf/open/T, reac_volume)
+	. = ..()
 	if(!istype(T))
 		return
 	var/CT = cooling_temperature
@@ -200,6 +202,7 @@
  */
 
 /datum/reagent/water/expose_obj(obj/O, reac_volume)
+	. = ..()
 	O.extinguish()
 	O.acid_level = 0
 	// Monkey cube
@@ -376,6 +379,7 @@
 	var/lube_kind = TURF_WET_LUBE ///What kind of slipperiness gets added to turfs.
 
 /datum/reagent/lube/expose_turf(turf/open/T, reac_volume)
+	. = ..()
 	if (!istype(T))
 		return
 	if(reac_volume >= 1)
@@ -778,6 +782,7 @@
 
 
 /datum/reagent/oxygen/expose_obj(obj/O, reac_volume)
+	. = ..()
 	if((!O) || (!reac_volume))
 		return 0
 	var/temp = holder ? holder.chem_temp : T20C
@@ -787,7 +792,7 @@
 	if(istype(T))
 		var/temp = holder ? holder.chem_temp : T20C
 		T.atmos_spawn_air("o2=[reac_volume/2];TEMP=[temp]")
-	return
+	return ..()
 
 /datum/reagent/copper
 	name = "Copper"
@@ -799,6 +804,7 @@
 
 
 /datum/reagent/copper/expose_obj(obj/O, reac_volume)
+	. = ..()
 	if(istype(O, /obj/item/stack/sheet/iron))
 		var/obj/item/stack/sheet/iron/M = O
 		reac_volume = min(reac_volume, M.amount)
@@ -815,6 +821,7 @@
 
 
 /datum/reagent/nitrogen/expose_obj(obj/O, reac_volume)
+	. = ..()
 	if((!O) || (!reac_volume))
 		return 0
 	var/temp = holder ? holder.chem_temp : T20C
@@ -824,7 +831,7 @@
 	if(istype(T))
 		var/temp = holder ? holder.chem_temp : T20C
 		T.atmos_spawn_air("n2=[reac_volume/2];TEMP=[temp]")
-	return
+	return ..()
 
 /datum/reagent/hydrogen
 	name = "Hydrogen"
@@ -876,6 +883,7 @@
 	taste_description = "sour chalk"
 
 /datum/reagent/carbon/expose_turf(turf/T, reac_volume)
+	. = ..()
 	if(!isspaceturf(T))
 		var/obj/effect/decal/cleanable/dirt/D = locate() in T.contents
 		if(!D)
@@ -1006,6 +1014,7 @@
 	..()
 
 /datum/reagent/uranium/expose_turf(turf/T, reac_volume)
+	. = ..()
 	if(reac_volume >= 3)
 		if(!isspaceturf(T))
 			var/obj/effect/decal/cleanable/greenglow/GG = locate() in T.contents
@@ -1108,9 +1117,11 @@
 	return TRUE
 
 /datum/reagent/space_cleaner/expose_obj(obj/O, reac_volume)
+	. = ..()
 	O?.wash(clean_types)
 
 /datum/reagent/space_cleaner/expose_turf(turf/T, reac_volume)
+	. = ..()
 	if(reac_volume < 1)
 		return
 
@@ -1273,6 +1284,7 @@
 	taste_description = "something unknowable"
 
 /datum/reagent/carbondioxide/expose_obj(obj/O, reac_volume)
+	. = ..()
 	if((!O) || (!reac_volume))
 		return 0
 	var/temp = holder ? holder.chem_temp : T20C
@@ -1282,7 +1294,7 @@
 	if(istype(T))
 		var/temp = holder ? holder.chem_temp : T20C
 		T.atmos_spawn_air("co2=[reac_volume/5];TEMP=[temp]")
-	return
+	return ..()
 
 /datum/reagent/nitrous_oxide
 	name = "Nitrous Oxide"
@@ -1294,17 +1306,20 @@
 	taste_description = "sweetness"
 
 /datum/reagent/nitrous_oxide/expose_obj(obj/O, reac_volume)
+	. = ..()
 	if((!O) || (!reac_volume))
 		return 0
 	var/temp = holder ? holder.chem_temp : T20C
 	O.atmos_spawn_air("n2o=[reac_volume/5];TEMP=[temp]")
 
 /datum/reagent/nitrous_oxide/expose_turf(turf/open/T, reac_volume)
+	. = ..()
 	if(istype(T))
 		var/temp = holder ? holder.chem_temp : T20C
 		T.atmos_spawn_air("n2o=[reac_volume/5];TEMP=[temp]")
 
 /datum/reagent/nitrous_oxide/expose_mob(mob/living/M, method=TOUCH, reac_volume)
+	. = ..()
 	if(method == VAPOR)
 		M.drowsyness += max(round(reac_volume, 1), 2)
 
@@ -1831,10 +1846,12 @@
 
 
 /datum/reagent/drying_agent/expose_turf(turf/open/T, reac_volume)
+	. = ..()
 	if(istype(T))
 		T.MakeDry(ALL, TRUE, reac_volume * 5 SECONDS)		//50 deciseconds per unit
 
 /datum/reagent/drying_agent/expose_obj(obj/O, reac_volume)
+	. = ..()
 	if(O.type == /obj/item/clothing/shoes/galoshes)
 		var/t_loc = get_turf(O)
 		qdel(O)
@@ -2009,6 +2026,7 @@
 	var/glitter_type = /obj/effect/decal/cleanable/glitter
 
 /datum/reagent/glitter/expose_turf(turf/T, reac_volume)
+	. = ..()
 	if(!istype(T))
 		return
 	new glitter_type(T)

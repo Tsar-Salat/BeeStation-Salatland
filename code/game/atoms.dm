@@ -555,9 +555,8 @@ CREATION_TEST_IGNORE_SUBTYPES(/atom)
 	if((. = SEND_SIGNAL(src, COMSIG_ATOM_EXPOSE_REAGENTS, reagents, source, method, volume_modifier, show_message)) & COMPONENT_NO_EXPOSE_REAGENTS)
 		return
 
-	for(var/reagent in reagents)
-		var/datum/reagent/R = reagent
-		. |= R.expose_atom(src, reagents[R])
+	for(var/datum/reagent/current_reagent as anything in reagents)
+		. |= current_reagent.expose_atom(src, reagents[current_reagent])
 
 /// Is this atom grindable to get reagents
 /atom/proc/is_grindable()
