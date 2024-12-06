@@ -22,9 +22,9 @@
 /atom/proc/MouseDrop_T(atom/dropping, mob/user, params)
 	SEND_SIGNAL(src, COMSIG_MOUSEDROPPED_ONTO, dropping, user, params)
 
-/client/MouseDown(object, location, control, params)
-	//if(QDELETED(object))
-	//	return
+/client/MouseDown(datum/object, location, control, params)
+	if(QDELETED(object))
+		return
 	SEND_SIGNAL(src, COMSIG_CLIENT_MOUSEDOWN, object, location, control, params)
 	if(mouse_down_icon)
 		mouse_pointer_icon = mouse_down_icon
@@ -90,6 +90,12 @@
 		else
 			middragtime = 0
 			middle_drag_atom_ref = null
+	mouseParams = params
+	mouse_location_ref = WEAKREF(over_location)
+	mouse_object_ref = WEAKREF(over_object)
+	if(selected_target[1] && over_object?.IsAutoclickable())
+		selected_target[1] = over_object
+		selected_target[2] = params
 	if(active_mousedown_item)
 		active_mousedown_item.onMouseDrag(src_object, over_object, src_location, over_location, params, mob)
 	SEND_SIGNAL(src, COMSIG_CLIENT_MOUSEDRAG, src_object, over_object, src_location, over_location, src_control, over_control, params)

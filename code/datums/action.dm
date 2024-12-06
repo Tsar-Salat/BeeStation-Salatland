@@ -25,7 +25,8 @@
 
 /datum/action/proc/link_to(Target)
 	target = Target
-	RegisterSignal(Target, COMSIG_ATOM_UPDATED_ICON, PROC_REF(OnUpdatedIcon))
+	if(isatom(target))
+		RegisterSignal(Target, COMSIG_ATOM_UPDATED_ICON, PROC_REF(OnUpdatedIcon))
 
 /datum/action/Destroy()
 	if(owner)
@@ -34,25 +35,28 @@
 	QDEL_LIST_ASSOC_VAL(viewers) // Qdel the buttons in the viewers list **NOT THE HUDS**
 	return ..()
 
-/datum/action/proc/Grant(mob/M)
-	if(!M)
-		Remove(owner)
-		return
-	if(owner)
-		if(owner == M)
-			return
-		Remove(owner)
-	owner = M
-	RegisterSignal(owner, COMSIG_PARENT_QDELETING, PROC_REF(clear_ref), override = TRUE)
-
-	GiveAction(M)
-
+/// Signal proc that clears any references based on the owner or target deleting
+/// If the owner's deleted, we will simply remove from them, but if the target's deleted, we will self-delete
 /datum/action/proc/clear_ref(datum/ref)
 	SIGNAL_HANDLER
 	if(ref == owner)
 		Remove(owner)
 	if(ref == target)
 		qdel(src)
+
+/// Grants the action to the passed mob, making it the owner
+/datum/action/proc/Grant(mob/grant_to)
+	if(!grant_to)
+		Remove(owner)
+		return
+	if(owner)
+		if(owner == grant_to)
+			return
+		Remove(owner)
+	owner = grant_to
+	RegisterSignal(owner, COMSIG_PARENT_QDELETING, PROC_REF(clear_ref), override = TRUE)
+
+	GiveAction(M)
 
 /datum/action/proc/Remove(mob/M)
 	for(var/datum/hud/hud in viewers)
@@ -214,7 +218,7 @@
 
 /datum/action/item_action/Trigger(trigger_flags)
 	. = ..()
-	if(!..())
+	if(!.)
 		return FALSE
 	if(target)
 		var/obj/item/I = target
@@ -786,7 +790,9 @@
 	if(SEND_SIGNAL(owner, COMSIG_ABILITY_STARTED, src) & COMPONENT_BLOCK_ABILITY_START)
 		return
 	. = Activate(target)
-	SEND_SIGNAL(owner, COMSIG_ABILITY_FINISHED, src)
+	// There is a possibility our action (or owner) is qdeleted in Activate().
+	if(!QDELETED(src) && !QDELETED(owner))
+		SEND_SIGNAL(owner, COMSIG_ABILITY_FINISHED, src)
 
 /// To be implemented by subtypes
 /datum/action/cooldown/proc/Activate(atom/target)

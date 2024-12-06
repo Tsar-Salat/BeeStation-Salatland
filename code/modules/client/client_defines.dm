@@ -49,10 +49,12 @@
 	/// The last world.time that the client's mob turned
 	var/last_turn = 0
 
-	/// The next world.time this client is allowed to move
+	///Move delay of controlled mob, any keypresses inside this period will persist until the next proper move
 	var/move_delay = 0
-
-	var/area			= null
+	///The visual delay to use for the current client.Move(), mostly used for making a client based move look like it came from some other slower source
+	var/visual_delay = 0
+	///Current area of the controlled mob
+	var/area = null
 
 	var/buzz_playing = null
 		////////////
@@ -80,11 +82,12 @@
 
 	var/atom/movable/screen/click_catcher/void
 
-	//These two vars are used to make a special mouse cursor, with a unique icon for clicking
-	/// Mouse icon while not clicking
+	///used to make a special mouse cursor, this one for mouse up icon
 	var/mouse_up_icon = null
-	/// Mouse icon while clicking
+	///used to make a special mouse cursor, this one for mouse up icon
 	var/mouse_down_icon = null
+	///used to override the mouse cursor so it doesnt get reset
+	//var/mouse_override_icon = null
 
 	var/ip_intel = "Disabled"
 
@@ -107,11 +110,23 @@
 	/// These persist between logins/logouts during the same round.
 	var/datum/player_details/player_details
 
+	///Amount of keydowns in the last keysend checking interval
 	var/client_keysend_amount = 0
+	///World tick time where client_keysend_amount will reset
 	var/next_keysend_reset = 0
+	///World tick time where keysend_tripped will reset back to false
 	var/next_keysend_trip_reset = 0
+	///When set to true, user will be autokicked if they trip the keysends in a second limit again
 	var/keysend_tripped = FALSE
 
+	///Autoclick list of two elements, first being the clicked thing, second being the parameters.
+	var/list/atom/selected_target[2]
+	///Used in MouseDrag to preserve the original mouse click parameters
+	var/mouseParams = ""
+	///Used in MouseDrag to preserve the last mouse-entered location. Weakref
+	var/datum/weakref/mouse_location_ref = null
+	///Used in MouseDrag to preserve the last mouse-entered object. Weakref
+	var/datum/weakref/mouse_object_ref
 	///Autoclick variable referencing the associated item.
 	var/obj/item/active_mousedown_item = null
 	//Middle-mouse-button click dragtime control for aimbot exploit detection.

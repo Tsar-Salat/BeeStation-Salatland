@@ -56,7 +56,7 @@
 	#define SPEECH_LANGUAGE 5
 	#define SPEECH_IGNORE_SPAM 6
 	#define SPEECH_FORCED 7 */
-
+	#define SPEECH_RANGE 8
 ///from /mob/living/emote(): ()
 #define COMSIG_MOB_EMOTE "mob_emote"
 ///from base of mob/swap_hand(): (obj/item)
@@ -78,3 +78,7 @@
 	/// From base of /client/Move()
 #define COMSIG_MOB_CLIENT_PRE_LIVING_MOVE "mob_client_pre_living_move"
 #define COMSIG_MOB_MOUSE_SCROLL_ON "comsig_mob_mouse_scroll_on"	//! from base of /mob/MouseWheelOn(): (atom/A, delta_x, delta_y, params)
+
+/// Called before a mob fires a gun (mob/source, obj/item/gun, atom/target, aimed)
+#define COMSIG_MOB_BEFORE_FIRE_GUN "before_fire_gun"
+	#define GUN_HIT_SELF (1 << 0)

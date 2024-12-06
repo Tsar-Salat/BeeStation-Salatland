@@ -59,13 +59,7 @@
 	SEND_SOUND(usr, 'sound/effects/pop.ogg')
 	return TRUE
 
-	/*
-	transform = turn(matrix() * 0.9, pick(-8, 8))
-	alpha = 200
-	animate(src, transform = matrix(), time=4, alpha=255)
-	*/
-
-// Entered and Exited won't fire while you're dragging something, because you're still "holding" it
+/// Entered and Exited won't fire while you're dragging something, because you're still "holding" it
 // Very much byond logic, but I want nice behavior, so we fake it with drag
 /atom/movable/screen/movable/action_button/MouseDrag(atom/over_object, src_location, over_location, src_control, over_control, params)
 	. = ..()
