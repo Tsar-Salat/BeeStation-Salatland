@@ -24,7 +24,7 @@ RLD
 	w_class = WEIGHT_CLASS_LARGE
 	custom_materials = list(/datum/material/iron=100000)
 	req_access_txt = "11"
-	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 50, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/item_construction
 	resistance_flags = FIRE_PROOF
 	var/datum/effect_system/spark_spread/spark_system
 	var/matter = 0
@@ -38,6 +38,11 @@ RLD
 	var/banned_upgrades = NONE
 	var/datum/component/remote_materials/silo_mats //remote connection to the silo
 	var/silo_link = FALSE //switch to use internal or remote storage
+
+
+/datum/armor/item_construction
+	fire = 100
+	acid = 50
 
 /obj/item/construction/Initialize(mapload)
 	. = ..()
@@ -212,6 +217,7 @@ RLD
 	has_ammobar = TRUE
 	actions_types = list(/datum/action/item_action/rcd_scan)
 	var/mode = RCD_FLOORWALL
+	var/construction_mode = RCD_FLOORWALL
 	var/ranged = FALSE
 	var/computer_dir = 1
 	var/airlock_type = /obj/machinery/door/airlock
@@ -626,7 +632,6 @@ GLOBAL_VAR_INIT(icon_holographic_window, init_holographic_window())
 	..()
 	var/list/choices = list(
 		"Airlock" = image(icon = 'icons/hud/radials/radial_generic.dmi', icon_state = "airlock"),
-		"Deconstruct" = image(icon= 'icons/hud/radials/radial_generic.dmi', icon_state = "delete"),
 		"Grilles & Windows" = image(icon = 'icons/hud/radials/radial_generic.dmi', icon_state = "grillewindow"),
 		"Floors & Walls" = image(icon = 'icons/hud/radials/radial_generic.dmi', icon_state = "wallfloor")
 	)
@@ -644,41 +649,40 @@ GLOBAL_VAR_INIT(icon_holographic_window, init_holographic_window())
 		choices += list(
 		"Furnishing" = image(icon = 'icons/hud/radials/radial_generic.dmi', icon_state = "chair")
 		)
-	if(mode == RCD_AIRLOCK)
-		choices += list(
-		"Change Access" = image(icon = 'icons/hud/radials/radial_generic.dmi', icon_state = "access"),
-		"Change Airlock Type" = image(icon = 'icons/hud/radials/radial_generic.dmi', icon_state = "airlocktype")
-		)
-	else if(mode == RCD_WINDOWGRILLE)
-		choices += list(
-		"Change Window Glass" = image(icon = 'icons/hud/radials/radial_generic.dmi', icon_state = "windowtype"),
-		"Change Window Size" = image(icon = 'icons/hud/radials/radial_generic.dmi', icon_state = "windowsize")
-		)
-	else if(mode == RCD_FURNISHING)
-		choices += list(
-		"Change Furnishing Type" = image(icon = 'icons/hud/radials/radial_generic.dmi', icon_state = "chair")
-		)
+	switch(construction_mode)
+		if(RCD_AIRLOCK)
+			choices += list(
+			"Change Access" = image(icon = 'icons/hud/radials/radial_generic.dmi', icon_state = "access"),
+			"Change Airlock Type" = image(icon = 'icons/hud/radials/radial_generic.dmi', icon_state = "airlocktype")
+			)
+		if(RCD_WINDOWGRILLE)
+			choices += list(
+			"Change Window Glass" = image(icon = 'icons/hud/radials/radial_generic.dmi', icon_state = "windowtype"),
+			"Change Window Size" = image(icon = 'icons/hud/radials/radial_generic.dmi', icon_state = "windowsize")
+			)
+		if(RCD_FURNISHING)
+			choices += list(
+			"Change Furnishing Type" = image(icon = 'icons/hud/radials/radial_generic.dmi', icon_state = "chair")
+			)
 	var/choice = show_radial_menu(user, src, choices, custom_check = CALLBACK(src, PROC_REF(check_menu), user), require_near = TRUE, tooltips = TRUE)
 	if(!check_menu(user))
 		return
 	switch(choice)
 		if("Floors & Walls")
-			mode = RCD_FLOORWALL
+			construction_mode = RCD_FLOORWALL
 		if("Airlock")
-			mode = RCD_AIRLOCK
-		if("Deconstruct")
-			mode = RCD_DECONSTRUCT
+			construction_mode = RCD_AIRLOCK
 		if("Grilles & Windows")
-			mode = RCD_WINDOWGRILLE
+			construction_mode = RCD_WINDOWGRILLE
 		if("Machine Frames")
-			mode = RCD_MACHINE
+			construction_mode = RCD_MACHINE
 		if("Furnishing")
-			mode = RCD_FURNISHING
+			construction_mode = RCD_FURNISHING
 		if("Computer Frames")
-			mode = RCD_COMPUTER
+			construction_mode = RCD_COMPUTER
 			change_computer_dir(user)
 		if("Ladders")
-			mode = RCD_LADDER
+			construction_mode = RCD_LADDER
 			return
 		if("Change Access")
 			airlock_electronics.ui_interact(user)
@@ -709,11 +713,21 @@ GLOBAL_VAR_INIT(icon_holographic_window, init_holographic_window())
 	else
 		return FALSE
 
-/obj/item/construction/rcd/afterattack(atom/A, mob/user, proximity)
+/obj/item/construction/rcd/pre_attack(atom/A, mob/user, params)
 	. = ..()
-	if(!prox_check(proximity))
+	mode = construction_mode
+	if(!A.rcd_vals(user, src))
 		return
 	rcd_create(A, user)
+	return FALSE
+
+/obj/item/construction/rcd/pre_attack_secondary(atom/target, mob/living/user, params)
+	. = ..()
+	mode = RCD_DECONSTRUCT
+	if(!target.rcd_vals(user, src))
+		return
+	rcd_create(target, user)
+	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
 /obj/item/construction/rcd/proc/detonate_pulse()
 	audible_message("<span class='danger'><b>[src] begins to vibrate and \
@@ -818,11 +832,19 @@ GLOBAL_VAR_INIT(icon_holographic_window, init_holographic_window())
 
 /obj/item/construction/rcd/arcd/afterattack(atom/A, mob/user)
 	. = ..()
-	if(!range_check(A,user))
-		return
-	if(target_check(A,user))
+	if(range_check(A,user))
+		pre_attack(A, user)
+
+/obj/item/construction/rcd/arcd/afterattack_secondary(atom/target, mob/user, proximity_flag, click_parameters)
+	if(range_check(target,user))
+		pre_attack_secondary(target, user)
+	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+
+
+/obj/item/construction/rcd/arcd/rcd_create(atom/A, mob/user)
+	. = ..()
+	if(.)
 		user.Beam(A,icon_state="rped_upgrade", time = delay_mod * 5 SECONDS) //5 SECONDS * 0.6 = 3 seconds
-	rcd_create(A,user)
 
 /obj/item/construction/rcd/arcd/handle_openspace_click(turf/target, mob/user, proximity_flag, click_parameters)
 	if(ranged && range_check(target, user))

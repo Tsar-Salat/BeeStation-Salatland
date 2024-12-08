@@ -5,13 +5,22 @@
 	icon_state = "wheelchair"
 	layer = OBJ_LAYER
 	max_integrity = 100
-	armor = list(MELEE = 10,  BULLET = 10, LASER = 10, ENERGY = 0, BOMB = 10, BIO = 0, RAD = 0, FIRE = 20, ACID = 30, STAMINA = 0, BLEED = 0)	//Wheelchairs aren't super tough yo
+	armor_type = /datum/armor/ridden_wheelchair
 	legs_required = 0	//You'll probably be using this if you don't have legs
 	canmove = TRUE
 	density = FALSE		//Thought I couldn't fix this one easily, phew
 	move_resist = MOVE_FORCE_WEAK
 	// Run speed delay is multiplied with this for vehicle move delay.
 	var/delay_multiplier = 6.7
+
+
+/datum/armor/ridden_wheelchair
+	melee = 10
+	bullet = 10
+	laser = 10
+	bomb = 10
+	fire = 20
+	acid = 30
 
 /obj/vehicle/ridden/wheelchair/Initialize(mapload)
 	. = ..()
@@ -22,10 +31,6 @@
 	D.set_vehicle_dir_layer(EAST, OBJ_LAYER)
 	D.set_vehicle_dir_layer(WEST, OBJ_LAYER)
 	ADD_TRAIT(src, TRAIT_NO_IMMOBILIZE, INNATE_TRAIT) //the wheelchair doesnt immobilize us like a bed would
-
-/obj/vehicle/ridden/wheelchair/ComponentInitialize()	//Since it's technically a chair I want it to have chair properties
-	. = ..()
-	AddComponent(/datum/component/simple_rotation,ROTATION_ALTCLICK | ROTATION_CLOCKWISE, CALLBACK(src, PROC_REF(can_user_rotate)),CALLBACK(src, PROC_REF(can_be_rotated)),null)
 
 /obj/vehicle/ridden/wheelchair/atom_destruction(damage_flag)
 	new /obj/item/stack/rods(drop_location(), 1)
@@ -83,6 +88,9 @@
 		qdel(src)
 	return TRUE
 
+/obj/vehicle/ridden/wheelchair/AltClick(mob/user)
+	return ..() // This hotkey is BLACKLISTED since it's used by /datum/component/simple_rotation
+
 /obj/vehicle/ridden/wheelchair/proc/handle_rotation(direction)
 	if(has_buckled_mobs())
 		handle_rotation_overlayed()
@@ -94,20 +102,6 @@
 	cut_overlays()
 	var/image/V = image(icon = icon, icon_state = "wheelchair_overlay", layer = FLY_LAYER, dir = src.dir)
 	add_overlay(V)
-
-
-
-/obj/vehicle/ridden/wheelchair/proc/can_be_rotated(mob/living/user)
-	return TRUE
-
-/obj/vehicle/ridden/wheelchair/proc/can_user_rotate(mob/living/user)
-	var/mob/living/L = user
-	if(istype(L))
-		if(!user.canUseTopic(src, BE_CLOSE, ismonkey(user)))
-			return FALSE
-	if(isobserver(user) && CONFIG_GET(flag/ghost_interaction))
-		return TRUE
-	return FALSE
 
 /obj/vehicle/ridden/wheelchair/the_whip/driver_move(mob/living/user, direction)
 	if(istype(user))

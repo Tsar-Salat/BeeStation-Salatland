@@ -12,7 +12,7 @@
 	pass_flags_self = PASSDOORS
 	z_flags = Z_BLOCK_IN_DOWN | Z_BLOCK_IN_UP
 	max_integrity = 350
-	armor = list(MELEE = 30,  BULLET = 30, LASER = 20, ENERGY = 20, BOMB = 10, BIO = 100, RAD = 100, FIRE = 80, ACID = 70, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/machinery_door
 	CanAtmosPass = ATMOS_PASS_DENSITY
 	flags_1 = PREVENT_CLICK_UNDER_1
 	ricochet_chance_mod = 0.8
@@ -41,6 +41,17 @@
 	var/red_alert_access = FALSE //if TRUE, this door will always open on red alert
 	var/unres_sides = 0 //Unrestricted sides. A bitflag for which direction (if any) can open the door with no access
 	var/open_speed = 5
+
+
+/datum/armor/machinery_door
+	melee = 30
+	bullet = 30
+	laser = 20
+	energy = 20
+	bomb = 10
+	rad = 100
+	fire = 80
+	acid = 70
 
 /obj/machinery/door/Initialize(mapload)
 	. = ..()
@@ -185,7 +196,16 @@
 /obj/machinery/door/proc/try_to_weld(obj/item/weldingtool/W, mob/user)
 	return
 
-/obj/machinery/door/proc/try_to_crowbar(obj/item/I, mob/user)
+/// Called when the user right-clicks on the door with a welding tool.
+/obj/machinery/door/proc/try_to_weld_secondary(obj/item/weldingtool/tool, mob/user)
+	return
+
+
+/obj/machinery/door/proc/try_to_crowbar(obj/item/acting_object, mob/user)
+	return
+
+/// Called when the user right-clicks on the door with a crowbar.
+/obj/machinery/door/proc/try_to_crowbar_secondary(obj/item/acting_object, mob/user)
 	return
 
 /obj/machinery/door/proc/is_holding_pressure()
@@ -213,16 +233,39 @@
 	T.ImmediateCalculateAdjacentTurfs() // alright lets put it back
 	return max_moles - min_moles > 20
 
-/obj/machinery/door/attackby(obj/item/I, mob/user, params)
-	if(user.a_intent != INTENT_HARM && (I.tool_behaviour == TOOL_CROWBAR || istype(I, /obj/item/fireaxe)))
-		try_to_crowbar(I, user)
-		return 1
-	else if(I.tool_behaviour == TOOL_WELDER)
-		try_to_weld(I, user)
-		return 1
-	else if(!(I.item_flags & NOBLUDGEON) && user.a_intent != INTENT_HARM)
-		try_to_activate_door(I, user)
-		return 1
+/obj/machinery/door/crowbar_act(mob/living/user, obj/item/tool)
+	if(user.combat_mode)
+		return
+
+	var/forced_open = FALSE
+	if(istype(tool, /obj/item/crowbar))
+		var/obj/item/crowbar/crowbar = tool
+		forced_open = crowbar.force_opens
+	try_to_crowbar(tool, user, forced_open)
+	return TOOL_ACT_TOOLTYPE_SUCCESS
+
+/obj/machinery/door/attackby(obj/item/I, mob/living/user, params)
+	if(!user.combat_mode && istype(I, /obj/item/fireaxe))
+		try_to_crowbar(I, user, FALSE)
+		return TRUE
+	else if(I.item_flags & NOBLUDGEON || user.combat_mode)
+		return ..()
+	else if(!user.combat_mode && istype(I, /obj/item/stack/sheet/wood))
+		return ..() // we need this so our can_barricade element can be called using COMSIG_PARENT_ATTACKBY
+	else if(try_to_activate_door(user))
+		return TRUE
+	return ..()
+
+/obj/machinery/door/welder_act_secondary(mob/living/user, obj/item/tool)
+	try_to_weld_secondary(tool, user)
+	return TOOL_ACT_TOOLTYPE_SUCCESS
+
+/obj/machinery/door/crowbar_act_secondary(mob/living/user, obj/item/tool)
+	var/forced_open = FALSE
+	if(istype(tool, /obj/item/crowbar))
+		var/obj/item/crowbar/crowbar = tool
+		forced_open = crowbar.force_opens
+	try_to_crowbar_secondary(tool, user, forced_open)
 	return ..()
 
 /obj/machinery/door/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir, armour_penetration = 0)
@@ -235,13 +278,13 @@
 	switch(damage_type)
 		if(BRUTE)
 			if(glass)
-				playsound(loc, 'sound/effects/glasshit.ogg', 90, 1)
+				playsound(loc, 'sound/effects/glasshit.ogg', 90, TRUE)
 			else if(damage_amount)
-				playsound(loc, 'sound/weapons/smash.ogg', 50, 1)
+				playsound(loc, 'sound/weapons/smash.ogg', 50, TRUE)
 			else
-				playsound(src, 'sound/weapons/tap.ogg', 50, 1)
+				playsound(src, 'sound/weapons/tap.ogg', 50, TRUE)
 		if(BURN)
-			playsound(src.loc, 'sound/items/welder.ogg', 100, 1)
+			playsound(src.loc, 'sound/items/welder.ogg', 100, TRUE)
 
 /obj/machinery/door/emp_act(severity)
 	. = ..()

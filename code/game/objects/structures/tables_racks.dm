@@ -92,15 +92,16 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 			if(pushed_mob.buckled)
 				to_chat(user, "<span class='warning'>[pushed_mob] is buckled to [pushed_mob.buckled]!</span>")
 				return
-			if(user.a_intent == INTENT_GRAB)
-				if(user.grab_state < GRAB_AGGRESSIVE)
-					to_chat(user, "<span class='warning'>You need a better grip to do that!</span>")
-					return
-				if(user.grab_state >= GRAB_NECK)
-					tableheadsmash(user, pushed_mob)
-				else
-					tablepush(user, pushed_mob)
-			if(user.a_intent == INTENT_HELP)
+			if(user.combat_mode)
+				switch(user.grab_state)
+					if(GRAB_PASSIVE)
+						to_chat(user, "<span class='warning'>You need a better grip to do that!</span>")
+						return
+					if(GRAB_AGGRESSIVE)
+						tablepush(user, pushed_mob)
+					if(GRAB_NECK to GRAB_KILL)
+						tableheadsmash(user, pushed_mob)
+			else
 				pushed_mob.visible_message("<span class='notice'>[user] begins to place [pushed_mob] onto [src]...</span>", \
 									"<span class='userdanger'>[user] begins to place [pushed_mob] onto [src]...</span>")
 				if(do_after(user, 35, target = pushed_mob))
@@ -177,16 +178,16 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 	log_combat(user, pushed_mob, "head slammed", null, "against [src]")
 	SEND_SIGNAL(pushed_mob, COMSIG_ADD_MOOD_EVENT, "table", /datum/mood_event/table_headsmash)
 
-/obj/structure/table/attackby(obj/item/I, mob/user, params)
+/obj/structure/table/attackby(obj/item/I, mob/living/user, params)
 	var/list/modifiers = params2list(params)
-	if(!(flags_1 & NODECONSTRUCT_1))
-		if(I.tool_behaviour == TOOL_SCREWDRIVER && deconstruction_ready && user.a_intent != INTENT_HELP)
+	if(!(flags_1 & NODECONSTRUCT_1) && LAZYACCESS(modifiers, RIGHT_CLICK))
+		if(I.tool_behaviour == TOOL_SCREWDRIVER && deconstruction_ready)
 			to_chat(user, "<span class='notice'>You start disassembling [src]...</span>")
 			if(I.use_tool(src, user, 20, volume=50))
 				deconstruct(TRUE)
 			return
 
-		if(I.tool_behaviour == TOOL_WRENCH && deconstruction_ready && user.a_intent != INTENT_HELP)
+		if(I.tool_behaviour == TOOL_WRENCH && deconstruction_ready)
 			to_chat(user, "<span class='notice'>You start deconstructing [src]...</span>")
 			if(I.use_tool(src, user, 40, volume=50))
 				playsound(src.loc, 'sound/items/deconstruct.ogg', 50, 1)
@@ -206,30 +207,26 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 		var/mob/living/carried_mob = riding_item.rider
 		if(carried_mob == user) //Piggyback user.
 			return
-		switch(user.a_intent)
-			if(INTENT_HARM)
+		if(user.combat_mode)
+			user.unbuckle_mob(carried_mob)
+			tableheadsmash(user, carried_mob)
+		else
+			var/tableplace_delay = 3.5 SECONDS
+			var/skills_space = ""
+			if(HAS_TRAIT(user, TRAIT_QUICKER_CARRY))
+				tableplace_delay = 2 SECONDS
+				skills_space = " expertly"
+			else if(HAS_TRAIT(user, TRAIT_QUICK_CARRY))
+				tableplace_delay = 2.75 SECONDS
+				skills_space = " quickly"
+			carried_mob.visible_message("<span class='notice'>[user] begins to[skills_space] place [carried_mob] onto [src]...</span>",
+				"<span class='userdanger'>[user] begins to[skills_space] place [carried_mob] onto [src]...</span>")
+			if(do_after(user, tableplace_delay, target = carried_mob))
 				user.unbuckle_mob(carried_mob)
-				tableheadsmash(user, carried_mob)
-			if(INTENT_HELP)
-				var/tableplace_delay = 3.5 SECONDS
-				var/skills_space = ""
-				if(HAS_TRAIT(user, TRAIT_QUICKER_CARRY))
-					tableplace_delay = 2 SECONDS
-					skills_space = " expertly"
-				else if(HAS_TRAIT(user, TRAIT_QUICK_CARRY))
-					tableplace_delay = 2.75 SECONDS
-					skills_space = " quickly"
-				carried_mob.visible_message("<span class='notice'>[user] begins to[skills_space] place [carried_mob] onto [src]...</span>",
-					"<span class='userdanger'>[user] begins to[skills_space] place [carried_mob] onto [src]...</span>")
-				if(do_after(user, tableplace_delay, target = carried_mob))
-					user.unbuckle_mob(carried_mob)
-					tableplace(user, carried_mob)
-			else
-				user.unbuckle_mob(carried_mob)
-				tablepush(user, carried_mob)
+				tableplace(user, carried_mob)
 		return TRUE
 
-	if(user.a_intent != INTENT_HARM && !(I.item_flags & ABSTRACT))
+	if(!user.combat_mode && !(I.item_flags & ABSTRACT))
 		if(user.transferItemToLoc(I, drop_location(), silent = FALSE))
 			//Center the icon where the user clicked.
 			if(!LAZYACCESS(modifiers, ICON_X) || !LAZYACCESS(modifiers, ICON_Y))
@@ -237,7 +234,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 			//Clamp it so that the icon never moves more than 16 pixels in either direction (thus leaving the table turf)
 			I.pixel_x = clamp(text2num(LAZYACCESS(modifiers, ICON_X)) - 16, -(world.icon_size/2), world.icon_size/2)
 			I.pixel_y = clamp(text2num(LAZYACCESS(modifiers, ICON_Y)) - 16, -(world.icon_size/2), world.icon_size/2)
-			return 1
+			return TRUE
 	else
 		return ..()
 
@@ -289,8 +286,13 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 	canSmoothWith = null
 	max_integrity = 70
 	resistance_flags = ACID_PROOF
-	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 80, ACID = 100, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/table_glass
 	var/list/debris = list()
+
+
+/datum/armor/table_glass
+	fire = 80
+	acid = 100
 
 /obj/structure/table/glass/Initialize(mapload)
 	. = ..()
@@ -317,7 +319,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 		check_break(M)
 
 /obj/structure/table/glass/proc/check_break(mob/living/M)
-	if(M.has_gravity() && M.mob_size > MOB_SIZE_SMALL && !(M.movement_type & (FLOATING|FLYING)))
+	if(M.has_gravity() && M.mob_size > MOB_SIZE_SMALL && !(M.movement_type & MOVETYPES_NOT_TOUCHING_GROUND))
 		table_shatter(M)
 
 /obj/structure/table/glass/proc/table_shatter(mob/living/victim)
@@ -357,7 +359,15 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 	buildstack = /obj/item/stack/sheet/plasmaglass
 	glass_shard_type = /obj/item/shard/plasma
 	max_integrity = 270
-	armor = list(MELEE = 10,  BULLET = 5, LASER = 0, ENERGY = 0, BOMB = 10, BIO = 0, RAD = 0, FIRE = 80, ACID = 100)
+	armor_type = /datum/armor/glass_plasma
+
+
+/datum/armor/glass_plasma
+	melee = 10
+	bullet = 5
+	bomb = 10
+	fire = 80
+	acid = 100
 
 /obj/structure/table/glass/plasma/Initialize(mapload)
 	. = ..()
@@ -478,7 +488,17 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 	buildstack = /obj/item/stack/sheet/plasteel
 	max_integrity = 200
 	integrity_failure = 0.25
-	armor = list(MELEE = 10,  BULLET = 30, LASER = 30, ENERGY = 100, BOMB = 20, BIO = 0, RAD = 0, FIRE = 80, ACID = 70, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/table_reinforced
+
+
+/datum/armor/table_reinforced
+	melee = 10
+	bullet = 30
+	laser = 30
+	energy = 100
+	bomb = 20
+	fire = 80
+	acid = 70
 
 /obj/structure/table/reinforced/deconstruction_hints(mob/user)
 	if(deconstruction_ready)
@@ -486,21 +506,20 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 	else
 		return "<span class='notice'>The top cover is firmly <b>welded</b> on.</span>"
 
-/obj/structure/table/reinforced/attackby(obj/item/W, mob/user, params)
-	if(W.tool_behaviour == TOOL_WELDER)
-		if(!W.tool_start_check(user, amount=0))
-			return
-
-		if(deconstruction_ready)
-			to_chat(user, "<span class='notice'>You start strengthening the reinforced table...</span>")
-			if (W.use_tool(src, user, 50, volume=50))
-				to_chat(user, "<span class='notice'>You strengthen the table.</span>")
-				deconstruction_ready = 0
-		else
-			to_chat(user, "<span class='notice'>You start weakening the reinforced table...</span>")
-			if (W.use_tool(src, user, 50, volume=50))
-				to_chat(user, "<span class='notice'>You weaken the table.</span>")
-				deconstruction_ready = 1
+/obj/structure/table/reinforced/attackby_secondary(obj/item/weapon, mob/user, params)
+	if(weapon.tool_behaviour == TOOL_WELDER)
+		if(weapon.tool_start_check(user, amount = 0))
+			if(deconstruction_ready)
+				to_chat(user, "<span class='notice'>You start strengthening the reinforced table...</span>")
+				if (weapon.use_tool(src, user, 50, volume = 50))
+					to_chat(user, "<span class='notice'>You strengthen the table.</span>")
+					deconstruction_ready = FALSE
+			else
+				to_chat(user, "<span class='notice'>You start weakening the reinforced table...</span>")
+				if (weapon.use_tool(src, user, 50, volume = 50))
+					to_chat(user, "<span class='notice'>You weaken the table.</span>")
+					deconstruction_ready = TRUE
+		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 	else
 		. = ..()
 
@@ -692,12 +711,13 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 	if(O.loc != src.loc)
 		step(O, get_dir(O, src))
 
-/obj/structure/rack/attackby(obj/item/W, mob/user, params)
-	if (W.tool_behaviour == TOOL_WRENCH && !(flags_1&NODECONSTRUCT_1) && user.a_intent != INTENT_HELP)
+/obj/structure/rack/attackby(obj/item/W, mob/living/user, params)
+	var/list/modifiers = params2list(params)
+	if (W.tool_behaviour == TOOL_WRENCH && !(flags_1 & NODECONSTRUCT_1) && LAZYACCESS(modifiers, RIGHT_CLICK))
 		W.play_tool_sound(src)
 		deconstruct(TRUE)
 		return
-	if(user.a_intent == INTENT_HARM)
+	if(user.combat_mode)
 		return ..()
 	if(user.transferItemToLoc(W, drop_location()))
 		return 1

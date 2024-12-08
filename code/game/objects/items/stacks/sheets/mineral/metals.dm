@@ -33,6 +33,10 @@ Metals Sheets
 	cost = 500
 	source = /datum/robot_energy_storage/metal
 
+/obj/item/stack/sheet/iron/examine(mob/user)
+	. = ..()
+	. += "<span class='notice'>You can build a wall girder (unanchored) by right clicking on an empty floor.</span>"
+
 /obj/item/stack/sheet/iron/ratvar_act()
 	new /obj/item/stack/sheet/brass(loc, amount)
 	qdel(src)
@@ -48,6 +52,32 @@ Metals Sheets
 	user.visible_message("<span class='suicide'>[user] begins whacking [user.p_them()]self over the head with \the [src]! It looks like [user.p_theyre()] trying to commit suicide!</span>")
 	return BRUTELOSS
 
+/obj/item/stack/sheet/iron/afterattack_secondary(atom/target, mob/user, proximity_flag, click_parameters)
+	if(istype(target, /turf/open))
+		var/turf/open/build_on = target
+		if(!user.Adjacent(build_on))
+			return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+		if(isgroundlessturf(build_on))
+			user.balloon_alert(user, "can't place it here!")
+			return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+		if(build_on.is_blocked_turf())
+			user.balloon_alert(user, "something is blocking the tile!")
+			return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+		if(get_amount() < 2)
+			user.balloon_alert(user, "not enough material!")
+			return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+		if(!do_after(user, 4 SECONDS, build_on))
+			return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+		if(build_on.is_blocked_turf())
+			user.balloon_alert(user, "something is blocking the tile!")
+			return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+		if(!use(2))
+			user.balloon_alert(user, "not enough material!")
+			return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+		new/obj/structure/girder/displaced(build_on)
+		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+	return SECONDARY_ATTACK_CONTINUE_CHAIN
+
 /* Plasteel */
 
 /obj/item/stack/sheet/plasteel
@@ -60,7 +90,7 @@ Metals Sheets
 	material_type = /datum/material/alloy/plasteel
 	throwforce = 10
 	flags_1 = CONDUCT_1
-	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 80, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/sheet_plasteel
 	resistance_flags = FIRE_PROOF
 	merge_type = /obj/item/stack/sheet/plasteel
 	grind_results = list(/datum/reagent/iron = 20, /datum/reagent/toxin/plasma = 20)
@@ -68,6 +98,11 @@ Metals Sheets
 	tableVariant = /obj/structure/table/reinforced
 	matter_amount = 12
 	material_flags = NONE
+
+
+/datum/armor/sheet_plasteel
+	fire = 100
+	acid = 80
 
 /obj/item/stack/sheet/plasteel/get_recipes()
 	return GLOB.plasteel_recipes

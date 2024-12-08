@@ -5,7 +5,7 @@
 /obj/machinery/disposal
 	icon = 'icons/obj/atmospherics/pipes/disposal.dmi'
 	density = TRUE
-	armor = list(MELEE = 25,  BULLET = 10, LASER = 10, ENERGY = 100, BOMB = 0, BIO = 100, RAD = 100, FIRE = 90, ACID = 30, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/machinery_disposal
 	max_integrity = 200
 	resistance_flags = FIRE_PROOF
 	interaction_flags_machine = INTERACT_MACHINE_OPEN | INTERACT_MACHINE_WIRES_IF_OPEN | INTERACT_MACHINE_ALLOW_SILICON | INTERACT_MACHINE_OPEN_SILICON
@@ -27,6 +27,16 @@
 	// find the attached trunk (if present) and init gas resvr.
 
 CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/disposal)
+
+
+/datum/armor/machinery_disposal
+	melee = 25
+	bullet = 10
+	laser = 10
+	energy = 100
+	rad = 100
+	fire = 90
+	acid = 30
 
 /obj/machinery/disposal/Initialize(mapload, obj/structure/disposalconstruct/make_from)
 	. = ..()
@@ -74,7 +84,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/disposal)
 	air_contents.merge(removed)
 	trunk_check()
 
-/obj/machinery/disposal/attackby(obj/item/I, mob/user, params)
+/obj/machinery/disposal/attackby(obj/item/I, mob/living/user, params)
 	add_fingerprint(user)
 	if(!pressure_charging && !full_pressure && !flush)
 		if(I.tool_behaviour == TOOL_SCREWDRIVER)
@@ -92,7 +102,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/disposal)
 				deconstruct()
 			return
 
-	if(user.a_intent != INTENT_HARM)
+	if(!user.combat_mode)
 		if((I.item_flags & ABSTRACT) || !user.temporarilyRemoveItemFromInventory(I))
 			return
 		place_item_in_disposal(I, user)

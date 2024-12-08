@@ -6,9 +6,17 @@
 	icon = 'icons/effects/effects.dmi'
 	anchored = TRUE
 	max_integrity = 1
-	armor = list(MELEE = 0,  BULLET = 50, LASER = 50, ENERGY = 50, BOMB = 0, BIO = 0, RAD = 0, FIRE = 20, ACID = 20, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/structure_holosign
 	layer = BELOW_OBJ_LAYER
 	var/obj/item/holosign_creator/projector
+
+
+/datum/armor/structure_holosign
+	bullet = 50
+	laser = 50
+	energy = 50
+	fire = 20
+	acid = 20
 
 /obj/structure/holosign/emp_act(severity)
 	take_damage(max_integrity/severity, BRUTE, MELEE, 1)
@@ -174,7 +182,7 @@
 		return TRUE //nice or benign diseases!
 
 /obj/structure/holosign/barrier/medical/attack_hand(mob/living/user, list/modifiers)
-	if(user.a_intent == INTENT_HELP && CanPass(user, get_dir(src, user)))
+	if(!user.combat_mode && CanPass(user, get_dir(src, user)))
 		force_allaccess = !force_allaccess
 		to_chat(user, "<span class='warning'>You [force_allaccess ? "deactivate" : "activate"] the biometric scanners.</span>") //warning spans because you can make the station sick!
 	else

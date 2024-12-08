@@ -203,7 +203,7 @@ GLOBAL_LIST_INIT(oilfry_blacklisted_items, typecacheof(list(
 /obj/machinery/deepfryer/attack_silicon(mob/user)
 	return TRUE
 
-/obj/machinery/deepfryer/attack_hand(mob/user)
+/obj/machinery/deepfryer/attack_hand(mob/living/user)
 	if(frying)
 		to_chat(user, "<span class='notice'>You eject [frying] from [src].</span>")
 		frying.forceMove(drop_location())
@@ -211,18 +211,18 @@ GLOBAL_LIST_INIT(oilfry_blacklisted_items, typecacheof(list(
 			user.put_in_hands(frying)
 		return
 
-	else if(user.pulling && user.a_intent == "grab" && iscarbon(user.pulling) && reagents.total_volume)
+	else if(user.pulling && iscarbon(user.pulling) && reagents.total_volume)
 		if(user.grab_state < GRAB_AGGRESSIVE)
 			to_chat(user, "<span class='warning'>You need a better grip to do that!</span>")
 			return
-		var/mob/living/carbon/C = user.pulling
-		user.visible_message("<span class = 'danger'>[user] dunks [C]'s face in [src]!</span>")
-		reagents.reaction(C, TOUCH)
-		log_combat(user, C, "fryer slammed")
-		var/permeability = 1 - C.get_permeability_protection(list(HEAD))
-		C.apply_damage(min(30 * permeability, reagents.total_volume), BURN, BODY_ZONE_HEAD)
+		var/mob/living/carbon/dunking_target = user.pulling
+		user.visible_message("<span class = 'danger'>[user] dunks [dunking_target]'s face in [src]!</span>")
+		reagents.reaction(dunking_target, TOUCH)
+		log_combat(user, dunking_target, "fryer slammed")
+		var/bio_multiplier = dunking_target.getarmor(BODY_ZONE_HEAD, BIO) * 0.01
+		dunking_target.apply_damage(min(30 * bio_multiplier, reagents.total_volume), BURN, BODY_ZONE_HEAD)
 		reagents.remove_any((reagents.total_volume/2))
-		C.Paralyze(60)
+		dunking_target.Paralyze(60)
 		user.changeNext_move(CLICK_CD_MELEE)
 	return ..()
 

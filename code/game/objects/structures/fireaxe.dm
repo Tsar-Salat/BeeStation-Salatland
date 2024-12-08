@@ -5,7 +5,7 @@
 	icon_state = "fireaxe"
 	anchored = TRUE
 	density = FALSE
-	armor = list(MELEE = 50,  BULLET = 20, LASER = 0, ENERGY = 100, BOMB = 10, BIO = 100, RAD = 100, FIRE = 90, ACID = 50, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/structure_fireaxecabinet
 	max_integrity = 150
 	integrity_failure = 0.33
 	layer = ABOVE_WINDOW_LAYER
@@ -14,6 +14,16 @@
 	var/obj/item/fireaxe/fireaxe
 
 MAPPING_DIRECTIONAL_HELPERS(/obj/structure/fireaxecabinet, 32)
+
+
+/datum/armor/structure_fireaxecabinet
+	melee = 50
+	bullet = 20
+	energy = 100
+	bomb = 10
+	rad = 100
+	fire = 90
+	acid = 50
 
 /obj/structure/fireaxecabinet/Initialize(mapload)
 	. = ..()
@@ -25,10 +35,10 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/fireaxecabinet, 32)
 		QDEL_NULL(fireaxe)
 	return ..()
 
-/obj/structure/fireaxecabinet/attackby(obj/item/I, mob/user, params)
+/obj/structure/fireaxecabinet/attackby(obj/item/I, mob/living/user, params)
 	if(iscyborg(user) || I.tool_behaviour == TOOL_MULTITOOL)
 		toggle_lock(user)
-	else if(I.tool_behaviour == TOOL_WELDER && user.a_intent == INTENT_HELP && !broken)
+	else if(I.tool_behaviour == TOOL_WELDER && !user.combat_mode && !broken)
 		if(atom_integrity < max_integrity)
 			if(!I.tool_start_check(user, amount=2))
 				return

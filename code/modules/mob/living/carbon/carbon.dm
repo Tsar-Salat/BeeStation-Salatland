@@ -61,11 +61,12 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 	else
 		mode() // Activate held item
 
-/mob/living/carbon/attackby(obj/item/I, mob/user, params)
+/mob/living/carbon/attackby(obj/item/I, mob/living/user, params)
 	for(var/datum/surgery/S in surgeries)
 		if(body_position == LYING_DOWN || !S.lying_required)
-			if((S.self_operable || user != src) && (user.a_intent == INTENT_HELP || user.a_intent == INTENT_DISARM))
-				if(S.next_step(user,user.a_intent))
+			var/list/modifiers = params2list(params)
+			if((S.self_operable || user != src) && !user.combat_mode)
+				if(S.next_step(user, modifiers))
 					return TRUE
 	return ..()
 
@@ -612,17 +613,6 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 	else
 		. += INFINITY
 
-/mob/living/carbon/get_permeability_protection(list/target_zones = list(HANDS = 0, CHEST = 0, GROIN = 0, LEGS = 0, FEET = 0, ARMS = 0, HEAD = 0))
-	for(var/obj/item/I in get_equipped_items())
-		for(var/zone in target_zones)
-			if(I.body_parts_covered & zone)
-				target_zones[zone] = max(1 - I.permeability_coefficient, target_zones[zone])
-	var/protection = 0
-	for(var/zone in target_zones)
-		protection += target_zones[zone]
-	protection *= INVERSE(target_zones.len)
-	return protection
-
 //this handles hud updates
 /mob/living/carbon/update_damage_hud()
 
@@ -811,7 +801,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 			set_stat(CONSCIOUS)
 			if(!is_blind())
 				var/datum/component/blind_sense/B = GetComponent(/datum/component/blind_sense)
-				B?.RemoveComponent()
+				B?.ClearFromParent()
 	update_damage_hud()
 	update_health_hud()
 	update_stamina_hud()

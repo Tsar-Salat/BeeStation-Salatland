@@ -117,8 +117,6 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	var/body_parts_covered = 0
 	/// For leaking gas from turf to mask and vice-versa (for masks right now, but at some point, i'd like to include space helmets)
 	var/gas_transfer_coefficient = 1
-	/// For leaking chemicals/diseases from turf to mask and vice-versa
-	var/permeability_coefficient = 1
 
 	/// For electrical admittance/conductance (electrocution checks and shit)
 	var/siemens_coefficient = 1
@@ -126,6 +124,10 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	var/slowdown = 0
 	/// Percentage of armour effectiveness to remove
 	var/armour_penetration = 0
+	/// The click cooldown given after attacking. Lower numbers means faster attacks
+	var/attack_speed = CLICK_CD_MELEE
+	/// The click cooldown on secondary attacks. Lower numbers mean faster attacks. Will use attack_speed if undefined.
+	var/secondary_attack_speed
 	/// A list of items that can be put in this item for like suit storage or something?? I honestly have no idea.
 	var/list/allowed = null
 	/// In deciseconds, how long an item takes to equip; counts only for normal clothing slots, not pockets etc.
@@ -236,6 +238,9 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		attack_verb_continuous = typelist("attack_verb_continuous", attack_verb_continuous)
 	if(attack_verb_simple)
 		attack_verb_simple = typelist("attack_verb_simple", attack_verb_simple)
+
+	if(sharpness && force > 5) //give sharp objects butchering functionality, for consistency
+		AddComponent(/datum/component/butchering, _speed = 8 SECONDS * toolspeed)
 
 	. = ..()
 	for(var/path in actions_types)
@@ -443,7 +448,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	add_fingerprint(usr)
 	return ..()
 
-/obj/item/attack_hand(mob/user)
+/obj/item/attack_hand(mob/user, modifiers)
 	. = ..()
 	if(.)
 		return
@@ -844,7 +849,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 
 	SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT, "eye_stab", /datum/mood_event/eye_stab)
 
-	log_combat(user, M, "attacked", "[src.name]", "(INTENT: [uppertext(user.a_intent)])")
+	log_combat(user, M, "attacked", "[src.name]", "(Combat mode: [user.combat_mode ? "On" : "Off"])")
 
 	var/obj/item/organ/eyes/eyes = M.getorganslot(ORGAN_SLOT_EYES)
 	if (!eyes)
@@ -1256,9 +1261,6 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 			take_damage(75, BRUTE, BOMB, 0)
 		if(3)
 			take_damage(20, BRUTE, BOMB, 0)
-
-/obj/item/proc/get_armor_rating(d_type, mob/wearer)
-	return armor.getRating(d_type)
 
 ///Does the current embedding var meet the criteria for being harmless? Namely, does it have a pain multiplier and jostle pain mult of 0? If so, return true.
 /obj/item/proc/isEmbedHarmless()

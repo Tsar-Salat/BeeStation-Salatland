@@ -10,10 +10,21 @@
 	var/device_type = null
 	var/id = null
 	var/initialized_button = 0
-	armor = list(MELEE = 50,  BULLET = 50, LASER = 50, ENERGY = 50, BOMB = 10, BIO = 100, RAD = 100, FIRE = 90, ACID = 70, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/machinery_button
 	use_power = IDLE_POWER_USE
 	idle_power_usage = 2
 	resistance_flags = LAVA_PROOF | FIRE_PROOF
+
+
+/datum/armor/machinery_button
+	melee = 50
+	bullet = 50
+	laser = 50
+	energy = 50
+	bomb = 10
+	rad = 100
+	fire = 90
+	acid = 70
 
 /obj/machinery/button/indestructible
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
@@ -57,7 +68,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/button)
 		else
 			icon_state = skin
 
-/obj/machinery/button/attackby(obj/item/W, mob/user, params)
+/obj/machinery/button/attackby(obj/item/W, mob/living/user, params)
 	if(W.tool_behaviour == TOOL_SCREWDRIVER)
 		if(panel_open || allowed(user))
 			default_deconstruction_screwdriver(user, "button-open", "[skin]",W)
@@ -98,7 +109,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/button)
 		update_icon()
 		return
 
-	if(user.a_intent != INTENT_HARM && !(W.item_flags & NOBLUDGEON))
+	if(!user.combat_mode && !(W.item_flags & NOBLUDGEON))
 		return attack_hand(user)
 	else
 		return ..()

@@ -201,9 +201,10 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/melee/arm_blade)
 /datum/action/changeling/weapon/tentacle
 	name = "Tentacle"
 	desc = "We ready a tentacle to grab items or victims with. Costs 10 chemicals."
-	helptext = "We can use it once to retrieve a distant item. If used on living creatures, the effect depends on the intent: \
-	Help will simply drag them closer, Disarm will grab whatever they're holding instead of them, Grab will put the victim in our hold after catching it, \
-	and Harm will stun it, and stab it if we're also holding a sharp weapon. Cannot be used while in lesser form."
+	helptext = "We can use it once to retrieve a distant item. If used on living creatures, the effect depends on our combat mode: \
+	In our neutral stance, we will simply drag them closer; if we try to shove, we will grab whatever they're holding in their active hand instead of them; \
+	in our combat stance, we will put the victim in our hold after catching them, and we will pull them in and stab them if we're also holding a sharp weapon. \
+	Cannot be used while in lesser form."
 	button_icon_state = "tentacle"
 	chemical_cost = 10
 	dna_cost = 2
@@ -250,7 +251,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/gun/magic/tentacle)
 /obj/item/gun/magic/tentacle/shoot_with_empty_chamber(mob/living/user as mob|obj)
 	to_chat(user, "<span class='warning'>The [name] is not ready yet.</span>")
 
-/obj/item/gun/magic/tentacle/process_chamber()
+/obj/item/gun/magic/tentacle/process_fire(atom/target, mob/living/user, message, params, zone_override, bonus_spread)
+	var/obj/projectile/tentacle/tentacle_shot = chambered.BB //Gets the actual projectile we will fire
+	tentacle_shot.fire_modifiers = params2list(params)
 	. = ..()
 	if(charges == 0)
 		qdel(src)
@@ -285,6 +288,8 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/gun/magic/tentacle)
 	hitsound = 'sound/weapons/thudswoosh.ogg'
 	var/chain
 	var/obj/item/ammo_casing/magic/tentacle/source //the item that shot it
+	///Click params that were used to fire the tentacle shot
+	var/list/fire_modifiers
 
 /obj/projectile/tentacle/Initialize(mapload)
 	source = loc
@@ -307,9 +312,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/gun/magic/tentacle)
 			return
 		C.grabbedby(H)
 		C.grippedby(H, instant = TRUE) //instant aggro grab
-
-/obj/projectile/tentacle/proc/tentacle_stab(mob/living/carbon/human/H, mob/living/carbon/C)
-	if(H.Adjacent(C))
 		for(var/obj/item/I in H.held_items)
 			if(I.is_sharp())
 				C.visible_message("<span class='danger'>[H] impales [C] with [H.p_their()] [I.name]!</span>", "<span class='userdanger'>[H] impales you with [H.p_their()] [I.name]!</span>")
@@ -336,39 +338,32 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/gun/magic/tentacle)
 		if(!L.anchored && !L.throwing)//avoid double hits
 			if(iscarbon(L))
 				var/mob/living/carbon/C = L
-				var/firer_intent = INTENT_HARM
-				var/mob/M = firer
-				if(istype(M))
-					firer_intent = M.a_intent
-				switch(firer_intent)
-					if(INTENT_HELP)
-						C.visible_message("<span class='danger'>[L] is pulled by [H]'s tentacle!</span>","<span class='userdanger'>A tentacle grabs you and pulls you towards [H]!</span>")
-						C.throw_at(get_step_towards(H,C), 8, 2)
-						return BULLET_ACT_HIT
-
-					if(INTENT_DISARM)
-						var/obj/item/I = C.get_active_held_item()
-						if(I)
-							if(C.dropItemToGround(I))
-								C.visible_message("<span class='danger'>[I] is yanked off [C]'s hand by [src]!</span>","<span class='userdanger'>A tentacle pulls [I] away from you!</span>")
-								on_hit(I) //grab the item as if you had hit it directly with the tentacle
-								return BULLET_ACT_HIT
-							else
-								to_chat(firer, "<span class='danger'>You can't seem to pry [I] off [C]'s hands!</span>")
-								return BULLET_ACT_BLOCK
-						else
-							to_chat(firer, "<span class='danger'>[C] has nothing in hand to disarm!</span>")
+				var/firer_combat_mode = TRUE
+				var/mob/living/living_shooter = firer
+				if(istype(living_shooter))
+					firer_combat_mode = living_shooter.combat_mode
+				if(fire_modifiers && fire_modifiers["right"])
+					var/obj/item/I = C.get_active_held_item()
+					if(I)
+						if(C.dropItemToGround(I))
+							C.visible_message("<span class='danger'>[I] is yanked off [C]'s hand by [src]!</span>","<span class='userdanger'>A tentacle pulls [I] away from you!</span>")
+							on_hit(I) //grab the item as if you had hit it directly with the tentacle
 							return BULLET_ACT_HIT
-
-					if(INTENT_GRAB)
-						C.visible_message("<span class='danger'>[L] is grabbed by [H]'s tentacle!</span>","<span class='userdanger'>A tentacle grabs you and pulls you towards [H]!</span>")
-						C.throw_at(get_step_towards(H,C), 8, 2, H, TRUE, TRUE, callback=CALLBACK(src, PROC_REF(tentacle_grab), H, C))
+						else
+							to_chat(firer, "<span class='warning'>You can't seem to pry [I] off [C]'s hands!</span>")
+							return BULLET_ACT_BLOCK
+					else
+						to_chat(firer, "<span class='danger'>[C] has nothing in hand to disarm!</span>")
 						return BULLET_ACT_HIT
+				if(firer_combat_mode)
+					C.visible_message("<span class='danger'>[L] is thrown towards [H] by a tentacle!</span>","<span class='userdanger'>A tentacle grabs you and throws you towards [H]!</span>")
+					C.throw_at(get_step_towards(H,C), 8, 2, H, TRUE, TRUE, callback=CALLBACK(src, PROC_REF(tentacle_grab), H, C))
+					return BULLET_ACT_HIT
+				else
+					C.visible_message("<span class='danger'>[L] is grabbed by [H]'s tentacle!</span>","<span class='userdanger'>A tentacle grabs you and pulls you towards [H]!</span>")
+					C.throw_at(get_step_towards(H,C), 8, 2, H, TRUE, TRUE)
+					return BULLET_ACT_HIT
 
-					if(INTENT_HARM)
-						C.visible_message("<span class='danger'>[L] is thrown towards [H] by a tentacle!</span>","<span class='userdanger'>A tentacle grabs you and throws you towards [H]!</span>")
-						C.throw_at(get_step_towards(H,C), 8, 2, H, TRUE, TRUE, callback=CALLBACK(src, PROC_REF(tentacle_stab), H, C))
-						return BULLET_ACT_HIT
 			else
 				L.visible_message("<span class='danger'>[L] is pulled by [H]'s tentacle!</span>","<span class='userdanger'>A tentacle grabs you and pulls you towards [H]!</span>")
 				L.throw_at(get_step_towards(H,L), 8, 2)
@@ -407,12 +402,26 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/gun/magic/tentacle)
 	item_flags = DROPDEL
 	clothing_flags = STOPSPRESSUREDAMAGE | HEADINTERNALS //Not THICKMATERIAL because it's organic tissue, so if somebody tries to inject something into it, it still ends up in your blood. (also balance but muh fluff)
 	allowed = list(/obj/item/flashlight, /obj/item/tank/internals/emergency_oxygen, /obj/item/tank/internals/oxygen)
-	armor = list(MELEE = 35,  BULLET = 25, LASER = 25, ENERGY = 30, BOMB = 30, BIO = 20, RAD = 20, FIRE = 90, ACID = 90, STAMINA = 10, BLEED = 80)//Bit less armoured than the Syndicate space suit
+	armor_type = /datum/armor/space_changeling
 	slowdown = 0.2
 	var/datum/reagent/salbutamol = /datum/reagent/medicine/salbutamol
 	actions_types = list()
 	cell = null
 	show_hud = FALSE
+
+
+/datum/armor/space_changeling
+	melee = 35
+	bullet = 25
+	laser = 25
+	energy = 30
+	bomb = 30
+	bio = 100
+	rad = 20
+	fire = 90
+	acid = 90
+	stamina = 10
+	bleed = 80
 
 /obj/item/clothing/suit/space/changeling/Initialize(mapload)
 	. = ..()
@@ -440,8 +449,22 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/gun/magic/tentacle)
 	desc = "A covering of armored pressure and temperature-resistant organic tissue with a glass-like chitin front."
 	item_flags = DROPDEL
 	clothing_flags = STOPSPRESSUREDAMAGE
-	armor = list(MELEE = 35,  BULLET = 25, LASER = 25, ENERGY = 30, BOMB = 30, BIO = 20, RAD = 20, FIRE = 90, ACID = 90, STAMINA = 10, BLEED = 80)
+	armor_type = /datum/armor/space_changeling
 	flags_cover = HEADCOVERSEYES | HEADCOVERSMOUTH
+
+
+/datum/armor/space_changeling
+	melee = 35
+	bullet = 25
+	laser = 25
+	energy = 30
+	bomb = 30
+	bio = 100
+	rad = 20
+	fire = 90
+	acid = 90
+	stamina = 10
+	bleed = 80
 
 /obj/item/clothing/head/helmet/space/changeling/Initialize(mapload)
 	. = ..()
@@ -473,12 +496,25 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/gun/magic/tentacle)
 	item_state = null
 	item_flags = DROPDEL
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
-	armor = list(MELEE = 40,  BULLET = 40, LASER = 50, ENERGY = 50, BOMB = 25, BIO = 0, RAD = 0, FIRE = 25, ACID = 25, STAMINA = 30, BLEED = 90)
+	armor_type = /datum/armor/armor_changeling
 	flags_inv = HIDEJUMPSUIT
 	cold_protection = 0
 	heat_protection = 0
 	blocks_shove_knockdown = TRUE
 	slowdown = 0.2
+
+
+/datum/armor/armor_changeling
+	melee = 40
+	bullet = 40
+	laser = 50
+	energy = 50
+	bomb = 25
+	bio = 10
+	fire = 25
+	acid = 25
+	stamina = 30
+	bleed = 90
 
 /obj/item/clothing/suit/armor/changeling/Initialize(mapload)
 	. = ..()
@@ -492,8 +528,21 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/gun/magic/tentacle)
 	icon_state = "lingarmorhelmet"
 	item_state = null
 	item_flags = DROPDEL
-	armor = list(MELEE = 40,  BULLET = 40, LASER = 50, ENERGY = 50, BOMB = 25, BIO = 0, RAD = 0, FIRE = 25, ACID = 25, STAMINA = 30, BLEED = 90)
+	armor_type = /datum/armor/helmet_changeling
 	flags_inv = HIDEEARS|HIDEHAIR|HIDEEYES|HIDEFACIALHAIR|HIDEFACE|HIDESNOUT
+
+
+/datum/armor/helmet_changeling
+	melee = 40
+	bullet = 40
+	laser = 50
+	energy = 50
+	bomb = 25
+	bio = 10
+	fire = 25
+	acid = 25
+	stamina = 30
+	bleed = 90
 
 /obj/item/clothing/head/helmet/changeling/Initialize(mapload)
 	. = ..()

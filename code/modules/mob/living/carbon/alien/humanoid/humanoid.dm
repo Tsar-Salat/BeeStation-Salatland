@@ -3,7 +3,6 @@
 	icon_state = "alien"
 	pass_flags = PASSTABLE
 	butcher_results = list(/obj/item/food/meat/slab/xeno = 5, /obj/item/stack/sheet/animalhide/xeno = 1)
-	possible_a_intents = list(INTENT_HELP, INTENT_DISARM, INTENT_GRAB, INTENT_HARM)
 	limb_destroyer = TRUE
 	hud_type = /datum/hud/alien
 	deathsound = 'sound/voice/hiss6.ogg'
@@ -44,9 +43,6 @@ GLOBAL_LIST_INIT(strippable_alien_humanoid_items, create_strippable_list(list(
 						"<span class='danger'>You break free of [pulledby]'s grip!</span>")
 	pulledby.stop_pulling()
 	. = 0
-
-/mob/living/carbon/alien/humanoid/get_permeability_protection(list/target_zones)
-	return 0.8
 
 /mob/living/carbon/alien/humanoid/alien_evolve(mob/living/carbon/alien/humanoid/new_xeno)
 	drop_all_held_items()

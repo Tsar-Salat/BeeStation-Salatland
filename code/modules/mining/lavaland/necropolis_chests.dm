@@ -399,14 +399,19 @@
 	fire_sound = 'sound/weapons/batonextend.ogg'
 	max_charges = 1
 	item_flags = NEEDS_PERMIT | ISWEAPON
+	sharpness = IS_SHARP_ACCURATE
 	force = 15
 	attack_weight = 2
+
+/obj/item/gun/magic/hook/shoot_with_empty_chamber(mob/living/user)
+	to_chat(user, "<span class='warning'>[src] isn't ready to fire yet!</span>")
 
 /obj/item/ammo_casing/magic/hook
 	name = "hook"
 	desc = "A hook."
 	projectile_type = /obj/projectile/hook
 	caliber = "hook"
+	firing_effect_type = /obj/effect/temp_visual/dir_setting/firing_effect/energy
 
 /obj/projectile/hook
 	name = "hook"
@@ -446,9 +451,6 @@
 /obj/item/gun/magic/hook/bounty
 	name = "hook"
 	ammo_type = /obj/item/ammo_casing/magic/hook/bounty
-
-/obj/item/gun/magic/hook/bounty/shoot_with_empty_chamber(mob/living/user)
-	to_chat(user, "<span class='warning'>The [src] isn't ready to fire yet!</span>")
 
 /obj/item/ammo_casing/magic/hook/bounty
 	projectile_type = /obj/projectile/hook/bounty
@@ -684,7 +686,19 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/shared_storage/blue)
 	heat_protection = HANDS
 	max_heat_protection_temperature = GLOVES_MAX_TEMP_PROTECT
 	resistance_flags = LAVA_PROOF | FIRE_PROOF //they are from lavaland after all
-	armor = list(MELEE = 15,  BULLET = 35, LASER = 35, ENERGY = 20, BOMB = 35, BIO = 35, RAD = 35, FIRE = 0, ACID = 0, STAMINA = 20, BLEED = 20) //Equivalent to bone bracers. Not bad.
+	armor_type = /datum/armor/gloves_concussive_gauntlets
+
+
+/datum/armor/gloves_concussive_gauntlets
+	melee = 15
+	bullet = 35
+	laser = 35
+	energy = 20
+	bomb = 35
+	bio = 35
+	rad = 35
+	stamina = 20
+	bleed = 20
 
 /obj/item/clothing/gloves/concussive_gauntlets/equipped(mob/user, slot)
 	. = ..()

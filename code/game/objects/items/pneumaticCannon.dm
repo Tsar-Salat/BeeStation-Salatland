@@ -16,7 +16,7 @@
 	item_state = "bulldog"
 	lefthand_file = 'icons/mob/inhands/weapons/guns_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/guns_righthand.dmi'
-	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 60, ACID = 50, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/item_pneumatic_cannon
 	var/maxWeightClass = 20 //The max weight of items that can fit into the cannon
 	var/loadedWeightClass = 0 //The weight of items currently in the cannon
 	var/obj/item/tank/internals/tank = null //The gas tank that is drawn from to fire things
@@ -39,6 +39,11 @@
 	var/spin_item = TRUE //Do the projectiles spin when launched?
 	trigger_guard = TRIGGER_GUARD_NORMAL
 
+
+
+/datum/armor/item_pneumatic_cannon
+	fire = 60
+	acid = 50
 
 /obj/item/pneumatic_cannon/Initialize(mapload)
 	. = ..()
@@ -72,8 +77,8 @@
 		out += "<span class='notice'>[icon2html(tank, user)] It has \a [tank] mounted onto it.</span>"
 	. += out.Join("\n")
 
-/obj/item/pneumatic_cannon/attackby(obj/item/W, mob/user, params)
-	if(user.a_intent == INTENT_HARM)
+/obj/item/pneumatic_cannon/attackby(obj/item/W, mob/living/user, params)
+	if(user.combat_mode)
 		return ..()
 	if(istype(W, /obj/item/tank/internals))
 		if(!tank)
@@ -134,7 +139,7 @@
 
 /obj/item/pneumatic_cannon/afterattack(atom/target, mob/living/user, flag, params)
 	. = ..()
-	if(flag && user.a_intent == INTENT_HARM) //melee attack
+	if(flag && user.combat_mode)//melee attack
 		return
 	if(!istype(user))
 		return

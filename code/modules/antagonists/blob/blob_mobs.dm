@@ -14,7 +14,7 @@
 	minbodytemp = 0
 	maxbodytemp = 360
 	unique_name = 1
-	a_intent = INTENT_HARM
+	combat_mode = TRUE
 	see_in_dark = NIGHTVISION_FOV_RANGE
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	initial_language_holder = /datum/language_holder/empty
@@ -149,8 +149,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/hostile/blob/blobspore)
 /mob/living/simple_animal/hostile/blob/blobspore/proc/Zombify(mob/living/carbon/human/H)
 	is_zombie = 1
 	if(H.wear_suit)
-		var/obj/item/clothing/suit/armor/A = H.wear_suit
-		maxHealth += A.armor.melee //That zombie's got armor, I want armor!
+		maxHealth += H.get_armor_rating(MELEE)
 	maxHealth += 40
 	health = maxHealth
 	name = "blob zombie"

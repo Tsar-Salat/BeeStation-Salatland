@@ -29,8 +29,11 @@
 				if("Nothing")
 					return
 
+/mob/living/simple_animal/drone/attack_drone_secondary(mob/living/simple_animal/drone/drone)
+	return SECONDARY_ATTACK_CALL_NORMAL
+
 //ATTACK HAND IGNORING PARENT RETURN VALUE
-/mob/living/simple_animal/drone/attack_hand(mob/user)
+/mob/living/simple_animal/drone/attack_hand(mob/user, list/modifiers)
 	if(ishuman(user))
 		if(stat == DEAD || status_flags & GODMODE || !can_be_held)
 			..()
@@ -105,7 +108,7 @@
 	var/armorval = 0
 
 	if(head)
-		armorval = ((head.get_armor_rating(type, src) / 100) * (1 - penetration / 100)) * 100
+		armorval = ((head.get_armor_rating(type) / 100) * (1 - penetration / 100)) * 100
 	return (armorval * get_armor_effectiveness()) //armor is reduced for tiny fragile drones
 
 /mob/living/simple_animal/drone/proc/get_armor_effectiveness()

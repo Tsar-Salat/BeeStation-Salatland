@@ -24,7 +24,7 @@
 	layer = BELOW_OPEN_DOOR_LAYER
 	closingLayer = CLOSED_FIREDOOR_LAYER
 	assemblytype = /obj/structure/firelock_frame
-	armor = list(MELEE = 30,  BULLET = 30, LASER = 20, ENERGY = 20, BOMB = 10, BIO = 100, RAD = 100, FIRE = 95, ACID = 70, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/door_firedoor
 	interaction_flags_machine = INTERACT_MACHINE_WIRES_IF_OPEN | INTERACT_MACHINE_ALLOW_SILICON | INTERACT_MACHINE_OPEN_SILICON | INTERACT_MACHINE_REQUIRES_SILICON | INTERACT_MACHINE_OPEN
 	air_tight = TRUE
 	open_speed = 2
@@ -36,6 +36,17 @@
 	var/list/affecting_areas
 	var/list/access_log
 	var/process_ticker //Ratelimit process to one check ~5 process ticks
+
+
+/datum/armor/door_firedoor
+	melee = 30
+	bullet = 30
+	laser = 20
+	energy = 20
+	bomb = 10
+	rad = 100
+	fire = 95
+	acid = 70
 
 /obj/machinery/door/firedoor/Initialize(mapload)
 	. = ..()
@@ -744,15 +755,9 @@
 	density = FALSE
 	firelock_type = /obj/machinery/door/firedoor/border_only
 
-/obj/structure/firelock_frame/border/ComponentInitialize()
+/obj/structure/reagent_dispensers/plumbed/storage/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/simple_rotation, ROTATION_ALTCLICK | ROTATION_CLOCKWISE | ROTATION_COUNTERCLOCKWISE | ROTATION_VERBS, null, CALLBACK(src, PROC_REF(can_be_rotated)))
-
-/obj/structure/firelock_frame/border/proc/can_be_rotated(mob/user, rotation_type)
-	if (anchored)
-		to_chat(user, "<span class='warning'>It is fastened to the floor!</span>")
-		return FALSE
-	return TRUE
+	AddComponent(/datum/component/simple_rotation)
 
 /obj/structure/firelock_frame/border/update_icon()
 	return

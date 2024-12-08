@@ -24,6 +24,7 @@
 		// it prevents 'GLOB.poi_list' being glitched. without this, it will show xeno(or some mobs) twice in orbit panel.
 	//color correction
 	RegisterSignal(src, COMSIG_MOVABLE_ENTERED_AREA, PROC_REF(apply_color_correction))
+	gravity_setup()
 
 /mob/living/ComponentInitialize()
 	. = ..()
@@ -141,12 +142,12 @@
 				mob_swap = TRUE
 		else
 			//You can swap with the person you are dragging on grab intent, and restrained people in most cases
-			if(M.pulledby == src && a_intent == INTENT_GRAB && !too_strong)
+			if(M.pulledby == src && !too_strong)
 				mob_swap = TRUE
 			else if(
 				!(HAS_TRAIT(M, TRAIT_NOMOBSWAP) || HAS_TRAIT(src, TRAIT_NOMOBSWAP))&&\
-				((HAS_TRAIT(M, TRAIT_RESTRAINED) && !too_strong) || M.a_intent == INTENT_HELP) &&\
-				(HAS_TRAIT(src, TRAIT_RESTRAINED) || a_intent == INTENT_HELP)
+				((HAS_TRAIT(M, TRAIT_RESTRAINED) && !too_strong) || !combat_mode) &&\
+				(HAS_TRAIT(src, TRAIT_RESTRAINED) || !combat_mode)
 			)
 				mob_swap = TRUE
 		if(mob_swap)
@@ -187,8 +188,15 @@
 		if(HAS_TRAIT(L, TRAIT_PUSHIMMUNE))
 			return TRUE
 	//If they're a human, and they're not in help intent, block pushing
-	if(ishuman(M) && (M.a_intent != INTENT_HELP))
-		return TRUE
+	if(ishuman(M))
+		var/mob/living/carbon/human/human = M
+		if(human.combat_mode)
+			return TRUE
+	//if they are a cyborg, and they're alive and in combat mode, block pushing
+	if(iscyborg(M))
+		var/mob/living/silicon/robot/borg = M
+		if(borg.combat_mode && borg.stat != DEAD)
+			return TRUE
 	//anti-riot equipment is also anti-push
 	for(var/obj/item/I in M.held_items)
 		if(!isclothing(M))
@@ -392,7 +400,7 @@
 
 	if(istype(AM) && Adjacent(AM))
 		start_pulling(AM)
-	else
+	else if(!combat_mode) //Don;'t cancel pulls if misclicking in combat mode.
 		stop_pulling()
 
 /mob/living/stop_pulling()
@@ -616,9 +624,29 @@
 			return TRUE
 	return FALSE
 
-// Living mobs use can_inject() to make sure that the mob is not syringe-proof in general.
-/mob/living/proc/can_inject(mob/user, error_msg, target_zone, penetrate_thick = FALSE)
+/**
+ * Returns whether or not the mob can be injected. Should not perform any side effects.
+ *
+ * Arguments:
+ * * user - The user trying to inject the mob.
+ * * target_zone - The zone being targeted.
+ * * injection_flags - A bitflag for extra properties to check.
+ *   Check __DEFINES/injection.dm for more details, specifically the ones prefixed INJECT_CHECK_*.
+ */
+/mob/living/proc/can_inject(mob/user, target_zone, injection_flags)
 	return TRUE
+
+/**
+ * Like can_inject, but it can perform side effects.
+ *
+ * Arguments:
+ * * user - The user trying to inject the mob.
+ * * target_zone - The zone being targeted.
+ * * injection_flags - A bitflag for extra properties to check. Check __DEFINES/injection.dm for more details.
+ *   Check __DEFINES/injection.dm for more details. Unlike can_inject, the INJECT_TRY_* defines will behave differently.
+ */
+/mob/living/proc/try_inject(mob/user, target_zone, injection_flags)
+	return can_inject(user, target_zone, injection_flags)
 
 /mob/living/is_injectable(mob/user, allowmobs = TRUE)
 	return (allowmobs && reagents && can_inject(user))
@@ -955,25 +983,51 @@
 /mob/living/proc/get_visible_name()
 	return name
 
-/mob/living/update_gravity(has_gravity)
-	. = ..()
-	if(!SSticker.HasRoundStarted())
-		return
-	var/was_weightless = alerts["gravity"] && istype(alerts["gravity"], /atom/movable/screen/alert/weightless)
-	if(has_gravity)
-		if(has_gravity == 1)
-			clear_alert("gravity")
-		else
-			if(has_gravity >= GRAVITY_DAMAGE_TRESHOLD)
-				throw_alert("gravity", /atom/movable/screen/alert/veryhighgravity)
-			else
-				throw_alert("gravity", /atom/movable/screen/alert/highgravity)
-		if(was_weightless)
-			REMOVE_TRAIT(src, TRAIT_MOVE_FLOATING, NO_GRAVITY_TRAIT)
+/mob/living/proc/update_gravity(gravity)
+	// Handle movespeed stuff
+	var/speed_change = max(0, gravity - STANDARD_GRAVITY)
+	if(speed_change)
+		add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/gravity, multiplicative_slowdown=speed_change)
 	else
-		throw_alert("gravity", /atom/movable/screen/alert/weightless)
-		if(!was_weightless)
-			ADD_TRAIT(src, TRAIT_MOVE_FLOATING, NO_GRAVITY_TRAIT)
+		remove_movespeed_modifier(/datum/movespeed_modifier/gravity)
+
+	// Time to add/remove gravity alerts. sorry for the mess it's gotta be fast
+	var/atom/movable/screen/alert/gravity_alert = alerts["gravity"]
+	switch(gravity)
+		if(-INFINITY to NEGATIVE_GRAVITY)
+			if(!istype(gravity_alert, /atom/movable/screen/alert/negative))
+				throw_alert("gravity", /atom/movable/screen/alert/negative)
+				ADD_TRAIT(src, TRAIT_MOVE_UPSIDE_DOWN, NEGATIVE_GRAVITY_TRAIT)
+				var/matrix/flipped_matrix = transform
+				flipped_matrix.b = -flipped_matrix.b
+				flipped_matrix.e = -flipped_matrix.e
+				animate(src, transform = flipped_matrix, pixel_y = pixel_y+4, time = 0.5 SECONDS, easing = EASE_OUT, flags = ANIMATION_PARALLEL)
+				base_pixel_y += 4
+		if(NEGATIVE_GRAVITY + 0.01 to 0)
+			if(!istype(gravity_alert, /atom/movable/screen/alert/weightless))
+				throw_alert("gravity", /atom/movable/screen/alert/weightless)
+				ADD_TRAIT(src, TRAIT_MOVE_FLOATING, NO_GRAVITY_TRAIT)
+		if(0.01 to STANDARD_GRAVITY)
+			if(gravity_alert)
+				clear_alert("gravity")
+		if(STANDARD_GRAVITY + 0.01 to GRAVITY_DAMAGE_THRESHOLD - 0.01)
+			throw_alert("gravity", /atom/movable/screen/alert/highgravity)
+		if(GRAVITY_DAMAGE_THRESHOLD to INFINITY)
+			throw_alert("gravity", /atom/movable/screen/alert/veryhighgravity)
+
+	// If we had no gravity alert, or the same alert as before, go home
+	if(!gravity_alert || alerts["gravity"] == gravity_alert)
+		return
+	// By this point we know that we do not have the same alert as we used to
+	if(istype(gravity_alert, /atom/movable/screen/alert/weightless))
+		REMOVE_TRAIT(src, TRAIT_MOVE_FLOATING, NO_GRAVITY_TRAIT)
+	if(istype(gravity_alert, /atom/movable/screen/alert/negative))
+		REMOVE_TRAIT(src, TRAIT_MOVE_UPSIDE_DOWN, NEGATIVE_GRAVITY_TRAIT)
+		var/matrix/flipped_matrix = transform
+		flipped_matrix.b = -flipped_matrix.b
+		flipped_matrix.e = -flipped_matrix.e
+		animate(src, transform = flipped_matrix, pixel_y = pixel_y-4, time = 0.5 SECONDS, easing = EASE_OUT, flags = ANIMATION_PARALLEL)
+		base_pixel_y -= 4
 
 // The src mob is trying to strip an item from someone
 // Override if a certain type of mob should be behave differently when stripping items (can't, for example)
@@ -1096,10 +1150,6 @@
 		return FALSE
 
 	return TRUE
-
-//used in datum/reagents/reaction() proc
-/mob/living/proc/get_permeability_protection(list/target_zones)
-	return 0
 
 /mob/living/proc/harvest(mob/living/user) //used for extra objects etc. in butchering
 	return

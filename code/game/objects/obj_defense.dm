@@ -30,7 +30,7 @@
 		visible_message("<span class='danger'>[src] is hit by \a [P][damage ? "" : ", without leaving a mark"]!</span>", null, null, COMBAT_MESSAGE_RANGE)
 
 /obj/attack_hulk(mob/living/carbon/human/user, does_attack_animation = 0)
-	if(user.a_intent == INTENT_HARM)
+	if(user.combat_mode)
 		..(user, 1)
 		if(density)
 			playsound(src, 'sound/effects/meteorimpact.ogg', 100, 1)
@@ -93,13 +93,13 @@
 	var/amt = max(0, ((force - (move_resist * MOVE_FORCE_CRUSH_RATIO)) / (move_resist * MOVE_FORCE_CRUSH_RATIO)) * 10)
 	take_damage(amt, BRUTE)
 
-/obj/attack_slime(mob/living/simple_animal/slime/M)
-	if(!M.is_adult)
+/obj/attack_slime(mob/living/simple_animal/slime/user, list/modifiers)
+	if(!user.is_adult)
 		return
 	var/damage = rand(15)
-	if(M.transformeffects & SLIME_EFFECT_RED)
+	if(user.transformeffects & SLIME_EFFECT_RED)
 		damage *= 1.1
-	attack_generic(M, damage, MELEE, 1)
+	attack_generic(user, damage, MELEE, 1)
 
 /obj/singularity_act()
 	SSexplosions.high_mov_atom += src
@@ -128,9 +128,9 @@ GLOBAL_DATUM_INIT(acid_overlay, /mutable_appearance, mutable_appearance('icons/e
 /obj/proc/acid_processing()
 	. = 1
 	if(!(resistance_flags & ACID_PROOF))
-		for(var/armour_value in armor.getList())
+		for(var/armour_value in get_armor_rating())
 			if(armour_value != ACID && armour_value != FIRE)
-				armor = armor.modifyAllRatings(0 - round(sqrt(acid_level)*0.1))
+				set_armor(get_armor().generate_new_with_modifiers(list(0 - round(sqrt(acid_level)*0.1))))
 		if(prob(33))
 			playsound(loc, 'sound/items/welder.ogg', 150, 1)
 		take_damage(min(1 + round(sqrt(acid_level)*0.3), 300), BURN, ACID, 0)

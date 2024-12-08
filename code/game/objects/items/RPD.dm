@@ -214,7 +214,7 @@ GLOBAL_LIST_INIT(fluid_duct_recipes, list(
 	w_class = WEIGHT_CLASS_LARGE
 	slot_flags = ITEM_SLOT_BELT
 	custom_materials = list(/datum/material/iron=75000, /datum/material/glass=37500)
-	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 50, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/item_pipe_dispenser
 	resistance_flags = FIRE_PROOF
 	var/datum/effect_system/spark_spread/spark_system
 	var/working = 0
@@ -261,6 +261,11 @@ GLOBAL_LIST_INIT(fluid_duct_recipes, list(
 		))
 	/// list of atmos constructs that we don't want to attack with RPD
 	var/static/list/atmos_constructs = typecacheof(list(/obj/machinery/atmospherics, /obj/structure/transit_tube))
+
+
+/datum/armor/item_pipe_dispenser
+	fire = 100
+	acid = 50
 
 /obj/item/pipe_dispenser/Initialize(mapload)
 	. = ..()
@@ -533,7 +538,7 @@ GLOBAL_LIST_INIT(fluid_duct_recipes, list(
 
 						P.update()
 						P.add_fingerprint(usr)
-						P.setPipingLayer(piping_layer)
+						P.set_piping_layer(piping_layer)
 						if(findtext("[queued_p_type]", "/obj/machinery/atmospherics/pipe") && !findtext("[queued_p_type]", "layer_manifold"))
 							P.add_atom_colour(GLOB.pipe_paint_colors[paint_color], FIXED_COLOUR_PRIORITY)
 						if(mode & WRENCH_MODE)
@@ -586,8 +591,8 @@ GLOBAL_LIST_INIT(fluid_duct_recipes, list(
 						tube.setDir(queued_p_dir)
 
 						if(queued_p_flipped)
-							tube.setDir(turn(queued_p_dir, 45))
-							tube.simple_rotate_flip()
+							tube.setDir(turn(queued_p_dir, 45 + ROTATION_FLIP))
+							tube.AfterRotation(user, ROTATION_FLIP)
 
 						tube.add_fingerprint(usr)
 						if(mode & WRENCH_MODE)
