@@ -7,7 +7,7 @@
 	drag_slowdown = 1.5		// Same as a prone mob
 	max_integrity = 200
 	integrity_failure = 0.25
-	armor = list(MELEE = 20,  BULLET = 10, LASER = 10, ENERGY = 0, BOMB = 10, BIO = 0, RAD = 0, FIRE = 70, ACID = 60, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/structure_closet
 	blocks_emissive = EMISSIVE_BLOCK_GENERIC
 	pass_flags_self = LETPASSCLICKS | PASSSTRUCTURE
 	interaction_flags_atom = NONE
@@ -20,7 +20,10 @@
 	var/opened = FALSE
 	var/welded = FALSE
 	var/locked = FALSE
-	var/divable = TRUE //controls whether someone with skittish trait can enter the closet with CtrlShiftClick
+	/// Whether a skittish person can dive inside this closet. Disable if opening the closet causes "bad things" to happen or that it leads to a logical inconsistency.
+	var/divable = TRUE
+	/// true whenever someone with the strong pull component (or magnet modsuit module) is dragging this, preventing opening
+	var/strong_grab = FALSE
 	var/large = TRUE
 	var/wall_mounted = 0 //never solid (You can always pass over it)
 	var/breakout_time = 1200
@@ -59,6 +62,15 @@
 
 	//should be just for crates, right?
 	var/obj/item/paper/fluff/jobs/cargo/manifest/manifest
+
+
+/datum/armor/structure_closet
+	melee = 20
+	bullet = 10
+	laser = 10
+	bomb = 10
+	fire = 70
+	acid = 60
 
 /obj/structure/closet/Initialize(mapload)
 	. = ..()

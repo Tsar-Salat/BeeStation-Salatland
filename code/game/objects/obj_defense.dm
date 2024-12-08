@@ -128,9 +128,9 @@ GLOBAL_DATUM_INIT(acid_overlay, /mutable_appearance, mutable_appearance('icons/e
 /obj/proc/acid_processing()
 	. = 1
 	if(!(resistance_flags & ACID_PROOF))
-		for(var/armour_value in armor.getList())
+		for(var/armour_value in get_armor_rating())
 			if(armour_value != ACID && armour_value != FIRE)
-				armor = armor.modifyAllRatings(0 - round(sqrt(acid_level)*0.1))
+				set_armor(get_armor().generate_new_with_modifiers(list(0 - round(sqrt(acid_level)*0.1))))
 		if(prob(33))
 			playsound(loc, 'sound/items/welder.ogg', 150, 1)
 		take_damage(min(1 + round(sqrt(acid_level)*0.3), 300), BURN, ACID, 0)
@@ -196,6 +196,7 @@ GLOBAL_DATUM_INIT(acid_overlay, /mutable_appearance, mutable_appearance('icons/e
 
 //what happens when the obj's integrity reaches zero.
 /obj/atom_destruction(damage_flag)
+	. = ..()
 	if(damage_flag == ACID)
 		acid_melt()
 	else if(damage_flag == FIRE)

@@ -14,7 +14,7 @@
 	z_flags = Z_BLOCK_IN_DOWN | Z_BLOCK_IN_UP
 	pressure_resistance = 5*ONE_ATMOSPHERE
 	layer = BELOW_OBJ_LAYER
-	armor = list(MELEE = 50,  BULLET = 70, LASER = 70, ENERGY = 100, BOMB = 10, BIO = 100, RAD = 100, FIRE = 0, ACID = 0, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/structure_grille
 	max_integrity = 50
 	integrity_failure = 0.4
 	var/rods_type = /obj/item/stack/rods
@@ -25,7 +25,16 @@
 		pipe_astar_cost = 1\
 	)
 
-/obj/structure/grille/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir, armour_penetration = 0)
+
+/datum/armor/structure_grille
+	melee = 50
+	bullet = 70
+	laser = 70
+	energy = 100
+	bomb = 10
+	rad = 100
+
+/obj/structure/grille/take_damage(damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armour_penetration)
 	. = ..()
 	update_appearance()
 
@@ -345,7 +354,7 @@
 					C.add_delayedload(C.newavail() * 0.0375) // you can gain up to 3.5 via the 4x upgrades power is halved by the pole so thats 2x then 1X then .5X for 3.5x the 3 bounces shock.
 	return ..()
 
-/obj/structure/grille/get_dumping_location(datum/component/storage/source,mob/user)
+/obj/structure/grille/get_dumping_location()
 	return null
 
 /obj/structure/grille/broken // Pre-broken grilles for map placement

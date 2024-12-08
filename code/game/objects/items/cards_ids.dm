@@ -164,7 +164,7 @@
 	lefthand_file = 'icons/mob/inhands/equipment/idcards_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/idcards_righthand.dmi'
 	slot_flags = ITEM_SLOT_ID
-	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/card_id
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	var/list/access = list()
 	var/registered_name// The name registered_name on the card
@@ -175,6 +175,11 @@
 	var/obj/machinery/paystand/my_store
 	/// controls various things, disable to make it have no bank account, ineditable in id machines, etc
 	var/electric = TRUE  // removes account info from examine
+
+
+/datum/armor/card_id
+	fire = 100
+	acid = 100
 
 /obj/item/card/id/Initialize(mapload)
 	. = ..()
@@ -200,6 +205,9 @@
 	if(Adjacent(user))
 		user.visible_message("<span class='notice'>[user] shows you: [icon2html(src, viewers(user))] [src.name].</span>", "<span class='notice'>You show \the [src.name].</span>")
 	add_fingerprint(user)
+
+/obj/item/card/id/proc/set_access(list/new_access_list, mode = ERROR_ON_FAIL)
+	return
 
 /obj/item/card/id/vv_edit_var(var_name, var_value)
 	. = ..()
@@ -859,12 +867,16 @@ update_label("John Doe", "Clowny")
 	name = "paper nametag"
 	desc = "Some spare papers taped into a vague card shape, with a name scribbled on it. Seems trustworthy."
 	icon_state = "paper"
-	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 0, ACID = 50, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/id_paper
 	resistance_flags = null  // removes all resistance because its a piece of paper
 	access = list()
 	assignment = "Unknown"
 	hud_state = JOB_HUD_PAPER
 	electric = FALSE
+
+
+/datum/armor/id_paper
+	acid = 50
 
 /obj/item/card/id/paper/attackby(obj/item/W, mob/user, params)
 	if(istype(W, /obj/item/pen))

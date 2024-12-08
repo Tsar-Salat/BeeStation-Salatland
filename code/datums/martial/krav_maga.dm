@@ -10,7 +10,7 @@
 	icon_icon = 'icons/hud/actions/actions_items.dmi'
 	button_icon_state = "neckchop"
 
-/datum/action/neck_chop/Trigger()
+/datum/action/neck_chop/Trigger(trigger_flags)
 	if(owner.incapacitated())
 		to_chat(owner, "<span class='warning'>You can't use [name] while you're incapacitated.</span>")
 		return
@@ -27,7 +27,7 @@
 	icon_icon = 'icons/hud/actions/actions_items.dmi'
 	button_icon_state = "legsweep"
 
-/datum/action/leg_sweep/Trigger()
+/datum/action/leg_sweep/Trigger(trigger_flags)
 	if(owner.incapacitated())
 		to_chat(owner, "<span class='warning'>You can't use [name] while you're incapacitated.</span>")
 		return
@@ -44,7 +44,7 @@
 	icon_icon = 'icons/hud/actions/actions_items.dmi'
 	button_icon_state = "lungpunch"
 
-/datum/action/lung_punch/Trigger()
+/datum/action/lung_punch/Trigger(trigger_flags)
 	if(owner.incapacitated())
 		to_chat(owner, "<span class='warning'>You can't use [name] while you're incapacitated.</span>")
 		return
@@ -215,6 +215,10 @@
 	item_state = "combatgloves"
 	worn_icon_state = "combatgloves"
 	siemens_coefficient = 0
-	permeability_coefficient = 0.05
 	strip_delay = 80
-	armor = list(MELEE = 0, BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 80, ACID = 50, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/krav_maga_combatglovesplus
+
+/datum/armor/krav_maga_combatglovesplus
+	bio = 90
+	fire = 80
+	acid = 50

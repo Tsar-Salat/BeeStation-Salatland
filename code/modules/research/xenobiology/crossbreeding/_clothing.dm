@@ -13,9 +13,13 @@ Slimecrossing Armor
 	body_parts_covered = NONE
 	w_class = WEIGHT_CLASS_SMALL
 	gas_transfer_coefficient = 0
-	permeability_coefficient = 0.5
+	armor_type = /datum/armor/mask_nobreath
 	flags_cover = MASKCOVERSMOUTH
 	resistance_flags = NONE
+
+
+/datum/armor/mask_nobreath
+	bio = 50
 
 /obj/item/clothing/mask/nobreath/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
@@ -71,7 +75,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/light_prism)
 	icon_icon = 'icons/obj/slimecrossing.dmi'
 	button_icon_state = "prismcolor"
 
-/datum/action/item_action/change_prism_colour/Trigger()
+/datum/action/item_action/change_prism_colour/Trigger(trigger_flags)
 	if(!IsAvailable())
 		return
 	var/obj/item/clothing/glasses/prism_glasses/glasses = target
@@ -85,7 +89,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/light_prism)
 	icon_icon = 'icons/obj/slimecrossing.dmi'
 	button_icon_state = "lightprism"
 
-/datum/action/item_action/place_light_prism/Trigger()
+/datum/action/item_action/place_light_prism/Trigger(trigger_flags)
 	if(!IsAvailable())
 		return
 	var/obj/item/clothing/glasses/prism_glasses/glasses = target

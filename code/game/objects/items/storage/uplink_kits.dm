@@ -117,7 +117,7 @@
 			new /obj/item/clothing/under/suit/black_really(src)
 
 		if("metaops")
-			new /obj/item/clothing/suit/space/hardsuit/syndi(src) // 8 tc
+			new /obj/item/mod/control/pre_equipped/nuclear(src) // 8 tc
 			new /obj/item/gun/ballistic/shotgun/automatic/bulldog/unrestricted(src) // 8 tc
 			new /obj/item/implanter/explosive(src) // 2 tc
 			new /obj/item/ammo_box/magazine/m12g(src) // 2 tc
@@ -616,8 +616,9 @@
 
 /obj/item/storage/box/syndie_kit/derringer
 	name = "'Infiltrator' pistol bundle"
-	desc = "Contains a Syndicate issued coat pistol, and one Match grade .38-special speed loader."
+	desc = "Contains a Syndicate issued coat pistol, and one Match grade .357 speed loader."
 
 /obj/item/storage/box/syndie_kit/derringer/PopulateContents()
 	new /obj/item/gun/ballistic/automatic/pistol/der38(src)
-	new /obj/item/ammo_box/c38/match(src)
+	for (var/i in 1 to 6)
+		new /obj/item/ammo_casing/a357(src)

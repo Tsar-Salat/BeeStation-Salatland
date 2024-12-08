@@ -27,8 +27,6 @@
 	var/cooldown = 0
 	var/envirosealed = FALSE //is it safe for plasmamen
 
-	var/blocks_shove_knockdown = FALSE //Whether wearing the clothing item blocks the ability for shove to knock down.
-
 	var/clothing_flags = NONE
 
 	/// What items can be consumed to repair this clothing (must by an /obj/item/stack)
@@ -41,6 +39,9 @@
 	var/list/user_vars_remembered //Auto built by the above + dropped() + equipped()
 
 	/// Trait modification, lazylist of traits to add/take away, on equipment/drop in the correct slot
+
+	/// Trait modification, lazylist of traits to add/take away, on equipment/drop in the correct slot
+	var/list/clothing_traits
 
 	var/pocket_storage_component_path
 
@@ -136,7 +137,7 @@
 	var/obj/item/organ/tongue/tongue = attacker.getorganslot(ORGAN_SLOT_TONGUE)
 	if(!istype(tongue, /obj/item/organ/tongue/moth) && !istype(tongue, /obj/item/organ/tongue/psyphoza))
 		return ..() //Not a clotheater tongue? No Clotheating!
-	if((clothing_flags & NOTCONSUMABLE) && (resistance_flags & INDESTRUCTIBLE) && (armor.getRating(MELEE) != 0))
+	if((clothing_flags & NOTCONSUMABLE) && (resistance_flags & INDESTRUCTIBLE) && (get_armor_rating(MELEE) != 0))
 		return ..() //Any remaining flags that make eating it impossible?
 
 	if (isnull(moth_snack))
@@ -234,8 +235,7 @@
 		RegisterSignal(C, COMSIG_MOVABLE_MOVED, PROC_REF(bristle))
 
 	zones_disabled++
-	for(var/i in body_zone2cover_flags(def_zone))
-		body_parts_covered &= ~i
+	body_parts_covered &= ~body_zone2cover_flags(def_zone)
 
 	if(body_parts_covered == NONE) // if there are no more parts to break then the whole thing is kaput
 		atom_destruction((damage_type == BRUTE ? MELEE : LASER)) // melee/laser is good enough since this only procs from direct attacks anyway and not from fire/bombs
@@ -262,6 +262,8 @@
 	if(!istype(user))
 		return
 	UnregisterSignal(user, COMSIG_MOVABLE_MOVED)
+	for(var/trait in clothing_traits)
+		REMOVE_TRAIT(user, trait, "[CLOTHING_TRAIT] [REF(src)]")
 
 	if(LAZYLEN(user_vars_remembered))
 		for(var/variable in user_vars_remembered)
@@ -277,8 +279,9 @@
 	if(slot_flags & slot) //Was equipped to a valid slot for this item?
 		if(iscarbon(user) && LAZYLEN(zones_disabled))
 			RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(bristle))
-
-		if(LAZYLEN(user_vars_to_edit))
+		for(var/trait in clothing_traits)
+			ADD_TRAIT(user, trait, "[CLOTHING_TRAIT] [REF(src)]")
+		if (LAZYLEN(user_vars_to_edit))
 			for(var/variable in user_vars_to_edit)
 				if(variable in user.vars)
 					LAZYSET(user_vars_remembered, variable, user.vars[variable])
@@ -327,46 +330,36 @@
 		how_cool_are_your_threads += "</span>"
 		. += how_cool_are_your_threads.Join()
 
-	if(armor.bio || armor.bomb || armor.bullet || armor.energy || armor.laser || armor.melee || armor.fire || armor.acid || armor.stamina || (flags_cover & HEADCOVERSMOUTH))
+	if(get_armor().has_any_armor() || (flags_cover & HEADCOVERSMOUTH))
 		. += "<span class='notice'>It has a <a href='?src=[REF(src)];list_armor=1'>tag</a> listing its protection classes.</span>"
 
 /obj/item/clothing/Topic(href, href_list)
 	. = ..()
 
 	if(href_list["list_armor"])
-		var/obj/item/clothing/compare_to = null
-		for (var/flag in bitfield_to_list(slot_flags))
-			var/thing = usr.get_item_by_slot(flag)
-			if (istype(thing, /obj/item/clothing))
-				compare_to = thing
-				break
 		var/list/readout = list("<span class='notice'><u><b>PROTECTION CLASSES</u></b>")
-		if(armor.bio || armor.bomb || armor.bullet || armor.energy || armor.laser || armor.melee || armor.rad || armor.stamina || armor.bleed)
-			readout += "<br /><b>ARMOR (I-X)</b>"
-			if(armor.bio || compare_to?.armor?.bio)
-				readout += "<br />TOXIN [armor_to_protection_class(armor.bio, compare_to?.armor?.bio)]"
-			if(armor.bomb || compare_to?.armor?.bomb)
-				readout += "<br />EXPLOSIVE [armor_to_protection_class(armor.bomb, compare_to?.armor?.bomb)]"
-			if(armor.bullet || compare_to?.armor?.bullet)
-				readout += "<br />BULLET [armor_to_protection_class(armor.bullet, compare_to?.armor?.bullet)]"
-			if(armor.energy || compare_to?.armor?.energy)
-				readout += "<br />ENERGY [armor_to_protection_class(armor.energy, compare_to?.armor?.energy)]"
-			if(armor.laser || compare_to?.armor?.laser)
-				readout += "<br />LASER [armor_to_protection_class(armor.laser, compare_to?.armor?.laser)]"
-			if(armor.melee || compare_to?.armor?.melee)
-				readout += "<br />MELEE [armor_to_protection_class(armor.melee, compare_to?.armor?.melee)]"
-			if(armor.rad || compare_to?.armor?.rad)
-				readout += "<br />RADIATION [armor_to_protection_class(armor.rad, compare_to?.armor?.rad)]"
-			if(armor.stamina || compare_to?.armor?.stamina)
-				readout += "<br />STAMINA [armor_to_protection_class(armor.stamina, compare_to?.armor?.stamina)]"
-			if(armor.bleed || compare_to?.armor?.bleed)
-				readout += "<br />BLEEDING [armor_to_protection_class(armor.bleed, compare_to?.armor?.bleed)]"
-		if(armor.fire || armor.acid)
-			readout += "<br /><b>DURABILITY (I-X)</b>"
-			if(armor.fire || compare_to?.armor?.fire)
-				readout += "<br />FIRE [armor_to_protection_class(armor.fire, compare_to?.armor?.fire)]"
-			if(armor.acid || compare_to?.armor?.acid)
-				readout += "<br />ACID [armor_to_protection_class(armor.acid, compare_to?.armor?.acid)]"
+
+		var/datum/armor/armor = get_armor()
+		var/added_damage_header = FALSE
+		for(var/damage_key in ARMOR_LIST_DAMAGE)
+			var/rating = armor.get_rating(damage_key)
+			if(!rating)
+				continue
+			if(!added_damage_header)
+				readout += "\n<b>ARMOR (I-X)</b>"
+				added_damage_header = TRUE
+			readout += "\n[armor_to_protection_name(damage_key)] [armor_to_protection_class(rating)]"
+
+		var/added_durability_header = FALSE
+		for(var/durability_key in ARMOR_LIST_DURABILITY)
+			var/rating = armor.get_rating(durability_key)
+			if(!rating)
+				continue
+			if(!added_durability_header)
+				readout += "\n<b>DURABILITY (I-X)</b>"
+				added_damage_header = TRUE
+			readout += "\n[armor_to_protection_name(durability_key)] [armor_to_protection_class(rating)]"
+
 		if(flags_cover & HEADCOVERSMOUTH)
 			readout += "<br /><b>COVERAGE</b>"
 			readout += "<br />It will block Facehuggers."
@@ -552,6 +545,8 @@ BLIND     // can't see anything
 	new /obj/effect/decal/cleanable/shreds(get_turf(src), name)
 
 /obj/item/clothing/atom_destruction(damage_flag)
+	if(damage_flag in list(ACID, FIRE))
+		return ..()
 	if(damage_flag == BOMB)
 		//so the shred survives potential turf change from the explosion.
 		addtimer(CALLBACK(src, PROC_REF(_spawn_shreds)), 1)
@@ -563,7 +558,7 @@ BLIND     // can't see anything
 			var/mob/living/possessing_mob = loc
 			possessing_mob.visible_message("<span class='danger'>[src] is consumed until naught but shreds remains!</span>", "<span class='boldwarning'>[src] falls apart into little bits!</span>")
 		deconstruct(FALSE)
-	else if(!(damage_flag in list(ACID, FIRE)))
+	else
 		body_parts_covered = NONE
 		slot_flags = NONE
 		update_clothes_damaged_state(CLOTHING_SHREDDED)
@@ -576,8 +571,6 @@ BLIND     // can't see anything
 				M.visible_message("<span class='danger'>[src] fall[p_s()] apart, completely shredded!</span>", vision_distance = COMBAT_MESSAGE_RANGE)
 		name = "shredded [initial(name)]" // change the name -after- the message, not before.
 		update_appearance()
-	else
-		..()
 
 /// If we're a clothing with at least 1 shredded/disabled zone, give the wearer a periodic heads up letting them know their clothes are damaged
 /obj/item/clothing/proc/bristle(mob/living/L)
@@ -588,15 +581,17 @@ BLIND     // can't see anything
 	if(prob(0.2))
 		to_chat(L, "<span class='warning'>The damaged threads on your [src.name] chafe!</span>")
 
-/obj/item/clothing/get_armor_rating(d_type, mob/wearer)
+/*
+/obj/item/clothing/get_armor_rating(d_type)
 	. = ..()
 	if(high_pressure_multiplier == 1)
 		return
-	var/turf/T = get_turf(wearer)
+	var/turf/T = get_turf(usr)
 	if(!T || !(d_type in high_pressure_multiplier_types))
 		return
 	if(!lavaland_equipment_pressure_check(T))
 		. *= high_pressure_multiplier
+*/
 
 #undef SENSORS_OFF
 #undef SENSORS_BINARY

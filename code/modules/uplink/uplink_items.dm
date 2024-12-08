@@ -697,8 +697,9 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 
 /datum/uplink_item/dangerous/derringer
 	name = "'Infiltrator' Coat Pistol"
-	desc = "For the deeply embedded agent; a very compact dual-barreled handgun chambered in .38-special. Compatible with \
-			standard production NT speed loaders. Loaded with .38 Match ammunition and includes a spare speedloader."
+	desc = "For the deeply embedded agent; a very compact dual-barreled handgun chambered with highly powerful .357 rounds. \
+		It's small ammo capacity and difficult to obtain ammo make it poor at prolonged engagements, but it's saved the lives of \
+		many agents that find themselves in sticky situations."
 	item = /obj/item/storage/box/syndie_kit/derringer
 	cost = 4
 	purchasable_from = ~UPLINK_CLOWN_OPS
@@ -1026,60 +1027,6 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	item = /obj/item/ammo_box/a357
 	player_minimum = 25
 	cost = 2
-	purchasable_from = ~UPLINK_CLOWN_OPS
-	illegal_tech = FALSE
-	contents_are_illegal_tech = FALSE
-
-/datum/uplink_item/ammo/c38
-	name = ".38-special Speed Loader"
-	desc = "A standard issue .38-special speed loader, for use with the Detective's revolver or 'Infiltrator' coat pistol."
-	item = /obj/item/ammo_box/c38
-	cost = 1
-	purchasable_from = ~UPLINK_CLOWN_OPS
-	illegal_tech = FALSE
-	contents_are_illegal_tech = FALSE
-
-/datum/uplink_item/ammo/c38blister
-	name = ".38-special 'Blister' Speed Loader"
-	desc = "For when you can't deside between a coat pistol and a dart pistol! These 6 cartridges can \
-			be injected with up to 10 units of your favorite poison for remote application via sidearm."
-	item = /obj/item/ammo_box/c38/dart
-	cost = 1
-	purchasable_from = ~UPLINK_CLOWN_OPS
-	illegal_tech = FALSE
-	contents_are_illegal_tech = FALSE
-
-/datum/uplink_item/ammo/c38dumdum
-	name = ".38-special DumDum Speed Loader"
-	desc = "6 specialized fragmenting .38-special catridges, excellent for dispatching unarmored targets. \
-			Shrapnel can embed within the victim and provide a debilitating effect. Not advised for use \
-			against armored targets."
-	item = /obj/item/ammo_box/c38/dumdum
-	cost = 1
-	purchasable_from = ~UPLINK_CLOWN_OPS
-
-/datum/uplink_item/ammo/c38iceblox
-	name = ".38-special Iceblox Speed Loader"
-	desc = "6 .38-special Iceblox cartridges, 'guaranteed' to free your target to the core."
-	item = /obj/item/ammo_box/c38/iceblox
-	cost = 1
-	purchasable_from = ~UPLINK_CLOWN_OPS
-
-/datum/uplink_item/ammo/c38hotshot
-	name = ".38-special Hot Shot Speed Loader"
-	desc = "6 .38-special Hot Shot cartridges. Set your target ablaze with this specialized thermal payload."
-	item = /obj/item/ammo_box/c38/hotshot
-	cost = 1
-	purchasable_from = ~UPLINK_CLOWN_OPS
-	illegal_tech = FALSE
-	contents_are_illegal_tech = FALSE
-
-/datum/uplink_item/ammo/c38emp
-	name = ".38-special 'BLK_OUT' Speed Loader"
-	desc = "6 specialized 'anti-silicon' .38-special cartridges that release a minor EMP on impact with a hard surface. \
-			From Silicons, to IPCs, to any machinery or energy-based weapons in use by security, leave them in the dark."
-	item = /obj/item/ammo_box/c38/emp
-	cost = 1
 	purchasable_from = ~UPLINK_CLOWN_OPS
 	illegal_tech = FALSE
 	contents_are_illegal_tech = FALSE
@@ -1672,17 +1619,14 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	item = /obj/item/storage/box/syndie_kit/space
 	cost = 3
 
-/datum/uplink_item/suits/hardsuit
-	name = "Syndicate Hardsuit"
-	desc = "The feared suit of a Syndicate nuclear agent. Features slightly better armoring, a built in jetpack \
-			that runs off standard atmospheric tanks and an advanced team location system. Toggling the suit in and out of \
-			combat mode will allow you all the mobility of a loose fitting uniform without sacrificing armoring. \
-			Additionally the suit is collapsible, making it small enough to fit within a backpack. \
-			Nanotrasen crew who spot these suits are known to panic."
-	item = /obj/item/clothing/suit/space/hardsuit/syndi
+/datum/uplink_item/suits/modsuit
+	name = "Syndicate MODsuit"
+	desc = "The feared MODsuit of a Syndicate agent. Features armoring and a set of inbuilt modules."
+	item = /obj/item/mod/control/pre_equipped/traitor
 	cost = 7
-	purchasable_from = ~UPLINK_NUKE_OPS //you can't buy it in nuke, because the elite hardsuit costs the same while being better
+	purchasable_from = ~(UPLINK_NUKE_OPS | UPLINK_CLOWN_OPS) //you can't buy it in nuke, because the elite modsuit costs the same while being better
 
+/*
 /datum/uplink_item/suits/hardsuit/spawn_item(spawn_path, mob/user, datum/component/uplink/U)
 	var/obj/item/clothing/suit/space/hardsuit/suit = ..()
 	var/datum/component/tracking_beacon/beacon = suit.GetComponent(/datum/component/tracking_beacon)
@@ -1695,22 +1639,76 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 		if(beacon)
 			beacon.set_frequency(nukie.nuke_team.team_frequency)
 	return suit
+*/
 
-/datum/uplink_item/suits/hardsuit/elite
-	name = "Elite Syndicate Hardsuit"
-	desc = "An upgraded, elite version of the Syndicate hardsuit. It features fireproofing, and also \
-			provides the user with superior armor and mobility compared to the standard Syndicate hardsuit."
-	item = /obj/item/clothing/suit/space/hardsuit/syndi/elite
-	cost = 8
+/datum/uplink_item/suits/modsuit/elite
+	name = "Elite Syndicate MODsuit"
+	desc = "An upgraded, elite version of the Syndicate MODsuit. It features fireproofing, and also \
+			provides the user with superior armor and mobility compared to the standard Syndicate MODsuit."
+	item = /obj/item/mod/control/pre_equipped/elite
 	purchasable_from = (UPLINK_NUKE_OPS | UPLINK_CLOWN_OPS)
 
-/datum/uplink_item/suits/hardsuit/shielded
-	name = "Shielded Syndicate Hardsuit"
-	desc = "An upgraded version of the standard Syndicate hardsuit. It features a built-in energy shielding system. \
-			The shields can handle up to three impacts within a short duration and will rapidly recharge while not under fire."
-	item = /obj/item/clothing/suit/space/hardsuit/shielded/syndi
-	cost = 30
-	purchasable_from = (UPLINK_NUKE_OPS | UPLINK_CLOWN_OPS)
+/datum/uplink_item/suits/energy_shield
+	name = "MODsuit Energy Shield Module"
+	desc = "An energy shield module for a MODsuit. The shields can handle up to three impacts \
+			within a short duration and will rapidly recharge while not under fire."
+	item = /obj/item/mod/module/energy_shield
+	cost = 15
+	purchasable_from = UPLINK_NUKE_OPS | UPLINK_CLOWN_OPS
+
+/datum/uplink_item/suits/energy_shield
+	name = "MODsuit Energy Shield Module"
+	desc = "An energy shield module for a MODsuit. The shields can handle up to three impacts \
+			within a short duration and will rapidly recharge while not under fire."
+	item = /obj/item/mod/module/energy_shield
+	cost = 15
+	purchasable_from = UPLINK_NUKE_OPS | UPLINK_CLOWN_OPS
+
+/datum/uplink_item/suits/injector
+	name = "MODsuit Injector Module"
+	desc = "An injector module for a MODsuit. It is an extendable piercing injector with 30u capacity."
+	item = /obj/item/mod/module/injector
+	cost = 2
+	purchasable_from = UPLINK_NUKE_OPS | UPLINK_CLOWN_OPS
+
+/datum/uplink_item/suits/holster
+	name = "MODsuit Holster Module"
+	desc = "A holster module for a MODsuit. It can stealthily store any not too heavy gun inside it."
+	item = /obj/item/mod/module/holster
+	cost = 2
+	purchasable_from = UPLINK_NUKE_OPS | UPLINK_CLOWN_OPS
+
+/datum/uplink_item/suits/thermal
+	name = "MODsuit Thermal Visor Module"
+	desc = "A visor for a MODsuit. Lets you see living beings through walls."
+	item = /obj/item/mod/module/visor/thermal
+	cost = 3
+
+/datum/uplink_item/suits/night
+	name = "MODsuit Night Visor Module"
+	desc = "A visor for a MODsuit. Lets you see clearer in the dark."
+	item = /obj/item/mod/module/visor/night
+	cost = 2
+
+/datum/uplink_item/suits/chameleon
+	name = "MODsuit Chameleon Module"
+	desc = "A MODsuit module that lets the suit disguise itself as other objects."
+	item = /obj/item/mod/module/chameleon
+	cost = 2
+
+/datum/uplink_item/suits/plate_compression
+	name = "MODsuit Plate Compression Module"
+	desc = "A MODsuit module that lets the suit compress into a smaller size. Not compatible with storage modules."
+	item = /obj/item/mod/module/plate_compression
+	cost = 2
+
+// Medium progression cost
+
+/datum/uplink_item/suits/noslip
+	name = "MODsuit Anti-Slip Module"
+	desc = "A MODsuit module preventing the user from slipping on water."
+	item = /obj/item/mod/module/noslip
+	cost = 2
 
 // Devices and Tools
 /datum/uplink_item/device_tools

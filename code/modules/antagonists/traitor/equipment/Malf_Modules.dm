@@ -4,6 +4,7 @@
 GLOBAL_LIST_INIT(blacklisted_malf_machines, typecacheof(list(
 		/obj/machinery/field/containment,
 		/obj/machinery/power/supermatter_crystal,
+		/obj/machinery/gravity_generator,
 		/obj/machinery/doomsday_device,
 		/obj/machinery/nuclearbomb,
 		/obj/machinery/nuclearbomb/selfdestruct,
@@ -44,7 +45,7 @@ GLOBAL_LIST_INIT(blacklisted_malf_machines, typecacheof(list(
 	if(owner_AI && owner_AI.malf_cooldown > world.time)
 		return
 
-/datum/action/innate/ai/Trigger()
+/datum/action/innate/ai/Trigger(trigger_flags)
 	. = ..()
 	if(auto_use_uses)
 		adjust_uses(-1)

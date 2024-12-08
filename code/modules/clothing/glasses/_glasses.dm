@@ -140,11 +140,16 @@
 	icon_state = "purple"
 	item_state = "glasses"
 	emissive_state = "meson_emissive"
-	clothing_flags = SCAN_REAGENTS
 	actions_types = list(/datum/action/item_action/toggle_research_scanner)
 	glass_colour_type = /datum/client_colour/glass_colour/purple
 	resistance_flags = ACID_PROOF
-	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 80, ACID = 100, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/glasses_science
+	clothing_traits = list(TRAIT_REAGENT_SCANNER)
+
+
+/datum/armor/glasses_science
+	fire = 80
+	acid = 100
 
 /obj/item/clothing/glasses/science/item_action_slot_check(slot)
 	if(slot == ITEM_SLOT_EYES)
@@ -156,8 +161,13 @@
 	icon_state = "prescscihud"
 	emissive_state = "prehud_emissive"
 	resistance_flags = NONE
-	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 20, ACID = 40, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/science_prescription
 	vision_correction = 1
+
+
+/datum/armor/science_prescription
+	fire = 20
+	acid = 40
 
 /obj/item/clothing/glasses/science/sciencesun
 	name = "science sunglasses"
@@ -292,7 +302,7 @@
 /obj/item/clothing/glasses/sunglasses/advanced/reagent
 	name = "beer goggles"
 	desc = "A pair of sunglasses outfitted with apparatus to scan reagents, as well as providing an innate understanding of liquid viscosity while in motion. Has enhanced shielding which blocks flashes."
-	clothing_flags = SCAN_REAGENTS | SCAN_BOOZEPOWER
+	clothing_traits = list(TRAIT_BOOZE_SLIDER, TRAIT_REAGENT_SCANNER)
 
 /obj/item/clothing/glasses/sunglasses/advanced/reagent/equipped(mob/user, slot)
 	. = ..()
@@ -548,7 +558,7 @@
 	item_state = "godeye"
 	vision_flags = SEE_TURFS|SEE_MOBS|SEE_OBJS
 	darkness_view = 8
-	clothing_flags = SCAN_REAGENTS | SCAN_BOOZEPOWER
+	clothing_traits = list(TRAIT_BOOZE_SLIDER, TRAIT_REAGENT_SCANNER)
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	resistance_flags = LAVA_PROOF | FIRE_PROOF
 	vision_correction = 1  // why should the eye of a god have bad vision?

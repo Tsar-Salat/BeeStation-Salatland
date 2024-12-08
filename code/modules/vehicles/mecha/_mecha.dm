@@ -23,7 +23,7 @@
 	icon = 'icons/mecha/mecha.dmi'
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	max_integrity = 300
-	armor = list(MELEE = 20, BULLET = 10, LASER = 0, ENERGY = 0, BOMB = 10, BIO = 0, RAD = 0, FIRE = 100, ACID = 100, STAMINA = 0)
+	armor_type = /datum/armor/sealed_mecha
 	movedelay = 1 SECONDS
 	force = 5
 	move_force = MOVE_FORCE_VERY_STRONG
@@ -178,6 +178,14 @@
 
 	hud_possible = list (DIAG_STAT_HUD, DIAG_BATT_HUD, DIAG_MECH_HUD, DIAG_TRACK_HUD)
 
+
+/datum/armor/sealed_mecha
+	melee = 20
+	bullet = 10
+	bomb = 10
+	fire = 100
+	acid = 100
+
 /obj/item/radio/mech //this has to go somewhere
 	subspace_transmission = TRUE
 
@@ -313,9 +321,9 @@
 		normal_step_energy_drain = 500
 		step_energy_drain = normal_step_energy_drain
 	if(capacitor)
-		armor = armor.modifyRating(energy = (capacitor.rating * 5)) //Each level of capacitor protects the mech against emp by 5%
-	else //because we can still be hit without a cap, even if we can't move
-		armor = armor.setRating(energy = 0)
+		var/datum/armor/stock_armor = get_armor_by_type(armor_type)
+		var/initial_energy = stock_armor.get_rating(ENERGY)
+		set_armor_rating(ENERGY, initial_energy + (capacitor.rating * 5))
 
 
 ////////////////////////
@@ -832,7 +840,7 @@
 			mecha_flags  &= ~SILICON_PILOT
 			AI.forceMove(card)
 			card.AI = AI
-			AI.controlled_mech = null
+			AI.controlled_equipment = null
 			AI.remote_control = null
 			to_chat(AI, "You have been downloaded to a mobile storage device. Wireless connection offline.")
 			to_chat(user, "<span class='boldnotice'>Transfer successful</span>: [AI.name] ([rand(1000,9999)].exe) removed from [name] and stored within local memory.")
@@ -872,7 +880,7 @@
 	mecha_flags |= SILICON_PILOT
 	moved_inside(AI)
 	AI.cancel_camera()
-	AI.controlled_mech = src
+	AI.controlled_equipment = src
 	AI.remote_control = src
 	to_chat(AI, AI.can_dominate_mechs ? "<span class='announce'>Takeover of [name] complete! You are now loaded onto the onboard computer. Do not attempt to leave the station sector!</span>" :\
 		"<span class='notice'>You have been uploaded to a mech's onboard computer.</span>")
@@ -1039,7 +1047,7 @@
 				return
 			if(!silent)
 				to_chat(AI, "<span class='notice'>Returning to core...</span>")
-			AI.controlled_mech = null
+			AI.controlled_equipment = null
 			AI.remote_control = null
 			mob_container = AI
 			newloc = get_turf(AI.linked_core)

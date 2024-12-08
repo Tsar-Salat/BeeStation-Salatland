@@ -14,10 +14,19 @@
 	throw_range = 1
 	w_class = WEIGHT_CLASS_HUGE
 	item_flags = ISWEAPON
-	armor = list(MELEE = 50,  BULLET = 50, LASER = 50, ENERGY = 0, BOMB = 50, BIO = 0, RAD = 0, FIRE = 100, ACID = 100, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/item_singularityhammer
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	force_string = "LORD SINGULOTH HIMSELF"
 	var/charged = 5
+
+
+/datum/armor/item_singularityhammer
+	melee = 50
+	bullet = 50
+	laser = 50
+	bomb = 50
+	fire = 100
+	acid = 100
 
 /obj/item/singularityhammer/Initialize(mapload)
 	. = ..()
@@ -50,21 +59,16 @@
 	for(var/atom/movable/A as mob|obj in orange(5,pull))
 		if(A == wielder)
 			continue
-		if(A && !A.anchored && !ishuman(A))
+		if(isliving(A))
+			var/mob/living/vortexed_mob = A
+			if(vortexed_mob.mob_negates_gravity())
+				continue
+			else
+				vortexed_mob.Paralyze(2 SECONDS)
+		if(!A.anchored && !isobserver(A))
 			step_towards(A,pull)
 			step_towards(A,pull)
 			step_towards(A,pull)
-		else if(ishuman(A))
-			var/mob/living/carbon/human/H = A
-			if(istype(H.shoes, /obj/item/clothing/shoes/magboots))
-				var/obj/item/clothing/shoes/magboots/M = H.shoes
-				if(M.magpulse)
-					continue
-			H.apply_effect(20, EFFECT_PARALYZE, 0)
-			step_towards(H,pull)
-			step_towards(H,pull)
-			step_towards(H,pull)
-	return
 
 /obj/item/singularityhammer/afterattack(atom/A as mob|obj|turf|area, mob/user, proximity)
 	. = ..()
