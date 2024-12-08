@@ -530,7 +530,7 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	name = "Bananium Energy Sword"
 	desc = "An energy sword that deals no damage, but will slip anyone it contacts, be it by melee attack, thrown \
 	impact, or just stepping on it. Beware friendly fire, as even anti-slip shoes will not protect against it."
-	item = /obj/item/melee/transforming/energy/sword/bananium
+	item = /obj/item/melee/energy/sword/bananium
 	cost = 3
 	surplus = 0
 	purchasable_from = UPLINK_CLOWN_OPS
@@ -593,7 +593,7 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	name = "Energy Sword"
 	desc = "The energy sword is an edged weapon with a blade of pure energy. The sword is small enough to be \
 			pocketed when inactive. Activating it produces a loud, distinctive noise."
-	item = /obj/item/melee/transforming/energy/sword/saber
+	item = /obj/item/melee/energy/sword/saber
 	cost = 8
 	purchasable_from = ~UPLINK_CLOWN_OPS
 
@@ -697,8 +697,9 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 
 /datum/uplink_item/dangerous/derringer
 	name = "'Infiltrator' Coat Pistol"
-	desc = "For the deeply embedded agent; a very compact dual-barreled handgun chambered in .38-special. Compatible with \
-			standard production NT speed loaders. Loaded with .38 Match ammunition and includes a spare speedloader."
+	desc = "For the deeply embedded agent; a very compact dual-barreled handgun chambered with highly powerful .357 rounds. \
+		It's small ammo capacity and difficult to obtain ammo make it poor at prolonged engagements, but it's saved the lives of \
+		many agents that find themselves in sticky situations."
 	item = /obj/item/storage/box/syndie_kit/derringer
 	cost = 4
 	purchasable_from = ~UPLINK_CLOWN_OPS
@@ -1026,60 +1027,6 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	item = /obj/item/ammo_box/a357
 	player_minimum = 25
 	cost = 2
-	purchasable_from = ~UPLINK_CLOWN_OPS
-	illegal_tech = FALSE
-	contents_are_illegal_tech = FALSE
-
-/datum/uplink_item/ammo/c38
-	name = ".38-special Speed Loader"
-	desc = "A standard issue .38-special speed loader, for use with the Detective's revolver or 'Infiltrator' coat pistol."
-	item = /obj/item/ammo_box/c38
-	cost = 1
-	purchasable_from = ~UPLINK_CLOWN_OPS
-	illegal_tech = FALSE
-	contents_are_illegal_tech = FALSE
-
-/datum/uplink_item/ammo/c38blister
-	name = ".38-special 'Blister' Speed Loader"
-	desc = "For when you can't deside between a coat pistol and a dart pistol! These 6 cartridges can \
-			be injected with up to 10 units of your favorite poison for remote application via sidearm."
-	item = /obj/item/ammo_box/c38/dart
-	cost = 1
-	purchasable_from = ~UPLINK_CLOWN_OPS
-	illegal_tech = FALSE
-	contents_are_illegal_tech = FALSE
-
-/datum/uplink_item/ammo/c38dumdum
-	name = ".38-special DumDum Speed Loader"
-	desc = "6 specialized fragmenting .38-special catridges, excellent for dispatching unarmored targets. \
-			Shrapnel can embed within the victim and provide a debilitating effect. Not advised for use \
-			against armored targets."
-	item = /obj/item/ammo_box/c38/dumdum
-	cost = 1
-	purchasable_from = ~UPLINK_CLOWN_OPS
-
-/datum/uplink_item/ammo/c38iceblox
-	name = ".38-special Iceblox Speed Loader"
-	desc = "6 .38-special Iceblox cartridges, 'guaranteed' to free your target to the core."
-	item = /obj/item/ammo_box/c38/iceblox
-	cost = 1
-	purchasable_from = ~UPLINK_CLOWN_OPS
-
-/datum/uplink_item/ammo/c38hotshot
-	name = ".38-special Hot Shot Speed Loader"
-	desc = "6 .38-special Hot Shot cartridges. Set your target ablaze with this specialized thermal payload."
-	item = /obj/item/ammo_box/c38/hotshot
-	cost = 1
-	purchasable_from = ~UPLINK_CLOWN_OPS
-	illegal_tech = FALSE
-	contents_are_illegal_tech = FALSE
-
-/datum/uplink_item/ammo/c38emp
-	name = ".38-special 'BLK_OUT' Speed Loader"
-	desc = "6 specialized 'anti-silicon' .38-special cartridges that release a minor EMP on impact with a hard surface. \
-			From Silicons, to IPCs, to any machinery or energy-based weapons in use by security, leave them in the dark."
-	item = /obj/item/ammo_box/c38/emp
-	cost = 1
 	purchasable_from = ~UPLINK_CLOWN_OPS
 	illegal_tech = FALSE
 	contents_are_illegal_tech = FALSE
@@ -2304,7 +2251,7 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	name = "Bananium Energy Sword"
 	desc = "An energy sword that deals no damage, but will slip anyone it contacts, be it by melee attack, thrown \
 	impact, or just stepping on it. Beware friendly fire, as even anti-slip shoes will not protect against it."
-	item = /obj/item/melee/transforming/energy/sword/bananium
+	item = /obj/item/melee/energy/sword/bananium
 	cost = 5
 	surplus = 0
 	restricted_roles = list(JOB_NAME_CLOWN)
@@ -2469,7 +2416,7 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	name = "Energy Saw"
 	desc = "A deadly energy saw. Comes in a slick black finish."
 	cost = 5
-	item = /obj/item/melee/transforming/energy/sword/esaw
+	item = /obj/item/melee/energy/sword/esaw
 	restricted_roles = list("Medical Doctor", "Chief Medical Officer", "Paramedic", "Brig Physician")
 
 /datum/uplink_item/role_restricted/esaw_arm

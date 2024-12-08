@@ -61,7 +61,7 @@
 			new /obj/item/pen/edagger(src)
 
 		if("murder")
-			new /obj/item/melee/transforming/energy/sword/saber(src)
+			new /obj/item/melee/energy/sword/saber(src)
 			new /obj/item/clothing/glasses/thermal/syndi(src)
 			new /obj/item/card/emag(src)
 			new /obj/item/clothing/shoes/chameleon/noslip(src)
@@ -204,7 +204,7 @@
 			new /obj/item/dnainjector/geladikinesis(src)
 			new /obj/item/dnainjector/cryokinesis(src)
 			new /obj/item/gun/energy/temperature/pin(src)
-			new /obj/item/melee/transforming/energy/sword/saber/blue(src) //see see it fits the theme bc its blue and ice is blue
+			new /obj/item/melee/energy/sword/saber/blue(src) //see see it fits the theme bc its blue and ice is blue //wow you are such a smartie
 
 /obj/item/storage/box/syndie_kit/contract_kit
 	name = "Contract Kit"
@@ -616,8 +616,9 @@
 
 /obj/item/storage/box/syndie_kit/derringer
 	name = "'Infiltrator' pistol bundle"
-	desc = "Contains a Syndicate issued coat pistol, and one Match grade .38-special speed loader."
+	desc = "Contains a Syndicate issued coat pistol, and one Match grade .357 speed loader."
 
 /obj/item/storage/box/syndie_kit/derringer/PopulateContents()
 	new /obj/item/gun/ballistic/automatic/pistol/der38(src)
-	new /obj/item/ammo_box/c38/match(src)
+	for (var/i in 1 to 6)
+		new /obj/item/ammo_casing/a357(src)
