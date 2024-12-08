@@ -8,13 +8,8 @@
 	w_class = WEIGHT_CLASS_SMALL
 	var/above_suit = FALSE
 	var/minimize_when_attached = TRUE // TRUE if shown as a small icon in corner, FALSE if overlayed
-	var/datum/component/storage/detached_pockets
 	var/attachment_slot = CHEST
 	appearance_flags = TILE_BOUND | RESET_COLOR
-
-/obj/item/clothing/accessory/Destroy()
-	set_detached_pockets(null)
-	return ..()
 
 /obj/item/clothing/accessory/proc/can_attach_accessory(obj/item/clothing/U, mob/user)
 	if(!attachment_slot || (U && U.body_parts_covered & attachment_slot))
@@ -23,12 +18,11 @@
 		to_chat(user, "<span class='warning'>There doesn't seem to be anywhere to put [src]...</span>")
 
 /obj/item/clothing/accessory/proc/attach(obj/item/clothing/under/U, user)
-	var/datum/component/storage/storage = GetComponent(/datum/component/storage)
-	if(storage)
-		if(SEND_SIGNAL(U, COMSIG_CONTAINS_STORAGE))
+	if(atom_storage)
+		if(U.atom_storage)
 			return FALSE
-		U.TakeComponent(storage)
-		set_detached_pockets(storage)
+		U.clone_storage(atom_storage)
+		U.atom_storage.set_real_location(src)
 	U.attached_accessory = src
 	forceMove(U)
 	layer = FLOAT_LAYER
@@ -39,18 +33,7 @@
 		pixel_y -= 8
 	U.add_overlay(src)
 
-	/**
-	** This proc can run before /obj/Initialize has run for U and src,
-	** we have to check that the armor list has been transformed into a datum before we try to call a proc on it
-	** This is safe to do as /obj/Initialize only handles setting up the datum if actually needed.
-	**/
-	if (islist(U.armor) || isnull(U.armor))
-		U.armor = getArmor(arglist(U.armor))
-
-	if (islist(armor) || isnull(armor))
-		armor = getArmor(arglist(armor))
-
-	U.armor = U.armor.attachArmor(armor)
+	U.set_armor(U.get_armor().add_other_armor(get_armor()))
 
 	if(isliving(user))
 		on_uniform_equip(U, user)
@@ -58,10 +41,10 @@
 	return TRUE
 
 /obj/item/clothing/accessory/proc/detach(obj/item/clothing/under/U, user)
-	if(detached_pockets && detached_pockets.parent == U)
-		TakeComponent(detached_pockets)
+	if(U.atom_storage && U.atom_storage.real_location?.resolve() == src)
+		QDEL_NULL(U.atom_storage)
 
-	U.armor = U.armor.detachArmor(armor)
+	U.set_armor(U.get_armor().subtract_other_armor(get_armor()))
 
 	if(isliving(user))
 		on_uniform_dropped(U, user)
@@ -75,17 +58,6 @@
 	U.cut_overlays()
 	U.attached_accessory = null
 	U.accessory_overlay = null
-
-/obj/item/clothing/accessory/proc/set_detached_pockets(new_pocket)
-	if(detached_pockets)
-		UnregisterSignal(detached_pockets, COMSIG_PARENT_QDELETING)
-	detached_pockets = new_pocket
-	if(detached_pockets)
-		RegisterSignal(detached_pockets, COMSIG_PARENT_QDELETING, PROC_REF(handle_pockets_del))
-
-/obj/item/clothing/accessory/proc/handle_pockets_del(datum/source)
-	SIGNAL_HANDLER
-	set_detached_pockets(null)
 
 /obj/item/clothing/accessory/proc/on_uniform_equip(obj/item/clothing/under/U, user)
 	return
@@ -233,8 +205,12 @@
 	desc = "An eccentric medal made of plasma."
 	icon_state = "plasma"
 	medaltype = "medal-plasma"
-	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = -10, ACID = 0, STAMINA = 0, BLEED = 0) //It's made of plasma. Of course it's flammable.
+	armor_type = /datum/armor/medal_plasma
 	custom_materials = list(/datum/material/plasma=1000)
+
+
+/datum/armor/medal_plasma
+	fire = -10
 
 /obj/item/clothing/accessory/medal/plasma/temperature_expose(datum/gas_mixture/air, exposed_temperature, exposed_volume)
 	if(exposed_temperature > 300)
@@ -345,10 +321,12 @@
 	name = "pocket protector"
 	desc = "Can protect your clothing from ink stains, but you'll look like a nerd if you're using one."
 	icon_state = "pocketprotector"
-	pocket_storage_component_path = /datum/component/storage/concrete/pockets/pocketprotector
 
 /obj/item/clothing/accessory/pocketprotector/full/Initialize(mapload)
 	. = ..()
+
+	create_storage(type = /datum/storage/pockets/pocketprotector)
+
 	new /obj/item/pen/red(src)
 	new /obj/item/pen(src)
 	new /obj/item/pen/blue(src)
@@ -366,16 +344,42 @@
 	name = "bone talisman"
 	desc = "A hunter's talisman, some say the old gods smile on those who wear it."
 	icon_state = "talisman"
-	armor = list(MELEE = 5,  BULLET = 5, LASER = 5, ENERGY = 5, BOMB = 20, BIO = 20, RAD = 5, FIRE = 0, ACID = 25, STAMINA = 10, BLEED = 10)
+	armor_type = /datum/armor/accessory_talisman
 	attachment_slot = null
+
+
+/datum/armor/accessory_talisman
+	melee = 5
+	bullet = 5
+	laser = 5
+	energy = 5
+	bomb = 20
+	bio = 20
+	rad = 5
+	acid = 25
+	stamina = 10
+	bleed = 10
 
 /obj/item/clothing/accessory/skullcodpiece
 	name = "skull codpiece"
 	desc = "A skull shaped ornament, intended to protect the important things in life."
 	icon_state = "skull"
 	above_suit = TRUE
-	armor = list(MELEE = 5,  BULLET = 5, LASER = 5, ENERGY = 5, BOMB = 20, BIO = 20, RAD = 5, FIRE = 0, ACID = 25, STAMINA = 10, BLEED = 10)
+	armor_type = /datum/armor/accessory_skullcodpiece
 	attachment_slot = GROIN
+
+
+/datum/armor/accessory_skullcodpiece
+	melee = 5
+	bullet = 5
+	laser = 5
+	energy = 5
+	bomb = 20
+	bio = 20
+	rad = 5
+	acid = 25
+	stamina = 10
+	bleed = 10
 
 /obj/item/clothing/accessory/holster
 	name = "shoulder holster"
@@ -383,12 +387,16 @@
 	icon_state = "holster"
 	item_state = "holster"
 	worn_icon_state = "holster"
-	pocket_storage_component_path = /datum/component/storage/concrete/pockets/holster
 	slot_flags = ITEM_SLOT_SUITSTORE|ITEM_SLOT_BELT
+	var/holstertype = /datum/storage/pockets/holster
+
+/obj/item/clothing/accessory/holster/Initialize(mapload)
+	. = ..()
+	create_storage(type = holstertype)
 
 /obj/item/clothing/accessory/holster/detective
 	name = "detective's shoulder holster"
-	pocket_storage_component_path = /datum/component/storage/concrete/pockets/holster/detective
+	holstertype = /datum/storage/pockets/holster/detective
 
 /obj/item/clothing/accessory/holster/detective/Initialize(mapload)
 	. = ..()

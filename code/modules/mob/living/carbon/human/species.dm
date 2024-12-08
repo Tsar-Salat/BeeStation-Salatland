@@ -1352,9 +1352,8 @@ GLOBAL_LIST_EMPTY(features_by_species)
 				return FALSE
 			return TRUE
 		if(ITEM_SLOT_BACKPACK)
-			if(H.back)
-				if(SEND_SIGNAL(H.back, COMSIG_TRY_STORAGE_CAN_INSERT, I, H, TRUE))
-					return TRUE
+			if(H.back && H.back.atom_storage?.can_insert(I, H, messages = TRUE))
+				return TRUE
 			return FALSE
 	return FALSE //Unsupported slot
 
@@ -2391,6 +2390,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		if(isturf(H.loc))
 			var/turf/T = H.loc
 			T.Entered(H)
+	H.refresh_gravity()
 
 ///Calls the DMI data for a custom icon for a given bodypart from the Species Datum.
 /datum/species/proc/get_custom_icons(var/part)

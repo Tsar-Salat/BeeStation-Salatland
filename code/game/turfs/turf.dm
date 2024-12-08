@@ -72,6 +72,9 @@ CREATION_TEST_IGNORE_SELF(/turf)
 	/// See __DEFINES/construction.dm for RCD_MEMORY_*.
 	var/rcd_memory
 
+	///whether or not this turf forces movables on it to have no gravity (unless they themselves have forced gravity)
+	var/force_no_gravity = FALSE
+
 	///Icon-smoothing variable to map a diagonal wall corner with a fixed underlay.
 	var/list/fixed_underlay = null
 
@@ -87,7 +90,13 @@ CREATION_TEST_IGNORE_SELF(/turf)
 		return FALSE
 	. = ..()
 
+/**
+  * Turf Initialize
+  *
+  * Doesn't call parent, see [/atom/proc/Initialize]
+  */
 /turf/Initialize(mapload)
+	SHOULD_CALL_PARENT(FALSE)
 	if(flags_1 & INITIALIZED_1)
 		stack_trace("Warning: [src]([type]) initialized multiple times!")
 	flags_1 |= INITIALIZED_1
@@ -156,11 +165,6 @@ CREATION_TEST_IGNORE_SELF(/turf)
 
 	if(uses_integrity)
 		atom_integrity = max_integrity
-
-		if (islist(armor))
-			armor = getArmor(arglist(armor))
-		else if (!armor)
-			armor = getArmor()
 
 	if(isopenturf(src))
 		var/turf/open/O = src
@@ -298,6 +302,7 @@ CREATION_TEST_IGNORE_SELF(/turf)
 	// Here's hoping it doesn't stay like this for years before we finish conversion to step_
 	var/atom/firstbump
 	var/canPassSelf = CanPass(mover, get_dir(src, mover))
+	
 	if(canPassSelf || (mover.movement_type & PHASING))
 		for(var/atom/movable/thing as anything in contents)
 			if(QDELETED(mover))
@@ -387,23 +392,6 @@ CREATION_TEST_IGNORE_SELF(/turf)
 
 /turf/proc/Bless()
 	new /obj/effect/blessing(src)
-
-/turf/storage_contents_dump_act(datum/component/storage/src_object, mob/user)
-	. = ..()
-	if(.)
-		return
-	if(length(src_object.contents()))
-		balloon_alert(usr, "You dump out the contents.")
-		if(!do_after(usr,20,target=src_object.parent))
-			return FALSE
-
-	var/list/things = src_object.contents()
-	var/datum/progressbar/progress = new(user, things.len, src)
-	while (do_after(usr, 10, src, progress = FALSE, extra_checks = CALLBACK(src_object, TYPE_PROC_REF(/datum/component/storage, mass_remove_from_storage), src, things, progress)))
-		stoplag(1)
-	progress.end_progress()
-
-	return TRUE
 
 //////////////////////////////
 //Distance procs

@@ -18,10 +18,9 @@
 
 		if(istype(I, /obj/item/storage))
 			var/obj/item/storage/S = I
-			var/datum/component/storage/STR = S.GetComponent(/datum/component/storage)
-			if(prob(upgrade_scroll_chance) && S.contents.len < STR.max_items && !S.invisibility)
+			if(prob(upgrade_scroll_chance) && S.contents.len < I.atom_storage.max_slots && !S.invisibility)
 				var/obj/item/upgradescroll/scroll = new(get_turf(S))
-				SEND_SIGNAL(S, COMSIG_TRY_STORAGE_INSERT, scroll, null, TRUE, TRUE)
+				I.atom_storage?.attempt_insert(S, scroll, null, TRUE, TRUE)
 				upgrade_scroll_chance = max(0,upgrade_scroll_chance-100)
 				if(isturf(scroll.loc))
 					qdel(scroll)
@@ -135,6 +134,6 @@
 	I.force = max(0,I.force + quality_mod)
 	I.throwforce = max(0,I.throwforce + quality_mod)
 
-	I.armor = I.armor.modifyAllRatings(quality)
+	I.set_armor(I.get_armor().generate_new_with_modifiers(list(ARMOR_ALL = -quality)))
 
 	rename()

@@ -59,7 +59,7 @@
 	verb_exclaim = "beeps"
 	max_integrity = 300
 	integrity_failure = 0.33
-	armor = list(MELEE = 20,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 70, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/machinery_vending
 	circuit = /obj/item/circuitboard/machine/vendor
 	clicksound = 'sound/machines/pda_button1.ogg'
 	dept_req_for_free = ACCOUNT_SRV_BITFLAG
@@ -179,6 +179,12 @@
 
 	///Name of lighting mask for the vending machine
 	var/light_mask
+
+
+/datum/armor/machinery_vending
+	melee = 20
+	fire = 50
+	acid = 70
 
 /obj/item/circuitboard
 	///determines if the circuit board originated from a vendor off station or not.
@@ -559,7 +565,7 @@
 					to_chat(user, "<span class='warning'>[src]'s compartment is full.</span>")
 					break
 				if(canLoadItem(the_item) && loadingAttempt(the_item,user))
-					SEND_SIGNAL(T, COMSIG_TRY_STORAGE_TAKE, the_item, src, TRUE)
+					T.atom_storage?.attempt_remove(the_item, src)
 					loaded++
 				else
 					denied_items++
@@ -1385,8 +1391,7 @@
 	if(isitem(target))
 		var/obj/item/I = target
 		I.custom_price = price
-		var/has_component = I.GetComponent(/datum/component/storage)
-		if(has_component)
+		if(atom_storage)
 			for(var/atom/A in I.contents)
 				A.custom_price = price
 			to_chat(user, "<span class='notice'>You set the price of [I] and everything inside of it to [price] cr.</span>")
