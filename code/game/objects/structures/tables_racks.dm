@@ -39,6 +39,8 @@
 	max_integrity = 100
 	integrity_failure = 0.33
 
+CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
+
 /obj/structure/table/Initialize(mapload, _buildstack)
 	. = ..()
 	if(_buildstack)
@@ -287,8 +289,13 @@
 	canSmoothWith = null
 	max_integrity = 70
 	resistance_flags = ACID_PROOF
-	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 80, ACID = 100, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/table_glass
 	var/list/debris = list()
+
+
+/datum/armor/table_glass
+	fire = 80
+	acid = 100
 
 /obj/structure/table/glass/Initialize(mapload)
 	. = ..()
@@ -315,7 +322,7 @@
 		check_break(M)
 
 /obj/structure/table/glass/proc/check_break(mob/living/M)
-	if(M.has_gravity() && M.mob_size > MOB_SIZE_SMALL && !(M.movement_type & (FLOATING|FLYING)))
+	if(M.has_gravity() && M.mob_size > MOB_SIZE_SMALL && !(M.movement_type & MOVETYPES_NOT_TOUCHING_GROUND))
 		table_shatter(M)
 
 /obj/structure/table/glass/proc/table_shatter(mob/living/victim)
@@ -355,7 +362,15 @@
 	buildstack = /obj/item/stack/sheet/plasmaglass
 	glass_shard_type = /obj/item/shard/plasma
 	max_integrity = 270
-	armor = list(MELEE = 10,  BULLET = 5, LASER = 0, ENERGY = 0, BOMB = 10, BIO = 0, RAD = 0, FIRE = 80, ACID = 100)
+	armor_type = /datum/armor/glass_plasma
+
+
+/datum/armor/glass_plasma
+	melee = 10
+	bullet = 5
+	bomb = 10
+	fire = 80
+	acid = 100
 
 /obj/structure/table/glass/plasma/Initialize(mapload)
 	. = ..()
@@ -476,7 +491,17 @@
 	buildstack = /obj/item/stack/sheet/plasteel
 	max_integrity = 200
 	integrity_failure = 0.25
-	armor = list(MELEE = 10,  BULLET = 30, LASER = 30, ENERGY = 100, BOMB = 20, BIO = 0, RAD = 0, FIRE = 80, ACID = 70, STAMINA = 0, BLEED = 0)
+	armor_type = /datum/armor/table_reinforced
+
+
+/datum/armor/table_reinforced
+	melee = 10
+	bullet = 30
+	laser = 30
+	energy = 100
+	bomb = 20
+	fire = 80
+	acid = 70
 
 /obj/structure/table/reinforced/deconstruction_hints(mob/user)
 	if(deconstruction_ready)
@@ -566,7 +591,7 @@
 	var/mob/living/carbon/human/patient = null
 	var/obj/machinery/computer/operating/computer = null
 
-/obj/structure/table/optable/Initialize()
+/obj/structure/table/optable/Initialize(mapload)
 	. = ..()
 	initial_link()
 
@@ -748,6 +773,7 @@
 	flags_1 = CONDUCT_1
 	custom_materials = list(/datum/material/iron=2000)
 	var/building = FALSE
+	var/obj/construction_type = /obj/structure/rack
 
 /obj/item/rack_parts/attackby(obj/item/W, mob/user, params)
 	if (W.tool_behaviour == TOOL_WRENCH)
@@ -757,14 +783,17 @@
 		. = ..()
 
 /obj/item/rack_parts/attack_self(mob/user)
+	if(locate(construction_type) in get_turf(user))
+		balloon_alert(user, "no room!")
+		return
 	if(building)
 		return
 	building = TRUE
-	to_chat(user, "<span class='notice'>You start constructing a rack...</span>")
+	to_chat(user, "<span class='notice'>You start assembling [src]...</span>")
 	if(do_after(user, 50, target = user))
 		if(!user.temporarilyRemoveItemFromInventory(src))
 			return
-		var/obj/structure/rack/R = new /obj/structure/rack(user.loc)
+		var/obj/structure/R = new construction_type(user.loc)
 		user.visible_message("<span class='notice'>[user] assembles \a [R].\
 			</span>", "<span class='notice'>You assemble \a [R].</span>")
 		R.add_fingerprint(user)

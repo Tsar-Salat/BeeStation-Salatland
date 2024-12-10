@@ -131,8 +131,10 @@
 		. = TRUE
 
 /turf/open/lava/proc/can_burn_stuff(atom/movable/burn_target)
-	if(burn_target.movement_type & (FLYING|FLOATING)) //you're flying over it.
-		return isliving(burn_target) ? LAVA_BE_PROCESSING : LAVA_BE_IGNORING
+	if(QDELETED(burn_target))
+		return LAVA_BE_IGNORING
+	if(burn_target.movement_type & MOVETYPES_NOT_TOUCHING_GROUND || !burn_target.has_gravity()) //you're flying over it.
+		return LAVA_BE_IGNORING
 
 	if(isobj(burn_target))
 		if(burn_target.throwing) // to avoid gulag prisoners easily escaping, throwing only works for objects.
@@ -150,7 +152,7 @@
 	var/mob/living/burn_living = burn_target
 	var/atom/movable/burn_buckled = burn_living.buckled
 	if(burn_buckled)
-		if(burn_buckled.movement_type & (FLYING|FLOATING))
+		if(burn_buckled.movement_type & MOVETYPES_NOT_TOUCHING_GROUND || !burn_buckled.has_gravity())
 			return LAVA_BE_PROCESSING
 		if(isobj(burn_buckled))
 			var/obj/burn_buckled_obj = burn_buckled
@@ -173,32 +175,37 @@
 #undef LAVA_BE_BURNING
 
 /turf/open/lava/proc/do_burn(atom/movable/burn_target, delta_time = 1)
-	. = TRUE
+	if(QDELETED(burn_target))
+		return FALSE
+
 	if(isobj(burn_target))
 		var/obj/burn_obj = burn_target
 		if(burn_obj.resistance_flags & ON_FIRE) // already on fire; skip it.
-			return
+			return TRUE
 		if(!(burn_obj.resistance_flags & FLAMMABLE))
 			burn_obj.resistance_flags |= FLAMMABLE //Even fireproof things burn up in lava
 		if(burn_obj.resistance_flags & FIRE_PROOF)
 			burn_obj.resistance_flags &= ~FIRE_PROOF
-		if(burn_obj.armor.fire > 50) //obj with 100% fire armor still get slowly burned away.
-			burn_obj.armor = burn_obj.armor.setRating(fire = 50)
-		burn_obj.fire_act(temperature_damage, 1000 * delta_time)
+		if(burn_obj.get_armor_rating(FIRE) > 50) //obj with 100% fire armor still get slowly burned away.
+			burn_obj.set_armor_rating(FIRE, 50)
+		burn_obj.fire_act(temperature_damage, 1000 * seconds_per_tick)
 		if(istype(burn_obj, /obj/structure/closet))
-			var/obj/structure/closet/burn_closet = burn_obj
-			for(var/burn_content in burn_closet.contents)
+			for(var/burn_content in burn_target)
 				burn_stuff(burn_content)
-		return
+		return TRUE
 
-	var/mob/living/burn_living = burn_target
-	ADD_TRAIT(burn_living, TRAIT_PERMANENTLY_ONFIRE, TURF_TRAIT)
-	burn_living.update_fire()
+	if(isliving(burn_target))
+		var/mob/living/burn_living = burn_target
+		ADD_TRAIT(burn_living, TRAIT_PERMANENTLY_ONFIRE, TURF_TRAIT)
+		burn_living.update_fire()
 
-	burn_living.adjustFireLoss(lava_damage * delta_time)
-	if(!QDELETED(burn_living)) //mobs turning into object corpses could get deleted here.
-		burn_living.adjust_fire_stacks(lava_firestacks * delta_time)
-		burn_living.IgniteMob()
+		burn_living.adjustFireLoss(lava_damage * delta_time)
+		if(!QDELETED(burn_living)) //mobs turning into object corpses could get deleted here.
+			burn_living.adjust_fire_stacks(lava_firestacks * delta_time)
+			burn_living.IgniteMob()
+		return TRUE
+
+	return FALSE
 
 /turf/open/lava/smooth
 	name = "lava"
