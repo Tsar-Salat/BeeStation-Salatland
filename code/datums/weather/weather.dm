@@ -86,24 +86,9 @@
 	/// This causes the weather to only end if forced to
 	var/perpetual = FALSE
 
-	// cached sprites to go on area overlays.
-	var/mutable_appearance/cached_weather_sprite_start
-	var/mutable_appearance/cached_weather_sprite_process
-	var/mutable_appearance/cached_weather_sprite_end
-	var/mutable_appearance/cached_current_overlay // a quick access variable
-
 /datum/weather/New(z_levels)
 	..()
 	impacted_z_levels = z_levels
-	generate_cached_weather_sprites()
-
-/datum/weather/proc/generate_cached_weather_sprites()
-	if(telegraph_overlay)
-		cached_weather_sprite_start = mutable_appearance('icons/effects/weather_effects.dmi', telegraph_overlay, overlay_layer, overlay_plane, color = weather_color)
-	if(weather_overlay)
-		cached_weather_sprite_process = mutable_appearance('icons/effects/weather_effects.dmi', weather_overlay, overlay_layer, overlay_plane, color = weather_color)
-	if(end_overlay)
-		cached_weather_sprite_end = mutable_appearance('icons/effects/weather_effects.dmi', end_overlay, overlay_layer, overlay_plane, color = weather_color)
 
 /**
   * Telegraphs the beginning of the weather on the impacted z levels

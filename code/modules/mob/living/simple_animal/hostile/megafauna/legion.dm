@@ -182,23 +182,26 @@ Difficulty: Medium
 	var/storm_type = /datum/weather/ash_storm
 	var/storm_cooldown = 0
 	var/static/list/allowed_areas = list(/area/lavaland/surface/outdoors, /area/lavaland/surface/outdoors/explored)
+	//If we are a debug staff for storm fuckery
+	var/debug = FALSE
 
 /obj/item/staff/storm/examine(mob/user)
 	. = ..()
 	. += "<span class='notice'>It has a cooldown of [storm_cooldown].</span>"
 
 /obj/item/staff/storm/attack_self(mob/user)
-	if(storm_cooldown > world.time)
-		to_chat(user, "<span class='warning'>The staff is still recharging!</span>")
-		return
-	if(!is_mining_level(user.z))
-		to_chat(user, "<span class='warning'>The staff's power is too dim to function this far from the necropolis")
-		return
 	var/area/user_area = get_area(user)
 	var/turf/user_turf = get_turf(user)
-	if(!user_area || !user_turf || !(user_area.type in allowed_areas))
-		to_chat(user, "<span class='warning'>You can only use this in an open area</span>")
-		return
+	if(!debug)
+		if(storm_cooldown > world.time)
+			to_chat(user, "<span class='warning'>The staff is still recharging!</span>")
+			return
+		if(!is_mining_level(user.z))
+			to_chat(user, "<span class='warning'>The staff's power is too dim to function this far from the necropolis")
+			return
+		if(!user_area || !user_turf || !(user_area.type in allowed_areas))
+			to_chat(user, "<span class='warning'>You can only use this in an open area</span>")
+			return
 	var/datum/weather/A
 	for(var/V in SSweather.processing)
 		var/datum/weather/W = V
@@ -218,6 +221,10 @@ Difficulty: Medium
 			log_game("[user] ([key_name(user)]) has dispelled a storm at [AREACOORD(user_turf)]")
 			return
 	else
+
+		if(debug)
+			storm_type = input("Choose a weather", "Weather")  as null|anything in sort_list(subtypesof(/datum/weather), GLOBAL_PROC_REF(cmp_typepaths_asc))
+
 		A = new storm_type(list(user_turf.z))
 		A.name = "ash storm"
 		log_game("[user] ([key_name(user)]) has summoned [A] at [AREACOORD(user_turf)]")

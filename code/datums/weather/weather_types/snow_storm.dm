@@ -16,9 +16,9 @@
 	end_duration = 100
 	end_message = "<span class='boldannounce'>The snowfall dies down, it should be safe to go outside again.</span>"
 
-	///Suppressed for now, until a certain map comes back
-	//area_type = /area/awaymission/snowdin/outside
-	target_trait = ZTRAIT_AWAY
+	area_type = /area
+	protect_indoors = TRUE
+	target_trait = ZTRAIT_SNOWSTORM
 
 	immunity_type = TRAIT_SNOWSTORM_IMMUNE
 
