@@ -123,7 +123,9 @@ SUBSYSTEM_DEF(mapping)
 	loading_ruins = FALSE
 #endif
 	// Run map generation after ruin generation to prevent issues
-	run_map_generation()
+	run_map_terrain_generation()
+	// now that the terrain is generated, including rivers, we can safely populate it with objects and mobs
+	run_map_terrain_population()
 	require_area_resort()
 	// Set up Z-level transitions.
 	setup_map_transitions()
@@ -381,9 +383,15 @@ GLOBAL_LIST_EMPTY(the_station_areas)
 	if(!GLOB.the_station_areas.len)
 		log_world("ERROR: Station areas list failed to generate!")
 
-/datum/controller/subsystem/mapping/proc/run_map_generation()
+/// Generate the turfs of the area
+/datum/controller/subsystem/mapping/proc/run_map_terrain_generation()
 	for(var/area/A as anything in GLOB.areas)
-		A.RunGeneration()
+		A.RunTerrainGeneration()
+
+/// Populate the turfs of the area
+/datum/controller/subsystem/mapping/proc/run_map_terrain_population()
+	for(var/area/A as anything in GLOB.areas)
+		A.RunTerrainPopulation()
 
 /datum/controller/subsystem/mapping/proc/maprotate()
 	if(map_voted)
@@ -675,3 +683,7 @@ GLOBAL_LIST_EMPTY(the_station_areas)
 	max_gravity = max_gravity || level_trait(z_level_number, ZTRAIT_GRAVITY) || 0 //just to make sure no nulls
 	gravity_by_z_level[z_level_number] = max_gravity
 	return max_gravity
+
+/// Returns true if the map we're playing on is on a planet
+/datum/controller/subsystem/mapping/proc/is_planetary()
+	return config.planetary

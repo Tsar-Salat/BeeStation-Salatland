@@ -20,10 +20,11 @@
 	var/map_file = "BoxStation.dmm"
 
 	//This should probably be refactored into a system like the regular configuration
-
 	var/traits = null
 	var/space_ruin_levels = 4	//Keep this low, as new ones are created dynamically when needed.
 	var/space_empty_levels = 1
+	/// Boolean that tells us if this is a planetary station. (like EchoStation)
+	var/planetary = FALSE
 
 	///Type of the mining level to use
 	var/minetype = "lavaland"

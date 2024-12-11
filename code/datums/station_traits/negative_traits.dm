@@ -196,3 +196,24 @@
 		                         "Due to the budget cuts in Nanotrasen Space Finance,",
 		                         "Since \[REDACTED\] has been \[REDACTED\] by \[REDACTED\],"))
 	report_message = "[event_source] all station budgets have been united into one, and all budget cards will be linked to one account."
+
+///Starts a storm on roundstart
+/datum/station_trait/storm
+	trait_flags = STATION_TRAIT_ABSTRACT
+	var/datum/weather/storm_type
+
+/datum/station_trait/storm/on_round_start()
+	. = ..()
+
+	SSweather.run_weather(storm_type)
+
+/// Calls down an eternal storm on planetary stations
+/datum/station_trait/storm/foreverstorm
+	name = "Forever Storm"
+	trait_type = STATION_TRAIT_NEGATIVE
+	trait_flags = STATION_TRAIT_PLANETARY
+	weight = 3
+	show_in_report = TRUE
+	report_message = "It looks like the storm is not gonna calm down anytime soon, stay safe out there."
+
+	storm_type = /datum/weather/snow_storm/forever_storm

@@ -135,7 +135,8 @@
 	if(get_to_the_good_part)
 		start()
 	else
-		send_alert(telegraph_message, telegraph_sound)
+		if(telegraph_duration)
+			send_alert(telegraph_message, telegraph_sound)
 		addtimer(CALLBACK(src, PROC_REF(start)), telegraph_duration)
 
 /**

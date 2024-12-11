@@ -273,7 +273,8 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 	lighting_overlay_matrix_cb = b * (lighting_overlay_opacity/255)
 	lighting_overlay_cached_darkening_matrix = null // Clear cached list
 
-/area/proc/RunGeneration()
+/// Generate turfs, including cool cave wall gen
+/area/proc/RunTerrainGeneration()
 	if(map_generator)
 		map_generator = new map_generator()
 		var/list/turfs = list()
@@ -283,6 +284,17 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 			turfs += additional_genturfs
 			additional_genturfs = null
 		map_generator.generate_terrain(turfs, src)
+
+/// Populate the previously generated terrain with mobs and objects
+/area/proc/RunTerrainPopulation()
+	if(map_generator)
+		var/list/turfs = list()
+		for(var/turf/T in contents)
+			turfs += T
+		if(additional_genturfs)
+			turfs += additional_genturfs
+			additional_genturfs = null
+		map_generator.populate_terrain(turfs, src)
 
 /area/proc/test_gen()
 	if(map_generator)
