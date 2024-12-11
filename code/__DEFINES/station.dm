@@ -12,3 +12,9 @@
 
 /// Not restricted by space or planet, can always just happen
 #define STATION_TRAIT_MAP_UNRESTRICTED STATION_TRAIT_PLANETARY | STATION_TRAIT_SPACE_BOUND
+
+/// The data file that future station traits forced by an admin are stored in
+#define FUTURE_STATION_TRAITS_FILE "data/future_station_traits.json"
+
+/// The amount of time until the station charter can no longer be used to rename the station
+#define STATION_RENAME_TIME_LIMIT 5 MINUTES

@@ -110,6 +110,9 @@
 	blacklist = list(/datum/station_trait/empty_maint)
 	trait_to_give = STATION_TRAIT_FILLED_MAINT
 
+	// This station trait is checked when loot drops initialize, so it's too late
+	can_revert = FALSE
+
 /datum/station_trait/quick_shuttle
 	name = "Quick Shuttle"
 	trait_type = STATION_TRAIT_POSITIVE

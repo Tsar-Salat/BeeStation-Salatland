@@ -108,7 +108,8 @@ GLOBAL_LIST_INIT(admin_verbs_fun, list(
 	/client/proc/load_circuit,
 	/client/proc/healall,
 	/client/proc/spawn_floor_cluwne,
-	/client/proc/spawnhuman
+	/client/proc/spawnhuman,
+	/datum/admins/proc/station_traits_panel,
 	))
 GLOBAL_PROTECT(admin_verbs_fun)
 GLOBAL_LIST_INIT(admin_verbs_spawn, list(

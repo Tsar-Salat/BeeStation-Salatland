@@ -1,5 +1,3 @@
-#define STATION_RENAME_TIME_LIMIT 3000
-
 /obj/item/station_charter
 	name = "station charter"
 	icon = 'icons/obj/wizard.dmi'
