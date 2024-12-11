@@ -1,36 +1,65 @@
-//The effects of weather occur across an entire z-level. For instance, lavaland has periodic ash storms that scorch most unprotected creatures.
+/**
+  * Causes weather to occur on a z level in certain area types
+  *
+  * The effects of weather occur across an entire z-level. For instance, lavaland has periodic ash storms that scorch most unprotected creatures.
+  * Weather always occurs on different z levels at different times, regardless of weather type.
+  * Can have custom durations, targets, and can automatically protect indoor areas.
+  *
+  */
 
 /datum/weather
+	/// name of weather
 	var/name = "space wind"
+	/// description of weather
 	var/desc = "Heavy gusts of wind blanket the area, periodically knocking down anyone caught in the open."
+	/// The message displayed in chat to foreshadow the weather's beginning
+	var/telegraph_message = "<span class='warning'>The wind begins to pick up.</span>"
+	/// In deciseconds, how long from the beginning of the telegraph until the weather begins
+	var/telegraph_duration = 300
+	/// The sound file played to everyone on an affected z-level
+	var/telegraph_sound
+	/// The overlay applied to all tiles on the z-level
+	var/telegraph_overlay
 
-	var/telegraph_message = "<span class='warning'>The wind begins to pick up.</span>" //The message displayed in chat to foreshadow the weather's beginning
-	var/telegraph_duration = 300 //In deciseconds, how long from the beginning of the telegraph until the weather begins
-	var/telegraph_sound //The sound file played to everyone on an affected z-level
-	var/telegraph_overlay //The overlay applied to all tiles on the z-level
-
-	var/weather_message = "<span class='userdanger'>The wind begins to blow ferociously!</span>" //Displayed in chat once the weather begins in earnest
-	var/weather_duration = 1200 //In deciseconds, how long the weather lasts once it begins
-	var/weather_duration_lower = 1200 //See above - this is the lowest possible duration
-	var/weather_duration_upper = 1500 //See above - this is the highest possible duration
+	/// Displayed in chat once the weather begins in earnest
+	var/weather_message = "<span class='userdanger'>The wind begins to blow ferociously!</span>"
+	/// In deciseconds, how long the weather lasts once it begins
+	var/weather_duration = 1200
+	/// See above - this is the lowest possible duration
+	var/weather_duration_lower = 1200
+	/// See above - this is the highest possible duration
+	var/weather_duration_upper = 1500
+	/// Looping sound while weather is occuring
 	var/weather_sound
+	/// Area overlay while the weather is occuring
 	var/weather_overlay
+	/// Color to apply to the area while weather is occuring
 	var/weather_color = null
 
-	var/end_message = "<span class='danger'>The wind relents its assault.</span>" //Displayed once the weather is over
-	var/end_duration = 300 //In deciseconds, how long the "wind-down" graphic will appear before vanishing entirely
+	/// Displayed once the weather is over
+	var/end_message = "<span class='danger'>The wind relents its assault.</span>"
+	/// In deciseconds, how long the "wind-down" graphic will appear before vanishing entirely
+	var/end_duration = 300
+	/// Sound that plays while weather is ending
 	var/end_sound
+	/// Area overlay while weather is ending
 	var/end_overlay
 
-	var/area_type = /area/space //Types of area to affect
-	var/protect_indoors = FALSE // set to TRUE to protect indoor areas
+	/// Types of area to affect
+	var/area_type = /area/space
+	/// TRUE value protects areas with outdoors marked as false, regardless of area type
+	var/protect_indoors = FALSE
 	/// Areas to be affected by the weather, calculated when the weather begins.
 	/// * If you need to update this list outside of this datum, you might be doing wrong. use update_areas(new_list)
 	VAR_PRIVATE/list/impacted_areas = list()
-	var/list/protected_areas = list()//Areas that are protected and excluded from the affected areas.
-	var/impacted_z_levels // The list of z-levels that this weather is actively affecting
+	/// Areas that are protected and excluded from the affected areas.
+	var/list/protected_areas = list()
+	/// The list of z-levels that this weather is actively affecting
+	var/impacted_z_levels
 
-	var/overlay_layer = AREA_LAYER //Since it's above everything else, this is the layer used by default. TURF_LAYER is below mobs and walls if you need to use that.
+	/// Since it's above everything else, this is the layer used by default. TURF_LAYER is below mobs and walls if you need to use that.
+	var/overlay_layer = AREA_LAYER
+	/// Plane for the overlay
 	var/overlay_plane = AREA_PLANE
 	/// If the weather has no purpose other than looks
 	var/aesthetic = FALSE
@@ -42,12 +71,15 @@
 	/// takes the same value as stage by update_areas(). Used to prevent overlay error.
 	VAR_PRIVATE/overlay_stage
 
-	// These are read by the weather subsystem and used to determine when and where to run the weather.
-	var/probability = 0 // Weight amongst other eligible weather. If zero, will never happen randomly.
-	var/target_trait = ZTRAIT_STATION // The z-level trait to affect when run randomly or when not overridden.
+	/// Weight amongst other eligible weather. If zero, will never happen randomly.
+	var/probability = 0
+	/// The z-level trait to affect when run randomly or when not overridden.
+	var/target_trait = ZTRAIT_STATION
 
+	/// Whether a barometer can predict when the weather will happen
 	var/barometer_predictable = FALSE
-	var/next_hit_time = 0 //For barometers to know when the next storm will hit
+	/// For barometers to know when the next storm will hit
+	var/next_hit_time = 0
 	/// This causes the weather to only end if forced to
 	var/perpetual = FALSE
 
@@ -70,6 +102,13 @@
 	if(end_overlay)
 		cached_weather_sprite_end = mutable_appearance('icons/effects/weather_effects.dmi', end_overlay, overlay_layer, overlay_plane, color = weather_color)
 
+/**
+  * Telegraphs the beginning of the weather on the impacted z levels
+  *
+  * Sends sounds and details to mobs in the area
+  * Calculates duration and hit areas, and makes a callback for the actual weather to start
+  *
+  */
 /datum/weather/proc/telegraph()
 	if(stage == STARTUP_STAGE)
 		return
@@ -100,6 +139,13 @@
 				SEND_SOUND(player, sound(telegraph_sound))
 	addtimer(CALLBACK(src, PROC_REF(start)), telegraph_duration)
 
+/**
+  * Starts the actual weather and effects from it
+  *
+  * Updates area overlays and sends sounds and messages to mobs to notify them
+  * Begins dealing effects from weather to mobs in the area
+  *
+  */
 /datum/weather/proc/start()
 	if(stage >= MAIN_STAGE)
 		return
@@ -118,6 +164,13 @@
 	if(!perpetual)
 		addtimer(CALLBACK(src, PROC_REF(wind_down)), weather_duration)
 
+/**
+  * Weather enters the winding down phase, stops effects
+  *
+  * Updates areas to be in the winding down phase
+  * Sends sounds and messages to mobs to notify them
+  *
+  */
 /datum/weather/proc/wind_down()
 	if(stage >= WIND_DOWN_STAGE)
 		return
@@ -135,6 +188,13 @@
 				SEND_SOUND(player, sound(end_sound))
 	addtimer(CALLBACK(src, PROC_REF(end)), end_duration)
 
+/**
+  * Fully ends the weather
+  *
+  * Effects no longer occur and area overlays are removed
+  * Removes weather from processing completely
+  *
+  */
 /datum/weather/proc/end()
 	if(stage == END_STAGE)
 		return
@@ -154,6 +214,9 @@
 		return
 
 	if(!(mob_turf.z in impacted_z_levels))
+		return
+
+	if((immunity_type && HAS_TRAIT(mob_to_check, immunity_type)) || HAS_TRAIT(mob_to_check, TRAIT_WEATHER_IMMUNE))
 		return
 
 	var/atom/loc_to_check = mob_to_check.loc
