@@ -65,11 +65,14 @@
 	var/aesthetic = FALSE
 	/// Used by mobs (or movables containing mobs, such as enviro bags) to prevent them from being affected by the weather.
 	var/immunity_type
+	/// If this bit of weather should also draw an overlay that's uneffected by lighting onto the area
+	/// Taken from weather_glow.dmi
+	var/use_glow = TRUE
+	/// List of all overlays to apply to our turfs
+	var/list/overlay_cache
 
 	/// The stage of the weather, from 1-4
 	var/stage = END_STAGE
-	/// takes the same value as stage by update_areas(). Used to prevent overlay error.
-	VAR_PRIVATE/overlay_stage
 
 	/// Weight amongst other eligible weather. If zero, will never happen randomly.
 	var/probability = 0
@@ -109,7 +112,7 @@
   * Calculates duration and hit areas, and makes a callback for the actual weather to start
   *
   */
-/datum/weather/proc/telegraph()
+/datum/weather/proc/telegraph(get_to_the_good_part)
 	if(stage == STARTUP_STAGE)
 		return
 	SEND_GLOBAL_SIGNAL(COMSIG_WEATHER_TELEGRAPH(type))
@@ -128,16 +131,12 @@
 	weather_duration = rand(weather_duration_lower, weather_duration_upper)
 	START_PROCESSING(SSweather, src)
 	update_areas()
-	for(var/z_level in impacted_z_levels)
-		for(var/mob/player as anything in SSmobs.clients_by_zlevel[z_level])
-			var/turf/mob_turf = get_turf(player)
-			if(!mob_turf)
-				continue
-			if(telegraph_message)
-				to_chat(player, telegraph_message)
-			if(telegraph_sound)
-				SEND_SOUND(player, sound(telegraph_sound))
-	addtimer(CALLBACK(src, PROC_REF(start)), telegraph_duration)
+
+	if(get_to_the_good_part)
+		start()
+	else
+		send_alert(telegraph_message, telegraph_sound)
+		addtimer(CALLBACK(src, PROC_REF(start)), telegraph_duration)
 
 /**
   * Starts the actual weather and effects from it
@@ -152,15 +151,8 @@
 	SEND_GLOBAL_SIGNAL(COMSIG_WEATHER_START(type))
 	stage = MAIN_STAGE
 	update_areas()
-	for(var/z_level in impacted_z_levels)
-		for(var/mob/player as anything in SSmobs.clients_by_zlevel[z_level])
-			var/turf/mob_turf = get_turf(player)
-			if(!mob_turf)
-				continue
-			if(weather_message)
-				to_chat(player, weather_message)
-			if(weather_sound)
-				SEND_SOUND(player, sound(weather_sound))
+
+	send_alert(weather_message, weather_sound)
 	if(!perpetual)
 		addtimer(CALLBACK(src, PROC_REF(wind_down)), weather_duration)
 
@@ -176,16 +168,10 @@
 		return
 	SEND_GLOBAL_SIGNAL(COMSIG_WEATHER_WINDDOWN(type))
 	stage = WIND_DOWN_STAGE
+
 	update_areas()
-	for(var/z_level in impacted_z_levels)
-		for(var/mob/player as anything in SSmobs.clients_by_zlevel[z_level])
-			var/turf/mob_turf = get_turf(player)
-			if(!mob_turf)
-				continue
-			if(end_message)
-				to_chat(player, end_message)
-			if(end_sound)
-				SEND_SOUND(player, sound(end_sound))
+
+	send_alert(end_message, end_sound)
 	addtimer(CALLBACK(src, PROC_REF(end)), end_duration)
 
 /**
@@ -198,10 +184,29 @@
 /datum/weather/proc/end()
 	if(stage == END_STAGE)
 		return
+
 	SEND_GLOBAL_SIGNAL(COMSIG_WEATHER_END(type))
 	stage = END_STAGE
+
 	STOP_PROCESSING(SSweather, src)
 	update_areas()
+
+/datum/weather/proc/send_alert(alert_msg, alert_sfx)
+	for(var/z_level in impacted_z_levels)
+		for(var/mob/player as anything in SSmobs.clients_by_zlevel[z_level])
+			if(!can_get_alert(player))
+				continue
+
+			if(telegraph_message)
+				to_chat(player, alert_msg)
+
+			if(telegraph_sound)
+				SEND_SOUND(player, sound(alert_sfx))
+
+// the checks for if a mob should recieve alerts, returns TRUE if can
+/datum/weather/proc/can_get_alert(mob/player)
+	var/turf/mob_turf = get_turf(player)
+	return !isnull(mob_turf)
 
 /**
  * Returns TRUE if the living mob can be affected by the weather
@@ -237,99 +242,43 @@
 /datum/weather/proc/weather_act(mob/living/L)
 	return
 
-/// * [Func A] If list/newly_given_areas = null, It will update area overlays to new weather stage overlay. Typically called by this datum itself.
-/// * [Func B] If list/newly_given_areas is given + overlay is not changed, it will apply overlays to new areas, and remove old areas.
-/// * [Func C] If list/newly_given_areas is given + overlay stage is changed, it will remove old overlay from old areas, and apply new overlay to new areas.
-/datum/weather/proc/update_areas(list/newly_given_areas = null)
-	if(overlay_stage == stage && isnull(newly_given_areas))
-		CRASH("update_areas() is called again while weather overlay is already set (and list/newly_given_areas doesn't exist). stage:[stage] / overlay_stage:[overlay_stage]")
-	overlay_stage = stage
+/**
+ * Updates the overlays on impacted areas
+ *
+ */
+/datum/weather/proc/update_areas()
+	var/list/new_overlay_cache = generate_overlay_cache()
+	for(var/area/impacted as anything in impacted_areas)
+		if(length(overlay_cache))
+			impacted.overlays -= overlay_cache
+		if(length(new_overlay_cache))
+			impacted.overlays += new_overlay_cache
 
-	var/new_overlay = null
+	overlay_cache = new_overlay_cache
+
+/// Returns a list of visual offset -> overlays to use
+/datum/weather/proc/generate_overlay_cache()
+	// We're ending, so no overlays at all
+	if(stage == END_STAGE)
+		return list()
+
+	var/weather_state = ""
 	switch(stage)
 		if(STARTUP_STAGE)
-			if(cached_weather_sprite_start)
-				new_overlay = cached_weather_sprite_start
+			weather_state = telegraph_overlay
 		if(MAIN_STAGE)
-			if(cached_weather_sprite_process)
-				new_overlay = cached_weather_sprite_process
+			weather_state = weather_overlay
 		if(WIND_DOWN_STAGE)
-			if(cached_weather_sprite_end)
-				new_overlay = cached_weather_sprite_end
-	var/is_overlay_same = (cached_current_overlay == new_overlay)
-	if(is_overlay_same && isnull(newly_given_areas) && isnull(cached_current_overlay) && isnull(new_overlay)) // changing null? meaningless
-		return
+			weather_state = end_overlay
 
-	//! [Func A] Standard update_areas. This will typically do the weather overlay change.
-	if(isnull(newly_given_areas))
-		if(is_overlay_same) // we don't have to iterate
-			return
+	var/list/gen_overlay_cache = list()
+	if(use_glow)
+		var/mutable_appearance/glow_image = mutable_appearance('icons/effects/glow_weather.dmi', weather_state, overlay_layer, ABOVE_LIGHTING_PLANE, 100)
+		glow_image.color = weather_color
+		gen_overlay_cache += glow_image
 
-		// ugly if conditions, but optimisation. We don't want to do if() checks in for loop
-		if(cached_current_overlay && new_overlay)
-			for(var/area/each_area as anything in impacted_areas)
-				each_area.cut_overlay(cached_current_overlay)
-				each_area.add_overlay(new_overlay)
-		else if(cached_current_overlay)
-			for(var/area/each_area as anything in impacted_areas)
-				each_area.cut_overlay(cached_current_overlay)
-		else if(new_overlay)
-			for(var/area/each_area as anything in impacted_areas)
-				each_area.add_overlay(new_overlay)
+	var/mutable_appearance/weather_image = mutable_appearance('icons/effects/weather_effects.dmi', weather_state, overlay_layer, plane = overlay_plane)
+	weather_image.color = weather_color
+	gen_overlay_cache += weather_image
 
-		cached_current_overlay = new_overlay // remembers previous one
-		return
-
-	if(!islist(newly_given_areas))
-		CRASH("lsit/newly_given_areas has been given, but it's not a list()")
-
-
-	// From after this line, It means list/newly_given_areas has a list to update
-	// This will remove old areas, and overlay from list/impacted_areas
-	// and add a new overlay to new areas
-	// And list/impacted_areas will be updated with the new list
-
-	if(is_overlay_same)
-	// * [Func B] overlays are the same, but we have new areas.
-	// * Calculate list
-	// * Early return if there's no list to iterate
-	// * If old_areas_to_remove exists, cut_overlay() for those
-	// * If new_areas_to_add exists, add_overlay() for those
-		var/list/old_areas_to_remove
-		var/list/new_areas_to_add
-		if(length(newly_given_areas))
-			old_areas_to_remove = impacted_areas - newly_given_areas
-			new_areas_to_add = newly_given_areas - impacted_areas
-			/*
-				impacted_areas = list(A, B, C, D)
-				newly_given_areas =  list(C, D, E, F)
-
-				old_areas_to_remove = list(A, B) // we want to remove already existing overlay from this
-				new_areas_to_add = list(E, F)    // and add the existing overlay to this
-			*/
-
-		if(!length(new_areas_to_add) && !length(old_areas_to_remove)) // nope
-			return
-
-		if(cached_current_overlay) // do the change only overlay exists. If there's no overlay, we'll just save list/newly_given_areas
-			for(var/area/each_old_area as anything in old_areas_to_remove)
-				each_old_area.cut_overlay(cached_current_overlay)
-			for(var/area/each_new_area as anything in new_areas_to_add)
-				each_new_area.add_overlay(cached_current_overlay)
-		impacted_areas = newly_given_areas.Copy() // this is now our new team
-		// Note: "new_areas_to_add" is not correct to copy. We just needed to apply cached overlay to new areas.
-		return
-
-	else
-	// * [Func C] different overlays, but also we have new areas
-	// * Removing old overlays from impacted_areas
-	// * Adding new overlays to new areas
-		if(cached_current_overlay)
-			for(var/area/each_old_area as anything in impacted_areas)
-				each_old_area.cut_overlay(cached_current_overlay)
-		if(new_overlay)
-			for(var/area/each_new_area as anything in newly_given_areas)
-				each_new_area.add_overlay(new_overlay)
-		cached_current_overlay = new_overlay
-		impacted_areas = newly_given_areas.Copy() // this is now our new team
-		return
+	return gen_overlay_cache

@@ -136,3 +136,6 @@
 #define NEGATIVE_GRAVITY_TRAIT "negative-gravity"
 /// Sources for TRAIT_IGNORING_GRAVITY
 #define IGNORING_GRAVITY_NEGATION "ignoring_gravity_negation"
+
+/// A trait gained from a mob's leap action, like the leaper
+#define LEAPING_TRAIT "leaping"

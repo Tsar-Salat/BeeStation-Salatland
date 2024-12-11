@@ -138,6 +138,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_UNSTABLE "unstable"
 #define TRAIT_OIL_FRIED "oil_fried"
 #define TRAIT_XENO_IMMUNE "xeno_immune" //prevents facehuggers implanting races that wouldn't be able to host an egg
+/// always detect storms
+#define TRAIT_DETECT_STORM "detect_storm"
 #define TRAIT_NECROPOLIS_INFECTED "necropolis-infection"
 #define TRAIT_BEEFRIEND 		"beefriend"
 #define TRAIT_PLANTHEALING		"planthealing"
@@ -322,7 +324,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Disables the floating animation. See above.
 #define TRAIT_NO_FLOATING_ANIM		"no-floating-animation"
 
-#define LEAPER_BUBBLE_TRAIT "leaper-bubble"
+/// For unit testing, all do_afters set on this mob complete instantly and do not sleep
+#define INSTANT_DO_AFTER "instant_do_after"
 
 /// This means the user is currently holding/wearing a "tactical camouflage" item (like a potted plant).
 #define TRAIT_TACTICALLY_CAMOUFLAGED "tactically_camouflaged"

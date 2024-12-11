@@ -11,6 +11,7 @@
 	weather_duration_lower = 60 SECONDS
 	weather_duration_upper = 120 SECONDS
 
+	use_glow = FALSE
 
 	end_duration = 10 SECONDS
 

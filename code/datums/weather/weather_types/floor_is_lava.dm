@@ -22,6 +22,7 @@
 	overlay_plane = FLOOR_PLANE
 	immunity_type = TRAIT_LAVA_IMMUNE
 
+	use_glow = FALSE
 
 /datum/weather/floor_is_lava/can_weather_act(mob/living/mob_to_check)
 	if(!mob_to_check.client) //Only sentient people are going along with it!

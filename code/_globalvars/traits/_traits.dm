@@ -68,6 +68,7 @@ GLOBAL_LIST_INIT(traits_by_type, list(
 		"TRAIT_NOBREATH" = TRAIT_NOBREATH,
 		"TRAIT_SEE_ANTIMAGIC" = TRAIT_SEE_ANTIMAGIC,
 		"TRAIT_DEPRESSION" = TRAIT_DEPRESSION,
+		"TRAIT_DETECT_STORM" = TRAIT_DETECT_STORM,
 		"TRAIT_JOLLY" = TRAIT_JOLLY,
 		"TRAIT_NOCRITDAMAGE" = TRAIT_NOCRITDAMAGE,
 		"TRAIT_NOSLIPWATER" = TRAIT_NOSLIPWATER,
@@ -126,6 +127,8 @@ GLOBAL_LIST_INIT(traits_by_type, list(
 		"TRAIT_NONECRODISEASE" = TRAIT_NONECRODISEASE,
 		"TRAIT_NICE_SHOT" = TRAIT_NICE_SHOT,
 		"TRAIT_ALWAYS_STUBS" = TRAIT_ALWAYS_STUBS,
+		"TRAIT_NO_FLOATING_ANIM" = TRAIT_NO_FLOATING_ANIM,
+		"TRAIT_NO_GLIDE" = TRAIT_NO_GLIDE,
 		"TRAIT_NAIVE" = TRAIT_NAIVE,
 		"TRAIT_DROPS_ITEMS_ON_DEATH" = TRAIT_DROPS_ITEMS_ON_DEATH,
 		"TRAIT_DRINKSBLOOD" = TRAIT_DRINKSBLOOD,
@@ -229,10 +232,6 @@ GLOBAL_LIST_INIT(traits_by_type, list(
 		"TRAIT_SNOWSTORM_IMMUNE" = TRAIT_SNOWSTORM_IMMUNE,
 		"TRAIT_VOIDSTORM_IMMUNE" = TRAIT_VOIDSTORM_IMMUNE,
 		"TRAIT_WEATHER_IMMUNE" = TRAIT_WEATHER_IMMUNE,
-		)
-		"TRAIT_MOVE_PHASING" = TRAIT_MOVE_PHASING,
-		"TRAIT_NO_FLOATING_ANIM" = TRAIT_NO_FLOATING_ANIM,
-		"TRAIT_NO_GLIDE" = TRAIT_NO_GLIDE,
 	),
 	/atom = list(
 		"TRAIT_KEEP_TOGETHER" = TRAIT_KEEP_TOGETHER,
@@ -242,6 +241,7 @@ GLOBAL_LIST_INIT(traits_by_type, list(
 		"TRAIT_FIREDOOR_STOP" = TRAIT_FIREDOOR_STOP,
 		"TURF_Z_TRANSPARENT_TRAIT" = TURF_Z_TRANSPARENT_TRAIT
 	),
+	//SSstation
 	/datum/controller/subsystem/processing/station = list(
 		"STATION_TRAIT_BANANIUM_SHIPMENTS" = STATION_TRAIT_BANANIUM_SHIPMENTS,
 		"STATION_TRAIT_CARP_INFESTATION" = STATION_TRAIT_CARP_INFESTATION,
@@ -254,28 +254,30 @@ GLOBAL_LIST_INIT(traits_by_type, list(
 		"STATION_TRAIT_PDA_GLITCHED" = STATION_TRAIT_PDA_GLITCHED,
 		"STATION_TRAIT_DISTANT_SUPPLY_LINES" = STATION_TRAIT_DISTANT_SUPPLY_LINES,
 		"STATION_TRAIT_STRONG_SUPPLY_LINES" = STATION_TRAIT_STRONG_SUPPLY_LINES,
-		"STATION_TRAIT_UNITED_BUDGET" = STATION_TRAIT_UNITED_BUDGET
-	)
-	))
+		"STATION_TRAIT_UNITED_BUDGET" = STATION_TRAIT_UNITED_BUDGET,
+	),
+))
 
-/// value -> trait name, generated on use from trait_by_type global
-GLOBAL_LIST(trait_name_map)
+/// value -> trait name, list of ALL traits that exist in the game, used for any type of accessing.
+GLOBAL_LIST(global_trait_name_map)
 
-/proc/generate_trait_name_map()
+/proc/generate_global_trait_name_map()
 	. = list()
 	for(var/key in GLOB.traits_by_type)
 		for(var/tname in GLOB.traits_by_type[key])
 			var/val = GLOB.traits_by_type[key][tname]
 			.[val] = tname
 
+	return .
 
 GLOBAL_LIST_INIT(movement_type_trait_to_flag, list(
 	TRAIT_MOVE_GROUND = GROUND,
 	TRAIT_MOVE_FLYING = FLYING,
 	TRAIT_MOVE_VENTCRAWLING = VENTCRAWLING,
 	TRAIT_MOVE_FLOATING = FLOATING,
-	TRAIT_MOVE_PHASING = PHASING
-	))
+	TRAIT_MOVE_PHASING = PHASING,
+	TRAIT_MOVE_UPSIDE_DOWN = UPSIDE_DOWN,
+))
 
 GLOBAL_LIST_INIT(movement_type_addtrait_signals, set_movement_type_addtrait_signals())
 GLOBAL_LIST_INIT(movement_type_removetrait_signals, set_movement_type_removetrait_signals())
@@ -285,7 +287,11 @@ GLOBAL_LIST_INIT(movement_type_removetrait_signals, set_movement_type_removetrai
 	for(var/trait in GLOB.movement_type_trait_to_flag)
 		. += SIGNAL_ADDTRAIT(trait)
 
+	return .
+
 /proc/set_movement_type_removetrait_signals(signal_prefix)
 	. = list()
 	for(var/trait in GLOB.movement_type_trait_to_flag)
 		. += SIGNAL_REMOVETRAIT(trait)
+
+	return .

@@ -534,6 +534,14 @@ GENE SCANNER
 	var/cooldown_time = 250
 	var/accuracy // 0 is the best accuracy.
 
+/obj/item/analyzer/equipped(mob/user, slot, initial)
+	. = ..()
+	ADD_TRAIT(user, TRAIT_DETECT_STORM, CLOTHING_TRAIT)
+
+/obj/item/analyzer/dropped(mob/user, silent)
+	. = ..()
+	REMOVE_TRAIT(user, TRAIT_DETECT_STORM, CLOTHING_TRAIT)
+
 /obj/item/analyzer/examine(mob/user)
 	. = ..()
 	. += "<span class='notice'>Alt-click [src] to activate the barometer function.</span>"
