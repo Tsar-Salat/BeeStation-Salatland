@@ -115,6 +115,7 @@
 	name = "Cleaned out maintenance"
 	trait_type = STATION_TRAIT_NEGATIVE
 	weight = 5
+	cost = STATION_TRAIT_COST_LOW //Most of maints is literal trash anyway
 	show_in_report = TRUE
 	report_message = "Our workers cleaned out most of the junk in the maintenace areas."
 	blacklist = list(/datum/station_trait/filled_maint)
@@ -158,6 +159,7 @@
 	name = "Bot Language Matrix Malfunction"
 	trait_type = STATION_TRAIT_NEGATIVE
 	weight = 3
+	cost = STATION_TRAIT_COST_LOW
 	show_in_report = TRUE
 	report_message = "Your station's friendly bots have had their language matrix fried due to an event, resulting in some strange and unfamiliar speech patterns."
 

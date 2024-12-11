@@ -1,7 +1,9 @@
+///This station traits gives 5 bananium sheets to the clown (and every dead clown out there in deep space or lavaland).
 /datum/station_trait/bananium_shipment
 	name = "Bananium Shipment"
 	trait_type = STATION_TRAIT_NEUTRAL
 	weight = 5
+	cost = STATION_TRAIT_COST_LOW
 	report_message = "Rumors has it that the clown planet has been sending support packages to clowns in this system"
 	trait_to_give = STATION_TRAIT_BANANIUM_SHIPMENTS
 
@@ -10,6 +12,7 @@
 	trait_type = STATION_TRAIT_NEUTRAL
 	weight = 5
 	show_in_report = FALSE
+	cost = STATION_TRAIT_COST_LOW
 	report_message = "Ian has gone exploring somewhere in the station."
 
 /datum/station_trait/ian_adventure/on_round_start()
@@ -33,6 +36,7 @@
 	trait_type = STATION_TRAIT_NEUTRAL
 	weight = 8
 	show_in_report = TRUE
+	cost = STATION_TRAIT_COST_MINIMAL
 	report_message = "Something seems to be wrong with the PDAs issued to you all this shift. Nothing too bad though."
 	trait_to_give = STATION_TRAIT_PDA_GLITCHED
 

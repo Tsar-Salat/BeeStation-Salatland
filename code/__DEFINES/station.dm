@@ -3,6 +3,13 @@
 #define STATION_TRAIT_NEGATIVE 3
 #define STATION_TRAIT_EXCLUSIVE 4
 
+///Defines for the cost of different station traits. This one is the default.
+#define STATION_TRAIT_COST_FULL 1
+///Cost for smaller traits that could fly under the radar, and are only minorly negative/positive if not neutral.
+#define STATION_TRAIT_COST_LOW 0.5
+///Cost for very little, and mainly neutral traits that hardly amount to anything really that interesting.
+#define STATION_TRAIT_COST_MINIMAL 0.3
+
 /// For traits that shouldn't be selected, like abstract types (wow)
 #define STATION_TRAIT_ABSTRACT (1<<0)
 /// Only run on planet stations

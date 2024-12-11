@@ -54,6 +54,7 @@
 	name = "Bountiful bounties"
 	trait_type = STATION_TRAIT_POSITIVE
 	weight = 5
+	cost = STATION_TRAIT_COST_LOW
 	show_in_report = TRUE
 	report_message = "It seems collectors in this system are extra keen to on bounties, and will pay more to see their completion."
 
@@ -73,6 +74,7 @@
 	name = "Scarves"
 	trait_type = STATION_TRAIT_POSITIVE
 	weight = 5
+	cost = STATION_TRAIT_COST_MINIMAL
 	show_in_report = TRUE
 	var/list/scarves
 
@@ -105,6 +107,7 @@
 	name = "Filled up maintenance"
 	trait_type = STATION_TRAIT_POSITIVE
 	weight = 5
+	cost = STATION_TRAIT_COST_LOW
 	show_in_report = TRUE
 	report_message = "Our workers accidentally forgot more of their personal belongings in the maintenance areas."
 	blacklist = list(/datum/station_trait/empty_maint)
