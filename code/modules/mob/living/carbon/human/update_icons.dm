@@ -793,6 +793,22 @@ generate/load female uniform sprites matching all previously decided variables
 
 	return L
 
+/// Returns offsets used for equipped item overlays in list(px_offset,py_offset) form.
+/obj/item/proc/get_worn_offsets(isinhands)
+	. = list(0,0) //(px,py)
+	if(isinhands)
+		//Handle held offsets
+		var/mob/holder = loc
+		if(istype(holder))
+			var/list/offsets = holder.get_item_offsets_for_index(holder.get_held_index_of_item(src))
+			if(offsets)
+				.[1] = offsets["x"]
+				.[2] = offsets["y"]
+	else
+		.[2] = worn_y_offset
+	if(ishuman(loc) && slot_flags != ITEM_SLOT_FEET) /// we adjust the human body for high given by body parts, execpt shoes, because they are always on the bottom
+		var/mob/living/carbon/human/human_holder = loc
+		.[2] += human_holder.get_top_offset()
 
 //Can't think of a better way to do this, sadly
 /mob/proc/get_item_offsets_for_index(i)

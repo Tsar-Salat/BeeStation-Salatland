@@ -33,7 +33,7 @@
 		playsound(loc, 'sound/creatures/holopara_summon.ogg', vol = 45, extrarange = HOLOPARA_MANIFEST_SOUND_EXTRARANGE, frequency = 1)
 		add_filter("holopara_manifest", 1, gauss_blur_filter(size = 4))
 		transition_filter("holopara_manifest", 1.2 SECONDS, list("size" = 0), easing = SINE_EASING, loop = 0)
-		addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, remove_filter), "holopara_manifest"), 1.25 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
+		addtimer(CALLBACK(src, TYPE_PROC_REF(/datum, remove_filter), "holopara_manifest"), 1.25 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
 		SEND_SIGNAL(src, COMSIG_HOLOPARA_POST_MANIFEST, forced)
 		return TRUE
 	return FALSE

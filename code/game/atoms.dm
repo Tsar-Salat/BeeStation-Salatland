@@ -1772,11 +1772,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/atom)
 		for(var/comp_mat in material_comp)
 			.[comp_mat] += material_comp[comp_mat]
 
-/// Returns the indice in filters of the given filter name.
-/// If it is not found, returns null.
-/atom/proc/get_filter_index(name)
-	return filter_data?.Find(name)
-
 ///Setter for the `density` variable to append behavior related to its changing.
 /atom/proc/set_density(new_value)
 	SHOULD_CALL_PARENT(TRUE)

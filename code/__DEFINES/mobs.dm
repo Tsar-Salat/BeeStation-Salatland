@@ -521,7 +521,6 @@ GLOBAL_LIST_INIT(human_heights_to_offsets, list(
 // Mob Overlays Indexes
 /// Total number of layers for mob overlays
 /// KEEP THIS UP-TO-DATE OR SHIT WILL BREAK
-
 /// Also consider updating layers_to_offset
 #define TOTAL_LAYERS 29
 /// Mutations layer - Tk headglows, cold resistance glow, etc
@@ -602,12 +601,12 @@ GLOBAL_LIST_INIT(layers_to_offset, list(
 	// Everything below looks fine with or without a filter, so we can skip it and just offset
 	// (In practice they'd be fine if they got a filter but we can optimize a bit by not.)
 	"[GLASSES_LAYER]" = UPPER_BODY,
-	"[ABOVE_BODY_FRONT_GLASSES_LAYER]" = UPPER_BODY, // currently unused
-	"[ABOVE_BODY_FRONT_HEAD_LAYER]" = UPPER_BODY, // only used for head stuff
+	//"[ABOVE_BODY_FRONT_GLASSES_LAYER]" = UPPER_BODY, // currently unused
+	//"[ABOVE_BODY_FRONT_HEAD_LAYER]" = UPPER_BODY, // only used for head stuff
 	"[GLOVES_LAYER]" = LOWER_BODY,
 	"[HALO_LAYER]" = UPPER_BODY, // above the head
 	"[HANDCUFF_LAYER]" = LOWER_BODY,
-	"[ID_CARD_LAYER]" = UPPER_BODY, // unused
+	//"[ID_CARD_LAYER]" = UPPER_BODY, // unused
 	"[ID_LAYER]" = UPPER_BODY,
 	"[FACEMASK_LAYER]" = UPPER_BODY,
 	// These two are cached, and have their appearance shared(?), so it's safer to just not touch it

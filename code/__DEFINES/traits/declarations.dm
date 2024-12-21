@@ -163,8 +163,11 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_MOTH_BURNT		"moth_burnt"
 #define TRAIT_SPECIAL_TRAUMA_BOOST "special_trauma_boost" ///Increases chance of getting special traumas, makes them harder to cure
 #define TRAIT_METALANGUAGE_KEY_ALLOWED "metalanguage_key_allowed" // you can use language key for metalanguage (,`) and but also you see lang icon
-#define TRAIT_HYPERSPACED "hyperspaced" // Sanity trait to keep track of when we're in hyperspace and add the appropriate element if we werent
-#define TRAIT_FREE_HYPERSPACE_MOVEMENT "free_hyperspace_movement" // Gives the movable free hyperspace movement without being pulled during shuttle transit
+/// Sanity trait to keep track of when we're in hyperspace and add the appropriate element if we weren't
+#define TRAIT_HYPERSPACED "hyperspaced"
+///Gives the movable free hyperspace movement without being pulled during shuttle transit
+#define TRAIT_FREE_HYPERSPACE_MOVEMENT "free_hyperspace_movement"
+#define TRAIT_DWARF "dwarf"
 #define TRAIT_FAST_CUFF_REMOVAL "fast_cuff_removal" // Faster cuff removal
 #define TRAIT_BLEED_HELD		"bleed_held" // For when a mob is holding their wounds, preventing them from bleeding further
 #define TRAIT_NO_BLOOD			"no_blood" // Bleeding heals itself and bleeding is impossible

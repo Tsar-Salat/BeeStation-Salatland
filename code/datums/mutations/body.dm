@@ -87,14 +87,12 @@
 	if(..())
 		return
 	ADD_TRAIT(owner, TRAIT_DWARF, GENETIC_MUTATION)
-	passtable_on(owner, GENETIC_MUTATION)
 	owner.visible_message("<span class='danger'>[owner] suddenly shrinks!</span>", "<span class='notice'>Everything around you seems to grow..</span>")
 
 /datum/mutation/dwarfism/on_losing(mob/living/carbon/owner)
 	if(..())
 		return
 	REMOVE_TRAIT(owner, TRAIT_DWARF, GENETIC_MUTATION)
-	passtable_off(owner, GENETIC_MUTATION)
 	owner.visible_message("<span class='danger'>[owner] suddenly grows!</span>", "<span class='notice'>Everything around you seems to shrink..</span>")
 
 

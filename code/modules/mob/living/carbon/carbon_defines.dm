@@ -54,8 +54,8 @@
 		/obj/item/bodypart/head,
 		/obj/item/bodypart/l_arm,
 		/obj/item/bodypart/r_arm,
-		/obj/item/bodypart/r_leg,
-		/obj/item/bodypart/l_leg
+		/obj/item/bodypart/leg/right,
+		/obj/item/bodypart/leg/left
 	)
 
 	//Gets filled up in create_bodyparts()
@@ -84,3 +84,6 @@
 
 	/// Only load in visual organs
 	var/visual_only_organs = FALSE
+
+	/// Stores the result of our last known top_offset generation for optimisation purposes when drawing limb icons.
+	var/last_top_offset

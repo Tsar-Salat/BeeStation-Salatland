@@ -918,13 +918,18 @@
 	max_damage = 5000
 	animal_origin = DEVIL_BODYPART
 
-/obj/item/bodypart/l_leg
+/// Parent Type for legs, should not appear in game.
+/obj/item/bodypart/leg
+	name = "leg"
+	desc = "This item shouldn't exist. Talk about breaking a leg. Badum-Tss!"
+	attack_verb_continuous = list("kicks", "stomps")
+	attack_verb_simple = list("kick", "stomp")
+
+/obj/item/bodypart/leg/left
 	name = "left leg"
 	desc = "Some athletes prefer to tie their left shoelaces first for good \
 		luck. In this instance, it probably would not have helped."
 	//icon_state = "default_human_l_leg"
-	attack_verb_continuous = list("kicks", "stomps")
-	attack_verb_simple = list("kick", "stomp")
 	max_damage = 40
 	body_zone = BODY_ZONE_L_LEG
 	body_part = LEG_LEFT
@@ -936,7 +941,7 @@
 	can_be_disabled = TRUE
 
 
-/obj/item/bodypart/l_leg/set_owner(new_owner)
+/obj/item/bodypart/leg/left/set_owner(new_owner)
 	. = ..()
 	if(. == FALSE)
 		return
@@ -958,7 +963,7 @@
 
 
 ///Proc to react to the owner gaining the TRAIT_PARALYSIS_L_LEG trait.
-/obj/item/bodypart/l_leg/proc/on_owner_paralysis_gain(mob/living/carbon/source)
+/obj/item/bodypart/leg/left/proc/on_owner_paralysis_gain(mob/living/carbon/source)
 	SIGNAL_HANDLER
 	ADD_TRAIT(src, TRAIT_PARALYSIS, TRAIT_PARALYSIS_L_LEG)
 	UnregisterSignal(owner, SIGNAL_ADDTRAIT(TRAIT_PARALYSIS_L_LEG))
@@ -966,14 +971,14 @@
 
 
 ///Proc to react to the owner losing the TRAIT_PARALYSIS_L_LEG trait.
-/obj/item/bodypart/l_leg/proc/on_owner_paralysis_loss(mob/living/carbon/source)
+/obj/item/bodypart/leg/left/proc/on_owner_paralysis_loss(mob/living/carbon/source)
 	SIGNAL_HANDLER
 	REMOVE_TRAIT(src, TRAIT_PARALYSIS, TRAIT_PARALYSIS_L_LEG)
 	UnregisterSignal(owner, SIGNAL_REMOVETRAIT(TRAIT_PARALYSIS_L_LEG))
 	RegisterSignal(owner, SIGNAL_ADDTRAIT(TRAIT_PARALYSIS_L_LEG), PROC_REF(on_owner_paralysis_gain))
 
 
-/obj/item/bodypart/l_leg/set_disabled(new_disabled)
+/obj/item/bodypart/leg/left/set_disabled(new_disabled)
 	. = ..()
 	if(isnull(.) || !owner)
 		return
@@ -987,19 +992,19 @@
 		owner.set_usable_legs(owner.usable_legs + 1)
 
 
-/obj/item/bodypart/l_leg/monkey
+/obj/item/bodypart/leg/left/monkey
 	icon = 'icons/mob/animal_parts.dmi'
 	icon_state = "default_monkey_l_leg"
 	limb_id = SPECIES_MONKEY
 	animal_origin = MONKEY_BODYPART
 	px_y = 4
 
-/obj/item/bodypart/l_leg/monkey/teratoma
+/obj/item/bodypart/leg/left/monkey/teratoma
 	icon_state = "teratoma_l_leg"
 	limb_id = "teratoma"
 	animal_origin = TERATOMA_BODYPART
 
-/obj/item/bodypart/l_leg/alien
+/obj/item/bodypart/leg/left/alien
 	icon = 'icons/mob/animal_parts.dmi'
 	icon_state = "alien_l_leg"
 	px_x = 0
@@ -1009,21 +1014,19 @@
 	max_damage = 100
 	animal_origin = ALIEN_BODYPART
 
-/obj/item/bodypart/l_leg/devil
+/obj/item/bodypart/leg/left/devil
 	dismemberable = FALSE
 	can_be_disabled = FALSE
 	max_damage = 5000
 	animal_origin = DEVIL_BODYPART
 
-/obj/item/bodypart/r_leg
+/obj/item/bodypart/leg/right
 	name = "right leg"
 	desc = "You put your right leg in, your right leg out. In, out, in, out, \
 		shake it all about. And apparently then it detaches.\n\
 		The hokey pokey has certainly changed a lot since space colonisation."
 	// alternative spellings of 'pokey' are available
 	//icon_state = "default_human_r_leg"
-	attack_verb_continuous = list("kicks", "stomps")
-	attack_verb_simple = list("kick", "stomp")
 	max_damage = 40
 	body_zone = BODY_ZONE_R_LEG
 	body_part = LEG_RIGHT
@@ -1035,7 +1038,7 @@
 	can_be_disabled = TRUE
 
 
-/obj/item/bodypart/r_leg/set_owner(new_owner)
+/obj/item/bodypart/leg/right/set_owner(new_owner)
 	. = ..()
 	if(. == FALSE)
 		return
@@ -1057,7 +1060,7 @@
 
 
 ///Proc to react to the owner gaining the TRAIT_PARALYSIS_R_LEG trait.
-/obj/item/bodypart/r_leg/proc/on_owner_paralysis_gain(mob/living/carbon/source)
+/obj/item/bodypart/leg/right/proc/on_owner_paralysis_gain(mob/living/carbon/source)
 	SIGNAL_HANDLER
 	ADD_TRAIT(src, TRAIT_PARALYSIS, TRAIT_PARALYSIS_R_LEG)
 	UnregisterSignal(owner, SIGNAL_ADDTRAIT(TRAIT_PARALYSIS_R_LEG))
@@ -1065,14 +1068,14 @@
 
 
 ///Proc to react to the owner losing the TRAIT_PARALYSIS_R_LEG trait.
-/obj/item/bodypart/r_leg/proc/on_owner_paralysis_loss(mob/living/carbon/source)
+/obj/item/bodypart/leg/right/proc/on_owner_paralysis_loss(mob/living/carbon/source)
 	SIGNAL_HANDLER
 	REMOVE_TRAIT(src, TRAIT_PARALYSIS, TRAIT_PARALYSIS_R_LEG)
 	UnregisterSignal(owner, SIGNAL_REMOVETRAIT(TRAIT_PARALYSIS_R_LEG))
 	RegisterSignal(owner, SIGNAL_ADDTRAIT(TRAIT_PARALYSIS_R_LEG), PROC_REF(on_owner_paralysis_gain))
 
 
-/obj/item/bodypart/r_leg/set_disabled(new_disabled)
+/obj/item/bodypart/leg/right/set_disabled(new_disabled)
 	. = ..()
 	if(isnull(.) || !owner)
 		return
@@ -1086,19 +1089,19 @@
 		owner.set_usable_legs(owner.usable_legs + 1)
 
 
-/obj/item/bodypart/r_leg/monkey
+/obj/item/bodypart/leg/right/monkey
 	icon = 'icons/mob/animal_parts.dmi'
 	icon_state = "default_monkey_r_leg"
 	limb_id = SPECIES_MONKEY
 	animal_origin = MONKEY_BODYPART
 	px_y = 4
 
-/obj/item/bodypart/r_leg/monkey/teratoma
+/obj/item/bodypart/leg/right/monkey/teratoma
 	icon_state = "teratoma_r_leg"
 	limb_id = "teratoma"
 	animal_origin = TERATOMA_BODYPART
 
-/obj/item/bodypart/r_leg/alien
+/obj/item/bodypart/leg/right/alien
 	icon = 'icons/mob/animal_parts.dmi'
 	icon_state = "alien_r_leg"
 	px_x = 0
@@ -1108,7 +1111,7 @@
 	max_damage = 100
 	animal_origin = ALIEN_BODYPART
 
-/obj/item/bodypart/r_leg/devil
+/obj/item/bodypart/leg/right/devil
 	dismemberable = FALSE
 	can_be_disabled = FALSE
 	max_damage = 5000
