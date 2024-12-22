@@ -61,10 +61,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	/// Type of an attack from this limb does. Arms will do punches, Legs for kicks, and head for bites. (TO ADD: tactical chestbumps)
 	var/attack_type = BRUTE
 	var/punchdamage = 7      //highest possible punch damage
-
-	/// How many pixels this bodypart will offset the top half of the mob, used for abnormally sized torsos and legs
-	var/top_offset = 0
-
 	var/siemens_coeff = 1 //base electrocution coefficient
 	var/damage_overlay_type = "human" //what kind of damage overlays (if any) appear on our species when wounded?
 	var/fixed_mut_color = "" //to use MUTCOLOR with a fixed color that's independent of dna.feature["mcolor"]
@@ -708,7 +704,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 
 /datum/species/proc/handle_body(mob/living/carbon/human/H)
 	H.remove_overlay(BODY_LAYER)
-	var/height_offset = H.get_top_offset() // From high changed by varying limb height
 
 	var/list/standing = list()
 
@@ -722,7 +717,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			if(OFFSET_FACE in H.dna.species.offset_features)
 				lip_overlay.pixel_x += H.dna.species.offset_features[OFFSET_FACE][1]
 				lip_overlay.pixel_y += H.dna.species.offset_features[OFFSET_FACE][2]
-			lip_overlay.pixel_y += height_offset
 			standing += lip_overlay
 
 		// eyes
@@ -737,9 +731,8 @@ GLOBAL_LIST_EMPTY(features_by_species)
 				SSvis_overlays.remove_vis_overlay(H, body_vis_overlays)
 
 			if(OFFSET_FACE in H.dna.species.offset_features)
-				no_eyeslay.pixel_x += H.dna.species.offset_features[OFFSET_FACE][1]
-				no_eyeslay.pixel_y += H.dna.species.offset_features[OFFSET_FACE][2]
-			add_pixel_y += height_offset
+				add_pixel_x += H.dna.species.offset_features[OFFSET_FACE][1]
+				add_pixel_y += H.dna.species.offset_features[OFFSET_FACE][2]
 
 			if(!eye_organ)
 				no_eyeslay = mutable_appearance('icons/mob/human_face.dmi', "eyes_missing", -BODY_LAYER)
@@ -748,11 +741,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 				standing += no_eyeslay
 			else
 				eye_organ.refresh(call_update = FALSE)
-
-			if(!no_eyeslay)
-				for(var/mutable_appearance/eye_overlay in eye_organ)
-					eye_overlay.pixel_y += height_offset
-					standing += eye_overlay
+				//standing += eye_organ.generate_body_overlay(species_human)
 
 		// blush
 		if (HAS_TRAIT(H, TRAIT_BLUSHING)) // Caused by either the *blush emote or the "drunk" mood event
@@ -789,22 +778,18 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		if(!HAS_TRAIT(H, TRAIT_HUSK))
 			if(HD && (IS_ORGANIC_LIMB(HD)))
 				var/mutable_appearance/markings_head_overlay = mutable_appearance(markings.icon, "[markings_icon_state]_head", CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
-				markings_head_overlay.pixel_y += height_offset
 				standing += markings_head_overlay
 
 			if(chest && (IS_ORGANIC_LIMB(chest)))
 				var/mutable_appearance/markings_chest_overlay = mutable_appearance(markings.icon, "[markings_icon_state]_chest", CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
-				markings_chest_overlay.pixel_y += height_offset
 				standing += markings_chest_overlay
 
 			if(right_arm && (IS_ORGANIC_LIMB(right_arm)))
 				var/mutable_appearance/markings_r_arm_overlay = mutable_appearance(markings.icon, "[markings_icon_state]_r_arm", CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
-				markings_r_arm_overlay.pixel_y += height_offset
 				standing += markings_r_arm_overlay
 
 			if(left_arm && (IS_ORGANIC_LIMB(left_arm)))
 				var/mutable_appearance/markings_l_arm_overlay = mutable_appearance(markings.icon, "[markings_icon_state]_l_arm", CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
-				markings_l_arm_overlay.pixel_y += height_offset
 				standing += markings_l_arm_overlay
 
 			if(right_leg && (IS_ORGANIC_LIMB(right_leg)))
@@ -827,7 +812,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 					underwear_overlay = mutable_appearance(underwear.icon, underwear.icon_state, CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
 				if(!underwear.use_static)
 					underwear_overlay.color = "#" + H.underwear_color
-				underwear_overlay.pixel_y += height_offset
 				standing += underwear_overlay
 
 		if(H.undershirt)
@@ -838,7 +822,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 					working_shirt = wear_female_version(undershirt.icon_state, undershirt.icon, CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
 				else
 					working_shirt = mutable_appearance(undershirt.icon, undershirt.icon_state, CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
-				working_shirt.pixel_y += height_offset
 				standing += working_shirt
 
 		if(H.socks && H.num_legs >= 2 && !(H.dna.species.bodytype & BODYTYPE_DIGITIGRADE) && !(NOSOCKS in species_traits))
@@ -1300,10 +1283,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 				return FALSE
 			return equip_delay_self_check(I, H, bypass_equip_delay_self)
 		if(ITEM_SLOT_ICLOTHING)
-			if(H.w_uniform)
-				return FALSE
-			if( !(I.slot_flags & ITEM_SLOT_ICLOTHING) )
-				return FALSE
 			return equip_delay_self_check(I, H, bypass_equip_delay_self)
 		if(ITEM_SLOT_ID)
 			if(H.wear_id)
