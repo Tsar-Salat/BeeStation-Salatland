@@ -94,6 +94,33 @@
 	category = CAT_STRUCTURE
 	one_per_turf = TRUE
 
+/datum/crafting_recipe/mod_core_standard
+	name = "MOD core (Standard)"
+	result = /obj/item/mod/core/standard
+	tools = list(TOOL_SCREWDRIVER)
+	time = 10 SECONDS
+	reqs = list(
+		/obj/item/stack/cable_coil = 5,
+		/obj/item/stack/rods = 2,
+		/obj/item/stack/sheet/glass = 1,
+		/obj/item/organ/heart/ethereal = 1,
+		)
+	category = CAT_MISC
+
+/datum/crafting_recipe/mod_core_ethereal
+	name = "MOD core (Ethereal)"
+	result = /obj/item/mod/core/ethereal
+	tools = list(TOOL_SCREWDRIVER)
+	time = 10 SECONDS
+	reqs = list(
+		/datum/reagent/consumable/liquidelectricity = 5,
+		/obj/item/stack/cable_coil = 5,
+		/obj/item/stack/rods = 2,
+		/obj/item/stack/sheet/glass = 1,
+		/obj/item/reagent_containers/syringe = 1,
+		)
+	category = CAT_MISC
+
 /datum/crafting_recipe/guillotine
 	name = "Guillotine"
 	result = /obj/structure/guillotine
@@ -117,6 +144,43 @@
 		/obj/item/stack/sheet/glass = 2
 	)
 	tools = list(TOOL_WRENCH)
+	category = CAT_STRUCTURE
+	one_per_turf = TRUE
+
+/datum/crafting_recipe/weightmachine
+	name = "Chest press machine"
+	result = /obj/structure/weightmachine
+	time = 6 SECONDS
+	reqs = list(
+		/obj/item/stack/sheet/iron = 2,
+		/obj/item/stack/rods = 6,
+		/obj/item/barbell/stacklifting = 1,
+	)
+	tools = list(TOOL_SCREWDRIVER, TOOL_WRENCH)
+	category = CAT_STRUCTURE
+	one_per_turf = TRUE
+
+/datum/crafting_recipe/weightmachine/weightlifter
+	name = "Inline bench press"
+	result = /obj/structure/weightmachine/weightlifter
+	time = 6 SECONDS
+	reqs = list(
+		/obj/item/stack/sheet/iron = 2,
+		/obj/item/stack/rods = 6,
+		/obj/item/barbell = 1,
+	)
+	tools = list(TOOL_SCREWDRIVER, TOOL_WRENCH)
+	category = CAT_STRUCTURE
+	one_per_turf = TRUE
+
+/datum/crafting_recipe/punching_bag
+	name = "Punching bag"
+	result = /obj/structure/punching_bag
+	time = 6 SECONDS
+	reqs = list(
+	/obj/item/stack/sheet/cotton/cloth = 10,
+	)
+	tools = list(TOOL_WIRECUTTER)
 	category = CAT_STRUCTURE
 	one_per_turf = TRUE
 
