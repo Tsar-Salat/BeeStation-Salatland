@@ -4,7 +4,6 @@
 	icon = 'icons/obj/clothing/head/beret.dmi'
 	worn_icon = 'icons/mob/clothing/head/beret.dmi'
 	icon_state = "beret"
-	dynamic_hair_suffix = ""
 	dying_key = DYE_REGISTRY_BERET
 
 /obj/item/clothing/head/frenchberet/equipped(mob/M, slot)
