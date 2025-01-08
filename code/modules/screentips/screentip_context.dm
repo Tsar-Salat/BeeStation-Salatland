@@ -6,10 +6,12 @@
 	var/relevant = FALSE
 	var/access_context
 	var/left_mouse_context
+	var/right_mouse_context
 	var/tool_icon_context
 	var/ctrl_left_mouse_context
 	var/shift_left_mouse_context
 	var/alt_left_mouse_context
+	var/alt_right_mouse_context
 	var/ctrl_shift_left_mouse_context
 
 /// Indicates that this screentip does not depend on any external state, and only state provided
@@ -125,6 +127,12 @@
 		alt_left_mouse_context += "\n[MAPTEXT("<span style='line-height: 0.35; color:[SCREEN_TIP_NORMAL]'>[CENTER("ctrl-[GLOB.lmb_icon] [action_text]")]</span>")]"
 	else
 		alt_left_mouse_context += "\n[MAPTEXT("<span style='line-height: 0.35; color:[SCREEN_TIP_INACCESSIBLE]'>[CENTER("ctrl-[GLOB.lmb_icon] [action_text] ([blocked_message])")]</span>")]"
+
+/datum/screentip_context/proc/add_alt_right_click_action(action_text, blocked_message = null, accessible = TRUE)
+	if (accessible)
+		alt_right_mouse_context += "\n[MAPTEXT("<span style='line-height: 0.35; color:[SCREEN_TIP_NORMAL]'>[CENTER("ctrl-[GLOB.rmb_icon] [action_text]")]</span>")]"
+	else
+		alt_right_mouse_context += "\n[MAPTEXT("<span style='line-height: 0.35; color:[SCREEN_TIP_INACCESSIBLE]'>[CENTER("ctrl-[GLOB.rmb_icon] [action_text] ([blocked_message])")]</span>")]"
 
 /datum/screentip_context/proc/add_alt_click_item_action(action_text, item_required)
 	if (istype(held_item, item_required))

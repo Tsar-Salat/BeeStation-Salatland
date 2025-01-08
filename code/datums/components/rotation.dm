@@ -22,6 +22,7 @@
 	RegisterSignal(parent, COMSIG_CLICK_ALT, PROC_REF(RotateLeft))
 	RegisterSignal(parent, COMSIG_CLICK_ALT_SECONDARY, PROC_REF(RotateRight))
 	RegisterSignal(parent, COMSIG_PARENT_EXAMINE, PROC_REF(ExamineMessage))
+	RegisterSignal(parent, COMSIG_ATOM_ADD_CONTEXT, PROC_REF(on_requesting_context_from_item))
 
 /datum/component/simple_rotation/proc/RemoveSignals()
 	UnregisterSignal(parent, list(COMSIG_CLICK_ALT, COMSIG_CLICK_ALT_SECONDARY, COMSIG_PARENT_EXAMINE))
@@ -119,3 +120,13 @@
 
 /datum/component/simple_rotation/proc/DefaultAfterRotation(mob/user, degrees)
 	return
+
+// maybe we don't need the item context proc but instead the hand one? since we don't need to check held_item
+/datum/component/simple_rotation/proc/on_requesting_context_from_item(datum/source, datum/screentip_context/context, mob/user)
+	SIGNAL_HANDLER
+
+	if(CanBeRotated(user, ROTATION_CLOCKWISE, silent=TRUE))
+		context.add_alt_click_action("Rotate left")
+
+	if(CanBeRotated(user, ROTATION_COUNTERCLOCKWISE, silent=TRUE))
+		context.add_alt_right_click_action("Rotate right")
