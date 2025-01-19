@@ -84,6 +84,12 @@
 			else
 				symptoms += pick_weight(spreadsymptoms)
 				symptoms += pick_weight(effectivesymptoms)
+			//
+			if(length(symptoms) > 10)
+				message_admins(">10 symptoms on [src], cutting symptoms")
+				symptoms.Cut(10)
+			else
+				message_admins("<10 symptoms on [src], no need to cut down list")
 			D = new /datum/disease/advance/random(max_severity, 8 + dangerous_virus, unfunny_virus, symptoms, mute = FALSE, special = TRUE)
 		H.ForceContractDisease(D, FALSE, TRUE)
 
