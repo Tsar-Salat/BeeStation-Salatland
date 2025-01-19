@@ -827,7 +827,6 @@
 #include "code\datums\diseases\advance\symptoms\heal.dm"
 #include "code\datums\diseases\advance\symptoms\heartattack.dm"
 #include "code\datums\diseases\advance\symptoms\itching.dm"
-#include "code\datums\diseases\advance\symptoms\kitty.dm"
 #include "code\datums\diseases\advance\symptoms\light.dm"
 #include "code\datums\diseases\advance\symptoms\lubefeet.dm"
 #include "code\datums\diseases\advance\symptoms\macrophage.dm"
