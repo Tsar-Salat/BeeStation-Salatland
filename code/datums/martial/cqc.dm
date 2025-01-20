@@ -7,25 +7,17 @@
 /datum/martial_art/cqc
 	name = "CQC"
 	id = MARTIALART_CQC
-	help_verb = /mob/living/carbon/human/proc/CQC_help
+	help_verb = /mob/living/proc/CQC_help
 	block_chance = 75
-	var/just_a_cook = FALSE
 	smashes_tables = TRUE
+	var/restraining = FALSE
+	var/old_grab_state = null
 
-/datum/martial_art/cqc/under_siege
-	name = "Close Quarters Cooking"
-	just_a_cook = TRUE
-
-/datum/martial_art/cqc/proc/drop_restraining()
+/datum/martial_art/cqc/reset_streak(mob/living/new_target)
+	. = ..()
 	restraining = FALSE
 
-/datum/martial_art/cqc/can_use(mob/living/carbon/human/H)
-	var/area/A = get_area(H)
-	if(just_a_cook && !(istype(A, /area/crew_quarters/kitchen)))
-		return FALSE
-	return ..()
-
-/datum/martial_art/cqc/proc/check_streak(mob/living/carbon/human/A, mob/living/carbon/human/D)
+/datum/martial_art/cqc/proc/check_streak(mob/living/A, mob/living/D)
 	if(!can_use(A))
 		return FALSE
 	if(findtext(streak,SLAM_COMBO))
@@ -49,7 +41,7 @@
 		Consecutive(A,D)
 	return FALSE
 
-/datum/martial_art/cqc/proc/Slam(mob/living/carbon/human/A, mob/living/carbon/human/D)
+/datum/martial_art/cqc/proc/Slam(mob/living/A, mob/living/D)
 	var/def_check = D.getarmor(BODY_ZONE_CHEST, MELEE)
 	if(!can_use(A))
 		return FALSE
@@ -63,7 +55,7 @@
 		log_combat(A, D, "slammed (CQC)", name)
 	return TRUE
 
-/datum/martial_art/cqc/proc/Kick(mob/living/carbon/human/A, mob/living/carbon/human/D)
+/datum/martial_art/cqc/proc/Kick(mob/living/A, mob/living/D)
 	var/def_check = D.getarmor(BODY_ZONE_CHEST, MELEE)
 	if(!can_use(A))
 		return FALSE
@@ -74,7 +66,7 @@
 		playsound(get_turf(A), 'sound/weapons/cqchit1.ogg', 50, 1, -1)
 		var/atom/throw_target = get_edge_target_turf(D, A.dir)
 		D.throw_at(throw_target, 1, 14, A)
-		D.apply_damage(10, A.dna.species.attack_type, blocked = def_check)
+		D.apply_damage(10, A.get_attack_type(), blocked = def_check)
 		log_combat(A, D, "kicked (CQC)", name)
 	if(D.IsParalyzed() && !D.stat)
 		log_combat(A, D, "knocked out (Head kick)(CQC)", name)
@@ -86,7 +78,7 @@
 		D.adjustOrganLoss(ORGAN_SLOT_BRAIN, 15, 150)
 	return TRUE
 
-/datum/martial_art/cqc/proc/Pressure(mob/living/carbon/human/A, mob/living/carbon/human/D)
+/datum/martial_art/cqc/proc/Pressure(mob/living/A, mob/living/D)
 	if(!can_use(A))
 		return FALSE
 	log_combat(A, D, "pressured (CQC)", name)
@@ -97,7 +89,7 @@
 	playsound(get_turf(A), 'sound/weapons/cqchit1.ogg', 50, 1, -1)
 	return TRUE
 
-/datum/martial_art/cqc/proc/Restrain(mob/living/carbon/human/A, mob/living/carbon/human/D)
+/datum/martial_art/cqc/proc/Restrain(mob/living/A, mob/living/D)
 	if(restraining)
 		return
 	if(!can_use(A))
@@ -110,10 +102,10 @@
 		D.adjustStaminaLoss(20)
 		D.Stun(100)
 		restraining = TRUE
-		addtimer(CALLBACK(src, PROC_REF(drop_restraining)), 50, TIMER_UNIQUE)
+		addtimer(VARSET_CALLBACK(src, restraining, FALSE), 50, TIMER_UNIQUE)
 	return TRUE
 
-/datum/martial_art/cqc/proc/Consecutive(mob/living/carbon/human/A, mob/living/carbon/human/D)
+/datum/martial_art/cqc/proc/Consecutive(mob/living/A, mob/living/D)
 	var/def_check = D.getarmor(BODY_ZONE_CHEST, MELEE)
 	if(!can_use(A))
 		return FALSE
@@ -127,31 +119,28 @@
 		if(I && D.temporarilyRemoveItemFromInventory(I))
 			A.put_in_hands(I)
 		D.adjustStaminaLoss(50)
-		D.apply_damage(25, A.dna.species.attack_type, blocked = def_check)
+		D.apply_damage(25, A.get_attack_type(), blocked = def_check)
 	return TRUE
 
-/datum/martial_art/cqc/grab_act(mob/living/carbon/human/A, mob/living/carbon/human/D)
-	if(!can_use(A))
-		return FALSE
-	if(A==D)
-		return FALSE //prevents grabbing yourself
-	if(A.a_intent == INTENT_GRAB)
+/datum/martial_art/cqc/harm_act(mob/living/A, mob/living/D)
+	if(A != D && can_use(A)) // A != D prevents grabbing yourself
 		add_to_streak("G",D)
-		if(check_streak(A,D)) //doing combos is prioritized over upgrading grabs
+		if(check_streak(A,D)) //if a combo is made no grab upgrade is done
 			return TRUE
+		old_grab_state = A.grab_state
 		D.grabbedby(A, 1)
-		if(A.grab_state == GRAB_PASSIVE)
+		if(old_grab_state == GRAB_PASSIVE)
 			D.drop_all_held_items()
 			A.setGrabState(GRAB_AGGRESSIVE) //Instant aggressive grab if on grab intent
 			log_combat(A, D, "grabbed", name, addition="aggressively")
 			D.visible_message("<span class='warning'>[A] violently grabs [D]!</span>", \
 							"<span class='userdanger'>You're grabbed violently by [A]!</span>", "<span class='hear'>You hear sounds of aggressive fondling!</span>", COMBAT_MESSAGE_RANGE, A)
 			to_chat(A, "<span class='danger'>You violently grab [D]!</span>")
+		return TRUE
 	else
-		D.grabbedby(A, 1)
-	return TRUE
+		return FALSE
 
-/datum/martial_art/cqc/harm_act(mob/living/carbon/human/A, mob/living/carbon/human/D)
+/datum/martial_art/cqc/harm_act(mob/living/A, mob/living/D)
 	var/def_check = D.getarmor(BODY_ZONE_CHEST, MELEE)
 	if(!can_use(A))
 		return FALSE
@@ -185,7 +174,7 @@
 		log_combat(A, D, "sweeped (CQC)", name)
 	return TRUE
 
-/datum/martial_art/cqc/disarm_act(mob/living/carbon/human/A, mob/living/carbon/human/D)
+/datum/martial_art/cqc/disarm_act(mob/living/A, mob/living/D)
 	var/def_check = D.getarmor(BODY_ZONE_CHEST, MELEE)
 	if(!can_use(A))
 		return FALSE
@@ -203,7 +192,7 @@
 			if(I && D.temporarilyRemoveItemFromInventory(I))
 				A.put_in_hands(I)
 			D.Jitter(2)
-			D.apply_damage(5, A.dna.species.attack_type, blocked = def_check)
+			D.apply_damage(5, A.get_attack_type(), blocked = def_check)
 	else
 		D.visible_message("<span class='danger'>[A] fails to disarm [D]!</span>", \
 						"<span class='userdanger'>You're nearly disarmed by [A]!</span>", "<span class='hear'>You hear a swoosh!</span>", COMBAT_MESSAGE_RANGE, A)
@@ -224,19 +213,30 @@
 		return FALSE
 	return TRUE
 
-/mob/living/carbon/human/proc/CQC_help()
+/mob/living/proc/CQC_help()
 	set name = "Remember The Basics"
 	set desc = "You try to remember some of the basics of CQC."
 	set category = "CQC"
 	to_chat(usr, "<b><i>You try to remember some of the basics of CQC.</i></b>")
 
-	to_chat(usr, "<span class='notice'>Slam</span>: Grab Harm. Slam opponent into the ground, knocking them down.")
-	to_chat(usr, "<span class='notice'>CQC Kick</span>: Harm Harm. Knocks opponent away. Knocks out stunned or knocked down opponents.")
+	to_chat(usr, "<span class='notice'>Slam</span>: Grab Punch. Slam opponent into the ground, knocking them down.")
+	to_chat(usr, "<span class='notice'>CQC Kick</span>: Punch Punch. Knocks opponent away. Knocks out stunned or knocked down opponents.")
 	to_chat(usr, "<span class='notice'>Restrain</span>: Grab Grab. Locks opponents into a restraining position, disarm to knock them out with a chokehold.")
-	to_chat(usr, "<span class='notice'>Pressure</span>: Disarm Grab. Decent stamina damage.")
-	to_chat(usr, "<span class='notice'>Consecutive CQC</span>: Disarm Disarm Harm. Mainly offensive move, huge damage and decent stamina damage.")
+	to_chat(usr, "<span class='notice'>Pressure</span>: Shove Grab. Decent stamina damage.")
+	to_chat(usr, "<span class='notice'>Consecutive CQC</span>: Shove Shove Punch. Mainly offensive move, huge damage and decent stamina damage.")
 
 	to_chat(usr, "<b><i>In addition, by having your throw mode on when being attacked, you enter an active defense mode where you have a chance to block and sometimes even counter attacks done to you.</i></b>")
+
+///Subtype of CQC. Only used for the chef.
+/datum/martial_art/cqc/under_siege
+	name = "Close Quarters Cooking"
+	var/list/valid_areas = list(/area/crew_quarters/kitchen)
+
+///Prevents use if the cook is not in the kitchen.
+/datum/martial_art/cqc/under_siege/can_use(mob/living/owner) //this is used to make chef CQC only work in kitchen
+	if(!is_type_in_list(get_area(owner), valid_areas))
+		return FALSE
+	return ..()
 
 #undef SLAM_COMBO
 #undef KICK_COMBO

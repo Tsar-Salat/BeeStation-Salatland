@@ -26,7 +26,7 @@
 	maxHealth = 350
 	health = 350
 	spacewalk = TRUE
-	a_intent = INTENT_HARM
+	combat_mode = TRUE
 	damage_coeff = list(BRUTE = 1, BURN = 1, TOX = 1, CLONE = 1, STAMINA = 0, OXY = 1)
 	speed = 0
 	attack_verb_continuous = "chomps"
@@ -133,6 +133,7 @@
 		tearing_wall = TRUE
 		if(do_after(src, timetotear, target = thewall))
 			if(istype(thewall, /turf/open))
+				tearing_wall = FALSE
 				return
 			thewall.dismantle_wall(1)
 			playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)

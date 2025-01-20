@@ -46,7 +46,7 @@
 	throwforce = 1
 	amount_per_transfer_from_this = 5
 	custom_materials = list(/datum/material/iron=100)
-	possible_transfer_amounts = list(5)
+	has_variable_transfer_amount = FALSE
 	volume = 5
 	flags_1 = CONDUCT_1
 	spillable = TRUE
@@ -243,7 +243,7 @@
 	return ..()
 
 /obj/item/reagent_containers/cup/glass/waterbottle/afterattack(obj/target, mob/living/user, proximity)
-	if(cap_on && (target.is_refillable() || target.is_drainable() || (reagents.total_volume && !user.a_intent == INTENT_HARM)))
+	if(cap_on && (target.is_refillable() || target.is_drainable() || (reagents.total_volume && !user.combat_mode)))
 		to_chat(user, "<span class='warning'>You must remove the cap before you can do that!</span>")
 		return
 
@@ -460,13 +460,6 @@
 	amount_per_transfer_from_this = 10
 	volume = 100
 	isGlass = FALSE
-
-/obj/item/reagent_containers/cup/glass/shaker/Initialize(mapload)
-	. = ..()
-	if(prob(10))
-		name = "\improper Nanotrasen 20th Anniversary Shaker"
-		desc += " It has an emblazoned Nanotrasen logo on it."
-		icon_state = "shaker_n"
 
 /obj/item/reagent_containers/cup/glass/flask
 	name = "flask"
