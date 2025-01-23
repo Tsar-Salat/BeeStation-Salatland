@@ -426,7 +426,7 @@ GLOBAL_LIST_EMPTY(species_list)
 	return spawned_mobs
 
 /proc/deadchat_broadcast(message, mob/follow_target=null, turf/turf_target=null, speaker_key=null, message_type=DEADCHAT_REGULAR)
-	message = "<span class='linkify'>[message]</span>"
+	message = span_linkify("[message]")
 	for(var/mob/M in GLOB.player_list)
 		var/death_rattle = TRUE
 		var/arrivals_rattle = TRUE
@@ -594,6 +594,49 @@ GLOBAL_LIST_EMPTY(species_list)
 			return "right foot"
 		else
 			return zone
+
+///Returns a list of strings for a given slot flag.
+/proc/parse_slot_flags(slot_flags)
+	var/list/slot_strings = list()
+	if(slot_flags & ITEM_SLOT_BACK)
+		slot_strings += "back"
+	if(slot_flags & ITEM_SLOT_MASK)
+		slot_strings += "mask"
+	if(slot_flags & ITEM_SLOT_NECK)
+		slot_strings += "neck"
+	if(slot_flags & ITEM_SLOT_HANDCUFFED)
+		slot_strings += "handcuff"
+	if(slot_flags & ITEM_SLOT_LEGCUFFED)
+		slot_strings += "legcuff"
+	if(slot_flags & ITEM_SLOT_BELT)
+		slot_strings += "belt"
+	if(slot_flags & ITEM_SLOT_ID)
+		slot_strings += "id"
+	if(slot_flags & ITEM_SLOT_EARS)
+		slot_strings += "ear"
+	if(slot_flags & ITEM_SLOT_EYES)
+		slot_strings += "glasses"
+	if(slot_flags & ITEM_SLOT_GLOVES)
+		slot_strings += "glove"
+	if(slot_flags & ITEM_SLOT_HEAD)
+		slot_strings += "head"
+	if(slot_flags & ITEM_SLOT_FEET)
+		slot_strings += "shoe"
+	if(slot_flags & ITEM_SLOT_OCLOTHING)
+		slot_strings += "oversuit"
+	if(slot_flags & ITEM_SLOT_ICLOTHING)
+		slot_strings += "undersuit"
+	if(slot_flags & ITEM_SLOT_SUITSTORE)
+		slot_strings += "suit storage"
+	if(slot_flags & (ITEM_SLOT_LPOCKET|ITEM_SLOT_RPOCKET))
+		slot_strings += "pocket"
+	if(slot_flags & ITEM_SLOT_HANDS)
+		slot_strings += "hand"
+	if(slot_flags & ITEM_SLOT_DEX_STORAGE)
+		slot_strings += "dextrous storage"
+	if(slot_flags & ITEM_SLOT_BACKPACK)
+		slot_strings += "backpack"
+	return slot_strings
 
 ///Returns the direction that the initiator and the target are facing
 /proc/check_target_facings(mob/living/initator, mob/living/target)
@@ -827,7 +870,7 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 
 	//This name has already been taken and this is not the original user, return FALSE
 	else
-		to_chat(C.mob, "<span class='warning'>Cyborg name already used this round by another character, your name has been randomized</span>")
+		to_chat(C.mob, span_warning("Cyborg name already used this round by another character, your name has been randomized"))
 		return FALSE
 
 /proc/view_or_range(distance = world.view , center = usr , type)

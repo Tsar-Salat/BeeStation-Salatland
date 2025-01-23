@@ -24,7 +24,7 @@ GLOBAL_LIST_EMPTY(GPS_list)
 	/// UI state of GPS, altering when it can be used.
 	var/datum/ui_state/state = null
 
-/datum/component/gps/item/Initialize(_gpstag = "COM0", emp_proof = FALSE, state = null)
+/datum/component/gps/item/Initialize(_gpstag = "COM0", emp_proof = FALSE, state = null, overlay_state = "working")
 	. = ..()
 	if(. == COMPONENT_INCOMPATIBLE || !isitem(parent))
 		return COMPONENT_INCOMPATIBLE
@@ -34,7 +34,8 @@ GLOBAL_LIST_EMPTY(GPS_list)
 	src.state = state
 
 	var/atom/A = parent
-	A.add_overlay("working")
+	if(overlay_state)
+		A.add_overlay(overlay_state)
 	A.name = "[initial(A.name)] ([gpstag])"
 	RegisterSignal(parent, COMSIG_ITEM_ATTACK_SELF, PROC_REF(interact))
 	if(!emp_proof)
@@ -53,7 +54,7 @@ GLOBAL_LIST_EMPTY(GPS_list)
 /datum/component/gps/item/proc/on_examine(datum/source, mob/user, list/examine_list)
 	SIGNAL_HANDLER
 
-	examine_list += "<span class='notice'>Alt-click to switch it [tracking ? "off":"on"].</span>"
+	examine_list += span_notice("Alt-click to switch it [tracking ? "off":"on"].")
 
 ///Called on COMSIG_ATOM_EMP_ACT
 /datum/component/gps/item/proc/on_emp_act(datum/source, severity)
@@ -86,16 +87,16 @@ GLOBAL_LIST_EMPTY(GPS_list)
 	if(!user.canUseTopic(parent, BE_CLOSE))
 		return //user not valid to use gps
 	if(emped)
-		to_chat(user, "<span class='warning'>It's busted!</span>")
+		to_chat(user, span_warning("It's busted!"))
 		return
 	var/atom/A = parent
 	if(tracking)
 		A.cut_overlay("working")
-		to_chat(user, "<span class='notice'>[parent] is no longer tracking, or visible to other GPS devices.</span>")
+		to_chat(user, span_notice("[parent] is no longer tracking, or visible to other GPS devices."))
 		tracking = FALSE
 	else
 		A.add_overlay("working")
-		to_chat(user, "<span class='notice'>[parent] is now tracking, and visible to other GPS devices.</span>")
+		to_chat(user, span_notice("[parent] is now tracking, and visible to other GPS devices."))
 		tracking = TRUE
 
 
@@ -104,7 +105,7 @@ GLOBAL_LIST_EMPTY(GPS_list)
 
 /datum/component/gps/item/ui_interact(mob/user, datum/tgui/ui) // Remember to use the appropriate state.
 	if(emped)
-		to_chat(user, "<span class='hear'>[parent] fizzles weakly.</span>")
+		to_chat(user, span_hear("[parent] fizzles weakly."))
 		return
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
@@ -161,7 +162,8 @@ GLOBAL_LIST_EMPTY(GPS_list)
 
 			gpstag = a
 			. = TRUE
-			parentasatom.name = "global positioning system ([gpstag])"
+			usr.log_message("renamed [parentasatom] to \"[initial(parentasatom.name)] ([gpstag])\".", LOG_GAME)
+			parentasatom.name = "[initial(parentasatom.name)] ([gpstag])"
 
 		if("power")
 			toggletracking(usr)

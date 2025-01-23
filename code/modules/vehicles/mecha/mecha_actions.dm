@@ -19,7 +19,7 @@
 	name = "Eject From Mech"
 	button_icon_state = "mech_eject"
 
-/datum/action/vehicle/sealed/mecha/mech_eject/Trigger()
+/datum/action/vehicle/sealed/mecha/mech_eject/Trigger(trigger_flags)
 	if(!owner)
 		return
 	if(!chassis || !(owner in chassis.occupants))
@@ -30,7 +30,7 @@
 	name = "Toggle Internal Airtank Usage"
 	button_icon_state = "mech_internals_off"
 
-/datum/action/vehicle/sealed/mecha/mech_toggle_internals/Trigger()
+/datum/action/vehicle/sealed/mecha/mech_toggle_internals/Trigger(trigger_flags)
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
 	chassis.use_internal_tank = !chassis.use_internal_tank
@@ -43,7 +43,7 @@
 	name = "Cycle Equipment"
 	button_icon_state = "mech_cycle_equip_off"
 
-/datum/action/vehicle/sealed/mecha/mech_cycle_equip/Trigger()
+/datum/action/vehicle/sealed/mecha/mech_cycle_equip/Trigger(trigger_flags)
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
 
@@ -85,11 +85,11 @@
 	name = "Toggle Lights"
 	button_icon_state = "mech_lights_off"
 
-/datum/action/vehicle/sealed/mecha/mech_toggle_lights/Trigger()
+/datum/action/vehicle/sealed/mecha/mech_toggle_lights/Trigger(trigger_flags)
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
 	if(!(chassis.mecha_flags & HAS_LIGHTS))
-		to_chat(owner, "<span class='warning'>This mechs lights are destroyed!</span>")
+		to_chat(owner, span_warning("This mechs lights are destroyed!"))
 		return
 	chassis.mecha_flags ^= LIGHTS_ON
 	if(chassis.mecha_flags & LIGHTS_ON)
@@ -105,7 +105,7 @@
 	name = "View Stats"
 	button_icon_state = "mech_view_stats"
 
-/datum/action/vehicle/sealed/mecha/mech_view_stats/Trigger()
+/datum/action/vehicle/sealed/mecha/mech_view_stats/Trigger(trigger_flags)
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
 	var/datum/browser/popup = new(owner , "exosuit")
@@ -117,7 +117,7 @@
 	name = "Toggle Strafing. Disabled when Alt is held."
 	button_icon_state = "strafe"
 
-/datum/action/vehicle/sealed/mecha/strafe/Trigger()
+/datum/action/vehicle/sealed/mecha/strafe/Trigger(trigger_flags)
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
 
@@ -129,11 +129,11 @@
 
 /obj/vehicle/sealed/mecha/proc/toggle_strafe()
 	if(!(mecha_flags & CANSTRAFE))
-		to_chat(occupants, "[icon2html(src, occupants)]<span class='notice'>This mecha does not support strafing.</span>")
+		to_chat(occupants, "[icon2html(src, occupants)][span_notice("This mecha does not support strafing.")]")
 		return
 	strafe = !strafe
 
-	to_chat(occupants, "[icon2html(src, occupants)]<span class='notice'>Toggled strafing mode [strafe?"on":"off"].</span>")
+	to_chat(occupants, "[icon2html(src, occupants)][span_notice("Toggled strafing mode [strafe?"on":"off"].")]")
 	log_message("Toggled strafing mode [strafe?"on":"off"].", LOG_MECHA)
 
 	for(var/occupant in occupants)
@@ -147,14 +147,14 @@
 	name = "Toggle an energy shield that blocks all attacks from the faced direction at a heavy power cost."
 	button_icon_state = "mech_defense_mode_off"
 
-/datum/action/vehicle/sealed/mecha/mech_defense_mode/Trigger(forced_state = FALSE)
+/datum/action/vehicle/sealed/mecha/mech_defense_mode/Trigger(trigger_flags, forced_state = FALSE)
 	SEND_SIGNAL(chassis, COMSIG_MECHA_ACTION_TRIGGER, owner, args) //Signal sent to the mech, to be handed to the shield. See durand.dm for more details
 
 /datum/action/vehicle/sealed/mecha/mech_overload_mode
 	name = "Toggle leg actuators overload"
 	button_icon_state = "mech_overload_off"
 
-/datum/action/vehicle/sealed/mecha/mech_overload_mode/Trigger(forced_state = null)
+/datum/action/vehicle/sealed/mecha/mech_overload_mode/Trigger(trigger_flags, forced_state = null)
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
 	if(!isnull(forced_state))
@@ -177,7 +177,7 @@
 	name = "Smoke"
 	button_icon_state = "mech_smoke"
 
-/datum/action/vehicle/sealed/mecha/mech_smoke/Trigger()
+/datum/action/vehicle/sealed/mecha/mech_smoke/Trigger(trigger_flags)
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
 	if(!TIMER_COOLDOWN_CHECK(src, COOLDOWN_MECHA_SMOKE) && chassis.smoke_charges>0)
@@ -190,7 +190,7 @@
 	name = "Zoom"
 	button_icon_state = "mech_zoom_off"
 
-/datum/action/vehicle/sealed/mecha/mech_zoom/Trigger()
+/datum/action/vehicle/sealed/mecha/mech_zoom/Trigger(trigger_flags)
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
 	if(owner.client)
@@ -209,20 +209,20 @@
 	name = "Reconfigure arm microtool arrays"
 	button_icon_state = "mech_damtype_brute"
 
-/datum/action/vehicle/sealed/mecha/mech_switch_damtype/Trigger()
+/datum/action/vehicle/sealed/mecha/mech_switch_damtype/Trigger(trigger_flags)
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
 	var/new_damtype
 	switch(chassis.damtype)
 		if("tox")
 			new_damtype = "brute"
-			to_chat(owner, "[icon2html(chassis, owner)]<span class='notice'>Your exosuit's hands form into fists.</span>")
+			to_chat(owner, "[icon2html(chassis, owner)][span_notice("Your exosuit's hands form into fists.")]")
 		if("brute")
 			new_damtype = "fire"
-			to_chat(owner, "[icon2html(chassis, owner)]<span class='notice'>A torch tip extends from your exosuit's hand, glowing red.</span>")
+			to_chat(owner, "[icon2html(chassis, owner)][span_notice("A torch tip extends from your exosuit's hand, glowing red.")]")
 		if("fire")
 			new_damtype = "tox"
-			to_chat(owner, "[icon2html(chassis, owner)]<span class='notice'>A bone-chillingly thick plasteel needle protracts from the exosuit's palm.</span>")
+			to_chat(owner, "[icon2html(chassis, owner)][span_notice("A bone-chillingly thick plasteel needle protracts from the exosuit's palm.")]")
 	chassis.damtype = new_damtype
 	button_icon_state = "mech_damtype_[new_damtype]"
 	playsound(chassis, 'sound/mecha/mechmove01.ogg', 50, TRUE)
@@ -232,7 +232,7 @@
 	name = "Toggle Phasing"
 	button_icon_state = "mech_phasing_off"
 
-/datum/action/vehicle/sealed/mecha/mech_toggle_phasing/Trigger()
+/datum/action/vehicle/sealed/mecha/mech_toggle_phasing/Trigger(trigger_flags)
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
 	chassis.phasing = !chassis.phasing

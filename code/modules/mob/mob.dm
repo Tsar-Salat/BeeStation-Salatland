@@ -135,11 +135,11 @@
 
 	var/datum/gas_mixture/environment = loc.return_air()
 
-	var/t =	"<span class='notice'>Coordinates: [x],[y] \n</span>"
-	t +=	"<span class='danger'>Temperature: [environment.return_temperature()] \n</span>"
+	var/t =	span_notice("Coordinates: [x],[y] \n")
+	t +=	span_danger("Temperature: [environment.return_temperature()] \n")
 	for(var/id in environment.get_gases())
 		if(environment.get_moles(id))
-			t+="<span class='notice'>[GLOB.gas_data.names[id]]: [environment.get_moles(id)] \n</span>"
+			t+=span_notice("[GLOB.gas_data.names[id]]: [environment.get_moles(id)] \n")
 
 	to_chat(usr, t)
 
@@ -205,7 +205,7 @@
 	var/raw_msg = message
 	var/is_emote = FALSE
 	if(LAZYFIND(visible_message_flags, CHATMESSAGE_EMOTE))
-		message = "<span class='emote'><b>[src]</b>[separation][message]</span>"
+		message = span_emote("<b>[src]</b>[separation][message]")
 		is_emote = TRUE
 
 	var/list/show_to = list()
@@ -243,7 +243,7 @@
 	var/raw_self_message = self_message
 	var/self_runechat = FALSE
 	if(LAZYFIND(visible_message_flags, CHATMESSAGE_EMOTE))
-		self_message = "<span class='emote'><b>[src]</b> [self_message]</span>" // May make more sense as "You do x"
+		self_message = span_emote("<b>[src]</b> [self_message]") // May make more sense as "You do x"
 
 	if(LAZYFIND(visible_message_flags, ALWAYS_SHOW_SELF_MESSAGE))
 		to_chat(src, self_message)
@@ -275,7 +275,7 @@
 	var/is_emote = FALSE
 	if(LAZYFIND(audible_message_flags, CHATMESSAGE_EMOTE))
 		is_emote = TRUE
-		message = "<span class='emote'><b>[src]</b>[separation][message]</span>"
+		message = span_emote("<b>[src]</b>[separation][message]")
 
 	var/list/show_to = list()
 	for(var/mob/M in hearers)
@@ -305,7 +305,7 @@
 	var/raw_self_message = self_message
 	var/self_runechat = FALSE
 	if(LAZYFIND(audible_message_flags, CHATMESSAGE_EMOTE))
-		self_message = "<span class='emote'><b>[src]</b> [self_message]</span>"
+		self_message = span_emote("<b>[src]</b> [self_message]")
 	if(LAZYFIND(audible_message_flags, ALWAYS_SHOW_SELF_MESSAGE))
 		to_chat(src, self_message)
 		self_runechat = TRUE
@@ -393,7 +393,7 @@
 		if(qdel_on_fail)
 			qdel(W)
 		else if(!disable_warning)
-			to_chat(src, "<span class='warning'>You are unable to equip that!</span>")
+			to_chat(src, span_warning("You are unable to equip that!"))
 		return FALSE
 	equip_to_slot(W, slot, initial, redraw_mob) //This proc should not ever fail.
 	return TRUE
@@ -530,22 +530,40 @@
   * [this byond forum post](https://secure.byond.com/forum/?post=1326139&page=2#comment8198716)
   * for why this isn't atom/verb/examine()
   */
-/mob/verb/examinate(atom/A as mob|obj|turf in view()) //It used to be oview(12), but I can't really say why
+/mob/verb/examinate(atom/examinify as mob|obj|turf in view()) //It used to be oview(12), but I can't really say why
 	set name = "Examine"
 	set category = "IC"
 
-	if(isturf(A) && !(sight & SEE_TURFS) && !(A in view(client ? client.view : world.view, src)))
+	if(isturf(examinify) && !(sight & SEE_TURFS) && !(examinify in view(client ? client.view : world.view, src)))
 		// shift-click catcher may issue examinate() calls for out-of-sight turfs
 		return
 
-	if(is_blind(src) && !blind_examine_check(A))
+	if(is_blind(src) && !blind_examine_check(examinify))
 		return
 
-	face_atom(A)
-	var/list/result = A.examine(src)
+	face_atom(examinify)
+	var/list/result
+	if(client)
+		LAZYINITLIST(client.recent_examines)
+		var/ref_to_atom = ref(examinify)
+		var/examine_time = client.recent_examines[ref_to_atom]
+		if(examine_time && (world.time - examine_time < EXAMINE_MORE_WINDOW))
+			result = examinify.examine_more(src)
+			if(!length(result))
+				result += "<span class='notice'><i>You examine [examinify] closer, but find nothing of interest...</i></span>"
+		else
+			result = examinify.examine(src)
+			client.recent_examines[ref_to_atom] = world.time // set to when we last normal examine'd them
+			addtimer(CALLBACK(src, PROC_REF(clear_from_recent_examines), ref_to_atom), RECENT_EXAMINE_MAX_WINDOW)
+	else
+		result = examinify.examine(src) // if a tree is examined but no client is there to see it, did the tree ever really exist?
 
-	to_chat(src, EXAMINE_BLOCK(jointext(result, "\n")))
-	SEND_SIGNAL(src, COMSIG_MOB_EXAMINATE, A)
+	if(result.len)
+		for(var/i in 1 to (length(result) - 1))
+			result[i] += "\n"
+
+	to_chat(src, EXAMINE_BLOCK("<span class='infoplain'>[result.Join()]</span>"))
+	SEND_SIGNAL(src, COMSIG_MOB_EXAMINATE, examinify)
 
 /mob/proc/blind_examine_check(atom/examined_thing)
 	return TRUE
@@ -553,27 +571,27 @@
 /mob/living/blind_examine_check(atom/examined_thing)
 	//need to be next to something and awake
 	if(!Adjacent(examined_thing) || incapacitated())
-		to_chat(src, "<span class='warning'>Something is there, but you can't see it!</span>")
+		to_chat(src, span_warning("Something is there, but you can't see it!"))
 		return FALSE
 
 	var/active_item = get_active_held_item()
 	if(active_item && active_item != examined_thing)
-		to_chat(src, "<span class='warning'>Your hands are too full to examine this!</span>")
+		to_chat(src, span_warning("Your hands are too full to examine this!"))
 		return FALSE
 
 	//you can only initiate exaimines if you have a hand, it's not disabled, and only as many examines as you have hands
 	/// our active hand, to check if it's disabled/detatched
 	var/obj/item/bodypart/active_hand = has_active_hand()? get_active_hand() : null
 	if(!active_hand || active_hand.bodypart_disabled || do_after_count() >= usable_hands)
-		to_chat(src, "<span class='warning'>You don't have a free hand to examine this!</span>")
+		to_chat(src, span_warning("You don't have a free hand to examine this!"))
 		return FALSE
 
 	//you can only queue up one examine on something at a time
 	if(DOING_INTERACTION_WITH_TARGET(src, examined_thing))
 		return FALSE
 
-	to_chat(src, "<span class='notice'>You start feeling around for something...</span>")
-	visible_message("<span class='notice'> [name] begins feeling around for \the [examined_thing.name]...</span>")
+	to_chat(src, span_notice("You start feeling around for something..."))
+	visible_message(span_notice(" [name] begins feeling around for \the [examined_thing.name]..."))
 
 	/// how long it takes for the blind person to find the thing they're examining
 	var/examine_delay_length = rand(1 SECONDS, 2 SECONDS)
@@ -583,7 +601,7 @@
 		examine_delay_length *= 2
 
 	if(examine_delay_length > 0 && !do_after(src, examine_delay_length, target = examined_thing))
-		to_chat(src, "<span class='notice'>You can't get a good feel for what is there.</span>")
+		to_chat(src, span_notice("You can't get a good feel for what is there."))
 		return FALSE
 
 	//now we touch the thing we're examining
@@ -594,6 +612,12 @@
 	a_intent = previous_intent
 
 	return TRUE
+
+/mob/proc/clear_from_recent_examines(ref_to_clear)
+	SIGNAL_HANDLER
+	if(!client)
+		return
+	LAZYREMOVE(client.recent_examines, ref_to_clear)
 
 /**
   * Called by using Activate Held Object with an empty hand/limb
@@ -707,19 +731,19 @@
 
 	if (CONFIG_GET(flag/norespawn))
 		if(!check_rights_for(client, R_ADMIN))
-			to_chat(usr, "<span class='boldnotice'>Respawning is disabled.</span>")
+			to_chat(usr, span_boldnotice("Respawning is disabled."))
 			return
 		alert_yes = alert(src, "Do you want to use your admin privilege to respawn? (Respawning is currently disabled)", "Options", "Yes", "No")
 		if(alert_yes != "Yes")
 			return
 
 	if ((stat != DEAD || !( SSticker )))
-		to_chat(usr, "<span class='boldnotice'>You must be dead to use this!</span>")
+		to_chat(usr, span_boldnotice("You must be dead to use this!"))
 		return
 
 	log_game("[key_name(usr)] used abandon mob.")
 
-	to_chat(usr, "<span class='boldnotice'>Please roleplay correctly!</span>")
+	to_chat(usr, span_boldnotice("Please roleplay correctly!"))
 
 	if(!client)
 		log_game("[key_name(usr)] AM failed due to disconnect.")
@@ -889,7 +913,7 @@
 /mob/proc/swap_hand()
 	var/obj/item/held_item = get_active_held_item()
 	if(SEND_SIGNAL(src, COMSIG_MOB_SWAP_HANDS, held_item) & COMPONENT_BLOCK_SWAP)
-		to_chat(src, "<span class='warning'>Your other hand is too busy holding [held_item].</span>")
+		to_chat(src, span_warning("Your other hand is too busy holding [held_item]."))
 		return FALSE
 	return TRUE
 
@@ -949,6 +973,8 @@
 			return pick(protection_sources)
 		else
 			return src
+	if(!self && magic && HAS_TRAIT(src, TRAIT_ANTIMAGIC_NO_SELFBLOCK))
+		return src
 
 ///Return any anti artifact atom on this mob
 /mob/proc/anti_artifact_check(self = FALSE)
@@ -1184,15 +1210,15 @@
 ///Can this mob read (is literate and not blind)
 /mob/proc/can_read(obj/O)
 	if(is_blind())
-		to_chat(src, "<span class='warning'You are blind and can't read anything!</span>")
+		to_chat(src, span_warning("You are blind and can't read anything!"))
 		return FALSE
-		//to_chat(src, "<span class='warning'>As you are trying to read [O], you suddenly feel very stupid!</span>")
+		//to_chat(src, span_warning("As you are trying to read [O], you suddenly feel very stupid!"))
 	if(!is_literate())
-		to_chat(src, "<span class='warning'>You try to read [O], but can't comprehend any of it.</span>")
+		to_chat(src, span_warning("You try to read [O], but can't comprehend any of it."))
 		return FALSE
 
 	if(!has_light_nearby() && !has_nightvision())
-		to_chat(src, "<span class='warning'>It's too dark in here to read!</span>")
+		to_chat(src, span_warning("It's too dark in here to read!"))
 		return FALSE
 
 	return TRUE

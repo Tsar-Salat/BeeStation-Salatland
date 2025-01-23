@@ -47,12 +47,12 @@
 /obj/item/storage/box/suicide_act(mob/living/carbon/user)
 	var/obj/item/bodypart/head/myhead = user.get_bodypart(BODY_ZONE_HEAD)
 	if(myhead)
-		user.visible_message("<span class='suicide'>[user] puts [user.p_their()] head into \the [src], and begins closing it! It looks like [user.p_theyre()] trying to commit suicide!</span>")
+		user.visible_message(span_suicide("[user] puts [user.p_their()] head into \the [src], and begins closing it! It looks like [user.p_theyre()] trying to commit suicide!"))
 		myhead.dismember()
 		myhead.forceMove(src)//force your enemies to kill themselves with your head collection box!
 		playsound(user,pick('sound/misc/desecration-01.ogg','sound/misc/desecration-02.ogg','sound/misc/desecration-01.ogg') ,50, 1, -1)
 		return BRUTELOSS
-	user.visible_message("<span class='suicide'>[user] beating [user.p_them()]self with \the [src]! It looks like [user.p_theyre()] trying to commit suicide!</span>")
+	user.visible_message(span_suicide("[user] beating [user.p_them()]self with \the [src]! It looks like [user.p_theyre()] trying to commit suicide!"))
 	return BRUTELOSS
 
 /obj/item/storage/box/update_overlays()
@@ -66,12 +66,12 @@
 	if(!foldable || (flags_1 & HOLOGRAM_1))
 		return
 	if(contents.len)
-		to_chat(user, "<span class='warning'>You can't fold this box with items still inside!</span>")
+		to_chat(user, span_warning("You can't fold this box with items still inside!"))
 		return
 	if(!ispath(foldable))
 		return
 
-	to_chat(user, "<span class='notice'>You fold [src] flat.</span>")
+	to_chat(user, span_notice("You fold [src] flat."))
 	var/obj/item/I = new foldable
 	qdel(src)
 	user.put_in_hands(I)
@@ -209,6 +209,10 @@
 // Mining survival box
 /obj/item/storage/box/survival/mining
 	mask_type = /obj/item/clothing/mask/gas/explorer
+
+/obj/item/storage/box/survival/mining/PopulateContents()
+	..()
+	new /obj/item/stack/medical/gauze(src)
 
 // Engineer survival box
 /obj/item/storage/box/survival/engineer
@@ -743,7 +747,7 @@
 
 /obj/item/storage/box/mousetraps
 	name = "box of Pest-B-Gon mousetraps"
-	desc = "<span class='alert'>Keep out of reach of children.</span>"
+	desc = span_alert("Keep out of reach of children.")
 	illustration = "mousetrap"
 
 /obj/item/storage/box/mousetraps/PopulateContents()
@@ -807,6 +811,7 @@
 	item_state = "syringe_kit"
 	lefthand_file = 'icons/mob/inhands/equipment/medical_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/medical_righthand.dmi'
+	w_class = WEIGHT_CLASS_NORMAL
 	foldable = /obj/item/stack/sheet/cardboard //BubbleWrap
 
 /obj/item/storage/box/lights/Initialize(mapload)
@@ -865,14 +870,14 @@
 	foldable = null
 
 /obj/item/storage/box/hug/suicide_act(mob/living/user)
-	user.visible_message("<span class='suicide'>[user] clamps the box of hugs on [user.p_their()] jugular! Guess it wasn't such a hugbox after all..</span>")
+	user.visible_message(span_suicide("[user] clamps the box of hugs on [user.p_their()] jugular! Guess it wasn't such a hugbox after all.."))
 	return BRUTELOSS
 
 /obj/item/storage/box/hug/attack_self(mob/user)
 	..()
 	user.changeNext_move(CLICK_CD_MELEE)
 	playsound(loc, "rustle", 50, 1, -5)
-	user.visible_message("<span class='notice'>[user] hugs \the [src].</span>","<span class='notice'>You hug \the [src].</span>")
+	user.visible_message(span_notice("[user] hugs \the [src]."),span_notice("You hug \the [src]."))
 
 /////clown box & honkbot assembly
 /obj/item/storage/box/clown
@@ -883,12 +888,12 @@
 /obj/item/storage/box/clown/attackby(obj/item/I, mob/user, params)
 	if((istype(I, /obj/item/bodypart/l_arm/robot)) || (istype(I, /obj/item/bodypart/r_arm/robot)))
 		if(contents.len) //prevent accidently deleting contents
-			to_chat(user, "<span class='warning'>You need to empty [src] out first!</span>")
+			to_chat(user, span_warning("You need to empty [src] out first!"))
 			return
 		if(!user.temporarilyRemoveItemFromInventory(I))
 			return
 		qdel(I)
-		to_chat(user, "<span class='notice'>You add some wheels to the [src]! You've got a honkbot assembly now! Honk!</span>")
+		to_chat(user, span_notice("You add some wheels to the [src]! You've got a honkbot assembly now! Honk!"))
 		var/obj/item/bot_assembly/honkbot/A = new
 		qdel(src)
 		user.put_in_hands(A)
@@ -1319,3 +1324,34 @@
 	new /obj/item/encryptionkey/heads/ce/fake(src)
 	new /obj/item/encryptionkey/heads/cmo/fake(src)
 	new /obj/item/encryptionkey/heads/hop/fake(src)
+
+/obj/item/storage/box/stabilized //every single stabilized extract from xenobiology
+	name = "box of stabilized extracts"
+	icon_state = "syndiebox"
+
+/obj/item/storage/box/stabilized/PopulateContents()
+	var/static/items_inside = list(
+		/obj/item/slimecross/stabilized/grey=1,\
+		/obj/item/slimecross/stabilized/orange=1,\
+		/obj/item/slimecross/stabilized/purple=1,\
+		/obj/item/slimecross/stabilized/blue=1,\
+		/obj/item/slimecross/stabilized/metal=1,\
+		/obj/item/slimecross/stabilized/yellow=1,\
+		/obj/item/slimecross/stabilized/darkpurple=1,\
+		/obj/item/slimecross/stabilized/darkblue=1,\
+		/obj/item/slimecross/stabilized/silver=1,\
+		/obj/item/slimecross/stabilized/bluespace=1,\
+		/obj/item/slimecross/stabilized/sepia=1,\
+		/obj/item/slimecross/stabilized/cerulean=1,\
+		/obj/item/slimecross/stabilized/pyrite=1,\
+		/obj/item/slimecross/stabilized/red=1,\
+		/obj/item/slimecross/stabilized/green=1,\
+		/obj/item/slimecross/stabilized/pink=1,\
+		/obj/item/slimecross/stabilized/gold=1,\
+		/obj/item/slimecross/stabilized/oil=1,\
+		/obj/item/slimecross/stabilized/black=1,\
+		/obj/item/slimecross/stabilized/lightpink=1,\
+		/obj/item/slimecross/stabilized/adamantine=1,\
+		/obj/item/slimecross/stabilized/rainbow=1,\
+		)
+	generate_items_inside(items_inside,src)

@@ -222,30 +222,19 @@
 	return dna.species.handle_chemicals(R,src)
 	// if it returns 0, it will run the usual on_mob_life for that reagent. otherwise, it will stop after running handle_chemicals for the species.
 
-
-/mob/living/carbon/human/can_track(mob/living/user)
-	if(wear_id && istype(wear_id.GetID(), /obj/item/card/id/syndicate))
-		return FALSE
-	if(istype(head, /obj/item/clothing/head))
-		var/obj/item/clothing/head/hat = head
-		if(hat.blockTracking)
-			return FALSE
-
-	return ..()
-
 /mob/living/carbon/human/can_use_guns(obj/item/G)
 	. = ..()
 
 	if(G.trigger_guard == TRIGGER_GUARD_NORMAL)
 		if(src.dna.check_mutation(HULK))
-			to_chat(src, "<span class='warning'>Your meaty finger is much too large for the trigger guard!</span>")
+			to_chat(src, span_warning("Your meaty finger is much too large for the trigger guard!"))
 			return FALSE
 		if(HAS_TRAIT(src, TRAIT_NOGUNS))
-			to_chat(src, "<span class='warning'>Your fingers don't fit in the trigger guard!</span>")
+			to_chat(src, span_warning("Your fingers don't fit in the trigger guard!"))
 			return FALSE
 	if(mind)
 		if(mind.martial_art && mind.martial_art.no_guns) //great dishonor to famiry
-			to_chat(src, "<span class='warning'>Use of ranged weaponry would bring dishonor to the clan.</span>")
+			to_chat(src, span_warning("Use of ranged weaponry would bring dishonor to the clan."))
 			return FALSE
 
 	return .
@@ -269,28 +258,6 @@
 	if(I_hud)
 		return I_hud
 	return "unknown"
-
-/mob/living/carbon/human/can_see_reagents()
-	. = ..()
-	if(.) //No need to run through all of this if it's already true.
-		return
-	if(isclothing(glasses) && (glasses.clothing_flags & SCAN_REAGENTS))
-		return TRUE
-	if(isclothing(head) && (head.clothing_flags & SCAN_REAGENTS))
-		return TRUE
-	if(isclothing(wear_mask) && (wear_mask.clothing_flags & SCAN_REAGENTS))
-		return TRUE
-
-/mob/living/carbon/human/can_see_boozepower()
-	. = ..()
-	if(.)
-		return
-	if(isclothing(glasses) && (glasses.clothing_flags & SCAN_BOOZEPOWER))
-		return TRUE
-	if(isclothing(head) && (head.clothing_flags & SCAN_BOOZEPOWER))
-		return TRUE
-	if(isclothing(wear_mask) && (wear_mask.clothing_flags & SCAN_BOOZEPOWER))
-		return TRUE
 
 ///copies over clothing preferences like underwear to another human
 /mob/living/carbon/human/proc/copy_clothing_prefs(mob/living/carbon/human/destination)

@@ -61,7 +61,7 @@
 
 /obj/item/clothing/head/helmet/space/hardsuit/attack_self(mob/user)
 	if(light_broken)
-		to_chat(user, "<span class='notice'>The headlamp has been burnt out... Looks like there's no replacing it.</span>")
+		to_chat(user, span_notice("The headlamp has been burnt out... Looks like there's no replacing it."))
 		on = FALSE
 	else
 		on = !on
@@ -98,18 +98,18 @@
 /obj/item/clothing/head/helmet/space/hardsuit/proc/toggle_hud(mob/user)
 	var/datum/component/team_monitor/worn/monitor = GetComponent(/datum/component/team_monitor/worn)
 	if(!monitor)
-		to_chat(user, "<span class='notice'>The suit is not fitted with a tracking beacon.</span>")
+		to_chat(user, span_notice("The suit is not fitted with a tracking beacon."))
 		return
 	monitor.toggle_hud(!monitor.hud_visible, user)
 	if(monitor.hud_visible)
-		to_chat(user, "<span class='notice'>You toggle the heads up display of your suit.</span>")
+		to_chat(user, span_notice("You toggle the heads up display of your suit."))
 	else
-		to_chat(user, "<span class='warning'>You disable the heads up display of your suit.</span>")
+		to_chat(user, span_warning("You disable the heads up display of your suit."))
 
 /obj/item/clothing/head/helmet/space/hardsuit/proc/display_visor_message(var/msg)
 	var/mob/wearer = loc
 	if(msg && ishuman(wearer))
-		wearer.show_message("[icon2html(src, wearer)]<b><span class='robot'>[msg]</span></b>", MSG_VISUAL)
+		wearer.show_message("[icon2html(src, wearer)]<b>[span_robot("[msg]")]</b>", MSG_VISUAL)
 
 /obj/item/clothing/head/helmet/space/hardsuit/rad_act(amount)
 	. = ..()
@@ -191,49 +191,49 @@
 /obj/item/clothing/suit/space/hardsuit/examine(mob/user)
 	. = ..()
 	if(!helmet && helmettype)
-		. += "<span class='notice'> The helmet on [src] seems to be malfunctioning. It's light bulb needs to be replaced.</span>"
+		. += span_notice(" The helmet on [src] seems to be malfunctioning. It's light bulb needs to be replaced.")
 
 /obj/item/clothing/suit/space/hardsuit/attackby(obj/item/I, mob/user, params)
 	if(istype(I, /obj/item/tank/jetpack/suit))
 		if(jetpack)
-			to_chat(user, "<span class='warning'>[src] already has a jetpack installed.</span>")
+			to_chat(user, span_warning("[src] already has a jetpack installed."))
 			return
 		if(src == user.get_item_by_slot(ITEM_SLOT_OCLOTHING)) //Make sure the player is not wearing the suit before applying the upgrade.
-			to_chat(user, "<span class='warning'>You cannot install the upgrade to [src] while wearing it.</span>")
+			to_chat(user, span_warning("You cannot install the upgrade to [src] while wearing it."))
 			return
 
 		if(user.transferItemToLoc(I, src))
 			jetpack = I
-			to_chat(user, "<span class='notice'>You successfully install the jetpack into [src].</span>")
+			to_chat(user, span_notice("You successfully install the jetpack into [src]."))
 			return
 	else if(!cell_cover_open && I.tool_behaviour == TOOL_SCREWDRIVER)
 		if(!jetpack)
-			to_chat(user, "<span class='warning'>[src] has no jetpack installed.</span>")
+			to_chat(user, span_warning("[src] has no jetpack installed."))
 			return
 		if(src == user.get_item_by_slot(ITEM_SLOT_OCLOTHING))
-			to_chat(user, "<span class='warning'>You cannot remove the jetpack from [src] while wearing it.</span>")
+			to_chat(user, span_warning("You cannot remove the jetpack from [src] while wearing it."))
 			return
 
 		jetpack.turn_off(user)
 		jetpack.forceMove(drop_location())
 		jetpack = null
-		to_chat(user, "<span class='notice'>You successfully remove the jetpack from [src].</span>")
+		to_chat(user, span_notice("You successfully remove the jetpack from [src]."))
 		return
 	else if(istype(I, /obj/item/light) && helmettype)
 		if(src == user.get_item_by_slot(ITEM_SLOT_OCLOTHING))
-			to_chat(user, "<span class='warning'>You cannot replace the bulb in the helmet of [src] while wearing it.</span>")
+			to_chat(user, span_warning("You cannot replace the bulb in the helmet of [src] while wearing it."))
 			return
 		if(helmet)
-			to_chat(user, "<span class='warning'>The helmet of [src] does not require a new bulb.</span>")
+			to_chat(user, span_warning("The helmet of [src] does not require a new bulb."))
 			return
 		var/obj/item/light/L = I
 		if(L.status)
-			to_chat(user, "<span class='warning'>This bulb is too damaged to use as a replacement!</span>")
+			to_chat(user, span_warning("This bulb is too damaged to use as a replacement!"))
 			return
 		if(do_after(user, 5 SECONDS, 1, src))
 			qdel(I)
 			helmet = new helmettype(src)
-			to_chat(user, "<span class='notice'>You have successfully repaired [src]'s helmet.</span>")
+			to_chat(user, span_notice("You have successfully repaired [src]'s helmet."))
 			new /obj/item/light/bulb/broken(drop_location())
 	return ..()
 
@@ -272,18 +272,18 @@
 /obj/item/clothing/suit/space/hardsuit/proc/toggle_beacon(mob/user)
 	var/datum/component/tracking_beacon/beacon = GetComponent(/datum/component/tracking_beacon)
 	if(!beacon)
-		to_chat(user, "<span class='notice'>The suit is not fitted with a tracking beacon.</span>")
+		to_chat(user, span_notice("The suit is not fitted with a tracking beacon."))
 		return
 	beacon.toggle_visibility(!beacon.visible)
 	if(beacon.visible)
-		to_chat(user, "<span class='notice'>You enable the tracking beacon on [src]. Anybody on the same frequency will now be able to track your location.</span>")
+		to_chat(user, span_notice("You enable the tracking beacon on [src]. Anybody on the same frequency will now be able to track your location."))
 	else
-		to_chat(user, "<span class='warning'>You disable the tracking beacon on [src].</span>")
+		to_chat(user, span_warning("You disable the tracking beacon on [src]."))
 
 /obj/item/clothing/suit/space/hardsuit/proc/set_beacon_freq(mob/user)
 	var/datum/component/tracking_beacon/beacon = GetComponent(/datum/component/tracking_beacon)
 	if(!beacon)
-		to_chat(user, "<span class='notice'>The suit is not fitted with a tracking beacon.</span>")
+		to_chat(user, span_notice("The suit is not fitted with a tracking beacon."))
 		return
 	beacon.change_frequency(user)
 
@@ -297,7 +297,7 @@
 	var/mob/living/carbon/human/user = src.loc
 	if(istype(user))
 		user.apply_damage(HARDSUIT_EMP_BURN, BURN)
-		to_chat(user, "<span class='warning'>You feel \the [src] heat up from the EMP burning you slightly.</span>")
+		to_chat(user, span_warning("You feel \the [src] heat up from the EMP burning you slightly."))
 
 		// Chance to scream
 		if (user.stat < UNCONSCIOUS && prob(10))
@@ -568,57 +568,6 @@
 	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/exploration
 	heat_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 
-//Cybersun Hardsuit
-//A kind of side-grade to the explorer suit, sacrificing burn protection for brute. If you can kill the guy inside it, anyways.
-
-/datum/armor/hardsuit_exploration
-	melee = 35
-	bullet = 15
-	laser = 20
-	energy = 10
-	bomb = 50
-	bio = 100
-	rad = 50
-	fire = 50
-	acid = 75
-	stamina = 20
-	bleed = 70
-
-/obj/item/clothing/head/helmet/space/hardsuit/cybersun
-	name = "Cybersun hardsuit helmet"
-	desc = "A bulbous red helmet designed for scavenging in hazardous, low pressure environments. Has dual floodlights, and a 360 Degree view."
-	icon_state = "hardsuit0-cybersun"
-	item_state = "death_commando_mask"
-	hardsuit_type = "cybersun"
-	armor_type = /datum/armor/hardsuit_cybersun
-	strip_delay = 600
-
-
-/datum/armor/hardsuit_cybersun
-	melee = 30
-	bullet = 35
-	laser = 15
-	energy = 15
-	bomb = 60
-	bio = 100
-	rad = 55
-	fire = 30
-	acid = 60
-	stamina = 15
-	bleed = 70
-
-/obj/item/clothing/suit/space/hardsuit/cybersun
-	icon_state = "cybersun"
-	name = "Cybersun hardsuit"
-	desc = "A bulky, protective suit designed to protect against the perils facing Cybersun Employed Engineers, Researchers, and more as they head from the safety of \
-		more stable employment to the dangers of Nanotrasen Controlled Deep Space. Designed to get the job done despite on-site hazards in derelicts, laser armor was \
-		sacrificed in favor of more effective blunt armor plates and radiation shielding."
-	armor_type = /datum/armor/hardsuit_cybersun
-	hardsuit_type = "cybersun"
-	item_state = "death_commando_mask"
-	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/cybersun
-	jetpack = /obj/item/tank/jetpack/suit
-
 	//Syndicate hardsuit
 
 /datum/armor/hardsuit_cybersun
@@ -690,14 +639,14 @@
 
 /obj/item/clothing/head/helmet/space/hardsuit/syndi/attack_self(mob/user) //Toggle Helmet
 	if(!isturf(user.loc))
-		to_chat(user, "<span class='warning'>You cannot toggle your helmet while in this [user.loc]!</span>" )
+		to_chat(user, span_warning("You cannot toggle your helmet while in this [user.loc]!") )
 		return
 	on = !on
 	if(on || force)
-		to_chat(user, "<span class='notice'>You switch your hardsuit to EVA mode, sacrificing speed for space protection.</span>")
+		to_chat(user, span_notice("You switch your hardsuit to EVA mode, sacrificing speed for space protection."))
 		activate_space_mode()
 	else
-		to_chat(user, "<span class='notice'>You switch your hardsuit to combat mode and can now run at full speed.</span>")
+		to_chat(user, span_notice("You switch your hardsuit to combat mode and can now run at full speed."))
 		activate_combat_mode()
 	update_icon()
 	playsound(src.loc, 'sound/mecha/mechmove03.ogg', 50, 1)
@@ -959,9 +908,10 @@
 	icon_state = "hardsuit0-medical"
 	item_state = "medical_helm"
 	hardsuit_type = "medical"
-	flash_protect = 0
+	flash_protect = FLASH_PROTECTION_NONE
 	armor_type = /datum/armor/hardsuit_medical
-	clothing_flags = STOPSPRESSUREDAMAGE | THICKMATERIAL | SNUG_FIT | SCAN_REAGENTS | HEADINTERNALS
+	clothing_flags = STOPSPRESSUREDAMAGE | THICKMATERIAL | SNUG_FIT | HEADINTERNALS
+	clothing_traits = list(TRAIT_REAGENT_SCANNER)
 
 
 /datum/armor/hardsuit_medical
@@ -1005,7 +955,7 @@
 /obj/item/clothing/head/helmet/space/hardsuit/medical/cmo
 	name = "chief medical officer's hardsuit helmet"
 	desc = "A special helmet designed for work in a hazardous, low pressure environment. Built with lightweight materials for extra comfort and protects the eyes from intense light."
-	flash_protect = 2
+	flash_protect = FLASH_PROTECTION_WELDER
 
 /obj/item/clothing/suit/space/hardsuit/medical/cmo
 	name = "chief medical officer's hardsuit"
@@ -1021,7 +971,8 @@
 	max_heat_protection_temperature = FIRE_SUIT_MAX_TEMP_PROTECT
 	armor_type = /datum/armor/hardsuit_rd
 	var/obj/machinery/doppler_array/integrated/bomb_radar
-	clothing_flags = STOPSPRESSUREDAMAGE | THICKMATERIAL | SNUG_FIT | SCAN_REAGENTS | HEADINTERNALS
+	clothing_flags = STOPSPRESSUREDAMAGE | THICKMATERIAL | SNUG_FIT | HEADINTERNALS
+	clothing_traits = list(TRAIT_REAGENT_SCANNER)
 	actions_types = list(
 		/datum/action/item_action/toggle_helmet_light,
 		/datum/action/item_action/toggle_research_scanner
@@ -1404,9 +1355,13 @@
 	. = ..()
 	if(!allowed)
 		allowed = GLOB.advanced_hardsuit_allowed
-
-/obj/item/clothing/suit/space/hardsuit/shielded/setup_shielding()
-	AddComponent(/datum/component/shielded, max_integrity = shield_integrity, recharge_start_delay = recharge_delay, charge_increment_delay = recharge_rate, shield_icon = shield_icon)
+	AddComponent(
+		/datum/component/shielded, \
+		max_integrity = shield_integrity, \
+		recharge_start_delay = recharge_delay, \
+		charge_increment_delay = recharge_rate, \
+		shield_icon = shield_icon \
+	)
 
 /obj/item/clothing/head/helmet/space/hardsuit/shielded
 	resistance_flags = FIRE_PROOF | ACID_PROOF
@@ -1430,9 +1385,20 @@
 
 	///Icon state to be fed into the shielded component
 	var/team_shield_icon = "shield-old"
+	var/shield_integrity = 150
+	var/charge_recovery = 30
+	var/recharge_start_delay = 20 SECONDS
+	var/charge_increment_delay = 1 SECONDS
 
-/obj/item/clothing/suit/armor/vest/ctf/setup_shielding()
-	AddComponent(/datum/component/shielded, max_integrity = 150, charge_recovery = 30, recharge_start_delay = 20 SECONDS, charge_increment_delay = 1 SECONDS, shield_icon = team_shield_icon)
+/obj/item/clothing/suit/armor/vest/ctf/Initialize(mapload)
+	AddComponent(
+		/datum/component/shielded, \
+		max_integrity = shield_integrity, \
+		charge_recovery = charge_recovery, \
+		recharge_start_delay = recharge_start_delay, \
+		charge_increment_delay = charge_increment_delay, \
+		shield_icon = team_shield_icon \
+	)
 
 // LIGHT SHIELDED VEST
 
@@ -1443,9 +1409,7 @@
 	greyscale_config = /datum/greyscale_config/ctf_light
 	greyscale_config_worn = /datum/greyscale_config/ctf_light_worn
 	slowdown = -0.25
-
-/obj/item/clothing/suit/armor/vest/ctf/light/setup_shielding()
-	AddComponent(/datum/component/shielded, max_integrity = 50, charge_recovery = 30, recharge_start_delay = 20 SECONDS, charge_increment_delay = 1 SECONDS, shield_icon = team_shield_icon)
+	shield_integrity = 50
 
 // RED TEAM SUITS
 
@@ -1501,7 +1465,6 @@
 	)
 	jetpack = /obj/item/tank/jetpack/suit
 
-
 /datum/armor/shielded_syndi
 	melee = 40
 	bullet = 50
@@ -1515,8 +1478,16 @@
 	stamina = 60
 	bleed = 70
 
-/obj/item/clothing/suit/space/hardsuit/shielded/syndi/setup_shielding()
-	AddComponent(/datum/component/shielded, max_integrity = 60, charge_recovery = 20, recharge_start_delay = 20 SECONDS, charge_increment_delay = 1 SECONDS, shield_icon = "shield-red")
+/obj/item/clothing/suit/space/hardsuit/shielded/syndi/Initialize(mapload)
+	. = ..()
+	AddComponent(
+		/datum/component/shielded, \
+		max_integrity = 60, \
+		charge_recovery = 20, \
+		recharge_start_delay = 20 SECONDS, \
+		charge_increment_delay = 1 SECONDS, \
+		shield_icon = "shield-red" \
+	)
 
 /obj/item/clothing/suit/space/hardsuit/shielded/syndi/ComponentInitialize()
 	. = ..()
@@ -1593,8 +1564,16 @@
 	stamina = 100
 	bleed = 100
 
-/obj/item/clothing/suit/space/hardsuit/shielded/swat/setup_shielding()
-	AddComponent(/datum/component/shielded, max_integrity = 80, charge_recovery = 20, recharge_start_delay = 1.5 SECONDS, charge_increment_delay = 1 SECONDS, shield_icon = "shield-old")
+/obj/item/clothing/suit/space/hardsuit/shielded/swat/Initialize(mapload)
+	. = ..()
+	AddComponent(
+		/datum/component/shielded, \
+		max_integrity = 80, \
+		charge_recovery = 20, \
+		recharge_start_delay = 1.5 SECONDS, \
+		charge_increment_delay = 1 SECONDS, \
+		shield_icon = "shield-old" \
+	)
 
 /obj/item/clothing/head/helmet/space/hardsuit/shielded/swat
 	name = "death commando helmet"
@@ -1666,8 +1645,16 @@
 	stamina = 100
 	bleed = 100
 
-/obj/item/clothing/suit/space/hardsuit/shielded/doomguy/setup_shielding()
-	AddComponent(/datum/component/shielded, max_integrity = 20, charge_recovery = 20, recharge_start_delay = 1 SECONDS, charge_increment_delay = 1 SECONDS, shield_icon = "shield-old")
+/obj/item/clothing/suit/space/hardsuit/shielded/doomguy/Initialize(mapload)
+	. = ..()
+	AddComponent(
+		/datum/component/shielded, \
+		max_integrity = 20, \
+		charge_recovery = 20, \
+		recharge_start_delay = 1 SECONDS, \
+		charge_increment_delay = 1 SECONDS, \
+		shield_icon = "shield-old" \
+	)
 
 /obj/item/clothing/head/helmet/space/hardsuit/shielded/doomguy
 	name = "juggernaut helmet"

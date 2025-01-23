@@ -71,7 +71,6 @@ GLOBAL_LIST_INIT(summoned_magic, list(
 	/obj/item/scrying,
 	/obj/item/voodoo,
 	/obj/item/warpwhistle,
-	/obj/item/clothing/suit/space/hardsuit/shielded/wizard,
 	/obj/item/immortality_talisman,
 	/obj/item/melee/ghost_sword))
 
@@ -88,7 +87,6 @@ GLOBAL_LIST_INIT(summoned_special_magic, list(
 GLOBAL_LIST_INIT(summoned_magic_objectives, list(
 	/obj/item/antag_spawner/contract,
 	/obj/item/blood_contract,
-	/obj/item/clothing/suit/space/hardsuit/shielded/wizard,
 	/obj/item/gun/magic,
 	/obj/item/immortality_talisman,
 	/obj/item/melee/ghost_sword,
@@ -124,7 +122,7 @@ GLOBAL_VAR_INIT(summon_magic_triggered, FALSE)
 
 	var/in_hand = H.put_in_hands(G) // not always successful
 
-	to_chat(H, "<span class='warning'>\A [G] appears [in_hand ? "in your hand" : "at your feet"]!</span>")
+	to_chat(H, span_warning("\A [G] appears [in_hand ? "in your hand" : "at your feet"]!"))
 
 /proc/give_magic(mob/living/carbon/human/H)
 	if(H.stat == DEAD || !(H.client))
@@ -148,14 +146,14 @@ GLOBAL_VAR_INIT(summon_magic_triggered, FALSE)
 
 	var/in_hand = H.put_in_hands(M)
 
-	to_chat(H, "<span class='warning'>\A [M] appears [in_hand ? "in your hand" : "at your feet"]!</span>")
+	to_chat(H, span_warning("\A [M] appears [in_hand ? "in your hand" : "at your feet"]!"))
 	if(lucky)
-		to_chat(H, "<span class='notice'>You feel incredibly lucky.</span>")
+		to_chat(H, span_notice("You feel incredibly lucky."))
 
 
 /proc/rightandwrong(summon_type, mob/user, survivor_probability)
 	if(user) //in this case either someone holding a spellbook or a badmin
-		to_chat(user, "<span class='warning'>You summoned [summon_type]!</span>")
+		to_chat(user, span_warning("You summoned [summon_type]!"))
 		message_admins("[ADMIN_LOOKUPFLW(user)] summoned [summon_type]!")
 		log_game("[key_name(user)] summoned [summon_type]!")
 

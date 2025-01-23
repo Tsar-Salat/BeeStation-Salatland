@@ -32,12 +32,10 @@
 
 /obj/item/clothing/suit/clockwork/equipped(mob/living/user, slot)
 	. = ..()
-	if(istype(user, /mob/living/carbon/human/consistent) || istype(user, /mob/living/carbon/human/dummy))
-		//Fake people need not apply (it fucks up my unit tests)
-		return
+	//If proper servant
 	if(is_servant_of_ratvar(user) && allow_any)
 		return
-	to_chat(user, "<span class='userdanger'>You feel a shock of energy surge through your body!</span>")
+	to_chat(user, span_userdanger("You feel a shock of energy surge through your body!"))
 	user.dropItemToGround(src, TRUE)
 	var/mob/living/carbon/C = user
 	if(ishuman(C))
@@ -126,7 +124,7 @@
 /obj/item/clothing/glasses/clockwork/equipped(mob/user, slot)
 	. = ..()
 	if(!is_servant_of_ratvar(user))
-		to_chat(user, "<span class='userdanger'>You feel a shock of energy surge through your body!</span>")
+		to_chat(user, span_userdanger("You feel a shock of energy surge through your body!"))
 		user.dropItemToGround(src, TRUE)
 		var/mob/living/carbon/C = user
 		if(ishuman(C))
@@ -145,7 +143,7 @@
 	icon_state = "wraith_specs"
 	invis_view = SEE_INVISIBLE_SPIRIT
 	invis_override = null
-	flash_protect = -1
+	flash_protect = FLASH_PROTECTION_SENSITIVE
 	vision_flags = SEE_MOBS
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_VISIBLE
 	glass_colour_type = /datum/client_colour/glass_colour/yellow
@@ -164,7 +162,7 @@
 		wearer = user
 		applied_eye_damage = 0
 		START_PROCESSING(SSobj, src)
-		to_chat(user, "<span class='nezbere'>You suddenly see so much more, but your eyes begin to falter...</span>")
+		to_chat(user, span_nezbere("You suddenly see so much more, but your eyes begin to falter..."))
 
 /obj/item/clothing/glasses/clockwork/wraith_spectacles/process(delta_time)
 	. = ..()
@@ -178,7 +176,7 @@
 /obj/item/clothing/glasses/clockwork/wraith_spectacles/dropped(mob/user)
 	..()
 	if(wearer && is_servant_of_ratvar(wearer))
-		to_chat(user, "<span class='nezbere'>You feel your eyes slowly recovering.</span>")
+		to_chat(user, span_nezbere("You feel your eyes slowly recovering."))
 		addtimer(CALLBACK(wearer, TYPE_PROC_REF(/mob/living, adjustOrganLoss), ORGAN_SLOT_EYES, -applied_eye_damage), 600)
 		wearer = null
 		applied_eye_damage = 0
@@ -192,7 +190,7 @@
 	armor_type = /datum/armor/helmet_clockcult
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	w_class = WEIGHT_CLASS_BULKY
-	flash_protect = 1
+	flash_protect = FLASH_PROTECTION_FLASH
 	bang_protect = 3
 
 

@@ -49,9 +49,6 @@
 	user.refresh_gravity()
 	update_action_buttons()
 
-/obj/item/clothing/shoes/magboots/negates_gravity()
-	return isspaceturf(get_turf(src)) ? FALSE : magpulse //We don't mimick gravity on space turfs
-
 /obj/item/clothing/shoes/magboots/examine(mob/user)
 	. = ..()
 	. += "Its mag-pulse traction system appears to be [magpulse ? "enabled" : "disabled"]."
@@ -110,7 +107,7 @@
 		slowdown = slowdown_active
 	magpulse = !magpulse
 	icon_state = "[magboot_state][magpulse]"
-	to_chat(user, "<span class='notice'>You [magpulse ? "enable" : "disable"] the mag-pulse traction system.</span>")
+	to_chat(user, span_notice("You [magpulse ? "enable" : "disable"] the mag-pulse traction system."))
 	user.update_inv_shoes()
 	update_action_buttons()
 
@@ -126,7 +123,7 @@
 	for (var/mob/living/A in T)
 		if (A != user && A.body_position == LYING_DOWN)
 			A.adjustBruteLoss(rand(10,13))
-			to_chat(A,"<span class='userdanger'>[user]'s magboots press down on you, crushing you!</span>")
+			to_chat(A,span_userdanger("[user]'s magboots press down on you, crushing you!"))
 			INVOKE_ASYNC(A, TYPE_PROC_REF(/mob, emote), "scream")
 
 /obj/item/clothing/shoes/magboots/crushing/attack_self(mob/user)

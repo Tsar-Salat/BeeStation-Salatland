@@ -3,7 +3,6 @@
 	name = "\improper Apid"
 	id = SPECIES_APID
 	bodyflag = FLAG_APID
-	default_color = "FFE800"
 	species_traits = list(LIPS,NOEYESPRITES,MUTCOLORS)
 	inherent_traits = list(TRAIT_BEEFRIEND)
 	inherent_biotypes = list(MOB_ORGANIC,MOB_HUMANOID,MOB_BUG)
@@ -39,7 +38,7 @@
 	if(H.bodytemperature < BODYTEMP_COLD_DAMAGE_LIMIT && !H.IsSleeping() && !HAS_TRAIT(H,TRAIT_RESISTCOLD)) // Sleep when cold, like bees
 		cold_cycle++
 		if(prob(5))
-			to_chat(H, "<span class='warning'>The cold is making you feel tired...</span>")
+			to_chat(H, span_warning("The cold is making you feel tired..."))
 		switch(cold_cycle)
 			if(5 to 10)
 				H.drowsyness++

@@ -358,8 +358,8 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	var/index = rand(1, 20)
 	starting_crate_value = index * 5
 	if(index == 1)
-		to_chat(user, "<span class='warning'><b>Incoming transmission from the syndicate.</b></span>")
-		to_chat(user, "<span class='warning'>You feel an overwhelming sense of pride and accomplishment.</span>")
+		to_chat(user, span_warning("<b>Incoming transmission from the syndicate.</b>"))
+		to_chat(user, span_warning("You feel an overwhelming sense of pride and accomplishment."))
 		var/obj/item/clothing/mask/joy/funny_mask = new(get_turf(user))
 		ADD_TRAIT(funny_mask, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 		var/obj/item/I = user.get_item_by_slot(ITEM_SLOT_MASK)
@@ -605,6 +605,15 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	cost = 16
 	surplus = 20
 	purchasable_from = UPLINK_NUKE_OPS
+
+/datum/uplink_item/dangerous/syndicate_teleporter
+	name = "Experimental Syndicate Jaunter"
+	desc = "The Syndicate jaunter is a handheld device that jaunts the user 4-8 meters forward. \
+		Anyone caught in the wake of the jaunter will be knocked off their feet and receive minor damage. \
+		Due to the Syndicate's more limited research of teleportation technologies, it is incapable of phasing the user \
+		through solid matter nor is it capable of teleporting them across longer ranges."
+	item = /obj/item/teleporter
+	cost = 7
 
 /datum/uplink_item/dangerous/flamethrower
 	name = "Flamethrower"
@@ -1619,17 +1628,14 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	item = /obj/item/storage/box/syndie_kit/space
 	cost = 3
 
-/datum/uplink_item/suits/hardsuit
-	name = "Syndicate Hardsuit"
-	desc = "The feared suit of a Syndicate nuclear agent. Features slightly better armoring, a built in jetpack \
-			that runs off standard atmospheric tanks and an advanced team location system. Toggling the suit in and out of \
-			combat mode will allow you all the mobility of a loose fitting uniform without sacrificing armoring. \
-			Additionally the suit is collapsible, making it small enough to fit within a backpack. \
-			Nanotrasen crew who spot these suits are known to panic."
-	item = /obj/item/clothing/suit/space/hardsuit/syndi
+/datum/uplink_item/suits/modsuit
+	name = "Syndicate MODsuit"
+	desc = "The feared MODsuit of a Syndicate agent. Features armoring and a set of inbuilt modules."
+	item = /obj/item/mod/control/pre_equipped/traitor
 	cost = 7
-	purchasable_from = ~UPLINK_NUKE_OPS //you can't buy it in nuke, because the elite hardsuit costs the same while being better
+	purchasable_from = ~(UPLINK_NUKE_OPS | UPLINK_CLOWN_OPS) //you can't buy it in nuke, because the elite modsuit costs the same while being better
 
+/*
 /datum/uplink_item/suits/hardsuit/spawn_item(spawn_path, mob/user, datum/component/uplink/U)
 	var/obj/item/clothing/suit/space/hardsuit/suit = ..()
 	var/datum/component/tracking_beacon/beacon = suit.GetComponent(/datum/component/tracking_beacon)
@@ -1642,22 +1648,76 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 		if(beacon)
 			beacon.set_frequency(nukie.nuke_team.team_frequency)
 	return suit
+*/
 
-/datum/uplink_item/suits/hardsuit/elite
-	name = "Elite Syndicate Hardsuit"
-	desc = "An upgraded, elite version of the Syndicate hardsuit. It features fireproofing, and also \
-			provides the user with superior armor and mobility compared to the standard Syndicate hardsuit."
-	item = /obj/item/clothing/suit/space/hardsuit/syndi/elite
-	cost = 8
+/datum/uplink_item/suits/modsuit/elite
+	name = "Elite Syndicate MODsuit"
+	desc = "An upgraded, elite version of the Syndicate MODsuit. It features fireproofing, and also \
+			provides the user with superior armor and mobility compared to the standard Syndicate MODsuit."
+	item = /obj/item/mod/control/pre_equipped/elite
 	purchasable_from = (UPLINK_NUKE_OPS | UPLINK_CLOWN_OPS)
 
-/datum/uplink_item/suits/hardsuit/shielded
-	name = "Shielded Syndicate Hardsuit"
-	desc = "An upgraded version of the standard Syndicate hardsuit. It features a built-in energy shielding system. \
-			The shields can handle up to three impacts within a short duration and will rapidly recharge while not under fire."
-	item = /obj/item/clothing/suit/space/hardsuit/shielded/syndi
-	cost = 30
-	purchasable_from = (UPLINK_NUKE_OPS | UPLINK_CLOWN_OPS)
+/datum/uplink_item/suits/energy_shield
+	name = "MODsuit Energy Shield Module"
+	desc = "An energy shield module for a MODsuit. The shields can handle up to three impacts \
+			within a short duration and will rapidly recharge while not under fire."
+	item = /obj/item/mod/module/energy_shield
+	cost = 15
+	purchasable_from = UPLINK_NUKE_OPS | UPLINK_CLOWN_OPS
+
+/datum/uplink_item/suits/energy_shield
+	name = "MODsuit Energy Shield Module"
+	desc = "An energy shield module for a MODsuit. The shields can handle up to three impacts \
+			within a short duration and will rapidly recharge while not under fire."
+	item = /obj/item/mod/module/energy_shield
+	cost = 15
+	purchasable_from = UPLINK_NUKE_OPS | UPLINK_CLOWN_OPS
+
+/datum/uplink_item/suits/injector
+	name = "MODsuit Injector Module"
+	desc = "An injector module for a MODsuit. It is an extendable piercing injector with 30u capacity."
+	item = /obj/item/mod/module/injector
+	cost = 2
+	purchasable_from = UPLINK_NUKE_OPS | UPLINK_CLOWN_OPS
+
+/datum/uplink_item/suits/holster
+	name = "MODsuit Holster Module"
+	desc = "A holster module for a MODsuit. It can stealthily store any not too heavy gun inside it."
+	item = /obj/item/mod/module/holster
+	cost = 2
+	purchasable_from = UPLINK_NUKE_OPS | UPLINK_CLOWN_OPS
+
+/datum/uplink_item/suits/thermal
+	name = "MODsuit Thermal Visor Module"
+	desc = "A visor for a MODsuit. Lets you see living beings through walls."
+	item = /obj/item/mod/module/visor/thermal
+	cost = 3
+
+/datum/uplink_item/suits/night
+	name = "MODsuit Night Visor Module"
+	desc = "A visor for a MODsuit. Lets you see clearer in the dark."
+	item = /obj/item/mod/module/visor/night
+	cost = 2
+
+/datum/uplink_item/suits/chameleon
+	name = "MODsuit Chameleon Module"
+	desc = "A MODsuit module that lets the suit disguise itself as other objects."
+	item = /obj/item/mod/module/chameleon
+	cost = 2
+
+/datum/uplink_item/suits/plate_compression
+	name = "MODsuit Plate Compression Module"
+	desc = "A MODsuit module that lets the suit compress into a smaller size. Not compatible with storage modules."
+	item = /obj/item/mod/module/plate_compression
+	cost = 2
+
+// Medium progression cost
+
+/datum/uplink_item/suits/noslip
+	name = "MODsuit Anti-Slip Module"
+	desc = "A MODsuit module preventing the user from slipping on water."
+	item = /obj/item/mod/module/noslip
+	cost = 2
 
 // Devices and Tools
 /datum/uplink_item/device_tools
@@ -1764,14 +1824,6 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 	surplus = 1
 	illegal_tech = FALSE
 
-/datum/uplink_item/device_tools/syndicate_teleporter
-	name = "Experimental Syndicate Jaunter"
-	desc = "The Syndicate jaunter is a handheld device that jaunts the user 4-8 meters forward. \
-		Anyone caught in the wake of the jaunter will be knocked off their feet and receive minor damage. \
-		Due to the Syndicate's more limited research of teleportation technologies, it is incapable of phasing the user \
-		through solid matter nor is it capable of teleporting them across longer ranges."
-	item = /obj/item/teleporter
-	cost = 7
 
 /datum/uplink_item/device_tools/frame
 	name = "F.R.A.M.E. PDA Disk"
@@ -1794,13 +1846,13 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 
 /datum/uplink_item/device_tools/failsafe/spawn_item(spawn_path, mob/user, datum/component/uplink/U)
 	if(!U || !U.unlock_code)
-		to_chat(user, "<span class='warning'>A failsafe code could not be assigned to this uplink.")
+		to_chat(user, span_warning("A failsafe code could not be assigned to this uplink."))
 		return
 	do
 		U.failsafe_code = U.generate_code()
 	while(islist(U.failsafe_code) ? compare_list(U.failsafe_code, U.unlock_code) : U.failsafe_code == U.unlock_code)
 	var/code = "[islist(U.failsafe_code) ? english_list(U.failsafe_code) : U.failsafe_code]"
-	to_chat(user, "<span class='warning'>The new failsafe code for this uplink is now : [code].</span>")
+	to_chat(user, span_warning("The new failsafe code for this uplink is now : [code]."))
 	if(user.mind)
 		user.mind.store_memory("Failsafe code for [U.parent] : [code]")
 	return U.parent //For log icon
@@ -1947,7 +1999,7 @@ GLOBAL_LIST_INIT(illegal_tech_blacklist, typecacheof(list(
 			emitted as heat and light by objects. Hotter objects, such as warm bodies, cybernetic organisms \
 			and artificial intelligence cores emit more of this light than cooler objects like walls and airlocks."
 	item = /obj/item/clothing/glasses/thermal/syndi
-	cost = 3
+	cost = 2
 
 // Implants
 /datum/uplink_item/implants

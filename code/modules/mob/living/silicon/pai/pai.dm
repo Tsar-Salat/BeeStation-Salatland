@@ -188,7 +188,7 @@
 		hackprogress = clamp(hackprogress + (2 * delta_time), 0, 100)
 		hackbar.update(hackprogress)
 	else
-		to_chat(src, "<span class='notice'>Door Jack: Connection to airlock has been lost. Hack aborted.</span>")
+		to_chat(src, span_notice("Door Jack: Connection to airlock has been lost. Hack aborted."))
 		hackprogress = 0
 		hacking = FALSE
 		hackdoor = null
@@ -238,7 +238,7 @@
 
 /mob/living/silicon/pai/canUseTopic(atom/movable/M, be_close=FALSE, no_dexterity=FALSE, no_tk=FALSE)
 	if(be_close && !in_range(M, src))
-		to_chat(src, "<span class='warning'>You are too far away!</span>")
+		to_chat(src, span_warning("You are too far away!"))
 		return FALSE
 	return TRUE
 
@@ -256,7 +256,7 @@
 	icon_icon = 'icons/hud/actions/actions_silicon.dmi'
 	var/mob/living/silicon/pai/P
 
-/datum/action/innate/pai/Trigger()
+/datum/action/innate/pai/Trigger(trigger_flags)
 	if(!ispAI(owner))
 		return 0
 	P = owner
@@ -266,7 +266,7 @@
 	button_icon_state = "pai"
 	background_icon_state = "bg_tech"
 
-/datum/action/innate/pai/software/Trigger()
+/datum/action/innate/pai/software/Trigger(trigger_flags)
 	..()
 	P.ui_act()
 
@@ -275,7 +275,7 @@
 	button_icon_state = "pai_holoform"
 	background_icon_state = "bg_tech"
 
-/datum/action/innate/pai/shell/Trigger()
+/datum/action/innate/pai/shell/Trigger(trigger_flags)
 	..()
 	if(P.holoform)
 		P.fold_in(0)
@@ -287,7 +287,7 @@
 	button_icon_state = "pai_chassis"
 	background_icon_state = "bg_tech"
 
-/datum/action/innate/pai/chassis/Trigger()
+/datum/action/innate/pai/chassis/Trigger(trigger_flags)
 	..()
 	P.choose_chassis()
 
@@ -296,7 +296,7 @@
 	button_icon_state = "pai_rest"
 	background_icon_state = "bg_tech"
 
-/datum/action/innate/pai/rest/Trigger()
+/datum/action/innate/pai/rest/Trigger(trigger_flags)
 	..()
 	P.toggle_resting()
 
@@ -306,7 +306,7 @@
 	button_icon_state = "emp"
 	background_icon_state = "bg_tech"
 
-/datum/action/innate/pai/light/Trigger()
+/datum/action/innate/pai/light/Trigger(trigger_flags)
 	..()
 	P.toggle_integrated_light()
 
@@ -328,7 +328,7 @@
 	if(hacking_cable)
 		if(get_dist(src, hacking_cable) > 1)
 			var/turf/T = get_turf(src.loc)
-			T.visible_message("<span class='warning'>[hacking_cable] rapidly retracts back into its spool.</span>", "<span class='hear'>You hear a click and the sound of wire spooling rapidly.</span>")
+			T.visible_message(span_warning("[hacking_cable] rapidly retracts back into its spool."), span_hear("You hear a click and the sound of wire spooling rapidly."))
 			QDEL_NULL(hacking_cable)
 			if(!QDELETED(card))
 				card.update_icon()
@@ -356,11 +356,11 @@
 /obj/item/paicard/attackby(obj/item/used, mob/user, params)
 	if(pai && (istype(used, /obj/item/encryptionkey) || used.tool_behaviour == TOOL_SCREWDRIVER))
 		if(!pai.encryptmod)
-			to_chat(user, "<span class='alert'>Encryption Key ports not configured.</span>")
+			to_chat(user, span_alert("Encryption Key ports not configured."))
 			return
 		user.set_machine(src)
 		pai.radio.attackby(used, user, params)
-		to_chat(user, "<span class='notice'>You insert [used] into the [src].</span>")
+		to_chat(user, span_notice("You insert [used] into the [src]."))
 		return
 
 	return ..()
@@ -375,8 +375,8 @@
 
 /obj/item/paicard/on_emag(mob/user) // Emag to wipe the master DNA and supplemental directive
 	..()
-	to_chat(user, "<span class='notice'>You override [pai]'s directive system, clearing its master string and supplied directive.</span>")
-	to_chat(pai, "<span class='danger'>Warning: System override detected, check directive sub-system for any changes.'</span>")
+	to_chat(user, span_notice("You override [pai]'s directive system, clearing its master string and supplied directive."))
+	to_chat(pai, span_danger("Warning: System override detected, check directive sub-system for any changes.'"))
 	log_game("[key_name(user)] emagged [key_name(pai)], wiping their master DNA and supplemental directive.")
 	pai.emagged = TRUE
 	pai.master = null

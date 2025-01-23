@@ -82,13 +82,13 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/stock_parts/cell)
 	return maxcharge ? 100 * charge / maxcharge : 0 //Division by 0 protection
 
 // use power from a cell
-/obj/item/stock_parts/cell/use(amount)
+/obj/item/stock_parts/cell/use(amount, force)
 	if(rigged && amount > 0)
 		plasma_ignition(4)
 		return 0
-	if(charge < amount)
+	if(!force && charge < amount)
 		return 0
-	charge = (charge - amount)
+	charge = max(charge - amount, 0)
 	if(!istype(loc, /obj/machinery/power/apc))
 		SSblackbox.record_feedback("tally", "cell_used", 1, type)
 	return 1
@@ -107,12 +107,12 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/stock_parts/cell)
 /obj/item/stock_parts/cell/examine(mob/user)
 	. = ..()
 	if(rigged)
-		. += "<span class='danger'>This power cell seems to be faulty!</span>"
+		. += span_danger("This power cell seems to be faulty!")
 	else
 		. += "The charge meter reads [round(src.percent() )]%."
 
 /obj/item/stock_parts/cell/suicide_act(mob/living/user)
-	user.visible_message("<span class='suicide'>[user] is licking the electrodes of [src]! It looks like [user.p_theyre()] trying to commit suicide!</span>")
+	user.visible_message(span_suicide("[user] is licking the electrodes of [src]! It looks like [user.p_theyre()] trying to commit suicide!"))
 	return FIRELOSS
 
 /obj/item/stock_parts/cell/on_reagent_change(changetype)
@@ -177,35 +177,35 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/stock_parts/cell)
 			return
 		var/obj/item/organ/stomach/battery/stomach = H.getorganslot(ORGAN_SLOT_STOMACH)
 		if(!istype(stomach))
-			to_chat(H, "<span class='warning'>You can't receive charge!</span>")
+			to_chat(H, span_warning("You can't receive charge!"))
 			return
 		if(H.nutrition >= NUTRITION_LEVEL_ALMOST_FULL)
-			to_chat(user, "<span class='warning'>You are already fully charged!</span>")
+			to_chat(user, span_warning("You are already fully charged!"))
 			return
 
-		to_chat(H, "<span class='notice'>You clumsily channel power through the [src] and into your body, wasting some in the process.</span>")
+		to_chat(H, span_notice("You clumsily channel power through the [src] and into your body, wasting some in the process."))
 		E.drain_time = world.time + 25
 		while(do_after(user, 20, target = src))
 			if(!istype(stomach))
-				to_chat(H, "<span class='warning'>You can't receive charge!</span>")
+				to_chat(H, span_warning("You can't receive charge!"))
 				return
 			E.drain_time = world.time + 25
 			if(charge > 300)
 				stomach.adjust_charge(75)
 				charge -= 300 //you waste way more than you receive, so that ethereals cant just steal one cell and forget about hunger
-				to_chat(H, "<span class='notice'>You receive some charge from the [src].</span>")
+				to_chat(H, span_notice("You receive some charge from the [src]."))
 			else
 				stomach.adjust_charge(charge/4)
 				charge = 0
-				to_chat(H, "<span class='notice'>You drain the [src].</span>")
+				to_chat(H, span_notice("You drain the [src]."))
 				E.drain_time = 0
 				return
 
 			if(stomach.charge >= stomach.max_charge)
-				to_chat(H, "<span class='notice'>You are now fully charged.</span>")
+				to_chat(H, span_notice("You are now fully charged."))
 				E.drain_time = 0
 				return
-		to_chat(H, "<span class='warning'>You fail to receive charge from the [src]!</span>")
+		to_chat(H, span_warning("You fail to receive charge from the [src]!"))
 		E.drain_time = 0
 	return
 
@@ -220,6 +220,10 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/stock_parts/cell)
 
 /obj/item/stock_parts/cell/get_part_rating()
 	return rating * maxcharge
+
+/obj/item/stock_parts/cell/attackby_storage_insert(datum/component/storage, atom/storage_holder, mob/user)
+	var/obj/item/mod/control/mod = storage_holder
+	return !(istype(mod) && mod.open)
 
 /* Cell variants*/
 /obj/item/stock_parts/cell/empty/Initialize(mapload)

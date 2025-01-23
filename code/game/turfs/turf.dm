@@ -229,7 +229,7 @@ CREATION_TEST_IGNORE_SELF(/turf)
 			show_zmove_radial(user)
 			return
 		else if(allow_z_travel)
-			to_chat(user, "<span class='warning'>You can't float up and down when there is gravity!</span>")
+			to_chat(user, span_warning("You can't float up and down when there is gravity!"))
 	. = ..()
 	if(SEND_SIGNAL(user, COMSIG_MOB_ATTACK_HAND_TURF, src) & COMPONENT_CANCEL_ATTACK_CHAIN)
 		. = TRUE
@@ -272,6 +272,20 @@ CREATION_TEST_IGNORE_SELF(/turf)
 		if(movable_content.density && (!exclude_mobs || !ismob(movable_content)))
 			if(source_atom && movable_content.CanPass(source_atom, get_dir(src, source_atom)))
 				continue
+			return TRUE
+	return FALSE
+
+/**
+ * Checks whether the specified turf is blocked by something dense inside it, but ignores anything with the climbable trait
+ *
+ * Works similar to is_blocked_turf(), but ignores climbables and has less options. Primarily added for jaunting checks
+ */
+/turf/proc/is_blocked_turf_ignore_climbable()
+	if(density)
+		return TRUE
+
+	for(var/atom/movable/atom_content as anything in contents)
+		if(atom_content.density && !(atom_content.flags_1 & ON_BORDER_1) && !HAS_TRAIT(atom_content, TRAIT_CLIMBABLE))
 			return TRUE
 	return FALSE
 

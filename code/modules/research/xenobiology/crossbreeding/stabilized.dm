@@ -29,6 +29,21 @@ Stabilized extracts:
 		humanfound = loc
 	if(ishuman(loc.loc)) //Check if in backpack.
 		humanfound = (loc.loc)
+	for(var/atom/storage_loc as anything in get_storage_locs(src))
+		if(ishuman(storage_loc))
+			humanfound = storage_loc
+			break
+		if(ishuman(storage_loc.loc))
+			humanfound = storage_loc.loc
+			break
+		for(var/atom/storage_loc_storage_loc as anything in get_storage_locs(storage_loc))
+			if(ishuman(storage_loc_storage_loc))
+				humanfound = storage_loc_storage_loc
+				break
+	for(var/atom/loc_storage_loc as anything in get_storage_locs(loc))
+		if(ishuman(loc_storage_loc))
+			humanfound = loc_storage_loc
+			break
 	if(!humanfound)
 		return
 	var/mob/living/carbon/human/H = humanfound
@@ -142,21 +157,21 @@ Stabilized extracts:
 		if(L.has_status_effect(/datum/status_effect/stabilized/gold))
 			L.remove_status_effect(/datum/status_effect/stabilized/gold)
 	if(choice == "Familiar Location")
-		to_chat(user, "<span class='notice'>You prod [src], and it shudders slightly.</span>")
+		to_chat(user, span_notice("You prod [src], and it shudders slightly."))
 		START_PROCESSING(SSobj, src)
 	if(choice == "Familiar Species")
-		to_chat(user, "<span class='notice'>You squeeze [src], and a shape seems to shift around inside.</span>")
+		to_chat(user, span_notice("You squeeze [src], and a shape seems to shift around inside."))
 		generate_mobtype()
 		START_PROCESSING(SSobj, src)
 	if(choice == "Familiar Sentience")
-		to_chat(user, "<span class='notice'>You poke [src], and it lets out a glowing pulse.</span>")
+		to_chat(user, span_notice("You poke [src], and it lets out a glowing pulse."))
 		saved_mind = null
 		START_PROCESSING(SSobj, src)
 	if(choice == "Familiar Name")
 		var/newname = sanitize_name(stripped_input(user, "Would you like to change the name of [mob_name]", "Name change", mob_name, MAX_NAME_LEN))
 		if(newname)
 			mob_name = newname
-		to_chat(user, "<span class='notice'>You speak softly into [src], and it shakes slightly in response.</span>")
+		to_chat(user, span_notice("You speak softly into [src], and it shakes slightly in response."))
 		START_PROCESSING(SSobj, src)
 
 /obj/item/slimecross/stabilized/oil
@@ -184,7 +199,7 @@ Stabilized extracts:
 /obj/item/slimecross/stabilized/rainbow/attackby(obj/item/O, mob/user)
 	var/obj/item/slimecross/regenerative/regen = O
 	if(istype(regen) && !regencore)
-		to_chat(user, "<span class='notice'>You place [O] in [src], prepping the extract for automatic application!</span>")
+		to_chat(user, span_notice("You place [O] in [src], prepping the extract for automatic application!"))
 		regencore = regen
 		regen.forceMove(src)
 		return

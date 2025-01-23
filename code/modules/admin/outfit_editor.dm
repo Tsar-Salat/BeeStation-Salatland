@@ -167,7 +167,7 @@
 				suit = new suit //initial() doesn't like lists
 				options = suit.allowed
 			if(!length(options)) //nothing will happen, but don't let the user think it's broken
-				to_chat(owner, "<span class='warning'>No options available for the current suit.</span>")
+				to_chat(owner, span_warning("No options available for the current suit."))
 
 		if("belt")
 			options = typesof(/obj/item/storage/belt)
@@ -178,6 +178,10 @@
 			choose_any_item(slot)
 		if("back")
 			options = typesof(/obj/item/storage/backpack)
+			for(var/obj/item/mod/control/pre_equipped/potential_mod as anything in subtypesof(/obj/item/mod/control/pre_equipped))
+				if(!(initial(potential_mod.slot_flags) == ITEM_SLOT_BACK))
+					continue
+				options |= potential_mod
 		if("r_hand")
 			choose_any_item(slot)
 

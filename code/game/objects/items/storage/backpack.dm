@@ -67,7 +67,7 @@
 	STR.max_combined_w_class = 70
 
 /obj/item/storage/backpack/holding/suicide_act(mob/living/user)
-	user.visible_message("<span class='suicide'>[user] is jumping into [src]! It looks like [user.p_theyre()] trying to commit suicide.</span>")
+	user.visible_message(span_suicide("[user] is jumping into [src]! It looks like [user.p_theyre()] trying to commit suicide."))
 	user.dropItemToGround(src, TRUE)
 	user.Stun(100, ignore_canstun = TRUE)
 	sleep(20)
@@ -132,7 +132,7 @@
 	STR.max_combined_w_class = 60
 
 /obj/item/storage/backpack/santabag/suicide_act(mob/living/user)
-	user.visible_message("<span class='suicide'>[user] places [src] over [user.p_their()] head and pulls it tight! It looks like [user.p_they()] [user.p_are()]n't in the Christmas spirit...</span>")
+	user.visible_message(span_suicide("[user] places [src] over [user.p_their()] head and pulls it tight! It looks like [user.p_they()] [user.p_are()]n't in the Christmas spirit..."))
 	return OXYLOSS
 
 /obj/item/storage/backpack/santabag/proc/regenerate_presents()
@@ -744,7 +744,7 @@
 	new /obj/item/flamethrower/full/tank(src)
 	new /obj/item/tank/internals/plasma(src)
 	new /obj/item/tank/internals/plasma(src)
-	new /obj/item/clothing/suit/space/hardsuit/syndi/elite(src)
+	new /obj/item/mod/control/pre_equipped/elite/flamethrower(src)
 	new /obj/item/gun/ballistic/automatic/pistol/APS(src)
 	new /obj/item/ammo_box/magazine/pistolm9mm(src)
 	new /obj/item/ammo_box/magazine/pistolm9mm(src)

@@ -4,7 +4,6 @@
 	id = SPECIES_DIONA
 	sexes = 0
 	bodyflag = FLAG_DIONA
-	default_color = "59CE00"
 	species_traits = list(MUTCOLORS,EYECOLOR,AGENDER,NOHUSK,NO_DNA_COPY,NO_UNDERWEAR,NOSOCKS,NOTRANSSTING,NOEYESPRITES)
 	inherent_traits = list(TRAIT_ALWAYS_CLEAN, TRAIT_BEEFRIEND, TRAIT_NONECRODISEASE, TRAIT_RESISTLOWPRESSURE, TRAIT_RESISTCOLD, TRAIT_NORADDAMAGE)
 	inherent_biotypes = list(MOB_HUMANOID, MOB_BUG)
@@ -64,7 +63,7 @@
 		split_ability.Trigger(TRUE)
 	if(H.nutrition > NUTRITION_LEVEL_WELL_FED && !informed_nymph)
 		informed_nymph = TRUE
-		to_chat(H, "<span class='warning'>You feel sufficiently satiated to allow a nymph to split off from your gestalt!")
+		to_chat(H, span_warning("You feel sufficiently satiated to allow a nymph to split off from your gestalt!"))
 	if(partition_ability)
 		partition_ability.UpdateButtonIcon()
 	if(H.nutrition > NUTRITION_LEVEL_ALMOST_FULL)
@@ -167,7 +166,7 @@
 	. = ..()
 	if(. && target != user && target.on_fire)
 		user.balloon_alert(user, "[user] you hug [target]")
-		target.visible_message("<span class='warning'>[user] catches fire from hugging [target]!</span>", "<span class='boldnotice'>[user] catches fire hugging you!</span>", "<span class='italics'>You hear a fire crackling.</span>")
+		target.visible_message(span_warning("[user] catches fire from hugging [target]!"), span_boldnotice("[user] catches fire hugging you!"), span_italics("You hear a fire crackling."))
 		user.fire_stacks = target.fire_stacks
 		if(user.fire_stacks > 0)
 			user.IgniteMob()
@@ -182,7 +181,7 @@
 	button_icon_state = "split"
 	var/Activated = FALSE
 
-/datum/action/diona/split/Trigger(special)
+/datum/action/diona/split/Trigger(trigger_flags, special)
 	. = ..()
 	var/mob/living/carbon/human/user = owner
 	if(!isdiona(user))
@@ -253,7 +252,7 @@
 	button_icon_state = "grow"
 	var/ability_partition_cooldown
 
-/datum/action/diona/partition/Trigger(special)
+/datum/action/diona/partition/Trigger(trigger_flags, special)
 	. = ..()
 	if(!IsAvailable())
 		return

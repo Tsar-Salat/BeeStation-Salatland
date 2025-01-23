@@ -14105,6 +14105,16 @@
 /obj/effect/turf_decal/bot,
 /turf/open/floor/iron/tech,
 /area/engine/atmos)
+"exy" = (
+/obj/machinery/defibrillator_mount{
+	pixel_x = -32
+	},
+/obj/machinery/camera/directional/west,
+/obj/machinery/computer/crew{
+	dir = 4
+	},
+/turf/open/floor/iron/white,
+/area/security/brig/medbay)
 "exY" = (
 /obj/structure/cable/yellow{
 	icon_state = "4-8"
@@ -21777,6 +21787,15 @@
 	},
 /turf/open/floor/iron,
 /area/science/xenobiology)
+"gQL" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 1
+	},
+/obj/structure/cable/yellow,
+/obj/machinery/power/apc/auto_name/directional/south,
+/obj/machinery/suit_storage_unit/standard_unit,
+/turf/open/floor/iron/tech,
+/area/ai_monitored/storage/eva)
 "gQP" = (
 /turf/closed/wall,
 /area/vacant_room/commissary/commissary1)
@@ -29228,6 +29247,17 @@
 /obj/structure/lattice/catwalk/over,
 /turf/open/floor/plating,
 /area/maintenance/central)
+"jpQ" = (
+/obj/effect/turf_decal/stripes/end{
+	dir = 1
+	},
+/obj/item/radio/intercom{
+	pixel_x = 32;
+	pixel_y = -3
+	},
+/obj/machinery/suit_storage_unit/industrial/loader,
+/turf/open/floor/iron/dark,
+/area/quartermaster/storage)
 "jqq" = (
 /obj/structure/cable/yellow{
 	icon_state = "1-8"
@@ -35839,17 +35869,6 @@
 /obj/item/book/manual/wiki/sopmedical,
 /turf/open/floor/iron/white,
 /area/crew_quarters/heads/cmo)
-"lvd" = (
-/obj/effect/turf_decal/stripes/end{
-	dir = 1
-	},
-/obj/item/radio/intercom{
-	pixel_x = 32;
-	pixel_y = -3
-	},
-/obj/structure/closet/crate,
-/turf/open/floor/iron/dark,
-/area/quartermaster/storage)
 "lvp" = (
 /obj/structure/table,
 /obj/item/clothing/suit/jacket/straight_jacket,
@@ -55843,15 +55862,6 @@
 /mob/living/carbon/monkey,
 /turf/open/floor/vault,
 /area/medical/genetics)
-"rGp" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 1
-	},
-/obj/structure/cable/yellow,
-/obj/machinery/suit_storage_unit/standard_unit,
-/obj/machinery/power/apc/auto_name/directional/south,
-/turf/open/floor/iron/tech,
-/area/ai_monitored/storage/eva)
 "rGC" = (
 /obj/machinery/camera/directional/south,
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer4{
@@ -57077,13 +57087,6 @@
 	dir = 10
 	},
 /area/science/research)
-"scM" = (
-/obj/machinery/defibrillator_mount{
-	pixel_x = -32
-	},
-/obj/machinery/camera/directional/west,
-/turf/open/floor/iron/white,
-/area/security/brig/medbay)
 "scT" = (
 /obj/effect/turf_decal/tile/neutral/half/contrasted,
 /obj/structure/disposalpipe/segment{
@@ -98786,7 +98789,7 @@ nFK
 eyo
 ctt
 ppA
-lvd
+jpQ
 rCP
 bsk
 oBB
@@ -99268,7 +99271,7 @@ rhT
 wIb
 uJB
 aCn
-scM
+exy
 wSw
 dNb
 rzL
@@ -106781,7 +106784,7 @@ fcP
 mKM
 ewi
 itk
-rGp
+gQL
 ykx
 rUt
 nvJ
