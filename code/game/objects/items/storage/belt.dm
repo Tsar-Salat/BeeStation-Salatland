@@ -315,7 +315,6 @@
 		/obj/item/implanter,
 		/obj/item/pinpointer/crew,
 		/obj/item/holosign_creator/medical,
-		/obj/item/pipe_dispenser/plumbing,
 		/obj/item/construction/plumbing,
 		/obj/item/plunger,
 		/obj/item/extrapolator
@@ -335,7 +334,7 @@
 	new /obj/item/surgical_drapes(src)
 	new /obj/item/scalpel/advanced(src)
 	new /obj/item/retractor/advanced(src)
-	new /obj/item/surgicaldrill/advanced(src)
+	new /obj/item/retractor/advanced(src)
 	new /obj/item/reagent_containers/medspray/sterilizine(src)
 	new /obj/item/gun/medbeam(src)
 
