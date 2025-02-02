@@ -10,10 +10,9 @@
 	var/title = "book"
 	item_flags = ISWEAPON
 
-/obj/item/storage/book/ComponentInitialize()
+/obj/item/storage/book/Initialize(mapload)
 	. = ..()
-	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
-	STR.max_items = 1
+	atom_storage.max_slots = 1
 
 /obj/item/storage/book/attack_self(mob/user)
 	to_chat(user, span_notice("The pages of [title] have been cut out!"))
@@ -38,7 +37,9 @@
 
 /obj/item/storage/book/bible/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/anti_magic, src, FALSE, TRUE, _allowed_slots = ITEM_SLOT_HANDS)
+	AddComponent(/datum/component/anti_magic, \
+	_source = src, \
+	antimagic_flags = (MAGIC_RESISTANCE|MAGIC_RESISTANCE_HOLY))
 
 /obj/item/storage/book/bible/suicide_act(mob/living/user)
 	user.visible_message(span_suicide("[user] is offering [user.p_them()]self to [deity_name]! It looks like [user.p_theyre()] trying to commit suicide!"))

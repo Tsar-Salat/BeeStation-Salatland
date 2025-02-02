@@ -87,15 +87,15 @@
 		final_block_chance = 0 //Don't bring a sword to a gunfight
 	return ..()
 
-/obj/item/melee/sabre/on_exit_storage(datum/component/storage/concrete/S)
-	var/obj/item/storage/belt/sabre/B = S.real_location()
-	if(istype(B))
-		playsound(B, 'sound/items/unsheath.ogg', 25, TRUE)
+/obj/item/melee/sabre/on_exit_storage(datum/storage/container)
+	var/obj/item/storage/belt/sabre/sabre = container.real_location?.resolve()
+	if(istype(sabre))
+		playsound(sabre, 'sound/items/unsheath.ogg', 25, TRUE)
 
-/obj/item/melee/sabre/on_enter_storage(datum/component/storage/concrete/S)
-	var/obj/item/storage/belt/sabre/B = S.real_location()
-	if(istype(B))
-		playsound(B, 'sound/items/sheath.ogg', 25, TRUE)
+/obj/item/melee/sabre/on_enter_storage(datum/storage/container)
+	var/obj/item/storage/belt/sabre/sabre = container.real_location?.resolve()
+	if(istype(sabre))
+		playsound(sabre, 'sound/items/sheath.ogg', 25, TRUE)
 
 /obj/item/melee/sabre/suicide_act(mob/living/user)
 	user.visible_message(span_suicide("[user] is trying to cut off all [user.p_their()] limbs with [src]! it looks like [user.p_theyre()] trying to commit suicide!"))
@@ -156,15 +156,15 @@
 	fire = 100
 	acid = 100
 
-/obj/item/melee/sabre/mime/on_exit_storage(datum/component/storage/concrete/R)
-	var/obj/item/storage/belt/sabre/mime/M = R.real_location()
-	if(istype(M))
-		playsound(M, 'sound/items/unsheath.ogg', 25, TRUE)
+/obj/item/melee/sabre/mime/on_exit_storage(datum/storage/container)
+	var/obj/item/storage/belt/sabre/mime/sabre = container.real_location?.resolve()
+	if(istype(sabre))
+		playsound(sabre, 'sound/items/unsheath.ogg', 25, TRUE)
 
-/obj/item/melee/sabre/on_enter_storage(datum/component/storage/concrete/R)
-	var/obj/item/storage/belt/sabre/mime/M = R.real_location()
-	if(istype(M))
-		playsound(M, 'sound/items/sheath.ogg', 25, TRUE)
+/obj/item/melee/sabre/on_enter_storage(datum/storage/container)
+	var/obj/item/storage/belt/sabre/mime/sabre = container.real_location?.resolve()
+	if(istype(sabre))
+		playsound(sabre, 'sound/items/sheath.ogg', 25, TRUE)
 
 /obj/item/melee/classic_baton
 	name = "classic baton"
@@ -706,7 +706,7 @@
 	T.visible_message(span_danger("[T] smacks into [src] and rapidly flashes to ash."),\
 	span_italics("You hear a loud crack as you are washed with a wave of heat."))
 	shard.Consume()
-	CALCULATE_ADJACENT_TURFS(T)
+	CALCULATE_ADJACENT_TURFS(T, MAKE_ACTIVE)
 
 /obj/item/melee/supermatter_sword/add_blood_DNA(list/blood_dna)
 	return FALSE
