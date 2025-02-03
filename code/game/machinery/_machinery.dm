@@ -137,13 +137,21 @@ Class Procs:
 	var/tgui_id // ID of TGUI interface
 	var/ui_style // ID of custom TGUI style (optional)
 
-	///Is this machine currently in the atmos machinery queue?
-	var/atmos_processing = FALSE
+	/// world.time of last use by [/mob/living]
+	var/last_used_time = 0
+	/// Mobtype of last user. Typecast to [/mob/living] for initial() usage
+	var/mob/living/last_user_mobtype
 	///Is this machine currently in the atmos machinery queue, but also interacting with turf air?
 	var/interacts_with_air = FALSE
 
 	/// Maximum time an EMP will disable this machine for
 	var/emp_disable_time = 2 MINUTES
+
+	///Is this machine currently in the atmos machinery queue?
+	var/atmos_processing = FALSE
+
+	/// Disables some optimizations
+	var/always_area_sensitive = FALSE
 
 	armor_type = /datum/armor/obj_machinery
 
@@ -192,7 +200,9 @@ Class Procs:
 /obj/machinery/LateInitialize()
 	. = ..()
 	power_change()
-	RegisterSignal(src, COMSIG_MOVABLE_ENTERED_AREA, PROC_REF(power_change))
+	if(use_power == NO_POWER_USE)
+		return
+	setup_area_power_relationship()
 
 /obj/machinery/Destroy()
 	GLOB.machines.Remove(src)
@@ -202,6 +212,59 @@ Class Procs:
 	QDEL_LIST(component_parts)
 	QDEL_NULL(circuit)
 	return ..()
+
+/**
+ * proc to call when the machine starts to require power after a duration of not requiring power
+ * sets up power related connections to its area if it exists and becomes area sensitive
+ * does not affect power usage itself
+ *
+ * Returns TRUE if it triggered a full registration, FALSE otherwise
+ * We do this so machinery that want to sidestep the area sensitiveity optimization can
+ */
+/obj/machinery/proc/setup_area_power_relationship()
+	var/area/our_area = get_area(src)
+	if(our_area)
+		RegisterSignal(our_area, COMSIG_AREA_POWER_CHANGE, PROC_REF(power_change))
+
+	if(HAS_TRAIT_FROM(src, TRAIT_AREA_SENSITIVE, INNATE_TRAIT)) // If we for some reason have not lost our area sensitivity, there's no reason to set it back up
+		return FALSE
+
+	become_area_sensitive(INNATE_TRAIT)
+	RegisterSignal(src, COMSIG_ENTER_AREA, PROC_REF(on_enter_area))
+	RegisterSignal(src, COMSIG_EXIT_AREA, PROC_REF(on_exit_area))
+	return TRUE
+
+/**
+ * proc to call when the machine stops requiring power after a duration of requiring power
+ * saves memory by removing the power relationship with its area if it exists and loses area sensitivity
+ * does not affect power usage itself
+ */
+/obj/machinery/proc/remove_area_power_relationship()
+	var/area/our_area = get_area(src)
+	if(our_area)
+		UnregisterSignal(our_area, COMSIG_AREA_POWER_CHANGE)
+
+	if(always_area_sensitive)
+		return
+
+	lose_area_sensitivity(INNATE_TRAIT)
+	UnregisterSignal(src, COMSIG_ENTER_AREA)
+	UnregisterSignal(src, COMSIG_EXIT_AREA)
+
+/obj/machinery/proc/on_enter_area(datum/source, area/area_to_register)
+	SIGNAL_HANDLER
+	// If we're always area sensitive, and this is called while we have no power usage, do nothing and return
+	if(always_area_sensitive && use_power == NO_POWER_USE)
+		return
+	power_change()
+	RegisterSignal(area_to_register, COMSIG_AREA_POWER_CHANGE, PROC_REF(power_change))
+
+/obj/machinery/proc/on_exit_area(datum/source, area/area_to_unregister)
+	SIGNAL_HANDLER
+	// If we're always area sensitive, and this is called while we have no power usage, do nothing and return
+	if(always_area_sensitive && use_power == NO_POWER_USE)
+		return
+	UnregisterSignal(area_to_unregister, COMSIG_AREA_POWER_CHANGE)
 
 /obj/machinery/proc/locate_machinery()
 	return
@@ -367,9 +430,11 @@ Class Procs:
 /obj/machinery/can_interact(mob/user)
 	var/silicon = issilicon(user)
 	var/admin_ghost = IsAdminGhost(user)
-	var/living = ishuman(user) // /mob/living/carbon/HUMANS, not /mob/living.
 
 	if((machine_stat & (NOPOWER|BROKEN)) && !(interaction_flags_machine & INTERACT_MACHINE_OFFLINE)) // Check if the machine is broken, and if we can still interact with it if so
+		return FALSE
+
+	if(SEND_SIGNAL(user, COMSIG_TRY_USE_MACHINE, src) & COMPONENT_CANT_USE_MACHINE_INTERACT)
 		return FALSE
 
 	if(panel_open && !(interaction_flags_machine & INTERACT_MACHINE_OPEN)) // Check if we can interact with an open panel machine, if the panel is open
@@ -377,10 +442,16 @@ Class Procs:
 			return FALSE
 
 	if(silicon || admin_ghost) // If we are an AI or adminghsot, make sure the machine allows silicons to interact
-		if(!(interaction_flags_machine & INTERACT_MACHINE_ALLOW_SILICON))
-			return FALSE
+		if(interaction_flags_machine & INTERACT_MACHINE_ALLOW_SILICON)
+			return TRUE
 
-	else if(living) // If we are a living human
+	var/is_dextrous = FALSE
+	if(isanimal(user))
+		var/mob/living/simple_animal/user_as_animal = user
+		if (user_as_animal.dextrous)
+			is_dextrous = TRUE
+
+	if(is_dextrous || user.can_hold_items()) // If we are a living mob with hand slots or a dextrous simple animal.
 		var/mob/living/L = user
 
 		if(interaction_flags_machine & INTERACT_MACHINE_REQUIRES_SILICON) // First make sure the machine doesn't require silicon interaction
@@ -440,10 +511,12 @@ Class Procs:
 /obj/machinery/interact(mob/user, special_state)
 	if(interaction_flags_machine & INTERACT_MACHINE_SET_MACHINE)
 		user.set_machine(src)
+	update_last_used(user)
 	. = ..()
 
 /obj/machinery/ui_act(action, params)
 	add_fingerprint(usr)
+	update_last_used(usr)
 	if(isliving(usr) && in_range(src, usr))
 		play_click_sound()
 	return ..()
@@ -455,12 +528,13 @@ Class Procs:
 	if(!usr.canUseTopic(src))
 		return TRUE
 	add_fingerprint(usr)
+	update_last_used(usr)
 	return FALSE
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 /obj/machinery/attack_paw(mob/living/user)
-	if(user.a_intent != INTENT_HARM)
+	if(!user.combat_mode)
 		return attack_hand(user)
 	else
 		user.changeNext_move(CLICK_CD_MELEE)
@@ -497,8 +571,30 @@ Class Procs:
 
 	return _try_interact(user)
 
+/obj/machinery/attackby(obj/item/weapon, mob/user, params)
+	. = ..()
+	if(.)
+		return
+	update_last_used(user)
+
+/obj/machinery/attackby_secondary(obj/item/weapon, mob/user, params)
+	. = ..()
+	if(.)
+		return
+	update_last_used(user)
+
+/obj/machinery/tool_act(mob/living/user, obj/item/tool, tool_type)
+	if(SEND_SIGNAL(user, COMSIG_TRY_USE_MACHINE, src) & COMPONENT_CANT_USE_MACHINE_TOOLS)
+		return TOOL_ACT_MELEE_CHAIN_BLOCKING
+	. = ..()
+	if(. & TOOL_ACT_SIGNAL_BLOCKING)
+		return
+	update_last_used(user)
+
 /obj/machinery/_try_interact(mob/user)
 	if((interaction_flags_machine & INTERACT_MACHINE_WIRES_IF_OPEN) && panel_open && (attempt_wire_interaction(user) == WIRE_INTERACTION_BLOCK))
+		return TRUE
+	if(SEND_SIGNAL(user, COMSIG_TRY_USE_MACHINE, src) & COMPONENT_CANT_USE_MACHINE_INTERACT)
 		return TRUE
 	return ..()
 
@@ -565,7 +661,6 @@ Class Procs:
 	transfer_fingerprints_to(new_frame)
 
 /obj/machinery/atom_break(damage_flag)
-	SHOULD_CALL_PARENT(TRUE)
 	. = ..()
 	if(!(machine_stat & BROKEN) && !(flags_1 & NODECONSTRUCT_1))
 		set_machine_stat(machine_stat | BROKEN)
@@ -616,14 +711,15 @@ Class Procs:
 /**
  * * turns: The amount of times to turn -90 degrees. Pointless to set this to anything above 4
  */
-/obj/machinery/proc/default_change_direction_wrench(mob/user, obj/item/I, turns = 1)
+/obj/machinery/proc/default_change_direction_wrench(mob/user, obj/item/wrench, turns = 1)
 	turns *= -90
-	if(panel_open && I.tool_behaviour == TOOL_WRENCH)
-		I.play_tool_sound(src, 50)
+	if(panel_open && wrench.tool_behaviour == TOOL_WRENCH)
+		wrench.play_tool_sound(src, 50)
 		setDir(turn(dir,turns))
 		to_chat(user, span_notice("You rotate [src]."))
-		return 1
-	return 0
+		SEND_SIGNAL(src, COMSIG_MACHINERY_DEFAULT_ROTATE_WRENCH, user, wrench)
+		return TRUE
+	return FALSE
 
 /obj/proc/can_be_unfasten_wrench(mob/user, silent) //if we can unwrench this object; returns SUCCESSFUL_UNFASTEN and FAILED_UNFASTEN, which are both TRUE, or CANT_UNFASTEN, which isn't.
 	if(!(isfloorturf(loc) || istype(loc, /turf/open/indestructible)) && !anchored)
@@ -812,3 +908,14 @@ Class Procs:
 		datum_flags |= DF_VAR_EDITED
 		return TRUE
 	return ..()
+
+/obj/machinery/proc/AI_notify_hack()
+	var/turf/location = get_turf(src)
+	var/alertstr = "<span class='userdanger'>Network Alert: Hacking attempt detected[location?" in [location]":". Unable to pinpoint location"]</span>."
+	for(var/mob/living/silicon/ai/AI in GLOB.player_list)
+		to_chat(AI, alertstr)
+
+/obj/machinery/proc/update_last_used(mob/user)
+	if(isliving(user))
+		last_used_time = world.time
+		last_user_mobtype = user.type

@@ -84,6 +84,10 @@
 	var/airlock_material //material of inner filling; if its an airlock with glass, this should be set to "glass"
 	var/overlays_file = 'icons/obj/doors/airlocks/station/overlays.dmi'
 	var/note_overlay_file = 'icons/obj/doors/airlocks/station/overlays.dmi' //Used for papers and photos pinned to the airlock
+
+	/// Airlock pump that overrides airlock controlls when set up for cycling
+	var/obj/machinery/atmospherics/components/unary/airlock_pump/cycle_pump
+
 	/* Note mask_file needed some change due to the change from 513 to 514(the behavior of alpha filters seems to have changed) thats the reason why the mask
 	dmi file for normal airlocks is not 32x32 but 64x64 and for the large airlocks instead of 64x32 its now 96x64 due to the fix to this problem*/
 	var/mask_file = 'icons/obj/doors/mask_32x32_doors.dmi' // because filters aren't allowed to have icon_states :(
@@ -117,8 +121,6 @@
 		wire_security_level = max(wire_security_level, A.airlock_hack_difficulty)
 
 	wires = set_wires(wire_security_level)
-	if(frequency)
-		set_frequency(frequency)
 	if(glass)
 		airlock_material = "glass"
 	if(security_level > AIRLOCK_SECURITY_IRON)
@@ -138,6 +140,12 @@
 
 	RegisterSignal(src, COMSIG_COMPONENT_NTNET_RECEIVE, PROC_REF(ntnet_receive))
 	RegisterSignal(src, COMSIG_MACHINERY_BROKEN, PROC_REF(on_break))
+
+	// Click on the floor to close airlocks
+	var/static/list/connections = list(
+		COMSIG_ATOM_ATTACK_HAND = PROC_REF(on_attack_hand)
+	)
+	AddElement(/datum/element/connect_loc, src, connections)
 
 	return INITIALIZE_HINT_LATELOAD
 
@@ -375,9 +383,6 @@
 		for(var/obj/machinery/door/airlock/otherlock as anything in close_others)
 			otherlock.close_others -= src
 		close_others.Cut()
-	if(id_tag)
-		for(var/obj/machinery/doorButtons/D in GLOB.machines)
-			D.removeMe(src)
 	qdel(note)
 	for(var/datum/atom_hud/data/diagnostic/diag_hud in GLOB.huds)
 		diag_hud.remove_from_hud(src)
@@ -387,28 +392,6 @@
 	if(A == note)
 		note = null
 		update_icon()
-
-/obj/machinery/door/airlock/Bumped(atom/movable/AM)
-	if(operating)
-		return
-	if(ismecha(AM))
-		var/obj/vehicle/sealed/mecha/mecha = AM
-		if(density)
-			if(mecha.occupants)
-				//Occupants are a list. Bump vars are stored on mobs, so we check those instead of mecha.occupants
-				for(var/mob/living/mecha_mobs in mecha.occupants)
-					if(world.time - mecha_mobs.last_bumped <= 10)
-						return
-					mecha_mobs.last_bumped = world.time
-			if(locked && (allowed(mecha.occupants) || check_access_list(mecha.operation_req_access)) && aac)
-				aac.request_from_door(src)
-				return
-			if(mecha.occupants && (src.allowed(mecha.occupants) || src.check_access_list(mecha.operation_req_access)))
-				open()
-			else
-				do_animate("deny")
-		return
-	. = ..()
 
 /obj/machinery/door/airlock/bumpopen(mob/living/user) //Airlocks now zap you when you 'bump' them open when they're electrified. --NeoFite
 	if(!issilicon(usr))
@@ -442,9 +425,6 @@
 				cyclelinkedairlock.delayed_close_requested = TRUE
 			else
 				addtimer(CALLBACK(cyclelinkedairlock, PROC_REF(close)), 2)
-	if(locked && aac && allowed(user))
-		aac.request_from_door(src)
-		return
 	..()
 
 /obj/machinery/door/airlock/proc/isElectrified()
@@ -841,11 +821,13 @@
 /obj/machinery/door/airlock/attack_paw(mob/user)
 	return attack_hand(user)
 
+/obj/machinery/door/airlock/proc/on_attack_hand(atom/source, mob/user, list/modifiers)
+	SIGNAL_HANDLER
+	INVOKE_ASYNC(src, /atom/proc/attack_hand, user, modifiers)
+	return COMPONENT_CANCEL_ATTACK_CHAIN
+
 /obj/machinery/door/airlock/attack_hand(mob/user)
 	if(SEND_SIGNAL(src, COMSIG_AIRLOCK_TOUCHED, user) & COMPONENT_PREVENT_OPEN)
-		. = TRUE
-	else if(locked && aac && allowed(user))
-		aac.request_from_door(src)
 		. = TRUE
 	else
 		. = ..()
@@ -914,7 +896,7 @@
 	else
 		updateDialog()
 
-/obj/machinery/door/airlock/attackby(obj/item/C, mob/user, params)
+/obj/machinery/door/airlock/attackby(obj/item/C, mob/living/user, params)
 	if(!issilicon(user) && !IsAdminGhost(user))
 		if(isElectrified() && C?.siemens_coefficient)
 			if(shock(user, 75))
@@ -1084,7 +1066,7 @@
 		user.visible_message(span_notice("[user] pins [C] to [src]."), span_notice("You pin [C] to [src]."))
 		note = C
 		update_icon()
-	else if(HAS_TRAIT(C, TRAIT_DOOR_PRYER) && user.a_intent != INTENT_HARM)
+	else if(HAS_TRAIT(C, TRAIT_DOOR_PRYER) && !user.combat_mode)
 		if(isElectrified() && C?.siemens_coefficient)
 			shock(user,100)
 
@@ -1114,35 +1096,37 @@
 	else
 		return ..()
 
-/obj/machinery/door/airlock/try_to_weld(obj/item/weldingtool/W, mob/user)
+/obj/machinery/door/airlock/try_to_weld(obj/item/weldingtool/W, mob/living/user)
 	if(!operating && density)
-		if(user.a_intent != INTENT_HELP)
+
+		if(atom_integrity < max_integrity)
 			if(protected_door || !W.tool_start_check(user, amount=0))
 				return
-			user.visible_message("[user] is [welded ? "unwelding":"welding"] the airlock.", \
-							span_notice("You begin [welded ? "unwelding":"welding"] the airlock..."), \
-							span_italics("You hear welding."))
+			user.visible_message("<span class='notice'>[user] begins welding the airlock.</span>", \
+							"<span class='notice'>You begin repairing the airlock...</span>", \
+							"<span class='hear'>You hear welding.</span>")
 			if(W.use_tool(src, user, 40, volume=50, extra_checks = CALLBACK(src, PROC_REF(weld_checks), W, user)))
-				welded = !welded
-				user.visible_message("[user.name] has [welded? "welded shut":"unwelded"] [src].", \
-									span_notice("You [welded ? "weld the airlock shut":"unweld the airlock"]."))
-				log_combat(user, src, welded? "welded shut":"unwelded", important = FALSE)
-				update_icon()
+				atom_integrity = max_integrity
+				set_machine_stat(machine_stat & ~BROKEN)
+				user.visible_message("<span class='notice'>[user] finishes welding [src].</span>", \
+									"<span class='notice'>You finish repairing the airlock.</span>")
+				update_appearance()
 		else
-			if(atom_integrity < max_integrity)
-				if(!W.tool_start_check(user, amount=0))
-					return
-				user.visible_message("[user] is welding the airlock.", \
-								span_notice("You begin repairing the airlock..."), \
-								span_italics("You hear welding."))
-				if(W.use_tool(src, user, 40, volume=50, extra_checks = CALLBACK(src, PROC_REF(weld_checks), W, user)))
-					atom_integrity = max_integrity
-					set_machine_stat(machine_stat & ~BROKEN)
-					user.visible_message("[user.name] has repaired [src].", \
-										span_notice("You finish repairing the airlock."))
-					update_icon()
-			else
-				to_chat(user, span_notice("The airlock doesn't need repairing."))
+			to_chat(user, "<span class='notice'>The airlock doesn't need repairing.</span>")
+
+/obj/machinery/door/airlock/try_to_weld_secondary(obj/item/weldingtool/tool, mob/user)
+	if(!tool.tool_start_check(user, amount=0))
+		return
+	user.visible_message("<span class='notice'>[user] begins [welded ? "unwelding":"welding"] the airlock.</span>", \
+		"<span class='notice'>You begin [welded ? "unwelding":"welding"] the airlock...</span>", \
+		"<span class='hear'>You hear welding.</span>")
+	if(!tool.use_tool(src, user, 40, volume=50, extra_checks = CALLBACK(src, PROC_REF(weld_checks), tool, user)))
+		return
+	welded = !welded
+	user.visible_message("<span class='notice'>[user] [welded? "welds shut":"unwelds"] [src].</span>", \
+		"<span class='notice'>You [welded ? "weld the airlock shut":"unweld the airlock"].</span>")
+	log_combat(user, tool, "[key_name(user)] [welded ? "welded":"unwelded"] airlock [src] with [tool] at [AREACOORD(src)]", important = FALSE)
+	update_appearance()
 
 /obj/machinery/door/airlock/proc/weld_checks(obj/item/weldingtool/W, mob/user)
 	return !operating && density
@@ -1226,7 +1210,7 @@
 	sleep(open_speed - 1)
 	density = FALSE
 	z_flags &= ~(Z_BLOCK_IN_DOWN | Z_BLOCK_IN_UP)
-	air_update_turf(1)
+	air_update_turf(TRUE, FALSE)
 	sleep(1)
 	layer = OPEN_DOOR_LAYER
 	update_icon(AIRLOCK_OPEN, 1)
@@ -1271,12 +1255,12 @@
 	if(air_tight)
 		set_density(TRUE)
 		z_flags |= (Z_BLOCK_IN_DOWN | Z_BLOCK_IN_UP)
-		air_update_turf(1)
+		air_update_turf(TRUE, TRUE)
 	sleep(1)
 	if(!air_tight)
 		set_density(TRUE)
 		z_flags |= (Z_BLOCK_IN_DOWN | Z_BLOCK_IN_UP)
-		air_update_turf(1)
+		air_update_turf(TRUE, TRUE)
 	sleep(open_speed - 1)
 	if(!safe)
 		crush()
@@ -1667,3 +1651,18 @@
 /obj/machinery/door/airlock/proc/set_wires(wire_security_level)
 	return new /datum/wires/airlock(src, wire_security_level)
 
+/obj/machinery/door/airlock/proc/set_cycle_pump(obj/machinery/atmospherics/components/unary/airlock_pump/pump)
+	RegisterSignal(pump, COMSIG_PARENT_QDELETING, PROC_REF(unset_cycle_pump))
+	cycle_pump = pump
+
+/obj/machinery/door/airlock/proc/unset_cycle_pump()
+	SIGNAL_HANDLER
+	if(locked)
+		unbolt()
+		say("Link broken, unbolting.")
+	cycle_pump = null
+
+/obj/machinery/door/airlock/on_magic_unlock(datum/source, datum/action/spell/aoe/knock/spell, mob/living/caster)
+	// Airlocks should unlock themselves when knock is casted, THEN open up.
+	locked = FALSE
+	return ..()

@@ -225,12 +225,6 @@ GLOBAL_LIST_INIT(approved_status_pictures, list(
 
 #define CHUNK_SIZE 16 // Only chunk sizes that are to the power of 2. E.g: 2, 4, 8, 16, etc..
 
-// Circulator defines
-// ---------------------------------------------------
-
-#define CIRCULATOR_HOT 0
-#define CIRCULATOR_COLD 1
-
 // Particle Accelerator defines
 // ---------------------------------------------------
 
@@ -278,3 +272,11 @@ GLOBAL_LIST_INIT(approved_status_pictures, list(
 
 // Special
 #define CAMERA_NETWORK_PRIVATE "private"
+
+// Air alarm buildstage [/obj/machinery/airalarm/buildstage]
+/// Air alarm missing circuit
+#define AIRALARM_BUILD_NO_CIRCUIT 0
+/// Air alarm has circuit but is missing wires
+#define AIRALARM_BUILD_NO_WIRES 1
+/// Air alarm has all components but isn't completed
+#define AIRALARM_BUILD_COMPLETE 2
