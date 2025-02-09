@@ -162,7 +162,7 @@
 	//Fill machine with a bag!
 	if(istype(weapon, /obj/item/storage/bag))
 		var/list/inserted = list()
-		if(SEND_SIGNAL(weapon, COMSIG_TRY_STORAGE_TAKE_TYPE, typecache_to_take, src, limit - length(holdingitems), null, null, user, inserted))
+		if(weapon.atom_storage.remove_type(typecache_to_take, src, limit - length(holdingitems), TRUE, FALSE, user, inserted))
 			for(var/i in inserted)
 				holdingitems[i] = TRUE
 			if(!weapon.contents.len)
