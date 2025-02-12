@@ -67,7 +67,6 @@
 	var/aiHacking = FALSE
 	var/closeOtherId //Cyclelinking for airlocks that aren't on the same x or y coord as the target.
 	var/list/obj/machinery/door/airlock/close_others = list()
-	var/justzap = FALSE
 	var/obj/item/electronics/airlock/electronics
 	COOLDOWN_DECLARE(shockCooldown) //Prevents multiple shocks from happening
 	var/obj/item/doorCharge/charge //If applied, causes an explosion upon opening the door
@@ -140,6 +139,12 @@
 
 	RegisterSignal(src, COMSIG_COMPONENT_NTNET_RECEIVE, PROC_REF(ntnet_receive))
 	RegisterSignal(src, COMSIG_MACHINERY_BROKEN, PROC_REF(on_break))
+
+	// Click on the floor to close airlocks
+	var/static/list/connections = list(
+		COMSIG_ATOM_ATTACK_HAND = PROC_REF(on_attack_hand)
+	)
+	AddElement(/datum/element/connect_loc, src, connections)
 
 	return INITIALIZE_HINT_LATELOAD
 
@@ -389,21 +394,13 @@
 
 /obj/machinery/door/airlock/bumpopen(mob/living/user) //Airlocks now zap you when you 'bump' them open when they're electrified. --NeoFite
 	if(!issilicon(usr))
-		if(isElectrified())
-			if(!justzap)
-				if(shock(user, 100))
-					justzap = TRUE
-					addtimer(VARSET_CALLBACK(src, justzap, FALSE) , 10)
-					return
-			else
+		if(isElectrified() && shock(user, 100))
+			return
+		else if(user.hallucinating() && iscarbon(user) && prob(1) && !operating)
+			var/mob/living/carbon/C = user
+			if(!C.wearing_shock_proof_gloves())
+				new /datum/hallucination/shock(C)
 				return
-		else if(user.hallucinating() && ishuman(user) && prob(1) && !operating)
-			var/mob/living/carbon/human/H = user
-			if(H.gloves)
-				var/obj/item/clothing/gloves/G = H.gloves
-				if(G.siemens_coefficient)//not insulated
-					new /datum/hallucination/shock(H)
-					return
 	if(SEND_SIGNAL(src, COMSIG_AIRLOCK_TOUCHED, user) & COMPONENT_PREVENT_OPEN)
 		return
 	if(close_others)
@@ -422,9 +419,7 @@
 	..()
 
 /obj/machinery/door/airlock/proc/isElectrified()
-	if(secondsElectrified != MACHINE_NOT_ELECTRIFIED)
-		return TRUE
-	return FALSE
+	return (secondsElectrified != MACHINE_NOT_ELECTRIFIED)
 
 /obj/machinery/door/airlock/proc/canAIControl(mob/user)
 	if(protected_door)
@@ -808,14 +803,19 @@
 			attack_ai(user)
 
 /obj/machinery/door/airlock/attack_animal(mob/user)
-	. = ..()
-	if(isElectrified())
-		shock(user, 100)
+	if(isElectrified() && shock(user, 100))
+		return
+	return ..()
 
 /obj/machinery/door/airlock/attack_paw(mob/user)
 	return attack_hand(user)
 
-/obj/machinery/door/airlock/attack_hand(mob/user)
+/obj/machinery/door/airlock/proc/on_attack_hand(atom/source, mob/user, list/modifiers)
+	SIGNAL_HANDLER
+	INVOKE_ASYNC(src, /atom/proc/attack_hand, user, modifiers)
+	return COMPONENT_CANCEL_ATTACK_CHAIN
+
+/obj/machinery/door/airlock/attack_hand(mob/user, list/modifiers)
 	if(SEND_SIGNAL(src, COMSIG_AIRLOCK_TOUCHED, user) & COMPONENT_PREVENT_OPEN)
 		. = TRUE
 	else
@@ -823,9 +823,8 @@
 	if(.)
 		return
 	if(!(issilicon(user) || IsAdminGhost(user)))
-		if(isElectrified())
-			if(shock(user, 100))
-				return
+		if(isElectrified() && shock(user, 100))
+			return
 
 	if(ishuman(user) && prob(40) && density)
 		var/mob/living/carbon/human/H = user
@@ -885,11 +884,10 @@
 	else
 		updateDialog()
 
-/obj/machinery/door/airlock/attackby(obj/item/C, mob/user, params)
+/obj/machinery/door/airlock/attackby(obj/item/C, mob/living/user, params)
 	if(!issilicon(user) && !IsAdminGhost(user))
-		if(isElectrified() && C?.siemens_coefficient)
-			if(shock(user, 75))
-				return
+		if(isElectrified() && C?.siemens_coefficient && shock(user, 75))
+			return
 	add_fingerprint(user)
 
 	if(panel_open)
@@ -942,7 +940,7 @@
 					return
 			if(AIRLOCK_SECURITY_PLASTEEL_I_S)
 				if(C.tool_behaviour == TOOL_CROWBAR)
-					var/obj/item/crowbar/W = C
+					var/obj/item/W = C
 					to_chat(user, span_notice("You start removing the inner layer of shielding..."))
 					if(W.use_tool(src, user, 40, volume=100))
 						if(!panel_open)
@@ -1055,75 +1053,68 @@
 		user.visible_message(span_notice("[user] pins [C] to [src]."), span_notice("You pin [C] to [src]."))
 		note = C
 		update_icon()
-	else if(HAS_TRAIT(C, TRAIT_DOOR_PRYER) && user.a_intent != INTENT_HARM)
-		if(isElectrified() && C?.siemens_coefficient)
-			shock(user,100)
-
-		if(locked)
-			to_chat(user, span_warning("The bolts are down, it won't budge!"))
-			return
-
-		if(welded)
-			if(C.tool_behaviour == TOOL_CROWBAR)
-				if(try_to_crowbar(C, user))
-					return
-			to_chat(user, span_warning("It's welded, it won't budge!"))
-			return
-
-		var/time_to_open = 5
-		if(hasPower() && !prying_so_hard && density)
-			time_to_open = 50
-			playsound(src, 'sound/machines/airlock_alien_prying.ogg', 100, TRUE)
-			prying_so_hard = TRUE
-			to_chat(user, span_warning("You begin prying open the airlock..."))
-			if(do_after(user, time_to_open, src))
-				if(!open(2) && density)
-					to_chat(user, span_warning("Despite your attempts, [src] refuses to open."))
-			prying_so_hard = FALSE
-		if(!hasPower())
-			INVOKE_ASYNC(src, (density ? PROC_REF(open) : PROC_REF(close)), 2)
 	else
 		return ..()
 
-/obj/machinery/door/airlock/try_to_weld(obj/item/weldingtool/W, mob/user)
+/obj/machinery/door/airlock/try_to_weld(obj/item/weldingtool/W, mob/living/user)
 	if(!operating && density)
-		if(user.a_intent != INTENT_HELP)
+
+		if(atom_integrity < max_integrity)
 			if(protected_door || !W.tool_start_check(user, amount=0))
 				return
-			user.visible_message("[user] is [welded ? "unwelding":"welding"] the airlock.", \
-							span_notice("You begin [welded ? "unwelding":"welding"] the airlock..."), \
-							span_italics("You hear welding."))
+			user.visible_message(span_notice("[user] begins welding the airlock."), \
+							span_notice("You begin repairing the airlock..."), \
+							span_hear("You hear welding."))
 			if(W.use_tool(src, user, 40, volume=50, extra_checks = CALLBACK(src, PROC_REF(weld_checks), W, user)))
-				welded = !welded
-				user.visible_message("[user.name] has [welded? "welded shut":"unwelded"] [src].", \
-									span_notice("You [welded ? "weld the airlock shut":"unweld the airlock"]."))
-				log_combat(user, src, welded? "welded shut":"unwelded", important = FALSE)
+				atom_integrity = max_integrity
+				set_machine_stat(machine_stat & ~BROKEN)
+				user.visible_message(span_notice("[user] finishes welding [src]."), \
+									span_notice("You finish repairing the airlock."))
 				update_icon()
 		else
-			if(atom_integrity < max_integrity)
-				if(!W.tool_start_check(user, amount=0))
-					return
-				user.visible_message("[user] is welding the airlock.", \
-								span_notice("You begin repairing the airlock..."), \
-								span_italics("You hear welding."))
-				if(W.use_tool(src, user, 40, volume=50, extra_checks = CALLBACK(src, PROC_REF(weld_checks), W, user)))
-					atom_integrity = max_integrity
-					set_machine_stat(machine_stat & ~BROKEN)
-					user.visible_message("[user.name] has repaired [src].", \
-										span_notice("You finish repairing the airlock."))
-					update_icon()
-			else
-				to_chat(user, span_notice("The airlock doesn't need repairing."))
+			to_chat(user, span_notice("The airlock doesn't need repairing."))
+
+/obj/machinery/door/airlock/try_to_weld_secondary(obj/item/weldingtool/tool, mob/user)
+	if(!tool.tool_start_check(user, amount=0))
+		return
+	user.visible_message(span_notice("[user] begins [welded ? "unwelding":"welding"] the airlock."), \
+		span_notice("You begin [welded ? "unwelding":"welding"] the airlock..."), \
+		span_hear("You hear welding."))
+	if(!tool.use_tool(src, user, 40, volume=50, extra_checks = CALLBACK(src, PROC_REF(weld_checks), tool, user)))
+		return
+	welded = !welded
+	user.visible_message(span_notice("[user] [welded? "welds shut":"unwelds"] [src]."), \
+		span_notice("You [welded ? "weld the airlock shut":"unweld the airlock"]."))
+	log_combat(user, tool, "[key_name(user)] [welded ? "welded":"unwelded"] airlock [src] with [tool] at [AREACOORD(src)]", important = FALSE)
+	update_icon()
 
 /obj/machinery/door/airlock/proc/weld_checks(obj/item/weldingtool/W, mob/user)
 	return !operating && density
 
-/obj/machinery/door/airlock/try_to_crowbar(obj/item/I, mob/living/user)
-	var/beingcrowbarred = null
-	if(I.tool_behaviour == TOOL_CROWBAR )
-		beingcrowbarred = 1
-	else
-		beingcrowbarred = 0
+/// Returns if a crowbar would remove the airlock electronics
+/obj/machinery/door/airlock/proc/should_try_removing_electronics()
+	if (security_level != 0)
+		return FALSE
+
+	if (!panel_open)
+		return FALSE
+
+	if (!density)
+		return FALSE
+
+	if (!welded)
+		return FALSE
+
+	if (hasPower())
+		return FALSE
+
+	if (locked)
+		return FALSE
+
+	return TRUE
+
+/obj/machinery/door/airlock/try_to_crowbar(obj/item/I, mob/living/user, forced = FALSE)
+	//Airlock Charges
 	if(panel_open && charge)
 		to_chat(user, span_notice("You carefully start removing [charge] from [src]..."))
 		if(!I.use_tool(src, user, 150, volume=50))
@@ -1136,28 +1127,54 @@
 		charge.forceMove(get_turf(user))
 		charge = null
 		return
-	if(!security_level && (beingcrowbarred && panel_open && (density && welded && !operating && !hasPower() && !locked)))
+	//End Airlock Charges
+	if(I?.tool_behaviour == TOOL_CROWBAR && should_try_removing_electronics() && !operating)
 		user.visible_message("[user] removes the electronics from the airlock assembly.", \
-							span_notice("You start to remove electronics from the airlock assembly..."))
+			span_notice("You start to remove electronics from the airlock assembly..."))
 		if(I.use_tool(src, user, 40, volume=100))
 			deconstruct(TRUE, user)
 			return TRUE
-	else if(hasPower())
-		to_chat(user, span_warning("The airlock's motors resist your efforts to force it!"))
-	else if(locked)
+	if(locked)
 		to_chat(user, span_warning("The airlock's bolts prevent it from being forced!"))
-	else if(!welded && !operating)
-		if(istype(I, /obj/item/fireaxe)) //being fireaxe'd
-			var/obj/item/fireaxe/F = I
-			if(F && !ISWIELDED(F))
-				to_chat(user, span_warning("You need to be wielding the fire axe to do that!"))
-				return
-		INVOKE_ASYNC(src, (density ? PROC_REF(open) : PROC_REF(close)), 2)
+		return
+	if(welded)
+		to_chat(user, span_warning("It's welded, it won't budge!"))
+		return
+	if(hasPower())
+		if(forced)
+			var/check_electrified = isElectrified() //setting this so we can check if the mob got shocked during the do_after below
+			if(check_electrified && shock(user,100))
+				return //it's like sticking a fork in a power socket
 
+			if(!density)//already open
+				return
+
+			if(!prying_so_hard)
+				var/time_to_open = 50
+				playsound(src, 'sound/machines/airlock_alien_prying.ogg', 100, TRUE) //is it aliens or just the CE being a dick?
+				prying_so_hard = TRUE
+				if(do_after(user, time_to_open, src))
+					if(check_electrified && shock(user,100))
+						prying_so_hard = FALSE
+						return
+					open(2)
+					if(density && !open(2))
+						to_chat(user, span_warning("Despite your attempts, [src] refuses to open."))
+				prying_so_hard = FALSE
+				return
+		to_chat(user, span_warning("The airlock's motors resist your efforts to force it!"))
+		return
+
+	if(!operating)
+		if(istype(I, /obj/item/fireaxe) && !HAS_TRAIT(I, TRAIT_WIELDED)) //being fireaxe'd
+			to_chat(user, span_warning("You need to be wielding the fire axe to do that!"))
+			return
+		INVOKE_ASYNC(src, (density ? PROC_REF(open) : PROC_REF(close)), 2)
 
 /obj/machinery/door/airlock/open(forced=0)
 	if( operating || welded || locked )
 		return FALSE
+
 	if(!forced)
 		if(!hasPower() || wires.is_cut(WIRE_OPEN))
 			return FALSE
@@ -1188,6 +1205,7 @@
 	if(!density)
 		return TRUE
 	ui_update()
+
 	SEND_SIGNAL(src, COMSIG_AIRLOCK_OPEN, forced)
 	operating = TRUE
 	update_icon(AIRLOCK_OPENING, 1)
@@ -1334,20 +1352,23 @@
 
 /obj/machinery/door/airlock/attack_alien(mob/living/carbon/alien/humanoid/user)
 	add_fingerprint(user)
-	if(isElectrified())
-		shock(user, 100) //Mmm, fried xeno!
+	if(isElectrified() && shock(user, 100)) //Mmm, fried xeno!
+		add_fingerprint(user)
 		return
 	if(!density) //Already open
-		return
+		return ..()
 	if(locked || welded) //Extremely generic, as aliens only understand the basics of how airlocks work.
+		if(user.combat_mode)
+			return ..()
 		to_chat(user, span_warning("[src] refuses to budge!"))
 		return
+	add_fingerprint(user)
 	user.visible_message(span_warning("[user] begins prying open [src]."),\
 						span_noticealien("You begin digging your claws into [src] with all your might!"),\
 						span_warning("You hear groaning metal..."))
 	var/time_to_open = 5
 	if(hasPower())
-		time_to_open = 50 //Powered airlocks take longer to open, and are loud.
+		time_to_open = 5 SECONDS //Powered airlocks take longer to open, and are loud.
 		playsound(src, 'sound/machines/airlock_alien_prying.ogg', 100, 1)
 
 
@@ -1405,7 +1426,7 @@
 		flags_1 |= NODECONSTRUCT_1  //If an explosive took us out, don't drop the assembly
 	. = ..()
 	if(atom_integrity < (0.75 * max_integrity))
-		update_appearance()
+		update_icon()
 
 /obj/machinery/door/airlock/deconstruct(disassembled = TRUE, mob/user)
 	if(!(flags_1 & NODECONSTRUCT_1))
