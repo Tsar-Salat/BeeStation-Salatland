@@ -73,8 +73,7 @@
 	update_action_buttons_icon()
 	update_health_hud()
 
-	med_hud_set_health()
-	med_hud_set_status()
+	update_med_hud()
 
 
 	stop_pulling()

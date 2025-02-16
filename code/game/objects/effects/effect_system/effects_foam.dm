@@ -60,7 +60,7 @@
 			P = new(loc)
 		P.reagents.add_reagent(/datum/reagent/stable_plasma, absorbed_plasma)
 
-	flick("[icon_state]-disolve", src)
+	z_flick("[icon_state]-disolve", src)
 	QDEL_IN(src, 5)
 
 /obj/effect/particle_effect/foam/firefighting/foam_mob(mob/living/L)
@@ -134,7 +134,7 @@
 			new /obj/structure/foamedmetal/resin(get_turf(src))
 		if(RESIN_FOAM_CHAINREACT)
 			new /obj/structure/foamedmetal/resin/chainreact(get_turf(src))
-	flick("[icon_state]-disolve", src)
+	z_flick("[icon_state]-disolve", src)
 	QDEL_IN(src, 5)
 
 /obj/effect/particle_effect/foam/smart/kill_foam() //Smart foam adheres to area borders for walls
@@ -148,7 +148,7 @@
 			if(get_area(cardinal_turf) != get_area(T)) //We're at an area boundary, so let's block off this turf!
 				new/obj/structure/foamedmetal(T)
 				break
-	flick("[icon_state]-disolve", src)
+	z_flick("[icon_state]-disolve", src)
 	QDEL_IN(src, 5)
 
 /obj/effect/particle_effect/foam/process()

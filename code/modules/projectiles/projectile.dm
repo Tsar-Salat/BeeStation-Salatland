@@ -695,8 +695,11 @@
 		var/matrix/matrix = new
 		matrix.Turn(Angle)
 		transform = matrix
+		UPDATE_OO_IF_PRESENT
+
 	if(trajectory)
 		trajectory.set_angle(new_angle)
+
 	if(fired && hitscan && isloc(loc) && (loc != last_angle_set_hitscan_store))
 		last_angle_set_hitscan_store = loc
 		var/datum/point/point_cache = new (src)
@@ -711,6 +714,8 @@
 		var/matrix/matrix = new
 		matrix.Turn(Angle)
 		transform = matrix
+		UPDATE_OO_IF_PRESENT
+
 	if(trajectory)
 		trajectory.set_angle(new_angle)
 
@@ -822,7 +827,8 @@
 	if(!hitscanning && !forcemoved)
 		pixel_x = trajectory.return_px() - trajectory.mpx * trajectory_multiplier * SSprojectiles.global_iterations_per_move
 		pixel_y = trajectory.return_py() - trajectory.mpy * trajectory_multiplier * SSprojectiles.global_iterations_per_move
-		animate(src, pixel_x = trajectory.return_px(), pixel_y = trajectory.return_py(), time = 1, flags = ANIMATION_END_NOW)
+		z_animate(src, pixel_x = trajectory.return_px(), pixel_y = trajectory.return_py(), time = 1, flags = ANIMATION_END_NOW)
+
 	Range()
 
 /obj/projectile/proc/process_homing()			//may need speeding up in the future performance wise.
@@ -948,7 +954,9 @@
 		thing.transform = M
 		thing.color = color
 		thing.set_light(muzzle_flash_range, muzzle_flash_intensity, muzzle_flash_color_override? muzzle_flash_color_override : color)
+		thing.update_above()
 		QDEL_IN(thing, duration)
+
 	if(impacting && impact_type && duration > 0)
 		var/datum/point/p = beam_segments[beam_segments[beam_segments.len]]
 		var/atom/movable/thing = new impact_type
@@ -958,7 +966,9 @@
 		thing.transform = M
 		thing.color = color
 		thing.set_light(impact_light_range, impact_light_intensity, impact_light_color_override? impact_light_color_override : color)
+		thing.update_above()
 		QDEL_IN(thing, duration)
+		
 	if(cleanup)
 		cleanup_beam_segments()
 

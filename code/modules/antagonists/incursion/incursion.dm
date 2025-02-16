@@ -69,17 +69,6 @@
 	owner.current.client?.tgui_panel?.give_antagonist_popup("Incursion",
 		"Work with your team members to complete your objectives.")
 
-/datum/antagonist/incursion/apply_innate_effects(mob/living/mob_override)
-	if(issilicon(owner))
-		var/mob/living/silicon/S = owner
-		if(istype(S.laws, /datum/ai_laws/syndicate_override))
-			SSticker.mode.update_incursion_icons_added(owner)
-	else
-		SSticker.mode.update_incursion_icons_added(owner)
-
-/datum/antagonist/incursion/remove_innate_effects(mob/living/mob_override)
-	SSticker.mode.update_incursion_icons_removed(owner)
-
 /datum/antagonist/incursion/proc/finalize_incursion()
 	equip()
 	owner.current.playsound_local(get_turf(owner.current), 'sound/ambience/antag/incursion.ogg', vol = 100, vary = FALSE, channel = CHANNEL_ANTAG_GREETING, pressure_affected = FALSE, use_reverb = FALSE)

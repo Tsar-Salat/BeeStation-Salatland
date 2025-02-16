@@ -54,9 +54,11 @@
 	var/static/default_martial_art = new/datum/martial_art
 	var/miming = 0 // Mime's vow of silence
 	var/hellbound = FALSE
+
 	var/list/antag_datums
-	var/antag_hud_icon_state = null //this mind's ANTAG_HUD should have this icon_state
-	var/datum/atom_hud/antag/antag_hud = null //this mind's antag HUD
+	///this mind's antag HUD
+	var/datum/atom_hud/alternate_appearance/basic/antagonist_hud/antag_hud = null
+
 	var/damnation_type = 0
 	var/datum/mind/soulOwner //who owns the soul.  Under normal circumstances, this will point to src
 	var/hasSoul = TRUE // If false, renders the character unable to sell their soul.
@@ -99,6 +101,7 @@
 
 /datum/mind/Destroy()
 	SSticker.minds -= src
+	QDEL_NULL(antag_hud)
 	QDEL_LIST(antag_datums)
 	soulOwner = null
 	set_current(null)
@@ -132,7 +135,6 @@
 	if(new_character.mind)								//disassociate any mind curently in our new body's mind variable
 		new_character.mind.set_current(null)
 
-	var/datum/atom_hud/antag/hud_to_transfer = antag_hud//we need this because leave_hud() will clear this list
 	var/mob/living/old_current = current
 	if(old_current)
 		//transfer anyone observing the old character to the new one
@@ -150,17 +152,19 @@
 		temp_holder.transfer_mind_languages(old_holder)
 
 	set_current(new_character) //associate ourself with our new body
-	new_character.mind = src							//and associate our new body with ourself
-
+	QDEL_NULL(antag_hud)
+	new_character.mind = src //and associate our new body with ourself
 	for(var/datum/quirk/T as() in quirks) //Retarget all traits this mind has
 		T.transfer_mob(new_character)
+
+	antag_hud = new_character.add_alt_appearance(/datum/atom_hud/alternate_appearance/basic/antagonist_hud, "combo_hud", current, src)
+
 	for(var/a in antag_datums)	//Makes sure all antag datums effects are applied in the new body
 		var/datum/antagonist/A = a
 		A.on_body_transfer(old_current, current)
 	if(iscarbon(new_character))
 		var/mob/living/carbon/C = new_character
 		C.last_mind = src
-	transfer_antag_huds(hud_to_transfer) //Inherit the antag HUD
 	transfer_martial_arts(new_character) //Todo: Port this proc
 	RegisterSignal(new_character, COMSIG_MOB_DEATH, PROC_REF(set_death_time))
 	if(active || force_key_move)
@@ -259,7 +263,6 @@
 /datum/mind/proc/remove_brother()
 	if(src in SSticker.mode.brothers)
 		remove_antag_datum(/datum/antagonist/brother)
-	SSticker.mode.update_brother_icons_removed(src)
 
 /datum/mind/proc/remove_nukeop()
 	var/datum/antagonist/nukeop/nuke = has_antag_datum(/datum/antagonist/nukeop,TRUE)
@@ -298,7 +301,6 @@
 	remove_wizard()
 	remove_cultist()
 	remove_rev()
-	SSticker.mode.update_cult_icons_removed(src)
 
 /datum/mind/proc/equip_traitor(employer = "The Syndicate", silent = FALSE, datum/antagonist/uplink_owner, telecrystals = 20, datum/game_mode/gamemode)
 	if(!current)

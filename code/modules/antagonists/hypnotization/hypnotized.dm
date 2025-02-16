@@ -5,11 +5,13 @@
 	victim.log_message("was hypnotized with the phrase '[hypnotic_phrase]'.", LOG_ATTACK, color="red")
 	log_game("[key_name(victim)] was hypnotized with the phrase '[hypnotic_phrase]'.")
 	to_chat(victim, span_reallybighypnophrase("[hypnotic_phrase]"))
-	to_chat(victim, span_notice(pick("You feel your thoughts focusing on this phrase... you can't seem to get it out of your head.",\
-												"Your head hurts, but this is all you can think of. It must be vitally important.",\
-												"You feel a part of your mind repeating this over and over. You need to follow these words.",\
-												"Something about this sounds... right, for some reason. You feel like you should follow these words.",\
-												"These words keep echoing in your mind. You find yourself completely fascinated by them.")))
+	to_chat(victim, span_notice(pick(
+		"You feel your thoughts focusing on this phrase... you can't seem to get it out of your head.",\
+		"Your head hurts, but this is all you can think of. It must be vitally important.",\
+		"You feel a part of your mind repeating this over and over. You need to follow these words.",\
+		"Something about this sounds... right, for some reason. You feel like you should follow these words.",\
+		"These words keep echoing in your mind. You find yourself completely fascinated by them.",\
+		)))
 	to_chat(victim, span_boldwarning("You've been hypnotized by this sentence. You must follow these words. If it isn't a clear order, you can freely interpret how to do so, as long as you act like the words are your highest priority."))
 	var/atom/movable/screen/alert/hypnosis/hypno_alert = victim.throw_alert("hypnosis", /atom/movable/screen/alert/hypnosis)
 	hypno_alert.desc = "\"[hypnotic_phrase]\"... your mind seems to be fixated on this concept."
@@ -31,6 +33,7 @@
 	antagpanel_category = "Other"
 	show_name_in_check_antagonists = TRUE
 	count_against_dynamic_roll_chance = FALSE
+	antag_hud_name = "hud_hypnotized"
 
 /datum/antagonist/hypnotized/on_gain()
 	owner.current.log_message("has been hypnotized!", LOG_ATTACK, color="red")
@@ -57,22 +60,6 @@
 
 /datum/antagonist/hypnotized/farewell()
 	owner.announce_objectives()
-
-/datum/antagonist/hypnotized/apply_innate_effects(mob/living/mob_override)
-	. = ..()
-	//Give traitor appearance on hud (If they are not an antag already)
-	var/datum/atom_hud/antag/traitorhud = GLOB.huds[ANTAG_HUD_HYPNOTIZED]
-	traitorhud.join_hud(owner.current)
-	if(!owner.antag_hud_icon_state)
-		set_antag_hud(owner.current, "hypnotized")
-
-/datum/antagonist/hypnotized/remove_innate_effects(mob/living/mob_override)
-	. = ..()
-	//Clear the hud if they haven't become something else and had the hud overwritten
-	var/datum/atom_hud/antag/traitorhud = GLOB.huds[ANTAG_HUD_HYPNOTIZED]
-	traitorhud.leave_hud(owner.current)
-	if(owner.antag_hud_icon_state == "hypnotized")
-		set_antag_hud(owner.current, null)
 
 /datum/antagonist/hypnotized/admin_add(datum/mind/new_owner,mob/admin)
 	var/mob/living/carbon/C = new_owner.current

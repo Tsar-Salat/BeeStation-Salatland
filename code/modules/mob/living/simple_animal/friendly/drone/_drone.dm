@@ -41,7 +41,10 @@
 	mob_size = MOB_SIZE_SMALL
 	has_unlimited_silicon_privilege = 1
 	damage_coeff = list(BRUTE = 1, BURN = 1, TOX = 0, CLONE = 0, STAMINA = 0, OXY = 0)
-	hud_possible = list(DIAG_STAT_HUD, DIAG_HUD, ANTAG_HUD)
+	hud_possible = list(
+		DIAG_STAT_HUD = 'icons/mob/huds/hud.dmi',
+		DIAG_HUD = 'icons/mob/huds/hud.dmi',
+	)
 	unique_name = TRUE
 	faction = list(FACTION_NEUTRAL,FACTION_SILICON,FACTION_TURRET)
 	dextrous = TRUE
@@ -100,7 +103,7 @@
 	alert_drones(DRONE_NET_CONNECT)
 
 	for(var/datum/atom_hud/data/diagnostic/diag_hud in GLOB.huds)
-		diag_hud.add_to_hud(src)
+		diag_hud.add_atom_to_hud(src)
 
 	listener = new(list(ALARM_ATMOS, ALARM_FIRE, ALARM_POWER), list(z))
 	RegisterSignal(listener, COMSIG_ALARM_TRIGGERED, PROC_REF(alarm_triggered))
@@ -109,21 +112,18 @@
 	listener.RegisterSignal(src, COMSIG_LIVING_REVIVE, TYPE_PROC_REF(/datum/alarm_listener, allow_alarm_changes))
 
 /mob/living/simple_animal/drone/med_hud_set_health()
-	var/image/holder = hud_list[DIAG_HUD]
-	var/icon/I = icon(icon, icon_state, dir)
-	holder.pixel_y = I.Height() - world.icon_size
-	holder.icon_state = "huddiag[RoundDiagBar(health/maxHealth)]"
+	set_hud_image_vars(DIAG_HUD, "huddiag[RoundDiagBar(health/maxHealth)]", get_hud_pixel_y())
 
 /mob/living/simple_animal/drone/med_hud_set_status()
-	var/image/holder = hud_list[DIAG_STAT_HUD]
-	var/icon/I = icon(icon, icon_state, dir)
-	holder.pixel_y = I.Height() - world.icon_size
+	var/new_state
 	if(stat == DEAD)
-		holder.icon_state = "huddead2"
+		new_state = "huddead2"
 	else if(incapacitated())
-		holder.icon_state = "hudoffline"
+		new_state = "hudoffline"
 	else
-		holder.icon_state = "hudstat"
+		new_state = "hudstat"
+
+	set_hud_image_vars(DIAG_STAT_HUD, new_state, get_hud_pixel_y())
 
 /mob/living/simple_animal/drone/Destroy()
 	GLOB.drones_list -= src

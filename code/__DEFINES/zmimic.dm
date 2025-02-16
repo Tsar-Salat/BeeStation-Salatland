@@ -20,6 +20,27 @@
 	|| ((M:zmm_flags & ZMM_LOOKBESIDE) && ZM_INTERNAL_SCAN_LOOKBESIDE(M, z_flags, Z_MIMIC_BELOW))) \
 )
 
+/// Performs an animate() call on the given object and it's mimics.
+#define z_animate(thing, args...) \
+	do { \
+		animate(thing, ##args); \
+		var/atom/movable/openspace/mimic/__mimic = thing.bound_overlay; \
+		while(!QDELETED(__mimic) && !__mimic.destruction_timer) { \
+			animate(__mimic, ##args); \
+			__mimic = __mimic.bound_overlay; \
+		} \
+	} while(FALSE)
+
+/// Performs a flick() call on the given object and it's mimics.
+#define z_flick(Icon, Object) \
+	do { \
+		flick(Icon, Object); \
+		var/atom/movable/openspace/mimic/__mimic = Object.bound_overlay; \
+		while(!QDELETED(__mimic) && !__mimic.destruction_timer) { \
+			flick(Icon, __mimic); \
+			__mimic = __mimic.bound_overlay; \
+		} \
+	} while(FALSE)
 
 // Z-level flags, used by zmove and Z-Mimic.
 

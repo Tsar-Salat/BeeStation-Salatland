@@ -7,14 +7,7 @@
 	show_to_ghosts = TRUE
 	prevent_roundtype_conversion = FALSE
 	count_against_dynamic_roll_chance = FALSE
-
-/datum/antagonist/prisoner/apply_innate_effects(mob/living/mob_override)
-	var/mob/living/M = mob_override || owner.current
-	update_prisoner_icons_added(M)
-
-/datum/antagonist/prisoner/remove_innate_effects(mob/living/mob_override)
-	var/mob/living/M = mob_override || owner.current
-	update_prisoner_icons_removed(M)
+	antag_hud_name = "prisoner"
 
 /datum/antagonist/prisoner/on_gain()
 	forge_objectives()
@@ -31,13 +24,3 @@
 					Do anything you can to escape prison and sneak off the station when the shift ends, via an emergency pod or the main transfer shuttle. \
 					Avoid killing as much as possible, especially non-security staff, but everything else is fair game!"))
 	owner.announce_objectives()
-
-/datum/antagonist/prisoner/proc/update_prisoner_icons_added(var/mob/living/carbon/human/prisoner)
-	var/datum/atom_hud/antag/prihud = GLOB.huds[ANTAG_HUD_PRISONER]
-	prihud.join_hud(prisoner)
-	set_antag_hud(prisoner, "prisoner")
-
-/datum/antagonist/prisoner/proc/update_prisoner_icons_removed(var/mob/living/carbon/human/prisoner)
-	var/datum/atom_hud/antag/prihud = GLOB.huds[ANTAG_HUD_PRISONER]
-	prihud.leave_hud(prisoner)
-	set_antag_hud(prisoner, null)

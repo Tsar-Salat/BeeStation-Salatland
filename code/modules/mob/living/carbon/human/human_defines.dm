@@ -1,5 +1,17 @@
 /mob/living/carbon/human
-	hud_possible = list(HEALTH_HUD,STATUS_HUD,ID_HUD,WANTED_HUD,IMPLOYAL_HUD,IMPCHEM_HUD,IMPTRACK_HUD, NANITE_HUD, DIAG_NANITE_FULL_HUD,ANTAG_HUD,GLAND_HUD,SENTIENT_DISEASE_HUD)
+	hud_possible = list(
+		HEALTH_HUD = 'icons/mob/huds/hud.dmi',
+		STATUS_HUD = 'icons/mob/huds/hud.dmi',
+		ID_HUD = 'icons/mob/huds/hud.dmi',
+		WANTED_HUD = 'icons/mob/huds/hud.dmi',
+		IMPLOYAL_HUD = 'icons/mob/huds/hud.dmi',
+		IMPCHEM_HUD = 'icons/mob/huds/hud.dmi',
+		IMPTRACK_HUD = 'icons/mob/huds/hud.dmi',
+		NANITE_HUD = 'icons/mob/huds/hud.dmi',
+		DIAG_NANITE_FULL_HUD = 'icons/mob/huds/hud.dmi',
+		ANTAG_HUD = 'icons/mob/huds/hud.dmi',
+		GLAND_HUD = 'icons/mob/huds/hud.dmi',
+	)
 	hud_type = /datum/hud/human
 	pressure_resistance = 25
 	can_buckle = TRUE

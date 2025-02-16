@@ -16,10 +16,10 @@
 		if(islist(hud_type))
 			for(var/T in hud_type)
 				var/datum/atom_hud/H = GLOB.huds[T]
-				H.add_hud_to(user)
+				H.show_to(user)
 		else
 			var/datum/atom_hud/H = GLOB.huds[hud_type]
-			H.add_hud_to(user)
+			H.hide_from(user)
 	if(hud_trait)
 		if(islist(hud_trait))
 			for(var/H in hud_trait)
@@ -36,10 +36,10 @@
 		if(islist(hud_type))
 			for(var/T in hud_type)
 				var/datum/atom_hud/H = GLOB.huds[T]
-				H.remove_hud_from(user)
+				H.hide_from(user)
 		else
 			var/datum/atom_hud/H = GLOB.huds[hud_type]
-			H.remove_hud_from(user)
+			H.hide_from(user)
 	if(hud_trait)
 		if(islist(hud_trait))
 			for(var/H in hud_trait)
@@ -328,7 +328,7 @@
 
 	if (hud_type)
 		var/datum/atom_hud/H = GLOB.huds[hud_type]
-		H.remove_hud_from(user)
+		H.hide_from(user)
 
 	if (hud_type == DATA_HUD_MEDICAL_ADVANCED)
 		hud_type = null
@@ -339,7 +339,7 @@
 
 	if (hud_type)
 		var/datum/atom_hud/H = GLOB.huds[hud_type]
-		H.add_hud_to(user)
+		H.show_to(user)
 
 /datum/action/item_action/switch_hud
 	name = "Switch HUD"

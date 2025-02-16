@@ -512,10 +512,11 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 		total_stamina += (BP.stamina_dam * BP.stam_damage_coeff)
 	set_health(round(maxHealth - getOxyLoss() - getToxLoss() - getCloneLoss() - total_burn - total_brute, DAMAGE_PRECISION))
 	staminaloss = round(total_stamina, DAMAGE_PRECISION)
+	update_damage_hud()
+	update_health_hud()
 	update_stat()
 	if(((maxHealth - total_burn) < HEALTH_THRESHOLD_DEAD*2) && stat == DEAD )
 		become_husk("burn")
-	med_hud_set_health()
 	if(stat == SOFT_CRIT)
 		add_movespeed_modifier(/datum/movespeed_modifier/carbon_softcrit)
 	else
@@ -558,7 +559,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 		if(!isnull(E.lighting_alpha))
 			lighting_alpha = E.lighting_alpha
 
-	if(client.eye != src)
+	if(client.eye && client.eye != src)
 		var/atom/A = client.eye
 		if(A.update_remote_sight(src)) //returns 1 if we override all other sight updates.
 			return
@@ -803,9 +804,6 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 			if(!is_blind())
 				var/datum/component/blind_sense/B = GetComponent(/datum/component/blind_sense)
 				B?.ClearFromParent()
-	update_damage_hud()
-	update_health_hud()
-	update_stamina_hud()
 	med_hud_set_status()
 
 //called when we get cuffed/uncuffed

@@ -1,33 +1,34 @@
-/datum/component/waddling
-	dupe_mode = COMPONENT_DUPE_UNIQUE_PASSARGS
+/datum/element/waddling
 
-/datum/component/waddling/Initialize()
+/datum/element/waddling/Attach(datum/target)
 	. = ..()
-	if(!ismovable(parent))
-		return COMPONENT_INCOMPATIBLE
-	if(isliving(parent))
-		RegisterSignal(parent, COMSIG_MOVABLE_MOVED, PROC_REF(LivingWaddle))
-	else
-		RegisterSignal(parent, COMSIG_MOVABLE_MOVED, PROC_REF(Waddle))
+	if(!ismovable(target))
+		return ELEMENT_INCOMPATIBLE
 
-/datum/component/waddling/proc/LivingWaddle()
+	RegisterSignal(target, COMSIG_MOVABLE_MOVED, PROC_REF(Waddle))
+
+/datum/element/waddling/Detach(datum/source)
+	. = ..()
+	UnregisterSignal(source, COMSIG_MOVABLE_MOVED)
+
+
+/datum/element/waddling/proc/Waddle(atom/movable/moved, atom/oldloc, direction, forced)
 	SIGNAL_HANDLER
 
-	if(isliving(parent))
-		var/mob/living/L = parent
-		if(L.incapacitated() || L.body_position == LYING_DOWN)
-			return
-	Waddle()
-
-/datum/component/waddling/proc/Waddle()
-	SIGNAL_HANDLER
-
-	if(!isatom(parent))
+	if(forced)
 		return
 
-	var/atom/movable/target = parent
+	if(isliving(moved))
+		var/mob/living/living_moved = moved
+		if (living_moved.incapacitated() || living_moved.body_position == LYING_DOWN)
+			return
 
-	animate(target, pixel_z = 4, time = 0)
-	var/prev_trans = matrix(target.transform)
-	animate(pixel_z = 0, transform = turn(target.transform, pick(-12, 0, 12)), time=2)
-	animate(pixel_z = 0, transform = prev_trans, time = 0)
+	waddle_animation(moved)
+
+/datum/element/waddling/proc/waddle_animation(atom/movable/target)
+	SIGNAL_HANDLER
+	for(var/atom/movable/AM as anything in target.get_associated_mimics() + target)
+		animate(AM, pixel_z = 4, time = 0)
+		var/prev_trans = matrix(AM.transform)
+		animate(pixel_z = 0, transform = turn(AM.transform, pick(-12, 0, 12)), time=2)
+		animate(pixel_z = 0, transform = prev_trans, time = 0)

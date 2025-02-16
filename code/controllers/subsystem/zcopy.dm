@@ -335,6 +335,9 @@ SUBSYSTEM_DEF(zcopy)
 				object.bound_overlay = new(T)
 				object.bound_overlay.associated_atom = object
 
+				if(length(object.hud_list))
+					object.bound_overlay.copy_huds(object)
+
 			var/override_depth
 			var/original_type = object.type
 			var/original_z = object.z

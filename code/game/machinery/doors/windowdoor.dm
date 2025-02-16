@@ -193,6 +193,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/door/window)
 	sleep(operationdelay)
 	set_density(FALSE)
 	air_update_turf(TRUE, FALSE)
+	update_appearance(UPDATE_ICON_STATE)
 	update_freelook_sight()
 
 	if(operating == 1) //emag again
@@ -216,6 +217,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/door/window)
 
 	set_density(TRUE)
 	air_update_turf(TRUE, TRUE)
+	update_appearance(UPDATE_ICON_STATE)
 	update_freelook_sight()
 	sleep(operationdelay)
 
@@ -271,7 +273,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/door/window)
 /obj/machinery/door/window/on_emag(mob/user)
 	..()
 	operating = TRUE
-	flick("[base_state]spark", src)
+	z_flick("[base_state]spark", src)
 	playsound(src, "sparks", 75, 1)
 	addtimer(CALLBACK(src, PROC_REF(after_emag)), 6)
 
@@ -373,11 +375,11 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/door/window)
 /obj/machinery/door/window/do_animate(animation)
 	switch(animation)
 		if("opening")
-			flick("[base_state]opening", src)
+			z_flick("[base_state]opening", src)
 		if("closing")
-			flick("[base_state]closing", src)
+			z_flick("[base_state]closing", src)
 		if("deny")
-			flick("[base_state]deny", src)
+			z_flick("[base_state]deny", src)
 
 /obj/machinery/door/window/check_access_ntnet(datum/netdata/data)
 	// Cutting WIRE_IDSCAN grants remote access... or it would, if we could hack windowdoors.

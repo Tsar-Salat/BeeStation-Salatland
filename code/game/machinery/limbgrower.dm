@@ -107,7 +107,7 @@
 			if(reagents.has_reagent(/datum/reagent/medicine/synthflesh, being_built.reagents_list[/datum/reagent/medicine/synthflesh]*prod_coeff))
 				busy = TRUE
 				use_power(power)
-				flick("limbgrower_fill",src)
+				z_flick("limbgrower_fill",src)
 				icon_state = "limbgrower_idleon"
 				addtimer(CALLBACK(src, PROC_REF(build_item)),32*prod_coeff)
 

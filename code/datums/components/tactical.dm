@@ -63,7 +63,7 @@
 	image.override = TRUE
 	image.layer = ABOVE_MOB_LAYER
 	image.plane = FLOAT_PLANE
-	user.add_alt_appearance(/datum/atom_hud/alternate_appearance/basic/everyone, "sneaking_mission[REF(src)]", image)
+	user.add_alt_appearance(/datum/atom_hud/alternate_appearance/basic/living, "sneaking_mission[REF(src)]", image)
 
 
 /datum/component/tactical/proc/on_name_inquiry(obj/item/source, list/identity)

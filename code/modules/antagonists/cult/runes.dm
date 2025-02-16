@@ -1044,7 +1044,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/rune/wall)
 			continue
 		if(ishuman(M))
 			if(!iscultist(M))
-				AH.remove_hud_from(M)
+				AH.hide_from(M)
 				addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(hudFix), M), duration)
 			var/image/A = image('icons/mob/cult.dmi', M,"cultist", ABOVE_MOB_LAYER)
 			A.override = 1
@@ -1137,4 +1137,4 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/rune/wall)
 	var/obj/O = target.get_item_by_slot(ITEM_SLOT_EYES)
 	if(istype(O, /obj/item/clothing/glasses/hud/security))
 		var/datum/atom_hud/AH = GLOB.huds[DATA_HUD_SECURITY_ADVANCED]
-		AH.add_hud_to(target)
+		AH.show_to(target)

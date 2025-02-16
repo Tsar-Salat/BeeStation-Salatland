@@ -2,7 +2,13 @@
 	see_invisible = SEE_INVISIBLE_LIVING
 	sight = 0
 	see_in_dark = 2
-	hud_possible = list(HEALTH_HUD,STATUS_HUD,ANTAG_HUD,NANITE_HUD,DIAG_NANITE_FULL_HUD)
+	hud_possible = list(
+		HEALTH_HUD = 'icons/mob/huds/hud.dmi',
+		STATUS_HUD = 'icons/mob/huds/hud.dmi',
+		ANTAG_HUD = 'icons/mob/huds/hud.dmi',
+		NANITE_HUD = 'icons/mob/huds/hud.dmi',
+		DIAG_NANITE_FULL_HUD = 'icons/mob/huds/hud.dmi',
+	)
 	pressure_resistance = 10
 	chat_color = "#CCCCCC"	//The say color of the mob, for when ID say isn't available (simplemobs that are not /mob/living/carbon/human)
 

@@ -10,6 +10,7 @@
 	var/datum/action/innate/cult/mastervote/vote = new
 	var/datum/action/innate/cult/blood_magic/magic = new
 	banning_key = ROLE_CULTIST
+	antag_hud_name = "cult"
 	required_living_playtime = 4
 	var/ignore_implant = FALSE
 	var/give_equipment = FALSE
@@ -64,7 +65,6 @@
 	if(give_equipment)
 		equip_cultist(TRUE)
 	SSticker.mode.cult += owner // Only add after they've been given objectives
-	SSticker.mode.update_cult_icons_added(owner)
 	current.log_message("has been converted to the cult of Nar'Sie!", LOG_ATTACK, color="#960000")
 
 	if(cult_team.blood_target && cult_team.blood_target_image && current.client)
@@ -75,7 +75,6 @@
 	var/mob/living/carbon/C = owner.current
 	if(!istype(C))
 		return
-	handle_clown_mutation(C, "Your training has allowed you to overcome your clownish nature, allowing you to wield weapons without harming yourself.")
 	. += cult_give_item(/obj/item/melee/cultblade/dagger, C)
 	if(metal)
 		. += cult_give_item(/obj/item/stack/sheet/runed_metal/ten, C)
@@ -113,6 +112,7 @@
 	var/mob/living/current = owner.current
 	if(mob_override)
 		current = mob_override
+	handle_clown_mutation(current, mob_override ? null : "Your training has allowed you to overcome your clownish nature, allowing you to wield weapons without harming yourself.")
 	current.faction |= FACTION_CULT
 	current.grant_language(/datum/language/narsie, source = LANGUAGE_CULTIST)
 	if(!cult_team.cult_master)
@@ -126,21 +126,14 @@
 		if(cult_team.cult_ascendent)
 			cult_team.ascend(current)
 
-/datum/antagonist/cult/master/apply_innate_effects(mob/living/mob_override)
-	. = ..()
-	var/mob/living/current = owner.current
-	if(!cult_team.reckoning_complete)
-		reckoning.Grant(current)
-	bloodmark.Grant(current)
-	throwing.Grant(current)
-	current.update_action_buttons_icon()
-	current.apply_status_effect(/datum/status_effect/cult_master)
+	add_team_hud(current)
 
 /datum/antagonist/cult/remove_innate_effects(mob/living/mob_override)
 	. = ..()
 	var/mob/living/current = owner.current
 	if(mob_override)
 		current = mob_override
+	handle_clown_mutation(current, removing = FALSE)
 	current.faction -= FACTION_CULT
 	current.remove_language(/datum/language/narsie, source = LANGUAGE_CULTIST)
 	vote.Remove(current)
@@ -156,6 +149,17 @@
 			REMOVE_LUM_SOURCE(H, LUM_SOURCE_HOLY)
 		H.update_body()
 
+/datum/antagonist/cult/master/apply_innate_effects(mob/living/mob_override)
+	. = ..()
+	var/mob/living/current = owner.current
+	if(!cult_team.reckoning_complete)
+		reckoning.Grant(current)
+	bloodmark.Grant(current)
+	throwing.Grant(current)
+	current.update_action_buttons_icon()
+	current.apply_status_effect(/datum/status_effect/cult_master)
+	add_team_hud(current, /datum/antagonist/cult)
+
 /datum/antagonist/cult/master/remove_innate_effects(mob/living/mob_override)
 	. = ..()
 	var/mob/living/current = owner.current
@@ -164,12 +168,11 @@
 	reckoning.Remove(current)
 	bloodmark.Remove(current)
 	throwing.Remove(current)
-	current.update_action_buttons_icon()
+	current?.update_action_buttons_icon()
 	current.remove_status_effect(/datum/status_effect/cult_master)
 
 /datum/antagonist/cult/on_removal()
 	SSticker.mode.cult -= owner
-	SSticker.mode.update_cult_icons_removed(owner)
 	if(!silent)
 		owner.current.visible_message("[span_deconversionmessage("[owner.current] looks like [owner.current.p_theyve()] just reverted to [owner.current.p_their()] old faith!")]", null, null, null, owner.current)
 		to_chat(owner.current, span_userdanger("An unfamiliar white light flashes through your mind, cleansing the taint of the Geometer and all your memories as her servant."))
@@ -213,6 +216,7 @@
 /datum/antagonist/cult/master
 	ignore_implant = TRUE
 	show_in_antagpanel = FALSE //Feel free to add this later
+	antag_hud_name = "cultmaster"
 	var/datum/action/innate/cult/master/finalreck/reckoning = new
 	var/datum/action/innate/cult/master/cultmark/bloodmark = new
 	var/datum/action/innate/cult/master/pulse/throwing = new
@@ -222,11 +226,6 @@
 	QDEL_NULL(bloodmark)
 	QDEL_NULL(throwing)
 	return ..()
-
-/datum/antagonist/cult/master/on_gain()
-	. = ..()
-	var/mob/living/current = owner.current
-	set_antag_hud(current, "cultmaster")
 
 /datum/antagonist/cult/master/greet()
 	to_chat(owner.current, "[span_cultlarge("You are the cult's Master")]. As the cult's Master, you have a unique title and loud voice when communicating, are capable of marking \

@@ -13,9 +13,11 @@
 		name = "[name] ([rand(1, 1000)])"
 		real_name = name
 	var/datum/atom_hud/data/human/medical/advanced/medhud = GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]
-	medhud.add_to_hud(src)
+	medhud.add_atom_to_hud(src)
+
 	for(var/datum/atom_hud/data/diagnostic/diag_hud in GLOB.huds)
-		diag_hud.add_to_hud(src)
+		diag_hud.add_atom_to_hud(src)
+		
 	faction += "[REF(src)]"
 	GLOB.mob_living_list += src
 	if (playable)
@@ -35,8 +37,7 @@
 	prepare_data_huds()
 
 /mob/living/proc/prepare_data_huds()
-	med_hud_set_health()
-	med_hud_set_status()
+	update_med_hud()
 
 /mob/living/Destroy()
 	if(LAZYLEN(status_effects))
@@ -663,10 +664,9 @@
 		return
 	set_health(maxHealth - getOxyLoss() - getToxLoss() - getFireLoss() - getBruteLoss() - getCloneLoss())
 	staminaloss = getStaminaLoss()
-	update_stat()
 	med_hud_set_health()
-	med_hud_set_status()
 	update_health_hud()
+	update_stat()
 	SEND_SIGNAL(src, COMSIG_LIVING_UPDATE_HEALTH)
 
 /mob/living/update_health_hud()
@@ -1144,8 +1144,9 @@
 	var/amplitude = min(4, (jitteriness/100) + 1)
 	var/pixel_x_diff = rand(-amplitude, amplitude)
 	var/pixel_y_diff = rand(-amplitude/3, amplitude/3)
-	animate(src, pixel_x = pixel_x_diff, pixel_y = pixel_y_diff , time = 2, loop = 6, flags = ANIMATION_RELATIVE|ANIMATION_PARALLEL)
-	animate(pixel_x = -pixel_x_diff , pixel_y = -pixel_y_diff , time = 2, flags = ANIMATION_RELATIVE)
+	for(var/atom/movable/AM as anything in get_associated_mimics() + src)
+		animate(AM, pixel_x = pixel_x_diff, pixel_y = pixel_y_diff , time = 2, loop = 6, flags = ANIMATION_RELATIVE|ANIMATION_PARALLEL)
+		animate(pixel_x = -pixel_x_diff , pixel_y = -pixel_y_diff , time = 2, flags = ANIMATION_RELATIVE)
 
 /mob/living/proc/get_temperature(datum/gas_mixture/environment)
 	var/loc_temp = environment ? environment.return_temperature() : T0C

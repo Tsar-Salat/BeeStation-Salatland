@@ -976,7 +976,7 @@
 		return
 	if (R.amount <= 0)
 		say("Sold out of [R.name].")
-		flick(icon_deny,src)
+		z_flick(icon_deny,src)
 		vend_ready = TRUE
 		return
 	if(onstation)
@@ -986,18 +986,18 @@
 			C = L.get_idcard(TRUE)
 		if(!C)
 			say("No card found.")
-			flick(icon_deny,src)
+			z_flick(icon_deny,src)
 			vend_ready = TRUE
 			return
 		else if (!C.registered_account)
 			say("No account found.")
-			flick(icon_deny,src)
+			z_flick(icon_deny,src)
 			vend_ready = TRUE
 			return
 		// Department cards cannot be used to order stuff in vendors, we make an exception for the debug card
 		else if(!C.registered_account.account_job && !istype(C, /obj/item/card/id/syndicate/debug))
 			say("Departmental accounts have been blacklisted from personal expenses due to embezzlement.")
-			flick(icon_deny, src)
+			z_flick(icon_deny, src)
 			vend_ready = TRUE
 			return
 		var/datum/bank_account/account = C.registered_account
@@ -1009,7 +1009,7 @@
 			price_to_use = 0 //returned items are free
 		if(price_to_use && !account.adjust_money(-price_to_use))
 			say("You do not possess the funds to purchase [R.name].")
-			flick(icon_deny,src)
+			z_flick(icon_deny,src)
 			vend_ready = TRUE
 			return
 		if(price_to_use && seller_department)
@@ -1028,7 +1028,7 @@
 		last_shopper = REF(usr)
 	use_power(5)
 	if(icon_vend) //Show the vending animation if needed
-		flick(icon_vend,src)
+		z_flick(icon_vend,src)
 	playsound(src, 'sound/machines/machine_vend.ogg', 50, TRUE, extrarange = -3)
 	var/obj/item/vended_item
 	if(!LAZYLEN(R.returned_products)) //always give out free returned stuff first, e.g. to avoid walling a traitor objective in a bag behind paid items
@@ -1293,7 +1293,7 @@
 						if(!C?.registered_account)
 							additional_message += "No account found. "
 						say("[additional_message]Not enough funds to purchase [S.name].")
-						flick(icon_deny,src)
+						z_flick(icon_deny,src)
 						vend_ready = TRUE
 						return
 			vend_ready = TRUE

@@ -196,7 +196,7 @@
 	// Otherwise, the R gets cut off.
 	final_icon.Scale(64, 64)
 
-	var/icon/rev_head_icon = icon('icons/mob/hud.dmi', "rev_head")
+	var/icon/rev_head_icon = icon('icons/mob/huds/hud.dmi', "rev_head")
 	rev_head_icon.Scale(48, 48)
 	rev_head_icon.Crop(1, 1, 64, 64)
 	rev_head_icon.Shift(EAST, 10)
@@ -270,7 +270,7 @@
 	// Otherwise, the I gets cut off.
 	final_icon.Scale(64, 64)
 
-	var/icon/inc_icon = icon('icons/mob/hud.dmi', "incursion")
+	var/icon/inc_icon = icon('icons/mob/huds/hud.dmi', "incursion")
 	inc_icon.Scale(48, 48)
 	inc_icon.Crop(1, 1, 64, 64)
 	inc_icon.Shift(EAST, 8)

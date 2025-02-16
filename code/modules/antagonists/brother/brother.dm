@@ -5,6 +5,7 @@
 	required_living_playtime = 4
 	ui_name = "AntagInfoBrother"
 	hijack_speed = 0.5
+	antag_hud_name = "brother"
 	var/datum/team/brother_team/team
 	antag_moodlet = /datum/mood_event/focused
 
@@ -82,7 +83,6 @@
 	for(var/datum/mind/M in team.members) // Link the implants of all team members
 		var/obj/item/implant/bloodbrother/T = locate() in M.current.implants
 		I.link_implant(T)
-	SSticker.mode.update_brother_icons_added(owner)
 	owner.current.playsound_local(get_turf(owner.current), 'sound/ambience/antag/tatoralert.ogg', vol = 100, vary = FALSE, channel = CHANNEL_ANTAG_GREETING, pressure_affected = FALSE, use_reverb = FALSE)
 
 /datum/antagonist/brother/admin_add(datum/mind/new_owner,mob/admin)

@@ -176,7 +176,12 @@
 	var/lavaland_only = FALSE
 
 
-	hud_possible = list (DIAG_STAT_HUD, DIAG_BATT_HUD, DIAG_MECH_HUD, DIAG_TRACK_HUD)
+	hud_possible = list(
+		DIAG_STAT_HUD = 'icons/mob/huds/hud.dmi',
+		DIAG_BATT_HUD = 'icons/mob/huds/hud.dmi',
+		DIAG_MECH_HUD = 'icons/mob/huds/hud.dmi',
+		DIAG_TRACK_HUD = 'icons/mob/huds/hud.dmi'
+	)
 
 
 /datum/armor/sealed_mecha
@@ -220,7 +225,7 @@
 	GLOB.mechas_list += src //global mech list
 	prepare_huds()
 	for(var/datum/atom_hud/data/diagnostic/diag_hud in GLOB.huds)
-		diag_hud.add_to_hud(src)
+		diag_hud.add_atom_to_hud(src)
 	diag_hud_set_mechhealth()
 	diag_hud_set_mechcell()
 	diag_hud_set_mechstat()
@@ -287,7 +292,7 @@
 	if(!phasing || get_charge() <= phasing_energy_drain || throwing)
 		return ..()
 	if(phase_state)
-		flick(phase_state, src)
+		z_flick(phase_state, src)
 	var/turf/destination_turf = get_step(loc, movement_dir)
 	var/area/destination_area = destination_turf.loc
 	if(destination_area.teleport_restriction >= TELEPORT_ALLOW_NONE)

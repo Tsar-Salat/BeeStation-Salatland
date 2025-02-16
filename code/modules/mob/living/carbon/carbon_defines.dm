@@ -1,7 +1,13 @@
 /mob/living/carbon
 	gender = MALE
 	pressure_resistance = 15
-	hud_possible = list(HEALTH_HUD,STATUS_HUD,ANTAG_HUD,GLAND_HUD,NANITE_HUD,DIAG_NANITE_FULL_HUD)
+	hud_possible = list(
+		HEALTH_HUD = 'icons/mob/huds/hud.dmi',
+		STATUS_HUD = 'icons/mob/huds/hud.dmi',
+		GLAND_HUD = 'icons/mob/huds/hud.dmi',
+		NANITE_HUD = 'icons/mob/huds/hud.dmi',
+		DIAG_NANITE_FULL_HUD = 'icons/mob/huds/hud.dmi',
+	)
 	has_limbs = 1
 	held_items = list(null, null)
 	num_legs = 0 //Populated on init through list/bodyparts

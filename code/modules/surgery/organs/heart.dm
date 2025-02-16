@@ -36,10 +36,19 @@
 	else
 		icon_state = "[icon_base]-off"
 
+/obj/item/organ/heart/Insert(mob/living/carbon/reciever, special, drop_if_replaced)
+	. = ..()
+	if(!.)
+		return
+
+	owner.med_hud_set_health()
+
 /obj/item/organ/heart/Remove(mob/living/carbon/M, special = 0, pref_load = FALSE)
 	..()
 	if(!special)
 		addtimer(CALLBACK(src, PROC_REF(stop_if_unowned)), 120)
+
+	M.med_hud_set_health()
 
 /obj/item/organ/heart/proc/stop_if_unowned()
 	if(!owner)
@@ -55,11 +64,13 @@
 /obj/item/organ/heart/proc/Stop()
 	beating = 0
 	update_icon()
+	owner?.med_hud_set_health()
 	return 1
 
 /obj/item/organ/heart/proc/Restart()
 	beating = 1
 	update_icon()
+	owner?.med_hud_set_health()
 	return 1
 
 /obj/item/organ/heart/on_eat_from(eater, feeder)
@@ -142,7 +153,7 @@
 		else
 			last_pump = world.time //lets be extra fair *sigh*
 
-/obj/item/organ/heart/cursed/Insert(mob/living/carbon/M, special = 0, pref_load = FALSE)
+/obj/item/organ/heart/cursed/Insert(mob/living/carbon/M, special = 0, drop_if_replaced, pref_load = FALSE)
 	..()
 	if(owner)
 		to_chat(owner, span_userdanger("Your heart has been replaced with a cursed one, you have to pump this one manually otherwise you'll die!"))

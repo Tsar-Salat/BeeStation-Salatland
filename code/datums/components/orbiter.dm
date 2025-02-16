@@ -200,6 +200,10 @@
 	if(!istype(A) || !get_turf(A) || A == src)
 		return
 
+	if(istype(A, /atom/movable/openspace/mimic))
+		var/atom/movable/openspace/mimic/mimic = A
+		A = mimic.get_root()
+
 	return A.AddComponent(/datum/component/orbiter, src, radius, clockwise, rotation_speed, rotation_segments, pre_rotation)
 
 /atom/movable/proc/stop_orbit(datum/component/orbiter/orbits)

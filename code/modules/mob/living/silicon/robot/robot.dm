@@ -96,7 +96,12 @@
 	var/atom/movable/screen/robot/lamp/lampButton
 
 	var/sight_mode = 0
-	hud_possible = list(ANTAG_HUD, DIAG_STAT_HUD, DIAG_HUD, DIAG_BATT_HUD, DIAG_TRACK_HUD)
+	hud_possible = list(
+		DIAG_STAT_HUD = 'icons/mob/huds/hud.dmi',
+		DIAG_HUD = 'icons/mob/huds/hud.dmi',
+		DIAG_BATT_HUD = 'icons/mob/huds/hud.dmi',
+		DIAG_TRACK_HUD = 'icons/mob/huds/hud.dmi',
+	)
 
 	var/atom/movable/screen/robot/modpc/interfaceButton
 

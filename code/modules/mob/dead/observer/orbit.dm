@@ -83,8 +83,8 @@
 							serialized["antag"] = antag_team.get_team_name()
 						else
 							serialized["antag"] = A.get_antag_name()
-						if(mind.antag_hud_icon_state)
-							serialized["antag_icon"] = mind.antag_hud_icon_state
+						if(mind.antag_hud)
+							serialized["antag_icon"] = mind.antag_hud.get_antag_image()
 						antagonists += list(serialized)
 						break
 
@@ -119,5 +119,5 @@
 	// Scale it up
 	transform.scale(16, 16)
 
-	for (var/icon_state_name in icon_states('icons/mob/hud.dmi'))
-		insert_icon("job-icon-[icon_state_name]", uni_icon('icons/mob/hud.dmi', icon_state_name, transform=transform))
+	for (var/icon_state_name in icon_states('icons/mob/huds/hud.dmi'))
+		insert_icon("job-icon-[icon_state_name]", uni_icon('icons/mob/huds/hud.dmi', icon_state_name, transform=transform))

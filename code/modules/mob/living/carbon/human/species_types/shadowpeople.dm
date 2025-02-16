@@ -180,7 +180,7 @@
 	user.temporarilyRemoveItemFromInventory(src, TRUE)
 	Insert(user)
 
-/obj/item/organ/heart/nightmare/Insert(mob/living/carbon/M, special = 0, pref_load = FALSE)
+/obj/item/organ/heart/nightmare/Insert(mob/living/carbon/M, special = 0, drop_if_replaced, pref_load = FALSE)
 	..()
 	if(special != HEART_SPECIAL_SHADOWIFY)
 		blade = new/obj/item/light_eater

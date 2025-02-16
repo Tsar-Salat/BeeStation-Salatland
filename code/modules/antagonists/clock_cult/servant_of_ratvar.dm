@@ -7,6 +7,7 @@
 	roundend_category = "clock cultists"
 	antagpanel_category = "Clockcult"
 	// TODO: ui_name = "AntagInfoClockCult"
+	antag_hud_name = "clockcult"
 	antag_moodlet = /datum/mood_event/cult
 	banning_key = ROLE_SERVANT_OF_RATVAR
 	required_living_playtime = 4
@@ -64,23 +65,23 @@
 
 /datum/antagonist/servant_of_ratvar/apply_innate_effects(mob/living/M)
 	. = ..()
-	owner.current.faction |= FACTION_RATVAR
+	var/mob/living/current = owner.current
+	current.faction |= FACTION_RATVAR
 	transmit_spell = new()
-	transmit_spell.Grant(owner.current)
-	if(GLOB.gateway_opening && ishuman(owner.current))
-		var/mob/living/carbon/owner_mob = owner.current
+	transmit_spell.Grant(current)
+	if(GLOB.gateway_opening && ishuman(current))
+		var/mob/living/carbon/owner_mob = current
 		forbearance = mutable_appearance('icons/effects/genetics.dmi', "servitude", -MUTATIONS_LAYER)
 		owner_mob.add_overlay(forbearance)
-	owner.current.throw_alert("clockinfo", /atom/movable/screen/alert/clockwork/clocksense)
-	SSticker.mode.update_clockcult_icons_added(owner)
-	var/datum/language_holder/LH = owner.current.get_language_holder()
+	current.throw_alert("clockinfo", /atom/movable/screen/alert/clockwork/clocksense)
+	var/datum/language_holder/LH = current.get_language_holder()
 	LH.grant_language(/datum/language/ratvar, source = LANGUAGE_CULTIST)
+	add_team_hud(current)
 
 /datum/antagonist/servant_of_ratvar/remove_innate_effects(mob/living/M)
 	owner.current.faction -= FACTION_RATVAR
 	owner.current.clear_alert("clockinfo")
 	transmit_spell.Remove(transmit_spell.owner)
-	SSticker.mode.update_clockcult_icons_removed(owner)
 	if(forbearance && ishuman(owner.current))
 		var/mob/living/carbon/owner_mob = owner.current
 		owner_mob.remove_overlay(forbearance)

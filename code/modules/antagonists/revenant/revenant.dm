@@ -48,7 +48,6 @@
 	pass_flags = PASSTABLE | PASSMOB
 	speed = 1
 	unique_name = TRUE
-	hud_possible = list(ANTAG_HUD)
 	hud_type = /datum/hud/revenant
 
 	chat_color = "#9A5ACB"

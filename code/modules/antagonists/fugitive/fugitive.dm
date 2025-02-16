@@ -6,19 +6,12 @@
 	antagpanel_category = "Fugitives"
 	show_to_ghosts = TRUE
 	prevent_roundtype_conversion = FALSE
+	antag_hud_name = "fugitive"
 	count_against_dynamic_roll_chance = FALSE
 	var/datum/team/fugitive/fugitive_team
 	var/is_captured = FALSE
 	var/living_on_capture = TRUE
 	var/datum/fugitive_type/backstory
-
-/datum/antagonist/fugitive/apply_innate_effects(mob/living/mob_override)
-	var/mob/living/M = mob_override || owner.current
-	update_fugitive_icons_added(M)
-
-/datum/antagonist/fugitive/remove_innate_effects(mob/living/mob_override)
-	var/mob/living/M = mob_override || owner.current
-	update_fugitive_icons_removed(M)
 
 /datum/antagonist/fugitive/on_gain()
 	for(var/datum/objective/O in fugitive_team.objectives)
@@ -51,6 +44,9 @@
 
 /datum/antagonist/fugitive/get_team()
 	return fugitive_team
+
+/datum/antagonist/fugitive/apply_innate_effects(mob/living/mob_override)
+	add_team_hud(mob_override || owner.current)
 
 /datum/objective/escape_capture
 	name = "Escape Capture"
@@ -101,13 +97,3 @@
 	var/datum/objective/escape_capture/survive = new()
 	survive.team = src
 	objectives += survive
-
-/datum/antagonist/fugitive/proc/update_fugitive_icons_added(var/mob/living/carbon/human/fugitive)
-	var/datum/atom_hud/antag/fughud = GLOB.huds[ANTAG_HUD_FUGITIVE]
-	fughud.join_hud(fugitive)
-	set_antag_hud(fugitive, "fugitive")
-
-/datum/antagonist/fugitive/proc/update_fugitive_icons_removed(var/mob/living/carbon/human/fugitive)
-	var/datum/atom_hud/antag/fughud = GLOB.huds[ANTAG_HUD_FUGITIVE]
-	fughud.leave_hud(fugitive)
-	set_antag_hud(fugitive, null)

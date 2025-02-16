@@ -42,7 +42,7 @@
 	damage_deflection = AIRLOCK_DAMAGE_DEFLECTION_N
 	autoclose = TRUE
 	explosion_block = 1
-	hud_possible = list(DIAG_AIRLOCK_HUD)
+	hud_possible = list(DIAG_AIRLOCK_HUD = 'icons/mob/huds/hud.dmi')
 	flags_1 = PREVENT_CLICK_UNDER_1 & HTML_USE_INITAL_ICON_1
 	var/allow_repaint = TRUE //Set to FALSE if the airlock should not be allowed to be repainted.
 
@@ -137,7 +137,7 @@
 		damage_deflection = AIRLOCK_DAMAGE_DEFLECTION_R
 	prepare_huds()
 	for(var/datum/atom_hud/data/diagnostic/diag_hud in GLOB.huds)
-		diag_hud.add_to_hud(src)
+		diag_hud.add_atom_to_hud(src)
 	diag_hud_set_electrified()
 
 	rebuild_parts()
@@ -391,7 +391,7 @@
 		close_others.Cut()
 	qdel(note)
 	for(var/datum/atom_hud/data/diagnostic/diag_hud in GLOB.huds)
-		diag_hud.remove_from_hud(src)
+		diag_hud.remove_atom_from_hud(src)
 	return ..()
 
 /obj/machinery/door/airlock/handle_atom_del(atom/A)
@@ -532,15 +532,13 @@
 		return
 	switch(state)
 		if(0)
-			if(density)
-				state = AIRLOCK_CLOSED
-			else
-				state = AIRLOCK_OPEN
+			state = density ? AIRLOCK_CLOSED : AIRLOCK_OPEN
 			icon_state = ""
 		if(AIRLOCK_OPEN, AIRLOCK_CLOSED)
 			icon_state = ""
 		if(AIRLOCK_DENY, AIRLOCK_OPENING, AIRLOCK_CLOSING, AIRLOCK_EMAG)
 			icon_state = "nonexistenticonstate" //MADNESS
+	UPDATE_OO_IF_PRESENT
 	set_airlock_overlays(state)
 
 /obj/machinery/door/airlock/proc/set_side_overlays(obj/effect/overlay/airlock_part/base, show_lights = FALSE)

@@ -293,12 +293,12 @@
 	for(var/mob/M in contents) //only drop mobs
 		M.forceMove(get_turf(src))
 	set_occupant(null)
-	flick("pod-open-anim", src)
+	z_flick("pod-open-anim", src)
 	..()
 
 /obj/machinery/cryo_cell/close_machine(mob/living/carbon/user)
 	if((isnull(user) || istype(user)) && state_open && !panel_open)
-		flick("pod-close-anim", src)
+		z_flick("pod-close-anim", src)
 		..(user)
 		return occupant
 

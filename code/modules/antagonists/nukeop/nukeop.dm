@@ -5,6 +5,7 @@
 	banning_key = ROLE_OPERATIVE
 	required_living_playtime = 8
 	antag_moodlet = /datum/mood_event/focused
+	antag_hud_name = "synd"
 	show_to_ghosts = TRUE
 	hijack_speed = 2 //If you can't take out the station, take the shuttle instead.
 	ui_name = "AntagInfoNukeOp"
@@ -13,25 +14,11 @@
 	var/send_to_spawnpoint = TRUE //Should the user be moved to default spawnpoint.
 	var/nukeop_outfit = /datum/outfit/syndicate
 
-/datum/antagonist/nukeop/proc/update_synd_icons_added(mob/living/M)
-	var/datum/atom_hud/antag/opshud = GLOB.huds[ANTAG_HUD_OPS]
-	opshud.join_hud(M)
-	set_antag_hud(M, "synd")
-
-/datum/antagonist/nukeop/proc/update_synd_icons_removed(mob/living/M)
-	var/datum/atom_hud/antag/opshud = GLOB.huds[ANTAG_HUD_OPS]
-	opshud.leave_hud(M)
-	set_antag_hud(M, null)
-
 /datum/antagonist/nukeop/apply_innate_effects(mob/living/mob_override)
-	var/mob/living/M = mob_override || owner.current
-	update_synd_icons_added(M)
 	ADD_TRAIT(owner, TRAIT_DISK_VERIFIER, NUKEOP_TRAIT)
 	owner.remove_all_quirks()
 
 /datum/antagonist/nukeop/remove_innate_effects(mob/living/mob_override)
-	var/mob/living/M = mob_override || owner.current
-	update_synd_icons_removed(M)
 	REMOVE_TRAIT(owner, TRAIT_DISK_VERIFIER, NUKEOP_TRAIT)
 
 /datum/antagonist/nukeop/proc/equip_op()
@@ -70,6 +57,9 @@
 
 /datum/antagonist/nukeop/get_team()
 	return nuke_team
+
+/datum/antagonist/nukeop/apply_innate_effects(mob/living/mob_override)
+	add_team_hud(mob_override || owner.current)
 
 /datum/antagonist/nukeop/ui_static_data(mob/user)
 	. = ..()

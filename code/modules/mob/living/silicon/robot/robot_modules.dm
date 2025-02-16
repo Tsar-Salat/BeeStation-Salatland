@@ -196,7 +196,7 @@
 	var/mob/living/silicon/robot/R = loc
 	var/prev_lockcharge = R.lockcharge
 	sleep(1)
-	flick("[cyborg_base_icon]_transform", R)
+	z_flick("[cyborg_base_icon]_transform", R)
 	R.notransform = TRUE
 	R.SetLockdown(TRUE)
 	R.set_anchored(TRUE)

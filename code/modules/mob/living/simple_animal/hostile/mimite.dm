@@ -74,7 +74,7 @@
 	. = ..()
 	AddElement(/datum/element/point_of_interest)
 	GLOB.all_mimites += src
-	var/image/I = image(icon = 'icons/mob/hud.dmi', icon_state = "hudcultist", layer = DATA_HUD_PLANE, loc = src)
+	var/image/I = image(icon = 'icons/mob/huds/hud.dmi', icon_state = "hudcultist", layer = DATA_HUD_PLANE, loc = src)
 	I.alpha = 200
 	I.appearance_flags = RESET_ALPHA
 	add_alt_appearance(/datum/atom_hud/alternate_appearance/basic/mimites, "hudcultist", I)
@@ -131,8 +131,7 @@
 	mobchatspan = initial(mobchatspan)
 
 	mimite_time = world.time + MIMITE_COOLDOWN
-	med_hud_set_health()
-	med_hud_set_status() //we're an object honest
+	update_med_hud()
 	vision_range = 1
 	aggro_vision_range = 1
 	return
@@ -164,8 +163,7 @@
 	set_varspeed(initial(speed))
 
 	mimite_time = world.time + MIMITE_COOLDOWN
-	med_hud_set_health()
-	med_hud_set_status() //we are not an object
+	update_med_hud()
 
 
 /mob/living/simple_animal/hostile/mimite/Aggro() // automated only
@@ -341,8 +339,7 @@
 	icon_state = pick("crate","weapon_crate","secgear_crate","private_crate")
 	icon_living = icon_state
 	add_overlay("[icon_state]_door")
-	med_hud_set_health()
-	med_hud_set_status()
+	update_med_hud()
 
 //Ambush attack does extra knockdown as crate mimite
 /mob/living/simple_animal/hostile/mimite/crate/attack_hand(mob/living/carbon/human/M)

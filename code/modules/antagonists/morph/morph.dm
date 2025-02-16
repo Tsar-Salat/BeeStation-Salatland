@@ -100,15 +100,13 @@
 
 /mob/living/simple_animal/hostile/morph/med_hud_set_health()
 	if(morphed && !isliving(form))
-		var/image/holder = hud_list[HEALTH_HUD]
-		holder.icon_state = null
+		set_hud_image_vars(HEALTH_HUD, null)
 		return //we hide medical hud while morphed
 	..()
 
 /mob/living/simple_animal/hostile/morph/med_hud_set_status()
 	if(morphed && !isliving(form))
-		var/image/holder = hud_list[STATUS_HUD]
-		holder.icon_state = null
+		set_hud_image_vars(STATUS_HUD, null)
 		return //we hide medical hud while morphed
 	..()
 
@@ -162,8 +160,7 @@
 	set_varspeed(0)
 
 	morph_time = world.time + MORPH_COOLDOWN
-	med_hud_set_health()
-	med_hud_set_status() //we're an object honest
+	update_med_hud()
 	return
 
 /mob/living/simple_animal/hostile/morph/proc/restore(var/intentional = FALSE)
@@ -191,8 +188,7 @@
 	set_varspeed(initial(speed))
 
 	morph_time = world.time + MORPH_COOLDOWN
-	med_hud_set_health()
-	med_hud_set_status() //we are not an object
+	update_med_hud()
 
 /mob/living/simple_animal/hostile/morph/death(gibbed)
 	if(morphed)

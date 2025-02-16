@@ -124,13 +124,13 @@
 /obj/item/organ/ears/penguin
 	name = "penguin ears"
 	desc = "The source of a penguin's happy feet."
-	var/datum/component/waddle
+	var/datum/element/waddle
 
 /obj/item/organ/ears/penguin/Insert(mob/living/carbon/human/H, special = 0, drop_if_replaced = TRUE, pref_load = FALSE)
 	. = ..()
 	if(istype(H))
 		to_chat(H, span_notice("You suddenly feel like you've lost your balance."))
-		waddle = H.AddComponent(/datum/component/waddling)
+		H.AddElement(/datum/element/waddling)
 
 /obj/item/organ/ears/penguin/Remove(mob/living/carbon/human/H,  special = 0, pref_load = FALSE)
 	. = ..()

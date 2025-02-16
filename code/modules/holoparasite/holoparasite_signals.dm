@@ -35,5 +35,4 @@
 /mob/living/simple_animal/hostile/holoparasite/proc/on_summoner_update_health()
 	SIGNAL_HANDLER
 	update_health_hud()
-	med_hud_set_health()
-	med_hud_set_status()
+	update_med_hud()

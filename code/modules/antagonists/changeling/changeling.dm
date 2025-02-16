@@ -6,6 +6,7 @@
 	required_living_playtime = 4
 	ui_name = "AntagInfoChangeling"
 	antag_moodlet = /datum/mood_event/focused
+	antag_hud_name = "changeling"
 	hijack_speed = 0.5
 	var/you_are_greet = TRUE
 	var/team_mode = FALSE //Should assign team objectives ?
@@ -95,7 +96,6 @@
 	create_initial_profile()
 	if(give_objectives)
 		forge_objectives()
-	handle_clown_mutation(owner.current, "You have evolved beyond your clownish nature, allowing you to wield weapons without harming yourself.")
 	owner.current.get_language_holder().omnitongue = TRUE
 	owner.current.playsound_local(get_turf(owner.current), 'sound/ambience/antag/ling_aler.ogg', 100, FALSE, pressure_affected = FALSE, use_reverb = FALSE)
 	. = ..()
@@ -386,7 +386,7 @@
 	if(ishuman(C))
 		add_new_profile(C)
 
-/datum/antagonist/changeling/apply_innate_effects()
+/datum/antagonist/changeling/apply_innate_effects(mob/living/mob_override)
 	//Brains optional.
 	var/mob/living/carbon/C = owner.current
 	if(istype(C))
@@ -395,10 +395,12 @@
 			B.organ_flags &= ~ORGAN_VITAL
 			B.decoy_override = TRUE
 		RegisterSignals(C, list(COMSIG_MOB_MIDDLECLICKON, COMSIG_MOB_ALTCLICKON), PROC_REF(stingAtom))
-	update_changeling_icons_added()
+	var/mob/living/M = mob_override || owner.current
+	handle_clown_mutation(M, "You have evolved beyond your clownish nature, allowing you to wield weapons without harming yourself.")
 
-/datum/antagonist/changeling/remove_innate_effects()
-	update_changeling_icons_removed()
+/datum/antagonist/changeling/remove_innate_effects(mob/living/mob_override)
+	var/mob/living/M = mob_override || owner.current
+	handle_clown_mutation(M, removing = FALSE)
 	UnregisterSignal(owner.current, list(COMSIG_MOB_MIDDLECLICKON, COMSIG_MOB_ALTCLICKON))
 
 
@@ -504,16 +506,6 @@
 			objectives += identity_theft
 			log_objective(owner, identity_theft.explanation_text)
 		escape_objective_possible = FALSE
-
-/datum/antagonist/changeling/proc/update_changeling_icons_added()
-	var/datum/atom_hud/antag/hud = GLOB.huds[ANTAG_HUD_CHANGELING]
-	hud.join_hud(owner.current)
-	set_antag_hud(owner.current, "changeling")
-
-/datum/antagonist/changeling/proc/update_changeling_icons_removed()
-	var/datum/atom_hud/antag/hud = GLOB.huds[ANTAG_HUD_CHANGELING]
-	hud.leave_hud(owner.current)
-	set_antag_hud(owner.current, null)
 
 /datum/antagonist/changeling/admin_add(datum/mind/new_owner,mob/admin)
 	. = ..()
