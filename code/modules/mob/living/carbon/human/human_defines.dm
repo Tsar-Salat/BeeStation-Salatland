@@ -9,7 +9,6 @@
 		IMPTRACK_HUD = 'icons/mob/huds/hud.dmi',
 		NANITE_HUD = 'icons/mob/huds/hud.dmi',
 		DIAG_NANITE_FULL_HUD = 'icons/mob/huds/hud.dmi',
-		ANTAG_HUD = 'icons/mob/huds/hud.dmi',
 		GLAND_HUD = 'icons/mob/huds/hud.dmi',
 	)
 	hud_type = /datum/hud/human

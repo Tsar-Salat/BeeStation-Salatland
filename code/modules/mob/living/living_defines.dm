@@ -5,7 +5,6 @@
 	hud_possible = list(
 		HEALTH_HUD = 'icons/mob/huds/hud.dmi',
 		STATUS_HUD = 'icons/mob/huds/hud.dmi',
-		ANTAG_HUD = 'icons/mob/huds/hud.dmi',
 		NANITE_HUD = 'icons/mob/huds/hud.dmi',
 		DIAG_NANITE_FULL_HUD = 'icons/mob/huds/hud.dmi',
 	)

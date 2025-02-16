@@ -115,7 +115,7 @@ GLOBAL_LIST_INIT(huds, list(
 		var/turf/their_turf = get_turf(new_viewer)
 		if(!their_turf)
 			return
-		hud_users[their_turf.z][new_viewer] = TRUE
+		hud_users[their_turf.get_virtual_z_level()][new_viewer] = TRUE
 
 		if(next_time_allowed[new_viewer] > world.time)
 			if(!queued_to_see[new_viewer])
@@ -124,7 +124,7 @@ GLOBAL_LIST_INIT(huds, list(
 
 		else
 			next_time_allowed[new_viewer] = world.time + ADD_HUD_TO_COOLDOWN
-			for(var/atom/hud_atom_to_add as anything in get_hud_atoms_for_z_level(their_turf.z))
+			for(var/atom/hud_atom_to_add as anything in get_hud_atoms_for_z_level(their_turf.get_virtual_z_level()))
 				add_atom_to_single_mob_hud(new_viewer, hud_atom_to_add)
 	else
 		hud_users_all_z_levels[new_viewer] += 1 //increment the number of times this hud has been added to this hud user
@@ -150,12 +150,12 @@ GLOBAL_LIST_INIT(huds, list(
 
 		var/turf/their_turf = get_turf(former_viewer)
 		if(their_turf)
-			hud_users[their_turf.z] -= former_viewer
+			hud_users[their_turf.get_virtual_z_level()] -= former_viewer
 
 		if(queued_to_see[former_viewer])
 			queued_to_see -= former_viewer
 		else if (their_turf)
-			for(var/atom/hud_atom as anything in get_hud_atoms_for_z_level(their_turf.z))
+			for(var/atom/hud_atom as anything in get_hud_atoms_for_z_level(their_turf.get_virtual_z_level()))
 				remove_atom_from_single_hud(former_viewer, hud_atom)
 
 /// add new_hud_atom to this hud
@@ -174,9 +174,9 @@ GLOBAL_LIST_INIT(huds, list(
 	if(!atom_turf)
 		return TRUE
 
-	hud_atoms[atom_turf.z] |= new_hud_atom
+	hud_atoms[atom_turf.get_virtual_z_level()] |= new_hud_atom
 
-	for(var/mob/mob_to_show as anything in get_hud_users_for_z_level(atom_turf.z))
+	for(var/mob/mob_to_show as anything in get_hud_users_for_z_level(atom_turf.get_virtual_z_level()))
 		if(!queued_to_see[mob_to_show])
 			add_atom_to_single_mob_hud(mob_to_show, new_hud_atom)
 	return TRUE
@@ -202,7 +202,7 @@ GLOBAL_LIST_INIT(huds, list(
 	if(!atom_turf)
 		return TRUE
 
-	hud_atoms[atom_turf.z] -= hud_atom_to_remove
+	hud_atoms[atom_turf.get_virtual_z_level()] -= hud_atom_to_remove
 
 	if(ismovable(hud_atom_to_remove) && !istype(hud_atom_to_remove, /atom/movable/openspace/mimic))
 		var/atom/movable/movable_to_remove = hud_atom_to_remove
@@ -223,7 +223,7 @@ GLOBAL_LIST_INIT(huds, list(
 	if(!atom_turf)
 		return FALSE
 
-	for(var/mob/hud_user as anything in get_hud_users_for_z_level(atom_turf.z))
+	for(var/mob/hud_user as anything in get_hud_users_for_z_level(atom_turf.get_virtual_z_level()))
 		if(!hud_user.client)
 			continue
 		if(!hud_exceptions[hud_user] || !(hud_atom in hud_exceptions[hud_user]))
@@ -245,7 +245,7 @@ GLOBAL_LIST_INIT(huds, list(
 	if(!atom_turf)
 		return FALSE
 
-	for(var/mob/hud_user as anything in get_hud_users_for_z_level(atom_turf.z))
+	for(var/mob/hud_user as anything in get_hud_users_for_z_level(atom_turf.get_virtual_z_level()))
 		if(!hud_user.client)
 			continue
 		hud_user.client.images -= hud_atom.active_hud_list[hud_category_to_remove]//by this point it shouldnt be in active_hud_list
@@ -260,26 +260,26 @@ GLOBAL_LIST_INIT(huds, list(
 	SIGNAL_HANDLER
 	if(old_turf)
 		if(hud_users_all_z_levels[moved_atom])
-			hud_users[old_turf.z] -= moved_atom
+			hud_users[old_turf.get_virtual_z_level()] -= moved_atom
 
-			remove_all_atoms_from_single_hud(moved_atom, get_hud_atoms_for_z_level(old_turf.z))
+			remove_all_atoms_from_single_hud(moved_atom, get_hud_atoms_for_z_level(old_turf.get_virtual_z_level()))
 
 		if(hud_atoms_all_z_levels[moved_atom])
-			hud_atoms[old_turf.z] -= moved_atom
+			hud_atoms[old_turf.get_virtual_z_level()] -= moved_atom
 
 			//this wont include moved_atom since its removed
-			remove_atom_from_all_huds(get_hud_users_for_z_level(old_turf.z), moved_atom)
+			remove_atom_from_all_huds(get_hud_users_for_z_level(old_turf.get_virtual_z_level()), moved_atom)
 
 	if(new_turf)
 		if(hud_users_all_z_levels[moved_atom])
-			hud_users[new_turf.z][moved_atom] = TRUE //hud users is associative, hud atoms isnt
+			hud_users[new_turf.get_virtual_z_level()][moved_atom] = TRUE //hud users is associative, hud atoms isnt
 
-			add_all_atoms_to_single_mob_hud(moved_atom, get_hud_atoms_for_z_level(new_turf.z))
+			add_all_atoms_to_single_mob_hud(moved_atom, get_hud_atoms_for_z_level(new_turf.get_virtual_z_level()))
 
 		if(hud_atoms_all_z_levels[moved_atom])
-			hud_atoms[new_turf.z] |= moved_atom
+			hud_atoms[new_turf.get_virtual_z_level()] |= moved_atom
 
-			add_atom_to_all_mob_huds(get_hud_users_for_z_level(new_turf.z), moved_atom)
+			add_atom_to_all_mob_huds(get_hud_users_for_z_level(new_turf.get_virtual_z_level()), moved_atom)
 
 /// add just hud_atom's hud images (that are part of this atom_hud) to requesting_mob's client.images list
 /datum/atom_hud/proc/add_atom_to_single_mob_hud(mob/requesting_mob, atom/hud_atom) //unsafe, no sanity apart from client
@@ -388,7 +388,7 @@ GLOBAL_LIST_INIT(huds, list(
 	if(!hud_atom_turf)
 		return
 
-	if(hud_users[hud_atom_turf.z][hud_user])
+	if(hud_users[hud_atom_turf.get_virtual_z_level()][hud_user])
 		add_atom_to_single_mob_hud(hud_user, hidden_atom)
 
 /datum/atom_hud/proc/show_hud_images_after_cooldown(mob/queued_hud_user)
@@ -402,7 +402,7 @@ GLOBAL_LIST_INIT(huds, list(
 	if(!user_turf)
 		return
 
-	for(var/atom/hud_atom_to_show as anything in get_hud_atoms_for_z_level(user_turf.z))
+	for(var/atom/hud_atom_to_show as anything in get_hud_atoms_for_z_level(user_turf.get_virtual_z_level()))
 		add_atom_to_single_mob_hud(queued_hud_user, hud_atom_to_show)
 
 //MOB PROCS
@@ -413,7 +413,7 @@ GLOBAL_LIST_INIT(huds, list(
 
 	for(var/datum/atom_hud/hud in GLOB.all_huds)
 		if(hud?.hud_users_all_z_levels[src])
-			for(var/atom/hud_atom as anything in hud.get_hud_atoms_for_z_level(our_turf.z))
+			for(var/atom/hud_atom as anything in hud.get_hud_atoms_for_z_level(our_turf.get_virtual_z_level()))
 				hud.add_atom_to_single_mob_hud(src, hud_atom)
 
 /mob/dead/new_player/reload_huds()
