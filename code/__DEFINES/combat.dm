@@ -297,6 +297,13 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 /// Proceed with the attack chain, but don't call the normal methods.
 #define SECONDARY_ATTACK_CONTINUE_CHAIN 3
 
+/// Flag for when /afterattack potentially acts on an item.
+/// Used for the swap hands/drop tutorials to know when you might just be trying to do something normally.
+/// Does not necessarily imply success, or even that it did hit an item, just intent.
+// This is intentionally not (1 << 0) because some stuff currently erroneously returns TRUE/FALSE for afterattack.
+// Doesn't need to be set if proximity flag is FALSE.
+#define AFTERATTACK_PROCESSED_ITEM (1 << 1)
+
 /// Martial arts attack requested but is not available, allow a check for a regular attack.
 #define MARTIAL_ATTACK_INVALID -1
 

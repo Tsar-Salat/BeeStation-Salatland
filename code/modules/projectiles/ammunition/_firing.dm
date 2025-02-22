@@ -8,7 +8,7 @@
 				spread = round((rand() - 0.5) * distro) * spread_mult
 			else //Smart spread
 				spread = round(1 - 0.5) * distro * spread_mult
-		if(!throw_proj(target, targloc, user, params, spread))
+		if(!throw_proj(target, targloc, user, params, spread, fired_from))
 			return FALSE
 	else
 		if(isnull(BB))
@@ -19,10 +19,18 @@
 		user.changeNext_move(click_cooldown_override)
 	else
 		user.changeNext_move(CLICK_CD_RANGE)
-	if(exists)
+	if(!tk_firing(user, fired_from) && exists)
 		user.newtonian_move(get_dir(target, user))
+	else if(ismovable(fired_from))
+		var/atom/movable/firer = fired_from
+		if(!firer.newtonian_move(get_dir(target, fired_from), instant = TRUE))
+			var/throwtarget = get_step(fired_from, get_dir(target, fired_from))
+			firer.safe_throw_at(throwtarget, 1, 2)
 	update_icon()
 	return TRUE
+
+/obj/item/ammo_casing/proc/tk_firing(mob/living/user, atom/fired_from)
+	return !user.contains(fired_from)
 
 /obj/item/ammo_casing/proc/ready_proj(atom/target, mob/living/user, quiet, zone_override = "", atom/fired_from)
 	if (!BB)
@@ -36,19 +44,22 @@
 		BB.def_zone = user.get_combat_bodyzone(target)
 	BB.suppressed = quiet
 
+	if(tk_firing(user, fired_from))
+		BB.ignore_source_check = TRUE
+
 	if(reagents && BB.reagents)
 		reagents.trans_to(BB, reagents.total_volume, transfered_by = user) //For chemical darts/bullets
 		qdel(reagents)
 
-/obj/item/ammo_casing/proc/throw_proj(atom/target, turf/targloc, mob/living/user, params, spread)
-	var/turf/current_location = get_turf(user)
+/obj/item/ammo_casing/proc/throw_proj(atom/target, turf/targloc, mob/living/user, params, spread, atom/fired_from)
+	var/turf/current_location = get_turf(fired_from)
 	if (!istype(targloc) || !istype(current_location) || !BB)
 		return FALSE
 
 	var/firing_dir
 	if(BB.firer)
-		firing_dir = BB.firer.dir
-	if(!BB.suppressed && firing_effect_type)
+		firing_dir = get_dir(fired_from, target)
+	if(!BB.suppressed && firing_effect_type && !tk_firing(user, fired_from))
 		new firing_effect_type(get_turf(src), firing_dir)
 
 	var/direct_target
@@ -57,7 +68,7 @@
 			direct_target = target
 	if(!direct_target)
 		var/modifiers = params2list(params)
-		BB.preparePixelProjectile(target, user, modifiers, spread)
+		BB.preparePixelProjectile(target, fired_from, modifiers, spread)
 	BB.fire(null, direct_target)
 	BB = null
 	return TRUE

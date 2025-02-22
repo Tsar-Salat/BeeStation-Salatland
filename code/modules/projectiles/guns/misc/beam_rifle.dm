@@ -380,7 +380,7 @@
 	HS_BB.do_pierce = do_pierce
 	HS_BB.gun = host
 
-/obj/item/ammo_casing/energy/beam_rifle/throw_proj(atom/target, turf/targloc, mob/living/user, params, spread)
+/obj/item/ammo_casing/energy/beam_rifle/throw_proj(atom/target, turf/targloc, mob/living/user, params, spread, atom/fired_from)
 	var/turf/current_location = get_turf(user)
 	if(!istype(current_location) || !BB)
 		return FALSE

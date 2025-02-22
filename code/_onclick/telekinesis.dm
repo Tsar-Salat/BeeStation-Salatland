@@ -67,6 +67,13 @@
 	if(attack_self(user))
 		return COMPONENT_CANCEL_ATTACK_CHAIN
 
+/atom/proc/attack_self_secondary_tk(mob/user)
+	return
+
+
+/obj/item/attack_self_secondary_tk(mob/user)
+	if(attack_self_secondary(user))
+		return COMPONENT_CANCEL_ATTACK_CHAIN
 
 /*
 	TK Grab Item (the workhorse of old TK)
@@ -84,19 +91,19 @@
 	item_flags = NOBLUDGEON | ABSTRACT | DROPDEL | ISWEAPON
 	//item_state = null
 	w_class = WEIGHT_CLASS_GIGANTIC
-
 	plane = ABOVE_HUD_PLANE
 
-	var/atom/movable/focus = null
-	var/mob/living/carbon/tk_user = null
+	var/atom/movable/focus
+	var/mob/living/carbon/tk_user
 
 /obj/item/tk_grab/Initialize(mapload)
 	. = ..()
 	START_PROCESSING(SSfastprocess, src)
 
 /obj/item/tk_grab/Destroy()
-	focus = null
 	STOP_PROCESSING(SSfastprocess, src)
+	focus = null
+	tk_user = null
 	return ..()
 
 /obj/item/tk_grab/process()
@@ -111,6 +118,7 @@
 
 //stops TK grabs being equipped anywhere but into hands
 /obj/item/tk_grab/equipped(mob/user, slot)
+	. = ..()
 	if(slot == ITEM_SLOT_HANDS)
 		return
 	qdel(src)
@@ -130,7 +138,7 @@
 		return
 	if(focus.attack_self_tk(user) & COMPONENT_CANCEL_ATTACK_CHAIN)
 		. = TRUE
-	update_icon()
+	update_appearance()
 
 /obj/item/tk_grab/afterattack(atom/target, mob/living/carbon/user, proximity, params)//TODO: go over this
 	. = ..()
@@ -150,7 +158,7 @@
 	if(target == focus)
 		if(target.attack_self_tk(user) & COMPONENT_CANCEL_ATTACK_CHAIN)
 			. = TRUE
-		update_icon()
+		update_appearance()
 		return
 
 	if(focus.buckled_mobs)
@@ -161,18 +169,77 @@
 		to_chat(user, span_notice("This object is too heavy to move with something inside of it!"))
 		return
 
-	if(!isturf(target) && isitem(focus) && target.Adjacent(focus))
-		apply_focus_overlay()
+	if(isitem(focus))
 		var/obj/item/I = focus
-		. = I.melee_attack_chain(tk_user, target, params) //isn't copying the attack chain fun. we should do it more often.
-		if(check_if_focusable(focus))
-			focus.do_attack_animation(target, null, focus)
-	else
-		. = TRUE
 		apply_focus_overlay()
-		focus.throw_at(target, 10, 1,user)
+		if(target.Adjacent(focus))
+			. = I.melee_attack_chain(tk_user, target, params) //isn't copying the attack chain fun. we should do it more often.
+			if(check_if_focusable(focus))
+				focus.do_attack_animation(target, null, focus)
+		else if(isgun(I)) //I've only tested this with guns, and it took some doing to make it work
+			. = I.afterattack(target, tk_user, 0, params)
+
 	user.changeNext_move(CLICK_CD_MELEE)
-	update_icon()
+	update_appearance()
+
+/obj/item/tk_grab/afterattack_secondary(atom/target, mob/user, proximity_flag, click_parameters)
+	. = ..()
+	if(. == SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN)
+		return
+
+	if(!target || !user)
+		return
+
+	if(!focus)
+		focus_object(target)
+		return TRUE
+
+	if(!check_if_focusable(focus))
+		return
+
+	if(target == focus)
+		if(target.attack_self_secondary_tk(user) & COMPONENT_CANCEL_ATTACK_CHAIN)
+			. = TRUE
+		update_appearance()
+		return
+
+	if(isitem(focus))
+		var/obj/item/I = focus
+		apply_focus_overlay()
+		if(target.Adjacent(focus))
+			. = I.melee_attack_chain(tk_user, target, click_parameters) //isn't copying the attack chain fun. we should do it more often.
+			if(check_if_focusable(focus))
+				focus.do_attack_animation(target, null, focus)
+		else if(isgun(I)) //I've only tested this with guns, and it took some doing to make it work
+			. = I.afterattack_secondary(target, tk_user, 0, click_parameters)
+
+	user.changeNext_move(CLICK_CD_MELEE)
+	update_appearance()
+
+/obj/item/tk_grab/on_thrown(mob/living/carbon/user, atom/target)
+	if(!target || !user)
+		return
+
+	if(!focus)
+		return
+
+	if(!check_if_focusable(focus))
+		return
+
+	if(target == focus)
+		if(target.attack_self_tk(user) & COMPONENT_CANCEL_ATTACK_CHAIN)
+			return
+		update_appearance()
+		return
+
+	apply_focus_overlay()
+	//Only items can be thrown 10 tiles everything else only 1 tile
+	focus.throw_at(target, focus.tk_throw_range, 1,user)
+	var/turf/start_turf = get_turf(focus)
+	var/turf/end_turf = get_turf(target)
+	user.log_message("has thrown [focus] from [AREACOORD(start_turf)] towards [AREACOORD(end_turf)] using Telekinesis", LOG_ATTACK)
+	user.changeNext_move(CLICK_CD_MELEE)
+	update_appearance()
 
 
 /proc/tkMaxRangeCheck(mob/user, atom/target)
@@ -189,7 +256,7 @@
 	if(!check_if_focusable(target))
 		return
 	focus = target
-	update_icon()
+	update_appearance()
 	apply_focus_overlay()
 	return TRUE
 
@@ -207,16 +274,15 @@
 		return
 	new /obj/effect/temp_visual/telekinesis(get_turf(focus))
 
-/obj/item/tk_grab/update_icon()
-	cut_overlays()
-	if(focus)
-		var/old_layer = focus.layer
-		var/old_plane = focus.plane
-		focus.layer = layer+0.01
-		focus.plane = ABOVE_HUD_PLANE
-		add_overlay(focus) //this is kind of ick, but it's better than using icon()
-		focus.layer = old_layer
-		focus.plane = old_plane
+/obj/item/tk_grab/update_overlays()
+	. = ..()
+	if(!focus)
+		return
+
+	var/mutable_appearance/focus_overlay = new(focus)
+	focus_overlay.layer = layer + 0.01
+	focus_overlay.plane = ABOVE_HUD_PLANE
+	. += focus_overlay
 
 /obj/item/tk_grab/suicide_act(mob/living/user)
 	user.visible_message(span_suicide("[user] is using [user.p_their()] telekinesis to choke [user.p_them()]self! It looks like [user.p_theyre()] trying to commit suicide!"))

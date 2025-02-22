@@ -13,6 +13,8 @@
 	var/datum/thrownthing/throwing = null
 	var/throw_speed = 2 //How many tiles to move per ds when being thrown. Float values are fully supported
 	var/throw_range = 7
+	///Max range this atom can be thrown via telekinesis
+	var/tk_throw_range = 10
 	var/mob/pulledby = null
 	/// What language holder type to init as
 	var/initial_language_holder = /datum/language_holder
