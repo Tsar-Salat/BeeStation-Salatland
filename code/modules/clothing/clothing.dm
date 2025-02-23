@@ -1,9 +1,3 @@
-#define SENSORS_OFF 0
-#define SENSORS_BINARY 1
-#define SENSORS_VITALS 2
-#define SENSORS_TRACKING 3
-#define SENSOR_CHANGE_DELAY 1.5 SECONDS
-
 #define MOTH_EATING_CLOTHING_DAMAGE 15
 
 /obj/item/clothing
@@ -527,11 +521,5 @@ BLIND     // can't see anything
 	if(!lavaland_equipment_pressure_check(T))
 		. *= high_pressure_multiplier
 */
-
-#undef SENSORS_OFF
-#undef SENSORS_BINARY
-#undef SENSORS_VITALS
-#undef SENSORS_TRACKING
-#undef SENSOR_CHANGE_DELAY
 
 #undef MOTH_EATING_CLOTHING_DAMAGE

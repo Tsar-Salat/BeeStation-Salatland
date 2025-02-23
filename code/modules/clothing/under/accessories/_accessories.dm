@@ -120,7 +120,7 @@
 		pixel_y = rand(4, -4)
 
 	layer = initial(layer)
-	SET_PLANE_IMPLICIT(src, initial(plane))
+	plane = initial(plane)
 	return TRUE
 
 /// Signal proc for [COMSIG_ITEM_EQUIPPED] on the uniform we're pinned to
@@ -169,7 +169,7 @@
 	. = ..()
 	if(.)
 		return
-	if(user.can_perform_action(src, NEED_DEXTERITY))
+	if(!user.canUseTopic(src, BE_CLOSE, NO_DEXTERITY))
 		above_suit = !above_suit
 		balloon_alert(user, "wearing [above_suit ? "above" : "below"] suits")
 		return TRUE
@@ -179,9 +179,11 @@
 	. += "It can be attached to a uniform."
 	. += "It can be worn above or below your suit. Right-click to toggle."
 
+/*
 /obj/item/clothing/accessory/add_context(atom/source, list/context, obj/item/held_item, mob/user)
 	if(!isnull(held_item))
 		return NONE
 
 	context[SCREENTIP_CONTEXT_RMB] = "Wear [above_suit ? "below" : "above"] suit"
 	return CONTEXTUAL_SCREENTIP_SET
+*/

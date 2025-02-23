@@ -1,55 +1,53 @@
-//////////
-//Medals//
-//////////
-
 /obj/item/clothing/accessory/medal
 	name = "bronze medal"
 	desc = "A bronze medal."
 	icon_state = "bronze"
 	custom_materials = list(/datum/material/iron=1000)
 	resistance_flags = FIRE_PROOF
-	var/medaltype = "medal" //Sprite used for medalbox
+	/// Sprite used for medalbox
+	var/medaltype = "medal"
+	/// Has this been use for a commendation?
 	var/commended = FALSE
 
-//Pinning medals on people
-/obj/item/clothing/accessory/medal/attack(mob/living/carbon/human/M, mob/living/user)
-	if(ishuman(M) && (user.a_intent == INTENT_HELP))
+// If someone adds SHOULD_NOT_SLEEP anywhere up the chain, this will need to be reworked
+/obj/item/clothing/accessory/medal/attach(obj/item/clothing/under/attach_to, mob/living/attacher)
+	if(isnull(attacher))
+		// Do normal attach
+		return ..()
 
-		if(M.wear_suit)
-			if((M.wear_suit.flags_inv & HIDEJUMPSUIT)) //Check if the jumpsuit is covered
-				to_chat(user, "<span class='warning'>Medals can only be pinned on jumpsuits.</span>")
-				return
+	var/mob/living/distinguished = attach_to.loc
+	if(!istype(distinguished) || distinguished == attacher)
+		// Do normal attach
+		return ..()
 
-		if(M.w_uniform)
-			var/obj/item/clothing/under/U = M.w_uniform
-			var/delay = 20
-			if(user == M)
-				delay = 0
-			else
-				user.visible_message("[user] is trying to pin [src] on [M]'s chest.", \
-									"<span class='notice'>You try to pin [src] on [M]'s chest.</span>")
-			var/input
-			if(!commended && user != M)
-				input = stripped_input(user,"Please input a reason for this commendation, it will be recorded by Nanotrasen.", ,"", 140)
-			if(do_after(user, delay, target = M))
-				if(U.attach_accessory(src, user, 0)) //Attach it, do not notify the user of the attachment
-					if(user == M)
-						to_chat(user, "<span class='notice'>You attach [src] to [U].</span>")
-					else
-						user.visible_message("[user] pins \the [src] on [M]'s chest.", \
-											"<span class='notice'>You pin \the [src] on [M]'s chest.</span>")
-						if(input)
-							SSblackbox.record_feedback("associative", "commendation", 1, list("commender" = "[user.real_name]", "commendee" = "[M.real_name]", "medal" = "[src]", "reason" = input))
-							GLOB.commendations += "[user.real_name] awarded <b>[M.real_name]</b> the <span class='medaltext'>[name]</span>! \n- [input]"
-							commended = TRUE
-							desc += "<br>The inscription reads: [input] - [user.real_name]"
-							log_game("<b>[key_name(M)]</b> was given the following commendation by <b>[key_name(user)]</b>: [input]")
-							message_admins("<b>[key_name_admin(M)]</b> was given the following commendation by <b>[key_name_admin(user)]</b>: [input]")
+	// Do a do_after before we attach, and allow us to include a commendation message.
+	attacher.visible_message(
+		span_notice("[attacher] is trying to pin [src] on [distinguished]'s chest."),
+		span_notice("You try to pin [src] on [distinguished]'s chest."),
+	)
 
-		else
-			to_chat(user, "<span class='warning'>Medals can only be pinned on jumpsuits!</span>")
-	else
-		..()
+	var/input
+	if(!commended)
+		input = tgui_input_text(attacher, "Reason for this commendation? It will be recorded by Nanotrasen.", "Commendation", max_length = 140)
+
+	if(!do_after(attacher, 2 SECONDS, distinguished))
+		return FALSE
+
+	attacher.visible_message(
+		span_notice("[attacher] pins [src] on [distinguished]'s chest."),
+		span_notice("You pin [src] on [distinguished]'s chest."),
+	)
+	if(!input)
+		return FALSE
+
+	commended = TRUE
+	SSblackbox.record_feedback("associative", "commendation", 1, list("commender" = "[attacher.real_name]", "commendee" = "[distinguished.real_name]", "medal" = "[src]", "reason" = input))
+	GLOB.commendations += "[attacher.real_name] awarded <b>[distinguished.real_name]</b> the <span class='medaltext'>[name]</span>! \n- [input]"
+	desc += "<br>The inscription reads: [input] - [attacher.real_name]"
+	distinguished.log_message("was given the following commendation by <b>[key_name(attacher)]</b>: [input]", LOG_GAME, color = "green")
+	message_admins("<b>[key_name_admin(distinguished)]</b> was given the following commendation by <b>[key_name_admin(attacher)]</b>: [input]")
+	//add_memory_in_range(distinguished, 7, /datum/memory/received_medal, protagonist = distinguished, deuteragonist = attacher, medal_type = src, medal_text = input)
+	return ..()
 
 /obj/item/clothing/accessory/medal/conduct
 	name = "distinguished conduct medal"
@@ -85,8 +83,12 @@
 	desc = "An award for distinguished combat and sacrifice in defence of Nanotrasen's commercial interests. Often awarded to security staff."
 
 /obj/item/clothing/accessory/medal/silver/excellence
-	name = "the head of personnel award for outstanding achievement in the field of excellence"
+	name = "\proper the head of personnel award for outstanding achievement in the field of excellence"
 	desc = "Nanotrasen's dictionary defines excellence as \"the quality or condition of being excellent\". This is awarded to those rare crewmembers who fit that definition."
+
+/obj/item/clothing/accessory/medal/silver/bureaucracy
+	name = "\improper Excellence in Bureaucracy Medal"
+	desc = "Awarded for exemplary managerial services rendered while under contract with Nanotrasen."
 
 /obj/item/clothing/accessory/medal/gold
 	name = "gold medal"
@@ -94,6 +96,16 @@
 	icon_state = "gold"
 	medaltype = "medal-gold"
 	custom_materials = list(/datum/material/gold=1000)
+
+/obj/item/clothing/accessory/medal/med_medal
+	name = "exemplary performance medal"
+	desc = "A medal awarded to those who have shown distinguished conduct, performance, and initiative within the medical department."
+	icon_state = "med_medal"
+
+/obj/item/clothing/accessory/medal/med_medal2
+	name = "excellence in medicine medal"
+	desc = "A medal awarded to those who have shown legendary performance, competence, and initiative beyond all expectations within the medical department."
+	icon_state = "med_medal2"
 
 /obj/item/clothing/accessory/medal/gold/captain
 	name = "medal of captaincy"
@@ -110,27 +122,20 @@
 	desc = "An eccentric medal made of plasma."
 	icon_state = "plasma"
 	medaltype = "medal-plasma"
-	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = -10, ACID = 0, STAMINA = 0, BLEED = 0) //It's made of plasma. Of course it's flammable.
 	custom_materials = list(/datum/material/plasma=1000)
 
-/obj/item/clothing/accessory/medal/plasma/temperature_expose(datum/gas_mixture/air, exposed_temperature, exposed_volume)
-	if(exposed_temperature > 300)
-		atmos_spawn_air("plasma=20;TEMP=[exposed_temperature]")
-		visible_message("<span class='danger'> \The [src] bursts into flame!</span>","<span class='userdanger'>Your [src] bursts into flame!</span>")
-		qdel(src)
+/obj/item/clothing/accessory/medal/plasma/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/atmos_sensitive, mapload)
+
+/obj/item/clothing/accessory/medal/plasma/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
+	return exposed_temperature > 300
+
+/obj/item/clothing/accessory/medal/plasma/atmos_expose(datum/gas_mixture/air, exposed_temperature)
+	atmos_spawn_air("[GAS_PLASMA]=20;[TURF_TEMPERATURE(exposed_temperature)]")
+	visible_message(span_danger("\The [src] bursts into flame!"), span_userdanger("Your [src] bursts into flame!"))
+	qdel(src)
 
 /obj/item/clothing/accessory/medal/plasma/nobel_science
 	name = "nobel sciences award"
 	desc = "A plasma medal which represents significant contributions to the field of science or engineering."
-
-/obj/item/clothing/accessory/medal/med_medal
-	name = "exemplary performance medal"
-	desc = "A medal awarded to those who have shown distinguished conduct, performance, and initiative within the medical department."
-	icon_state = "med_medal"
-	above_suit = TRUE
-
-/obj/item/clothing/accessory/medal/med_medal2
-	name = "excellence in medicine medal"
-	desc = "A medal awarded to those who have shown legendary performance, competence, and initiative beyond all expectations within the medical department."
-	icon_state = "med_medal2"
-	above_suit = TRUE

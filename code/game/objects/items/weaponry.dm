@@ -895,8 +895,8 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 			transform = transform.Scale(2)
 			color = COLOR_GREEN
 		user.do_attack_animation(the_table)
+		SEND_SIGNAL(user, COMSIG_LIVING_SLAM_TABLE, the_table)
 		//Uncomment if we ever port table slam signals
-		//SEND_SIGNAL(user, COMSIG_LIVING_SLAM_TABLE, the_table)
 		//SEND_SIGNAL(the_table, COMSIG_TABLE_SLAMMED, user)
 		playsound(get_turf(the_table), 'sound/effects/tableslam.ogg', 110, TRUE)
 		user.visible_message("<b>[span_danger("[user] slams [user.p_their()] fist down on [the_table]!")]</b>", "<b>[span_danger("You slam your fist down on [the_table]!")]</b>")

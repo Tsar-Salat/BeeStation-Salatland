@@ -9,6 +9,7 @@
 #define SENSOR_VITALS 2
 /// Suit sensor displays the mob damage values and exact location
 #define SENSOR_COORDS 3
+#define SENSOR_CHANGE_DELAY 1.5 SECONDS
 
 //suit sensors: has_sensor defines
 /// Suit sensor has been EMP'd and cannot display any information (can be fixed)
