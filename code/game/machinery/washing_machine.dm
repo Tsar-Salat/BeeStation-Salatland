@@ -334,7 +334,7 @@ GLOBAL_LIST_INIT(dye_registry, list(
 	if(.)
 		var/obj/item/clothing/under/U = .
 		can_adjust = initial(U.can_adjust)
-		if(!can_adjust && adjusted) //we deadjust the uniform if it's now unadjustable
+		if(!can_adjust && adjusted == ALT_STYLE) //we deadjust the uniform if it's now unadjustable
 			toggle_jumpsuit_adjust()
 
 /obj/item/clothing/head/soft/dye_item(dye_color, dye_key)
