@@ -3,9 +3,8 @@
 	icon = 'icons/obj/clothing/under/default.dmi'
 	worn_icon = 'icons/mob/clothing/under/default.dmi'
 	body_parts_covered = CHEST|GROIN|LEGS|ARMS
-	permeability_coefficient = 0.9
 	slot_flags = ITEM_SLOT_ICLOTHING
-	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 0, ACID = 0, STAMINA = 0, BLEED = 10)
+	armor_type = /datum/armor/clothing_under
 	drop_sound = 'sound/items/handling/cloth_drop.ogg'
 	pickup_sound = 'sound/items/handling/cloth_pickup.ogg'
 	//limb_integrity = 30 //Wounds
@@ -41,6 +40,11 @@
 	var/mutable_appearance/accessory_overlay
 	dying_key = DYE_REGISTRY_UNDER
 
+
+/datum/armor/clothing_under
+	bio = 10
+	bleed = 10
+
 /obj/item/clothing/under/worn_overlays(mutable_appearance/standing, isinhands = FALSE, icon_file, item_layer, atom/origin)
 	. = list()
 	if(isinhands)
@@ -67,6 +71,14 @@
 		return attach_accessory(attacking_item, user)
 
 	return ..()
+
+/obj/item/clothing/under/attack_hand_secondary(mob/user, params)
+	. = ..()
+	if(. == SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN)
+		return
+
+	toggle()
+	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
 /obj/item/clothing/under/update_clothes_damaged_state(damaged_state = CLOTHING_DAMAGED)
 	. = ..()
@@ -136,29 +148,34 @@
 		sensor_mode = pick(SENSOR_OFF, SENSOR_OFF, SENSOR_OFF, SENSOR_LIVING, SENSOR_LIVING, SENSOR_VITALS, SENSOR_VITALS, SENSOR_COORDS)
 		if(ismob(loc))
 			var/mob/M = loc
-			to_chat(M,"<span class='warning'>The sensors on the [src] change rapidly!</span>")
-
-	if(ishuman(loc))
-		var/mob/living/carbon/human/ooman = loc
-		if(ooman.w_uniform == src)
-			ooman.update_suit_sensors()
+			to_chat(M,span_warning("The sensors on the [src] change rapidly!"))
+		update_sensors(new_sensor_mode)
 
 /obj/item/clothing/under/visual_equipped(mob/user, slot)
-	. = ..()
-	if(adjusted == ALT_STYLE)
-		adjust_to_normal()
-
-	if((supports_variations_flags & CLOTHING_DIGITIGRADE_VARIATION) && ishuman(user))
-		var/mob/living/carbon/human/wearer = user
-		if(wearer.bodytype & BODYTYPE_DIGITIGRADE)
-			adjusted = DIGITIGRADE_STYLE
-			update_appearance()
-
-/obj/item/clothing/under/equipped(mob/living/user, slot)
 	..()
-	if((slot & ITEM_SLOT_ICLOTHING) && freshly_laundered)
+	if(adjusted)
+		adjusted = NORMAL_STYLE
+		female_sprite_flags = initial(female_sprite_flags)
+		if(!alt_covers_chest)
+			body_parts_covered |= CHEST
+
+	if(ishuman(user) || ismonkey(user))
+		var/mob/living/carbon/human/H = user
+		H.update_inv_w_uniform()
+	if(slot == ITEM_SLOT_ICLOTHING)
+		update_sensors(sensor_mode, TRUE)
+
+	if(attached_accessory && slot != ITEM_SLOT_HANDS && ishuman(user))
+		var/mob/living/carbon/human/H = user
+		attached_accessory.on_uniform_equip(src, user)
+		if(attached_accessory.above_suit)
+			H.update_inv_wear_suit()
+
+/obj/item/clothing/under/equipped(mob/user, slot)
+	..()
+	if(slot == ITEM_SLOT_ICLOTHING && freshly_laundered)
 		freshly_laundered = FALSE
-		user.add_mood_event("fresh_laundry", /datum/mood_event/fresh_laundry)
+		SEND_SIGNAL(user, COMSIG_ADD_MOOD_EVENT, "fresh_laundry", /datum/mood_event/fresh_laundry)
 
 /obj/item/clothing/under/dropped(mob/user)
 	..()
@@ -461,6 +478,72 @@
 	if(ismob(user) && !user.can_perform_action(src, NEED_DEXTERITY|NEED_HANDS|ALLOW_RESTING))
 		return FALSE
 	return ..()
+
+/obj/item/clothing/under/verb/toggle()
+	set name = "Adjust Suit Sensors"
+	set category = "Object"
+	set src in usr
+	set_sensors(usr)
+
+/obj/item/clothing/under/attack_hand(mob/user, list/modifiers)
+	if(attached_accessory && ispath(attached_accessory.pocket_storage_component_path) && loc == user)
+		attached_accessory.attack_hand(user)
+		return
+	..()
+
+/obj/item/clothing/under/AltClick(mob/user)
+	if(!user.canUseTopic(src, BE_CLOSE, NO_DEXTERITY, FALSE, !iscyborg(user)))
+		return
+	if(attached_accessory)
+		remove_accessory(user)
+	else
+		rolldown()
+
+/obj/item/clothing/under/verb/jumpsuit_adjust()
+	set name = "Adjust Jumpsuit Style"
+	set category = null
+	set src in usr
+	rolldown()
+
+/obj/item/clothing/under/proc/rolldown()
+	if(!can_use(usr))
+		return
+	if(!can_adjust)
+		to_chat(usr, span_warning("You cannot wear this suit any differently!"))
+		return
+	if(toggle_jumpsuit_adjust())
+		to_chat(usr, span_notice("You adjust the suit to wear it more casually."))
+	else
+		to_chat(usr, span_notice("You adjust the suit back to normal."))
+	if(ishuman(usr))
+		var/mob/living/carbon/human/H = usr
+		H.update_inv_w_uniform()
+		H.update_body()
+
+/obj/item/clothing/under/proc/toggle_jumpsuit_adjust()
+	if(adjusted == DIGITIGRADE_STYLE)
+		return
+	adjusted = !adjusted
+	if(adjusted)
+		envirosealed = FALSE
+		if(female_sprite_flags != FEMALE_UNIFORM_TOP_ONLY)
+			female_sprite_flags = NO_FEMALE_UNIFORM
+		if(!alt_covers_chest) // for the special snowflake suits that expose the chest when adjusted
+			body_parts_covered &= ~CHEST
+			body_parts_covered &= ~ARMS
+	else
+		female_sprite_flags = initial(female_sprite_flags)
+		envirosealed = initial(envirosealed)
+		if(!alt_covers_chest)
+			body_parts_covered |= CHEST
+			body_parts_covered |= ARMS
+			if(!LAZYLEN(damage_by_parts))
+				return adjusted
+			for(var/zone in list(BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM)) // ugly check to make sure we don't reenable protection on a disabled part
+				if(damage_by_parts[zone] > limb_integrity)
+					for(var/part in body_zone2cover_flags(zone))
+						body_parts_covered &= part
+	return adjusted
 
 /obj/item/clothing/under/rank
 	dying_key = DYE_REGISTRY_UNDER
