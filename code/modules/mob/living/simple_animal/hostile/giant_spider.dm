@@ -208,7 +208,7 @@
 						else
 							fed++ //it is not a humanoid, but still has nourishment
 						if(lay_eggs)
-							lay_eggs.update_buttons(TRUE)
+							lay_eggs.build_all_button_icons()
 						visible_message(span_danger("[src] sticks a proboscis into [L] and sucks a viscous substance out."),span_notice("You suck the nutriment out of [L], feeding you enough to lay a cluster of eggs."))
 					else
 						to_chat(src, span_warning("[L] cannot sate your hunger!"))
@@ -460,9 +460,10 @@
 // SPIDER ACTIONS/PROCS
 
 /datum/action/innate/spider
-	icon_icon = 'icons/hud/actions/actions_animal.dmi'
+	button_icon = 'icons/hud/actions/actions_animal.dmi'
 	button_icon_state = null
 	background_icon_state = "bg_alien"
+	overlay_icon_state = "bg_alien_border"
 	check_flags = AB_CHECK_CONSCIOUS
 
 /datum/action/innate/spider/lay_web
@@ -507,21 +508,21 @@
 		return
 	var/mob/living/living_owner = owner
 	button_icon_state = "block_1"
-	update_buttons()
+	build_all_button_icons()
 	if(!living_owner.combat_mode)
 		living_owner.combat_mode = TRUE
 		button_icon_state = "block_1"
-		update_buttons()
+		build_all_button_icons()
 		owner.visible_message(span_notice("[owner] widens its stance and blocks passage around it."),span_notice("You are now blocking others from passing around you."))
 	else
 		living_owner.combat_mode = FALSE
 		button_icon_state = "block"
-		update_buttons()
+		build_all_button_icons()
 		owner.visible_message(span_notice("[owner] loosens up and allows others to pass again."),span_notice("You are no longer blocking others from passing around you."))
 
 /datum/action/innate/spider/block/on_deactivate(mob/user, atom/target)
 	button_icon_state = "block"
-	update_buttons()
+	build_all_button_icons()
 
 /datum/action/innate/spider/lay_web/is_available()
 	. = ..()
@@ -549,7 +550,8 @@
 	desc = "Wrap something or someone in a cocoon. If it's a human or similar species, \
 		you'll also consume them, allowing you to lay enriched eggs."
 	background_icon_state = "bg_alien"
-	icon_icon = 'icons/hud/actions/actions_animal.dmi'
+	overlay_icon_state = "bg_alien_border"
+	button_icon = 'icons/hud/actions/actions_animal.dmi'
 	button_icon_state = "wrap_0"
 	check_flags = AB_CHECK_CONSCIOUS
 	requires_target = TRUE
@@ -574,7 +576,7 @@
 
 	to_chat(on_who, ("<span class='notice'>You prepare to wrap something in a cocoon. <B>Left-click your target to start wrapping!</B></span>"))
 	button_icon_state = "wrap_1"
-	update_buttons()
+	build_all_button_icons()
 
 /datum/action/wrap/unset_click_ability(mob/on_who, refund_cooldown = TRUE)
 	. = ..()
@@ -584,7 +586,7 @@
 	if(refund_cooldown)
 		to_chat(on_who, ("<span class='notice'>You no longer prepare to wrap something in a cocoon.</span>"))
 	button_icon_state = "wrap_0"
-	update_buttons()
+	build_all_button_icons()
 
 /datum/action/wrap/on_activate(mob/user, atom/target)
 	if(!owner.Adjacent(target))
@@ -667,7 +669,7 @@
 						spider.spider_team = spiders					//lets make sure her potentially sentient children are all on the same team
 						new_cluster.spider_team = spider.spider_team
 					new_cluster.faction = spider.faction.Copy()
-					update_buttons()
+					build_all_button_icons()
 		spider.busy = SPIDER_IDLE
 		spider.stop_automated_movement = FALSE
 
@@ -744,7 +746,7 @@
 	name = "Throw web"
 	desc = "Throw a sticky web at potential prey to immobilize them temporarily"
 	ranged_mousepointer = 'icons/effects/throwweb_target.dmi'
-	icon_icon = 'icons/hud/actions/actions_animal.dmi'
+	button_icon = 'icons/hud/actions/actions_animal.dmi'
 	button_icon_state = "throw_web_0"
 	background_icon_state = "bg_alien"
 	cooldown_time = 2 SECONDS
@@ -810,7 +812,7 @@
 	if(new_directive)
 		spider_antag.spider_team.update_directives(new_directive)
 		log_game("[key_name(owner)][spider_antag.spider_team.master ? " (master: [spider_antag.spider_team.master]" : ""] set its directive to: '[new_directive]'.")
-		S.lay_eggs.update_buttons()
+		S.lay_eggs.build_all_button_icons()
 
 
 #undef SPIDER_IDLE

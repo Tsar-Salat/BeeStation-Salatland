@@ -1351,7 +1351,7 @@
 	SEND_SIGNAL(src, COMSIG_MOB_STATCHANGE, new_stat)
 	. = stat
 	stat = new_stat
-	update_action_buttons_icon(TRUE)
+	update_mob_action_buttons(UPDATE_BUTTON_STATUS)
 
 /mob/proc/set_active_storage(new_active_storage)
 	if(active_storage)

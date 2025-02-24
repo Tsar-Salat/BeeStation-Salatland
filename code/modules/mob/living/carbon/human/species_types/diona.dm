@@ -66,7 +66,7 @@
 		informed_nymph = TRUE
 		to_chat(H, span_warning("You feel sufficiently satiated to allow a nymph to split off from your gestalt!"))
 	if(partition_ability)
-		partition_ability.update_buttons()
+		partition_ability.build_all_button_icons()
 	if(H.nutrition > NUTRITION_LEVEL_ALMOST_FULL)
 		H.set_nutrition(NUTRITION_LEVEL_ALMOST_FULL)
 	var/light_amount = 0 //how much light there is in the place, affects receiving nutrition and healing
@@ -178,7 +178,7 @@
 	name = "Split"
 	desc = "Split into our seperate nymphs."
 	background_icon_state = "bg_default"
-	icon_icon = 'icons/hud/actions/actions_spells.dmi'
+	button_icon = 'icons/hud/actions/actions_spells.dmi'
 	button_icon_state = "split"
 	check_flags = AB_CHECK_DEAD
 	var/Activated = FALSE
@@ -244,7 +244,7 @@
 	name = "Partition"
 	desc = "Allow a nymph to partition from our gestalt self."
 	background_icon_state = "bg_default"
-	icon_icon = 'icons/hud/actions/actions_spells.dmi'
+	button_icon = 'icons/hud/actions/actions_spells.dmi'
 	button_icon_state = "grow"
 	cooldown_time = 5 MINUTES
 	var/ability_partition_cooldow

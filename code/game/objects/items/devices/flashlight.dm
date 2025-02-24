@@ -47,7 +47,7 @@
 	on = !on
 	playsound(user, on ? sound_on : sound_off, 40, TRUE)
 	update_brightness(user)
-	update_action_buttons()
+	update_item_action_buttons()
 
 /obj/item/flashlight/attack_self(mob/user)
 	toggle_lights(user)
@@ -581,9 +581,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/temp_visual/medical_holosign)
 	found.update_icon()
 	found.update_brightness()
 
-	for(var/X in found.actions)
-		var/datum/action/A = X
-		A.update_buttons()
+	found.update_item_action_buttons()
 	found.burn_pickup = TRUE
 
 /obj/item/flashlight/spotlight //invisible lighting source

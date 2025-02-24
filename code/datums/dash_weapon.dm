@@ -1,7 +1,7 @@
 /datum/action/innate/dash
 	name = "Dash"
 	desc = "Teleport to the targeted location."
-	icon_icon = 'icons/hud/actions/actions_items.dmi'
+	button_icon = 'icons/hud/actions/actions_items.dmi'
 	button_icon_state = "jetboot"
 	var/current_charges = 1
 	var/max_charges = 1
@@ -41,8 +41,7 @@
 			playsound(T, dash_sound, 25, 1)
 			var/obj/spot2 = new phasein(new_location, user.dir)
 			spot1.Beam(spot2,beam_effect,time=2 SECONDS)
-			if (owner)
-				owner.update_action_buttons_icon()
+			owner?.update_mob_action_buttons()
 			if (current_charges == max_charges)
 				addtimer(CALLBACK(src, PROC_REF(charge)), charge_rate)
 			current_charges--
@@ -66,8 +65,8 @@
 /datum/action/innate/dash/proc/charge()
 	current_charges = clamp(current_charges + 1, 0, max_charges)
 	if (owner)
-		owner.update_action_buttons_icon()
-		to_chat(owner, span_notice("[src] now has [current_charges]/[max_charges] charges."))
+		owner.update_mob_action_buttons()
+		dashing_item.balloon_alert(owner, "[current_charges]/[max_charges] dash charges")
 	if(recharge_sound)
 		playsound(dashing_item, recharge_sound, 50, 1)
 	if (current_charges != max_charges)

@@ -64,7 +64,8 @@
 
 /datum/action/innate/fugu
 	button_icon_state = null
-	icon_icon = 'icons/hud/actions/actions_animal.dmi'
+	button_icon = 'icons/hud/actions/actions_animal.dmi'
+	overlay_icon_state = "bg_fugu_border"
 
 /datum/action/innate/fugu/expand
 	name = "Inflate"

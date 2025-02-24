@@ -263,8 +263,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/camera/imaginary_friend)
 /datum/action/innate/imaginary_join
 	name = "Join"
 	desc = "Join your owner, following them from inside their mind."
-	icon_icon = 'icons/hud/actions/actions_minor_antag.dmi'
+	button_icon = 'icons/hud/actions/actions_minor_antag.dmi'
 	background_icon_state = "bg_revenant"
+	overlay_icon_state = "bg_revenant_border"
 	button_icon_state = "join"
 
 /datum/action/innate/imaginary_join/on_activate()
@@ -274,8 +275,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/camera/imaginary_friend)
 /datum/action/innate/imaginary_hide
 	name = "Hide"
 	desc = "Hide yourself from your owner's sight."
-	icon_icon = 'icons/hud/actions/actions_minor_antag.dmi'
+	button_icon = 'icons/hud/actions/actions_minor_antag.dmi'
 	background_icon_state = "bg_revenant"
+	overlay_icon_state = "bg_revenant_border"
 	button_icon_state = "hide"
 
 /datum/action/innate/imaginary_hide/proc/update_status()
@@ -288,13 +290,32 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/camera/imaginary_friend)
 		name = "Hide"
 		desc = "Hide yourself from your owner's sight."
 		button_icon_state = "hide"
-	update_buttons()
+	build_all_button_icons()
 
 /datum/action/innate/imaginary_hide/on_activate()
-	var/mob/camera/imaginary_friend/I = owner
-	I.hidden = !I.hidden
-	I.Show()
-	update_status()
+	var/mob/camera/imaginary_friend/fake_friend = owner
+	fake_friend.hidden = !fake_friend.hidden
+	fake_friend.Show()
+	build_all_button_icons(UPDATE_BUTTON_NAME|UPDATE_BUTTON_ICON)
+
+/datum/action/innate/imaginary_hide/update_button_name(atom/movable/screen/movable/action_button/button, force)
+	var/mob/camera/imaginary_friend/fake_friend = owner
+	if(fake_friend.hidden)
+		name = "Show"
+		desc = "Become visible to your owner."
+	else
+		name = "Hide"
+		desc = "Hide yourself from your owner's sight."
+	return ..()
+
+/datum/action/innate/imaginary_hide/apply_button_icon(atom/movable/screen/movable/action_button/current_button, force = FALSE)
+	var/mob/camera/imaginary_friend/fake_friend = owner
+	if(fake_friend.hidden)
+		button_icon_state = "unhide"
+	else
+		button_icon_state = "hide"
+
+	return ..()
 
 //down here is the trapped mind
 //like imaginary friend but a lot less imagination and more like mind prison//

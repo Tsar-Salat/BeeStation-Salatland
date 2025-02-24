@@ -61,7 +61,7 @@
 
 	var/spellnum = 1
 	for(var/datum/action/spell as anything in actions)
-		if(!(type in construct_spells))
+		if(!(spell.type in construct_spells))
 			continue
 
 		var/pos = 2 + spellnum * 31
@@ -69,7 +69,7 @@
 			pos -= 31 * (construct_spells.len - 4)
 		spell.default_button_position = "6:[pos],4:-2" // Set the default position to this random position
 		spellnum++
-		update_action_buttons()
+		update_item_action_buttons()
 
 	if(icon_state)
 		add_overlay("glow_[icon_state]_[theme]")
@@ -249,7 +249,7 @@
 			total_refund += attack_refund
 
 		jaunt.reduce_cooldown(total_refund)
-		jaunt.update_buttons()
+		jaunt.build_all_button_icons()
 
 /mob/living/simple_animal/hostile/construct/wraith/hostile //actually hostile, will move around, hit things
 	AIStatus = AI_ON
@@ -479,9 +479,11 @@
 	name = "Seek your Master"
 	desc = "You and your master share a soul-link that informs you of their location"
 	background_icon_state = "bg_demon"
+	overlay_icon_state = "bg_demon_border"
+
 	buttontooltipstyle = "cult"
 	button_icon_state = "cult_mark"
-	icon_icon = 'icons/hud/actions/actions_cult.dmi'
+	button_icon = 'icons/hud/actions/actions_cult.dmi'
 	var/tracking = FALSE
 	var/mob/living/simple_animal/hostile/construct/the_construct
 
@@ -517,8 +519,10 @@
 /datum/action/innate/seek_prey
 	name = "Seek the Harvest"
 	desc = "None can hide from Nar'Sie, activate to track a survivor attempting to flee the red harvest!"
-	icon_icon = 'icons/hud/actions/actions_cult.dmi'
+	button_icon = 'icons/hud/actions/actions_cult.dmi'
 	background_icon_state = "bg_demon"
+	overlay_icon_state = "bg_demon_border"
+
 	buttontooltipstyle = "cult"
 	button_icon_state = "cult_mark"
 

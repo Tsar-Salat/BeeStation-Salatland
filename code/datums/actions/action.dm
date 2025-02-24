@@ -6,7 +6,7 @@
 /datum/action
 	/// The name of the action
 	var/name = "Generic Action"
-	/// The description of what the action does
+	/// The description of what the action does, shown in button tooltips
 	var/desc
 	/// The datum the action is attached to. If the master datum is deleted, the action is as well.
 	/// Set in New() via the proc link_to().
@@ -22,11 +22,14 @@
 	// =====================================
 	/// Flags that will determine of the owner / user of the action can... use the action
 	var/check_flags = NONE
+	/// Whether the button becomes transparent when it can't be used, or just reddened
+	var/transparent_when_unavailable = TRUE
+	/// If TRUE, this action button will be shown to observers / other mobs who view from this action's owner's eyes.
+	/// Used in [/mob/proc/show_other_mob_action_buttons]
+	var/show_to_observers = TRUE
+
 	/// Setting for intercepting clicks before activating the ability
 	var/requires_target = FALSE
-	/// If TRUE, we will unset after using our click intercept. Requires requires_target
-	/// If false, then cooldown and action conclussion needs to be handled manually
-	var/unset_after_click = TRUE
 	/// The cooldown added onto the user's next click. Requires requires_target
 	var/click_cd_override = CLICK_CD_CLICK_ABILITY
 	/// If toggleable, deactivate will be called when the action button is pressed after
@@ -37,16 +40,24 @@
 	// =====================================
 	/// The style the button's tooltips appear to be
 	var/buttontooltipstyle = ""
-	/// Whether the button becomes transparent when it can't be used or just reddened
-	var/transparent_when_unavailable = TRUE
-	/// This is the file for the BACKGROUND icon of the button
-	var/button_icon = 'icons/hud/actions/backgrounds.dmi'
-	/// This is the icon state state for the BACKGROUND icon of the button
+
+	/// This is the file for the BACKGROUND underlay icon of the button
+	var/background_icon = 'icons/hud/actions/backgrounds.dmi'
+	/// This is the icon state state for the BACKGROUND underlay icon of the button
+	/// (If set to ACTION_BUTTON_DEFAULT_BACKGROUND, uses the hud's default background)
 	var/background_icon_state = ACTION_BUTTON_DEFAULT_BACKGROUND
-	/// This is the file for the icon that appears OVER the button background
-	var/icon_icon = 'icons/hud/actions.dmi'
-	/// This is the icon state for the icon that appears OVER the button background
+
+	/// This is the file for the icon that appears on the button
+	var/button_icon = 'icons/hud/actions.dmi'
+	/// This is the icon state for the icon that appears on the button
 	var/button_icon_state = "default"
+
+	/// This is the file for any FOREGROUND overlay icons on the button (such as borders)
+	var/overlay_icon = 'icons/hud/actions/backgrounds.dmi'
+	/// This is the icon state for any FOREGROUND overlay icons on the button (such as borders)
+	var/overlay_icon_state
+
+	/// This is the icon state for any FOREGROUND overlay icons on the button (such as borders)
 	///List of all mobs that are viewing our action button -> A unique movable for them to view.
 	var/list/viewers = list()
 	/// What icon to replace our mouse cursor with when active. Optional, Requires requires_target
@@ -79,7 +90,32 @@
 	/// Icon state for the timer icon
 	VAR_PROTECTED/timer_icon_state_active = "second"
 
+	// These are only used for click_to_activate actions
+	/// Setting for intercepting clicks before activating the ability
+	var/click_to_activate = FALSE
+	/// If TRUE, we will unset after using our click intercept.
+	var/unset_after_click = TRUE
+	/// The base icon_state of this action's background
+	var/base_background_icon_state
+	/// The icon state the background uses when active
+	var/active_background_icon_state
+	/// The base icon_state of the overlay we apply
+	var/base_overlay_icon_state
+	/// The active icon_state of the overlay we apply
+	var/active_overlay_icon_state
+	/// The base icon state of the spell's button icon, used for editing the icon "off"
+	var/base_icon_state
+	/// The active icon state of the spell's button icon, used for editing the icon "on"
+	var/active_icon_state
+
 /datum/action/New(master)
+	if(active_background_icon_state)
+		base_background_icon_state ||= background_icon_state
+	if(active_overlay_icon_state)
+		base_overlay_icon_state ||= overlay_icon_state
+	if(active_icon_state)
+		base_icon_state ||= button_icon_state
+
 	if (master)
 		link_to(master)
 
@@ -89,7 +125,7 @@
 	RegisterSignal(master, COMSIG_PARENT_QDELETING, PROC_REF(clear_ref), override = TRUE)
 
 	if(isatom(master))
-		RegisterSignal(master, COMSIG_ATOM_UPDATED_ICON, PROC_REF(update_icon_on_signal))
+		RegisterSignal(master, COMSIG_ATOM_UPDATED_ICON, PROC_REF(on_target_icon_update))
 
 	if(istype(master, /datum/mind))
 		RegisterSignal(master, COMSIG_MIND_TRANSFERRED, PROC_REF(on_master_mind_swapped))
@@ -125,25 +161,26 @@
 			return
 		Remove(owner)
 	SEND_SIGNAL(src, COMSIG_ACTION_GRANTED, grant_to)
+	SEND_SIGNAL(grant_to, COMSIG_MOB_GRANTED_ACTION, src)
 	owner = grant_to
 	RegisterSignal(owner, COMSIG_PARENT_QDELETING, PROC_REF(clear_ref), override = TRUE)
 
 	// Register some signals based on our check_flags
 	// so that our button icon updates when relevant
 	if(check_flags & (AB_CHECK_CONSCIOUS | AB_CHECK_DEAD))
-		RegisterSignal(owner, COMSIG_MOB_STATCHANGE, PROC_REF(update_icon_on_signal))
+		RegisterSignal(owner, COMSIG_MOB_STATCHANGE, PROC_REF(update_status_on_signal))
 	if(check_flags & AB_CHECK_IMMOBILE)
-		RegisterSignal(owner, SIGNAL_ADDTRAIT(TRAIT_IMMOBILIZED), PROC_REF(update_icon_on_signal))
+		RegisterSignal(owner, SIGNAL_ADDTRAIT(TRAIT_IMMOBILIZED), PROC_REF(update_status_on_signal))
 	if(check_flags & AB_CHECK_HANDS_BLOCKED)
-		RegisterSignal(owner, SIGNAL_ADDTRAIT(TRAIT_HANDS_BLOCKED), PROC_REF(update_icon_on_signal))
+		RegisterSignal(owner, SIGNAL_ADDTRAIT(TRAIT_HANDS_BLOCKED), PROC_REF(update_status_on_signal))
 	if(check_flags & AB_CHECK_LYING)
-		RegisterSignal(owner, COMSIG_LIVING_SET_BODY_POSITION, PROC_REF(update_icon_on_signal))
+		RegisterSignal(owner, COMSIG_LIVING_SET_BODY_POSITION, PROC_REF(update_status_on_signal))
 
 	give_action(grant_to)
 	// Start cooldown timer if we gained it mid-cooldown
 	if(!owner)
 		return
-	update_buttons()
+	build_all_button_icons()
 	if(next_use_time > world.time)
 		START_PROCESSING(SSfastprocess, src)
 
@@ -163,6 +200,7 @@
 
 	if(owner)
 		SEND_SIGNAL(src, COMSIG_ACTION_REMOVED, owner)
+		SEND_SIGNAL(owner, COMSIG_MOB_REMOVED_ACTION, src)
 		UnregisterSignal(owner, COMSIG_PARENT_QDELETING)
 
 		// Clean up our check_flag signals
@@ -219,6 +257,7 @@
 			already_set.unset_click_ability(user, refund_cooldown = TRUE)
 
 		set_click_ability(user)
+		build_all_button_icons(UPDATE_BUTTON_STATUS)
 		return
 
 	// If our cooldown action is not a requires_target action:
@@ -312,67 +351,155 @@
 		return FALSE
 	return TRUE
 
-/datum/action/proc/update_buttons(status_only, force)
-	for(var/datum/hud/hud in viewers)
-		var/atom/movable/screen/movable/button = viewers[hud]
-		update_button(button, status_only, force)
+/// Builds / updates all buttons we have shared or given out
+/datum/action/proc/build_all_button_icons(update_flags = ALL, force)
+	for(var/datum/hud/hud as anything in viewers)
+		build_button_icon(viewers[hud], update_flags, force)
 
-/datum/action/proc/update_button(atom/movable/screen/movable/action_button/button, status_only = FALSE, force = FALSE)
+/**
+ * Builds the icon of the button.
+ *
+ * Concept:
+ * - Underlay (Background icon)
+ * - Icon (button icon)
+ * - Maptext
+ * - Overlay (Background border)
+ *
+ * button - which button we are modifying the icon of
+ * force - whether we're forcing a full update
+ */
+/datum/action/proc/build_button_icon(atom/movable/screen/movable/action_button/button, update_flags = ALL, force = FALSE)
 	if(!button)
 		return
-	if(!status_only)
-		button.name = name
+
+	if(update_flags & UPDATE_BUTTON_NAME)
+		update_button_name(button, force)
+
+	if(update_flags & UPDATE_BUTTON_BACKGROUND)
+		apply_button_background(button, force)
+
+	if(update_flags & UPDATE_BUTTON_ICON)
+		apply_button_icon(button, force)
+
+	if(update_flags & UPDATE_BUTTON_OVERLAY)
+		apply_button_overlay(button, force)
+
+	if(update_flags & UPDATE_BUTTON_STATUS)
+		update_button_status(button, force)
+
+/**
+ * Updates the name and description of the button to match our action name and discription.
+ *
+ * current_button - what button are we editing?
+ * force - whether an update is forced regardless of existing status
+ */
+/datum/action/proc/update_button_name(atom/movable/screen/movable/action_button/button, force = FALSE)
+	button.name = name
+	if(desc)
 		button.desc = desc
-		if(owner?.hud_used && background_icon_state == ACTION_BUTTON_DEFAULT_BACKGROUND)
-			var/list/settings = owner.hud_used.get_action_buttons_icons()
-			if(button.icon != settings["bg_icon"])
-				button.icon = settings["bg_icon"]
-			if(button.icon_state != settings["bg_state"])
-				button.icon_state = settings["bg_state"]
-		else
-			if(button.icon != button_icon)
-				button.icon = button_icon
-			if(button.icon_state != background_icon_state)
-				button.icon_state = background_icon_state
 
-		apply_icon(button, force)
+/**
+ * Creates the background underlay for the button
+ *
+ * current_button - what button are we editing?
+ * force - whether an update is forced regardless of existing status
+ */
+/datum/action/proc/apply_button_background(atom/movable/screen/movable/action_button/current_button, force = FALSE)
+	if(active_background_icon_state)
+		background_icon_state = is_action_active(current_button) ? active_background_icon_state : base_background_icon_state
 
-	if (next_use_time >= world.time)
-		update_cooldown_icon(button)
-	else if(timer_overlay)
-		button.cut_overlay(timer_overlay)
-		QDEL_NULL(timer_overlay)
-
-	var/available = is_available()
-	if(available)
-		button.color = rgb(255,255,255,255)
-	else
-		button.color = next_use_time ? rgb(219, 219, 219, 128) : (transparent_when_unavailable ? rgb(128,0,0,128) : rgb(128,0,0))
-	return available
-
-/// Applies our button icon over top the background icon of the action
-/datum/action/proc/apply_icon(atom/movable/screen/movable/action_button/current_button, force = FALSE)
-	if(icon_icon && button_icon_state && ((current_button.button_icon_state != button_icon_state) || force))
-		current_button.cut_overlays(TRUE)
-		current_button.add_overlay(mutable_appearance(icon_icon, button_icon_state))
-		current_button.button_icon_state = button_icon_state
-
-/datum/action/proc/update_cooldown_icon(atom/movable/screen/movable/action_button/button, force = FALSE)
-	if(!button)
+	if(!background_icon || !background_icon_state || (current_button.active_underlay_icon_state == background_icon_state && !force))
 		return
-	if (!timer_overlay)
-		timer_overlay = mutable_appearance(timer_icon, timer_icon_state_active)
-		timer_overlay.alpha = 180
-		timer_overlay.appearance_flags = APPEARANCE_UI_IGNORE_ALPHA
-		timer_overlay.maptext_width = 64
-		timer_overlay.maptext_height = 64
-		timer_overlay.maptext_x = -8
-		timer_overlay.maptext_y = -6
-	var/new_maptext = "<center><span class='maptext' style='font-weight: bold;color: #eeeeee;'>[FLOOR((next_use_time - world.time)/10, 1)]</span></center>"
-	if (new_maptext != timer_overlay.maptext || force)
-		button.cut_overlay(timer_overlay)
-		timer_overlay.maptext = new_maptext
-		button.add_overlay(timer_overlay)
+
+	// What icons we use for our background
+	var/list/icon_settings = list(
+		// The icon file
+		"bg_icon" = background_icon,
+		// The icon state, if is_action_active() returns FALSE
+		"bg_state" = background_icon_state,
+		// The icon state, if is_action_active() returns TRUE
+		"bg_state_active" = background_icon_state,
+	)
+
+	// If background_icon_state is ACTION_BUTTON_DEFAULT_BACKGROUND instead use our hud's action button scheme
+	if(background_icon_state == ACTION_BUTTON_DEFAULT_BACKGROUND && owner?.hud_used)
+		icon_settings = owner.hud_used.get_action_buttons_icons()
+
+	// Determine which icon to use
+	var/used_icon_key = is_action_active(current_button) ? "bg_state_active" : "bg_state"
+
+	// Make the underlay
+	current_button.underlays.Cut()
+	current_button.underlays += image(icon = icon_settings["bg_icon"], icon_state = icon_settings[used_icon_key])
+	current_button.active_underlay_icon_state = icon_settings[used_icon_key]
+
+/**
+ * Applies our button icon and icon state to the button
+ *
+ * current_button - what button are we editing?
+ * force - whether an update is forced regardless of existing status
+ */
+/datum/action/proc/apply_button_icon(atom/movable/screen/movable/action_button/current_button, force = FALSE)
+	if(active_icon_state)
+		button_icon_state = is_action_active(current_button) ? active_icon_state : base_icon_state
+
+	if(!button_icon || !button_icon_state || (current_button.icon_state == button_icon_state && !force))
+		return
+
+	current_button.icon = button_icon
+	current_button.icon_state = button_icon_state
+
+/**
+ * Applies any overlays to our button
+ *
+ * current_button - what button are we editing?
+ * force - whether an update is forced regardless of existing status
+ */
+/datum/action/proc/apply_button_overlay(atom/movable/screen/movable/action_button/current_button, force = FALSE)
+	if(active_overlay_icon_state)
+		overlay_icon_state = is_action_active(current_button) ? active_overlay_icon_state : base_overlay_icon_state
+
+	SEND_SIGNAL(src, COMSIG_ACTION_OVERLAY_APPLY, current_button, force)
+
+	if(!overlay_icon || !overlay_icon_state || (current_button.active_overlay_icon_state == overlay_icon_state && !force))
+		return
+
+	current_button.cut_overlay(current_button.button_overlay)
+	current_button.button_overlay = mutable_appearance(icon = overlay_icon, icon_state = overlay_icon_state)
+	current_button.add_overlay(current_button.button_overlay)
+	current_button.active_overlay_icon_state = overlay_icon_state
+
+/**
+ * Any other miscellaneous "status" updates within the action button is handled here,
+ * such as redding out when unavailable or modifying maptext.
+ *
+ * current_button - what button are we editing?
+ * force - whether an update is forced regardless of existing status
+ */
+/datum/action/proc/update_button_status(atom/movable/screen/movable/action_button/current_button, force = FALSE)
+	if(is_available())
+		current_button.color = rgb(255,255,255,255)
+	else
+		current_button.color = transparent_when_unavailable ? rgb(128,0,0,128) : rgb(128,0,0)
+
+	/*
+	var/time_left = max(next_use_time - world.time, 0)
+	if(!text_cooldown || !owner || time_left == 0 || time_left >= COOLDOWN_NO_DISPLAY_TIME)
+		current_button.maptext = ""
+	else
+		if (cooldown_rounding > 0)
+			current_button.maptext = MAPTEXT_TINY_UNICODE("[round(time_left/10, cooldown_rounding)]")
+		else
+			current_button.maptext = MAPTEXT_TINY_UNICODE("[round(time_left/10)]")
+	*/
+
+	if(!is_available() || !is_action_active(current_button))
+		return
+	// If we don't change the icon state, or don't apply a special overlay,
+	if(active_background_icon_state || active_icon_state || active_overlay_icon_state)
+		return
+	// ...we need to show it's active somehow. So, make it greeeen
+	current_button.color = COLOR_GREEN
 
 /// Gives our action to the passed viewer.
 /// Puts our action in their actions list and shows them the button.
@@ -399,7 +526,7 @@
 		viewer.client.screen += button
 
 	button.load_position(viewer)
-	viewer.update_action_buttons()
+	viewer.update_item_action_buttons()
 
 /// Removes our action from the passed viewer.
 /datum/action/proc/hide_from(mob/viewer)
@@ -413,10 +540,7 @@
 /datum/action/proc/create_button()
 	var/atom/movable/screen/movable/action_button/button = new()
 	button.linked_action = src
-	button.name = name
-	button.actiontooltipstyle = buttontooltipstyle
-	if(desc)
-		button.desc = desc
+	build_button_icon(button, ALL, TRUE)
 	return button
 
 /datum/action/proc/set_id(atom/movable/screen/movable/action_button/our_button, mob/owner)
@@ -436,11 +560,30 @@
 			our_button.id = bitflag
 			return
 
-/// A general use signal proc that reacts to an event and updates our button icon in accordance
-/datum/action/proc/update_icon_on_signal(datum/source)
+/// Updates our buttons if our target's icon was updated
+/datum/action/proc/on_target_icon_update(datum/source, updates, updated)
 	SIGNAL_HANDLER
 
-	update_buttons()
+	var/update_flag = NONE
+	var/forced = FALSE
+	if(updates & UPDATE_ICON_STATE)
+		update_flag |= UPDATE_BUTTON_ICON
+		forced = TRUE
+	if(updates & UPDATE_OVERLAYS)
+		update_flag |= UPDATE_BUTTON_OVERLAY
+		forced = TRUE
+	if(updates & (UPDATE_NAME|UPDATE_DESC))
+		update_flag |= UPDATE_BUTTON_NAME
+	// Status is not relevant, and background is not relevant. Neither will change
+
+	// Force the update if an icon state or overlay change was done
+	build_all_button_icons(update_flag, forced)
+
+/// A general use signal proc that reacts to an event and updates JUST our button's status
+/datum/action/proc/update_status_on_signal(datum/source)
+	SIGNAL_HANDLER
+
+	build_all_button_icons(UPDATE_BUTTON_STATUS)
 
 /// Signal proc for COMSIG_MIND_TRANSFERRED - for minds, transfers our action to our new mob on mind transfer
 /datum/action/proc/on_master_mind_swapped(datum/mind/source, mob/old_current)
@@ -448,6 +591,10 @@
 
 	// Grant() calls Remove() from the existing owner so we're covered on that
 	Grant(source.current)
+
+/// Checks if our action is actively selected. Used for selecting icons primarily.
+/datum/action/proc/is_action_active(atom/movable/screen/movable/action_button/current_button)
+	return click_to_activate && current_button.our_hud?.mymob?.click_intercept == src
 
 /// Starts a cooldown time to be shared with similar abilities
 /// Will use default cooldown time if an override is not specified
@@ -469,18 +616,18 @@
 		next_use_time = world.time + override_cooldown_time
 	else
 		next_use_time = world.time + cooldown_time
-	update_buttons()
+	build_all_button_icons(UPDATE_BUTTON_STATUS)
 	// Needs to update once per second
 	START_PROCESSING(SSprocessing, src)
 
 /// Actions process to handle their cooldown timer
 /datum/action/process()
 	if(!owner || (next_use_time - world.time) <= 0)
-		update_buttons()
+		build_all_button_icons(UPDATE_BUTTON_STATUS)
 		STOP_PROCESSING(SSfastprocess, src)
 		return
 
-	update_buttons()
+	build_all_button_icons(UPDATE_BUTTON_STATUS)
 
 /**
  * Set our action as the click override on the passed mob.
@@ -492,7 +639,7 @@
 	if(ranged_mousepointer)
 		on_who.client?.mouse_override_icon = ranged_mousepointer
 		on_who.update_mouse_pointer()
-	update_buttons()
+	build_all_button_icons(UPDATE_BUTTON_STATUS)
 	return TRUE
 
 /**
@@ -508,7 +655,7 @@
 	if(ranged_mousepointer)
 		on_who.client?.mouse_override_icon = initial(on_who.client?.mouse_override_icon)
 		on_who.update_mouse_pointer()
-	update_buttons()
+	build_all_button_icons(UPDATE_BUTTON_STATUS)
 	return TRUE
 
 /datum/action/proc/reduce_cooldown(amount)

@@ -3,7 +3,7 @@
 	name = "\improper APLU MK-I \"Ripley\""
 	icon_state = "ripley"
 	base_icon_state = "ripley"
-	silicon_icon_state = "ripley-empty"
+	silbutton_icon_state = "ripley-empty"
 	movedelay = 1.5 //Move speed, lower is faster.
 	/// How fast the mech is in low pressure
 	var/fast_pressure_step_in = 1.5
@@ -85,7 +85,7 @@
 	wreckage = /obj/structure/mecha_wreckage/ripley/mk2
 	enclosed = TRUE
 	enter_delay = 40
-	silicon_icon_state = null
+	silbutton_icon_state = null
 
 
 /datum/armor/ripley_mk2
@@ -119,7 +119,7 @@
 	step_energy_drain = 0
 	enclosed = TRUE
 	enter_delay = 40
-	silicon_icon_state = null
+	silbutton_icon_state = null
 
 /obj/vehicle/sealed/mecha/working/ripley/deathripley/Initialize(mapload)
 	. = ..()

@@ -1,8 +1,10 @@
 // Contains cult communion, guide, and cult master abilities
 
 /datum/action/innate/cult
-	icon_icon = 'icons/hud/actions/actions_cult.dmi'
+	button_icon = 'icons/hud/actions/actions_cult.dmi'
 	background_icon_state = "bg_demon"
+	overlay_icon_state = "bg_demon_border"
+	
 	button_icon_state = null
 	buttontooltipstyle = "cult"
 	check_flags = AB_CHECK_HANDS_BLOCKED|AB_CHECK_INCAPACITATED|AB_CHECK_CONSCIOUS
@@ -100,7 +102,7 @@
 	team.cult_vote_called = TRUE //somebody's trying to be a master, make sure we don't let anyone else try
 	for(var/datum/mind/B in team.members)
 		if(B.current)
-			B.current.update_action_buttons_icon()
+			B.current.update_mob_action_buttons()
 			if(!B.current.incapacitated())
 				SEND_SOUND(B.current, 'sound/hallucinations/im_here1.ogg')
 				to_chat(B.current, span_cultlarge("Acolyte [Nominee] has asserted that [Nominee.p_theyre()] worthy of leading the cult. A vote will be called shortly."))
@@ -115,7 +117,7 @@
 		team.cult_vote_called = FALSE
 		for(var/datum/mind/B in team.members)
 			if(B.current)
-				B.current.update_action_buttons_icon()
+				B.current.update_mob_action_buttons()
 				if(!B.current.incapacitated())
 					to_chat(B.current,span_cultlarge("[Nominee] has died in the process of attempting to win the cult's support!"))
 		return FALSE
@@ -123,7 +125,7 @@
 		team.cult_vote_called = FALSE
 		for(var/datum/mind/B in team.members)
 			if(B.current)
-				B.current.update_action_buttons_icon()
+				B.current.update_mob_action_buttons()
 				if(!B.current.incapacitated())
 					to_chat(B.current,span_cultlarge("[Nominee] has gone catatonic in the process of attempting to win the cult's support!"))
 		return FALSE
@@ -131,7 +133,7 @@
 		team.cult_vote_called = FALSE
 		for(var/datum/mind/B in team.members)
 			if(B.current)
-				B.current.update_action_buttons_icon()
+				B.current.update_mob_action_buttons()
 				if(!B.current.incapacitated())
 					to_chat(B.current, span_cultlarge("[Nominee] could not win the cult's support and shall continue to serve as an acolyte."))
 		return FALSE
@@ -245,6 +247,7 @@
 	var/datum/team/cult/cult_team = cultist.get_team()
 	if(!cult_team)
 		CRASH("[type] was casted by a cultist without a cult team datum.")
+
 	if(cult_team.blood_target)
 		to_chat(user, ("<span class='cult'>The cult has already designated a target!</span>"))
 		return FALSE
@@ -254,7 +257,7 @@
 		unset_click_ability(user)
 		disable_text = initial(disable_text)
 		start_cooldown()
-		update_buttons()
+		build_all_button_icons()
 		return TRUE
 	unset_click_ability(user)
 	return TRUE
@@ -302,34 +305,38 @@
 	if(cult_team.set_blood_target(mark_target, owner, 60 SECONDS))
 		to_chat(owner, span_cultbold(">You have marked [mark_target] for the cult! It will last for [DisplayTimeText(cult_mark_duration)]."))
 		COOLDOWN_START(src, cult_mark_cooldown, cult_mark_cooldown_duration)
-		update_button_status()
+		build_all_button_icons(UPDATE_BUTTON_NAME|UPDATE_BUTTON_ICON)
 		addtimer(CALLBACK(src, PROC_REF(reset_button)), cult_mark_cooldown_duration + 1)
 		return TRUE
 
-	to_chat(owner, ("<span class='cult'>The marking failed!</span>"))
+	to_chat(owner, span_cult("The marking failed!"))
 	return FALSE
 
-/datum/action/innate/cult/ghostmark/proc/update_button_status()
-	if(!owner)
-		return
+/datum/action/innate/cult/ghostmark/update_button_name(atom/movable/screen/movable/action_button/current_button, force = FALSE)
 	if(COOLDOWN_FINISHED(src, cult_mark_duration))
 		name = initial(name)
 		desc = initial(desc)
-		button_icon_state = initial(button_icon_state)
 	else
 		name = "Clear the Blood Mark"
 		desc = "Remove the Blood Mark you previously set."
+
+	return ..()
+
+/datum/action/innate/cult/ghostmark/apply_button_icon(atom/movable/screen/movable/action_button/current_button, force = FALSE)
+	if(COOLDOWN_FINISHED(src, cult_mark_duration))
+		button_icon_state = initial(button_icon_state)
+	else
 		button_icon_state = "emp"
 
-	update_buttons()
+	return ..()
 
 /datum/action/innate/cult/ghostmark/proc/reset_button()
 	if(QDELETED(owner) || QDELETED(src))
 		return
 
 	SEND_SOUND(owner, 'sound/magic/enter_blood.ogg')
-	to_chat(owner, ("<span class='cultbold'>Your previous mark is gone - you are now ready to create a new blood mark.</span>"))
-	update_button_status()
+	to_chat(owner, span_cultbold("Your previous mark is gone - you are now ready to create a new blood mark."))
+	build_all_button_icons(UPDATE_BUTTON_NAME|UPDATE_BUTTON_ICON)
 
 //////// ELDRITCH PULSE /////////
 
@@ -338,7 +345,7 @@
 /datum/action/innate/cult/master/pulse
 	name = "Eldritch Pulse"
 	desc = "Seize upon a fellow cultist or cult structure and teleport it to a nearby location."
-	icon_icon = 'icons/hud/actions/actions_spells.dmi'
+	button_icon = 'icons/hud/actions/actions_spells.dmi'
 	button_icon_state = "arcane_barrage"
 	requires_target = TRUE
 	enable_text = "<span class='cult'>You prepare to tear through the fabric of reality... <b>Click a target to sieze them!</b></span>"
@@ -401,7 +408,7 @@
 		to_chat(user, span_cult("A pulse of blood magic surges through you as you shift [throwee] through time and space."))
 		user.click_intercept = null
 		throwee_ref = null
-		update_buttons()
+		build_all_button_icons()
 
 		return TRUE
 	else

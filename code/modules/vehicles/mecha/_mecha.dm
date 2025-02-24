@@ -133,7 +133,7 @@
 	///Whether outside viewers can see the pilot inside
 	var/enclosed = TRUE
 	///In case theres a different iconstate for AI/MMI pilot(currently only used for ripley)
-	var/silicon_icon_state = null
+	var/silbutton_icon_state = null
 	///Currently ejecting, and unable to do things
 	var/is_currently_ejecting = FALSE
 
@@ -274,8 +274,8 @@
 	return ..()
 
 /obj/vehicle/sealed/mecha/update_icon_state()
-	if((mecha_flags & SILICON_PILOT) && silicon_icon_state)
-		icon_state = silicon_icon_state
+	if((mecha_flags & SILICON_PILOT) && silbutton_icon_state)
+		icon_state = silbutton_icon_state
 		return ..()
 	if(LAZYLEN(occupants))
 		icon_state = base_icon_state

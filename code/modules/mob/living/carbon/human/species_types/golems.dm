@@ -174,7 +174,7 @@
 	desc = "Set yourself aflame, bringing yourself closer to exploding!"
 	check_flags = AB_CHECK_CONSCIOUS
 	button_icon_state = "sacredflame"
-	icon_icon = 'icons/hud/actions/actions_spells.dmi'
+	button_icon = 'icons/hud/actions/actions_spells.dmi'
 
 /datum/action/innate/ignite/on_activate()
 	if(ishuman(owner))
@@ -553,21 +553,15 @@
 	name = "Unstable Teleport"
 	check_flags = AB_CHECK_CONSCIOUS
 	button_icon_state = "jaunt"
-	icon_icon = 'icons/hud/actions/actions_spells.dmi'
-	var/cooldown = 150
-	var/last_teleport = 0
-
-/datum/action/innate/unstable_teleport/is_available()
-	if(..())
-		if(world.time > last_teleport + cooldown)
-			return 1
-		return 0
+	button_icon = 'icons/hud/actions/actions_spells.dmi'
+	cooldown_time = 17.5 SECONDS
 
 /datum/action/innate/unstable_teleport/on_activate()
 	var/mob/living/carbon/human/H = owner
 	H.visible_message(span_warning("[H] starts vibrating!"), span_danger("You start charging your bluespace core..."))
 	playsound(get_turf(H), 'sound/weapons/flash.ogg', 25, 1)
-	addtimer(CALLBACK(src, PROC_REF(teleport), H), 15)
+	addtimer(CALLBACK(src, PROC_REF(teleport), H), 1.5 SECONDS)
+	return TRUE
 
 /datum/action/innate/unstable_teleport/proc/teleport(mob/living/carbon/human/H)
 	H.visible_message(span_warning("[H] disappears in a shower of sparks!"), span_danger("You teleport!"))
@@ -576,11 +570,6 @@
 	spark_system.attach(H)
 	spark_system.start()
 	do_teleport(H, get_turf(H), 12, asoundin = 'sound/weapons/emitter2.ogg', channel = TELEPORT_CHANNEL_BLUESPACE)
-	last_teleport = world.time
-	update_buttons() //action icon looks unavailable
-	//action icon looks available again
-	addtimer(CALLBACK(src, PROC_REF(update_buttons)), cooldown + 5)
-
 
 //honk
 /datum/species/golem/bananium
@@ -1243,7 +1232,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/cloth_pile)
 	name = "Bone Chill"
 	desc = "Rattle your bones and strike fear into your enemies!"
 	check_flags = AB_CHECK_CONSCIOUS
-	icon_icon = 'icons/hud/actions/actions_spells.dmi'
+	button_icon = 'icons/hud/actions/actions_spells.dmi'
 	button_icon_state = "bonechill"
 	var/cooldown = 600
 	var/last_use

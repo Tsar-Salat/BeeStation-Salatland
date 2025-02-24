@@ -90,7 +90,7 @@ GLOBAL_LIST(admin_antag_list)
 	give_antag_moodies()
 	if(count_against_dynamic_roll_chance && new_body.stat != DEAD)
 		new_body.add_to_current_living_antags()
-	new_body.update_action_buttons()
+	new_body.update_item_action_buttons()
 
 //This handles the application of antag huds/special abilities
 /datum/antagonist/proc/apply_innate_effects(mob/living/mob_override)
@@ -128,7 +128,7 @@ GLOBAL_LIST(admin_antag_list)
 		owner.current.client.holder.auto_deadmin()
 	if(count_against_dynamic_roll_chance && owner.current.stat != DEAD && owner.current.client)
 		owner.current.add_to_current_living_antags()
-	owner.current.update_action_buttons()
+	owner.current.update_item_action_buttons()
 
 //in the future, this should entirely replace greet.
 /datum/antagonist/proc/make_info_button()
@@ -171,7 +171,7 @@ GLOBAL_LIST(admin_antag_list)
 			owner.current.remove_from_current_living_antags()
 		if(!silent && owner.current)
 			farewell()
-		owner.current.update_action_buttons()
+		owner.current.update_item_action_buttons()
 	var/datum/team/team = get_team()
 	if(team)
 		team.remove_member(owner)
@@ -400,6 +400,7 @@ GLOBAL_LIST(admin_antag_list)
 /datum/action/antag_info
 	name = "Open Special Role Information:"
 	button_icon_state = "round_end"
+	show_to_observers = FALSE
 
 /datum/action/antag_info/New(master)
 	. = ..()

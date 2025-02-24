@@ -97,14 +97,12 @@
 
 	if(!(inventory_flags & slot)) //Check that the slot is valid for antimagic
 		unregister_antimagic_signals(equipper)
-		equipper.update_action_buttons()
 		REMOVE_TRAIT(equipper, TRAIT_SEE_ANTIMAGIC, identifier)
 		equipper.remove_alt_appearance("magic_protection_[identifier]")
 		equipper.update_alt_appearances()
 		return
 
 	register_antimagic_signals(equipper)
-	equipper.update_action_buttons()
 	var/mob/mob_parent = equipper
 	if(!HAS_TRAIT(equipper, TRAIT_SEE_ANTIMAGIC))
 		ADD_TRAIT(mob_parent, TRAIT_SEE_ANTIMAGIC, identifier)
@@ -134,7 +132,6 @@
 	if(source.loc != user)
 		alert_caster_on_equip = TRUE
 	unregister_antimagic_signals(user)
-	user.update_action_buttons()
 	REMOVE_TRAIT(user, TRAIT_SEE_ANTIMAGIC, identifier)
 	user.remove_alt_appearance("magic_protection_[identifier]")
 	user.update_alt_appearances()

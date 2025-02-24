@@ -72,7 +72,7 @@
 
 	set_light_on(on)
 
-	update_action_buttons()
+	update_item_action_buttons()
 
 /obj/item/clothing/head/helmet/space/hardsuit/dropped(mob/user)
 	..()
@@ -708,7 +708,7 @@
 	if(iscarbon(user))
 		var/mob/living/carbon/C = user
 		C.head_update(src, forced = 1)
-	update_action_buttons()
+	update_item_action_buttons()
 
 /obj/item/clothing/head/helmet/space/hardsuit/syndi/proc/toggle_hardsuit_mode(mob/user) //Helmet Toggles Suit Mode
 	if(linkedsuit)
@@ -775,9 +775,7 @@
 		return
 	syndieHelmet.activate_combat_mode()
 	syndieHelmet.update_icon()
-	for(var/X in syndieHelmet.actions)
-		var/datum/action/A = X
-		A.update_buttons()
+	syndieHelmet.update_item_action_buttons()
 	//Update the icon_state first
 	icon_state = "hardsuit[syndieHelmet.on]-[syndieHelmet.hardsuit_type]"
 	update_icon()

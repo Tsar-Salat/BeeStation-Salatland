@@ -47,7 +47,7 @@
 	icon_state = "[magboot_state][magpulse]"
 	update_gravity_trait(user)
 	user.refresh_gravity()
-	update_action_buttons()
+	update_item_action_buttons()
 
 /obj/item/clothing/shoes/magboots/negates_gravity()
 	return isspaceturf(get_turf(src)) ? FALSE : magpulse //We don't mimick gravity on space turfs
@@ -112,7 +112,7 @@
 	icon_state = "[magboot_state][magpulse]"
 	to_chat(user, span_notice("You [magpulse ? "enable" : "disable"] the mag-pulse traction system."))
 	user.update_inv_shoes()
-	update_action_buttons()
+	update_item_action_buttons()
 
 /obj/item/clothing/shoes/magboots/crushing
 	desc = "Normal looking magboots that are altered to increase magnetic pull to crush anything underfoot."

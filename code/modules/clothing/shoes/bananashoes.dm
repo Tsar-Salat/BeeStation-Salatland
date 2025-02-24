@@ -66,4 +66,4 @@
 	else
 		icon_state = "clown_prototype_off"
 	usr.update_inv_shoes()
-	update_action_buttons()
+	update_item_action_buttons()

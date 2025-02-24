@@ -154,7 +154,8 @@
 /datum/action/spell/night_vision/revenant
 	name = "Toggle Darkvision"
 	background_icon_state = "bg_revenant"
-	icon_icon = 'icons/hud/actions/actions_revenant.dmi'
+	overlay_icon_state = "bg_revenant_border"
+	button_icon = 'icons/hud/actions/actions_revenant.dmi'
 	button_icon_state = "r_nightvision"
 	toggle_span = "revennotice"
 
@@ -162,6 +163,7 @@
 /datum/action/spell/telepathy/revenant
 	name = "Revenant Transmit"
 	background_icon_state = "bg_revenant"
+	overlay_icon_state = "bg_revenant_border"
 
 	telepathy_span = "revennotice"
 	bold_telepathy_span = "revenboldnotice"
@@ -170,7 +172,8 @@
 
 /datum/action/spell/aoe/revenant
 	background_icon_state = "bg_revenant"
-	icon_icon = 'icons/hud/actions/actions_revenant.dmi'
+	overlay_icon_state = "bg_revenant_border"
+	button_icon = 'icons/hud/actions/actions_revenant.dmi'
 	button_icon_state = "r_default"
 	antimagic_flags = MAGIC_RESISTANCE_HOLY
 	spell_requirements = NONE

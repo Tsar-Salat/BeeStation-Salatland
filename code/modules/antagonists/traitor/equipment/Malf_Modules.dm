@@ -41,7 +41,8 @@ GLOBAL_LIST_INIT(blacklisted_malf_machines, typecacheof(list(
 	desc = "You aren't entirely sure what this does, but it's very beepy and boopy."
 	background_icon_state = "bg_tech_blue"
 	button_icon_state = null
-	icon_icon = 'icons/hud/actions/actions_AI.dmi'
+	overlay_icon_state = "bg_tech_blue_border"
+	button_icon = 'icons/hud/actions/actions_AI.dmi'
 	cooldown_group = MALF_ACTION_GROUP
 	check_flags = AB_CHECK_CONSCIOUS
 	/// The owner AI, so we don't have to typecast every time
@@ -599,7 +600,7 @@ GLOBAL_LIST_INIT(blacklisted_malf_machines, typecacheof(list(
 	adjust_uses(-1)
 	if(uses)
 		desc = "[initial(desc)] It has [uses] use\s remaining."
-		update_buttons()
+		build_all_button_icons()
 
 	clicked_machine.audible_message(("<span class='userdanger'>You hear a loud electrical buzzing sound coming from [clicked_machine]!</span>"))
 	addtimer(CALLBACK(src, PROC_REF(detonate_machine), user, clicked_machine), 5 SECONDS) //kaboom!
@@ -646,7 +647,7 @@ GLOBAL_LIST_INIT(blacklisted_malf_machines, typecacheof(list(
 
 	if(uses)
 		desc = "[initial(desc)] It has [uses] use\s remaining."
-		update_buttons()
+		build_all_button_icons()
 
 	clicked_machine.audible_message(span_userdanger("You hear a loud electrical buzzing sound coming from [clicked_machine]!"))
 	addtimer(CALLBACK(src, PROC_REF(animate_machine), user, clicked_machine), 5 SECONDS) //kabeep!

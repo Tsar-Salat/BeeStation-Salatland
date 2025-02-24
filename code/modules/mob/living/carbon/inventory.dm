@@ -141,10 +141,14 @@
 		legcuffed = null
 		if(!QDELETED(src))
 			update_inv_legcuffed()
+
+	// Not an else-if because we're probably equipped in another slot
 	if(I == internal && (QDELETED(src) || QDELETED(I) || I.loc != src))
 		cutoff_internals()
 		if(!QDELETED(src))
-			update_action_buttons_icon(status_only = TRUE)
+			update_mob_action_buttons(UPDATE_BUTTON_STATUS)
+
+	update_equipment_speed_mods()
 
 /// Returns TRUE if an air tank compatible helmet is equipped.
 /mob/living/carbon/proc/can_breathe_helmet()
@@ -187,7 +191,7 @@
 	else
 		internal = target_tank
 	target_tank.after_internals_opened(src)
-	update_action_buttons_icon()
+	update_mob_action_buttons()
 	return TRUE
 
 /**
@@ -219,7 +223,7 @@
 	else
 		internal = null
 	target_tank.after_internals_closed(src)
-	update_action_buttons_icon()
+	update_mob_action_buttons()
 	return TRUE
 
 /// Close the the currently open external (that's EX-ternal) air tank. Returns TREUE if successful.

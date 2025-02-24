@@ -15,12 +15,9 @@
 	if(revive_ready)
 		INVOKE_ASYNC(src, PROC_REF(revive), user)
 		revive_ready = FALSE
-		name = "Reviving Stasis"
-		desc = "We fall into a stasis, allowing us to regenerate and trick our enemies."
-		button_icon_state = "fake_death"
-		update_buttons()
 		chemical_cost = 15
 		to_chat(user, span_notice("We have revived ourselves."))
+		build_all_button_icons(UPDATE_BUTTON_NAME|UPDATE_BUTTON_ICON)
 	else
 		to_chat(user, span_notice("We begin our stasis, preparing energy to arise once more."))
 		user.fakedeath("changeling") //play dead
@@ -40,22 +37,32 @@
 	var/datum/antagonist/changeling/C = mind.has_antag_datum(/datum/antagonist/changeling)
 	if(C?.purchasedpowers)
 		to_chat(mind.current, span_notice("We are ready to revive."))
-		name = "Revive"
-		desc = "We arise once more."
-		button_icon_state = "revive"
-		update_buttons()
+		build_all_button_icons(UPDATE_BUTTON_NAME|UPDATE_BUTTON_ICON)
 		chemical_cost = 0
 		revive_ready = TRUE
 
 /datum/action/changeling/fakedeath/can_sting(mob/living/user)
 	if(HAS_TRAIT(user, TRAIT_HUSK))
-		to_chat(user, span_warning("This body is too damaged to revive!."))
+		to_chat(user, span_warning("This body is too damaged to revive!"))
 		return
 	if(HAS_TRAIT_FROM(user, TRAIT_DEATHCOMA, "changeling") && !revive_ready)
 		to_chat(user, span_warning("We are already reviving."))
 		return
 	if(!user.stat && !revive_ready) //Confirmation for living changelings if they want to fake their death
-		switch(alert("Are we sure we wish to fake our own death?",,"Yes", "No"))
+		switch(tgui_alert(usr,"Are we sure we wish to fake our own death?", "Feign Death", list("Yes", "No")))
 			if("No")
 				return
+	return ..()
+
+/datum/action/changeling/fakedeath/update_button_name(atom/movable/screen/movable/action_button/button, force)
+	if(revive_ready)
+		name = "Revive"
+		desc = "We arise once more."
+	else
+		name = "Reviving Stasis"
+		desc = "We fall into a stasis, allowing us to regenerate and trick our enemies."
+	return ..()
+
+/datum/action/changeling/fakedeath/apply_button_icon(atom/movable/screen/movable/action_button/current_button, force)
+	button_icon_state = revive_ready ? "revive" : "fake_death"
 	return ..()

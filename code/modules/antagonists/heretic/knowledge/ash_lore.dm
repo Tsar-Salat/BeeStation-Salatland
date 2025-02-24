@@ -134,7 +134,7 @@
 	var/datum/action/spell/touch/mansus_grasp/grasp = locate() in user.actions
 	if(grasp)
 		grasp.reduce_cooldown(grasp.cooldown_time * 0.75)
-		grasp.update_buttons()
+		grasp.build_all_button_icons()
 
 /datum/heretic_knowledge/knowledge_ritual/ash
 	next_knowledge = list(/datum/heretic_knowledge/mad_mask)

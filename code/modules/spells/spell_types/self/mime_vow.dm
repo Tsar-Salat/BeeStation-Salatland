@@ -2,7 +2,8 @@
 	name = "Speech"
 	desc = "Make (or break) a vow of silence."
 	background_icon_state = "bg_mime"
-	icon_icon = 'icons/hud/actions/actions_mime.dmi'
+	overlay_icon_state = "bg_mime_border"
+	button_icon = 'icons/hud/actions/actions_mime.dmi'
 	button_icon_state = "mime_speech"
 
 	school = SCHOOL_MIME
@@ -20,4 +21,4 @@
 	else
 		to_chat(user, ("<span class='notice'>You break your vow of silence.</span>"))
 		SEND_SIGNAL(user, COMSIG_ADD_MOOD_EVENT, "vow", /datum/mood_event/broken_vow)
-	user.update_action_buttons_icon()
+	user.update_mob_action_buttons()

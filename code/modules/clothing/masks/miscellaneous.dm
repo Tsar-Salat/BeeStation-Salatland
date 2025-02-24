@@ -93,9 +93,7 @@
 	if(src && choice && !user.incapacitated() && in_range(user,src))
 		icon_state = options[choice]
 		user.update_inv_wear_mask()
-		for(var/X in actions)
-			var/datum/action/A = X
-			A.update_buttons()
+		update_item_action_buttons()
 		to_chat(user, span_notice("Your emotion mask has now morphed into [choice]!"))
 		return 1
 

@@ -15,6 +15,12 @@
 	if (disable_text && requires_target)
 		to_chat(on_who, disable_text)
 
+/datum/action/innate/is_action_active(atom/movable/screen/movable/action_button/current_button)
+	if(requires_target)
+		return current_button.our_hud?.mymob?.click_intercept == src
+	else
+		return active
+
 /datum/action/innate/on_activate(mob/user, atom/target)
 	if (enable_text && !requires_target)
 		to_chat(user, enable_text)

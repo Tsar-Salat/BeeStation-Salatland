@@ -250,7 +250,7 @@
 
 /datum/action/innate/pai
 	name = "PAI Action"
-	icon_icon = 'icons/hud/actions/actions_silicon.dmi'
+	button_icon = 'icons/hud/actions/actions_silicon.dmi'
 	button_icon_state = null
 	var/mob/living/silicon/pai/P
 
@@ -263,6 +263,7 @@
 	name = "Software Interface"
 	button_icon_state = "pai"
 	background_icon_state = "bg_tech"
+	overlay_icon_state = "bg_tech_border"
 
 /datum/action/innate/pai/software/on_activate(mob/user, atom/target)
 	P.ui_act()
@@ -271,6 +272,7 @@
 	name = "Toggle Holoform"
 	button_icon_state = "pai_holoform"
 	background_icon_state = "bg_tech"
+	overlay_icon_state = "bg_tech_border"
 
 /datum/action/innate/pai/shell/on_activate(mob/user, atom/target)
 	if(P.holoform)
@@ -282,6 +284,7 @@
 	name = "Holochassis Appearance Composite"
 	button_icon_state = "pai_chassis"
 	background_icon_state = "bg_tech"
+	overlay_icon_state = "bg_tech_border"
 
 /datum/action/innate/pai/chassis/on_activate(mob/user, atom/target)
 	P.choose_chassis()
@@ -290,15 +293,17 @@
 	name = "Rest"
 	button_icon_state = "pai_rest"
 	background_icon_state = "bg_tech"
+	overlay_icon_state = "bg_tech_border"
 
 /datum/action/innate/pai/rest/on_activate(mob/user, atom/target)
 	P.toggle_resting()
 
 /datum/action/innate/pai/light
 	name = "Toggle Integrated Lights"
-	icon_icon = 'icons/hud/actions/actions_spells.dmi'
+	button_icon = 'icons/hud/actions/actions_spells.dmi'
 	button_icon_state = "emp"
 	background_icon_state = "bg_tech"
+	overlay_icon_state = "bg_tech_border"
 
 /datum/action/innate/pai/light/on_activate(mob/user, atom/target)
 	P.toggle_integrated_light()

@@ -99,7 +99,7 @@
 	if(H.blood_volume < BLOOD_VOLUME_OKAY)
 		Cannibalize_Body(H)
 	if(regenerate_limbs)
-		regenerate_limbs.update_buttons()
+		regenerate_limbs.build_all_button_icons()
 
 /datum/species/oozeling/proc/Cannibalize_Body(mob/living/carbon/human/H)
 	var/list/limbs_to_consume = list(BODY_ZONE_R_ARM, BODY_ZONE_L_ARM, BODY_ZONE_R_LEG, BODY_ZONE_L_LEG) - H.get_missing_limbs()
@@ -123,8 +123,9 @@
 	name = "Regenerate Limbs"
 	check_flags = AB_CHECK_CONSCIOUS
 	button_icon_state = "slimeheal"
-	icon_icon = 'icons/hud/actions/actions_slime.dmi'
+	button_icon = 'icons/hud/actions/actions_slime.dmi'
 	background_icon_state = "bg_alien"
+	overlay_icon_state = "bg_alien_border"
 
 /datum/action/innate/regenerate_limbs/is_available()
 	if(..())

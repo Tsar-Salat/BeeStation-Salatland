@@ -64,7 +64,7 @@
 
 	if(src == user.get_active_held_item()) //update inhands
 		user.update_inv_hands()
-	update_action_buttons()
+	update_item_action_buttons()
 
 // DOOMGUY CHAINSAW
 /obj/item/chainsaw/doomslayer
@@ -125,7 +125,7 @@
 
 	if(src == user.get_active_held_item())
 		user.update_inv_hands()
-	update_action_buttons()
+	update_item_action_buttons()
 
 // DOOMGUY ENERGY CHAINSAW
 /obj/item/chainsaw/energy/doom

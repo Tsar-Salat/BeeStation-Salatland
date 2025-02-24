@@ -353,7 +353,7 @@
 
 /datum/action/innate/nanite_button
 	name = "Button"
-	icon_icon = 'icons/hud/actions/actions_items.dmi'
+	button_icon = 'icons/hud/actions/actions_items.dmi'
 	check_flags = AB_CHECK_HANDS_BLOCKED|AB_CHECK_INCAPACITATED|AB_CHECK_CONSCIOUS
 	button_icon_state = "power_green"
 	var/datum/nanite_program/dermal_button/program
@@ -369,7 +369,7 @@
 
 /datum/action/innate/nanite_button/proc/update_icon(icon, color)
 	button_icon_state = "[icon]_[color]"
-	update_buttons()
+	build_all_button_icons()
 
 /datum/nanite_program/dermal_button/toggle
 	name = "Dermal Toggle"

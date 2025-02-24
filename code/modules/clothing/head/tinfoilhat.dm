@@ -102,6 +102,4 @@
 	else
 		set_light(FALSE)
 
-	for(var/X in actions)
-		var/datum/action/A=X
-		A.update_buttons()
+	update_item_action_buttons()

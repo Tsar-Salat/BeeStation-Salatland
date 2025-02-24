@@ -231,7 +231,7 @@
 //==================================//
 
 /datum/action/innate/clockcult
-	icon_icon = 'icons/hud/actions/actions_clockcult.dmi'
+	button_icon = 'icons/hud/actions/actions_clockcult.dmi'
 	button_icon_state = null
 	background_icon_state = "bg_clock"
 	buttontooltipstyle = "brass"

@@ -153,7 +153,7 @@
 	log_game("[key_name_admin(man)] took control of the sentient [X]. [X] located at [AREACOORD(X)]")
 	man.forceMove(X)
 	man.set_anchored(TRUE)
-	var/datum/action/xeno_senitent_action/P = new /datum/action/xeno_senitent_action(X)
+	var/datum/action/xeno_sentient_action/P = new /datum/action/xeno_sentient_action(X)
 	P.Grant(man)
 	//show little guy his traits
 	to_chat(man, span_notice("Your traits are: \n"))
@@ -163,20 +163,20 @@
 		playsound(get_turf(X), 'sound/items/haunted/ghostitemattack.ogg', 50, TRUE)
 	qdel(S)
 
-/datum/action/xeno_senitent_action //Lets sentience target goober
+/datum/action/xeno_sentient_action //Lets sentience target goober
 	name = "Activate"
 	desc = "Select a target to activate your traits on."
-	icon_icon = 'icons/hud/actions/actions_revenant.dmi'
+	button_icon = 'icons/hud/actions/actions_revenant.dmi'
 	button_icon_state = "r_transmit"
 	background_icon_state = "bg_spell"
 	requires_target = TRUE
 
-/datum/action/xeno_senitent_action/New(master)
+/datum/action/xeno_sentient_action/New(master)
 	. = ..()
 	if (!istype(master, /obj/item/xenoartifact))
 		CRASH("Xeno artifact action assigned to a non-xeno artifact")
 
-/datum/action/xeno_senitent_action/on_activate(mob/user, atom/target)
+/datum/action/xeno_sentient_action/on_activate(mob/user, atom/target)
 	. = ..()
 	var/obj/item/xenoartifact/xeno = master
 	xeno.true_target += xeno.process_target(target)
