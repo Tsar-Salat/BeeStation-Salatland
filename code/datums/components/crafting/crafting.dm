@@ -148,7 +148,7 @@
 	var/list/present_qualities = list()
 
 	for(var/obj/item/contained_item in source.contents)
-		if(contained_item.atom_storage)
+		if(contained_item.GetComponent(/datum/component/storage))
 			for(var/obj/item/subcontained_item in contained_item.contents)
 				available_tools[subcontained_item.type] = TRUE
 				if(subcontained_item.tool_behaviour)
@@ -247,7 +247,7 @@
 	else
 		result = new recipe.result(get_turf(crafter.loc))
 		result.dir = crafter.dir
-		if(result.atom_storage && recipe.delete_contents)
+		if(result.GetComponent(/datum/component/storage) && recipe.delete_contents)
 			for(var/obj/item/thing in result)
 				qdel(thing)
 	var/datum/reagents/holder = locate() in parts
