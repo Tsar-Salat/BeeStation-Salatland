@@ -11595,6 +11595,12 @@
 	},
 /turf/open/floor/iron/dark,
 /area/bridge)
+"byw" = (
+/obj/structure/bed/dogbed/ian,
+/obj/machinery/airalarm/directional/east,
+/mob/living/basic/pet/dog/corgi/Ian,
+/turf/open/floor/wood,
+/area/crew_quarters/heads/hop)
 "byF" = (
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
 /obj/machinery/atmospherics/pipe/smart/simple/scrubbers/hidden/layer4{
@@ -32498,6 +32504,16 @@
 	},
 /turf/open/floor/iron,
 /area/crew_quarters/fitness/recreation)
+"eBj" = (
+/mob/living/basic/pet/dog/pug{
+	density = 0;
+	dir = 8
+	},
+/obj/effect/turf_decal/box/corners{
+	dir = 8
+	},
+/turf/open/floor/engine,
+/area/science/explab)
 "eBl" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
@@ -45123,6 +45139,16 @@
 	},
 /turf/open/floor/wood,
 /area/medical/exam_room)
+"iuT" = (
+/obj/machinery/airalarm/directional/south{
+	pixel_y = -22
+	},
+/obj/machinery/light/small,
+/obj/machinery/suit_storage_unit/medical,
+/turf/open/floor/plating{
+	broken = 1
+	},
+/area/medical/morgue)
 "iuW" = (
 /obj/machinery/power/terminal{
 	dir = 1
@@ -47776,15 +47802,6 @@
 	},
 /turf/open/floor/iron,
 /area/crew_quarters/toilet/restrooms)
-"jrv" = (
-/obj/machinery/airalarm/directional/south{
-	pixel_y = -22
-	},
-/obj/machinery/light/small,
-/turf/open/floor/plating{
-	broken = 1
-	},
-/area/medical/morgue)
 "jrz" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/atmospherics/pipe/smart/simple/scrubbers/hidden/layer4,
@@ -50987,16 +51004,6 @@
 	},
 /turf/open/floor/catwalk_floor/iron,
 /area/engine/atmos)
-"ksy" = (
-/mob/living/simple_animal/pet/dog/pug{
-	density = 0;
-	dir = 8
-	},
-/obj/effect/turf_decal/box/corners{
-	dir = 8
-	},
-/turf/open/floor/engine,
-/area/science/explab)
 "ksC" = (
 /obj/structure/closet/secure_closet/bar,
 /obj/machinery/status_display/evac{
@@ -67555,17 +67562,6 @@
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
 /turf/open/floor/iron,
 /area/engine/engineering)
-"pNR" = (
-/obj/effect/turf_decal/tile/red/half/contrasted{
-	dir = 8
-	},
-/obj/structure/cable/yellow{
-	icon_state = "2-8"
-	},
-/obj/structure/bed/dogbed/walter,
-/mob/living/simple_animal/pet/dog/bullterrier/walter,
-/turf/open/floor/iron/dark,
-/area/security/warden)
 "pNW" = (
 /obj/machinery/computer/card{
 	dir = 4
@@ -72797,12 +72793,6 @@
 	},
 /turf/open/floor/prison/dark,
 /area/security/prison)
-"rte" = (
-/obj/structure/bed/dogbed/ian,
-/obj/machinery/airalarm/directional/east,
-/mob/living/simple_animal/pet/dog/corgi/Ian,
-/turf/open/floor/wood,
-/area/crew_quarters/heads/hop)
 "rtH" = (
 /obj/machinery/door/firedoor,
 /obj/machinery/atmospherics/pipe/smart/simple/supply/hidden/layer2,
@@ -76099,13 +76089,6 @@
 	},
 /turf/open/floor/iron,
 /area/hallway/primary/fore)
-"stM" = (
-/obj/effect/turf_decal/tile/brown/half/contrasted{
-	dir = 4
-	},
-/obj/machinery/camera/directional/north,
-/turf/open/floor/iron,
-/area/quartermaster/storage)
 "stS" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
@@ -81683,6 +81666,14 @@
 	},
 /turf/open/floor/iron,
 /area/maintenance/department/medical/central)
+"uiL" = (
+/obj/effect/turf_decal/tile/brown/half/contrasted{
+	dir = 4
+	},
+/obj/machinery/camera/directional/north,
+/obj/machinery/suit_storage_unit/industrial/loader,
+/turf/open/floor/iron,
+/area/quartermaster/storage)
 "uiR" = (
 /obj/structure/cable/yellow{
 	icon_state = "4-8"
@@ -83838,6 +83829,17 @@
 	},
 /turf/open/floor/iron,
 /area/maintenance/port/aft)
+"uUc" = (
+/obj/effect/turf_decal/tile/red/half/contrasted{
+	dir = 8
+	},
+/obj/structure/cable/yellow{
+	icon_state = "2-8"
+	},
+/obj/structure/bed/dogbed/walter,
+/mob/living/basic/pet/dog/bullterrier/walter,
+/turf/open/floor/iron/dark,
+/area/security/warden)
 "uUh" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
@@ -123871,7 +123873,7 @@ iJg
 tTz
 eYD
 sKO
-ksy
+eBj
 djA
 oPM
 xUI
@@ -131797,7 +131799,7 @@ ckV
 cgh
 cib
 cjD
-rte
+byw
 cmC
 cod
 cpD
@@ -136216,7 +136218,7 @@ laY
 jVd
 jce
 geg
-jrv
+iuT
 dCy
 pRu
 wuY
@@ -139964,7 +139966,7 @@ aoE
 pKM
 lkf
 aoF
-stM
+uiL
 ayB
 azE
 azE
@@ -145664,7 +145666,7 @@ nYx
 yfJ
 eSx
 qQX
-pNR
+uUc
 hhb
 ecw
 soX

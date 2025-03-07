@@ -186,6 +186,11 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 		log_message("has thrown [thrown_thing]", LOG_ATTACK)
 		newtonian_move(get_dir(target, src))
 		thrown_thing.safe_throw_at(target, thrown_thing.throw_range, thrown_thing.throw_speed, src, null, null, null, move_force)
+		do_attack_animation(target, no_effect = 1)
+		var/sound/throwsound = 'sound/weapons/throw.ogg'
+		var/power_throw_text = "."
+		playsound(src, throwsound, min(8*min(get_dist(loc,target),thrown_thing.throw_range), 50), vary = TRUE, extrarange = -1)
+		log_message("has thrown [thrown_thing] [power_throw_text]", LOG_ATTACK)
 		return TRUE
 	return FALSE
 
@@ -574,12 +579,20 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 		if(!isnull(G.lighting_alpha))
 			lighting_alpha = min(lighting_alpha, G.lighting_alpha)
 
+	if(HAS_TRAIT(src, TRAIT_TRUE_NIGHT_VISION))
+		lighting_alpha = min(lighting_alpha, LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE)
+		see_in_dark = max(see_in_dark, 8)
+
+	if(HAS_TRAIT(src, TRAIT_MESON_VISION))
+		sight |= SEE_TURFS
+		lighting_alpha = min(lighting_alpha, LIGHTING_PLANE_ALPHA_MOSTLY_VISIBLE)
+
 	if(HAS_TRAIT(src, TRAIT_THERMAL_VISION))
-		sight |= (SEE_MOBS)
+		sight |= SEE_MOBS
 		lighting_alpha = min(lighting_alpha, LIGHTING_PLANE_ALPHA_MOSTLY_VISIBLE)
 
 	if(HAS_TRAIT(src, TRAIT_XRAY_VISION))
-		sight |= (SEE_TURFS|SEE_MOBS|SEE_OBJS)
+		sight |= SEE_TURFS|SEE_MOBS|SEE_OBJS
 		see_in_dark = max(see_in_dark, 8)
 
 	if(HAS_TRAIT(src, TRAIT_NIGHT_VISION))

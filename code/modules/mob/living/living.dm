@@ -94,6 +94,7 @@
 
 //Called when we bump onto a mob
 /mob/living/proc/MobBump(mob/M)
+	SEND_SIGNAL(src, COMSIG_LIVING_MOB_BUMP, M)
 	//Even if we don't push/swap places, we "touched" them, so spread fire
 	spreadFire(M)
 
@@ -132,6 +133,14 @@
 	if(moving_diagonally)//no mob swap during diagonal moves.
 		return TRUE
 
+	var/either_combat_mode = combat_mode
+	var/target_combat_mode = FALSE
+	if (isliving(M))
+		var/mob/living/L = M
+		if (L.stat == CONSCIOUS)
+			either_combat_mode ||= L.combat_mode
+			target_combat_mode = L.combat_mode
+
 	if(!M.buckled && !M.has_buckled_mobs())
 		var/mob_swap = FALSE
 		var/too_strong = (M.move_resist > move_force) //can't swap with immovable objects unless they help us
@@ -144,8 +153,8 @@
 				mob_swap = TRUE
 			else if(
 				!(HAS_TRAIT(M, TRAIT_NOMOBSWAP) || HAS_TRAIT(src, TRAIT_NOMOBSWAP))&&\
-				((HAS_TRAIT(M, TRAIT_RESTRAINED) && !too_strong) || !combat_mode) &&\
-				(HAS_TRAIT(src, TRAIT_RESTRAINED) || !combat_mode)
+				((HAS_TRAIT(M, TRAIT_RESTRAINED) && !too_strong) || !either_combat_mode) &&\
+				(HAS_TRAIT(src, TRAIT_RESTRAINED) || !either_combat_mode)
 			)
 				mob_swap = TRUE
 		if(mob_swap)
@@ -185,16 +194,9 @@
 		var/mob/living/L = M
 		if(HAS_TRAIT(L, TRAIT_PUSHIMMUNE))
 			return TRUE
-	//If they're a human, and they're not in help intent, block pushing
-	if(ishuman(M))
-		var/mob/living/carbon/human/human = M
-		if(human.combat_mode)
-			return TRUE
-	//if they are a cyborg, and they're alive and in combat mode, block pushing
-	if(iscyborg(M))
-		var/mob/living/silicon/robot/borg = M
-		if(borg.combat_mode && borg.stat != DEAD)
-			return TRUE
+	// Don't allow pushing the target if they are in combat mode.
+	if(target_combat_mode)
+		return TRUE
 	//anti-riot equipment is also anti-push
 	for(var/obj/item/I in M.held_items)
 		if(!isclothing(M))
@@ -399,7 +401,11 @@
 
 	if(istype(AM) && Adjacent(AM))
 		start_pulling(AM)
-	else if(!combat_mode) //Don;'t cancel pulls if misclicking in combat mode.
+	else
+		// If we click on a turf adjacent to a target while we have them in an aggro-grab
+		// then we won't cancel the grab
+		if (ismob(pulling) && grab_state >= GRAB_AGGRESSIVE && isturf(AM) && get_dist(AM, pulling) <= 1)
+			return
 		stop_pulling()
 
 /mob/living/stop_pulling()
@@ -535,7 +541,7 @@
 		if(body_position == LYING_DOWN)
 			if(!silent)
 				to_chat(src, span_notice("You will now try to stay lying down on the floor."))
-		else if(buckled && buckled.buckle_lying != NO_BUCKLE_LYING)
+		else if(HAS_TRAIT(src, TRAIT_FORCED_STANDING) || (buckled && buckled.buckle_lying != NO_BUCKLE_LYING))
 			if(!silent)
 				to_chat(src, span_notice("You will now lay down as soon as you are able to."))
 		else
@@ -554,8 +560,8 @@
 				to_chat(src, span_notice("You stand up."))
 			get_up(instant)
 
+	SEND_SIGNAL(src, COMSIG_LIVING_RESTING, new_resting, silent, instant)
 	update_resting()
-
 
 /// Proc to append and redefine behavior to the change of the [/mob/living/var/resting] variable.
 /mob/living/proc/update_resting()
@@ -908,7 +914,7 @@
 		return pick("trails_1", "trails_2")
 
 /mob/living/experience_pressure_difference(pressure_difference, direction, pressure_resistance_prob_delta = 0)
-	if(buckled)
+	if(buckled || mob_negates_gravity())
 		return
 	if(client && client.move_delay >= world.time + world.tick_lag*2)
 		pressure_resistance_prob_delta -= 30
@@ -1172,7 +1178,7 @@
 		return FALSE
 	if(invisibility || alpha == 0)//cloaked
 		return FALSE
-	if(SEND_SIGNAL(src, COMSIG_LIVING_CAN_TRACK, args) & COMPONENT_CANT_TRACK)
+	if(SEND_SIGNAL(src, COMSIG_LIVING_CAN_TRACK, user) & COMPONENT_CANT_TRACK)
 		return FALSE
 
 	// Now, are they viewable by a camera? (This is last because it's the most intensive check)
@@ -1741,8 +1747,8 @@
 /// Proc to append behavior to the condition of being floored. Called when the condition starts.
 /mob/living/proc/on_floored_start()
 	if(body_position == STANDING_UP) //force them on the ground
-		set_lying_angle(pick(90, 270))
 		set_body_position(LYING_DOWN)
+		set_lying_angle(pick(90, 270))
 		on_fall()
 
 

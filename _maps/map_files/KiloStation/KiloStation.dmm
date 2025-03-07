@@ -2233,6 +2233,18 @@
 /obj/effect/decal/cleanable/cobweb/cobweb2,
 /turf/open/floor/plating,
 /area/maintenance/port/fore)
+"avm" = (
+/obj/effect/decal/cleanable/cobweb/cobweb2,
+/obj/machinery/firealarm{
+	dir = 8;
+	pixel_x = 28
+	},
+/obj/effect/turf_decal/tile/neutral/half/contrasted{
+	dir = 1
+	},
+/obj/machinery/suit_storage_unit/industrial/loader,
+/turf/open/floor/iron/dark,
+/area/quartermaster/storage)
 "avn" = (
 /obj/structure/table/wood,
 /obj/effect/turf_decal/box/corners,
@@ -8575,25 +8587,6 @@
 "bHV" = (
 /turf/closed/wall/rust,
 /area/storage/tech)
-"bHW" = (
-/obj/structure/bed/dogbed/ian,
-/obj/machinery/power/apc{
-	areastring = "/area/crew_quarters/heads/hop";
-	dir = 1;
-	name = "Head of Personnel's Office APC";
-	pixel_y = 24
-	},
-/obj/structure/cable/yellow{
-	icon_state = "0-2"
-	},
-/mob/living/simple_animal/pet/dog/corgi/Ian{
-	dir = 8
-	},
-/obj/effect/turf_decal/siding/wood{
-	dir = 9
-	},
-/turf/open/floor/wood,
-/area/crew_quarters/heads/hop)
 "bHX" = (
 /turf/closed/wall/rust,
 /area/hallway/primary/port)
@@ -22122,20 +22115,6 @@
 	},
 /turf/open/floor/iron,
 /area/hallway/secondary/exit/departure_lounge)
-"fjE" = (
-/obj/effect/turf_decal/tile/neutral{
-	dir = 8
-	},
-/obj/structure/bed/dogbed/walter,
-/mob/living/simple_animal/pet/dog/bullterrier/walter,
-/obj/structure/cable/yellow{
-	icon_state = "1-2"
-	},
-/obj/structure/cable/yellow{
-	icon_state = "2-4"
-	},
-/turf/open/floor/iron/showroomfloor,
-/area/security/warden)
 "fjS" = (
 /obj/structure/closet/crate/freezer/surplus_limbs,
 /obj/effect/turf_decal/tile/blue/half/contrasted{
@@ -31329,17 +31308,6 @@
 	},
 /turf/open/floor/iron,
 /area/security/brig)
-"ijm" = (
-/obj/effect/decal/cleanable/cobweb/cobweb2,
-/obj/machinery/firealarm{
-	dir = 8;
-	pixel_x = 28
-	},
-/obj/effect/turf_decal/tile/neutral/half/contrasted{
-	dir = 1
-	},
-/turf/open/floor/iron/dark,
-/area/quartermaster/storage)
 "iju" = (
 /obj/machinery/mass_driver{
 	dir = 1;
@@ -58300,6 +58268,20 @@
 	},
 /turf/open/floor/noslip/white,
 /area/security/main)
+"qVd" = (
+/obj/effect/turf_decal/tile/neutral{
+	dir = 8
+	},
+/obj/structure/bed/dogbed/walter,
+/mob/living/basic/pet/dog/bullterrier/walter,
+/obj/structure/cable/yellow{
+	icon_state = "1-2"
+	},
+/obj/structure/cable/yellow{
+	icon_state = "2-4"
+	},
+/turf/open/floor/iron/showroomfloor,
+/area/security/warden)
 "qVe" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/reagent_dispensers/watertank,
@@ -76546,6 +76528,25 @@
 	},
 /turf/open/floor/iron/dark,
 /area/crew_quarters/fitness/recreation)
+"wNo" = (
+/obj/structure/bed/dogbed/ian,
+/obj/machinery/power/apc{
+	areastring = "/area/crew_quarters/heads/hop";
+	dir = 1;
+	name = "Head of Personnel's Office APC";
+	pixel_y = 24
+	},
+/obj/structure/cable/yellow{
+	icon_state = "0-2"
+	},
+/mob/living/basic/pet/dog/corgi/Ian{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/wood{
+	dir = 9
+	},
+/turf/open/floor/wood,
+/area/crew_quarters/heads/hop)
 "wNH" = (
 /obj/machinery/camera/directional/north{
 	c_tag = "Chief Medical Officer's Office";
@@ -98400,7 +98401,7 @@ chS
 xDC
 amA
 wdS
-crP
+jrs
 jrs
 lxw
 amA
@@ -102813,7 +102814,7 @@ gMx
 sgL
 lRw
 owZ
-fjE
+qVd
 uft
 bDQ
 uKJ
@@ -110248,7 +110249,7 @@ wPz
 atT
 atP
 atj
-bHW
+wNo
 bIf
 uKS
 pWD
@@ -122319,7 +122320,7 @@ sHT
 tKM
 bhH
 bhH
-ijm
+avm
 ios
 rOZ
 uOB

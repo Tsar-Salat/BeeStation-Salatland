@@ -38,7 +38,7 @@
 	icon_state = "armoralt"
 	item_state = "armor"
 	blood_overlay_type = "armor"
-	dog_fashion = /datum/dog_fashion/back
+	dog_fashion = /datum/dog_fashion/back/armorvest
 
 /obj/item/clothing/suit/armor/vest/alt
 	desc = "An alternate style Type I-B armored vest that provides decent protection against most types of damage. They perform identically in the field."
@@ -219,7 +219,7 @@
 	cold_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	heat_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	armor_type = /datum/armor/armor_riot
-	blocks_shove_knockdown = TRUE
+	clothing_flags = BLOCKS_SHOVE_KNOCKDOWN
 	strip_delay = 80
 	equip_delay_other = 60
 	slowdown = 0.15
@@ -430,6 +430,7 @@
 	max_integrity = 200
 	resistance_flags = FLAMMABLE
 	armor_type = /datum/armor/vest_durathread
+	dog_fashion = null
 
 
 /datum/armor/vest_durathread
@@ -450,6 +451,7 @@
 	item_state = "rus_armor"
 	armor_type = /datum/armor/vest_russian
 	slowdown = 0.05
+	dog_fashion = null
 
 
 /datum/armor/vest_russian
@@ -472,6 +474,7 @@
 	cold_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	min_cold_protection_temperature = SPACE_SUIT_MIN_TEMP_PROTECT
 	armor_type = /datum/armor/vest_russian_coat
+	dog_fashion = null
 
 
 /datum/armor/vest_russian_coat

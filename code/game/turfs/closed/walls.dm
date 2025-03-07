@@ -132,6 +132,7 @@
 				balloon_alert(user, "You fix some dents on the wall.")
 				cut_overlay(dent_decals)
 				dent_decals.Cut()
+			integrity = max_integrity
 			return TRUE
 
 	return FALSE
@@ -200,7 +201,7 @@
 	if(.)
 		ChangeTurf(/turf/closed/wall/clockwork)
 
-/turf/closed/wall/get_dumping_location(obj/item/storage/source, mob/user)
+/turf/closed/wall/get_dumping_location()
 	return null
 
 /turf/closed/wall/acid_act(acidpwr, acid_volume)

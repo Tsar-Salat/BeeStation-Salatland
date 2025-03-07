@@ -5456,17 +5456,6 @@
 /obj/effect/spawner/lootdrop/maintenance,
 /turf/open/floor/plating,
 /area/maintenance/port)
-"bjm" = (
-/obj/structure/table,
-/obj/item/hand_labeler,
-/obj/item/hand_labeler,
-/obj/machinery/requests_console{
-	department = "Cargo Bay";
-	departmentType = 2;
-	pixel_y = 30
-	},
-/turf/open/floor/iron,
-/area/quartermaster/storage)
 "bjp" = (
 /obj/structure/table,
 /obj/machinery/cell_charger,
@@ -17655,6 +17644,15 @@
 /obj/effect/landmark/navigate_destination,
 /turf/open/floor/iron/dark,
 /area/tcommsat/computer)
+"dIH" = (
+/obj/machinery/requests_console{
+	department = "Cargo Bay";
+	departmentType = 2;
+	pixel_y = 30
+	},
+/obj/machinery/suit_storage_unit/industrial/loader,
+/turf/open/floor/iron,
+/area/quartermaster/storage)
 "dJs" = (
 /obj/machinery/light_switch{
 	pixel_x = -28
@@ -20728,17 +20726,6 @@
 /obj/effect/turf_decal/stripes/red/line,
 /turf/open/floor/iron/dark,
 /area/security/prison)
-"eRL" = (
-/obj/effect/turf_decal/caution{
-	dir = 8
-	},
-/mob/living/simple_animal/pet/dog/pug{
-	density = 0;
-	dir = 8
-	},
-/obj/item/beacon,
-/turf/open/floor/engine,
-/area/science/explab)
 "eRQ" = (
 /obj/machinery/atmospherics/pipe/smart/simple/scrubbers/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/simple/supply/hidden/layer2{
@@ -28157,14 +28144,6 @@
 /obj/machinery/vending/dinnerware,
 /turf/open/floor/iron/freezer,
 /area/crew_quarters/kitchen/coldroom)
-"hTX" = (
-/obj/structure/bed/dogbed/walter,
-/mob/living/simple_animal/pet/dog/bullterrier/walter,
-/obj/machinery/atmospherics/pipe/smart/simple/scrubbers/hidden/layer4{
-	dir = 5
-	},
-/turf/open/floor/iron/dark,
-/area/security/warden)
 "hUb" = (
 /turf/open/floor/catwalk_floor,
 /area/maintenance/starboard/aft)
@@ -30018,6 +29997,14 @@
 	},
 /turf/open/floor/iron,
 /area/science/mixing)
+"iEq" = (
+/obj/structure/bed/dogbed/walter,
+/mob/living/basic/pet/dog/bullterrier/walter,
+/obj/machinery/atmospherics/pipe/smart/simple/scrubbers/hidden/layer4{
+	dir = 5
+	},
+/turf/open/floor/iron/dark,
+/area/security/warden)
 "iEs" = (
 /obj/effect/turf_decal/tile/dark_blue/opposingcorners,
 /obj/effect/turf_decal/tile/dark_blue{
@@ -37049,6 +37036,17 @@
 	},
 /turf/open/floor/iron/white,
 /area/science/xenobiology)
+"lpO" = (
+/obj/effect/turf_decal/caution{
+	dir = 8
+	},
+/mob/living/basic/pet/dog/pug{
+	density = 0;
+	dir = 8
+	},
+/obj/item/beacon,
+/turf/open/floor/engine,
+/area/science/explab)
 "lpS" = (
 /obj/structure/bed,
 /obj/item/bedsheet/mime,
@@ -37554,6 +37552,19 @@
 /obj/structure/closet/firecloset,
 /turf/open/floor/iron,
 /area/engine/engineering)
+"lBd" = (
+/mob/living/basic/pet/dog/corgi/Ian,
+/obj/effect/turf_decal/siding/wood,
+/obj/structure/bed/dogbed/ian,
+/obj/structure/cable/yellow{
+	icon_state = "1-2"
+	},
+/obj/machinery/light_switch{
+	pixel_x = 27
+	},
+/obj/machinery/camera/directional/east,
+/turf/open/floor/wood,
+/area/crew_quarters/heads/hop)
 "lBv" = (
 /obj/structure/bed/roller,
 /obj/machinery/light,
@@ -39313,6 +39324,20 @@
 /obj/structure/grille,
 /turf/open/floor/plating,
 /area/maintenance/central)
+"mxI" = (
+/obj/structure/table,
+/obj/item/clothing/head/soft/cargo,
+/obj/item/clothing/head/soft/cargo,
+/obj/machinery/power/apc/auto_name/directional/north{
+	pixel_y = 24
+	},
+/obj/structure/cable/yellow{
+	icon_state = "0-2"
+	},
+/obj/item/hand_labeler,
+/obj/item/hand_labeler,
+/turf/open/floor/iron,
+/area/quartermaster/storage)
 "mye" = (
 /obj/structure/sign/departments/minsky/research/research{
 	pixel_x = 32
@@ -39442,18 +39467,6 @@
 	},
 /turf/open/floor/iron/dark,
 /area/hallway/secondary/command)
-"mAq" = (
-/obj/structure/table,
-/obj/item/clothing/head/soft/cargo,
-/obj/item/clothing/head/soft/cargo,
-/obj/machinery/power/apc/auto_name/directional/north{
-	pixel_y = 24
-	},
-/obj/structure/cable/yellow{
-	icon_state = "0-2"
-	},
-/turf/open/floor/iron,
-/area/quartermaster/storage)
 "mAN" = (
 /obj/structure/cable/yellow{
 	icon_state = "1-4"
@@ -55353,6 +55366,10 @@
 /obj/effect/turf_decal/tile/red/half/contrasted,
 /turf/open/floor/iron/dark,
 /area/security/prison)
+"sSc" = (
+/obj/machinery/suit_storage_unit/medical,
+/turf/open/floor/iron/dark,
+/area/medical/morgue)
 "sSq" = (
 /obj/structure/disposalpipe/segment,
 /turf/open/floor/iron/white,
@@ -59836,19 +59853,6 @@
 	},
 /turf/open/floor/iron/white,
 /area/medical/genetics)
-"uFB" = (
-/mob/living/simple_animal/pet/dog/corgi/Ian,
-/obj/effect/turf_decal/siding/wood,
-/obj/structure/bed/dogbed/ian,
-/obj/structure/cable/yellow{
-	icon_state = "1-2"
-	},
-/obj/machinery/light_switch{
-	pixel_x = 27
-	},
-/obj/machinery/camera/directional/east,
-/turf/open/floor/wood,
-/area/crew_quarters/heads/hop)
 "uFK" = (
 /obj/machinery/door/firedoor,
 /obj/machinery/door/airlock/public/glass{
@@ -88170,7 +88174,7 @@ aPA
 aSg
 rGD
 aZE
-mAq
+mxI
 uxM
 hWE
 pSt
@@ -88427,7 +88431,7 @@ rqX
 xVS
 rYK
 aZE
-bjm
+dIH
 bjr
 mJS
 bmh
@@ -95877,7 +95881,7 @@ acO
 kZO
 hxw
 rvO
-uFB
+lBd
 jKn
 xLi
 lOA
@@ -96345,7 +96349,7 @@ hJw
 vrJ
 gET
 qiN
-hTX
+iEq
 dDm
 agn
 mzv
@@ -103342,7 +103346,7 @@ pmc
 sHA
 tyR
 cBD
-obY
+sSc
 snx
 cAL
 cAL
@@ -116730,7 +116734,7 @@ kwA
 hNK
 sei
 tGr
-eRL
+lpO
 plg
 sei
 hNK

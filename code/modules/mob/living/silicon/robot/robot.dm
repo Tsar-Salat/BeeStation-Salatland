@@ -69,7 +69,6 @@
 	var/datum/station_alert/alert_control
 
 	var/speed = 0 // VTEC speed boost.
-	var/magpulse = FALSE // Magboot-like effect.
 	var/ionpulse = FALSE // Jetpack-like effect.
 	var/ionpulse_on = FALSE // Jetpack-like effect.
 	var/datum/effect_system/trail_follow/ion/ion_trail // Ionpulse effect.
@@ -125,6 +124,17 @@
 	spark_system = new /datum/effect_system/spark_spread()
 	spark_system.set_up(5, 0, src)
 	spark_system.attach(src)
+
+	ADD_TRAIT(src, TRAIT_FORCED_STANDING, INNATE_TRAIT)
+	AddComponent(/datum/component/tippable, \
+		tip_time = 3 SECONDS, \
+		untip_time = 2 SECONDS, \
+		self_right_time = 60 SECONDS, \
+		post_tipped_callback = CALLBACK(src, PROC_REF(after_tip_over)), \
+		post_untipped_callback = CALLBACK(src, PROC_REF(after_righted)), \
+		roleplay_friendly = TRUE, \
+		roleplay_emotes = list(/datum/emote/silicon/buzz, /datum/emote/silicon/buzz2, /datum/emote/silicon/boop, /datum/emote/silicon/warn), \
+		roleplay_callback = CALLBACK(src, PROC_REF(untip_roleplay)))
 
 	wires = new /datum/wires/robot(src)
 	AddElement(/datum/element/empprotection, EMP_PROTECT_WIRES)
@@ -579,6 +589,18 @@
 			logevent("[emagged ? "ChÃ¥vÃis" : "Chassis"] cover lock has been [locked ? "engaged" : "released"]") //ChÃ¥vÃis: see above line
 		else
 			to_chat(user, span_danger("Access denied."))
+
+///For any special cases for robots after being righted.
+/mob/living/silicon/robot/proc/after_righted(mob/user)
+	return
+
+/mob/living/silicon/robot/proc/after_tip_over(mob/user)
+	if(hat)
+		hat.forceMove(drop_location())
+	unbuckle_all_mobs()
+
+/mob/living/silicon/robot/proc/untip_roleplay()
+	to_chat(src, span_notice("Your frustration has empowered you! You can now right yourself faster!"))
 
 /mob/living/silicon/robot/proc/allowed(mob/M)
 	//check if it doesn't require any access at all
@@ -1094,10 +1116,11 @@
 	designation = module.name
 	if(hands)
 		hands.icon_state = module.moduleselect_icon
-	if(module.can_be_pushed)
-		status_flags |= CANPUSH
-	else
-		status_flags &= ~CANPUSH
+
+	REMOVE_TRAITS_IN(src, MODULE_TRAIT)
+	if(module.module_traits)
+		for(var/trait in module.module_traits)
+			ADD_TRAIT(src, trait, MODULE_TRAIT)
 
 	if(module.clean_on_move)
 		AddElement(/datum/element/cleaning)
@@ -1112,7 +1135,6 @@
 
 	hat_offset = module.hat_offset
 
-	magpulse = module.magpulsing
 	updatename()
 
 
