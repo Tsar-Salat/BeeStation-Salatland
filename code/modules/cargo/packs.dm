@@ -72,12 +72,14 @@
 	cost = 1500
 	contraband = TRUE
 	max_supply = 2
-	contains = list(/obj/vehicle/ridden/atv,
-					/obj/item/key,
-					/obj/item/clothing/suit/jacket/leather/overcoat,
-					/obj/item/clothing/gloves/color/black,
-					/obj/item/clothing/head/soft/cargo,
-					/obj/item/clothing/mask/bandana/skull/black)//so you can properly #cargoniabikergang
+	contains = list(
+		/obj/vehicle/ridden/atv,
+		/obj/item/key/atv,
+		/obj/item/clothing/suit/jacket/leather/overcoat,
+		/obj/item/clothing/gloves/color/black,
+		/obj/item/clothing/head/soft/cargo,
+		/obj/item/clothing/mask/bandana/skull/black,//so you can properly #cargoniabikergang
+	)
 	crate_name = "Biker Kit"
 	crate_type = /obj/structure/closet/crate/large
 
@@ -2720,6 +2722,31 @@
 					/obj/item/food/canned/beefbroth
 					)
 	crate_name = "Beef Broth Care"
+
+/datum/supply_pack/organic/syrup
+	name = "Coffee Syrups Box"
+	desc = "A packaged box of various syrups, perfect for making your delicious coffee even more diabetic."
+	cost = 800
+	contains = list(
+		/obj/item/reagent_containers/cup/bottle/syrup_bottle/caramel,
+		/obj/item/reagent_containers/cup/bottle/syrup_bottle/liqueur,
+		//obj/item/reagent_containers/cup/bottle/syrup_bottle/korta_nectar,
+	)
+	crate_name = "coffee syrups box"
+	crate_type = /obj/structure/closet/crate/cardboard
+
+/datum/supply_pack/organic/syrup_contraband
+	contraband = TRUE
+	name = "Contraband Syrups Box"
+	desc = "A packaged box containing illegal coffee syrups. Possession of these carries a penalty established in the galactic penal code."
+	cost = 1200
+	contains = list(
+		/obj/item/reagent_containers/cup/bottle/syrup_bottle/laughsyrup,
+		/obj/item/reagent_containers/cup/bottle/syrup_bottle/laughsyrup,
+	)
+	crate_name = "illegal syrups box"
+	crate_type = /obj/structure/closet/crate/cardboard
+
 //////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// Livestock /////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -2805,17 +2832,17 @@
 	name = "Corgi Crate"
 	desc = "Considered the optimal dog breed by thousands of research scientists, this Corgi is but one dog from the millions of Ian's noble bloodline. Comes with a cute collar!"
 	cost = 5000
-	contains = list(/mob/living/simple_animal/pet/dog/corgi,
+	contains = list(/mob/living/basic/pet/dog/corgi,
 					/obj/item/clothing/neck/petcollar)
 	crate_name = "corgi crate"
 
 /datum/supply_pack/critter/corgi/generate()
 	. = ..()
 	if(prob(50))
-		var/mob/living/simple_animal/pet/dog/corgi/D = locate() in .
+		var/mob/living/basic/pet/dog/corgi/D = locate() in .
 		if(D.gender == FEMALE)
 			qdel(D)
-			new /mob/living/simple_animal/pet/dog/corgi/Lisa(.)
+			new /mob/living/basic/pet/dog/corgi/Lisa(.)
 
 /datum/supply_pack/critter/cow
 	name = "Cow Crate"
@@ -2841,7 +2868,7 @@
 	name = "Exotic Corgi Crate"
 	desc = "Corgis fit for a king, these corgis come in a unique color to signify their superiority. Comes with a cute collar!"
 	cost = 5500
-	contains = list(/mob/living/simple_animal/pet/dog/corgi/exoticcorgi,
+	contains = list(/mob/living/basic/pet/dog/corgi/exoticcorgi,
 					/obj/item/clothing/neck/petcollar)
 	crate_name = "exotic corgi crate"
 
@@ -2880,7 +2907,7 @@
 	name = "Pug Crate"
 	desc = "Like a normal dog, but... squished. Comes with a nice collar!"
 	cost = 5000
-	contains = list(/mob/living/simple_animal/pet/dog/pug,
+	contains = list(/mob/living/basic/pet/dog/pug,
 					/obj/item/clothing/neck/petcollar)
 	crate_name = "pug crate"
 
@@ -2888,7 +2915,7 @@
 	name = "Bull Terrier Crate"
 	desc = "Like a normal dog, but with a head the shape of an egg. Comes with a nice collar!"
 	cost = 5000
-	contains = list(/mob/living/simple_animal/pet/dog/bullterrier,
+	contains = list(/mob/living/basic/pet/dog/bullterrier,
 					/obj/item/clothing/neck/petcollar)
 	crate_name = "bull terrier crate"
 
@@ -2906,7 +2933,7 @@
 	name = "Capybara Crate"
 	desc = "Coconut doggy"
 	cost = 10000
-	contains = list(/mob/living/simple_animal/pet/dog/corgi/capybara)
+	contains = list(/mob/living/basic/pet/dog/corgi/capybara)
 	crate_name = "capybara crate"
 
 //////////////////////////////////////////////////////////////////////////////
@@ -3544,3 +3571,59 @@
 					/obj/item/toner/large,
 					/obj/item/toner/large)
 	crate_name = "large toner crate"
+
+
+/datum/supply_pack/service/coffee_mug
+	name = "Coffee Mug"
+	desc = "A bog standard coffee mug, for drinking coffee."
+	cost = PAYCHECK_LOWER
+	contains = list(/obj/item/reagent_containers/cup/glass/mug)
+
+/datum/supply_pack/service/nt_mug
+	name = "Nanotrasen Coffee Mug"
+	desc = "A blue mug bearing the logo of your corporate masters. Usually given out at inductions or events, we'll send one out special for a nominal fee."
+	cost = PAYCHECK_LOWER
+	contains = list(/obj/item/reagent_containers/cup/glass/mug/nanotrasen)
+
+/datum/supply_pack/service/coffee_cartridge
+	name = "Coffee Cartridge"
+	desc = "A basic cartridge for a coffeemaker. Makes 4 pots."
+	cost = PAYCHECK_LOWER
+	contains = list(/obj/item/coffee_cartridge)
+
+/datum/supply_pack/service/coffee_cartridge_fancy
+	name = "Fancy Coffee Cartridge"
+	desc = "A fancy cartridge for a coffeemaker. Makes 4 pots."
+	cost = PAYCHECK_MEDIUM
+	contains = list(/obj/item/coffee_cartridge/fancy)
+
+/datum/supply_pack/service/coffeepot
+	name = "Coffeepot"
+	desc = "A standard-sized coffeepot, for use with a coffeemaker."
+	cost = PAYCHECK_MEDIUM
+	contains = list(/obj/item/reagent_containers/cup/coffeepot)
+
+/datum/supply_pack/service/coffeekit
+	name = "Coffee Equipment Crate"
+	desc = "A complete kit to setup your own cozy coffee shop, the coffeemaker is for some reason not included."
+	cost = 800
+	contains = list(
+		/obj/item/storage/box/coffeepack/robusta,
+		/obj/item/storage/box/coffeepack,
+		/obj/item/reagent_containers/cup/coffeepot,
+		/obj/item/storage/fancy/coffee_condi_display,
+		/obj/item/reagent_containers/cup/glass/bottle/juice/cream,
+		/obj/item/reagent_containers/condiment/milk,
+		/obj/item/reagent_containers/condiment/soymilk,
+		/obj/item/reagent_containers/condiment/sugar,
+		/obj/item/reagent_containers/cup/bottle/syrup_bottle/caramel, //one extra syrup as a treat
+	)
+	crate_name = "coffee equipment crate"
+
+/datum/supply_pack/service/coffeemaker
+	name = "Impressa Coffeemaker Crate"
+	desc = "An assembled Impressa model coffeemaker."
+	cost = 800
+	contains = list(/obj/machinery/coffeemaker/impressa)
+	crate_name = "coffeemaker crate"
+	crate_type = /obj/structure/closet/crate/large
