@@ -184,6 +184,7 @@
 #define BLIND_LAYER 4
 #define CRIT_LAYER 5
 #define CURSE_LAYER 6
+#define PARRY_LAYER 8
 
 ///--------------- PSYCHIC & BLIND IMAGES ------------
 //Plane for highlighting objects - most soul glimmers

@@ -21,9 +21,10 @@
 	var/turf/open/floor/plating/turf_type = /turf/open/floor/plating/asteroid/airless
 	var/obj/item/stack/ore/mineralType = null
 	var/mineralAmt = 3
-	var/last_act = 0
 	var/scan_state = "" //Holder for the image we display when we're pinged by a mining scanner
 	var/defer_change = 0
+	///How long it takes to mine this turf with tools, before the tool's speed and the user's skill modifier are factored in.
+	var/tool_mine_speed = 4 SECONDS
 
 /turf/closed/mineral/Initialize(mapload)
 	var/static/list/smoothing_groups = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_MINERAL_WALLS)
@@ -71,20 +72,26 @@
 		if (!isturf(T))
 			return
 
-		if(last_act + (40 * I.toolspeed) > world.time)//prevents message spam
+		if(TIMER_COOLDOWN_CHECK(src, REF(user))) //prevents mining turfs in progress
 			return
-		last_act = world.time
-		to_chat(user, span_notice("You start picking..."))
 
-		if(I.use_tool(src, user, 40, volume=50))
-			if(ismineralturf(src))
-				to_chat(user, span_notice("You finish cutting into the rock."))
-				gets_drilled(user)
-				SSblackbox.record_feedback("tally", "pick_used_mining", 1, I.type)
+		TIMER_COOLDOWN_START(src, REF(user), tool_mine_speed)
+
+		balloon_alert(user, "picking...")
+
+		if(!I.use_tool(src, user, tool_mine_speed, volume=50))
+			TIMER_COOLDOWN_END(src, REF(user)) //if we fail we can start again immediately
+			return
+		if(ismineralturf(src))
+			to_chat(user, span_notice("You finish cutting into the rock."))
+			gets_drilled(user, TRUE)
+			SSblackbox.record_feedback("tally", "pick_used_mining", 1, I.type)
 	else
 		return attack_hand(user)
 
-/turf/closed/mineral/proc/gets_drilled()
+/turf/closed/mineral/proc/gets_drilled(mob/user, give_exp = FALSE)
+	if(istype(user))
+		SEND_SIGNAL(user, COMSIG_MOB_MINED, src, give_exp)
 	if (mineralType && (mineralAmt > 0))
 		new mineralType(src, mineralAmt)
 		SSblackbox.record_feedback("tally", "ore_mined", mineralAmt, mineralType)
@@ -105,10 +112,9 @@
 	..()
 
 /turf/closed/mineral/attack_alien(mob/living/carbon/alien/user, list/modifiers)
-	to_chat(user, "<span class='notice'>You start digging into the rock...</span>")
+	balloon_alert(user, "digging...")
 	playsound(src, 'sound/effects/break_stone.ogg', 50, TRUE)
 	if(do_after(user, 4 SECONDS, target = src))
-		to_chat(user, "<span class='notice'>You tunnel into the rock.</span>")
 		gets_drilled(user)
 
 /turf/closed/mineral/attack_hulk(mob/living/carbon/human/H)
@@ -139,7 +145,7 @@
 	ScrapeAway()
 
 /turf/closed/mineral/turf_destruction(damage_flag, additional_damage)
-	gets_drilled(null, 1)
+	gets_drilled(null, FALSE)
 
 
 
@@ -546,7 +552,7 @@
 /turf/closed/mineral/gibtonite/attackby(obj/item/I, mob/user, params)
 	if(istype(I, /obj/item/mining_scanner) || istype(I, /obj/item/t_scanner/adv_mining_scanner) && stage == 1)
 		user.visible_message(span_notice("[user] holds [I] to [src]..."), span_notice("You use [I] to locate where to cut off the chain reaction and attempt to stop it..."))
-		defuse()
+		defuse(user)
 	..()
 
 /turf/closed/mineral/gibtonite/proc/explosive_reaction(mob/user = null, triggered_by_explosion = 0)
@@ -582,7 +588,7 @@
 			explosion(bombturf,1,3,5, adminlog = notify_admins)
 			turf_destruction()
 
-/turf/closed/mineral/gibtonite/proc/defuse()
+/turf/closed/mineral/gibtonite/proc/defuse(mob/living/defuser)
 	if(stage == GIBTONITE_ACTIVE)
 		cut_overlay(activated_overlay)
 		activated_overlay.icon_state = "rock_Gibtonite_inactive"
@@ -592,8 +598,13 @@
 		if(det_time < 0)
 			det_time = 0
 		visible_message(span_notice("The chain reaction was stopped! The gibtonite had [det_time] reactions left till the explosion!"))
+		if(defuser)
+			SEND_SIGNAL(defuser, COMSIG_LIVING_DEFUSED_GIBTONITE, det_time)
 
-/turf/closed/mineral/gibtonite/gets_drilled(mob/user, triggered_by_explosion = 0)
+/turf/closed/mineral/gibtonite/gets_drilled(mob/user, give_exp = FALSE, triggered_by_explosion = FALSE)
+	if(istype(user))
+		SEND_SIGNAL(user, COMSIG_MOB_MINED, src, give_exp)
+
 	if(stage == GIBTONITE_UNSTRUCK && mineralAmt >= 1) //Gibtonite deposit is activated
 		playsound(src,'sound/effects/hit_on_shattered_glass.ogg',50,1)
 		explosive_reaction(user, triggered_by_explosion)

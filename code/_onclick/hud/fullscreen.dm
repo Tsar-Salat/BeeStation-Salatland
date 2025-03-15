@@ -104,6 +104,9 @@
 	icon_state = "oxydamageoverlay"
 	layer = BLIND_LAYER
 
+/atom/movable/screen/fullscreen/crit/projectile_parry
+	layer = PARRY_LAYER
+
 /atom/movable/screen/fullscreen/blind
 	icon_state = "blackimageoverlay"
 	render_target = "blind_fullscreen_overlay"

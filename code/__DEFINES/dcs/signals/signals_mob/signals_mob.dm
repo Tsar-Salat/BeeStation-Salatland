@@ -50,7 +50,7 @@
 #define COMSIG_MOB_HAND_ATTACKED "mob_hand_attacked"			//! from base of
 #define COMSIG_MOB_EQUIPPED_ITEM "mob_equipped_item"			//! from base of /item/equipped(): (/mob/user, /obj/item, slot)
 #define COMSIG_MOB_DROPPED_ITEM "mob_dropped_item"				//! from base of /item/dropped(): (/mob/user, /obj/item, loc)
-#define COMSIG_MOB_APPLY_DAMGE	"mob_apply_damage"				//! from base of /mob/living/proc/apply_damage(): (damage, damagetype, def_zone)
+#define COMSIG_MOB_APPLY_DAMAGE	"mob_apply_damage"				//! from base of /mob/living/proc/apply_damage(): (damage, damagetype, def_zone)
 #define COMSIG_MOB_THROW "mob_throw"							//! from base of /mob/throw_item(): (atom/target)
 #define COMSIG_MOB_UPDATE_SIGHT "mob_update_sight"				//! from base of /mob/update_sight(): ()
 #define COMSIG_MOB_EXAMINATE "mob_examinate"					//from base of /mob/verb/examinate(): (atom/target)
@@ -68,11 +68,16 @@
 	#define SPEECH_FORCED 7 */
 	#define SPEECH_RANGE 8
 
-#define COMSIG_MOB_EMOTE "mob_emote" // from /mob/living/emote(): ()
-#define COMSIG_MOB_SWAP_HANDS "mob_swap_hands"        //from base of mob/swap_hand()
-	#define COMPONENT_BLOCK_SWAP 1
 #define COMSIG_MOB_DEADSAY "mob_deadsay" // from /mob/say_dead(): (mob/speaker, message)
-	#define MOB_DEADSAY_SIGNAL_INTERCEPT 1
+	#define MOB_DEADSAY_SIGNAL_INTERCEPT (1<<0)
+///from /mob/living/emote(): ()
+#define COMSIG_MOB_EMOTE "mob_emote"
+///from base of mob/swap_hand(): (obj/item/currently_held_item)
+#define COMSIG_MOB_SWAP_HANDS "mob_swap_hands"
+	#define COMPONENT_BLOCK_SWAP (1<<0)
+#define COMSIG_MOB_EMOTED(emote_key) "mob_emoted_[emote_key]"
+
+
 #define COMSIG_MOB_POINTED "mob_pointed" //from base of /mob/verb/pointed: (atom/A)
 ///Mob is trying to open the wires of a target [/atom], from /datum/wires/interactable(): (atom/target)
 #define COMSIG_TRY_WIRES_INTERACT "try_wires_interact"
@@ -90,3 +95,28 @@
 /// Called before a mob fires a gun (mob/source, obj/item/gun, atom/target, aimed)
 #define COMSIG_MOB_BEFORE_FIRE_GUN "before_fire_gun"
 	#define GUN_HIT_SELF (1 << 0)
+
+///From base of /turf/closed/mineral/proc/gets_drilled(): (turf/closed/mineral/rock, give_exp)
+#define COMSIG_MOB_MINED "mob_mined"
+
+/// From /obj/effect/temp_visual/resonance/burst() : (mob/creator, mob/living/hit_living)
+#define COMSIG_LIVING_RESONATOR_BURST "living_resonator_burst"
+
+/// From /obj/projectile/attempt_parry() : (obj/projectile/parried_projectile)
+#define COMSIG_LIVING_PROJECTILE_PARRYING "living_projectile_parrying"
+	/// Return to allow the parry to happen
+	#define ALLOW_PARRY (1<<0)
+
+/// From /obj/projectile/on_parry() : (obj/projectile/parried_projectile)
+#define COMSIG_LIVING_PROJECTILE_PARRIED "living_projectile_parried"
+	/// Return to prevent the projectile from executing any code in on_parry()
+	#define INTERCEPT_PARRY_EFFECTS (1<<0)
+
+/// From /turf/closed/mineral/gibtonite/defuse() : (det_time)
+#define COMSIG_LIVING_DEFUSED_GIBTONITE "living_defused_gibtonite"
+
+/// From /obj/item/kinetic_crusher/afterattack() : (mob/living/target, obj/item/kinetic_crusher/crusher, backstabbed)
+#define COMSIG_LIVING_CRUSHER_DETONATE "living_crusher_detonate"
+
+/// From /obj/structure/geyser/attackby() : (obj/structure/geyser/geyser)
+#define COMSIG_LIVING_DISCOVERED_GEYSER "living_discovered_geyser"

@@ -1180,6 +1180,10 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 /client/proc/increase_score(achievement_type, mob/user, value)
 	return player_details.achievements.increase_score(achievement_type, user, value)
 
+///Redirect proc that makes it easier to get the status of an achievement. Achievement type is the typepath to the award.
+/client/proc/get_award_status(achievement_type, mob/user, value = 1)
+	return player_details.achievements.get_achievement_status(achievement_type)
+
 #undef LIMITER_SIZE
 #undef CURRENT_SECOND
 #undef SECOND_COUNT

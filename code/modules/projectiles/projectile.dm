@@ -154,19 +154,21 @@
 
 	///If defined, gets passed to checkEmbedProjectile() via signalling & adds embed element to projectile
 	var/shrapnel_type
+	var/static/list/projectile_connections = list(
+		COMSIG_ATOM_ENTERED = PROC_REF(on_entered),
+		COMSIG_ATOM_ATTACK_HAND = PROC_REF(attempt_parry),
+	)
 	///If TRUE, hit mobs even if they're on the floor and not our target
 	var/hit_stunned_targets = FALSE
+	/// If this projectile has been parried before
+	var/parried = FALSE
 
 /obj/projectile/Initialize(mapload)
 	. = ..()
 	decayedRange = range
-
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = PROC_REF(on_entered),
-	)
-	AddElement(/datum/element/connect_loc, loc_connections)
 	if(shrapnel_type) //Only add embed element if the project HAS STUFF to try to embed
 		AddElement(/datum/element/embed) //Allows Embed to read signal from COMSIG_PROJECTILE_SELF_ON_HIT, actually embedding handled by shrapnel_type
+	AddElement(/datum/element/connect_loc, projectile_connections)
 
 /obj/projectile/proc/Range()
 	range--
@@ -187,6 +189,41 @@
 		return hit_zone
 	else //when a limb is missing the damage is actually passed to the chest
 		return BODY_ZONE_CHEST
+
+/// Signal proc for when a projectile enters a turf.
+/obj/projectile/proc/on_enter(datum/source, atom/old_loc, dir, forced, list/old_locs)
+	SIGNAL_HANDLER
+
+	UnregisterSignal(old_loc, COMSIG_ATOM_ATTACK_HAND)
+
+	if(isturf(loc))
+		RegisterSignal(loc, COMSIG_ATOM_ATTACK_HAND, PROC_REF(attempt_parry))
+
+/// Signal proc for when a mob attempts to attack this projectile or the turf it's on with an empty hand.
+/obj/projectile/proc/attempt_parry(datum/source, mob/user, list/modifiers)
+	SIGNAL_HANDLER
+
+	if(parried)
+		return FALSE
+
+	if(SEND_SIGNAL(user, COMSIG_LIVING_PROJECTILE_PARRYING, src) & ALLOW_PARRY)
+		on_parry(user, modifiers)
+		return TRUE
+
+	return FALSE
+
+
+/// Called when a mob with PARRY_TRAIT clicks on this projectile or the tile its on, reflecting the projectile within 17 degrees and increasing the bullet's stats.
+/obj/projectile/proc/on_parry(mob/user, list/modifiers)
+	if(SEND_SIGNAL(user, COMSIG_LIVING_PROJECTILE_PARRIED, src) & INTERCEPT_PARRY_EFFECTS)
+		return
+
+	parried = TRUE
+	set_angle(dir2angle(user.dir) + rand(-3, 3))
+	firer = user
+	speed *= 0.8 // Go 20% faster when parried
+	damage *= 1.15 // And do 15% more damage
+	add_atom_colour(COLOR_RED_LIGHT, TEMPORARY_COLOUR_PRIORITY)
 
 /**
  * Called when the projectile hits something
@@ -683,6 +720,7 @@
 	trajectory = new(starting.x, starting.y, starting.z, pixel_x, pixel_y, Angle, SSprojectiles.global_pixel_speed)
 	last_projectile_move = world.time
 	fired = TRUE
+	RegisterSignal(src, COMSIG_ATOM_ATTACK_HAND, PROC_REF(attempt_parry))
 	if(hitscan)
 		INVOKE_ASYNC(src, PROC_REF(process_hitscan))
 	if(!(datum_flags & DF_ISPROCESSING))

@@ -67,7 +67,7 @@
 	duration = 50
 	var/resonance_damage = 10
 	var/damage_multiplier = 1
-	var/creator
+	var/mob/creator
 	var/obj/item/resonator/res
 
 CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/temp_visual/resonance)
@@ -114,6 +114,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/temp_visual/resonance)
 	for(var/mob/living/L in T)
 		if(creator)
 			log_combat(creator, L, "used a resonator field on", "resonator")
+			SEND_SIGNAL(creator, COMSIG_LIVING_RESONATOR_BURST, creator, L)
 		to_chat(L, span_userdanger("[src] ruptured with you in it!"))
 		L.apply_damage(resonance_damage, BRUTE)
 	qdel(src)
