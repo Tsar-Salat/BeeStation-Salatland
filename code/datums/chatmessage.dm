@@ -227,7 +227,7 @@
 	text = "[prefixes?.Join("&nbsp;")][text]"
 
 	// Approximate text height
-	complete_text = "<span class='center [extra_classes.Join(" ")]' style='color: [tgt_color]'>[target.say_emphasis(text)]</span>"
+	complete_text = "<span style='color: [tgt_color]'><span class='center [extra_classes.Join(" ")]'>[target.say_emphasis(text)]</span></span>"
 	approx_lines = length(text) / MESSAGE_LINE_LENGTH_ESTIMATE
 
 	// Translate any existing messages upwards, apply exponential decay factors to timers

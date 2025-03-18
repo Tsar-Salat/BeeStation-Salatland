@@ -66,4 +66,4 @@
 #define BIG_BOMB_SCORE		"Biggest Bomb"
 
 // DB ID for style point count
-#define  "Style Score"
+#define STYLE_SCORE "Style Score"
