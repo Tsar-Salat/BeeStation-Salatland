@@ -67,6 +67,7 @@
 
 /obj/item/laser_pointer/afterattack(atom/target, mob/living/user, flag, params)
 	. = ..()
+	. |= AFTERATTACK_PROCESSED_ITEM
 	laser_act(target, user, params)
 
 /obj/item/laser_pointer/proc/laser_act(atom/target, mob/living/user, params)
@@ -82,7 +83,7 @@
 		to_chat(user, "<span class='warning'>Your fingers can't press the button!</span>")
 		return
 	add_fingerprint(user)
-	
+
 	//nothing happens if the battery is drained
 	if(recharge_locked)
 		to_chat(user, span_notice("You point [src] at [target], but it's still charging."))

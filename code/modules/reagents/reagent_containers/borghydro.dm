@@ -240,20 +240,21 @@ Borg Shaker
 /obj/item/reagent_containers/borghypo/borgshaker/afterattack(obj/target, mob/user, proximity)
 	. = ..()
 	if(!proximity)
-		return
+		return .
 
-	else if(target.is_refillable())
+	. |= AFTERATTACK_PROCESSED_ITEM
+	if(target.is_refillable())
 		var/datum/reagents/R = reagent_list[mode]
 		if(!R.total_volume)
 			to_chat(user, span_warning("[src] is currently out of this ingredient! Please allow some time for the synthesizer to produce more."))
-			return
+			return .
 
 		if(target.reagents.total_volume >= target.reagents.maximum_volume)
 			to_chat(user, span_notice("[target] is full."))
-			return
+			return .
 
-		var/trans = R.trans_to(target, amount_per_transfer_from_this, transfered_by = user)
-		to_chat(user, span_notice("You transfer [trans] unit\s of the solution to [target]."))
+		balloon_alert(user, "[amount_per_transfer_from_this] unit\s poured")
+	return .
 
 /obj/item/reagent_containers/borghypo/borgshaker/DescribeContents()
 	var/datum/reagents/RS = reagent_list[mode]

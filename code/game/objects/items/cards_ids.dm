@@ -151,9 +151,12 @@
 	lefthand_file = 'icons/mob/inhands/equipment/idcards_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/idcards_righthand.dmi'
 
-/obj/item/card/emagfake/afterattack()
+/obj/item/card/emagfake/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
 	. = ..()
-	playsound(src, 'sound/items/bikehorn.ogg', 50, 1)
+	if (!proximity_flag)
+		return
+	. |= AFTERATTACK_PROCESSED_ITEM
+	playsound(src, 'sound/items/bikehorn.ogg', 50, TRUE)
 
 /obj/item/card/id
 	name = "identification card"

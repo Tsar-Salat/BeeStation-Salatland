@@ -684,6 +684,8 @@
 
 /obj/item/slimepotion/afterattack(obj/item/reagent_containers/target, mob/user , proximity)
 	. = ..()
+	if(!proximity)
+		return
 	if (istype(target))
 		to_chat(user, span_notice("You cannot transfer [src] to [target]! It appears the potion must be given directly to a slime to absorb.") )
 		return
@@ -792,7 +794,9 @@
 	var/prompted = 0
 	var/animal_type = SENTIENCE_ORGANIC
 
-/obj/item/slimepotion/transference/afterattack(mob/living/M, mob/user)
+/obj/item/slimepotion/transference/afterattack(mob/living/M, mob/user, proximity)
+	if(!proximity)
+		return
 	if(prompted || !ismob(M))
 		return
 	if(!isanimal(M) || M.ckey) //much like sentience, these will not work on something that is already player controlled
@@ -960,6 +964,7 @@
 	if(!uses)
 		qdel(src)
 		return
+	. |= AFTERATTACK_PROCESSED_ITEM
 	if(!istype(clothing))
 		to_chat(user, span_warning("[src] can only be used on clothing!"))
 		return

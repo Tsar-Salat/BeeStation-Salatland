@@ -13,9 +13,9 @@
 	var/viral = FALSE
 	hitsound = 'sound/hallucinations/growl1.ogg'
 	force = 21 // Just enough to break airlocks with melee attacks
+	damtype = BRUTE
 	/// Base infection chance of 80%, gets lowered with armour
 	var/base_infection_chance = 80
-	damtype = BRUTE
 
 /obj/item/zombie_hand/Initialize(mapload)
 	. = ..()
@@ -51,6 +51,7 @@
 				else
 					try_to_zombie_infect(target)
 		else
+			. |= AFTERATTACK_PROCESSED_ITEM
 			check_feast(target, user)
 	if((istype(target, /obj/structure) || istype(target, /obj/machinery)) && viral)
 		var/obj/O = target

@@ -123,6 +123,8 @@
 	return TRUE
 
 /obj/item/camera/afterattack(atom/target, mob/user, flag)
+	. |= AFTERATTACK_PROCESSED_ITEM
+
 	if (disk)
 		if(ismob(target))
 			if (disk.record)

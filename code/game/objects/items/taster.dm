@@ -15,6 +15,8 @@
 	if(!proximity)
 		return
 
-	if(O.reagents)
+	. |= AFTERATTACK_PROCESSED_ITEM
+
+	if(!O.reagents)
 		var/message = O.reagents.generate_taste_message(taste_sensitivity)
 		to_chat(user, span_notice("[src] tastes [span_italics("[message]")] in [O]."))

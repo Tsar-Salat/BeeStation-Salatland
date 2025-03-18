@@ -7,7 +7,7 @@
 	w_class = WEIGHT_CLASS_TINY
 	var/label = null
 	var/labels_left = 30
-	var/mode = 0
+	VAR_FINAL/mode = FALSE
 
 /obj/item/hand_labeler/suicide_act(mob/living/user)
 	user.visible_message(span_suicide("[user] is pointing [src] at [user.p_them()]self. [user.p_theyre(TRUE)] going to label [user.p_them()]self as a suicide!"))
@@ -40,7 +40,10 @@
 	. = ..()
 	if(!proximity)
 		return
-	if(!mode)	//if it's off, give up.
+
+	. |= AFTERATTACK_PROCESSED_ITEM
+
+	if(!mode) //if it's off, give up.
 		return
 
 	if(!labels_left)
@@ -57,7 +60,7 @@
 		return
 
 	user.visible_message("[user] labels [A] as [label].", \
-						span_notice("You label [A] as [label]."))
+		span_notice("You label [A] as [label]."))
 	A.name = "[A.name] ([label])"
 	labels_left--
 
@@ -71,7 +74,7 @@
 	if(mode)
 		to_chat(user, span_notice("You turn on [src]."))
 		//Now let them chose the text.
-		var/str = reject_bad_text(stripped_input(user, "Label text?", "Set label","", MAX_NAME_LEN))
+		var/str = reject_bad_text(tgui_input_text(user, "Label text", "Set Label", label, MAX_NAME_LEN))
 		if(!str || !length(str))
 			to_chat(user, span_warning("Invalid text!"))
 			return
@@ -94,7 +97,10 @@
 	name = "cyborg-hand labeler"
 
 /obj/item/hand_labeler/borg/afterattack(atom/A, mob/user, proximity)
-	. = ..(A, user, proximity)
+	. = ..()
+	if(!proximity)
+		return
+	. |= AFTERATTACK_PROCESSED_ITEM
 	if(!iscyborg(user))
 		return
 

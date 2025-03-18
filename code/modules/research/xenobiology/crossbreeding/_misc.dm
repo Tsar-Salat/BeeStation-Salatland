@@ -55,8 +55,10 @@ Slimecrossing Items
 	return ret
 
 /obj/item/camera/rewind/afterattack(atom/target, mob/user, flag)
+	. |= AFTERATTACK_PROCESSED_ITEM
+
 	if(!on || !pictures_left || !isturf(target.loc))
-		return
+		return .
 	if(!used)//selfie time
 		if(user == target)
 			to_chat(user, span_notice("You take a selfie!"))
@@ -67,7 +69,7 @@ Slimecrossing Items
 
 		used = TRUE
 		target.AddComponent(/datum/component/dejavu, 2)
-	.=..()
+	return . | ..()
 
 
 
@@ -80,13 +82,15 @@ Slimecrossing Items
 	var/used = FALSE
 
 /obj/item/camera/timefreeze/afterattack(atom/target, mob/user, flag)
+	. |= AFTERATTACK_PROCESSED_ITEM
+
 	if(!on || !pictures_left || !isturf(target.loc))
-		return
+		return .
 	if(!used) //refilling the film does not refill the timestop
 		new /obj/effect/timestop(get_turf(target), 2, 50, list(user))
 		used = TRUE
 		desc = "This camera has seen better days."
-	. = ..()
+	return . | ..()
 
 
 //Hypercharged slime cell - Charged Yellow

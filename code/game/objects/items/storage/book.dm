@@ -200,35 +200,40 @@
 		M.visible_message(span_danger("[user] smacks [M]'s lifeless corpse with [src]."))
 		playsound(src.loc, "punch", 25, 1, -1)
 
-/obj/item/storage/book/bible/afterattack(atom/A, mob/user, proximity)
+/obj/item/storage/book/bible/afterattack(atom/bible_smacked, mob/user, proximity)
 	. = ..()
 	if(!proximity)
 		return
-	if(isfloorturf(A))
-		to_chat(user, span_notice("You hit the floor with the bible."))
+	if(isfloorturf(bible_smacked))
 		if(user?.mind?.holy_role)
-			for(var/obj/effect/rune/R in orange(2,user))
-				R.invisibility = 0
+			for(var/obj/effect/rune/nearby_runes in orange(2,user))
+				nearby_runes.invisibility = 0
+		bible_smacked.balloon_alert(user, "floor smacked")
+
 	if(user?.mind?.holy_role)
-		if(A.reagents && A.reagents.has_reagent(/datum/reagent/water)) // blesses all the water in the holder
-			to_chat(user, span_notice("You bless [A]."))
-			var/water2holy = A.reagents.get_reagent_amount(/datum/reagent/water)
-			A.reagents.del_reagent(/datum/reagent/water)
-			A.reagents.add_reagent(/datum/reagent/water/holywater,water2holy)
-		if(A.reagents && A.reagents.has_reagent(/datum/reagent/fuel/unholywater)) // yeah yeah, copy pasted code - sue me
-			to_chat(user, span_notice("You purify [A]."))
-			var/unholy2clean = A.reagents.get_reagent_amount(/datum/reagent/fuel/unholywater)
-			A.reagents.del_reagent(/datum/reagent/fuel/unholywater)
-			A.reagents.add_reagent(/datum/reagent/water/holywater,unholy2clean)
-		if(istype(A, /obj/item/storage/book/bible) && !istype(A, /obj/item/storage/book/bible/syndicate))
-			to_chat(user, span_notice("You purify [A], conforming it to your belief."))
-			var/obj/item/storage/book/bible/B = A
+		if(bible_smacked.reagents && bible_smacked.reagents.has_reagent(/datum/reagent/water)) // blesses all the water in the holder
+			. |= AFTERATTACK_PROCESSED_ITEM
+			bible_smacked.balloon_alert(user, "blessed")
+			var/water2holy = bible_smacked.reagents.get_reagent_amount(/datum/reagent/water)
+			bible_smacked.reagents.del_reagent(/datum/reagent/water)
+			bible_smacked.reagents.add_reagent(/datum/reagent/water/holywater,water2holy)
+		if(bible_smacked.reagents && bible_smacked.reagents.has_reagent(/datum/reagent/fuel/unholywater)) // yeah yeah, copy pasted code - sue me
+			. |= AFTERATTACK_PROCESSED_ITEM
+			bible_smacked.balloon_alert(user, "purified")
+			var/unholy2clean = bible_smacked.reagents.get_reagent_amount(/datum/reagent/fuel/unholywater)
+			bible_smacked.reagents.del_reagent(/datum/reagent/fuel/unholywater)
+			bible_smacked.reagents.add_reagent(/datum/reagent/water/holywater,unholy2clean)
+		if(istype(bible_smacked, /obj/item/storage/book/bible) && !istype(bible_smacked, /obj/item/storage/book/bible/syndicate))
+			. |= AFTERATTACK_PROCESSED_ITEM
+			bible_smacked.balloon_alert(user, "converted")
+			var/obj/item/storage/book/bible/B = bible_smacked
 			B.name = name
 			B.icon_state = icon_state
 			B.item_state = item_state
 
-	else if(istype(A, /obj/item/soulstone) && !iscultist(user))
-		var/obj/item/soulstone/SS = A
+	else if(istype(bible_smacked, /obj/item/soulstone) && !IS_CULTIST(user))
+		. |= AFTERATTACK_PROCESSED_ITEM
+		var/obj/item/soulstone/SS = bible_smacked
 		if(SS.theme == THEME_HOLY)
 			return
 		to_chat(user, span_notice("You begin to exorcise [SS]."))

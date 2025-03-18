@@ -243,6 +243,7 @@
 	return ..()
 
 /obj/item/reagent_containers/cup/glass/waterbottle/afterattack(obj/target, mob/living/user, proximity)
+	. |= AFTERATTACK_PROCESSED_ITEM
 	if(cap_on && (target.is_refillable() || target.is_drainable() || (reagents.total_volume && !user.combat_mode)))
 		to_chat(user, span_warning("You must remove the cap before you can do that!"))
 		return
@@ -253,7 +254,7 @@
 			to_chat(user, span_warning("[other_bottle] has a cap firmly twisted on!"))
 			return
 
-	return ..()
+	return . | ..()
 
 // heehoo bottle flipping
 /obj/item/reagent_containers/cup/glass/waterbottle/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)

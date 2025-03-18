@@ -677,6 +677,7 @@ GENE SCANNER
 	. = ..()
 	if(!can_see(user, target, ranged_scan_distance))
 		return
+	. |= AFTERATTACK_PROCESSED_ITEM
 	atmos_scan(user, (target.return_analyzable_air() ? target : get_turf(target)))
 
 /proc/atmos_scan(mob/user, atom/target, silent=FALSE)

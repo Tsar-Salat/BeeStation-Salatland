@@ -180,6 +180,7 @@
 	. = ..()
 	if(!proximity_flag || !iscyborg(user))
 		return
+	. |= AFTERATTACK_PROCESSED_ITEM
 	if(active)
 		if(mode == MODE_DRAW)
 			to_chat(user, span_warning("You're already drawing power from something!"))
@@ -549,19 +550,20 @@
 		var/mob/living/silicon/robot/R = user
 		if(!R.cell.use(12))
 			to_chat(user, span_warning("Not enough power."))
-			return FALSE
+			return AFTERATTACK_PROCESSED_ITEM
 		if(R.emagged)
 			hitdamage = emaggedhitdamage
 	switch(mode)
 		if(DISPENSE_LOLLIPOP_MODE, DISPENSE_ICECREAM_MODE)
 			if(!proximity)
-				return FALSE
+				return AFTERATTACK_PROCESSED_ITEM
 			dispense(target, user)
 		if(THROW_LOLLIPOP_MODE)
 			shootL(target, user, click_params)
 		if(THROW_GUMBALL_MODE)
 			shootG(target, user, click_params)
 	hitdamage = initial(hitdamage)
+	return ..() | AFTERATTACK_PROCESSED_ITEM
 
 /obj/item/borg/lollipop/attack_self(mob/living/user)
 	switch(mode)

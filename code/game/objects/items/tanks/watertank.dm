@@ -511,8 +511,7 @@
 
 /obj/item/extinguisher/mini/nozzle/afterattack(atom/target, mob/user)
 	if(nozzle_mode == EXTINGUISHER)
-		..()
-		return
+		return ..()
 	var/Adj = user.Adjacent(target)
 	if(Adj)
 		AttemptRefill(target, user)

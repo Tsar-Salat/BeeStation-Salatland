@@ -20,18 +20,19 @@
 	var/boom_sizes = list(0, 0, 3)
 	var/can_attach_mob = FALSE
 	var/full_damage_on_mobs = FALSE
+	/// Minimum timer for c4 charges
+	var/minimum_timer = 10
+	/// Maximum timer for c4 charges
+	var/maximum_timer = 60000
 
 /obj/item/grenade/plastic/Initialize(mapload)
 	. = ..()
+	AddElement(/datum/element/empprotection, EMP_PROTECT_WIRES)
 	plastic_overlay = mutable_appearance(icon, "[item_state]2", HIGH_OBJ_LAYER)
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = PROC_REF(on_entered),
 	)
 	AddElement(/datum/element/connect_loc, loc_connections)
-
-/obj/item/grenade/plastic/ComponentInitialize()
-	. = ..()
-	AddElement(/datum/element/empprotection, EMP_PROTECT_WIRES)
 
 /obj/item/grenade/plastic/Destroy()
 	qdel(nadeassembly)
@@ -104,19 +105,22 @@
 	if(nadeassembly)
 		nadeassembly.attack_self(user)
 		return
-	var/newtime = input(usr, "Please set the timer.", "Timer", 10) as num
-	if(user.get_active_held_item() == src)
-		newtime = clamp(newtime, 10, 60000)
-		det_time = newtime
-		to_chat(user, "Timer set for [det_time] seconds.")
+	var/newtime = tgui_input_number(user, "Please set the timer", "C4 Timer", minimum_timer, maximum_timer, minimum_timer)
+	if(!newtime || QDELETED(user) || QDELETED(src) || !usr.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
+		return
+	det_time = newtime
+	to_chat(user, "Timer set for [det_time] seconds.")
 
 /obj/item/grenade/plastic/afterattack(atom/movable/AM, mob/user, flag)
 	. = ..()
 	aim_dir = get_dir(user,AM)
 	if(!flag)
 		return
+
+	. |= AFTERATTACK_PROCESSED_ITEM
+
 	if(ismob(AM) && !can_attach_mob)
-		return
+		return .
 
 	if(ismob(AM))
 		to_chat(AM, span_userdanger("[user.name] is trying to plant [name] on you!"))
@@ -125,12 +129,11 @@
 
 	if(do_after(user, 30, target = AM))
 		if(!user.temporarilyRemoveItemFromInventory(src))
-			return
+			return .
 		target = AM
 
 		message_admins("[ADMIN_LOOKUPFLW(user)] planted [name] on [target.name] at [ADMIN_VERBOSEJMP(target)] with [det_time] second fuse")
 		log_game("[key_name(user)] planted [name] on [target.name] at [AREACOORD(user)] with a [det_time] second fuse")
-
 		notify_ghosts("[user] has planted \a [src] on [target] with a [det_time] second fuse!", source = AM, action = (isturf(target) ? NOTIFY_JUMP : NOTIFY_ORBIT), flashwindow = FALSE, header = "Explosive Planted")
 
 		moveToNullspace()	//Yep
@@ -151,6 +154,8 @@
 			addtimer(CALLBACK(src, PROC_REF(prime)), det_time*10)
 		else
 			qdel(src)	//How?
+
+	return .
 
 /obj/item/grenade/plastic/proc/shout_syndicate_crap(mob/M)
 	if(!M)
@@ -203,16 +208,6 @@
 	wires = null
 	target = null
 	return ..()
-
-/obj/item/grenade/plastic/c4/suicide_act(mob/living/user)
-	user.visible_message(span_suicide("[user] activates the [src.name] and holds it above [user.p_their()] head! It looks like [user.p_theyre()] going out with a bang!"))
-	shout_syndicate_crap(user)
-	target = user
-	message_admins("[ADMIN_LOOKUPFLW(user)] suicided with [name] at [ADMIN_VERBOSEJMP(src)]")
-	log_game("[key_name(user)] suicided with [name] at [AREACOORD(user)]")
-	sleep(10)
-	prime()
-	user.gib(1, 1)
 
 /obj/item/grenade/plastic/c4/attackby(obj/item/I, mob/user, params)
 	if(I.tool_behaviour == TOOL_SCREWDRIVER)

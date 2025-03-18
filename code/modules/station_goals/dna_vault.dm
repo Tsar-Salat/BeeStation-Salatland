@@ -79,21 +79,25 @@
 	plants = list()
 	dna = list()
 
-/obj/item/dna_probe/afterattack(atom/target, mob/user, proximity)
+/obj/item/dna_probe/afterattack(atom/target, mob/user, proximity_flag)
 	. = ..()
-	if(!proximity || !target)
-		return
+	if(!proximity_flag || !target)
+		return .
+
+	if (isitem(target))
+		. |= AFTERATTACK_PROCESSED_ITEM
+
 	//tray plants
 	if(istype(target, /obj/machinery/hydroponics))
 		var/obj/machinery/hydroponics/H = target
 		if(!H.myseed)
-			return
+			return .
 		if(!H.harvest)// So it's bit harder.
 			to_chat(user, span_warning("Plant needs to be ready to harvest to perform full data scan.")) //Because space dna is actually magic
-			return
+			return .
 		if(plants[H.myseed.type])
 			to_chat(user, span_notice("Plant data already present in local storage."))
-			return
+			return .
 		plants[H.myseed.type] = 1
 		to_chat(user, span_notice("Plant data added to local storage."))
 
@@ -104,10 +108,10 @@
 			var/mob/living/simple_animal/A = target
 			if(!A.healable || (A.flags_1 & HOLOGRAM_1)) //simple approximation of being animal not a robot or similar. Also checking if holographic
 				to_chat(user, span_warning("No compatible DNA detected."))
-				return
+				return .
 		if(animals[target.type])
 			to_chat(user, span_notice("Animal data already present in local storage."))
-			return
+			return .
 		animals[target.type] = 1
 		to_chat(user, span_notice("Animal data added to local storage."))
 
@@ -116,7 +120,7 @@
 		var/mob/living/carbon/human/H = target
 		if(dna[H.dna.uni_identity])
 			to_chat(user, span_notice("Humanoid data already present in local storage."))
-			return
+			return .
 		dna[H.dna.uni_identity] = 1
 		to_chat(user, span_notice("Humanoid data added to local storage."))
 

@@ -100,6 +100,7 @@
 	. = ..()
 	if(!proximity)
 		return
+	. |= AFTERATTACK_PROCESSED_ITEM
 	if(isclothing(target) && HAS_TRAIT(target, TRAIT_SPRAYPAINTED) || target.color != initial(target.color))
 		user.visible_message("[user] begins to clean \the [target.name] with [src]...", span_notice("You begin to clean \the [target.name] with [src]..."))
 		if(!do_after(user, 10, target = target))

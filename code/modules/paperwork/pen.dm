@@ -126,57 +126,71 @@
 	. = ..()
 
 /obj/item/pen/attack_self(mob/living/carbon/user)
-	var/deg = input(user, "What angle would you like to rotate the pen head to? (1-360)", "Rotate Pen Head") as null|num
-	if(deg && (deg > 0 && deg <= 360))
-		degrees = deg
-		to_chat(user, span_notice("You rotate the top of the pen to [degrees] degrees."))
-		SEND_SIGNAL(src, COMSIG_PEN_ROTATED, deg, user)
+	if(loc != user)
+		to_chat(user, span_warning("You must be holding the pen to continue!"))
+		return
+	var/deg = tgui_input_number(user, "What angle would you like to rotate the pen head to? (0-360)", "Rotate Pen Head", max_value = 360)
+	if(isnull(deg) || QDELETED(user) || QDELETED(src) || !user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK) || loc != user)
+		return
+	degrees = deg
+	to_chat(user, span_notice("You rotate the top of the pen to [degrees] degrees."))
+	SEND_SIGNAL(src, COMSIG_PEN_ROTATED, deg, user)
 
 /obj/item/pen/attack(mob/living/M, mob/user,stealth)
 	if(!istype(M))
 		return
 
-	if(!force)
-		if(M.try_inject(user, injection_flags = INJECT_TRY_SHOW_ERROR_MESSAGE))
-			to_chat(user, span_warning("You stab [M] with the pen."))
-			if(!stealth)
-				to_chat(M, span_danger("You feel a tiny prick!"))
-			. = 1
+	if(force) // If the pen has a force value, call the normal attack procs. Used for e-daggers and captain's pen mostly.
+		return ..()
+	if(!M.try_inject(user, injection_flags = INJECT_TRY_SHOW_ERROR_MESSAGE))
+		return FALSE
+	to_chat(user, span_warning("You stab [M] with the pen."))
+	if(!stealth)
+		to_chat(M, span_danger("You feel a tiny prick!"))
+	. = 1
 
-		log_combat(user, M, "stabbed", src)
-
-	else
-		. = ..()
+	log_combat(user, M, "stabbed", src)
 
 /obj/item/pen/afterattack(obj/O, mob/living/user, proximity)
 	. = ..()
+
+	if (!proximity)
+		return .
+
+	. |= AFTERATTACK_PROCESSED_ITEM
+
 	//Changing Name/Description of items. Only works if they have the 'unique_rename' flag set
-	if(isobj(O) && proximity && (O.obj_flags & UNIQUE_RENAME))
-		var/penchoice = input(user, "What would you like to edit?", "Rename or change description?") as null|anything in list("Rename","Change description")
+	if(isobj(O) && (O.obj_flags & UNIQUE_RENAME))
+		var/penchoice = tgui_input_list(user, "What would you like to edit?", "Pen Setting", list("Rename", "Description"))
 		if(QDELETED(O) || !user.canUseTopic(O, BE_CLOSE))
 			return
 		var/anythingchanged = FALSE
 		if(penchoice == "Rename")
-			var/input = stripped_input(user,"What do you want to name \the [O.name]?", ,"", MAX_NAME_LEN)
+			var/input = tgui_input_text(user, "What do you want to name [O]?", "Object Name", "[O.name]", MAX_NAME_LEN)
 			var/oldname = O.name
 			if(QDELETED(O) || !user.canUseTopic(O, BE_CLOSE))
 				return
-			if(oldname == input)
-				to_chat(user, "You changed \the [O.name] to... well... \the [O.name].")
+			if(input == oldname || !input)
+				to_chat(user, span_notice("You changed [O] to... well... [O]."))
 			else
 				O.name = input
 				to_chat(user, "\The [oldname] has been successfully been renamed to \the [input].")
 				O.renamedByPlayer = TRUE
 				anythingchanged = TRUE
-		if(penchoice == "Change description")
-			var/input = stripped_input(user,"Describe \the [O.name] here", ,"", 100)
+
+		if(penchoice == "Description")
+			var/input = tgui_input_text(user, "Describe [O]", "Description", "[O.desc]", 280)
+			var/olddesc = O.desc
 			if(QDELETED(O) || !user.canUseTopic(O, BE_CLOSE))
 				return
-			O.desc = input
-			to_chat(user, "You have successfully changed \the [O.name]'s description.")
-			anythingchanged = TRUE
+			if(input == olddesc || !input)
+				to_chat(user, span_notice("You decide against changing [O]'s description."))
+			else
+				O.desc = input
+				to_chat(user, "You have successfully changed \the [O.name]'s description.")
+				anythingchanged = TRUE
 		if(anythingchanged)
-			O.update_icon()
+			O.update_appearance(UPDATE_ICON)
 
 /obj/item/pen/get_writing_implement_details()
 	return list(
@@ -307,7 +321,7 @@
 		throw_range = 5
 		to_chat(user, "You extend the screwdriver.")
 	playsound(src, 'sound/machines/pda_button2.ogg', 50, TRUE) // click
-	update_icon()
+	update_appearance()
 
 /obj/item/pen/screwdriver/attack(mob/living/carbon/M, mob/living/carbon/user)
 	if(!extended)
@@ -323,8 +337,6 @@
 		M = user
 	return eyestab(M,user)
 
-/obj/item/pen/screwdriver/update_icon()
-	if(extended)
-		icon_state = "pendriverout"
-	else
-		icon_state = initial(icon_state)
+/obj/item/pen/screwdriver/update_icon_state()
+	. = ..()
+	icon_state = extended ? "pendriverout" : initial(icon_state)

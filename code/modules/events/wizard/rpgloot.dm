@@ -46,6 +46,8 @@
 	if(!proximity || !istype(target))
 		return
 
+	. |= AFTERATTACK_PROCESSED_ITEM
+
 	var/datum/rpg_loot/rpg_loot_datum = target.rpg_loot
 	var/turf/T = get_turf(target)
 
@@ -76,6 +78,8 @@
 
 	if(--uses <= 0)
 		qdel(src)
+
+	return .
 
 /obj/item/upgradescroll/unlimited
 	name = "unlimited foolproof item fortification scroll"

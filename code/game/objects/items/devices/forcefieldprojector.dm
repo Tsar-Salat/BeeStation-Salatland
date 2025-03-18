@@ -21,6 +21,7 @@
 	. = ..()
 	if(!check_allowed_items(target, 1))
 		return
+	. |= AFTERATTACK_PROCESSED_ITEM
 	if(istype(target, /obj/structure/projected_forcefield))
 		var/obj/structure/projected_forcefield/F = target
 		if(F.generator == src)

@@ -104,9 +104,14 @@
 	if(LAZYLEN(diseases_to_add))
 		AddComponent(/datum/component/infective, diseases_to_add)
 
-/obj/item/reagent_containers/cup/afterattack(obj/target, mob/living/user, proximity)
+/obj/item/reagent_containers/cup/afterattack(obj/target, mob/living/user, proximity_flag)
 	. = ..()
-	if((!proximity) || !check_allowed_items(target,target_self=1))
+	if(!proximity_flag)
+		return
+
+	. |= AFTERATTACK_PROCESSED_ITEM
+
+	if(!check_allowed_items(target, target_self = TRUE))
 		return
 
 	if(!spillable)

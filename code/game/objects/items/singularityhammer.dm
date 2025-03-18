@@ -79,7 +79,8 @@
 	. = ..()
 	if(!proximity)
 		return
-	if(ISWIELDED(src))
+	. |= AFTERATTACK_PROCESSED_ITEM
+	if(HAS_TRAIT(src, TRAIT_WIELDED))
 		if(charged == 5)
 			charged = 0
 			if(istype(A, /mob/living/))
@@ -88,3 +89,4 @@
 			playsound(user, 'sound/weapons/marauder.ogg', 50, 1)
 			var/turf/target = get_turf(A)
 			vortex(target,user)
+	return .

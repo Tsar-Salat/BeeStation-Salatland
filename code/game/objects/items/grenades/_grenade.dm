@@ -171,3 +171,4 @@
 	. = ..()
 	if(active)
 		user.throw_item(target)
+		return . | AFTERATTACK_PROCESSED_ITEM

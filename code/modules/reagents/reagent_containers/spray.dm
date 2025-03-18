@@ -30,6 +30,8 @@
 	if(istype(A, /obj/structure/sink) || istype(A, /obj/structure/janitorialcart) || istype(A, /obj/machinery/hydroponics))
 		return
 
+	. |= AFTERATTACK_PROCESSED_ITEM
+
 	if((A.is_drainable() && !A.is_refillable()) && get_dist(src,A) <= 1 && can_fill_from_container)
 		if(!A.reagents.total_volume)
 			to_chat(user, span_warning("[A] is empty."))
@@ -254,7 +256,7 @@
 	// Make it so the bioterror spray doesn't spray yourself when you click your inventory items
 	if (A.loc == user)
 		return
-	. = ..()
+	return ..() | AFTERATTACK_PROCESSED_ITEM
 
 /obj/item/reagent_containers/spray/chemsprayer/spray(atom/A, mob/user)
 	var/direction = get_dir(src, A)

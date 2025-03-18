@@ -133,12 +133,17 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/spear/explosive)
 
 /obj/item/spear/explosive/afterattack(atom/movable/AM, mob/user, proximity)
 	. = ..()
-	if(!proximity)
+	if(!proximity || !HAS_TRAIT(src, TRAIT_WIELDED) || !istype(AM))
 		return
-	if(ISWIELDED(src))
-		user.say("[war_cry]", forced="spear warcry")
-		explosive.prime(lanced_by=user)
-		qdel(src)
+	. |= AFTERATTACK_PROCESSED_ITEM
+	if(AM.resistance_flags & INDESTRUCTIBLE)
+		return .
+	if(iseffect(AM))
+		return .
+	user.say("[war_cry]", forced="spear warcry")
+	explosive.prime(lanced_by=user)
+	qdel(src)
+	return .
 
 //GREY TIDE
 /obj/item/spear/grey_tide

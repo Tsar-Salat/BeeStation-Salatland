@@ -71,9 +71,10 @@ RSF
 /obj/item/rsf/afterattack(atom/A, mob/user, proximity)
 	. = ..()
 	if(!proximity)
-		return
+		return .
+	. |= AFTERATTACK_PROCESSED_ITEM
 	if (!(istype(A, /obj/structure/table) || isfloorturf(A)))
-		return
+		return .
 
 	if(iscyborg(user))
 		var/mob/living/silicon/robot/R = user

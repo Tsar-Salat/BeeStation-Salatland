@@ -244,26 +244,30 @@
 	if(!user.canUseTopic(src, BE_CLOSE))
 		return
 	cover_open = !cover_open
-	to_chat(user, span_notice("You [cover_open ? "open" : "close"] [src]'s cover."))
+	balloon_alert(user, "cover [cover_open ? "opened" : "closed"]")
 	if(cover_open)
 		playsound(user, 'sound/weapons/sawopen.ogg', 60, 1)
 	else
 		playsound(user, 'sound/weapons/sawopen.ogg', 60, 1)
-	update_icon()
+	update_appearance()
 
-
-/obj/item/gun/ballistic/automatic/l6_saw/update_icon()
+/obj/item/gun/ballistic/automatic/l6_saw/update_icon_state()
 	. = ..()
-	add_overlay("l6_door_[cover_open ? "open" : "closed"]")
+	item_state = "[base_icon_state][cover_open ? "open" : "closed"][magazine ? "mag":"nomag"]"
+
+/obj/item/gun/ballistic/automatic/l6_saw/update_overlays()
+	. = ..()
+	. += "l6_door_[cover_open ? "open" : "closed"]"
 
 
 /obj/item/gun/ballistic/automatic/l6_saw/afterattack(atom/target as mob|obj|turf, mob/living/user as mob|obj, flag, params)
+	. |= AFTERATTACK_PROCESSED_ITEM
 	if(cover_open)
-		to_chat(user, span_warning("[src]'s cover is open! Close it before firing!"))
+		balloon_alert(user, "close the cover!")
 		return
 	else
-		. = ..()
-		update_icon()
+		. |= ..()
+		update_appearance()
 
 //ATTACK HAND IGNORING PARENT RETURN VALUE
 /obj/item/gun/ballistic/automatic/l6_saw/attack_hand(mob/user, list/modifiers)
@@ -271,13 +275,13 @@
 		..()
 		return
 	if (!cover_open && user.is_holding(src))
-		to_chat(user, span_warning("[src]'s cover is closed! Open it before trying to remove the magazine!"))
+		balloon_alert(user, "open the cover!")
 		return
 	..()
 
 /obj/item/gun/ballistic/automatic/l6_saw/attackby(obj/item/A, mob/user, params)
 	if(!cover_open && istype(A, mag_type))
-		to_chat(user, span_warning("[src]'s dust cover prevents a magazine from being fit."))
+		balloon_alert(user, "open the cover!")
 		return
 	..()
 

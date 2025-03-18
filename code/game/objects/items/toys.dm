@@ -1263,6 +1263,7 @@
 
 /obj/item/toy/snowball/afterattack(atom/target as mob|obj|turf|area, mob/user)
 	. = ..()
+	. |= AFTERATTACK_PROCESSED_ITEM
 	if(user.dropItemToGround(src))
 		throw_at(target, throw_range, throw_speed)
 

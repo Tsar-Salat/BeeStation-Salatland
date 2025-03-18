@@ -48,6 +48,7 @@
 		sweep(user, A, FALSE)
 	else
 		to_chat(user, span_warning("You need to wield \the [src] in both hands to sweep!"))
+	return . | AFTERATTACK_PROCESSED_ITEM
 
 /obj/item/pushbroom/proc/sweep(mob/user, atom/A, moving = TRUE)
 	SIGNAL_HANDLER

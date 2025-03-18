@@ -224,6 +224,8 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 		. = ..()
 		dip(target, user, proximity)
 
+	return AFTERATTACK_PROCESSED_ITEM
+
 /obj/item/clothing/mask/cigarette/proc/light(flavor_text = null)
 	if(lit)
 		return

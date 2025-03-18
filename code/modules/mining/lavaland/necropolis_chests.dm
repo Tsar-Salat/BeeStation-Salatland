@@ -1034,6 +1034,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/shared_storage/blue)
 	if(timer > world.time)
 		to_chat(user, span_warning("The staff is still recharging!"))
 		return
+	. |= AFTERATTACK_PROCESSED_ITEM
 	var/area/target_area = get_area(target)
 	if(is_type_in_typecache(target, banned_turfs) || !(target_area.type in allowed_areas))
 		to_chat(user, span_warning("You can only use this out in an open area"))
@@ -1208,6 +1209,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/shared_storage/blue)
 
 /obj/item/hierophant_club/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
 	. = ..()
+	. |= AFTERATTACK_PROCESSED_ITEM
 	if(!is_mining_level(user.z))
 		power = 5
 		to_chat(user, span_warning("[name] is too far from the source of its power!"))

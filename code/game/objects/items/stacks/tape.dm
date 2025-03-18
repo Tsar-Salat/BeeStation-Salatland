@@ -15,26 +15,33 @@
 	var/list/conferred_embed = EMBED_HARMLESS
 	var/overwrite_existing = FALSE
 
-/obj/item/stack/sticky_tape/afterattack(obj/item/I, mob/living/user)
-	if(!istype(I))
+/obj/item/stack/sticky_tape/afterattack(obj/item/target, mob/living/user, proximity)
+	if(!proximity)
 		return
 
-	if(I.embedding == conferred_embed)
-		to_chat(user, span_warning("[I] is already coated in [src]!"))
+	if(!istype(target))
 		return
 
-	user.visible_message(span_notice("[user] begins wrapping [I] with [src]."), span_notice("You begin wrapping [I] with [src]."))
+	. |= AFTERATTACK_PROCESSED_ITEM
 
-	if(do_after(user, 30, target=I))
-		I.embedding = conferred_embed
-		I.updateEmbedding()
-		to_chat(user, span_notice("You finish wrapping [I] with [src]."))
+	if(target.embedding == conferred_embed)
+		to_chat(user, span_warning("[target] is already coated in [src]!"))
+		return .
+
+	user.visible_message(span_notice("[user] begins wrapping [target] with [src]."), span_notice("You begin wrapping [target] with [src]."))
+
+	if(do_after(user, 3 SECONDS, target=target))
+		target.embedding = conferred_embed
+		target.updateEmbedding()
+		to_chat(user, span_notice("You finish wrapping [target] with [src]."))
 		use(1)
-		I.name = "[prefix] [I.name]"
+		target.name = "[prefix] [target.name]"
 
-		if(istype(I, /obj/item/grenade))
-			var/obj/item/grenade/sticky_bomb = I
+		if(istype(target, /obj/item/grenade))
+			var/obj/item/grenade/sticky_bomb = target
 			sticky_bomb.sticky = TRUE
+
+	return .
 
 /obj/item/stack/sticky_tape/super
 	name = "super sticky tape"

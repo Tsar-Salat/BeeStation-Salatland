@@ -14,6 +14,7 @@ Slimecrossing Potions
 /obj/item/slimepotion/extract_cloner/afterattack(obj/item/target, mob/user , proximity)
 	if(!proximity)
 		return
+	. |= AFTERATTACK_PROCESSED_ITEM
 	if(istype(target, /obj/item/reagent_containers))
 		return ..(target, user, proximity)
 	if(istype(target, /obj/item/slimecross))

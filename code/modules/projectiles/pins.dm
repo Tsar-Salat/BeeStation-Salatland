@@ -22,7 +22,8 @@
 /obj/item/firing_pin/afterattack(atom/target, mob/user, proximity_flag)
 	. = ..()
 	if(proximity_flag)
-		if(istype(target, /obj/item/gun))
+		if(isgun(target))
+			. |= AFTERATTACK_PROCESSED_ITEM
 			var/obj/item/gun/G = target
 			if(G.no_pin_required)
 				return
@@ -33,11 +34,13 @@
 
 			if(!G.pin)
 				if(!user.temporarilyRemoveItemFromInventory(src))
-					return
+					return .
 				gun_insert(user, G)
 				to_chat(user, span_notice("You insert [src] into [G]."))
 			else
 				to_chat(user, span_notice("This firearm already has a firing pin installed."))
+
+			return .
 
 /obj/item/firing_pin/on_emag(mob/user)
 	..()

@@ -128,6 +128,8 @@
 
 /obj/item/geiger_counter/afterattack(atom/target,mob/living/user)
 	. = ..()
+	. |= AFTERATTACK_PROCESSED_ITEM
+
 	if(!user.combat_mode)
 		if(!(obj_flags & EMAGGED))
 			user.visible_message(span_notice("[user] scans [target] with [src]."), span_notice("You scan [target]'s radiation levels with [src]..."))
