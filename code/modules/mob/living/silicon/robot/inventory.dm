@@ -211,7 +211,7 @@
 
 
 
-/mob/living/silicon/robot/swap_hand()
+/mob/living/silicon/robot/perform_hand_swap()
 	cycle_modules()
 
 /mob/living/silicon/robot/can_hold_items(obj/item/I)

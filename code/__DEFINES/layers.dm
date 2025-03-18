@@ -89,7 +89,11 @@
 #define RADIAL_LAYER 1000
 
 #define RADIAL_BACKGROUND_LAYER 0
+///1000 is an unimportant number, it's just to normalize copied layers
 #define RADIAL_CONTENT_LAYER 1000
+
+/// Layer for tutorial instructions
+#define TUTORIAL_INSTRUCTIONS_LAYER 5
 
 /**
  * Planes

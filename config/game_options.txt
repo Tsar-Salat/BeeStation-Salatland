@@ -706,5 +706,8 @@ SPECIAL_SYMPTOM_THRESHOLDS
 ##At this amount of symptoms, Synaptizine will no longer remove symptoms from a virus. Set this to 6 or higher to prevent removing symptoms at all. Set this to 1 to allow synaptizine to work to its full effect
 VIRUS_THINNING_CAP 4
 
-
+## If enabled, then when the database is disabled, all players will get tutorials.
+## This is primarily useful for developing tutorials. If you have a proper DB setup, you
+## don't need (or want) this.
+GIVE_TUTORIALS_WITHOUT_DB
 

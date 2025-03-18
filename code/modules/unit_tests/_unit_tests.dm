@@ -85,6 +85,7 @@
 #include "tgui_create_message.dm"
 #include "timer_sanity.dm"
 #include "trait_tests.dm"
+#include "tutorial_sanity.dm"
 #include "unit_test.dm"
 #include "walls_have_sheets.dm"
 #include "wizard_loadout.dm"

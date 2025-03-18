@@ -24,7 +24,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 	QDEL_NULL(dna)
 	GLOB.carbon_list -= src
 
-/mob/living/carbon/swap_hand(held_index)
+/mob/living/carbon/perform_hand_swap(held_index)
 	. = ..()
 	if(!.)
 		var/obj/item/held_item = get_active_held_item()

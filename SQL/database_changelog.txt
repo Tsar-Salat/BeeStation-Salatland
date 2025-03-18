@@ -8,6 +8,18 @@ INSERT INTO `SS13_schema_revision` (`major`, `minor`) VALUES (7, 3);
 
 In any query remember to add a prefix to the table names if you use one.
 
+-----------------------------------------------------
+Version 7.4, 18 March 2025, by Tsar-Salat
+Added `tutorial_completions` to mark what ckeys have completed contextual tutorials.
+
+```
+CREATE TABLE `tutorial_completions` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `ckey` VARCHAR(32) NOT NULL,
+  `tutorial_key` VARCHAR(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `ckey_tutorial_unique` (`ckey`, `tutorial_key`));
+```
 
 -----------------------------------------------------
 Version 7.3, 30 April 2024, by XeonMations
