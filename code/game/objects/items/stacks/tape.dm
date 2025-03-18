@@ -24,13 +24,26 @@
 
 	. |= AFTERATTACK_PROCESSED_ITEM
 
-	if(target.embedding == conferred_embed)
+	if(target.embedding && target.embedding == conferred_embed)
 		to_chat(user, span_warning("[target] is already coated in [src]!"))
 		return .
 
 	user.visible_message(span_notice("[user] begins wrapping [target] with [src]."), span_notice("You begin wrapping [target] with [src]."))
 
 	if(do_after(user, 3 SECONDS, target=target))
+		use(1)
+		if(istype(target, /obj/item/clothing/gloves/fingerless))
+			var/obj/item/clothing/gloves/tackler/offbrand/O = new /obj/item/clothing/gloves/tackler/offbrand
+			to_chat(user, span_notice("You turn [target] into [O] with [src]."))
+			use(1)
+			QDEL_NULL(target)
+			user.put_in_hands(O)
+			return
+
+		if(target.embedding && target.embedding == conferred_embed)
+			to_chat(user, span_warning("[target] is already coated in [src]!"))
+			return .
+
 		target.embedding = conferred_embed
 		target.updateEmbedding()
 		to_chat(user, span_notice("You finish wrapping [target] with [src]."))
