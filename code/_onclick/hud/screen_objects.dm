@@ -32,6 +32,18 @@
 	var/del_on_map_removal = TRUE
 	///Can we throw things at this
 	var/can_throw_target = FALSE
+	/// If TRUE, clicking the screen element will fall through and perform a default "Click" call
+	/// Obviously this requires your Click override, if any, to call parent on their own.
+	/// This is set to FALSE to default to dissade you from doing this.
+	/// Generally we don't want default Click stuff, which results in bugs like using Telekinesis on a screen element
+	/// or trying to point your gun at your screen.
+	var/default_click = FALSE
+
+/atom/movable/screen/Click(location, control, params)
+	if(flags_1 & INITIALIZED_1)
+		SEND_SIGNAL(src, COMSIG_SCREEN_ELEMENT_CLICK, location, control, params, usr)
+	if(default_click)
+		return ..()
 
 /atom/movable/screen/examine(mob/user)
 	return list()

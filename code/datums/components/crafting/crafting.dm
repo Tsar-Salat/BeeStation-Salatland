@@ -9,7 +9,7 @@
 	C.icon = H.ui_style
 	H.static_inventory += C
 	CL.screen += C
-	RegisterSignal(C, COMSIG_CLICK, PROC_REF(component_ui_interact))
+	RegisterSignal(C, COMSIG_SCREEN_ELEMENT_CLICK, PROC_REF(component_ui_interact))
 
 /datum/component/personal_crafting
 	var/busy

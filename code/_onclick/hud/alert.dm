@@ -104,6 +104,8 @@
 	var/mob/owner //Alert owner
 	/// The thing that this alert is showing
 	var/obj/master
+	/// Boolean. If TRUE, the Click() proc will attempt to Click() on the master first if there is a master.
+	var/click_master = TRUE
 
 /atom/movable/screen/alert/MouseEntered(location,control,params)
 	if(!QDELETED(src))
@@ -231,10 +233,10 @@ or something covering your eyes."
 	var/command
 
 /atom/movable/screen/alert/mind_control/Click()
-	var/mob/living/L = usr
-	if(L != owner)
+	. = ..()
+	if(!.)
 		return
-	to_chat(L, "[span_mindcontrol("[command]")]")
+	to_chat(owner, "[span_mindcontrol("[command]")]")
 
 /atom/movable/screen/alert/drunk
 	name = "Drunk"
@@ -248,9 +250,13 @@ If you're feeling frisky, examine yourself and click the underlined item to pull
 	icon_state = "embeddedobject"
 
 /atom/movable/screen/alert/embeddedobject/Click()
-	if(isliving(usr) && usr == owner)
-		var/mob/living/carbon/M = usr
-		return M.help_shake_act(M)
+	. = ..()
+	if(!.)
+		return
+
+	var/mob/living/carbon/carbon_owner = owner
+
+	return carbon_owner.help_shake_act(carbon_owner)
 
 /atom/movable/screen/alert/negative
 	name = "Negative Gravity"
@@ -281,12 +287,15 @@ or shoot a gun to move around via Newton's 3rd Law of Motion."
 	icon_state = "fire"
 
 /atom/movable/screen/alert/fire/Click()
-	var/mob/living/L = usr
-	if(!istype(L) || !L.can_resist() || L != owner)
+	. = ..()
+	if(!.)
 		return
-	L.changeNext_move(CLICK_CD_RESIST)
-	if(L.mobility_flags & MOBILITY_MOVE)
-		return L.resist_fire() //I just want to start a flame in your hearrrrrrtttttt.
+
+	var/mob/living/living_owner = owner
+
+	living_owner.changeNext_move(CLICK_CD_RESIST)
+	if(living_owner.mobility_flags & MOBILITY_MOVE)
+		return living_owner.resist_fire() //I just want to start a flame in your hearrrrrrtttttt.
 
 
 /atom/movable/screen/alert/give // information set when the give alert is made
@@ -320,6 +329,9 @@ or shoot a gun to move around via Newton's 3rd Law of Motion."
 
 /atom/movable/screen/alert/give/Click(location, control, params)
 	. = ..()
+	if(!.)
+		return
+
 	if(!iscarbon(usr))
 		CRASH("User for [src] is of type \[[usr.type]\]. This should never happen.")
 	handle_transfer()
@@ -336,7 +348,8 @@ or shoot a gun to move around via Newton's 3rd Law of Motion."
 	icon_state = "succumb"
 
 /atom/movable/screen/alert/succumb/Click()
-	if (isobserver(usr))
+	. = ..()
+	if(!.)
 		return
 	var/mob/living/living_owner = owner
 	var/last_whisper = tgui_input_text(usr, "Do you have any last words?", "Goodnight, Sweet Prince")
@@ -584,14 +597,14 @@ so as to remain in compliance with the most up-to-date laws."
 	var/atom/target = null
 
 /atom/movable/screen/alert/hackingapc/Click()
-	if(!usr || !usr.client || usr != owner)
+	. = ..()
+	if(!.)
 		return
-	if(!target)
-		return
-	var/mob/living/silicon/ai/AI = usr
-	var/turf/T = get_turf(target)
-	if(T)
-		AI.eyeobj.setLoc(T)
+
+	var/mob/living/silicon/ai/ai_owner = owner
+	var/turf/target_turf = get_turf(target)
+	if(target_turf)
+		ai_owner.eyeobj.setLoc(target_turf)
 
 //MECHS
 
@@ -610,10 +623,11 @@ so as to remain in compliance with the most up-to-date laws."
 	timeout = 300
 
 /atom/movable/screen/alert/notify_cloning/Click()
-	if(!usr || !usr.client || usr != owner)
+	. = ..()
+	if(!.)
 		return
-	var/mob/dead/observer/G = usr
-	G.reenter_corpse()
+	var/mob/dead/observer/dead_owner = owner
+	dead_owner.reenter_corpse()
 
 /atom/movable/screen/alert/notify_action
 	name = "Body created"
@@ -624,28 +638,29 @@ so as to remain in compliance with the most up-to-date laws."
 	var/action = NOTIFY_JUMP
 
 /atom/movable/screen/alert/notify_action/Click()
-	if(!usr || !usr.client || usr != owner)
+	. = ..()
+	if(!.)
 		return
 	if(!target)
 		return
-	var/mob/dead/observer/ghost_owner = usr
-	if(!istype(ghost_owner))
+	var/mob/dead/observer/dead_owner = owner
+	if(!istype(dead_owner))
 		return
 	//Any actions that cause you to jump to the target turf
 	if (action == NOTIFY_ATTACK || action == NOTIFY_JUMP)
-		var/turf/T = get_turf(target)
-		if(isturf(T))
-			ghost_owner.abstract_move(T)
+		var/turf/target_turf = get_turf(target)
+		if(isturf(target_turf))
+			dead_owner.abstract_move(target_turf)
 	//Other additional actions
 	switch(action)
 		if(NOTIFY_ATTACK)
-			target.attack_ghost(ghost_owner)
+			target.attack_ghost(dead_owner)
 		if(NOTIFY_ORBIT)
-			ghost_owner.check_orbitable(target)
+			dead_owner.check_orbitable(target)
 
 //OBJECT-BASED
 
-/atom/movable/screen/alert/restrained/buckled
+/atom/movable/screen/alert/buckled
 	name = "Buckled"
 	desc = "You've been buckled to something. Click the alert to unbuckle unless you're handcuffed."
 	icon_state = "buckled"
@@ -653,26 +668,39 @@ so as to remain in compliance with the most up-to-date laws."
 /atom/movable/screen/alert/restrained/handcuffed
 	name = "Handcuffed"
 	desc = "You're handcuffed and can't act. If anyone drags you, you won't be able to move. Click the alert to free yourself."
+	click_master = FALSE
 
 /atom/movable/screen/alert/restrained/legcuffed
 	name = "Legcuffed"
 	desc = "You're legcuffed, which slows you down considerably. Click the alert to free yourself."
+	click_master = FALSE
 
 /atom/movable/screen/alert/restrained/Click()
-	var/mob/living/L = usr
-	if(!istype(L) || !L.can_resist() || L != owner)
+	. = ..()
+	if(!.)
 		return
-	L.changeNext_move(CLICK_CD_RESIST)
-	if((L.mobility_flags & MOBILITY_MOVE) && (L.last_special <= world.time))
-		return L.resist_restraints()
 
-/atom/movable/screen/alert/restrained/buckled/Click()
-	var/mob/living/L = usr
-	if(!istype(L) || !L.can_resist() || L != owner)
+	var/mob/living/living_owner = owner
+
+	if(!living_owner.can_resist())
 		return
-	L.changeNext_move(CLICK_CD_RESIST)
-	if(L.last_special <= world.time)
-		return L.resist_buckle()
+
+	living_owner.changeNext_move(CLICK_CD_RESIST)
+	if((living_owner.mobility_flags & MOBILITY_MOVE) && (living_owner.last_special <= world.time))
+		return living_owner.resist_restraints()
+
+/atom/movable/screen/alert/buckled/Click()
+	. = ..()
+	if(!.)
+		return
+
+	var/mob/living/living_owner = owner
+
+	if(!living_owner.can_resist())
+		return
+	living_owner.changeNext_move(CLICK_CD_RESIST)
+	if(living_owner.last_special <= world.time)
+		return living_owner.resist_buckle()
 
 // PRIVATE = only edit, use, or override these if you're editing the system as a whole
 
@@ -713,16 +741,21 @@ so as to remain in compliance with the most up-to-date laws."
 /mob/var/list/alerts = list() // contains /atom/movable/screen/alert only // On /mob so clientless mobs will throw alerts properly
 
 /atom/movable/screen/alert/Click(location, control, params)
+	SHOULD_CALL_PARENT(TRUE)
+
+	..()
 	if(!usr || !usr.client)
-		return
+		return FALSE
+	if(usr != owner)
+		return FALSE
 	var/list/modifiers = params2list(params)
 	if(LAZYACCESS(modifiers, SHIFT_CLICK)) // screen objects don't do the normal Click() stuff so we'll cheat
 		to_chat(usr, span_boldnotice("[name] - [span_info(desc)]"))
-		return
-	if(usr != owner)
-		return
-	if(master)
+		return FALSE
+	if(master && click_master)
 		return usr.client.Click(master, location, control, params)
+
+	return TRUE
 
 /atom/movable/screen/alert/Destroy()
 	severity = 0
