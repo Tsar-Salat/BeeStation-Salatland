@@ -3,11 +3,15 @@
 	desc = "A holster to carry a handgun and ammo. WARNING: Badasses only."
 	icon_state = "holster"
 	item_state = "holster"
-	pocket_storage_component_path = /datum/component/storage/concrete/pockets/holster
+	var/storage_typepath = /datum/storage/pockets/holster
+
+/obj/item/clothing/accessory/holster/detective/Initialize(mapload)
+	. = ..()
+	create_storage(storage_type = storage_typepath)
 
 /obj/item/clothing/accessory/holster/detective
 	name = "detective's shoulder holster"
-	pocket_storage_component_path = /datum/component/storage/concrete/pockets/holster/detective
+	storage_typepath = /datum/storage/pockets/holster/detective
 
 /obj/item/clothing/accessory/holster/detective/Initialize(mapload)
 	. = ..()

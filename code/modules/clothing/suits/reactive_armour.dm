@@ -37,6 +37,8 @@
 	actions_types = list(/datum/action/item_action/toggle)
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | ACID_PROOF
 	hit_reaction_chance = 50
+	//cannae store
+	pockets = FALSE
 	///Whether the armor will try to react to hits (is it on)
 	var/active = 0
 	///This will be true for 30 seconds after an EMP, it makes the reaction effect dangerous to the user.
@@ -49,7 +51,6 @@
 	var/reactivearmor_cooldown_duration = 5 SECONDS
 	///The cooldown itself of the reactive armor for when it can activate again.
 	COOLDOWN_DECLARE(reactivearmor_cooldown)
-	pocket_storage_component_path = FALSE
 
 
 /datum/armor/armor_reactive

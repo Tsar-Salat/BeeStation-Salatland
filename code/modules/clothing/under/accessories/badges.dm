@@ -31,13 +31,10 @@
 	name = "pocket protector"
 	desc = "Can protect your clothing from ink stains, but you'll look like a nerd if you're using one."
 	icon_state = "pocketprotector"
-	pocket_storage_component_path = /datum/component/storage/concrete/pockets/pocketprotector
 
-/*
 /obj/item/clothing/accessory/pocketprotector/Initialize(mapload)
 	. = ..()
 	create_storage(storage_type = /datum/storage/pockets/pocketprotector)
-*/
 
 /obj/item/clothing/accessory/pocketprotector/can_attach_accessory(obj/item/clothing/under/attach_to, mob/living/user)
 	. = ..()
