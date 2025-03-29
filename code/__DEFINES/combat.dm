@@ -189,7 +189,7 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 ///This percentage of all pain will be dealt as stam damage rather than brute (0-1)
 #define EMBEDDED_PAIN_STAM_PCT 0.0
 ///For thrown weapons, every extra speed it's thrown at above its normal throwspeed will add this to the embed chance
-#define EMBEDDED_CHANCE_SPEED_BONUS 10
+#define EMBED_CHANCE_SPEED_BONUS 10
 ///The point at which embeds are fully blocked.
 ///Anything under will linearly decrease the embed chance.
 ///If the armour on the limb against melee is greater than the armour block, the embed will fail.
