@@ -156,7 +156,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	mouse_drag_pointer = MOUSE_ACTIVE_POINTER //the icon to indicate this object is being dragged
 
 	/// Used for when things get stuck in you and need to be surgically removed. See [/datum/embedding_behavior]
-	var/list/embedding = NONE
+	var/list/embedding
 
 	/// For flags such as GLASSESCOVERSEYES to show which slots this item can cover. See _DEFINES/inventory.dm
 	var/flags_cover = 0
@@ -1393,7 +1393,9 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 
 ///For when you want to add/update the embedding on an item. Uses the vars in [/obj/item/embedding], and defaults to config values for values that aren't set. Will automatically detach previous embed elements on this item.
 /obj/item/proc/updateEmbedding()
-	if(!islist(embedding) || !LAZYLEN(embedding))
+	SHOULD_CALL_PARENT(TRUE)
+
+	if(!LAZYLEN(embedding))
 		return
 
 	AddElement(/datum/element/embed,\

@@ -35,38 +35,38 @@
 	if(!isitem(target) && !isprojectile(target))
 		return ELEMENT_INCOMPATIBLE
 
+	RegisterSignal(target, COMSIG_ELEMENT_ATTACH, .proc/severancePackage)
 	if(isitem(target))
 		RegisterSignal(target, COMSIG_MOVABLE_IMPACT_ZONE, PROC_REF(checkEmbed))
-		RegisterSignal(target, COMSIG_ELEMENT_ATTACH, PROC_REF(severancePackage))
 		RegisterSignal(target, COMSIG_PARENT_EXAMINE, PROC_REF(examined))
 		RegisterSignal(target, COMSIG_EMBED_TRY_FORCE, PROC_REF(tryForceEmbed))
 		RegisterSignal(target, COMSIG_ITEM_DISABLE_EMBED, PROC_REF(detachFromWeapon))
-		if(!initialized)
-			src.embed_chance = embed_chance
-			src.fall_chance = fall_chance
-			src.pain_chance = pain_chance
-			src.pain_mult = pain_mult
-			src.max_damage_mult = max_damage_mult
-			src.remove_pain_mult = remove_pain_mult
-			src.rip_time = rip_time
-			src.ignore_throwspeed_threshold = ignore_throwspeed_threshold
-			src.jostle_chance = jostle_chance
-			src.jostle_pain_mult = jostle_pain_mult
-			src.pain_stam_pct = pain_stam_pct
-			src.armour_block = armour_block
-			initialized = TRUE
 	else
 		var/obj/projectile/P = target
 		payload_type = P.shrapnel_type
 		RegisterSignal(target, COMSIG_PROJECTILE_SELF_ON_HIT, PROC_REF(checkEmbedProjectile))
 
+	if(!initialized)
+		src.embed_chance = embed_chance
+		src.fall_chance = fall_chance
+		src.pain_chance = pain_chance
+		src.pain_mult = pain_mult
+		src.max_damage_mult = max_damage_mult
+		src.remove_pain_mult = remove_pain_mult
+		src.rip_time = rip_time
+		src.ignore_throwspeed_threshold = ignore_throwspeed_threshold
+		src.jostle_chance = jostle_chance
+		src.jostle_pain_mult = jostle_pain_mult
+		src.pain_stam_pct = pain_stam_pct
+		src.armour_block = armour_block
+		initialized = TRUE
 
 /datum/element/embed/Detach(obj/target)
 	. = ..()
 	if(isitem(target))
 		UnregisterSignal(target, list(COMSIG_MOVABLE_IMPACT_ZONE, COMSIG_ELEMENT_ATTACH, COMSIG_MOVABLE_IMPACT, COMSIG_PARENT_EXAMINE, COMSIG_EMBED_TRY_FORCE, COMSIG_ITEM_DISABLE_EMBED))
 	else
-		UnregisterSignal(target, list(COMSIG_PROJECTILE_SELF_ON_HIT))
+		UnregisterSignal(target, list(COMSIG_PROJECTILE_SELF_ON_HIT, COMSIG_ELEMENT_ATTACH))
 
 
 /// Checking to see if we're gonna embed into a human
@@ -110,7 +110,7 @@
 		pain_stam_pct = pain_stam_pct)
 
 ///A different embed element has been attached, so we'll detach and let them handle things
-/datum/element/embed/proc/severancePackage(obj/item/weapon, datum/element/E)
+/datum/element/embed/proc/severancePackage(obj/weapon, datum/element/E)
 	SIGNAL_HANDLER
 
 	if(istype(E, /datum/element/embed))
@@ -137,22 +137,26 @@
   * If we hit a valid target, we create the shrapnel_type object and immediately call tryEmbed() on it, targeting what we impacted. That will lead
   *	it to call tryForceEmbed() on its own embed element (it's out of our hands here, our projectile is done), where it will run through all the checks it needs to.
   */
-/datum/element/embed/proc/checkEmbedProjectile(obj/projectile/P, atom/movable/firer, atom/hit, angle, hit_zone)
+/datum/element/embed/proc/checkEmbedProjectile(obj/projectile/source, atom/movable/firer, atom/hit, angle, hit_zone)
 	SIGNAL_HANDLER
 
-	if(!iscarbon(hit) || HAS_TRAIT(hit, TRAIT_PIERCEIMMUNE))
-		Detach(P)
+	if(!source.can_embed_into(hit))
+		Detach(source)
 		return // we don't care
 
 	var/obj/item/payload = new payload_type(get_turf(hit))
+	if(istype(payload, /obj/item/shrapnel/bullet))
+		payload.name = source.name
+	payload.embedding = source.embedding
+	payload.updateEmbedding()
 	var/mob/living/carbon/C = hit
 	var/obj/item/bodypart/limb = C.get_bodypart(hit_zone)
 	if(!limb)
 		limb = C.get_bodypart()
 
-	if(!payload.tryEmbed(limb))
+	if(!tryForceEmbed(payload, limb))
 		payload.failedEmbed()
-	Detach(P)
+	Detach(source)
 
 /**
  * tryForceEmbed() is called here when we fire COMSIG_EMBED_TRY_FORCE from [/obj/item/proc/tryEmbed]. Mostly, this means we're a piece of shrapnel from a projectile that just impacted something, and we're trying to embed in it.
