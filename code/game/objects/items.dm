@@ -155,8 +155,10 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 
 	mouse_drag_pointer = MOUSE_ACTIVE_POINTER //the icon to indicate this object is being dragged
 
-	/// Used for when things get stuck in you and need to be surgically removed. See [/datum/embedding_behavior]
-	var/list/embedding
+	/// Does it embed and if yes, what kind of embed
+	var/embed_type
+	/// Stores embedding data
+	var/datum/embed_data/embed_data
 
 	/// For flags such as GLASSESCOVERSEYES to show which slots this item can cover. See _DEFINES/inventory.dm
 	var/flags_cover = 0
@@ -270,8 +272,8 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		if(damtype == BRUTE)
 			hitsound = "swing_hit"
 
-	if(LAZYLEN(embedding))
-		updateEmbedding()
+	if(get_embed())
+		AddElement(/datum/element/embed)
 
 /obj/item/Destroy()
 	master = null
@@ -340,17 +342,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 /obj/item/ComponentInitialize()
 	. = ..()
 
-	// this proc says it's for initializing components, but we're initializing elements too because it's you and me against the world >:)
-	if(!LAZYLEN(embedding))
-		if(GLOB.embedpocalypse)
-			embedding = EMBED_POINTY
-			name = "pointy [name]"
-		else if(GLOB.stickpocalypse)
-			embedding = EMBED_HARMLESS
-			name = "sticky [name]"
-	updateEmbedding()
-
-	if(sharpness) //give sharp objects butchering functionality, for consistency
+	if(sharpness && force > 5) //give sharp objects butchering functionality, for consistency
 		AddComponent(/datum/component/butchering, 80 * toolspeed)
 
 //user: The mob that is suiciding
@@ -1345,9 +1337,11 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 			take_damage(20, BRUTE, BOMB, 0)
 
 ///Does the current embedding var meet the criteria for being harmless? Namely, does it have a pain multiplier and jostle pain mult of 0? If so, return true.
-/obj/item/proc/isEmbedHarmless()
-	if(embedding)
-		return (!embedding["pain_mult"] && !embedding["jostle_pain_mult"])
+/obj/item/proc/is_embed_harmless()
+	if (!get_embed())
+		return FALSE
+
+	return !isnull(embed_data.pain_mult) && !isnull(embed_data.jostle_pain_mult) && embed_data.pain_mult == 0 && embed_data.jostle_pain_mult == 0
 
 ///In case we want to do something special (like self delete) upon failing to embed in something, return true
 /obj/item/proc/failedEmbed()
@@ -1378,40 +1372,20 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
   */
 /obj/item/proc/tryEmbed(atom/target, forced=FALSE)
 	if(!isbodypart(target) && !iscarbon(target))
-		return
-	if(!forced && !LAZYLEN(embedding))
-		return
+		return NONE
+
+	if(!forced && !get_embed())
+		return NONE
 
 	if(SEND_SIGNAL(src, COMSIG_EMBED_TRY_FORCE, target = target, forced = forced))
 		return TRUE
+
 	failedEmbed()
 
 ///For when you want to disable an item's embedding capabilities (like transforming weapons and such), this proc will detach any active embed elements from it.
 /obj/item/proc/disableEmbedding()
 	SEND_SIGNAL(src, COMSIG_ITEM_DISABLE_EMBED)
 	return
-
-///For when you want to add/update the embedding on an item. Uses the vars in [/obj/item/embedding], and defaults to config values for values that aren't set. Will automatically detach previous embed elements on this item.
-/obj/item/proc/updateEmbedding()
-	SHOULD_CALL_PARENT(TRUE)
-
-	if(!LAZYLEN(embedding))
-		return
-
-	AddElement(/datum/element/embed,\
-		embed_chance = (!isnull(embedding["embed_chance"]) ? embedding["embed_chance"] : EMBED_CHANCE),\
-		fall_chance = (!isnull(embedding["fall_chance"]) ? embedding["fall_chance"] : EMBEDDED_ITEM_FALLOUT),\
-		pain_chance = (!isnull(embedding["pain_chance"]) ? embedding["pain_chance"] : EMBEDDED_PAIN_CHANCE),\
-		pain_mult = (!isnull(embedding["pain_mult"]) ? embedding["pain_mult"] : EMBEDDED_PAIN_MULTIPLIER),\
-		max_damage_mult = (!isnull(embedding["max_damage_mult"]) ? embedding["max_damage_mult"] : EMBEDDED_MAX_DAMAGE_MULTIPLIER),\
-		remove_pain_mult = (!isnull(embedding["remove_pain_mult"]) ? embedding["remove_pain_mult"] : EMBEDDED_UNSAFE_REMOVAL_PAIN_MULTIPLIER),\
-		rip_time = (!isnull(embedding["rip_time"]) ? embedding["rip_time"] : EMBEDDED_UNSAFE_REMOVAL_TIME),\
-		ignore_throwspeed_threshold = (!isnull(embedding["ignore_throwspeed_threshold"]) ? embedding["ignore_throwspeed_threshold"] : FALSE),\
-		jostle_chance = (!isnull(embedding["jostle_chance"]) ? embedding["jostle_chance"] : EMBEDDED_JOSTLE_CHANCE),\
-		jostle_pain_mult = (!isnull(embedding["jostle_pain_mult"]) ? embedding["jostle_pain_mult"] : EMBEDDED_JOSTLE_PAIN_MULTIPLIER),\
-		pain_stam_pct = (!isnull(embedding["pain_stam_pct"]) ? embedding["pain_stam_pct"] : EMBEDDED_PAIN_STAM_PCT),\
-		armour_block = (!isnull(embedding["armour_block"]) ? embedding["armour_block"] : EMBEDDED_ARMOUR_BLOCK))
-	return TRUE
 
 /// How many different types of mats will be counted in a bite?
 #define MAX_MATS_PER_BITE 2
@@ -1614,3 +1588,16 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 /obj/item/proc/add_strip_actions(datum/strip_context/context)
 
 /obj/item/proc/perform_strip_actions(action_key, mob/actor)
+
+/// Fetches embedding data
+/obj/item/proc/get_embed()
+	RETURN_TYPE(/datum/embed_data)
+	return embed_type ? (embed_data ||= get_embed_by_type(embed_type)) : null
+
+/obj/item/proc/set_embed(datum/embed_data/embed)
+	if(embed_data == embed)
+		return
+	if(!GLOB.embed_by_type[embed_data?.type])
+		qdel(embed_data)
+	embed_data = ispath(embed) ? get_embed_by_type(armor) : embed
+	SEND_SIGNAL(src, COMSIG_ITEM_EMBEDDING_UPDATE)

@@ -127,4 +127,7 @@
 	attack_verb_simple = list("mop", "stab", "shank", "joust")
 	sharpness = SHARP
 	bleed_force = BLEED_SURFACE
-	embedding = list("armour_block" = 40)
+	embed_type = /datum/embed_data/mop
+
+/datum/embed_data/mop
+	armour_block = 40

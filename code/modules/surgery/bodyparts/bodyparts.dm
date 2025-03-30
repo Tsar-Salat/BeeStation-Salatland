@@ -695,11 +695,6 @@
 	max_damage = 500
 	animal_origin = ALIEN_BODYPART
 
-/obj/item/bodypart/chest/devil
-	dismemberable = 0
-	max_damage = 5000
-	animal_origin = DEVIL_BODYPART
-
 /obj/item/bodypart/chest/larva
 	icon = 'icons/mob/animal_parts.dmi'
 	icon_state = "larva_chest"
@@ -808,12 +803,6 @@
 	max_damage = 100
 	animal_origin = ALIEN_BODYPART
 
-/obj/item/bodypart/l_arm/devil
-	dismemberable = FALSE
-	can_be_disabled = FALSE
-	max_damage = 5000
-	animal_origin = DEVIL_BODYPART
-
 /obj/item/bodypart/r_arm
 	name = "right arm"
 	desc = "Over 87% of humans are right handed. That figure is much lower \
@@ -914,12 +903,6 @@
 	max_damage = 100
 	animal_origin = ALIEN_BODYPART
 
-/obj/item/bodypart/r_arm/devil
-	dismemberable = FALSE
-	can_be_disabled = FALSE
-	max_damage = 5000
-	animal_origin = DEVIL_BODYPART
-
 /obj/item/bodypart/l_leg
 	name = "left leg"
 	desc = "Some athletes prefer to tie their left shoelaces first for good \
@@ -1010,12 +993,6 @@
 	can_be_disabled = FALSE
 	max_damage = 100
 	animal_origin = ALIEN_BODYPART
-
-/obj/item/bodypart/l_leg/devil
-	dismemberable = FALSE
-	can_be_disabled = FALSE
-	max_damage = 5000
-	animal_origin = DEVIL_BODYPART
 
 /obj/item/bodypart/r_leg
 	name = "right leg"
@@ -1109,9 +1086,3 @@
 	can_be_disabled = FALSE
 	max_damage = 100
 	animal_origin = ALIEN_BODYPART
-
-/obj/item/bodypart/r_leg/devil
-	dismemberable = FALSE
-	can_be_disabled = FALSE
-	max_damage = 5000
-	animal_origin = DEVIL_BODYPART

@@ -111,13 +111,9 @@
 	SIGNAL_HANDLER
 
 	if(active)
-		if(embedding)
-			updateEmbedding()
 		heat = active_heat
 		START_PROCESSING(SSobj, src)
 	else
-		if(embedding)
-			disableEmbedding()
 		heat = initial(heat)
 		STOP_PROCESSING(SSobj, src)
 
@@ -187,10 +183,15 @@
 	block_power = 35
 	block_sound = 'sound/weapons/egloves.ogg'
 	block_flags = BLOCKING_ACTIVE | BLOCKING_NASTY
-	embedding = list("embed_chance" = 200, "armour_block" = 60, "max_pain_mult" = 15)
+	embed_type = /datum/embed_data/esword
 
 	active_throwforce = 35 // Does a lot of damage on throw, but will embed
 	active_bleedforce = BLEED_DEEP_WOUND
+
+/datum/embed_data/esword
+	embed_chance = 200
+	armour_block = 60
+	max_damage_mult = 15
 
 /obj/item/melee/energy/sword/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
 	if(!HAS_TRAIT(src, TRAIT_TRANSFORM_ACTIVE))

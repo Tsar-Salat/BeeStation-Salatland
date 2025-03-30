@@ -655,11 +655,9 @@
 						crit_rebate = 50
 						for(var/i in 1 to num_shards)
 							var/obj/item/shard/shard = new /obj/item/shard(get_turf(C))
-							shard.embedding = list(embed_chance = 10000, ignore_throwspeed_threshold = TRUE, impact_pain_mult=1, pain_chance=5)
-							shard.updateEmbedding()
+							shard.set_embed(/datum/embed_data/glass_candy)
 							C.hitby(shard, skipcatch = TRUE, hitpush = FALSE)
-							shard.embedding = list()
-							shard.updateEmbedding()
+							shard.set_embed(initial(shard.embed_type))
 					if(4) // paralyze this binch
 						// the new paraplegic gets like 4 lines of losing their legs so skip them
 						visible_message(span_danger("[C]'s spinal cord is obliterated with a sickening crunch!"))

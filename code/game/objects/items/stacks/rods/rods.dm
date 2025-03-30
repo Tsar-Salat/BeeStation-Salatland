@@ -16,11 +16,14 @@
 	attack_verb_continuous = list("hits", "bludgeons", "whacks")
 	attack_verb_simple = list("hit", "bludgeon", "whack")
 	hitsound = 'sound/weapons/grenadelaunch.ogg'
-	embedding = list()
+	embed_type = /datum/embed_data/rods
 	novariants = TRUE
 	matter_amount = 2
 	cost = 250
 	source = /datum/robot_energy_storage/metal
+
+/datum/embed_data/rods
+	embed_chance = 50
 
 /obj/item/stack/rods/suicide_act(mob/living/carbon/user)
 	user.visible_message(span_suicide("[user] begins to stuff \the [src] down [user.p_their()] throat! It looks like [user.p_theyre()] trying to commit suicide!"))//it looks like theyre ur mum

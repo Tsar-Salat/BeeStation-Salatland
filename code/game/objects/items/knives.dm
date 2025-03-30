@@ -123,22 +123,33 @@
 	icon_state = "buckknife"
 	icon = 'icons/obj/knives.dmi'
 	desc = "A military combat utility survival knife."
-	embedding = list("pain_mult" = 4, "embed_chance" = 65, "fall_chance" = 10, "ignore_throwspeed_threshold" = TRUE, "armour_block" = 60)
+	embed_type = /datum/embed_data/combat_knife
 	force = 20
 	throwforce = 20
 	attack_verb_continuous = list("slashes", "stabs", "slices", "tears", "lacerates", "rips", "cuts")
 	attack_verb_simple = list("slash", "stab", "slice", "tear", "lacerate", "rip", "cut")
 	bayonet = TRUE
 
+/datum/embed_data/combat_knife
+	pain_mult = 4
+	embed_chance = 65
+	fall_chance = 10
+	ignore_throwspeed_threshold = TRUE
+	armour_block = 60
+
 /obj/item/knife/combat/survival
 	name = "survival knife"
 	icon = 'icons/obj/knives.dmi'
 	icon_state = "survivalknife"
-	embedding = list("pain_mult" = 4, "embed_chance" = 35, "fall_chance" = 10, "armour_block" = 40)
+	embed_type = /datum/embed_data/combat_knife/weak
 	desc = "A hunting grade survival knife."
 	force = 15
 	throwforce = 15
 	bayonet = TRUE
+
+/datum/embed_data/combat_knife/weak
+	embed_chance = 35
+	armour_block = 40
 
 /obj/item/knife/combat/bone
 	name = "bone dagger"
@@ -148,7 +159,7 @@
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
 	desc = "A sharpened bone. The bare minimum in survival."
-	embedding = list("pain_mult" = 4, "embed_chance" = 35, "fall_chance" = 10, "armour_block" = 40)
+	embed_type = /datum/embed_data/combat_knife/weak
 	force = 15
 	throwforce = 15
 	custom_materials = null
@@ -171,10 +182,17 @@
 	throwforce = 8
 	throw_speed = 5 //yeets
 	armour_penetration = 10 //spear has 10 armour pen, I think its fitting another glass tipped item should have it too
-	embedding = list("embedded_pain_multiplier" = 6, "embed_chance" = 40, "embedded_fall_chance" = 5, "armour_block" = 30) // Incentive to disengage/stop chasing when stuck
+	embed_type = /datum/embed_data/shiv
 	attack_verb_continuous = list("sticks", "shanks")
 	attack_verb_simple = list("stuck", "shank")
 	custom_materials = list(/datum/material/glass=400)
+
+/datum/embed_data/shiv
+	pain_mult = 6
+	embed_chance = 40
+	fall_chance = 5
+	armour_block = 30
+	// Incentive to disengage/stop chasing when stuck
 
 /obj/item/knife/shiv/suicide_act(mob/living/user)
 	user.visible_message(span_suicide("[user] is slitting [user.p_their()] [pick("wrists", "throat")] with the shank! It looks like [user.p_theyre()] trying to commit suicide."))

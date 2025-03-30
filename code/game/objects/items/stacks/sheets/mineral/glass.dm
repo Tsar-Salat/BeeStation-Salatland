@@ -251,9 +251,16 @@
 	sharpness = SHARP
 	bleed_force = BLEED_SURFACE
 	var/icon_prefix
-	embedding = list("embed_chance" = 65)
+	embed_type = /datum/embed_data/shard
 
+/datum/embed_data/shard
+	embed_chance = 65
 
+/datum/embed_data/glass_candy
+	embed_chance = 100
+	ignore_throwspeed_threshold = TRUE
+	max_damage_mult = 1
+	pain_chance = 5
 
 /datum/armor/item_shard
 	melee = 100

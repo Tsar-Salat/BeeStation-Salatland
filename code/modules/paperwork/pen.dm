@@ -106,7 +106,11 @@
 						"Black and Silver" = "pen-fountain-b",
 						"Command Blue" = "pen-fountain-cb"
 						)
-	embedding = list("embed_chance" = 75, "armour_block" = 40)
+	embed_type = /datum/embed_data/pen
+
+/datum/embed_data/pen
+	embed_chance = 75
+	armour_block = 40
 
 /obj/item/pen/fountain/captain/Initialize(mapload)
 	. = ..()
@@ -228,8 +232,20 @@
 	attack_verb_continuous = list("slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts") //these won't show up if the pen is off
 	attack_verb_simple = list("slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
 	sharpness = SHARP
+	armour_penetration = 20
+	light_system = MOVABLE_LIGHT
+	light_range = 1.5
+	light_power = 0.75
+	light_color = COLOR_SOFT_RED
+	light_on = FALSE
 	/// The real name of our item when extended.
 	var/hidden_name = "energy dagger"
+	/// The real desc of our item when extended.
+	var/hidden_desc = "It's a normal black ink pe- Wait. That's a thing used to stab people!"
+	/// The real icons used when extended.
+	var/hidden_icon = "edagger"
+	/// Whether or pen is extended
+	var/extended = FALSE
 
 /obj/item/pen/edagger/Initialize(mapload)
 	. = ..()
@@ -264,26 +280,29 @@
 
 	if(active)
 		name = hidden_name
-		icon_state = "edagger"
-		item_state = "edagger"
+		desc = hidden_desc
+		icon_state = hidden_icon
+		item_state = hidden_icon
 		lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 		righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
-		embedding = list(embed_chance = 100) // Rule of cool
+		set_embed(/datum/embed_data/edagger_active) // Rule of cool
 	else
 		name = initial(name)
+		desc = initial(desc)
 		icon_state = initial(icon_state)
 		item_state = initial(item_state)
 		lefthand_file = initial(lefthand_file)
 		righthand_file = initial(righthand_file)
-		embedding = list(embed_chance = EMBED_CHANCE)
+		set_embed(embed_type)
 
-	updateEmbedding()
 	if(user)
 		balloon_alert(user, "[hidden_name] [active ? "active" : "concealed"]")
 	playsound(src, active ? 'sound/weapons/saberon.ogg' : 'sound/weapons/saberoff.ogg', 5, TRUE)
 	set_light_on(active)
 	return COMPONENT_NO_DEFAULT_MESSAGE
 
+/datum/embed_data/edagger_active
+	embed_chance = 100
 
 /*
  * Screwdriver Pen

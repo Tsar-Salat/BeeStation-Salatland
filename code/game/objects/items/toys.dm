@@ -1091,10 +1091,9 @@
 
 /obj/item/toy/cards/singlecard/apply_card_vars(obj/item/toy/cards/singlecard/newobj,obj/item/toy/cards/sourceobj)
 	..()
-	newobj.embedding = sourceobj.embedding
+	newobj.set_embed(sourceobj.embed_type)
 	newobj.card_sharpness = sourceobj.card_sharpness
 	newobj.sharpness = sourceobj.card_sharpness
-	newobj.updateEmbedding()
 
 /obj/item/toy/cards/singlecard/examine(mob/user)
 	. = ..()
@@ -1193,13 +1192,20 @@
 	card_force = 5
 	card_throwforce = 12
 	card_throw_speed = 6
-	embedding = list("pain_mult" = 1, "embed_chance" = 80, "max_damage_mult" = 8, "fall_chance" = 0, "embed_chance_turf_mod" = 15, "armour_block" = 60) //less painful than throwing stars
+	embed_type = /datum/embed_data/syndicard
 	card_sharpness = SHARP
 	bleed_force = BLEED_SURFACE
 	card_throw_range = 7
 	card_attack_verb_continuous = list("attacks", "slices", "dices", "slashes", "cuts")
 	card_attack_verb_simple = list("attack", "slice", "dice", "slash", "cut")
 	resistance_flags = NONE
+
+/datum/embed_data/syndicard
+	pain_mult = 1
+	embed_chance = 80
+	max_damage_mult = 8
+	fall_chance = 0
+	armour_block = 60
 
 /*
  * Fake nuke

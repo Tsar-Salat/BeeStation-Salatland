@@ -29,64 +29,27 @@
 	var/obj/item/bodypart/limb
 	var/obj/item/weapon
 
-	// all of this stuff is explained in _DEFINES/combat.dm
-	var/embed_chance // not like we really need it once we're already stuck in but hey
-	var/fall_chance
-	var/pain_chance
-	var/pain_mult
-	var/max_damage_mult
-	var/remove_pain_mult
-	var/rip_time
-	var/ignore_throwspeed_threshold
-	var/jostle_chance
-	var/jostle_pain_mult
-	var/pain_stam_pct
-	var/armour_block
-
 	var/harmful
 
-/datum/component/embedded/Initialize(obj/item/I,
+/datum/component/embedded/Initialize(obj/item/weapon,
 			datum/thrownthing/throwingdatum,
-			obj/item/bodypart/part,
-			embed_chance = EMBED_CHANCE,
-			fall_chance = EMBEDDED_ITEM_FALLOUT,
-			pain_chance = EMBEDDED_PAIN_CHANCE,
-			pain_mult = EMBEDDED_PAIN_MULTIPLIER,
-			max_damage_mult = EMBEDDED_MAX_DAMAGE_MULTIPLIER,
-			remove_pain_mult = EMBEDDED_UNSAFE_REMOVAL_PAIN_MULTIPLIER,
-			rip_time = EMBEDDED_UNSAFE_REMOVAL_TIME,
-			ignore_throwspeed_threshold = FALSE,
-			jostle_chance = EMBEDDED_JOSTLE_CHANCE,
-			jostle_pain_mult = EMBEDDED_JOSTLE_PAIN_MULTIPLIER,
-			pain_stam_pct = EMBEDDED_PAIN_STAM_PCT,
-			armour_block = EMBEDDED_ARMOUR_BLOCK)
+			obj/item/bodypart/part)
 
-	if(!iscarbon(parent) || !isitem(I))
+	if(!iscarbon(parent) || !isitem(weapon))
 		return COMPONENT_INCOMPATIBLE
+
+	src.weapon = weapon
 
 	if(part)
 		limb = part
-	src.embed_chance = embed_chance
-	src.fall_chance = fall_chance
-	src.pain_chance = pain_chance
-	src.pain_mult = pain_mult
-	src.max_damage_mult = max_damage_mult
-	src.remove_pain_mult = remove_pain_mult
-	src.rip_time = rip_time
-	src.ignore_throwspeed_threshold = ignore_throwspeed_threshold
-	src.jostle_chance = jostle_chance
-	src.jostle_pain_mult = jostle_pain_mult
-	src.pain_stam_pct = pain_stam_pct
-	src.armour_block = armour_block
-	src.weapon = I
 
-	if(!weapon.isEmbedHarmless())
+	if(!weapon.is_embed_harmless())
 		harmful = TRUE
 
 	weapon.embedded(parent, part)
 	START_PROCESSING(SSdcs, src)
 	var/mob/living/carbon/victim = parent
-
+	var/datum/embed_data/embed_data = weapon.get_embed()
 	limb.embedded_objects |= weapon // on the inside... on the inside...
 	weapon.forceMove(victim)
 	RegisterSignals(weapon, list(COMSIG_MOVABLE_MOVED, COMSIG_PARENT_QDELETING), PROC_REF(weaponDeleted))
@@ -130,10 +93,11 @@
 	if(victim.stat == DEAD)
 		return
 
-	var/damage = weapon.w_class * pain_mult
-	var/max_damage = weapon.w_class * max_damage_mult + weapon.throwforce
-	var/pain_chance_current = DT_PROB_RATE(pain_chance / 100, delta_time) * 100
-	if(pain_stam_pct && HAS_TRAIT_FROM(victim, TRAIT_INCAPACITATED, STAMINA)) //if it's a less-lethal embed, give them a break if they're already stamcritted
+	var/datum/embed_data/embed_data = weapon.get_embed()
+	var/damage = weapon.w_class * embed_data.pain_mult
+	var/max_damage = weapon.w_class * embed_data.max_damage_mult + weapon.throwforce
+	var/pain_chance_current = DT_PROB_RATE(embed_data.pain_chance / 100, delta_time) * 100
+	if(embed_data.pain_stam_pct && HAS_TRAIT_FROM(victim, TRAIT_INCAPACITATED, STAMINA)) //if it's a less-lethal embed, give them a break if they're already stamcritted
 		pain_chance_current *= 0.2
 		damage *= 0.5
 	else if(victim.body_position == LYING_DOWN)
@@ -141,17 +105,20 @@
 
 	if(harmful && prob(pain_chance_current))
 		var/damage_left = max_damage - limb.get_damage()
-		var/damage_wanted = (1-pain_stam_pct) * damage
+		var/damage_wanted = (1 - embed_data.pain_stam_pct) * damage
 		var/damage_to_deal = clamp(damage_wanted, 0, damage_left)
 		var/damage_as_stam = damage_wanted - damage_to_deal
 		if(!damage_to_deal)
-			to_chat(victim, span_userdanger("[weapon] embedded in your [limb.name] stings a little!"))
+			to_chat(victim, span_userdanger("[weapon] embedded in your [limb.plaintext_zone] stings a little!"))
 		else
-			limb.receive_damage(brute=damage_to_deal, stamina=(pain_stam_pct * damage) + damage_as_stam)
-			to_chat(victim, span_userdanger("[weapon] embedded in your [limb.name] hurts!"))
+			limb.receive_damage(brute = damage_to_deal, stamina = (embed_data.pain_stam_pct * damage) + damage_as_stam)
+			to_chat(victim, span_userdanger("[weapon] embedded in your [limb.plaintext_zone] hurts!"))
 
-	var/fallchance_current =  DT_PROB_RATE(fall_chance / 100, delta_time) * 100
-	if(prob(fallchance_current))
+	var/fall_chance_current = DT_PROB_RATE(embed_data.fall_chance / 100, delta_time) * 100
+	if(victim.body_position == LYING_DOWN)
+		fall_chance_current *= 0.2
+
+	if(prob(fall_chance_current))
 		fallOut()
 
 ////////////////////////////////////////
@@ -163,23 +130,25 @@
 	SIGNAL_HANDLER
 
 	var/mob/living/carbon/victim = parent
-	var/chance = jostle_chance
+	var/datum/embed_data/embed_data = weapon.get_embed()
+	var/chance = embed_data.jostle_chance
 	if(victim.m_intent == MOVE_INTENT_WALK || victim.body_position == LYING_DOWN)
 		chance *= 0.5
 
 	if(harmful && prob(chance))
-		var/damage = weapon.w_class * jostle_pain_mult
-		limb.receive_damage(brute=(1-pain_stam_pct) * damage, stamina=pain_stam_pct * damage)
+		var/damage = weapon.w_class * embed_data.jostle_pain_mult
+		limb.receive_damage(brute = (1 - embed_data.pain_stam_pct) * damage, stamina = embed_data.pain_stam_pct * damage)
 		to_chat(victim, span_userdanger("[weapon] embedded in your [limb.name] jostles and stings!"))
 
 
 /// Called when then item randomly falls out of a carbon. This handles the damage and descriptors, then calls safe_remove()
 /datum/component/embedded/proc/fallOut()
 	var/mob/living/carbon/victim = parent
+	var/datum/embed_data/embed_data = weapon.get_embed()
 
 	if(harmful)
-		var/damage = weapon.w_class * remove_pain_mult
-		limb.receive_damage(brute=(1-pain_stam_pct) * damage, stamina=pain_stam_pct * damage)
+		var/damage = weapon.w_class * embed_data.remove_pain_mult
+		limb.receive_damage(brute = (1 - embed_data.pain_stam_pct) * damage, stamina = embed_data.pain_stam_pct * damage)
 
 	victim.visible_message(span_danger("[weapon] falls [harmful ? "out" : "off"] of [victim.name]'s [limb.name]!"), span_userdanger("[weapon] falls [harmful ? "out" : "off"] of your [limb.name]!"))
 	safeRemove()
@@ -192,26 +161,31 @@
 		return
 
 	var/mob/living/carbon/victim = parent
-	var/time_taken = rip_time * weapon.w_class
+	var/datum/embed_data/embed_data = weapon.get_embed()
+	var/time_taken = embed_data.rip_time * weapon.w_class
 	INVOKE_ASYNC(src, PROC_REF(complete_rip_out), victim, I, limb, time_taken)
 
 /// everything async that ripOut used to do
 /datum/component/embedded/proc/complete_rip_out(mob/living/carbon/victim, obj/item/I, obj/item/bodypart/limb, time_taken)
 	victim.visible_message(span_warning("[victim] attempts to remove [weapon] from [victim.p_their()] [limb.name]."),span_notice("You attempt to remove [weapon] from your [limb.name]... (It will take [DisplayTimeText(time_taken)].)"))
-
 	if(!do_after(victim, time_taken, target = victim))
 		return
 	if(!weapon || !limb || weapon.loc != victim || !(weapon in limb.embedded_objects))
 		qdel(src)
 		return
-
 	if(harmful)
-		var/damage = weapon.w_class * remove_pain_mult
-		limb.receive_damage(brute=(1-pain_stam_pct) * damage, stamina=pain_stam_pct * damage) //It hurts to rip it out, get surgery you dingus.
-		victim.emote("scream")
+		damaging_removal(victim, I, limb)
 
 	victim.visible_message(span_notice("[victim] successfully rips [weapon] [harmful ? "out" : "off"] of [victim.p_their()] [limb.name]!"), span_notice("You successfully remove [weapon] from your [limb.name]."))
 	safeRemove(victim)
+
+/// Proc that actually does the damage associated with ripping something out of yourself. Call this before safeRemove.
+/datum/component/embedded/proc/damaging_removal(mob/living/carbon/victim, obj/item/removed, obj/item/bodypart/limb, ouch_multiplier = 1)
+	var/datum/embed_data/embed_data = weapon.get_embed()
+	var/damage = weapon.w_class * embed_data.remove_pain_mult * ouch_multiplier
+	limb.receive_damage(brute= (1 - embed_data.pain_stam_pct) * damage) //It hurts to rip it out, get surgery you dingus.
+	victim.adjustStaminaLoss(embed_data.pain_stam_pct * damage)
+	victim.emote("scream")
 
 /// This proc handles the final step and actual removal of an embedded/stuck item from a carbon, whether or not it was actually removed safely.
 /// Pass TRUE for to_hands if we want it to go to the victim's hands when they pull it out
@@ -291,7 +265,7 @@
 /// The actual action for pulling out an embedded object with any tools that work
 /datum/component/embedded/proc/pluckOut(mob/user, damage_multiplier, time_multiplier, remove_verb)
 	var/mob/living/carbon/victim = parent
-
+	var/datum/embed_data/embed_data = weapon.get_embed()
 	var/self_pluck = (user == victim)
 
 	if(self_pluck)
@@ -321,8 +295,8 @@
 
 	//Apply damage
 	if(harmful && damage_multiplier)
-		var/damage = weapon.w_class * remove_pain_mult * damage_multiplier
-		limb.receive_damage(brute=(1-pain_stam_pct) * damage, stamina=pain_stam_pct * damage)
+		var/damage = weapon.w_class * embed_data.remove_pain_mult * damage_multiplier
+		limb.receive_damage(brute = (1 - embed_data.pain_stam_pct) * damage, stamina = embed_data.pain_stam_pct * damage)
 		victim.emote("scream")
 
 	//Remove it

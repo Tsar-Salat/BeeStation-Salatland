@@ -352,7 +352,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	force = 2
 	throwforce = 24
 	throw_speed = 4
-	embedding = list("pain_mult" = 4, "embed_chance" = 300, "fall_chance" = 0, "armour_block" = 70)
+	embed_type = /datum/embed_data/throwing_star
 	armour_penetration = 40
 	w_class = WEIGHT_CLASS_SMALL
 	item_flags = ISWEAPON
@@ -366,7 +366,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	name = "shock throwing star"
 	desc = "An aerodynamic disc designed to cause excruciating pain when stuck inside fleeing targets, hopefully without causing fatal harm."
 	throwforce = 5
-	embedding = list("pain_chance" = 5, "embed_chance" = 300, "fall_chance" = 0, "jostle_chance" = 10, "pain_stam_pct" = 0.8, "jostle_pain_mult" = 3, "armour_block" = 70)
+	embed_type = /datum/embed_data/throwing_star/stamina
 
 /obj/item/throwing_star/toy
 	name = "toy throwing star"
@@ -374,7 +374,27 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	sharpness = BLUNT
 	force = 0
 	throwforce = 0
-	embedding = list("pain_mult" = 0, "jostle_pain_mult" = 0, "embed_chance" = 300, "fall_chance" = 25, "armour_block" = 70)
+	embed_type = /datum/embed_data/throwing_star/toy
+
+/datum/embed_data/throwing_star
+	pain_mult = 4
+	embed_chance = 300
+	fall_chance = 0
+	armour_block = 70
+
+/datum/embed_data/throwing_star/stamina
+	pain_mult = 5
+	fall_chance = 0
+	jostle_chance = 10
+	pain_stam_pct = 0.8
+	jostle_pain_mult = 3
+
+/datum/embed_data/throwing_star/toy
+	pain_mult = 0
+	jostle_pain_mult = 0
+	embed_chance = 300
+	fall_chance = 25
+	armour_block = 70
 
 /obj/item/throwing_star/magspear
 	name = "magnetic spear"
@@ -388,7 +408,13 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	throw_range = 0 //throwing these invalidates the speargun
 	attack_verb_continuous = list("stabs", "rips", "gores", "impales")
 	attack_verb_simple = list("stab", "rip", "gore", "impale")
-	embedding = list("pain_mult" = 8, "embed_chance" = 1000, "fall_chance" = 0, "armour_block" = 100)
+	embed_type = /datum/embed_data/magspear
+
+/datum/embed_data/magspear
+	pain_mult = 8
+	embed_chance = 1000
+	fall_chance = 0
+	armour_block = 100
 
 /obj/item/switchblade
 	name = "long switchblade"

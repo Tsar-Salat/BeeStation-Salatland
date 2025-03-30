@@ -12,7 +12,7 @@
 	block_upgrade_walk = 1
 	throwforce = 20
 	throw_speed = 4
-	embedding = list("armour_block" = 60, "max_damage_mult" = 0.5)
+	embed_type = /datum/embed_data/spear
 	armour_penetration = 10
 	custom_materials = list(/datum/material/iron=1150, /datum/material/glass=2075)
 	hitsound = 'sound/weapons/bladeslice.ogg'
@@ -25,6 +25,9 @@
 	var/war_cry = "AAAAARGH!!!"
 	var/icon_prefix = "spearglass"
 
+/datum/embed_data/spear
+	armour_block = 60
+	max_damage_mult = 0.5
 
 /datum/armor/item_spear
 	fire = 50
@@ -196,13 +199,16 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/spear/explosive)
 	block_upgrade_walk = 1
 	throwforce = 22
 	throw_speed = 4
-	embedding = list("armour_block" = 30, "max_damage_mult" = 0.5)
+	embed_type = /datum/embed_data/spear/bamboo
 	armour_penetration = 10
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	attack_verb_continuous = list("attacks", "pokes", "jabs", "tears", "lacerates", "gores")
 	attack_verb_simple = list("attack", "poke", "jab", "tear", "lacerate", "gore")
 	sharpness = SHARP
 	bleed_force = BLEED_CUT
+
+/datum/embed_data/spear/bamboo
+	armour_block = 30
 
 /obj/item/spear/bamboospear/ComponentInitialize()
 	. = ..()

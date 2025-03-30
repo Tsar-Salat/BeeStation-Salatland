@@ -139,9 +139,8 @@
 			var/obj/item/I = AM
 			I.throw_speed = max(1, (I.throw_speed - 3))
 			I.throw_range = max(1, (I.throw_range - 3))
-			if(I.embedding)
-				I.embedding["embed_chance"] = 0
-				I.updateEmbedding()
+			if(I.get_embed())
+				I.set_embed(I.get_embed().generate_with_values(embed_chance = 0))
 		else if(istype(AM, /mob/living))
 			plastic_overlay.layer = FLOAT_LAYER
 
