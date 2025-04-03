@@ -202,6 +202,8 @@
 			)
 		if(RCD_LADDER)
 			return list("mode" = RCD_LADDER, "delay" = 25, "cost" = 16)
+		if(RCD_REFLECTOR)
+			return list("mode" = RCD_REFLECTOR, "delay" = 20, "cost" = 30)
 		if(RCD_AIRLOCK)
 			if(the_rcd.airlock_glass)
 				return list("mode" = RCD_AIRLOCK, "delay" = 50, "cost" = 20)
@@ -218,6 +220,8 @@
 			return list("mode" = RCD_MACHINE, "delay" = 20, "cost" = 25)
 		if(RCD_COMPUTER)
 			return list("mode" = RCD_COMPUTER, "delay" = 20, "cost" = 25)
+		if(RCD_FLOODLIGHT)
+			return list("mode" = RCD_FLOODLIGHT, "delay" = 30, "cost" = 35)
 		if(RCD_FURNISHING)
 			return list("mode" = RCD_FURNISHING, "delay" = the_rcd.furnish_delay, "cost" = the_rcd.furnish_cost)
 	return FALSE
@@ -240,13 +244,22 @@
 			var/obj/structure/ladder/L = new(src)
 			L.set_anchored(TRUE)
 			return TRUE
-		if(RCD_AIRLOCK)
-			for(var/obj/machinery/door/door in src)
-				if(door.sub_door)
-					continue
-				to_chat(user, span_notice("There is another door here!"))
+		if(RCD_REFLECTOR)
+			if(locate(/obj/structure/reflector) in src)
 				return FALSE
+			var/obj/structure/reflector/reflector_base = new(src)
+			reflector_base.set_anchored(TRUE)
+			return TRUE
+		if(RCD_AIRLOCK)
 			if(ispath(the_rcd.airlock_type, /obj/machinery/door/window))
+				if(!valid_window_location(src, user.dir, is_fulltile = FALSE))
+					balloon_alert(user, "there's already a windoor!")
+					return FALSE
+				for(var/obj/machinery/door/door in src)
+					if(istype(door, /obj/machinery/door/window))
+						continue
+					balloon_alert(user, "there's already a door!")
+					return FALSE
 				to_chat(user, span_notice("You build a windoor."))
 				var/obj/machinery/door/window/new_window = new the_rcd.airlock_type(src, user.dir, the_rcd.airlock_electronics?.unres_sides)
 				if(the_rcd.airlock_electronics)
@@ -258,7 +271,12 @@
 				new_window.autoclose = TRUE
 				new_window.update_icon()
 				return TRUE
-			to_chat(user, span_notice("You build an airlock."))
+
+			for(var/obj/machinery/door/door in src)
+				if(door.sub_door)
+					continue
+				balloon_alert(user, "there's already a door!")
+				return FALSE
 			log_attack("[key_name(user)] has constructed an airlock at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
 			var/obj/machinery/door/airlock/new_airlock = new the_rcd.airlock_type(src)
 			new_airlock.electronics = new /obj/item/electronics/airlock(new_airlock)
@@ -268,7 +286,7 @@
 				new_airlock.electronics.unres_sides = the_rcd.airlock_electronics.unres_sides
 				new_airlock.electronics.passed_name = the_rcd.airlock_electronics.passed_name
 				new_airlock.electronics.passed_cycle_id = the_rcd.airlock_electronics.passed_cycle_id
-				new_airlock.electronics.shell = the_rcd.airlock_electronics.shell
+				//new_airlock.electronics.shell = the_rcd.airlock_electronics.shell
 			if(new_airlock.electronics.one_access)
 				new_airlock.req_one_access = new_airlock.electronics.accesses
 			else
@@ -313,6 +331,15 @@
 			new_computer.set_anchored(TRUE)
 			new_computer.state = 1
 			new_computer.setDir(the_rcd.computer_dir)
+			return TRUE
+		if(RCD_FLOODLIGHT)
+			if(locate(/obj/structure/floodlight_frame) in src)
+				return FALSE
+			var/obj/structure/floodlight_frame/new_floodlight = new(src)
+			new_floodlight.name = "secured [new_floodlight.name]"
+			new_floodlight.desc = "A bare metal frame that looks like a floodlight. Requires a light tube to complete."
+			new_floodlight.icon_state = "floodlight_c3"
+			new_floodlight.state = FLOODLIGHT_NEEDS_LIGHTS
 			return TRUE
 		if(RCD_FURNISHING)
 			if(locate(the_rcd.furnish_type) in src)

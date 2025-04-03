@@ -31,7 +31,7 @@
 	name = "base construction console"
 	desc = "An industrial computer integrated with a camera-assisted rapid construction drone."
 	networks = list("ss13")
-	var/obj/item/construction/rcd/internal/RCD //Internal RCD. The computer passes user commands to this in order to avoid massive copypaste.
+	var/obj/item/construction/rcd/internal/internal_rcd //Internal RCD. The computer passes user commands to this in order to avoid massive copypaste.
 	circuit = /obj/item/circuitboard/computer/base_construction
 	off_action = new/datum/action/innate/camera_off/base_construction
 	jump_action = null
@@ -52,18 +52,15 @@
 
 /obj/machinery/computer/camera_advanced/base_construction/Initialize(mapload)
 	. = ..()
-	RCD = new(src)
-	switch_mode_action = new(src)
+	internal_rcd = new(src)
 	build_action = new(src)
-	airlock_mode_action = new(src)
-	window_action = new(src)
 	fan_action = new(src)
 	turret_action = new(src)
 
 /obj/machinery/computer/camera_advanced/base_construction/Initialize(mapload)
 	. = ..()
 	if(mapload) //Map spawned consoles have a filled RCD and stocked special structures
-		RCD.matter = RCD.max_matter
+		internal_rcd.matter = internal_rcd.max_matter
 		fans_remaining = 4
 		turret_stock = 4
 
@@ -87,32 +84,20 @@
 
 /obj/machinery/computer/camera_advanced/base_construction/attackby(obj/item/W, mob/user, params)
 	if(istype(W, /obj/item/rcd_ammo) || istype(W, /obj/item/stack/sheet))
-		RCD.attackby(W, user, params) //If trying to feed the console more materials, pass it along to the RCD.
+		internal_rcd.attackby(W, user, params) //If trying to feed the console more materials, pass it along to the RCD.
 	else
 		return ..()
 
 /obj/machinery/computer/camera_advanced/base_construction/Destroy()
-	qdel(RCD)
+	qdel(internal_rcd)
 	return ..()
 
 /obj/machinery/computer/camera_advanced/base_construction/GrantActions(mob/living/user)
 	..()
 
-	if(switch_mode_action)
-		switch_mode_action.Grant(user)
-		actions += switch_mode_action
-
 	if(build_action)
 		build_action.Grant(user)
 		actions += build_action
-
-	if(airlock_mode_action)
-		airlock_mode_action.Grant(user)
-		actions += airlock_mode_action
-
-	if(window_action)
-		window_action.Grant(user)
-		actions += window_action
 
 	if(fan_action)
 		fan_action.Grant(user)
@@ -141,8 +126,8 @@
 	C = owner
 	remote_eye = C.remote_control
 	B = master
-	if(!B.RCD) //The console must always have an RCD.
-		B.RCD = new /obj/item/construction/rcd/internal(src) //If the RCD is lost somehow, make a new (empty) one!
+	if(!B.internal_rcd) //The console must always have an RCD.
+		B.internal_rcd = new /obj/item/construction/rcd/internal(src) //If the RCD is lost somehow, make a new (empty) one!
 
 /datum/action/innate/aux_base/proc/check_spot()
 //Check a loction to see if it is inside the aux base at the station. Camera visbility checks omitted so as to not hinder construction.
@@ -180,45 +165,46 @@
 
 	//Find airlocks and other shite
 	for(var/obj/S in target_turf)
-		if(LAZYLEN(S.rcd_vals(owner,B.RCD)))
+		if(LAZYLEN(S.rcd_vals(owner,B.internal_rcd)))
 			rcd_target = S //If we don't break out of this loop we'll get the last placed thing
 
 	owner.changeNext_move(CLICK_CD_RANGE)
-	B.RCD.afterattack(rcd_target, owner, TRUE) //Activate the RCD and force it to work remotely!
+	B.internal_rcd.afterattack(rcd_target, owner, TRUE) //Activate the RCD and force it to work remotely!
 	playsound(target_turf, 'sound/items/deconstruct.ogg', 60, 1)
 
-/datum/action/innate/aux_base/switch_mode
-	name = "Switch Mode"
-	button_icon_state = "builder_mode"
+///Generic construction action for base [construction consoles][/obj/machinery/computer/camera_advanced/base_construction].
+/datum/action/innate/construction
+	button_icon = 'icons/hud/actions/actions_construction.dmi'
+	///Console's eye mob
+	var/mob/camera/ai_eye/remote/base_construction/remote_eye
+	///Console itself
+	var/obj/machinery/computer/camera_advanced/base_construction/base_console
+	///Is this used to build only on the station z level?
+	var/only_station_z = TRUE
 
-/datum/action/innate/aux_base/switch_mode/on_activate()
+/datum/action/innate/construction/on_activate()
+	if(!master)
+		return TRUE
+	remote_eye = owner.remote_control
+	base_console = master
+
+///Sanity check for any construction action that relies on an RCD being in the base console
+/datum/action/innate/construction/proc/check_rcd()
+	//The console must always have an RCD.
+	if(!base_console.internal_rcd)
+		CRASH("Base console is somehow missing an internal RCD!")
+
+/datum/action/innate/construction/configure_mode
+	name = "Configure RCD"
+	button_icon = 'icons/obj/tools.dmi'
+	button_icon_state = "rcd"
+
+/datum/action/innate/construction/configure_mode/on_activate()
 	if(..())
 		return
-
-	var/list/buildlist = list("Walls and Floors" = 1,"Airlocks" = 2,"Deconstruction" = 3,"Windows and Grilles" = 4)
-	var/buildmode = tgui_input_list("Set construction mode.", "Base Console", buildlist)
-	B.RCD.mode = buildlist[buildmode]
-	to_chat(owner, "Build mode is now [buildmode].")
-
-/datum/action/innate/aux_base/airlock_type
-	name = "Select Airlock Type"
-	button_icon_state = "airlock_select"
-
-/datum/action/innate/aux_base/airlock_type/on_activate()
-	if(..())
-		return
-
-	B.RCD.change_airlock_setting()
-
-
-/datum/action/innate/aux_base/window_type
-	name = "Select Window Glass"
-	button_icon_state = "window_select"
-
-/datum/action/innate/aux_base/window_type/on_activate()
-	if(..())
-		return
-	B.RCD.toggle_window_glass()
+	check_rcd()
+	base_console.internal_rcd.owner = base_console
+	base_console.internal_rcd.ui_interact(owner)
 
 /datum/action/innate/aux_base/place_fan
 	name = "Place Tiny Fan"

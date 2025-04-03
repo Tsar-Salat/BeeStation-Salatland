@@ -60,6 +60,8 @@
 /obj/structure/lattice/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
 	if(the_rcd.mode == RCD_FLOORWALL)
 		return list("mode" = RCD_FLOORWALL, "delay" = 0, "cost" = 1)
+	if(the_rcd.mode == RCD_CATWALK)
+		return list("mode" = RCD_CATWALK, "delay" = 0, "cost" = 1)
 	return FALSE
 
 /obj/structure/lattice/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)
@@ -68,9 +70,29 @@
 		log_attack("[key_name(user)] has constructed a floor over space at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
 		var/turf/T = src.loc
 		T.PlaceOnTop(/turf/open/floor/plating, flags = CHANGETURF_INHERIT_AIR)
+		qdel(src)
+		return TRUE
+	if(passed_mode == RCD_CATWALK)
+		to_chat(user, span_notice("You build a catwalk."))
+		var/turf/turf = loc
+		qdel(src)
+		new /obj/structure/lattice/catwalk(turf)
 		return TRUE
 	return FALSE
 
 /obj/structure/lattice/singularity_pull(S, current_size)
 	if(current_size >= STAGE_FOUR)
 		deconstruct()
+
+/obj/structure/lattice/catwalk/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
+	if(the_rcd.mode == RCD_DECONSTRUCT)
+		return list("mode" = RCD_DECONSTRUCT, "delay" = 10, "cost" = 5)
+	return FALSE
+
+/obj/structure/lattice/catwalk/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)
+	if(passed_mode == RCD_DECONSTRUCT)
+		var/turf/turf = loc
+		for(var/obj/structure/cable/cable_coil in turf)
+			cable_coil.deconstruct()
+		qdel(src)
+		return TRUE

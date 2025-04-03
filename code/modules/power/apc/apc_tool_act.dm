@@ -130,44 +130,43 @@
 			if(machine_stat & BROKEN)
 				to_chat(user, span_warning("[src]'s frame is too damaged to support a circuit."))
 				return FALSE
-			return list("mode" = RCD_UPGRADE_SIMPLE_CIRCUITS, "delay" = 20, "cost" = 1)
+			return list("mode" = RCD_WALLFRAME, "delay" = 20, "cost" = 1)
 		else if(!cell)
 			if(machine_stat & MAINT)
 				to_chat(user, span_warning("There's no connector for a power cell."))
 				return FALSE
-			return list("mode" = RCD_UPGRADE_SIMPLE_CIRCUITS, "delay" = 50, "cost" = 10) //16 for a wall
+			return list("mode" = RCD_WALLFRAME, "delay" = 50, "cost" = 10)
 		else
 			to_chat(user, span_warning("[src] has both electronics and a cell."))
 			return FALSE
 	return FALSE
 
 /obj/machinery/power/apc/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)
-	switch(passed_mode)
-		if(RCD_UPGRADE_SIMPLE_CIRCUITS)
-			if(!has_electronics)
-				if(machine_stat & BROKEN)
-					to_chat(user, span_warning("[src]'s frame is too damaged to support a circuit."))
-					return
-				user.visible_message(span_notice("[user] fabricates a circuit and places it into [src]."), \
-				span_notice("You adapt a power control board and click it into place in [src]'s guts."))
-				has_electronics = TRUE
-				locked = FALSE
-				return TRUE
-			else if(!cell)
-				if(machine_stat & MAINT)
-					to_chat(user, span_warning("There's no connector for a power cell."))
-					return FALSE
-				var/obj/item/stock_parts/cell/crap/empty/C = new(src)
-				C.forceMove(src)
-				cell = C
-				chargecount = 0
-				user.visible_message(span_notice("[user] fabricates a weak power cell and places it into [src]."), \
-				span_warning("Your [the_rcd.name] whirrs with strain as you create a weak power cell and place it into [src]!"))
-				update_appearance()
-				return TRUE
-			else
-				to_chat(user, span_warning("[src] has both electronics and a cell."))
-				return FALSE
+	if(!(the_rcd.upgrade & RCD_UPGRADE_SIMPLE_CIRCUITS) || passed_mode != RCD_WALLFRAME)
+		return FALSE
+
+	if(!has_electronics)
+		if(machine_stat & BROKEN)
+			balloon_alert(user, "frame is too damaged!")
+			return
+		balloon_alert(user, "control board placed")
+		has_electronics = TRUE
+		locked = FALSE
+		return TRUE
+
+	if(!cell)
+		if(machine_stat & MAINT)
+			balloon_alert(user, "no board for a cell!")
+			return FALSE
+		var/obj/item/stock_parts/cell/crap/empty/C = new(src)
+		C.forceMove(src)
+		cell = C
+		chargecount = 0
+		balloon_alert(user, "power cell installed")
+		update_appearance()
+		return TRUE
+
+	balloon_alert(user, "has both board and cell!")
 	return FALSE
 
 /obj/machinery/power/apc/should_emag(mob/user)

@@ -24,7 +24,6 @@ type Category = {
 
 type Design = {
   title: string;
-  design_id: Number;
   icon: string;
 };
 
@@ -71,14 +70,14 @@ const CategoryItem = (props) => {
   );
 };
 
-const InfoSection = (props) => {
+export const InfoSection = (props, context) => {
   const { data } = useBackend<Data>();
   const { silo_upgraded } = data;
 
   return (
     <Section>
       <LabeledList>
-        <MatterItem space />
+        <MatterItem />
         {silo_upgraded ? <SiloItem /> : ''}
         <CategoryItem />
       </LabeledList>
@@ -109,9 +108,9 @@ const DesignSection = (props) => {
           </Tabs.Tab>
         ))}
       </Tabs>
-      {shownCategory?.designs.map((design) => (
+      {shownCategory?.designs.map((design, i) => (
         <Button
-          key={design.design_id}
+          key={i + 1}
           fluid
           ellipsis
           height="31px"
@@ -123,7 +122,7 @@ const DesignSection = (props) => {
           onClick={() =>
             act('design', {
               category: shownCategory.cat_name,
-              index: design.design_id,
+              index: i + 1,
             })
           }>
           <Box
@@ -133,7 +132,9 @@ const DesignSection = (props) => {
             className={classes(['rcd-tgui32x32', design.icon])}
             style={{
               transform:
-                design.icon === 'window0' || design.icon === 'rwindow0'
+                design.icon === 'window0' ||
+                design.icon === 'rwindow0' ||
+                design.icon === 'catwalk0'
                   ? 'scale(0.7)'
                   : 'scale(1.0)',
             }}

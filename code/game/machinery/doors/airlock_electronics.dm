@@ -77,6 +77,7 @@
 				accesses -= access
 		if("direc_set")
 			var/unres_direction = text2num(params["unres_direction"])
+			unres_sides ^= unres_direction //XOR, toggles only the bit that was clicked
 		if("grant_region")
 			var/region = text2num(params["region"])
 			if(isnull(region))

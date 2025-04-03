@@ -122,6 +122,9 @@
 	///Represents a signel source of power alarms for this apc
 	var/datum/alarm_handler/alarm_manager
 
+	/// Offsets the object by APC_PIXEL_OFFSET (defined in apc_defines.dm) pixels in the direction we want it placed in. This allows the APC to be embedded in a wall, yet still inside an area (like mapping).
+	var/offset_old
+
 	//Clockcult - Has the reward for converting an APC been given?
 	var/clock_cog_rewarded = FALSE
 	//Clockcult - The integration cog inserted inside of us
@@ -142,24 +145,11 @@
 	fire = 90
 	acid = 50
 
-/obj/machinery/power/apc/New(turf/loc, var/ndir, var/building=0)
-	..()
-	GLOB.apcs_list += src
+/obj/machinery/power/apc/Initialize(mapload, ndir)
+	. = ..()
 
-	wires = new /datum/wires/apc(src)
-	if (building)
-		area = get_area(src)
-		opened = APC_COVER_OPENED
-		operating = FALSE
-		name = "\improper [get_area_name(area, TRUE)] APC"
-		set_machine_stat(machine_stat | MAINT)
-		update_appearance()
-		addtimer(CALLBACK(src, PROC_REF(update)), 5)
-		dir = ndir
-
-	// offset APC_PIXEL_OFFSET pixels in direction of dir
-	// this allows the APC to be embedded in a wall, yet still inside an area
-	var/offset_old
+	//Pixel offset its appearance based on its direction
+	dir = ndir
 	switch(dir)
 		if(NORTH)
 			offset_old = pixel_y
@@ -173,8 +163,53 @@
 		if(WEST)
 			offset_old = pixel_x
 			pixel_x = -APC_PIXEL_OFFSET
-	if(offset_old != APC_PIXEL_OFFSET && !building)
-		log_mapping("APC: ([src]) at [AREACOORD(src)] with dir ([dir] | [uppertext(dir2text(dir))]) has pixel_[dir & (WEST|EAST) ? "x" : "y"] value [offset_old] - should be [dir & (SOUTH|EAST) ? "-" : ""][APC_PIXEL_OFFSET]. Use the directional/ helpers!")
+
+	//Assign it to its area. If mappers already assigned an area string fast load the area from it else get the current area
+	var/area/our_area = get_area(loc)
+	if(areastring)
+		area = get_area_instance_from_text(areastring)
+		if(!area)
+			area = our_area
+			stack_trace("Bad areastring path for [src], [areastring]")
+	else if(isarea(our_area) && areastring == null)
+		area = our_area
+	if(area)
+		if(area.apc)
+			log_mapping("Duplicate APC created at [AREACOORD(src)] [area.type]. Original at [AREACOORD(area.apc)] [area.type].")
+		area.apc = src
+
+	//Initialize name & access of the apc. Name requires area to be assigned first
+	if(!req_access)
+		req_access = list(ACCESS_ENGINE_EQUIP)
+	if(auto_name)
+		name = "\improper [get_area_name(area, TRUE)] APC"
+
+	//Initialize its electronics
+	wires = new /datum/wires/apc(src)
+	alarm_manager = new(src)
+	AddElement(/datum/element/atmos_sensitive, mapload)
+	// for apcs created during map load make them fully functional
+	if(mapload)
+		has_electronics = APC_ELECTRONICS_SECURED
+		// is starting with a power cell installed, create it and set its charge level
+		if(cell_type)
+			cell = new cell_type(src)
+			cell.charge = start_charge * cell.maxcharge / 100 // (convert percentage to actual value)
+		make_terminal()
+		///This is how we test to ensure that mappers use the directional subtypes of APCs, rather than use the parent and pixel-shift it themselves.
+		if(abs(offset_old) != APC_PIXEL_OFFSET)
+			log_mapping("APC: ([src]) at [AREACOORD(src)] with dir ([dir] | [uppertext(dir2text(dir))]) has pixel_[dir & (WEST|EAST) ? "x" : "y"] value [offset_old] - should be [dir & (SOUTH|EAST) ? "-" : ""][APC_PIXEL_OFFSET]. Use the directional/ helpers!")
+	// For apcs created during the round players need to configure them from scratch
+	else
+		opened = APC_COVER_OPENED
+		operating = FALSE
+		set_machine_stat(machine_stat | MAINT)
+
+	//Make the apc visually interactive
+	addtimer(CALLBACK(src, PROC_REF(update)), 5)
+	update_appearance()
+
+	GLOB.apcs_list += src
 
 /obj/machinery/power/apc/Destroy()
 	GLOB.apcs_list -= src
@@ -242,43 +277,6 @@
 		charging = APC_NOT_CHARGING
 		update_appearance()
 		updateUsrDialog()
-
-/obj/machinery/power/apc/Initialize(mapload)
-	. = ..()
-	alarm_manager = new(src)
-
-	if(!mapload)
-		return
-	has_electronics = APC_ELECTRONICS_SECURED
-	// is starting with a power cell installed, create it and set its charge level
-	if(cell_type)
-		cell = new cell_type
-		cell.charge = start_charge * cell.maxcharge / 100 // (convert percentage to actual value)
-
-	var/area/our_area = loc.loc
-
-	//if area isn't specified use current
-	if(areastring)
-		area = get_area_instance_from_text(areastring)
-		if(!area)
-			area = our_area
-			stack_trace("Bad areastring path for [src], [areastring]")
-	else if(isarea(our_area) && areastring == null)
-		area = our_area
-
-	if(auto_name)
-		name = "\improper [get_area_name(area, TRUE)] APC"
-
-	if(area)
-		if(area.apc)
-			log_mapping("Duplicate APC created at [AREACOORD(src)] [area.type]. Original at [AREACOORD(area.apc)] [area.type].")
-		area.apc = src
-
-	update_appearance()
-
-	make_terminal()
-
-	addtimer(CALLBACK(src, PROC_REF(update)), 5)
 
 /obj/machinery/power/apc/examine(mob/user)
 	. = ..()

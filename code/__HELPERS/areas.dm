@@ -52,20 +52,24 @@ GLOBAL_LIST_INIT(typecache_powerfailure_safe_areas, typecacheof(/area/engine/eng
 		creator.create_area_cooldown = world.time + 10
 
 	// Ignore these areas and dont let people expand them. They can expand into them though
-	var/static/blacklisted_areas = typecacheof(list(
+	var/static/list/blacklisted_areas = typecacheof(list(
 		/area/space,
 		))
 
+	var/error = ""
 	var/list/turfs = detect_room(get_turf(creator), area_or_turf_fail_types)
-	if(!turfs)
-		to_chat(creator, span_warning("The new area must be completely airtight and not a part of a shuttle."))
+	var/turf_count = length(turfs)
+	if(!turf_count)
+		error = "The new area must be completely airtight and not a part of a shuttle."
+	else if(turf_count > BP_MAX_ROOM_SIZE)
+		error = "The room you're in is too big. It is [turf_count >= BP_MAX_ROOM_SIZE *2 ? "more than 100" : ((turf_count / BP_MAX_ROOM_SIZE)-1)*100]% larger than allowed."
+	if(error)
+		to_chat(creator, span_warning(error))
 		return
-	if(length(turfs) > BP_MAX_ROOM_SIZE)
-		to_chat(creator, span_warning("The room you're in is too big. It is [((turfs.len / BP_MAX_ROOM_SIZE)-1)*100]% larger than allowed."))
-		return
+
 	var/list/apc_map = list()
 	var/list/areas = list("New Area" = /area)
-	for(var/i in 1 to length(turfs))
+	for(var/i in 1 to turf_count)
 		var/turf/the_turf = turfs[i]
 		var/area/place = get_area(turfs[i])
 		if(blacklisted_areas[place.type])

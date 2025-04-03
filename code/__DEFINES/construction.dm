@@ -87,6 +87,10 @@
 #define RCD_COMPUTER (1<<5)
 #define RCD_FURNISHING (1<<6)
 #define RCD_LADDER (1<<7)
+#define RCD_CATWALK (1<<8)
+#define RCD_FLOODLIGHT (1<<9)
+#define RCD_WALLFRAME (1<<10)
+#define RCD_REFLECTOR (1<<11)
 
 #define RCD_UPGRADE_FRAMES (1<<0)
 #define RCD_UPGRADE_SIMPLE_CIRCUITS	(1<<1)

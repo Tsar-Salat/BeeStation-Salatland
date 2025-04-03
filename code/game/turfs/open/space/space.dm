@@ -219,20 +219,35 @@
 	if(!CanBuildHere())
 		return FALSE
 
-	if(the_rcd.mode == RCD_FLOORWALL)
-		var/obj/structure/lattice/L = locate(/obj/structure/lattice, src)
-		if(L)
-			return list("mode" = RCD_FLOORWALL, "delay" = 0, "cost" = 1)
-		else
-			return list("mode" = RCD_FLOORWALL, "delay" = 0, "cost" = 3)
+	switch(the_rcd.mode)
+		if(RCD_FLOORWALL)
+			var/obj/structure/lattice/lattice = locate(/obj/structure/lattice, src)
+			if(lattice)
+				return list("mode" = RCD_FLOORWALL, "delay" = 0, "cost" = 1)
+			else
+				return list("mode" = RCD_FLOORWALL, "delay" = 0, "cost" = 3)
+		if(RCD_CATWALK)
+			var/obj/structure/lattice/lattice = locate(/obj/structure/lattice, src)
+			if(lattice)
+				return list("mode" = RCD_CATWALK, "delay" = 0, "cost" = 1)
+			else
+				return list("mode" = RCD_CATWALK, "delay" = 0, "cost" = 2)
 	return FALSE
 
 /turf/open/space/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)
-	if(passed_mode == RCD_FLOORWALL)
-		to_chat(user, span_notice("You build a floor."))
-		log_attack("[key_name(user)] has constructed a floor over space at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
-		PlaceOnTop(/turf/open/floor/plating, flags = CHANGETURF_INHERIT_AIR)
-		return TRUE
+	switch(passed_mode)
+		if(RCD_FLOORWALL)
+			to_chat(user, span_notice("You build a floor."))
+			log_attack("[key_name(user)] has constructed a floor over space at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
+			PlaceOnTop(/turf/open/floor/plating, flags = CHANGETURF_INHERIT_AIR)
+			return TRUE
+		if(RCD_CATWALK)
+			to_chat(user, span_notice("You build a catwalk."))
+			var/obj/structure/lattice/lattice = locate(/obj/structure/lattice, src)
+			if(lattice)
+				qdel(lattice)
+			new /obj/structure/lattice/catwalk(src)
+			return TRUE
 	return FALSE
 
 /turf/open/space/rust_heretic_act()

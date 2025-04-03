@@ -101,7 +101,7 @@
 				CRASH("Invalid window path type in RCD: [the_rcd.window_type]")
 			var/obj/structure/window/window_path = the_rcd.window_type
 			if(!valid_window_location(local_turf, user.dir, is_fulltile = initial(window_path.fulltile)))
-				to_chat(user, span_notice("Already a window in this direction!."))
+				to_chat(user, span_notice("Already a window in this direction!"))
 				return FALSE
 			to_chat(user, span_notice("You construct the window."))
 			log_attack("[key_name(user)] has constructed a window at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
