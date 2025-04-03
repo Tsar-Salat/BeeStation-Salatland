@@ -59,51 +59,47 @@
 	data["passedCycleId"] = passed_cycle_id
 	return data
 
-/obj/item/electronics/airlock/ui_act(action, params)
-	if(..())
-		return
+///shared by rcd & airlock electronics
+/obj/item/electronics/airlock/proc/do_action(action, params)
 	switch(action)
 		if("clear_all")
 			accesses = list()
 			one_access = 0
-			. = TRUE
 		if("grant_all")
 			accesses = get_all_accesses()
-			. = TRUE
 		if("one_access")
 			one_access = !one_access
-			. = TRUE
 		if("set")
 			var/access = text2num(params["access"])
 			if (!(access in accesses))
 				accesses += access
 			else
 				accesses -= access
-			. = TRUE
 		if("direc_set")
 			var/unres_direction = text2num(params["unres_direction"])
-			unres_sides ^= unres_direction //XOR, toggles only the bit that was clicked
-			. = TRUE
 		if("grant_region")
 			var/region = text2num(params["region"])
 			if(isnull(region))
 				return
 			accesses |= get_region_accesses(region)
-			. = TRUE
 		if("deny_region")
 			var/region = text2num(params["region"])
 			if(isnull(region))
 				return
 			accesses -= get_region_accesses(region)
-			. = TRUE
 		if("passedName")
 			var/new_name = trim(sanitize("[params["passedName"]]"), 30)
 			passed_name = new_name
-			. = TRUE
 		if("passedCycleId")
 			var/new_cycle_id = trim(sanitize(params["passedCycleId"]), 30)
 			passed_cycle_id = new_cycle_id
-			. = TRUE
+
+/obj/item/electronics/airlock/ui_act(action, params)
+	. = ..()
+	if(.)
+		return
+	do_action(action, params)
+	return TRUE
 
 /obj/item/electronics/airlock/ui_host()
 	if(holder)

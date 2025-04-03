@@ -3,15 +3,13 @@ import { Button, LabeledList, Input, Section } from '../components';
 import { Window } from '../layouts';
 import { AccessList } from './common/AccessList';
 
-export const AirlockElectronics = (props) => {
+export const AirLockMainSection = (props) => {
   const { act, data } = useBackend();
   const { oneAccess, unres_direction, passedName, passedCycleId } = data;
   const regions = data.regions || [];
   const accesses = data.accesses || [];
   return (
-    <Window width={420} height={485}>
-      <Window.Content>
-        <Section title="Main">
+    <Section title="Main">
           <LabeledList>
             <LabeledList.Item label="Access Required">
               <Button
@@ -87,7 +85,6 @@ export const AirlockElectronics = (props) => {
               />
             </LabeledList.Item>
           </LabeledList>
-        </Section>
         <AccessList
           accesses={regions}
           selectedList={accesses}
@@ -106,9 +103,18 @@ export const AirlockElectronics = (props) => {
           denyDep={(ref) =>
             act('deny_region', {
               region: ref,
-            })
-          }
-        />
+          })
+        }
+      />
+    </Section>
+  );
+};
+
+export const AirlockElectronics = (props, context) => {
+  return (
+    <Window width={420} height={485}>
+      <Window.Content>
+        <AirLockMainSection />
       </Window.Content>
     </Window>
   );

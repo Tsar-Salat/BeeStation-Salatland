@@ -1,6 +1,7 @@
 import { BooleanLike, classes } from 'common/react';
-import { toTitleCase } from 'common/string';
+import { capitalizeAll } from 'common/string';
 import { useBackend, useLocalState } from '../backend';
+
 import { Box, Button, ColorBox, LabeledList, Section, Stack, Table, Tabs } from '../components';
 import { Window } from '../layouts';
 
@@ -140,7 +141,7 @@ export const ColorItem = (props) => {
         />
       ))}
       <Box inline ml={2} px={1} bold color={paint_colors[selected_color]}>
-        {toTitleCase(selected_color)}
+        {capitalizeAll(selected_color)}
       </Box>
     </LabeledList.Item>
   );
