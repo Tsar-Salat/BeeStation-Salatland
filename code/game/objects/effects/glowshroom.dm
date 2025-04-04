@@ -82,6 +82,10 @@
 
 	addtimer(CALLBACK(src, PROC_REF(Spread)), delay)
 
+/obj/structure/glowshroom/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/atmos_sensitive, mapload)
+
 /obj/structure/glowshroom/proc/Spread()
 	var/turf/ownturf = get_turf(src)
 	if(!TURF_SHARES(ownturf)) //If we are in a 1x1 room
@@ -178,7 +182,3 @@
 	var/obj/effect/decal/cleanable/molten_object/I = new (get_turf(src))
 	I.desc = "Looks like this was \an [src] some time ago."
 	qdel(src)
-
-/obj/structure/glowshroom/ComponentInitialize()
-	. = ..()
-	AddElement(/datum/element/atmos_sensitive)

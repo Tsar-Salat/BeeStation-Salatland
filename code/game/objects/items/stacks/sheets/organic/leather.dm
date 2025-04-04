@@ -37,7 +37,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/stack/sheet/leather/wetleather)
 /obj/item/stack/sheet/leather/wetleather/Initialize(mapload, new_amount, merge)
 	. = ..()
 	AddElement(/datum/element/dryable, /obj/item/stack/sheet/leather)
-	AddElement(/datum/element/atmos_sensitive)
+	AddElement(/datum/element/atmos_sensitive, mapload)
 	AddComponent(/datum/component/bakeable, /obj/item/stack/sheet/leather, rand(15 SECONDS, 20 SECONDS), TRUE, TRUE)
 
 //Step two to make leather - washing

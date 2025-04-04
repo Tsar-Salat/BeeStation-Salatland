@@ -28,9 +28,9 @@
 	var/strength = 5
 	var/attached = 0
 
-/obj/item/clothing/mask/facehugger/ComponentInitialize()
+/obj/item/clothing/mask/facehugger/Initialize(mapload)
 	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
+	AddElement(/datum/element/atmos_sensitive, mapload)
 
 /obj/item/clothing/mask/facehugger/Initialize(mapload)
 	. = ..()

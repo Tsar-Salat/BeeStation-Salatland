@@ -163,10 +163,8 @@
 
 	add_fingerprint(user)
 
-	var/turf/T = user.loc	//get user's location for delay checks
-
 	//the istype cascade has been spread among various procs for easy overriding
-	if(try_clean(W, user, T) || try_wallmount(W, user, T) || try_decon(W, user, T) || try_destroy(W, user, T))
+	if(try_clean(W, user) || try_wallmount(W, user) || try_decon(W, user) || try_destroy(W, user))
 		return
 
 	if(can_lay_cable() && istype(W, /obj/item/stack/cable_coil))
@@ -183,18 +181,18 @@
 
 	return ..() || ((can_hit) && W.attack_turf(src, user))
 
-/turf/proc/try_clean(obj/item/W, mob/user, turf/T)
+/turf/proc/try_clean(obj/item/W, mob/living/user)
 	return FALSE
 
-/turf/proc/try_wallmount(obj/item/W, mob/user, turf/T)
-	return FALSE
-
-
-/turf/proc/try_decon(obj/item/I, mob/user, turf/T)
+/turf/proc/try_wallmount(obj/item/W, mob/user)
 	return FALSE
 
 
-/turf/proc/try_destroy(obj/item/I, mob/user, turf/T)
+/turf/proc/try_decon(obj/item/I, mob/user)
+	return FALSE
+
+
+/turf/proc/try_destroy(obj/item/I, mob/user)
 	return FALSE
 
 //====================================

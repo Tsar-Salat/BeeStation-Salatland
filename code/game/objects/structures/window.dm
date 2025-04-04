@@ -79,6 +79,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 	explosion_block = EXPLOSION_BLOCK_PROC
 
 	AddComponent(/datum/component/simple_rotation, ROTATION_NEEDS_ROOM, AfterRotation = CALLBACK(src, PROC_REF(AfterRotation)))
+	AddElement(/datum/element/atmos_sensitive, mapload)
 
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_EXIT = PROC_REF(on_exit),
@@ -95,9 +96,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 	//Adds the component only once. We do it here & not in Initialize() because there are tons of windows & we don't want to add to their init times
 	LoadComponent(/datum/component/leanable, dropping)
 
-/obj/structure/window/ComponentInitialize()
-	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
 /obj/structure/window/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
 	if(the_rcd.mode == RCD_DECONSTRUCT)
 		return list("mode" = RCD_DECONSTRUCT, "delay" = 20, "cost" = 5)
@@ -105,7 +103,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 
 /obj/structure/window/rcd_act(mob/user, var/obj/item/construction/rcd/the_rcd, passed_mode)
 	if(passed_mode == RCD_DECONSTRUCT)
-		to_chat(user, span_notice("You deconstruct the window."))
 		log_attack("[key_name(user)] has deconstructed [src] at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
 		qdel(src)
 		return TRUE
@@ -453,7 +450,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 	glass_type = /obj/item/stack/sheet/plasmaglass
 	rad_insulation = RAD_NO_INSULATION
 
-/obj/structure/window/plasma/ComponentInitialize()
+/obj/structure/window/plasma/Initialize(mapload, direct)
 	. = ..()
 	RemoveElement(/datum/element/atmos_sensitive)
 
@@ -573,6 +570,12 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 	flags_1 = PREVENT_CLICK_UNDER_1
 	glass_amount = 2
 
+/obj/structure/window/fulltile/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
+	switch(the_rcd.mode)
+		if(RCD_DECONSTRUCT)
+			return list("mode" = RCD_DECONSTRUCT, "delay" = 25, "cost" = 10)
+	return FALSE
+
 /obj/structure/window/fulltile/unanchored
 	anchored = FALSE
 
@@ -633,6 +636,12 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 	fulltile = TRUE
 	flags_1 = PREVENT_CLICK_UNDER_1
 	glass_amount = 2
+
+/obj/structure/window/reinforced/fulltile/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
+	switch(the_rcd.mode)
+		if(RCD_DECONSTRUCT)
+			return list("mode" = RCD_DECONSTRUCT, "delay" = 40, "cost" = 20)
+	return FALSE
 
 /obj/structure/window/reinforced/fulltile/unanchored
 	anchored = FALSE

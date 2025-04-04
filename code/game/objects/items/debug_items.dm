@@ -166,8 +166,6 @@
 	w_class = WEIGHT_CLASS_TINY
 	max_matter = INFINITY
 	matter = INFINITY
-	walldelay = 0.1
-	floordelay = 0.1
 	decondelay = 0.1
 
 /obj/item/holosign_creator/atmos/debug

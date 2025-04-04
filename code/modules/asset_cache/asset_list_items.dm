@@ -655,10 +655,10 @@
 		'icons/obj/monitors.dmi' = list("alarm_bitem", "fire_bitem"),
 		'icons/obj/wallframe.dmi' = list("apc"),
 		'icons/obj/stock_parts.dmi' = list("box_1"),
-		'icons/obj/objects.dmi' = list("bed", "rack"),
+		'icons/obj/beds_chairs/beds.dmi' = list("bed"),
 		'icons/obj/smooth_structures/catwalks/catwalk.dmi' = list("catwalk-0"),
 		'icons/hud/radials/radial_generic.dmi' = list("cnorth", "csouth", "ceast", "cwest", "chair", "secure_windoor", "stool", "wallfloor", "windowsize", "windowtype", "windoor"),
-		'icons/obj/structures.dmi' = list("glass_table", "rwindow0", "reflector_base", "table", "window0"),
+		'icons/obj/structures.dmi' = list("glass_table", "rack", "rwindow0", "reflector_base", "table", "window0"),
 	)
 
 	var/icon/icon

@@ -223,7 +223,32 @@
 		if(RCD_FLOODLIGHT)
 			return list("mode" = RCD_FLOODLIGHT, "delay" = 30, "cost" = 35)
 		if(RCD_FURNISHING)
-			return list("mode" = RCD_FURNISHING, "delay" = the_rcd.furnish_delay, "cost" = the_rcd.furnish_cost)
+			var/cost = 0
+			var/delay = 0
+			if(the_rcd.furnish_type == /obj/structure/chair || the_rcd.furnish_type == /obj/structure/chair/stool)
+				cost = 8
+				delay = 10
+			else if(the_rcd.furnish_type == /obj/structure/chair/stool/bar)
+				cost = 4
+				delay = 5
+			else if(the_rcd.furnish_type == /obj/structure/chair/stool/bar)
+				cost = 4
+				delay = 5
+			else if(the_rcd.furnish_type == /obj/structure/table)
+				cost = 15
+				delay = 20
+			else if(the_rcd.furnish_type == /obj/structure/table/glass)
+				cost = 12
+				delay = 15
+			else if(the_rcd.furnish_type == /obj/structure/rack)
+				cost = 20
+				delay = 25
+			else if(the_rcd.furnish_type == /obj/structure/bed)
+				cost = 10
+				delay = 15
+			if(!cost)
+				return FALSE
+			return list("mode" = RCD_FURNISHING, "delay" = cost, "cost" = delay)
 	return FALSE
 
 /turf/open/floor/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)
@@ -232,7 +257,6 @@
 			var/obj/structure/girder/girder = locate() in src
 			if(girder)
 				return girder.rcd_act(user, the_rcd, passed_mode)
-			to_chat(user, span_notice("You build a wall."))
 			log_attack("[key_name(user)] has constructed a wall at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
 			var/overlapping_lattice = locate(/obj/structure/lattice) in get_turf(src)
 			if(overlapping_lattice)
@@ -260,7 +284,6 @@
 						continue
 					balloon_alert(user, "there's already a door!")
 					return FALSE
-				to_chat(user, span_notice("You build a windoor."))
 				var/obj/machinery/door/window/new_window = new the_rcd.airlock_type(src, user.dir, the_rcd.airlock_electronics?.unres_sides)
 				if(the_rcd.airlock_electronics)
 					new_window.name = the_rcd.airlock_electronics.passed_name || initial(new_window.name)
@@ -305,13 +328,11 @@
 			var/previous_turf = initial(name)
 			if(!ScrapeAway(flags = CHANGETURF_INHERIT_AIR))
 				return FALSE
-			to_chat(user, span_notice("You deconstruct [previous_turf]."))
 			log_attack("[key_name(user)] has deconstructed [previous_turf] at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
 			return TRUE
 		if(RCD_WINDOWGRILLE)
 			if(locate(/obj/structure/grille) in src)
 				return FALSE
-			to_chat(user, span_notice("You construct the grille."))
 			log_attack("[key_name(user)] has constructed a grille at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
 			var/obj/structure/grille/new_grille = new(src)
 			new_grille.set_anchored(TRUE)

@@ -227,9 +227,7 @@
 
 	become_hearing_sensitive(trait_source = ROUNDSTART_TRAIT)
 
-/obj/mecha/ComponentInitialize()
-	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
+	AddElement(/datum/element/atmos_sensitive, mapload)
 
 //separate proc so that the ejection mechanism can be easily triggered by other things, such as admins
 /obj/vehicle/sealed/mecha/proc/Eject()
