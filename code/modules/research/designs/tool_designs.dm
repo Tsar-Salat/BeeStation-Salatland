@@ -93,6 +93,35 @@
 	category = list("Tool Designs")
 	departmental_flags = DEPARTMENTAL_FLAG_ENGINEERING
 
+/datum/design/rcd_upgrade/anti_interrupt
+	name = "RCD anti disruption designs upgrade"
+	desc = "Prevents interruption of RCD construction and deconstruction."
+	id = "rcd_upgrade_anti_interrupt"
+	build_type = PROTOLATHE
+	materials = list(
+		/datum/material/iron = 5000,
+		/datum/material/glass = 2500,
+		/datum/material/silver = 1500,
+		/datum/material/titanium = 2000,
+	)
+	build_path = /obj/item/rcd_upgrade/anti_interrupt
+	category = list("Tool Designs")
+	departmental_flags = DEPARTMENTAL_FLAG_ENGINEERING
+
+/datum/design/rcd_upgrade/cooling
+	name = "RCD cooling upgrade"
+	desc = "Allows the RCD to more quickly perform multiple actions at once."
+	id = "rcd_upgrade_cooling"
+	build_type = PROTOLATHE
+	materials = list(
+		/datum/material/iron = 5000,
+		/datum/material/glass = 2500,
+		/datum/material/silver = 1500,
+	)
+	build_path = /obj/item/rcd_upgrade/cooling
+	category = list("Tool Designs")
+	departmental_flags = DEPARTMENTAL_FLAG_ENGINEERING
+
 /datum/design/rcd_upgrade/furnishing
 	name = "RCD furnishing upgrade"
 	desc = "Adds the ability to furnish areas using the RCD."
