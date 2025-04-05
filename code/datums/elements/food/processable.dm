@@ -24,6 +24,14 @@
 	src.amount_created = amount_created
 	src.table_required = table_required
 
+	if(!islist(result_atom_type))
+		stack_trace("result_atom_type on [src] is not a list. Fix yo shit")
+	if(!result_atom_type.len)
+		stack_trace("[src] has no output result. You have made something processable into nothing. Fix yo shit.")
+		return
+	if(!islist(amount_created))
+		stack_trace("amount_created on [src] is not a list. Fix yo shit")
+
 	RegisterSignal(target, COMSIG_ATOM_TOOL_ACT(tool_behaviour), PROC_REF(try_process))
 	RegisterSignal(target, COMSIG_PARENT_EXAMINE, PROC_REF(OnExamine))
 
@@ -52,22 +60,37 @@
 /datum/element/processable/proc/OnExamine(atom/source, mob/user, list/examine_list)
 	SIGNAL_HANDLER
 
+	var/list/result_strings = list()
+
 	for(var/i in 1 to result_atom_type.len)
 		var/atom/target = result_atom_type[i]
 		var/result_name = initial(target.name)
 		var/result_gender = initial(target.gender)
-		var/tool_desc = tool_behaviour_name(tool_behaviour)
 
-		// I admit, this is a lot of lines for very minor changes in the strings
-		// but at least it's readable?
+		// Construct the result string for this item
 		if(amount_created[i] > 1)
 			if(result_gender == PLURAL)
-				examine_list += span_notice("It can be turned into [amount_created[i]] [result_name] with <b>[tool_desc]</b>!")
+				result_strings += "[amount_created[i]] [result_name]"
 			else
-				examine_list += span_notice("It can be turned into [amount_created[i]] [result_name][plural_s(result_name)] with <b>[tool_desc]</b>!")
-
+				result_strings += "[amount_created[i]] [result_name][plural_s(result_name)]"
 		else
 			if(result_gender == PLURAL)
-				examine_list += span_notice("It can be turned into some [result_name] with <b>[tool_desc]</b>!")
+				result_strings += "some [result_name]"
 			else
-				examine_list += span_notice("It can be turned into \a [result_name] with <b>[tool_desc]</b>!")
+				result_strings += "\a [result_name]"
+
+	// Combine all results into a single string with commas and "and" before the last item. Oxford comma this shit because its uggo otherwise
+	var/result_output = ""
+	if(result_strings.len == 1)
+		result_output = result_strings[1]
+	else if(result_strings.len == 2)
+		result_output = "[result_strings[1]] and [result_strings[2]]"
+	else
+		for(var/i in 1 to result_strings.len)
+			if(i == result_strings.len) // Last item
+				result_output += "and [result_strings[i]]"
+			else
+				result_output += "[result_strings[i]], "
+
+	var/tool_desc = tool_behaviour_name(tool_behaviour)
+	examine_list += span_notice("It can be turned into [result_output] with <b>[tool_desc]</b>!")

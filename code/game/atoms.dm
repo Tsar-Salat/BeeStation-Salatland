@@ -1574,33 +1574,59 @@
 	return TOOL_ACT_TOOLTYPE_SUCCESS
 
 /atom/proc/process_recipes(mob/living/user, obj/item/I, list/processing_recipes)
-	// Process all recipes in the list
-	for(var/list/current_option in processing_recipes)
-		StartProcessingAtom(user, I, current_option)
+	// Process all recipes in parallel
+	var/list/all_created_atoms = list()
 
-/atom/proc/StartProcessingAtom(mob/living/user, obj/item/process_item, list/chosen_option)
-	var/processing_time = chosen_option[TOOL_PROCESSING_TIME]
-	to_chat(user, span_notice("You start working on [src]"))
-	if(process_item.use_tool(src, user, processing_time, volume=50))
-		var/atom/atom_to_create = chosen_option[TOOL_PROCESSING_RESULT]
-		var/list/atom/created_atoms = list()
-		var/amount_to_create = chosen_option[TOOL_PROCESSING_AMOUNT]
+	// Ensure the tool is used for the required processing time for all recipes
+	var/total_processing_time = 0
+	for(var/list/current_option in processing_recipes)
+		total_processing_time = max(total_processing_time, current_option[TOOL_PROCESSING_TIME])
+
+	if(!I.use_tool(src, user, total_processing_time, volume=50))
+		return
+
+	// Batch create all items for all recipes
+	for(var/list/current_option in processing_recipes)
+		var/atom/atom_to_create = current_option[TOOL_PROCESSING_RESULT]
+		var/amount_to_create = current_option[TOOL_PROCESSING_AMOUNT]
+
 		for(var/i = 1 to amount_to_create)
 			var/atom/created_atom = new atom_to_create(drop_location())
 			created_atom.pixel_x = pixel_x
 			created_atom.pixel_y = pixel_y
 			if(i > 1)
-				created_atom.pixel_x += rand(-8,8)
-				created_atom.pixel_y += rand(-8,8)
-			created_atom.OnCreatedFromProcessing(user, process_item, chosen_option, src)
-			to_chat(user, span_notice("You manage to create [chosen_option[TOOL_PROCESSING_AMOUNT]] [initial(atom_to_create.gender) == PLURAL ? "[initial(atom_to_create.name)]" : "[initial(atom_to_create.name)][plural_s(initial(atom_to_create.name))]"] from [src]."))
-			created_atoms.Add(created_atom)
-		SEND_SIGNAL(src, COMSIG_ATOM_PROCESSED, user, process_item, created_atoms)
-		UsedforProcessing(user, process_item, chosen_option)
-		return
+				created_atom.pixel_x += rand(-8, 8)
+				created_atom.pixel_y += rand(-8, 8)
+			created_atom.OnCreatedFromProcessing(user, I, current_option, src)
+			all_created_atoms.Add(created_atom)
+
+		// Signal that the recipe has been processed
+		SEND_SIGNAL(src, COMSIG_ATOM_PROCESSED, user, I, all_created_atoms)
+		UsedforProcessing(user, I, current_option)
+
+	//Show all results lol
+	if(all_created_atoms.len)
+		var/result_string = generate_combined_result_string(all_created_atoms)
+		to_chat(user, span_notice("You manage to create [result_string] from [src]."))
+
+	// Delete the source atom only after all recipes are processed
+	qdel(src)
+
+/atom/proc/generate_combined_result_string(list/created_atoms)
+	// Helper proc to generate a combined result string for all created atoms
+	var/list/result_counts = list()
+	for(var/atom/A in created_atoms)
+		var/name = initial(A.name)
+		result_counts[name] = (result_counts[name] || 0) + 1
+
+	var/list/result_strings = list()
+	for(var/name in result_counts)
+		var/count = result_counts[name]
+		result_strings += "[count] [name][plural_s(name)]"
+
+	return english_list(result_strings)
 
 /atom/proc/UsedforProcessing(mob/living/user, obj/item/used_item, list/chosen_option)
-	qdel(src)
 	return
 
 /atom/proc/OnCreatedFromProcessing(mob/living/user, obj/item/I, list/chosen_option, atom/original_atom)
