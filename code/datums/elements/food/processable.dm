@@ -2,26 +2,26 @@
 /datum/element/processable
 	element_flags = ELEMENT_BESPOKE
 	id_arg_index = 2
-	///The type of atom this creates when the processing recipe is used.
-	var/atom/result_atom_type
+	///The types of atoms this creates when the processing recipe is used.
+	var/list/result_atom_type = list()
 	///The tool behaviour for this processing recipe
 	var/tool_behaviour
 	///Time to process the atom
 	var/time_to_process
-	///Amount of the resulting actor this will create
-	var/amount_created
+	///The amounts of the resulting actors this will create
+	var/list/amount_created = list()
 	///Whether or not the atom being processed has to be on a table or tray to process it
 	var/table_required
 
-/datum/element/processable/Attach(datum/target, tool_behaviour, result_atom_type, amount_created = 3, time_to_process = 2 SECONDS, table_required = FALSE)
+/datum/element/processable/Attach(datum/target, tool_behaviour, result_atom_type = list(), amount_created = list(3), time_to_process = 2 SECONDS, table_required = FALSE)
 	. = ..()
 	if(!isatom(target))
 		return ELEMENT_INCOMPATIBLE
 
-	src.tool_behaviour = tool_behaviour
-	src.amount_created = amount_created
-	src.time_to_process = time_to_process
 	src.result_atom_type = result_atom_type
+	src.tool_behaviour = tool_behaviour
+	src.time_to_process = time_to_process
+	src.amount_created = amount_created
 	src.table_required = table_required
 
 	RegisterSignal(target, COMSIG_ATOM_TOOL_ACT(tool_behaviour), PROC_REF(try_process))
@@ -41,29 +41,33 @@
 		var/found_table = locate(/obj/structure/table) in found_location
 		var/found_tray = locate(/obj/item/storage/bag/tray) in found_location
 		if(!found_turf && !istype(found_location, /obj/item/storage/bag/tray) || found_turf && !(found_table || found_tray))
-			to_chat(user, span_notice("You cannot make [initial(result_atom_type.name)] here! You need a table or at least a tray."))
+			var/atom/target = result_atom_type[1]
+			to_chat(user, span_notice("You cannot make [initial(target.name)] here! You need a table or at least a tray."))
 			return
 
-	mutable_recipes += list(list(TOOL_PROCESSING_RESULT = result_atom_type, TOOL_PROCESSING_AMOUNT = amount_created, TOOL_PROCESSING_TIME = time_to_process))
+	for(var/i in 1 to result_atom_type.len)
+		mutable_recipes += list(list(TOOL_PROCESSING_RESULT = result_atom_type[i], TOOL_PROCESSING_AMOUNT = amount_created[i], TOOL_PROCESSING_TIME = time_to_process))
 
 ///So people know what the frick they're doing without reading from a wiki page (I mean they will inevitably but i'm trying to help, ok?)
 /datum/element/processable/proc/OnExamine(atom/source, mob/user, list/examine_list)
 	SIGNAL_HANDLER
 
-	var/result_name = initial(result_atom_type.name)
-	var/result_gender = initial(result_atom_type.gender)
-	var/tool_desc = tool_behaviour_name(tool_behaviour)
+	for(var/i in 1 to result_atom_type.len)
+		var/atom/target = result_atom_type[i]
+		var/result_name = initial(target.name)
+		var/result_gender = initial(target.gender)
+		var/tool_desc = tool_behaviour_name(tool_behaviour)
 
-	// I admit, this is a lot of lines for very minor changes in the strings
-	// but at least it's readable?
-	if(amount_created > 1)
-		if(result_gender == PLURAL)
-			examine_list += span_notice("It can be turned into [amount_created] [result_name] with <b>[tool_desc]</b>!")
-		else
-			examine_list += span_notice("It can be turned into [amount_created] [result_name][plural_s(result_name)] with <b>[tool_desc]</b>!")
+		// I admit, this is a lot of lines for very minor changes in the strings
+		// but at least it's readable?
+		if(amount_created[i] > 1)
+			if(result_gender == PLURAL)
+				examine_list += span_notice("It can be turned into [amount_created[i]] [result_name] with <b>[tool_desc]</b>!")
+			else
+				examine_list += span_notice("It can be turned into [amount_created[i]] [result_name][plural_s(result_name)] with <b>[tool_desc]</b>!")
 
-	else
-		if(result_gender == PLURAL)
-			examine_list += span_notice("It can be turned into some [result_name] with <b>[tool_desc]</b>!")
 		else
-			examine_list += span_notice("It can be turned into \a [result_name] with <b>[tool_desc]</b>!")
+			if(result_gender == PLURAL)
+				examine_list += span_notice("It can be turned into some [result_name] with <b>[tool_desc]</b>!")
+			else
+				examine_list += span_notice("It can be turned into \a [result_name] with <b>[tool_desc]</b>!")

@@ -1,4 +1,3 @@
-
 /**
   * The base type for nearly all physical objects in SS13
 
@@ -230,7 +229,7 @@
   * * /turf/open/space/Initialize
   */
 
-/atom/proc/Initialize(mapload, ...)
+//atom/proc/Initialize(mapload, ...)
 	//SHOULD_NOT_SLEEP(TRUE) //TODO: We shouldn't be sleeping initialize
 	SHOULD_CALL_PARENT(TRUE)
 
@@ -1575,29 +1574,9 @@
 	return TOOL_ACT_TOOLTYPE_SUCCESS
 
 /atom/proc/process_recipes(mob/living/user, obj/item/I, list/processing_recipes)
-	//Only one recipe? use the first
-	if(processing_recipes.len == 1)
-		StartProcessingAtom(user, I, processing_recipes[1])
-		return
-	//Otherwise, select one with a radial
-	ShowProcessingGui(user, I, processing_recipes)
-
-///Creates the radial and processes the selected option
-/atom/proc/ShowProcessingGui(mob/living/user, obj/item/I, list/possible_options)
-	var/list/choices_to_options = list() //Dict of object name | dict of object processing settings
-	var/list/choices = list()
-
-	for(var/i in possible_options)
-		var/list/current_option = i
-		var/atom/current_option_type = current_option[TOOL_PROCESSING_RESULT]
-		choices_to_options[initial(current_option_type.name)] = current_option
-		var/image/option_image = image(icon = initial(current_option_type.icon), icon_state = initial(current_option_type.icon_state))
-		choices += list("[initial(current_option_type.name)]" = option_image)
-
-	var/pick = show_radial_menu(user, src, choices, radius = 36, require_near = TRUE)
-
-	StartProcessingAtom(user, I, choices_to_options[pick])
-
+	// Process all recipes in the list
+	for(var/list/current_option in processing_recipes)
+		StartProcessingAtom(user, I, current_option)
 
 /atom/proc/StartProcessingAtom(mob/living/user, obj/item/process_item, list/chosen_option)
 	var/processing_time = chosen_option[TOOL_PROCESSING_TIME]
