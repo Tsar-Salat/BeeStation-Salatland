@@ -229,7 +229,7 @@
   * * /turf/open/space/Initialize
   */
 
-//atom/proc/Initialize(mapload, ...)
+/atom/proc/Initialize(mapload, ...)
 	//SHOULD_NOT_SLEEP(TRUE) //TODO: We shouldn't be sleeping initialize
 	SHOULD_CALL_PARENT(TRUE)
 
