@@ -26,7 +26,8 @@
 
 	if(!islist(result_atom_type))
 		stack_trace("result_atom_type on [src] is not a list. Fix yo shit")
-	if(!result_atom_type.len)
+	var/list/result_check = result_atom_type
+	if(!result_check.len)
 		stack_trace("[src] has no output result. You have made something processable into nothing. Fix yo shit.")
 		return
 	if(!islist(amount_created))

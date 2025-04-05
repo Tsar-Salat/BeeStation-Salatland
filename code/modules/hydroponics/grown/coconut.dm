@@ -28,7 +28,30 @@ when processed, it lets you choose between coconut flesh or the coconut cup*/
 	throw_speed = 2
 	throw_range = 4
 
-// Use a knife/sharp object to process the coconut
+/obj/item/grown/coconut/Initialize(mapload, obj/item/seeds/new_seed)
+	. = ..()
+	AddElement(/datum/element/processable, TOOL_KNIFE, list(/obj/item/food/coconutflesh, /obj/item/reagent_containers/cup/coconutcup), list(5, 1), 15)
+
+/obj/item/grown/coconut/UsedforProcessing(mob/living/user, obj/item/used_item, list/chosen_option, atom/original_atom)
+	// Iterate through the chosen options to find a coconutcup
+	for(var/atom/item in chosen_option)
+		if(istype(item, /obj/item/reagent_containers/cup/coconutcup))
+			var/obj/item/reagent_containers/cup/coconutcup/cup = item
+
+			// Ensure the original atom has reagents to transfer
+			if(original_atom.reagents && original_atom.reagents.total_volume > 0)
+				// Ensure the coconutcup has a valid reagents datum
+				if(!cup.reagents)
+					stack_trace("Coconut cup has no reagents datum, creating one.")
+					cup.reagents = new /datum/reagents(cup)
+
+				// Transfer the reagents from the original atom to the coconutcup
+				original_atom.reagents.trans_to(cup.reagents, original_atom.reagents.total_volume)
+			else
+				stack_trace("Coconut has no reagents to transfer.")
+			break
+
+/*
 /obj/item/grown/coconut/attackby(obj/item/W, mob/user, params)
 	if(!W.is_sharp())
 		return ..()
@@ -47,3 +70,4 @@ when processed, it lets you choose between coconut flesh or the coconut cup*/
 		reagents.trans_to(cup.reagents, reagents.total_volume)
 	qdel(src)
 	return ..()
+*/

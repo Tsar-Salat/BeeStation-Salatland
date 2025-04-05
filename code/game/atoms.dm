@@ -1602,7 +1602,7 @@
 
 		// Signal that the recipe has been processed
 		SEND_SIGNAL(src, COMSIG_ATOM_PROCESSED, user, I, all_created_atoms)
-		UsedforProcessing(user, I, current_option)
+		UsedforProcessing(user, I, current_option, src)
 
 	//Show all results lol
 	if(all_created_atoms.len)
@@ -1626,7 +1626,7 @@
 
 	return english_list(result_strings)
 
-/atom/proc/UsedforProcessing(mob/living/user, obj/item/used_item, list/chosen_option)
+/atom/proc/UsedforProcessing(mob/living/user, obj/item/used_item, list/chosen_option, atom/original_atom)
 	return
 
 /atom/proc/OnCreatedFromProcessing(mob/living/user, obj/item/I, list/chosen_option, atom/original_atom)
