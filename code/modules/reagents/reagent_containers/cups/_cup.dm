@@ -449,8 +449,5 @@
 	pickup_sound =  'sound/items/handling/drinkglass_pickup.ogg'
 
 /obj/item/reagent_containers/cup/coconutcup/on_reagent_change(changetype)
-	if (reagents && reagents.total_volume > 0)
-		icon_state = "coconutcup_full"
-	else
-		icon_state = "coconutcup_empty"
+	icon_state = (reagents?.total_volume > 0) ? "coconutcup_full" : "coconutcup_empty"
 
