@@ -1602,7 +1602,7 @@
 
 		// Signal that the recipe has been processed
 		SEND_SIGNAL(src, COMSIG_ATOM_PROCESSED, user, I, all_created_atoms)
-		UsedforProcessing(user, I, current_option, src)
+		UsedforProcessing(user, I, processing_recipes, src)
 
 	//Show all results lol
 	if(all_created_atoms.len)
