@@ -146,6 +146,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/computer/records/security)
 			return TRUE
 
 		if("delete_record")
+			investigate_log("[usr] deleted record: \"[target_record]\".", INVESTIGATE_RECORDS)
 			qdel(target_record)
 			return TRUE
 
@@ -166,7 +167,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/computer/records/security)
 			return TRUE
 
 		if("set_note")
-			target_record.set_security_note(sanitize_ic(params["security_note"]))
+			var/note = trim(params["note"], MAX_MESSAGE_LEN)
+			investigate_log("[usr] has changed the security note of record: \"[target_record]\" from \"[target_record.security_note]\" to \"[note]\".")
+			target_record.security_note = note
 			return TRUE
 
 		if("set_wanted")

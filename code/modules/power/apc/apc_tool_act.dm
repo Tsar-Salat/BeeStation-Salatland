@@ -125,7 +125,7 @@
 			return TRUE
 
 /obj/machinery/power/apc/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
-	if(the_rcd.upgrade & RCD_UPGRADE_SIMPLE_CIRCUITS)
+	if(the_rcd.construction_upgrades & RCD_UPGRADE_SIMPLE_CIRCUITS)
 		if(!has_electronics)
 			if(machine_stat & BROKEN)
 				to_chat(user, span_warning("[src]'s frame is too damaged to support a circuit."))
@@ -142,7 +142,7 @@
 	return FALSE
 
 /obj/machinery/power/apc/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, list/rcd_data)
-	if(!(the_rcd.upgrade & RCD_UPGRADE_SIMPLE_CIRCUITS) || rcd_data["[RCD_DESIGN_MODE]"] != RCD_WALLFRAME)
+	if(!(the_rcd.construction_upgrades & RCD_UPGRADE_SIMPLE_CIRCUITS) || rcd_data["[RCD_DESIGN_MODE]"] != RCD_WALLFRAME)
 		return FALSE
 
 	if(!has_electronics)

@@ -103,7 +103,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 
 /obj/structure/window/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, list/rcd_data)
 	if(rcd_data["[RCD_DESIGN_MODE]"] == RCD_DECONSTRUCT)
-		log_attack("[key_name(user)] has deconstructed [src] at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
 		qdel(src)
 		return TRUE
 	return FALSE

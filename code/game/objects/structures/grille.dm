@@ -69,7 +69,13 @@
 			var/cost = 0
 			var/delay = 0
 
-			if(the_rcd.rcd_design_path  == /obj/structure/window/fulltile)
+			if(the_rcd.rcd_design_path  == /obj/structure/window)
+				cost = 4
+				delay = 2 SECONDS
+			else if(the_rcd.rcd_design_path  == /obj/structure/window/reinforced)
+				cost = 6
+				delay = 2.5 SECONDS
+			else if(the_rcd.rcd_design_path  == /obj/structure/window/fulltile)
 				cost = 8
 				delay = 3 SECONDS
 			else if(the_rcd.rcd_design_path  == /obj/structure/window/reinforced/fulltile)
@@ -87,7 +93,6 @@
 /obj/structure/grille/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, list/rcd_data)
 	switch(rcd_data["[RCD_DESIGN_MODE]"])
 		if(RCD_DECONSTRUCT)
-			log_attack("[key_name(user)] has deconstructed [src] at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
 			qdel(src)
 			return TRUE
 		if(RCD_WINDOWGRILLE)
@@ -103,8 +108,12 @@
 			var/obj/structure/window/window_path = rcd_data["[RCD_DESIGN_PATH]"]
 			if(!ispath(window_path))
 				CRASH("Invalid window path type in RCD: [window_path]")
-			if(!initial(window_path.fulltile)) //only fulltile windows can be built here
-				return FALSE
+
+			//checks if its a valid build direction
+			if(!initial(window_path.fulltile))
+				if(!valid_window_location(loc, user.dir, is_fulltile = FALSE))
+					balloon_alert(user, "window already here!")
+					return FALSE
 			log_attack("[key_name(user)] has constructed a window at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
 			var/obj/structure/window/WD = new window_path(local_turf, user.dir)
 			WD.set_anchored(TRUE)

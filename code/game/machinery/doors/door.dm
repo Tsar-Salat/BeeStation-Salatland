@@ -24,6 +24,8 @@
 	var/visible = TRUE
 	var/operating = FALSE
 	var/glass = FALSE
+	/// If something isn't a glass door but doesn't have a fill_closed icon (no glass slots), this prevents it from being used
+	var/can_be_glass = TRUE
 	var/welded = FALSE
 	var/heat_proof = FALSE // For rglass-windowed airlocks and firedoors
 	var/emergency = FALSE // Emergency access override

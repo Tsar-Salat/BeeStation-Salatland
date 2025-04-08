@@ -13,7 +13,7 @@
 	worn_icon_state = "RCD"
 	lefthand_file = 'icons/mob/inhands/equipment/tools_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/tools_righthand.dmi'
-	custom_premium_price = PAYCHECK_COMMAND * 10
+	custom_premium_price = PAYCHECK_COMMAND * 2
 	max_matter = 160
 	slot_flags = ITEM_SLOT_BELT
 	item_flags = NO_MAT_REDEMPTION | NOBLUDGEON
@@ -33,8 +33,8 @@
 	/// The path of the structure the rcd is currently creating
 	var/atom/movable/rcd_design_path
 
-	/// owner of this rcd. It can either be an construction console or an player
-	var/owner
+	/// Owner of this rcd. It can either be a construction console, player, or mech.
+	var/atom/owner
 	/// used by arcd, can this rcd work from a range
 	var/ranged = FALSE
 	/// delay multiplier for all construction types
@@ -74,6 +74,23 @@
 
 	GLOB.rcd_list += src
 
+/obj/item/construction/rcd/examine(mob/user)
+	. = ..()
+	if(construction_upgrades)
+		. += "It has the following upgrades installed:"
+		if(construction_upgrades & RCD_UPGRADE_FRAMES)
+			. += /obj/item/rcd_upgrade/frames::name
+		if(construction_upgrades & RCD_UPGRADE_SIMPLE_CIRCUITS)
+			. += /obj/item/rcd_upgrade/simple_circuits::name
+		if(construction_upgrades & RCD_UPGRADE_SILO_LINK)
+			. += /obj/item/rcd_upgrade/silo_link::name
+		if(construction_upgrades & RCD_UPGRADE_FURNISHING)
+			. += /obj/item/rcd_upgrade/furnishing::name
+		if(construction_upgrades & RCD_UPGRADE_ANTI_INTERRUPT)
+			. += /obj/item/rcd_upgrade/anti_interrupt::name
+		if(construction_upgrades & RCD_UPGRADE_NO_FREQUENT_USE_COOLDOWN)
+			. += /obj/item/rcd_upgrade/cooling::name
+
 /obj/item/construction/rcd/Destroy()
 	QDEL_NULL(airlock_electronics)
 	GLOB.rcd_list -= src
@@ -104,7 +121,7 @@
 	var/atom/movable/rcd_structure = rcd_results["[RCD_DESIGN_PATH]"]
 	/**
 	 *For anything that does not go an a wall we have to make sure that turf is clear for us to put the structure on it
-	 *If we are just trying to destory something then this check is not nessassary
+	 *If we are just trying to destroy something then this check is not necessary
 	 *RCD_WALLFRAME is also returned as the rcd_mode when upgrading apc, airalarm, firealarm using simple circuits upgrade
 	 */
 	if(rcd_mode != RCD_WALLFRAME && rcd_mode != RCD_DECONSTRUCT)
@@ -117,23 +134,23 @@
 			var/list/structures_to_ignore
 			if(istype(target, /obj/structure/grille))
 				if(is_full_tile) //if we are trying to build full-tile windows we ignore the grille
-					structures_to_ignore = list(target)
-				else //no building directional windows on grills
-					return FALSE
-			else //for directional windows we ignore other directional windows as they can be in diffrent directions on the turf.
+					structures_to_ignore = list(/obj/structure/grille)
+				else //when building directional windows we ignore the grill and other directional windows
+					structures_to_ignore = list(/obj/structure/grille, /obj/structure/window)
+			else //for directional windows we ignore other directional windows as they can be in different directions on the turf.
 				structures_to_ignore = list(/obj/structure/window)
 
 			//check if we can build our window on the grill
-			if(target_turf.is_blocked_turf(exclude_mobs = !is_full_tile, source_atom = null, ignore_atoms = structures_to_ignore, type_list = !is_full_tile))
+			if(target_turf.is_blocked_turf(exclude_mobs = !is_full_tile, source_atom = null, ignore_atoms = structures_to_ignore, type_list = TRUE))
 				playsound(loc, 'sound/machines/click.ogg', 50, TRUE)
 				balloon_alert(user, "something is blocking the turf")
 				return FALSE
 
 		/**
-		 * if we are trying to create plating on turf which is not a proper floor then dont check for objects on top of the turf just allow that turf to be converted into plating. e.g. create plating beneath a player or underneath a machine frame/any dense object
+		 * if we are trying to create plating on turf which is not a proper floor then don't check for objects on top of the turf just allow that turf to be converted into plating. e.g. create plating beneath a player or underneath a machine frame/any dense object
 		 * if we are trying to finish a wall girder then let it finish then make sure no one/nothing is stuck in the girder
 		 */
-		else if(rcd_mode == RCD_TURF && rcd_structure == /turf/open/floor/plating/rcd && (!istype(target_turf, /turf/open/floor) || istype(target, /obj/structure/girder)))
+		else if(rcd_mode == RCD_TURF && rcd_structure == /turf/open/floor/plating/rcd  && (!istype(target_turf, /turf/open/floor) || istype(target, /obj/structure/girder)))
 			//if a player builds a wallgirder on top of himself manually with iron sheets he can't finish the wall if he is still on the girder. Exclude the girder itself when checking for other dense objects on the turf
 			if(istype(target, /obj/structure/girder) && target_turf.is_blocked_turf(exclude_mobs = FALSE, source_atom = null, ignore_atoms = list(target)))
 				playsound(loc, 'sound/machines/click.ogg', 50, TRUE)
@@ -162,10 +179,10 @@
 				ignored_types = list(/obj/structure/window)
 				//if we are trying to create grills/windoors we can go ahead and further ignore other windoors on the turf
 				if(rcd_mode == RCD_WINDOWGRILLE || (rcd_mode == RCD_AIRLOCK && ispath(rcd_structure, /obj/machinery/door/window)))
-					//only ignore mobs if we are trying to create windoors and not grills. We dont want to drop a grill on top of somebody
+					//only ignore mobs if we are trying to create windoors and not grills. We don't want to drop a grill on top of somebody
 					ignore_mobs = rcd_mode == RCD_AIRLOCK
 					ignored_types += /obj/machinery/door/window
-				//if we are trying to create full airlock doors then we do the regular checks and make sure we have the full space for them. i.e. dont ignore anything dense on the turf
+				//if we are trying to create full airlock doors then we do the regular checks and make sure we have the full space for them. i.e. don't ignore anything dense on the turf
 				else if(rcd_mode == RCD_AIRLOCK)
 					ignored_types = list()
 
@@ -177,6 +194,17 @@
 
 	return TRUE
 
+/obj/item/construction/rcd/build_delay(mob/user, delay, atom/target)
+	//unaffected by ui changes
+	if(mode == RCD_DECONSTRUCT)
+		if(delay <= 0)
+			return TRUE
+
+		return do_after(user, delay, target)
+
+	//checks for ui changes
+	return ..()
+
 /**
  * actual proc to create the structure
  *
@@ -185,23 +213,31 @@
  * * [mob][user]- the user building this structure
  */
 /obj/item/construction/rcd/proc/rcd_create(atom/target, mob/user)
-	//does this atom allow for rcd actions?
-	var/list/rcd_results = target.rcd_vals(user, src)
-	if(!rcd_results)
+	var/list/rcd_results = target.rcd_vals(user, src) // does this atom allow for rcd actions?
+	if(!rcd_results) // nope
 		return FALSE
+
+
 	rcd_results["[RCD_DESIGN_MODE]"] = mode
 	rcd_results["[RCD_DESIGN_PATH]"] = rcd_design_path
 
 	var/delay = rcd_results["delay"] * delay_mod
 	if (
-		!(upgrade & RCD_UPGRADE_NO_FREQUENT_USE_COOLDOWN) \
+		!(construction_upgrades & RCD_UPGRADE_NO_FREQUENT_USE_COOLDOWN) \
 			&& !rcd_results[RCD_RESULT_BYPASS_FREQUENT_USE_COOLDOWN] \
 			&& current_active_effects > 0
 	)
 		delay *= FREQUENT_USE_DEBUFF_MULTIPLIER
 
 	current_active_effects += 1
-	_rcd_create_effect(target, user, delay, rcd_results)
+
+	var/target_name = target.name //Store this information before it gets mutated by the rcd.
+	var/target_path = target.type
+	var/atom/design_path = rcd_results["[RCD_DESIGN_PATH]"]
+	var/location = AREACOORD(target)
+	if(_rcd_create_effect(target, user, delay, rcd_results))
+		investigate_log("[key_name(user)] used [src] to [rcd_results["[RCD_DESIGN_MODE]"] != RCD_DECONSTRUCT ? "construct [initial(design_path.name)]([design_path])" : "deconstruct [target_name]([target_path])"] at [location]",INVESTIGATE_TOOLS)
+
 	current_active_effects -= 1
 
 /**
@@ -214,7 +250,9 @@
  * * rcd_results- list of params which contains the cost & build mode to create the structure
  */
 /obj/item/construction/rcd/proc/_rcd_create_effect(atom/target, mob/user, delay, list/rcd_results)
-	var/obj/effect/constructing_effect/rcd_effect = new(get_turf(target), delay, rcd_results["[RCD_DESIGN_MODE]"], upgrade)
+	PRIVATE_PROC(TRUE)
+
+	var/obj/effect/constructing_effect/rcd_effect = new(get_turf(target), delay, rcd_results["[RCD_DESIGN_MODE]"], construction_upgrades)
 
 	//resource & structure placement sanity checks before & after delay along with beam effects
 	if(!checkResource(rcd_results["cost"], user) || !can_place(target, rcd_results, user))
@@ -222,8 +260,9 @@
 		return FALSE
 	var/beam
 	if(ranged)
-		beam = user.Beam(target,icon_state="rped_upgrade", time = delay)
-	if(!do_after(user, delay, target = target))
+		var/atom/beam_source = owner ? owner : user
+		beam = beam_source.Beam(target, icon_state = "rped_upgrade", time = delay)
+	if(!build_delay(user, delay, target = target)) // no need for do_after with no delay
 		qdel(rcd_effect)
 		if(!isnull(beam))
 			qdel(beam)
@@ -247,7 +286,7 @@
 
 /obj/item/construction/rcd/ui_assets(mob/user)
 	return list(
-		get_asset_datum(/datum/asset/spritesheet/rcd),
+		get_asset_datum(/datum/asset/spritesheet_batched/rcd),
 	)
 
 /obj/item/construction/rcd/ui_host(mob/user)
@@ -269,6 +308,7 @@
 	data["root_categories"] = list()
 	for(var/category in GLOB.rcd_designs)
 		data["root_categories"] += category
+	data["selected_root"] = root_category
 
 	data["categories"] = list()
 	for(var/sub_category as anything in GLOB.rcd_designs[root_category])
@@ -277,9 +317,9 @@
 			continue
 
 		//skip category if upgrades were not installed for these
-		if(sub_category == "Machines" && !(upgrade & RCD_UPGRADE_FRAMES))
+		if(sub_category == "Machines" && !(construction_upgrades & RCD_UPGRADE_FRAMES))
 			continue
-		if(sub_category == "Furniture" && !(upgrade & RCD_UPGRADE_FURNISHING))
+		if(sub_category == "Furniture" && !(construction_upgrades & RCD_UPGRADE_FURNISHING))
 			continue
 
 		var/list/designs = list() //initialize all designs under this category
@@ -297,7 +337,6 @@
 	var/list/data = ..()
 
 	//main categories
-	data["selected_root"] = root_category
 	data["selected_category"] = design_category
 	data["selected_design"] = design_title
 
@@ -315,6 +354,7 @@
 			var/new_root = params["root_category"]
 			if(GLOB.rcd_designs[new_root] != null) //is a valid category
 				root_category = new_root
+				update_static_data_for_all_viewers()
 
 		if("design")
 			//read and validate params from UI
@@ -331,11 +371,11 @@
 			 * The advantage of organizing designs into categories is that
 			 * You can ignore an complete category if the design disk upgrade for that category isn't installed.
 			 */
-			//You can't select designs from the Machines category if you dont have the frames upgrade installed.
-			if(category == "Machines" && !(upgrade & RCD_UPGRADE_FRAMES))
+			//You can't select designs from the Machines category if you don't have the frames upgrade installed.
+			if(category == "Machines" && !(construction_upgrades & RCD_UPGRADE_FRAMES))
 				return TRUE
-			//You can't select designs from the Furniture category if you dont have the furnishing upgrade installed.
-			if(category == "Furniture" && !(upgrade & RCD_UPGRADE_FURNISHING))
+			//You can't select designs from the Furniture category if you don't have the furnishing upgrade installed.
+			if(category == "Furniture" && !(construction_upgrades & RCD_UPGRADE_FURNISHING))
 				return TRUE
 
 			//use UI params to set variables
@@ -347,6 +387,7 @@
 			construction_mode = mode
 			rcd_design_path = design["[RCD_DESIGN_PATH]"]
 			design_title = initial(rcd_design_path.name)
+			blueprint_changed = TRUE
 
 		else
 			airlock_electronics.do_action(action, params)
@@ -375,29 +416,26 @@
 	if((!proximity_flag && !ranged) || (ranged && !range_check(target, user)))
 		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
-	//do the work
 	mode = RCD_DECONSTRUCT
 	rcd_create(target, user)
 
 	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
 /obj/item/construction/rcd/proc/detonate_pulse()
-	audible_message(span_danger("<b>[src] begins to vibrate and buzz loudly!</b>"), span_danger("<b>[src] begins vibrating violently!</b>"))
+	audible_message(span_danger("<b>[src] begins to vibrate and buzz loudly!</b>"), \
+	span_danger("<b>[src] begins vibrating violently!</b>"))
 	// 5 seconds to get rid of it
-	addtimer(CALLBACK(src, PROC_REF(detonate_pulse_explode)), 50)
+	addtimer(CALLBACK(src, PROC_REF(detonate_pulse_explode)), 5 SECONDS)
 
 /obj/item/construction/rcd/proc/detonate_pulse_explode()
-	explosion(src, 0, 0, 3, 1, flame_range = 1)
+	explosion(src, light_impact_range = 3, flame_range = 1, flash_range = 1)
 	qdel(src)
-
-/obj/item/construction/rcd/Initialize(mapload)
-	. = ..()
-	update_appearance()
 
 /obj/item/construction/rcd/borg
 	desc = "A device used to rapidly build walls and floors."
 	canRturf = TRUE
 	banned_upgrades = RCD_UPGRADE_SILO_LINK
+	/// enery usage
 	var/energyfactor = 72
 
 /obj/item/construction/rcd/borg/get_matter(mob/user)
@@ -447,12 +485,12 @@
 	matter = 160
 
 /obj/item/construction/rcd/loaded/upgraded
-	upgrade = RCD_ALL_UPGRADES
+	construction_upgrades = RCD_ALL_UPGRADES
 
 /obj/item/construction/rcd/ce
 	name = "professional RCD"
 	desc = "A higher-end model of the rapid construction device, prefitted with improved cooling and disruption prevention. Provided to the chief engineer."
-	upgrade = RCD_UPGRADE_ANTI_INTERRUPT | RCD_UPGRADE_NO_FREQUENT_USE_COOLDOWN
+	construction_upgrades = RCD_UPGRADE_ANTI_INTERRUPT | RCD_UPGRADE_NO_FREQUENT_USE_COOLDOWN
 	matter = 160
 	color = list(
 		0.3, 0.3, 0.7, 0.0,
@@ -469,7 +507,7 @@
 	max_matter = 500
 	matter = 500
 	canRturf = TRUE
-	upgrade = RCD_ALL_UPGRADES
+	construction_upgrades = RCD_ALL_UPGRADES
 
 // Ranged RCD
 /obj/item/construction/rcd/arcd
@@ -483,23 +521,21 @@
 	icon_state = "arcd"
 	item_state = "oldrcd"
 	has_ammobar = FALSE
-	upgrade = RCD_ALL_UPGRADES & ~RCD_UPGRADE_SILO_LINK
+	construction_upgrades = RCD_ALL_UPGRADES & ~RCD_UPGRADE_SILO_LINK
 
 #undef FREQUENT_USE_DEBUFF_MULTIPLIER
-#undef RCD_DESTRUCTIVE_SCAN_COOLDOWN
 
 /obj/item/rcd_ammo
-	name = "compressed matter cartridge"
+	name = "RCD matter cartridge"
 	desc = "Highly compressed matter for the RCD."
 	icon = 'icons/obj/ammo.dmi'
-	icon_state = "rcd"
-	item_state = "rcdammo"
+	icon_state = "rcdammo"
 	w_class = WEIGHT_CLASS_TINY
 	lefthand_file = 'icons/mob/inhands/equipment/tools_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/tools_righthand.dmi'
-	custom_materials = list(/datum/material/iron=12000, /datum/material/glass=8000)
+	custom_materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT *6, /datum/material/glass=SHEET_MATERIAL_AMOUNT*4)
 	var/ammoamt = 40
 
 /obj/item/rcd_ammo/large
-	custom_materials = list(/datum/material/iron=48000, /datum/material/glass=32000)
+	custom_materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*24, /datum/material/glass=SHEET_MATERIAL_AMOUNT*16)
 	ammoamt = 160

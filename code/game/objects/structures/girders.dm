@@ -431,7 +431,6 @@
 			if(the_rcd.rcd_design_path != /turf/open/floor/plating/rcd)
 				return FALSE
 			var/turf/T = get_turf(src)
-			log_attack("[key_name(user)] has constructed a wall at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
 			var/overlapping_lattice = locate(/obj/structure/lattice) in get_turf(src)
 			if(overlapping_lattice)
 				qdel(overlapping_lattice) // Don't need lattice burried under the wall, or in the case of catwalk - on top of it.
@@ -439,8 +438,6 @@
 			qdel(src)
 			return TRUE
 		if(RCD_DECONSTRUCT)
-			balloon_alert(user, "You deconstruct [src].")
-			log_attack("[key_name(user)] has deconstructed [src] at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
 			qdel(src)
 			return TRUE
 	return FALSE

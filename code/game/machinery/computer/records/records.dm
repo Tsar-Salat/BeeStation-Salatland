@@ -52,6 +52,7 @@
 				return FALSE
 			var/text = "[params["value"]]" //Converts the value to a string, due to fuckery in TGUI.
 			var/value = sanitize_ic(trim(text, MAX_BROADCAST_LEN))
+			investigate_log("[key_name(usr)] changed the field: \"[field]\" with value: \"[target_record.vars[field]]\" to new value: \"[value || "Unknown"]\"", INVESTIGATE_RECORDS)
 			target_record.vars[field] = value || null
 			update_all_security_huds()
 			return TRUE
@@ -70,6 +71,7 @@
 
 		if("login")
 			authenticated = secure_login(user)
+			investigate_log("[key_name(usr)] [authenticated ? "successfully logged" : "failed to log"] into the [src].", INVESTIGATE_RECORDS)
 			return TRUE
 
 		if("logout")
