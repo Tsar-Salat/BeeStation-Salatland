@@ -293,3 +293,12 @@
 			var/obj/item/I = X
 			I.forceMove(loc)
 	..()
+
+/obj/structure/frame/machine/secured
+	state = 2
+	icon_state = "box_1"
+
+/obj/structure/frame/machine/secured/Initialize(mapload)
+	. = ..()
+
+	set_anchored(TRUE)

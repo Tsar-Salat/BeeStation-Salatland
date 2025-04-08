@@ -11,7 +11,7 @@
 			new /obj/item/electronics/airalarm(drop_location())
 			playsound(loc, 'sound/items/deconstruct.ogg', 50, TRUE)
 			buildstage = AIR_ALARM_BUILD_NO_CIRCUIT
-			update_icon()
+			update_appearance()
 	return TRUE
 
 /obj/machinery/airalarm/screwdriver_act(mob/living/user, obj/item/tool)
@@ -20,7 +20,7 @@
 	tool.play_tool_sound(src)
 	panel_open = !panel_open
 	to_chat(user, "<span class = 'notice'>The wires have been [panel_open ? "exposed" : "unexposed"].</span>")
-	update_icon()
+	update_appearance()
 	return TRUE
 
 /obj/machinery/airalarm/wirecutter_act(mob/living/user, obj/item/tool)
@@ -31,7 +31,7 @@
 	var/obj/item/stack/cable_coil/cables = new(drop_location(), 5)
 	user.put_in_hands(cables)
 	buildstage = AIR_ALARM_BUILD_NO_WIRES
-	update_icon()
+	update_appearance()
 	return TRUE
 
 /obj/machinery/airalarm/wrench_act(mob/living/user, obj/item/tool)
@@ -47,17 +47,15 @@
 
 /obj/machinery/airalarm/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
 	if((buildstage == AIR_ALARM_BUILD_NO_CIRCUIT) && (the_rcd.upgrade & RCD_UPGRADE_SIMPLE_CIRCUITS))
-		return list("mode" = RCD_WALLFRAME, "delay" = 2 SECONDS, "cost" = 1)
+		return list("delay" = 2 SECONDS, "cost" = 1)
 	return FALSE
 
-/obj/machinery/airalarm/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)
-	switch(passed_mode)
-		if(RCD_WALLFRAME)
-			user.visible_message("<span class = 'notice'>[user] fabricates a circuit and places it into [src].</span>", \
-			"<span class = 'notice'>You adapt an air alarm circuit and slot it into the assembly.</span>")
-			buildstage = AIR_ALARM_BUILD_NO_WIRES
-			update_icon()
-			return TRUE
+/obj/machinery/airalarm/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, list/rcd_data)
+	if(rcd_data["[RCD_DESIGN_MODE]"] == RCD_WALLFRAME)
+		balloon_alert(user, "circuit installed")
+		buildstage = AIR_ALARM_BUILD_NO_WIRES
+		update_appearance()
+		return TRUE
 	return FALSE
 
 /obj/machinery/airalarm/AltClick(mob/user)
@@ -129,14 +127,14 @@
 						danger_level = AIR_ALARM_ALERT_NONE
 						buildstage = AIR_ALARM_BUILD_COMPLETE
 						select_mode(user, /datum/air_alarm_mode/filtering)
-						update_icon()
+						update_appearance()
 				return
 		if(AIR_ALARM_BUILD_NO_CIRCUIT)
 			if(istype(W, /obj/item/electronics/airalarm))
 				if(user.temporarilyRemoveItemFromInventory(W))
 					to_chat(user, "<span class = 'notice'>You insert the circuit.</span>")
 					buildstage = AIR_ALARM_BUILD_NO_WIRES
-					update_icon()
+					update_appearance()
 					qdel(W)
 				return
 
@@ -147,7 +145,7 @@
 				user.visible_message("<span class = 'notice'>[user] fabricates a circuit and places it into [src].</span>", \
 				"<span class = 'notice'>You adapt an air alarm circuit and slot it into the assembly.</span>")
 				buildstage = AIR_ALARM_BUILD_NO_WIRES
-				update_icon()
+				update_appearance()
 				return
 
 	return ..()
@@ -157,7 +155,7 @@
 		if(WIRE_POWER)
 			if(!wires.is_cut(WIRE_POWER))
 				shorted = FALSE
-				update_icon()
+				update_appearance()
 		if(WIRE_AI)
 			if(!wires.is_cut(WIRE_AI))
 				aidisabled = FALSE

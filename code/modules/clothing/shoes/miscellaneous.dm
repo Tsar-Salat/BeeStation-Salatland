@@ -51,7 +51,7 @@
 	desc = "A pair of rather plain wooden sandals."
 	name = "sandals"
 	icon_state = "wizard"
-	custom_materials = list(/datum/material/wood = MINERAL_MATERIAL_AMOUNT * 0.5)
+	custom_materials = list(/datum/material/wood = SHEET_MATERIAL_AMOUNT * 0.5)
 	strip_delay = 50
 	equip_delay_other = 50
 	armor_type = /datum/armor/shoes_sandal

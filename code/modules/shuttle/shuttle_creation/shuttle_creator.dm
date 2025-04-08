@@ -486,7 +486,9 @@ GLOBAL_LIST_EMPTY(custom_shuttle_machines)		//Machines that require updating (He
 	overlay_holder.highlight_turf(T)
 
 /obj/item/shuttle_creator/proc/add_saved_area(mob/user)
-	var/static/area_or_turf_fail_types = typecacheof(list(/area/shuttle))
+	var/static/list/area_or_turf_fail_types = typecacheof(list(
+		/area/shuttle
+		))
 	area_or_turf_fail_types += GLOB.shuttle_turf_blacklist
 	//Detect the turfs connected in the curerrent enclosed area
 	var/list/turfs = detect_room(get_turf(user), area_or_turf_fail_types)

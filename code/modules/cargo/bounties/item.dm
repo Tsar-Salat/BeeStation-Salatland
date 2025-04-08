@@ -1,14 +1,16 @@
 /datum/bounty/item
+	///How many items have to be shipped to complete the bounty
 	var/required_count = 1
+	///How many items have been shipped for the bounty so far
 	var/shipped_count = 0
-	var/list/wanted_types  // Types accepted for the bounty.
-	var/include_subtypes = TRUE     // Set to FALSE to make the datum apply only to a strict type.
-	var/list/exclude_types // Types excluded.
+	///Types accepted|denied by the bounty. (including all subtypes, unless include_subtypes is set to FALSE)
+	var/list/wanted_types
+	///Set to FALSE to make the bounty not accept subtypes of the wanted_types
+	var/include_subtypes = TRUE
 
 /datum/bounty/item/New()
 	..()
-	wanted_types = typecacheof(wanted_types)
-	exclude_types = typecacheof(exclude_types)
+	wanted_types = string_assoc_list(zebra_typecacheof(wanted_types, only_root_path = !include_subtypes))
 
 /datum/bounty/item/completion_string()
 	return {"[shipped_count]/[required_count]"}
@@ -17,9 +19,7 @@
 	return ..() && shipped_count >= required_count
 
 /datum/bounty/item/applies_to(obj/O)
-	if(!include_subtypes && !(O.type in wanted_types))
-		return FALSE
-	if(include_subtypes && (!is_type_in_typecache(O, wanted_types) || is_type_in_typecache(O, exclude_types)))
+	if(!is_type_in_typecache(O, wanted_types))
 		return FALSE
 	if(O.flags_1 & HOLOGRAM_1)
 		return FALSE

@@ -1,12 +1,26 @@
+//Defines for amount of material retrieved from sheets & other items
+/// The amount of materials you get from a sheet of mineral like iron/diamond/glass etc. 100 Units.
+#define SHEET_MATERIAL_AMOUNT 100
+/// The amount of materials you get from half a sheet. Used in standard object quantities. 50 units.
+#define HALF_SHEET_MATERIAL_AMOUNT (SHEET_MATERIAL_AMOUNT / 2)
+/// The amount of materials used in the smallest of objects, like pens and screwdrivers. 10 units.
+#define SMALL_MATERIAL_AMOUNT (HALF_SHEET_MATERIAL_AMOUNT / 5)
+/// The amount of material that goes into a coin, which determines the value of the coin.
+#define COIN_MATERIAL_AMOUNT (HALF_SHEET_MATERIAL_AMOUNT * 0.4)
+
+//Cable related values
+/// The maximum size of a stack object.
+#define MAX_STACK_SIZE 50
+/// Maximum amount of cable in a coil
+#define MAXCOIL 60
+
+//Category of materials
 /// Is the material from an ore? currently unused but exists atm for categorizations sake
 #define MAT_CATEGORY_ORE "ore capable"
-
 /// Hard materials, such as iron or metal
 #define MAT_CATEGORY_RIGID "rigid material"
-
 ///Use this flag on TRUE if you want the basic recipes
 #define MAT_CATEGORY_BASE_RECIPES "basic recipes"
-
 /// Used to make a material initialize at roundstart.
 #define MATERIAL_INIT_MAPLOAD (1<<0)
 
@@ -49,9 +63,9 @@
 #define MATERIAL_SOURCE(mat) "[mat.name]_material"
 
 // Slowdown values.
-/// The slowdown value of one [MINERAL_MATERIAL_AMOUNT] of plasteel.
+/// The slowdown value of one [SHEET_MATERIAL_AMOUNT] of plasteel.
 #define MATERIAL_SLOWDOWN_PLASTEEL		(0.05)
-/// The slowdown value of one [MINERAL_MATERIAL_AMOUNT] of alien alloy.
+/// The slowdown value of one [SHEET_MATERIAL_AMOUNT] of alien alloy.
 #define MATERIAL_SLOWDOWN_ALIEN_ALLOY	(0.1)
 
 /// Create standardized stack sizes.

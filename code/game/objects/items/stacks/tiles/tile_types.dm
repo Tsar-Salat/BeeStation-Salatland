@@ -650,7 +650,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/stack/tile)
 	turf_type = /turf/open/floor/glass
 	item_state = "tile-glass"
 	merge_type = /obj/item/stack/tile/glass
-	mats_per_unit = list(/datum/material/glass=MINERAL_MATERIAL_AMOUNT * 0.25) // 4 tiles per sheet
+	mats_per_unit = list(/datum/material/glass=SHEET_MATERIAL_AMOUNT * 0.25) // 4 tiles per sheet
 	replace_plating = TRUE
 
 /obj/item/stack/tile/glass/sixty
@@ -664,7 +664,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/stack/tile)
 	item_state = "tile-rglass"
 	turf_type = /turf/open/floor/glass/reinforced
 	merge_type = /obj/item/stack/tile/rglass
-	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125, /datum/material/glass=MINERAL_MATERIAL_AMOUNT * 0.25) // 4 tiles per sheet
+	mats_per_unit = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT * 0.125, /datum/material/glass=SHEET_MATERIAL_AMOUNT * 0.25) // 4 tiles per sheet
 	replace_plating = TRUE
 
 /obj/item/stack/tile/rglass/sixty
