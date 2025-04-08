@@ -1,6 +1,6 @@
 /obj/structure/window
 	name = "window"
-	desc = "A directional window."
+	desc = "A window."
 	icon_state = "window"
 	density = TRUE
 	layer = ABOVE_OBJ_LAYER //Just above doors
@@ -98,11 +98,11 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 
 /obj/structure/window/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
 	if(the_rcd.mode == RCD_DECONSTRUCT)
-		return list("delay" = 2 SECONDS, "cost" = 5)
+		return list("mode" = RCD_DECONSTRUCT, "delay" = 20, "cost" = 5)
 	return FALSE
 
-/obj/structure/window/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, list/rcd_data)
-	if(rcd_data["[RCD_DESIGN_MODE]"] == RCD_DECONSTRUCT)
+/obj/structure/window/rcd_act(mob/user, var/obj/item/construction/rcd/the_rcd, passed_mode)
+	if(passed_mode == RCD_DECONSTRUCT)
 		log_attack("[key_name(user)] has deconstructed [src] at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
 		qdel(src)
 		return TRUE
@@ -559,8 +559,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 /* Full Tile Windows (more atom_integrity) */
 
 /obj/structure/window/fulltile
-	name = "full tile window"
-	desc = "A full tile window."
 	icon = 'icons/obj/smooth_structures/windows/window.dmi'
 	icon_state = "window-0"
 	base_icon_state = "window"
@@ -573,8 +571,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 	glass_amount = 2
 
 /obj/structure/window/fulltile/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
-	if(the_rcd.mode == RCD_DECONSTRUCT)
-		return list("delay" = 2.5 SECONDS, "cost" = 10)
+	switch(the_rcd.mode)
+		if(RCD_DECONSTRUCT)
+			return list("mode" = RCD_DECONSTRUCT, "delay" = 25, "cost" = 10)
 	return FALSE
 
 /obj/structure/window/fulltile/unanchored
@@ -627,8 +626,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 	anchored = FALSE
 
 /obj/structure/window/reinforced/fulltile
-	name = "full tile reinforced window"
-	desc = "A full tile reinforced window"
 	icon = 'icons/obj/smooth_structures/windows/reinforced_window.dmi'
 	icon_state = "reinforced_window-0"
 	base_icon_state = "reinforced_window"
@@ -641,8 +638,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 	glass_amount = 2
 
 /obj/structure/window/reinforced/fulltile/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
-	if(the_rcd.mode == RCD_DECONSTRUCT)
-		return list("mode" = RCD_DECONSTRUCT, "delay" = 4 SECONDS, "cost" = 20)
+	switch(the_rcd.mode)
+		if(RCD_DECONSTRUCT)
+			return list("mode" = RCD_DECONSTRUCT, "delay" = 40, "cost" = 20)
 	return FALSE
 
 /obj/structure/window/reinforced/fulltile/unanchored

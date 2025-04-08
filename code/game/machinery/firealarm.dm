@@ -430,13 +430,14 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/firealarm)
 
 /obj/machinery/firealarm/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
 	if((buildstage == FIRE_ALARM_BUILD_NO_CIRCUIT) && (the_rcd.upgrade & RCD_UPGRADE_SIMPLE_CIRCUITS))
-		return list("delay" = 2 SECONDS, "cost" = 1)
+		return list("mode" = RCD_WALLFRAME, "delay" = 20, "cost" = 1)
 	return FALSE
 
-/obj/machinery/firealarm/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, list/rcd_data)
-	switch(rcd_data["[RCD_DESIGN_MODE]"])
+/obj/machinery/firealarm/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)
+	switch(passed_mode)
 		if(RCD_WALLFRAME)
-			balloon_alert(user, "circuit installed")
+			user.visible_message(span_notice("[user] fabricates a circuit and places it into [src]."), \
+			span_notice("You adapt a fire alarm circuit and slot it into the assembly."))
 			buildstage = FIRE_ALARM_BUILD_NO_WIRES
 			update_appearance()
 			return TRUE

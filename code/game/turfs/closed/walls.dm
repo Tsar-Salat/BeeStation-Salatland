@@ -218,18 +218,22 @@
 /turf/closed/wall/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
 	switch(the_rcd.mode)
 		if(RCD_DECONSTRUCT)
-			return list("delay" = 4 SECONDS, "cost" = 26)
+			return list("mode" = RCD_DECONSTRUCT, "delay" = 40, "cost" = 26)
 		if(RCD_WALLFRAME)
-			return list("delay" = 1 SECONDS, "cost" = 8)
+			return list("mode" = RCD_WALLFRAME, "delay" = 10, "cost" = 25)
 	return FALSE
 
-/turf/closed/wall/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, list/rcd_data)
-	switch(rcd_data["[RCD_DESIGN_MODE]"])
+/turf/closed/wall/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)
+	switch(passed_mode)
 		if(RCD_WALLFRAME)
-			var/obj/item/wallframe/wallmount = rcd_data["[RCD_DESIGN_PATH]"]
-			var/obj/item/wallframe/new_wallmount = new wallmount(user.drop_location())
-			return try_wallmount(new_wallmount, user, src)
+			var/obj/item/wallframe/new_wallmount = new the_rcd.wallframe_type(user.drop_location())
+			if(!try_wallmount(new_wallmount, user, src))
+				qdel(new_wallmount)
+				return FALSE
+			return TRUE
 		if(RCD_DECONSTRUCT)
+			to_chat(user, span_notice("You deconstruct the wall."))
+			log_attack("[key_name(user)] has deconstructed [get_turf(src)] at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
 			ScrapeAway()
 			return TRUE
 	return FALSE

@@ -79,7 +79,7 @@
 		return ..()
 
 
-/turf/open/floor/plating/asteroid/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, list/rcd_data)
+/turf/open/floor/plating/asteroid/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)
 	if(the_rcd.canRturf)
 		return ..()
 

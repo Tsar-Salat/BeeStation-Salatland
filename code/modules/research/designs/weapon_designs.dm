@@ -429,7 +429,7 @@
 	desc = "A belt which evelops the user inside a high-energy shield which blocks incoming and outgoing high-energy projectiles."
 	id = "shieldbelt"
 	build_type = PROTOLATHE
-	materials = list(/datum/material/iron = 1 * SHEET_MATERIAL_AMOUNT, /datum/material/uranium = 1 * SHEET_MATERIAL_AMOUNT)
+	materials = list(/datum/material/iron = 1 * MINERAL_MATERIAL_AMOUNT, /datum/material/uranium = 1 * MINERAL_MATERIAL_AMOUNT)
 	build_path = /obj/item/shield_belt
 	category = list("Weapons")
 	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE

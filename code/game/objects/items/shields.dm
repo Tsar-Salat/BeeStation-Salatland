@@ -151,7 +151,7 @@
 	block_upgrade_walk = 1
 	lefthand_file = 'icons/mob/inhands/equipment/shields_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/shields_righthand.dmi'
-	custom_materials = list(/datum/material/wood = SHEET_MATERIAL_AMOUNT * 10)
+	custom_materials = list(/datum/material/wood = MINERAL_MATERIAL_AMOUNT * 10)
 	resistance_flags = FLAMMABLE
 	transparent = FALSE
 	max_integrity = 55

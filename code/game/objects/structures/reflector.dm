@@ -311,10 +311,3 @@
 				return FALSE
 			set_angle(SIMPLIFY_DEGREES(new_angle))
 			return TRUE
-
-/obj/structure/reflector/wrenched
-
-/obj/structure/reflector/wrenched/Initialize(mapload)
-	. = ..()
-
-	set_anchored(TRUE)

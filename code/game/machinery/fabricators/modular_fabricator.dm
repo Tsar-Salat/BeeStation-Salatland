@@ -153,7 +153,7 @@
 			for(var/material_id in D.materials)
 				material_cost += list(list(
 					"name" = material_id,
-					"amount" = ( D.materials[material_id] / SHEET_MATERIAL_AMOUNT) * creation_efficiency,
+					"amount" = ( D.materials[material_id] / MINERAL_MATERIAL_AMOUNT) * creation_efficiency,
 				))
 
 			//Add
@@ -199,7 +199,7 @@
 	var/datum/component/material_container/materials = get_material_container()
 	for(var/material in materials.materials)
 		var/datum/material/M = material
-		var/mineral_amount = materials.materials[material] / SHEET_MATERIAL_AMOUNT
+		var/mineral_amount = materials.materials[material] / MINERAL_MATERIAL_AMOUNT
 		data["materials"] += list(list(
 			"name" = M.name,
 			"amount" = mineral_amount,
@@ -369,7 +369,7 @@
 
 /obj/machinery/modular_fabricator/proc/AfterMaterialInsert(item_inserted, id_inserted, amount_inserted)
 	if(istype(item_inserted, /obj/item/stack/ore/bluespace_crystal))
-		use_power(SHEET_MATERIAL_AMOUNT / 10)
+		use_power(MINERAL_MATERIAL_AMOUNT / 10)
 	else
 		use_power(min(1000, amount_inserted / 100))
 	//Begin processing to continue the queue if we had items in the queue

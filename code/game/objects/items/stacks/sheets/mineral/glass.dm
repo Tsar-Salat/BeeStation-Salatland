@@ -16,7 +16,7 @@
 	singular_name = "glass sheet"
 	icon_state = "sheet-glass"
 	item_state = "sheet-glass"
-	mats_per_unit = list(/datum/material/glass=SHEET_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/glass=MINERAL_MATERIAL_AMOUNT)
 	armor_type = /datum/armor/sheet_glass
 	resistance_flags = ACID_PROOF
 	merge_type = /obj/item/stack/sheet/glass
@@ -74,7 +74,7 @@
 	singular_name = "reinforced glass sheet"
 	icon_state = "sheet-rglass"
 	item_state = "sheet-rglass"
-	custom_materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT * 0.5, /datum/material/glass=SHEET_MATERIAL_AMOUNT)
+	custom_materials = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.5, /datum/material/glass=MINERAL_MATERIAL_AMOUNT)
 	armor_type = /datum/armor/sheet_rglass
 	resistance_flags = ACID_PROOF
 	merge_type = /obj/item/stack/sheet/rglass
@@ -123,7 +123,7 @@
 	singular_name = "plasma glass sheet"
 	icon_state = "sheet-pglass"
 	item_state = "sheet-pglass"
-	mats_per_unit = list(/datum/material/alloy/plasmaglass=SHEET_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/alloy/plasmaglass=MINERAL_MATERIAL_AMOUNT)
 	material_type = /datum/material/alloy/plasmaglass
 	armor_type = /datum/armor/sheet_plasmaglass
 	resistance_flags = ACID_PROOF
@@ -166,7 +166,7 @@
 	singular_name = "reinforced plasma glass sheet"
 	icon_state = "sheet-prglass"
 	item_state = "sheet-prglass"
-	mats_per_unit = list(/datum/material/alloy/plasmaglass=SHEET_MATERIAL_AMOUNT, /datum/material/iron = SHEET_MATERIAL_AMOUNT * 0.5)
+	mats_per_unit = list(/datum/material/alloy/plasmaglass=MINERAL_MATERIAL_AMOUNT, /datum/material/iron = MINERAL_MATERIAL_AMOUNT * 0.5)
 	armor_type = /datum/armor/sheet_plasmarglass
 	resistance_flags = ACID_PROOF
 	material_flags = NONE
@@ -192,7 +192,7 @@
 	singular_name = "titanium glass sheet"
 	icon_state = "sheet-titaniumglass"
 	item_state = "sheet-titaniumglass"
-	mats_per_unit = list(/datum/material/alloy/titaniumglass=SHEET_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/alloy/titaniumglass=MINERAL_MATERIAL_AMOUNT)
 	material_type = /datum/material/alloy/titaniumglass
 	armor_type = /datum/armor/sheet_titaniumglass
 	resistance_flags = ACID_PROOF
@@ -214,7 +214,7 @@
 	singular_name = "plastitanium glass sheet"
 	icon_state = "sheet-plastitaniumglass"
 	item_state = "sheet-plastitaniumglass"
-	mats_per_unit = list(/datum/material/titanium=SHEET_MATERIAL_AMOUNT * 0.5, /datum/material/plasma=SHEET_MATERIAL_AMOUNT * 0.5, /datum/material/glass=SHEET_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/titanium=MINERAL_MATERIAL_AMOUNT * 0.5, /datum/material/plasma=MINERAL_MATERIAL_AMOUNT * 0.5, /datum/material/glass=MINERAL_MATERIAL_AMOUNT)
 	armor_type = /datum/armor/sheet_plastitaniumglass
 	resistance_flags = ACID_PROOF
 	material_flags = NONE
@@ -241,7 +241,7 @@
 	item_state = "shard-glass"
 	lefthand_file = 'icons/mob/inhands/weapons/melee_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/melee_righthand.dmi'
-	custom_materials = list(/datum/material/glass=SHEET_MATERIAL_AMOUNT)
+	custom_materials = list(/datum/material/glass=MINERAL_MATERIAL_AMOUNT)
 	attack_verb_continuous = list("stabs", "slashes", "slices", "cuts")
 	attack_verb_simple = list("stab", "slash", "slice", "cut")
 	hitsound = 'sound/weapons/bladeslice.ogg'
@@ -342,5 +342,5 @@
 	force = 6
 	throwforce = 11
 	icon_state = "plasmalarge"
-	custom_materials = list(/datum/material/alloy/plasmaglass=SHEET_MATERIAL_AMOUNT)
+	custom_materials = list(/datum/material/alloy/plasmaglass=MINERAL_MATERIAL_AMOUNT)
 	icon_prefix = "plasma"

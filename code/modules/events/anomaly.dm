@@ -16,10 +16,10 @@
 	var/static/list/allowed_areas
 	if(!allowed_areas)
 		//Places that shouldn't explode
-		var/static/list/safe_area_types = typecacheof(ANOMALY_AREA_BLACKLIST)
+		var/list/safe_area_types = typecacheof(ANOMALY_AREA_BLACKLIST)
 
 		//Subtypes from the above that actually should explode.
-		var/static/list/unsafe_area_subtypes = typecacheof(ANOMALY_AREA_SUBTYPE_WHITELIST)
+		var/list/unsafe_area_subtypes = typecacheof(ANOMALY_AREA_SUBTYPE_WHITELIST)
 
 		allowed_areas = make_associative(GLOB.the_station_areas) - safe_area_types + unsafe_area_subtypes
 

@@ -227,12 +227,12 @@
 			dismantle_wall()
 
 /turf/closed/wall/r_wall/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
-	if(the_rcd.canRturf || the_rcd.construction_mode == RCD_WALLFRAME)
+	if(the_rcd.canRturf)
 		return ..()
 
 
-/turf/closed/wall/r_wall/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, list/rcd_data)
-	if(the_rcd.canRturf || rcd_data["[RCD_DESIGN_MODE]"] == RCD_WALLFRAME)
+/turf/closed/wall/r_wall/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)
+	if(the_rcd.canRturf)
 		return ..()
 
 /turf/closed/wall/r_wall/rust_heretic_act()

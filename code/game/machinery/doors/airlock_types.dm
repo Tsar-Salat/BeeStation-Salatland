@@ -3,33 +3,22 @@
 */
 
 /obj/machinery/door/airlock/command
-	name = "command airlock"
 	icon = 'icons/obj/doors/airlocks/station/command.dmi'
 	assemblytype = /obj/structure/door_assembly/door_assembly_com
 	normal_integrity = 450
 
 /obj/machinery/door/airlock/security
-	name = "security airlock"
 	icon = 'icons/obj/doors/airlocks/station/security.dmi'
 	assemblytype = /obj/structure/door_assembly/door_assembly_sec
 	normal_integrity = 450
 
 /obj/machinery/door/airlock/engineering
-	name = "engineering airlock"
 	icon = 'icons/obj/doors/airlocks/station/engineering.dmi'
 	assemblytype = /obj/structure/door_assembly/door_assembly_eng
 
 /obj/machinery/door/airlock/medical
-	name = "medical airlock"
 	icon = 'icons/obj/doors/airlocks/station/medical.dmi'
 	assemblytype = /obj/structure/door_assembly/door_assembly_med
-
-/*
-/obj/machinery/door/airlock/hydroponics	//Hydroponics front doors!
-	name = "hydroponics airlock"
-	icon = 'icons/obj/doors/airlocks/station/hydroponics.dmi'
-	assemblytype = /obj/structure/door_assembly/door_assembly_hydro
-*/
 
 /obj/machinery/door/airlock/maintenance
 	name = "maintenance access"
@@ -53,7 +42,6 @@
 	assemblytype = /obj/structure/door_assembly/door_assembly_atmo
 
 /obj/machinery/door/airlock/research
-	name = "research airlock"
 	icon = 'icons/obj/doors/airlocks/station/research.dmi'
 	assemblytype = /obj/structure/door_assembly/door_assembly_research
 
@@ -63,12 +51,10 @@
 	assemblytype = /obj/structure/door_assembly/door_assembly_fre
 
 /obj/machinery/door/airlock/science
-	name = "science airlock"
 	icon = 'icons/obj/doors/airlocks/station/science.dmi'
 	assemblytype = /obj/structure/door_assembly/door_assembly_science
 
 /obj/machinery/door/airlock/virology
-	name = "virology airlock"
 	icon = 'icons/obj/doors/airlocks/station/virology.dmi'
 	assemblytype = /obj/structure/door_assembly/door_assembly_viro
 
@@ -78,7 +64,6 @@
 */
 
 /obj/machinery/door/airlock/glass
-	name = "glass airlock"
 	opacity = FALSE
 	glass = TRUE
 
@@ -96,13 +81,11 @@
 	id_tag = INCINERATOR_SYNDICATELAVA_AIRLOCK_EXTERIOR
 
 /obj/machinery/door/airlock/command/glass
-	name = "command glass airlock"
 	opacity = FALSE
 	glass = TRUE
 	normal_integrity = 400
 
 /obj/machinery/door/airlock/engineering/glass
-	name = "engineering glass airlock"
 	opacity = FALSE
 	glass = TRUE
 
@@ -110,25 +93,15 @@
 	critical_machine = TRUE //stops greytide virus from opening & bolting doors in critical positions, such as the SM chamber.
 
 /obj/machinery/door/airlock/security/glass
-	name = "security glass airlock"
 	opacity = FALSE
 	glass = TRUE
 	normal_integrity = 400
 
 /obj/machinery/door/airlock/medical/glass
-	name = "medical glass airlock"
 	opacity = FALSE
 	glass = TRUE
-
-/*
-/obj/machinery/door/airlock/hydroponics/glass //Uses same icon as medical/glass, maybe update it with its own unique icon one day?
-	name = "hydroponics glass airlock"
-	opacity = FALSE
-	glass = TRUE
-*/
 
 /obj/machinery/door/airlock/research/glass
-	name = "research glass airlock"
 	opacity = FALSE
 	glass = TRUE
 
@@ -146,12 +119,10 @@
 	id_tag = INCINERATOR_TOXMIX_AIRLOCK_EXTERIOR
 
 /obj/machinery/door/airlock/mining/glass
-	name = "mining glass airlock"
 	opacity = FALSE
 	glass = TRUE
 
 /obj/machinery/door/airlock/atmos/glass
-	name = "atmospheric glass airlock"
 	opacity = FALSE
 	glass = TRUE
 
@@ -159,22 +130,18 @@
 	critical_machine = TRUE //stops greytide virus from opening & bolting doors in critical positions, such as the SM chamber.
 
 /obj/machinery/door/airlock/science/glass
-	name = "science glass airlock"
 	opacity = FALSE
 	glass = TRUE
 
 /obj/machinery/door/airlock/virology/glass
-	name = "virology glass airlock"
 	opacity = FALSE
 	glass = TRUE
 
 /obj/machinery/door/airlock/maintenance/glass
-	name = "maintainence glass airlock"
 	opacity = FALSE
 	glass = TRUE
 
 /obj/machinery/door/airlock/maintenance/external/glass
-	name = "maintainence external glass airlock"
 	opacity = FALSE
 	glass = TRUE
 	normal_integrity = 200
@@ -348,13 +315,11 @@
 */
 
 /obj/machinery/door/airlock/public
-	name = "public airlock"
 	icon = 'icons/obj/doors/airlocks/station2/glass.dmi'
 	overlays_file = 'icons/obj/doors/airlocks/station2/overlays.dmi'
 	assemblytype = /obj/structure/door_assembly/door_assembly_public
 
 /obj/machinery/door/airlock/public/glass
-	name = "public glass airlock"
 	opacity = FALSE
 	glass = TRUE
 
@@ -397,7 +362,6 @@
 	panel_attachment = "bottom"
 
 /obj/machinery/door/airlock/external/glass
-	name = "external glass airlock"
 	opacity = FALSE
 	glass = TRUE
 

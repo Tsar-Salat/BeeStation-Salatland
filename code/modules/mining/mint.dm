@@ -29,7 +29,7 @@
 		/datum/material/bananium,
 		/datum/material/adamantine,
 		/datum/material/plastic
-	), SHEET_MATERIAL_AMOUNT * 75, FALSE, /obj/item/stack)
+	), MINERAL_MATERIAL_AMOUNT * 75, FALSE, /obj/item/stack)
 	chosen = SSmaterials.GetMaterialRef(chosen)
 
 
@@ -56,7 +56,7 @@
 			return
 
 		icon_state = "coinpress1"
-		var/coin_mat = SHEET_MATERIAL_AMOUNT
+		var/coin_mat = MINERAL_MATERIAL_AMOUNT
 
 		for(var/sheets in 1 to 2)
 			if(materials.use_amount_mat(coin_mat, chosen))

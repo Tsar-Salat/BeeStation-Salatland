@@ -17,9 +17,9 @@
 		/turf/open/indestructible)
 		)
 
-	var/static/list/resistlist = typecacheof(list(
-		/turf/closed/wall/r_wall,
-	))
+	var/static/list/resistlist = typecacheof(
+		/turf/closed/wall/r_wall
+		)
 
 /datum/component/thermite/Initialize(_amount)
 	if(!istype(parent, /turf) || blacklist[parent.type])

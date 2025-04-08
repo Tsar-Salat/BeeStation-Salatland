@@ -304,7 +304,7 @@
 	name = "Iron"
 	id = "iron"
 	build_type = AUTOLATHE
-	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT)
+	materials = list(/datum/material/iron = MINERAL_MATERIAL_AMOUNT)
 	build_path = /obj/item/stack/sheet/iron
 	category = list("initial","Construction")
 	maxstack = 50
@@ -313,7 +313,7 @@
 	name = "Glass"
 	id = "glass"
 	build_type = AUTOLATHE
-	materials = list(/datum/material/glass = SHEET_MATERIAL_AMOUNT)
+	materials = list(/datum/material/glass = MINERAL_MATERIAL_AMOUNT)
 	build_path = /obj/item/stack/sheet/glass
 	category = list("initial","Construction")
 	maxstack = 50
@@ -322,7 +322,7 @@
 	name = "Reinforced Glass"
 	id = "rglass"
 	build_type = AUTOLATHE | SMELTER | PROTOLATHE
-	materials = list(/datum/material/iron = 1000, /datum/material/glass = SHEET_MATERIAL_AMOUNT)
+	materials = list(/datum/material/iron = 1000, /datum/material/glass = MINERAL_MATERIAL_AMOUNT)
 	build_path = /obj/item/stack/sheet/rglass
 	category = list("initial","Construction","Stock Parts")
 	maxstack = 50

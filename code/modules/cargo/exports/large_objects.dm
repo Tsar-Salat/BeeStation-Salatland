@@ -2,12 +2,8 @@
 	cost = 500
 	k_elasticity = 0
 	unit_name = "crate"
-	export_types = list(
-		/obj/structure/closet/crate = TRUE,
-		/obj/structure/closet/crate/large = FALSE,
-		/obj/structure/closet/crate/wooden = FALSE,
-		/obj/structure/closet/crate/mail = FALSE,
-		)
+	export_types = list(/obj/structure/closet/crate)
+	exclude_types = list(/obj/structure/closet/crate/large, /obj/structure/closet/crate/wooden, /obj/structure/closet/crate/mail)
 
 /datum/export/large/crate/total_printout(datum/export_report/ex, notes = TRUE) // That's why a goddamn metal crate costs that much.
 	. = ..()
@@ -18,6 +14,7 @@
 	cost = 100
 	unit_name = "large wooden crate"
 	export_types = list(/obj/structure/closet/crate/large)
+	exclude_types = list()
 
 /datum/export/large/crate/wooden/ore
 	unit_name = "ore box"
@@ -27,6 +24,7 @@
 	cost = 240
 	unit_name = "wooden crate"
 	export_types = list(/obj/structure/closet/crate/wooden)
+	exclude_types = list()
 
 /datum/export/large/crate/coffin
 	cost = 140 //50 wood costs 1700, makes 10 coffins, makes 1400 back. No free money allowed, considering they can be easlily stacked with disposal loops. Additionally you still get 600 credits from the box + manifest either way, for a total of 2000 back. Total of 300 profit for wasting your time building coffins.

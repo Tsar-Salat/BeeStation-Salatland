@@ -1,19 +1,8 @@
 // RAPID LIGHTING DEVICE
 
-// modes of operation
-#define GLOW_MODE 1
+#define GLOW_MODE 3
 #define LIGHT_MODE 2
-#define REMOVE_MODE 3
-
-// operation costs
-#define LIGHT_TUBE_COST 10
-#define FLOOR_LIGHT_COST 15
-#define GLOW_STICK_COST 5
-#define DECONSTRUCT_COST 10
-
-//operation delays
-#define BUILD_DELAY 10
-#define REMOVE_DELAY 15
+#define REMOVE_MODE 1
 
 /obj/item/construction/rld
 	name = "Rapid Lighting Device"
@@ -28,13 +17,20 @@
 	slot_flags = ITEM_SLOT_BELT
 	has_ammobar = TRUE
 	ammo_sections = 6
-	banned_upgrades = RCD_ALL_UPGRADES & ~RCD_UPGRADE_SILO_LINK
+	///it does not make sense why any of these should be installed
+	banned_upgrades = RCD_UPGRADE_FRAMES | RCD_UPGRADE_SIMPLE_CIRCUITS | RCD_UPGRADE_FURNISHING | RCD_UPGRADE_ANTI_INTERRUPT | RCD_UPGRADE_NO_FREQUENT_USE_COOLDOWN
 
-	/// mode of operation see above defines
 	var/mode = LIGHT_MODE
+	var/wallcost = 10
+	var/floorcost = 15
+	var/launchcost = 5
+	var/deconcost = 10
+
+	var/condelay = 10
+	var/decondelay = 15
 
 	///reference to thr original icons
-	var/static/list/original_options = list(
+	var/list/original_options = list(
 		"Color Pick" = icon(icon = 'icons/hud/radials/radial_generic.dmi', icon_state = "omni"),
 		"Glow Stick" = icon(icon = 'icons/obj/lighting.dmi', icon_state = "glowstick"),
 		"Deconstruct" = icon(icon = 'icons/obj/tools.dmi', icon_state = "wrench"),
@@ -99,17 +95,17 @@
 				return FALSE
 
 			//resource sanity checks before & after delay
-			if(!checkResource(DECONSTRUCT_COST, user))
+			if(!checkResource(deconcost, user))
 				return FALSE
 			var/beam = user.Beam(A,icon_state="light_beam", time = 15)
 			playsound(loc, 'sound/machines/click.ogg', 50, TRUE)
-			if(!do_after(user, REMOVE_DELAY, target = A))
+			if(!do_after(user, decondelay, target = A))
 				qdel(beam)
 				return FALSE
-			if(!checkResource(DECONSTRUCT_COST, user))
+			if(!checkResource(deconcost, user))
 				return FALSE
 
-			if(!useResource(DECONSTRUCT_COST, user))
+			if(!useResource(deconcost, user))
 				return FALSE
 			activate()
 			qdel(A)
@@ -117,17 +113,15 @@
 
 		if(LIGHT_MODE)
 			//resource sanity checks before & after delay
-			var/cost = iswallturf(A) ? LIGHT_TUBE_COST : FLOOR_LIGHT_COST
-
-			if(!checkResource(cost, user))
+			if(!checkResource(floorcost, user))
 				return FALSE
-			var/beam = user.Beam(A,icon_state="light_beam", time = BUILD_DELAY)
+			var/beam = user.Beam(A,icon_state="light_beam", time = condelay)
 			playsound(loc, 'sound/machines/click.ogg', 50, TRUE)
 			playsound(loc, 'sound/effects/light_flicker.ogg', 50, FALSE)
-			if(!do_after(user, BUILD_DELAY, target = A))
+			if(!do_after(user, condelay, target = A))
 				qdel(beam)
 				return FALSE
-			if(!checkResource(cost, user))
+			if(!checkResource(floorcost, user))
 				return FALSE
 
 			if(iswallturf(A))
@@ -161,7 +155,7 @@
 					balloon_alert(user, "no valid target!")
 					return FALSE
 
-				if(!useResource(cost, user))
+				if(!useResource(wallcost, user))
 					return FALSE
 				activate()
 				var/obj/machinery/light/L = new /obj/machinery/light(get_turf(winner))
@@ -176,7 +170,7 @@
 					if(istype(dupe))
 						return FALSE
 
-				if(!useResource(cost, user))
+				if(!useResource(floorcost, user))
 					return FALSE
 				activate()
 				var/obj/machinery/light/floor/FL = new /obj/machinery/light/floor(target)
@@ -185,7 +179,7 @@
 				return TRUE
 
 		if(GLOW_MODE)
-			if(!useResource(GLOW_STICK_COST, user))
+			if(!useResource(launchcost, user))
 				return FALSE
 			activate()
 			var/obj/item/flashlight/glowstick/G = new /obj/item/flashlight/glowstick(start)
@@ -206,14 +200,6 @@
 	righthand_file = 'icons/mob/inhands/equipment/tools_righthand.dmi'
 	matter = 100
 	max_matter = 100
-
-#undef LIGHT_TUBE_COST
-#undef FLOOR_LIGHT_COST
-#undef GLOW_STICK_COST
-#undef DECONSTRUCT_COST
-
-#undef BUILD_DELAY
-#undef REMOVE_DELAY
 
 #undef GLOW_MODE
 #undef LIGHT_MODE
