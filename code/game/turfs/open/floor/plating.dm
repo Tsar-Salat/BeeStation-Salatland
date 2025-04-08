@@ -167,13 +167,11 @@
 			to_chat(user, span_danger("You hit [src], to no effect!"))
 
 /turf/open/floor/plating/foam/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
-	if(the_rcd.mode == RCD_FLOORWALL)
-		return list("mode" = RCD_FLOORWALL, "delay" = 0, "cost" = 1)
+	if(the_rcd.mode == RCD_TURF && the_rcd.rcd_design_path == /turf/open/floor/plating/rcd)
+		return list("delay" = 0, "cost" = 1)
 
-/turf/open/floor/plating/foam/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)
-	if(passed_mode == RCD_FLOORWALL)
-		to_chat(user, span_notice("You build a floor."))
-		log_attack("[key_name(user)] has constructed a floor over metalfoam plating at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
+/turf/open/floor/plating/foam/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, list/rcd_data)
+	if(rcd_data["[RCD_DESIGN_MODE]"] == RCD_TURF && rcd_data["[RCD_DESIGN_PATH]"] == /turf/open/floor/plating/rcd)
 		ChangeTurf(/turf/open/floor/plating, flags = CHANGETURF_INHERIT_AIR)
 		return TRUE
 	return FALSE
@@ -190,3 +188,8 @@
 		return 0
 	return 1
 
+///not an actual turf its used just for rcd ui purposes
+/turf/open/floor/plating/rcd
+	name = "Floor/Wall"
+	icon = 'icons/hud/radials/radial_generic.dmi'
+	icon_state = "wallfloor"

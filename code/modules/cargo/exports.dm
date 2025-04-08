@@ -85,13 +85,18 @@ then the player gets the profit from selling his own wasted time.
 	return report
 
 /datum/export
-	var/unit_name = ""				// Unit name. Only used in "Received [total_amount] [name]s [message]." message
+	/// Unit name. Only used in "Received [total_amount] [name]s [message]."
+	var/unit_name = ""
+	/// Message appended to the sale report
 	var/message = ""
 	var/cost = 100					// Cost of item, in cargo credits. Must not alow for infinite price dupes, see above.
 	var/k_elasticity = 1/30			//coefficient used in marginal price calculation that roughly corresponds to the inverse of price elasticity, or "quantity elasticity"
-	var/list/export_types = list()	// Type of the exported object. If none, the export datum is considered base type.
-	var/include_subtypes = TRUE		// Set to FALSE to make the datum apply only to a strict type.
-	var/list/exclude_types = list()	// Types excluded from export
+	/// Type of the exported object. If none, the export datum is considered base type.
+	var/list/export_types = list()
+	/// Set to FALSE to make the datum apply only to a strict type.
+	var/include_subtypes = TRUE
+	/// Types excluded from export
+	var/list/exclude_types = list()
 
 	//cost includes elasticity, this does not.
 	var/init_cost
@@ -103,7 +108,7 @@ then the player gets the profit from selling his own wasted time.
 	..()
 	START_PROCESSING(SSprocessing, src)
 	init_cost = cost
-	export_types = typecacheof(export_types)
+	export_types = typecacheof(export_types, only_root_path = !include_subtypes, ignore_root_path = FALSE)
 	exclude_types = typecacheof(exclude_types)
 
 /datum/export/Destroy()
@@ -138,9 +143,9 @@ then the player gets the profit from selling his own wasted time.
 /datum/export/proc/applies_to(obj/O, allowed_categories = NONE, apply_elastic = TRUE)
 	if((allowed_categories & export_category) != export_category)
 		return FALSE
-	if(!include_subtypes && !(O.type in export_types))
+	if(!is_type_in_typecache(O, export_types))
 		return FALSE
-	if(include_subtypes && (!is_type_in_typecache(O, export_types) || is_type_in_typecache(O, exclude_types)))
+	if(include_subtypes && is_type_in_typecache(O, exclude_types))
 		return FALSE
 	if(!get_cost(O, allowed_categories , apply_elastic))
 		return FALSE
@@ -168,7 +173,7 @@ then the player gets the profit from selling his own wasted time.
 	report.total_value[src] += the_cost
 
 	if(istype(O, /datum/export/material))
-		report.total_amount[src] += amount*MINERAL_MATERIAL_AMOUNT
+		report.total_amount[src] += amount*SHEET_MATERIAL_AMOUNT
 	else
 		report.total_amount[src] += amount
 

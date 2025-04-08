@@ -16,7 +16,7 @@ Woods Sheets
 	icon_state = "sheet-wood"
 	item_state = "sheet-wood"
 	icon = 'icons/obj/stacks/organic.dmi'
-	mats_per_unit = list(/datum/material/wood=MINERAL_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/wood=SHEET_MATERIAL_AMOUNT)
 	sheettype = "wood"
 	armor_type = /datum/armor/sheet_wood
 	resistance_flags = FLAMMABLE

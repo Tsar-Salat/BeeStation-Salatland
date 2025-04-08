@@ -130,19 +130,19 @@
 			if(machine_stat & BROKEN)
 				to_chat(user, span_warning("[src]'s frame is too damaged to support a circuit."))
 				return FALSE
-			return list("mode" = RCD_WALLFRAME, "delay" = 20, "cost" = 1)
+			return list("delay" = 2 SECONDS, "cost" = 1)
 		else if(!cell)
 			if(machine_stat & MAINT)
 				to_chat(user, span_warning("There's no connector for a power cell."))
 				return FALSE
-			return list("mode" = RCD_WALLFRAME, "delay" = 50, "cost" = 10)
+			return list("delay" = 5 SECONDS, "cost" = 10)
 		else
 			to_chat(user, span_warning("[src] has both electronics and a cell."))
 			return FALSE
 	return FALSE
 
-/obj/machinery/power/apc/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)
-	if(!(the_rcd.upgrade & RCD_UPGRADE_SIMPLE_CIRCUITS) || passed_mode != RCD_WALLFRAME)
+/obj/machinery/power/apc/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, list/rcd_data)
+	if(!(the_rcd.upgrade & RCD_UPGRADE_SIMPLE_CIRCUITS) || rcd_data["[RCD_DESIGN_MODE]"] != RCD_WALLFRAME)
 		return FALSE
 
 	if(!has_electronics)

@@ -211,34 +211,40 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/anomaly/energy_ball)
 	var/closest_dist = 0
 	var/atom/closest_atom
 	var/priority = 7 //Initial Value is always lowest priority + 1
-	var/static/things_to_shock = typecacheof(list(/obj/machinery, /mob/living, /obj/structure))
-	var/static/blacklisted_tesla_types = typecacheof(list(/obj/machinery/atmospherics,
-										/obj/machinery/power/emitter,
-										/obj/machinery/field/generator,
-										/mob/living/simple_animal,
-										/obj/machinery/particle_accelerator/control_box,
-										/obj/structure/particle_accelerator/fuel_chamber,
-										/obj/structure/particle_accelerator/particle_emitter/center,
-										/obj/structure/particle_accelerator/particle_emitter/left,
-										/obj/structure/particle_accelerator/particle_emitter/right,
-										/obj/structure/particle_accelerator/power_box,
-										/obj/structure/particle_accelerator/end_cap,
-										/obj/machinery/field/containment,
-										/obj/structure/disposalpipe,
-										/obj/structure/disposaloutlet,
-										/obj/machinery/disposal/deliveryChute,
-										/obj/machinery/camera,
-										/obj/structure/sign,
-										/obj/machinery/gateway,
-										/obj/structure/lattice,
-										/obj/structure/grille,
-										/obj/machinery/the_singularitygen/tesla,
-										/obj/structure/frame/machine))
+	var/static/list/things_to_shock = zebra_typecacheof(list(
+		// Things that we want to shock.
+		/obj/machinery = TRUE,
+		/mob/living = TRUE,
+		/obj/structure = TRUE,
+		/obj/vehicle/ridden = TRUE,
 
-	for(var/atom/A as() in oview(zap_range+2, source))
-		//typecache_filter_multi_list_exclusion has been inlined to minimize lag.
-		if(!things_to_shock[A.type] || blacklisted_tesla_types[A.type] || (!(tesla_flags & TESLA_ALLOW_DUPLICATES) && LAZYACCESS(shocked_targets, A)))
-			continue
+		// Things that we don't want to shock.
+		/obj/machinery/atmospherics = FALSE,
+		/obj/machinery/portable_atmospherics = FALSE,
+		/obj/machinery/power/emitter = FALSE,
+		/obj/machinery/field/generator = FALSE,
+		/obj/machinery/field/containment = FALSE,
+		/mob/living/simple_animal = FALSE,
+		/obj/machinery/camera = FALSE,
+		/obj/structure/sign = FALSE,
+		/obj/machinery/gateway = FALSE,
+		/obj/structure/lattice = FALSE,
+		/obj/structure/grille = FALSE,
+		/obj/machinery/the_singularitygen/tesla = FALSE,
+		/obj/structure/frame/machine = FALSE,
+		/obj/machinery/particle_accelerator/control_box = FALSE,
+		/obj/structure/particle_accelerator/fuel_chamber = FALSE,
+		/obj/structure/particle_accelerator/particle_emitter/center = FALSE,
+		/obj/structure/particle_accelerator/particle_emitter/left = FALSE,
+		/obj/structure/particle_accelerator/particle_emitter/right = FALSE,
+		/obj/structure/particle_accelerator/power_box = FALSE,
+		/obj/structure/particle_accelerator/end_cap = FALSE,
+		/obj/structure/disposalpipe = FALSE,
+		/obj/structure/disposaloutlet = FALSE,
+		/obj/machinery/disposal/deliveryChute = FALSE,
+	))
+
+	for(var/A in typecache_filter_list(oview(zap_range+2, source), things_to_shock))
 		if(istype(A, /obj/machinery/power/tesla_coil))
 			var/obj/o = A
 			var/dist = get_dist(source, A)

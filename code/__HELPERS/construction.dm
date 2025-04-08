@@ -1,3 +1,6 @@
+/// Makes sure only integer values are used when consuming, removing & checking for mats
+#define OPTIMAL_COST(cost)(max(1, round(cost)))
+
 /// Produces a new RCD result from the given one if it can be calculated that
 /// the RCD should speed up with the remembered form.
 /proc/rcd_result_with_memory(list/defaults, turf/place, expected_memory)

@@ -317,7 +317,7 @@ c
 	var/datum/component/material_container/materials = GetComponent(/datum/component/material_container)
 	for(var/datum/material/M in materials.materials)
 		var/amount = materials.materials[M]
-		var/sheet_amount = amount / MINERAL_MATERIAL_AMOUNT
+		var/sheet_amount = amount / SHEET_MATERIAL_AMOUNT
 		var/ref = REF(M)
 		data["materials"] += list(list("name" = M.name, "id" = ref, "amount" = sheet_amount, "smelting" = (selected_material == M)))
 
@@ -364,7 +364,7 @@ c
 	var/datum/material/mat = selected_material
 	var/desired_amount_sheets = auto_shutdown ? min(smelt_amount * delta_time, smelt_amount_limit - amount_already_smelted) : smelt_amount * delta_time
 	if(mat)
-		var/sheets_to_remove = (materials.materials[mat] >= (MINERAL_MATERIAL_AMOUNT * desired_amount_sheets) ) ? desired_amount_sheets : round(materials.materials[mat] /  MINERAL_MATERIAL_AMOUNT)
+		var/sheets_to_remove = (materials.materials[mat] >= (SHEET_MATERIAL_AMOUNT * desired_amount_sheets) ) ? desired_amount_sheets : round(materials.materials[mat] /  SHEET_MATERIAL_AMOUNT)
 		if(!sheets_to_remove)
 			on = FALSE
 		else

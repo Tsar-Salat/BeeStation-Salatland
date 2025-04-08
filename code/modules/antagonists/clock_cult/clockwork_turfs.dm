@@ -109,7 +109,7 @@
 		new/obj/item/clockwork/alloy_shards/small(src)
 
 //No cheesing it
-/turf/closed/wall/clockwork/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)
+/turf/closed/wall/clockwork/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, list/rcd_data)
 	return
 
 /turf/closed/wall/clockwork/attack_hulk(mob/user, does_attack_animation)
@@ -229,7 +229,7 @@
 /turf/open/floor/clockwork/ratvar_act(force, ignore_mobs)
 	return 0
 
-/turf/open/floor/clockwork/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)
+/turf/open/floor/clockwork/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, list/rcd_data)
 	return
 
 /turf/open/floor/clockwork/reebe

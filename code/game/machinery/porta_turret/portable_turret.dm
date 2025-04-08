@@ -1056,7 +1056,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/turretid)
 	desc = "Used for building turret control panels."
 	icon_state = "apc"
 	result_path = /obj/machinery/turretid
-	custom_materials = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT)
+	custom_materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT)
 	pixel_shift = 29
 
 /obj/item/gun/proc/get_turret_properties()

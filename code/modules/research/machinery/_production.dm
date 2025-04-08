@@ -162,7 +162,7 @@
 	for(var/datum/material/material as() in materials.mat_container.materials)
 		L[material.name] = list(
 				name = material.name,
-				amount = materials.mat_container.materials[material]/MINERAL_MATERIAL_AMOUNT,
+				amount = materials.mat_container.materials[material]/SHEET_MATERIAL_AMOUNT,
 			)
 
 	return list(
@@ -192,7 +192,7 @@
 
 	data["recipes"] = build_recipes()
 	data["categories"] = categories
-	data["stack_to_mineral"] = MINERAL_MATERIAL_AMOUNT
+	data["stack_to_mineral"] = SHEET_MATERIAL_AMOUNT
 
 	return data
 
@@ -384,7 +384,7 @@
 		return 0
 	var/count = mat_container.retrieve_sheets(text2num(eject_amt), eject_sheet, drop_location())
 	var/list/matlist = list()
-	matlist[eject_sheet] = MINERAL_MATERIAL_AMOUNT
+	matlist[eject_sheet] = SHEET_MATERIAL_AMOUNT
 	materials.silo_log(src, "ejected", -count, "sheets", matlist)
 	return count
 

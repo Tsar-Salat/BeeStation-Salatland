@@ -85,7 +85,7 @@ GLOBAL_LIST_INIT(sandbag_recipes, list ( \
 	singular_name = "plastic sheet"
 	icon_state = "sheet-plastic"
 	item_state = "sheet-plastic"
-	mats_per_unit = list(/datum/material/plastic=MINERAL_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/plastic=SHEET_MATERIAL_AMOUNT)
 	throwforce = 7
 	merge_type = /obj/item/stack/sheet/plastic
 	material_type = /datum/material/plastic
@@ -128,7 +128,7 @@ GLOBAL_LIST_INIT(sandbag_recipes, list ( \
 	singular_name = "meat sheet"
 	icon_state = "sheet-meat"
 	material_flags = MATERIAL_EFFECTS | MATERIAL_COLOR
-	mats_per_unit = list(/datum/material/meat = MINERAL_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/meat = SHEET_MATERIAL_AMOUNT)
 	merge_type = /obj/item/stack/sheet/meat
 	material_type = /datum/material/meat
 	material_modifier = 1 //None of that wussy stuff

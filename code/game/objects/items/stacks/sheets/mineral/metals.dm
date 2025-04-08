@@ -20,7 +20,7 @@ Metals Sheets
 	singular_name = "iron sheet"
 	icon_state = "sheet-metal"
 	item_state = "sheet-metal"
-	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT)
 	throwforce = 10
 	flags_1 = CONDUCT_1
 	resistance_flags = FIRE_PROOF
@@ -86,7 +86,7 @@ Metals Sheets
 	desc = "This sheet is an alloy of iron and plasma."
 	icon_state = "sheet-plasteel"
 	item_state = "sheet-metal"
-	mats_per_unit = list(/datum/material/alloy/plasteel=MINERAL_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/alloy/plasteel=SHEET_MATERIAL_AMOUNT)
 	material_type = /datum/material/alloy/plasteel
 	throwforce = 10
 	flags_1 = CONDUCT_1
@@ -153,7 +153,7 @@ Metals Sheets
 	throw_range = 3
 	grind_results = list(/datum/reagent/iron = 5, /datum/reagent/teslium = 15)
 	merge_type = /obj/item/stack/sheet/brass
-	custom_materials = list(/datum/material/copper=MINERAL_MATERIAL_AMOUNT*0.5, /datum/material/iron=MINERAL_MATERIAL_AMOUNT*0.5)
+	custom_materials = list(/datum/material/copper=SHEET_MATERIAL_AMOUNT*0.5, /datum/material/iron=SHEET_MATERIAL_AMOUNT*0.5)
 
 /obj/item/stack/sheet/brass/narsie_act()
 	new /obj/item/stack/sheet/runed_metal(loc, amount)

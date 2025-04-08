@@ -25,7 +25,7 @@ Mineral Sheets
 	item_state = "sheet-sandstone"
 	throw_speed = 3
 	throw_range = 5
-	mats_per_unit = list(/datum/material/glass=MINERAL_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/glass=SHEET_MATERIAL_AMOUNT)
 	sheettype = "sandstone"
 	merge_type = /obj/item/stack/sheet/mineral/sandstone
 	walltype = /turf/closed/wall/mineral/sandstone
@@ -41,7 +41,7 @@ Mineral Sheets
 	item_state = "sheet-diamond"
 	singular_name = "diamond"
 	sheettype = "diamond"
-	mats_per_unit = list(/datum/material/diamond=MINERAL_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/diamond=SHEET_MATERIAL_AMOUNT)
 	grind_results = list(/datum/reagent/carbon = 20)
 	point_value = 25
 	merge_type = /obj/item/stack/sheet/mineral/diamond
@@ -59,7 +59,7 @@ Mineral Sheets
 	item_state = "sheet-uranium"
 	singular_name = "uranium rod"
 	sheettype = "uranium"
-	mats_per_unit = list(/datum/material/uranium=MINERAL_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/uranium=SHEET_MATERIAL_AMOUNT)
 	grind_results = list(/datum/reagent/uranium = 20)
 	point_value = 20
 	merge_type = /obj/item/stack/sheet/mineral/uranium
@@ -79,7 +79,7 @@ Mineral Sheets
 	sheettype = "plasma"
 	resistance_flags = FLAMMABLE
 	max_integrity = 100
-	mats_per_unit = list(/datum/material/plasma=MINERAL_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/plasma=SHEET_MATERIAL_AMOUNT)
 	grind_results = list(/datum/reagent/toxin/plasma = 20)
 	point_value = 20
 	merge_type = /obj/item/stack/sheet/mineral/plasma
@@ -118,7 +118,7 @@ Mineral Sheets
 	item_state = "sheet-gold"
 	singular_name = "gold bar"
 	sheettype = "gold"
-	mats_per_unit = list(/datum/material/gold=MINERAL_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/gold=SHEET_MATERIAL_AMOUNT)
 	grind_results = list(/datum/reagent/gold = 20)
 	point_value = 20
 	merge_type = /obj/item/stack/sheet/mineral/gold
@@ -136,7 +136,7 @@ Mineral Sheets
 	item_state = "sheet-silver"
 	singular_name = "silver bar"
 	sheettype = "silver"
-	mats_per_unit = list(/datum/material/silver=MINERAL_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/silver=SHEET_MATERIAL_AMOUNT)
 	grind_results = list(/datum/reagent/silver = 20)
 	point_value = 20
 	merge_type = /obj/item/stack/sheet/mineral/silver
@@ -155,7 +155,7 @@ Mineral Sheets
 	item_state = "sheet-copper"
 	singular_name = "copper bar"
 	sheettype = "copper"
-	mats_per_unit = list(/datum/material/copper=MINERAL_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/copper=SHEET_MATERIAL_AMOUNT)
 	grind_results = list(/datum/reagent/copper = 20)
 	point_value = 3
 	merge_type = /obj/item/stack/sheet/mineral/copper
@@ -178,7 +178,7 @@ Mineral Sheets
 	throw_speed = 1
 	throw_range = 3
 	sheettype = "titanium"
-	mats_per_unit = list(/datum/material/titanium=MINERAL_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/titanium=SHEET_MATERIAL_AMOUNT)
 	point_value = 20
 	merge_type = /obj/item/stack/sheet/mineral/titanium
 	material_type = /datum/material/titanium
@@ -200,7 +200,7 @@ Mineral Sheets
 	throw_speed = 1
 	throw_range = 3
 	sheettype = "plastitanium"
-	mats_per_unit = list(/datum/material/alloy/plastitanium=MINERAL_MATERIAL_AMOUNT)
+	mats_per_unit = list(/datum/material/alloy/plastitanium=SHEET_MATERIAL_AMOUNT)
 	material_type = /datum/material/alloy/plastitanium
 	point_value = 45
 	merge_type = /obj/item/stack/sheet/mineral/plastitanium

@@ -2,7 +2,7 @@
 	This datum should be used for handling mineral contents of machines and whatever else is supposed to hold minerals and make use of them.
 
 	Variables:
-		amount - raw amount of the mineral this container is holding, calculated by the defined value MINERAL_MATERIAL_AMOUNT=2000.
+		amount - raw amount of the mineral this container is holding, calculated by the defined value SHEET_MATERIAL_AMOUNT=2000.
 		max_amount - max raw amount of mineral this container can hold.
 		sheet_type - type of the mineral sheet the container handles, used for output.
 		parent - object that this container is being used by, used for output.
@@ -243,20 +243,20 @@
 
 	if(!target)
 		target = get_turf(parent)
-	if(materials[M] < (sheet_amt * MINERAL_MATERIAL_AMOUNT))
-		sheet_amt = round(materials[M] / MINERAL_MATERIAL_AMOUNT)
+	if(materials[M] < (sheet_amt * SHEET_MATERIAL_AMOUNT))
+		sheet_amt = round(materials[M] / SHEET_MATERIAL_AMOUNT)
 	var/count = 0
 	while(sheet_amt > MAX_STACK_SIZE)
 		var/obj/item/stack/sheets = new M.sheet_type(null, MAX_STACK_SIZE)
 		sheets.forceMove(target)
 		count += MAX_STACK_SIZE
-		use_amount_mat(sheet_amt * MINERAL_MATERIAL_AMOUNT, M)
+		use_amount_mat(sheet_amt * SHEET_MATERIAL_AMOUNT, M)
 		sheet_amt -= MAX_STACK_SIZE
 	if(sheet_amt >= 1)
 		var/obj/item/stack/sheets = new M.sheet_type(null, sheet_amt)
 		sheets.forceMove(target)
 		count += sheet_amt
-		use_amount_mat(sheet_amt * MINERAL_MATERIAL_AMOUNT, M)
+		use_amount_mat(sheet_amt * SHEET_MATERIAL_AMOUNT, M)
 	return count
 
 
@@ -323,14 +323,14 @@
 
 /// Turns a material amount into the amount of sheets it should output
 /datum/component/material_container/proc/amount2sheet(amt)
-	if(amt >= MINERAL_MATERIAL_AMOUNT)
-		return round(amt / MINERAL_MATERIAL_AMOUNT)
+	if(amt >= SHEET_MATERIAL_AMOUNT)
+		return round(amt / SHEET_MATERIAL_AMOUNT)
 	return FALSE
 
 /// Turns an amount of sheets into the amount of material amount it should output
 /datum/component/material_container/proc/sheet2amount(sheet_amt)
 	if(sheet_amt > 0)
-		return sheet_amt * MINERAL_MATERIAL_AMOUNT
+		return sheet_amt * SHEET_MATERIAL_AMOUNT
 	return FALSE
 
 
@@ -361,8 +361,8 @@
 			"name" = material.name,
 			"ref" = REF(material),
 			"amount" = amount,
-			"sheets" = round(amount / MINERAL_MATERIAL_AMOUNT),
-			"removable" = amount >= MINERAL_MATERIAL_AMOUNT,
+			"sheets" = round(amount / SHEET_MATERIAL_AMOUNT),
+			"removable" = amount >= SHEET_MATERIAL_AMOUNT,
 		))
 
 	return data

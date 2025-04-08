@@ -98,7 +98,7 @@ GLOBAL_LIST_EMPTY(silo_access_logs)
 	for(var/M in materials.materials)
 		var/datum/material/mat = M
 		var/amount = materials.materials[M]
-		var/sheets = round(amount) / MINERAL_MATERIAL_AMOUNT
+		var/sheets = round(amount) / SHEET_MATERIAL_AMOUNT
 		var/ref = REF(M)
 		if (sheets)
 			if (sheets >= 1)
@@ -175,7 +175,7 @@ GLOBAL_LIST_EMPTY(silo_access_logs)
 		var/datum/component/material_container/materials = GetComponent(/datum/component/material_container)
 		var/count = materials.retrieve_sheets(text2num(href_list["eject_amt"]), eject_sheet, drop_location())
 		var/list/matlist = list()
-		matlist[eject_sheet] = MINERAL_MATERIAL_AMOUNT
+		matlist[eject_sheet] = SHEET_MATERIAL_AMOUNT
 		silo_log(src, "ejected", -count, "sheets", matlist)
 		return TRUE
 	else if(href_list["page"])
@@ -215,7 +215,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/ore_silo)
 	var/dat
 	var/datum/component/material_container/material_holder = GetComponent(/datum/component/material_container)
 	for(var/each in material_holder.materials)
-		var/amount = material_holder.materials[each] / MINERAL_MATERIAL_AMOUNT
+		var/amount = material_holder.materials[each] / SHEET_MATERIAL_AMOUNT
 		var/datum/material/material_datum = each
 		while(amount > 0)
 			var/amount_in_stack = max(1, min(50, amount))
@@ -267,7 +267,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/ore_silo)
 	var/sep = ""
 	for(var/key in materials)
 		var/datum/material/M = key
-		var/val = round(materials[key]) / MINERAL_MATERIAL_AMOUNT
+		var/val = round(materials[key]) / SHEET_MATERIAL_AMOUNT
 		msg += sep
 		sep = ", "
 		msg += "[amount < 0 ? "-" : "+"][val] [M.name]"

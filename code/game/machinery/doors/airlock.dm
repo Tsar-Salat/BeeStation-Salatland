@@ -1468,6 +1468,16 @@
 	if(atom_integrity < (0.75 * max_integrity))
 		update_icon()
 
+/obj/machinery/door/airlock/proc/prepare_deconstruction_assembly(obj/structure/door_assembly/assembly)
+	assembly.heat_proof_finished = heat_proof //tracks whether there's rglass in
+	assembly.set_anchored(TRUE)
+	assembly.glass = glass
+	assembly.state = AIRLOCK_ASSEMBLY_NEEDS_ELECTRONICS
+	assembly.created_name = name
+	assembly.previous_assembly = previous_airlock
+	assembly.update_name()
+	assembly.update_appearance()
+
 /obj/machinery/door/airlock/deconstruct(disassembled = TRUE, mob/user)
 	if(!(flags_1 & NODECONSTRUCT_1))
 		var/obj/structure/door_assembly/A
@@ -1476,14 +1486,7 @@
 		else
 			A = new /obj/structure/door_assembly(loc)
 			//If you come across a null assemblytype, it will produce the default assembly instead of disintegrating.
-		A.heat_proof_finished = heat_proof //tracks whether there's rglass in
-		A.set_anchored(TRUE)
-		A.glass = glass
-		A.state = AIRLOCK_ASSEMBLY_NEEDS_ELECTRONICS
-		A.created_name = name
-		A.previous_assembly = previous_airlock
-		A.update_name()
-		A.update_icon()
+		prepare_deconstruction_assembly(A)
 
 		if(!disassembled)
 			A?.update_integrity(A.max_integrity * 0.5)
@@ -1511,16 +1514,15 @@
 		if(RCD_DECONSTRUCT)
 			if(security_level != AIRLOCK_SECURITY_NONE)
 				to_chat(user, span_notice("[src]'s reinforcement needs to be removed first."))
-				return FALSE
-			return list("mode" = RCD_DECONSTRUCT, "delay" = 50, "cost" = 32)
+			return list("delay" = 5 SECONDS, "cost" = 32)
 	return FALSE
 
-/obj/machinery/door/airlock/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)
-	if(RCD_DECONSTRUCT == passed_mode)
-		to_chat(user, span_notice("You deconstruct the airlock."))
-		log_attack("[key_name(user)] has deconstructed [src] at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
-		qdel(src)
-		return TRUE
+/obj/machinery/door/airlock/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, list/rcd_data)
+	switch(rcd_data["[RCD_DESIGN_MODE]"])
+		if(RCD_DECONSTRUCT)
+			log_attack("[key_name(user)] has deconstructed [src] at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
+			qdel(src)
+			return TRUE
 	return FALSE
 
 /obj/machinery/door/airlock/proc/note_type() //Returns a string representing the type of note pinned to this airlock

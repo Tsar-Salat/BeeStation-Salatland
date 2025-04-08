@@ -207,7 +207,7 @@
 						var/turf/newturf = T.PlaceOnTop(/turf/closed/wall/material)
 						var/list/material_list = list()
 						if(S.material_type)
-							material_list[SSmaterials.GetMaterialRef(S.material_type)] = MINERAL_MATERIAL_AMOUNT * 2
+							material_list[SSmaterials.GetMaterialRef(S.material_type)] = SHEET_MATERIAL_AMOUNT * 2
 						if(material_list)
 							newturf.set_custom_materials(material_list)
 
@@ -413,20 +413,24 @@
 
 /obj/structure/girder/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
 	switch(the_rcd.mode)
-		if(RCD_FLOORWALL)
+		if(RCD_TURF)
+			if(the_rcd.rcd_design_path != /turf/open/floor/plating/rcd)
+				return FALSE
+
 			return rcd_result_with_memory(
-				list("mode" = RCD_FLOORWALL, "delay" = 2 SECONDS, "cost" = 8),
+				list("delay" = 2 SECONDS, "cost" = 8),
 				get_turf(src), RCD_MEMORY_WALL,
 			)
 		if(RCD_DECONSTRUCT)
-			return list("mode" = RCD_DECONSTRUCT, "delay" = 20, "cost" = 13)
+			return list("delay" = 2 SECONDS, "cost" = 13)
 	return FALSE
 
-/obj/structure/girder/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)
-	var/turf/T = get_turf(src)
-	switch(passed_mode)
-		if(RCD_FLOORWALL)
-			balloon_alert(user, "You finish the wall.")
+/obj/structure/girder/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, list/rcd_data)
+	switch(rcd_data["[RCD_DESIGN_MODE]"])
+		if(RCD_TURF)
+			if(the_rcd.rcd_design_path != /turf/open/floor/plating/rcd)
+				return FALSE
+			var/turf/T = get_turf(src)
 			log_attack("[key_name(user)] has constructed a wall at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
 			var/overlapping_lattice = locate(/obj/structure/lattice) in get_turf(src)
 			if(overlapping_lattice)

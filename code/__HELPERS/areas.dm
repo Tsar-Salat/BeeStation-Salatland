@@ -40,7 +40,7 @@ GLOBAL_LIST_INIT(typecache_powerfailure_safe_areas, typecacheof(/area/engine/eng
 
 /proc/create_area(mob/creator)
 	// Passed into the above proc as list/break_if_found
-	var/static/area_or_turf_fail_types = typecacheof(list(
+	var/static/list/area_or_turf_fail_types = typecacheof(list(
 		/turf/open/space,
 		/area/shuttle,
 		))

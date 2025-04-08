@@ -50,9 +50,9 @@
 	else
 		. += span_notice("There is a small <i>paper</i> placard on the assembly[doorname].")
 
-/obj/structure/door_assembly/attackby(obj/item/W, mob/user, params)
-	if(istype(W, /obj/item/pen))
-		var/t = stripped_input(user, "Enter the name for the door.", name, created_name,MAX_NAME_LEN)
+/obj/structure/door_assembly/attackby(obj/item/W, mob/living/user, params)
+	if(istype(W, /obj/item/pen) && !user.combat_mode)
+		var/t = tgui_input_text(user, "Enter the name for the door", "Airlock Renaming", created_name, MAX_NAME_LEN)
 		if(!t)
 			return
 		if(!in_range(src, usr) && loc != usr)
@@ -261,38 +261,43 @@
 		if(W.use_tool(src, user, 40, volume=100))
 			if(loc && state == AIRLOCK_ASSEMBLY_NEEDS_SCREWDRIVER)
 				to_chat(user, span_notice("You finish the airlock."))
-				var/obj/machinery/door/airlock/door
-				if(glass)
-					door = new glass_type( loc )
-				else
-					door = new airlock_type( loc )
-				door.setDir(dir)
-				door.unres_sides = electronics.unres_sides
-				//door.req_access = req_access
-				door.electronics = electronics
-				door.heat_proof = heat_proof_finished
-				door.security_level = AIRLOCK_SECURITY_NONE
-				if(electronics.one_access)
-					door.req_one_access = electronics.accesses
-				else
-					door.req_access = electronics.accesses
-				if(created_name)
-					door.name = created_name
-				else if(electronics.passed_name)
-					door.name = sanitize(electronics.passed_name)
-				else
-					door.name = base_name
-				if(electronics.passed_cycle_id)
-					door.closeOtherId = electronics.passed_cycle_id
-					door.update_other_id()
-				door.previous_airlock = previous_assembly
-				electronics.forceMove(door)
-				door.update_icon()
-				qdel(src)
+				finish_door()
 	else
 		return ..()
 	update_name()
-	update_icon()
+	update_appearance()
+
+/obj/structure/door_assembly/proc/finish_door()
+	var/obj/machinery/door/airlock/door
+	if(glass)
+		door = new glass_type( loc )
+	else
+		door = new airlock_type( loc )
+	door.setDir(dir)
+	door.unres_sides = electronics.unres_sides
+	door.electronics = electronics
+	door.heat_proof = heat_proof_finished
+	door.security_level = AIRLOCK_SECURITY_NONE
+	if(electronics.one_access)
+		door.req_one_access = electronics.accesses
+	else
+		door.req_access = electronics.accesses
+	if(created_name)
+		door.name = created_name
+	else if(electronics.passed_name)
+		door.name = sanitize(electronics.passed_name)
+	else
+		door.name = base_name
+	if(electronics.passed_cycle_id)
+		door.closeOtherId = electronics.passed_cycle_id
+		door.update_other_id()
+	door.previous_airlock = previous_assembly
+	electronics.forceMove(door)
+	door.autoclose = TRUE
+	door.close()
+	door.update_appearance()
+
+	qdel(src)
 
 /obj/structure/door_assembly/update_icon()
 	cut_overlays()
@@ -356,14 +361,12 @@
 
 /obj/structure/door_assembly/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
 	if(the_rcd.mode == RCD_DECONSTRUCT)
-		return list("mode" = RCD_DECONSTRUCT, "delay" = 50, "cost" = 16)
+		return list("delay" = 5 SECONDS, "cost" = 16)
 	return FALSE
 
-/obj/structure/door_assembly/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)
-	switch(passed_mode)
-		if(RCD_DECONSTRUCT)
-			to_chat(user, span_notice("You deconstruct [src]."))
-			log_attack("[key_name(user)] has deconstructed [src] at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
-			qdel(src)
-			return TRUE
+/obj/structure/door_assembly/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, list/rcd_data)
+	if(rcd_data["[RCD_DESIGN_MODE]"] == RCD_DECONSTRUCT)
+		log_attack("[key_name(user)] has deconstructed [src] at [loc_name(src)] using [format_text(initial(the_rcd.name))]")
+		qdel(src)
+		return TRUE
 	return FALSE
