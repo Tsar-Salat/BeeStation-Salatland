@@ -28,22 +28,33 @@ when processed, it lets you choose between coconut flesh or the coconut cup*/
 	throw_speed = 2
 	throw_range = 4
 
-// Use a knife/sharp object to process the coconut
-/obj/item/grown/coconut/attackby(obj/item/W, mob/user, params)
-	if(!W.is_sharp())
-		return ..()
-	to_chat(user, span_notice("You use [W] to process the flesh from the coconut"))
+/obj/item/grown/coconut/Initialize(mapload, obj/item/seeds/new_seed)
+	. = ..()
+	// Attach the processable element with the knife tool and specify the results
+	AddElement(/datum/element/processable, TOOL_KNIFE, list(/obj/item/food/coconutflesh, /obj/item/reagent_containers/cup/coconutcup), list(5, 1), 15)
 
-	// Creates 5 coconut flesh when processed
-	for(var/i = 1 to 5)
-		var/obj/item/food/coconutflesh/flesh = new /obj/item/food/coconutflesh(src.loc)
-		flesh.pixel_x = rand(-5, 5) // Randomises the positioning of the flesh so it isn't all lumped on top of each other
-		flesh.pixel_y = rand(-5, 5)
+/obj/item/grown/coconut/UsedforProcessing(mob/living/user, obj/item/used_item, list/chosen_option, atom/original_atom)
+	// Iterate through the chosen options to find a coconutcup
+	for(var/list/current_option in chosen_option)
+		if(!ispath(current_option["result"]))
+			stack_trace("Current option is not an path.")
 
-	// Creates the coconut cup alongside the coconut flesh
-	var/obj/item/reagent_containers/cup/coconutcup/cup = new /obj/item/reagent_containers/cup/coconutcup(src.loc)
-	// Transfers the reagents from the plant to liquid form inside the cup
-	if(reagents && reagents.total_volume > 0)
-		reagents.trans_to(cup.reagents, reagents.total_volume)
-	qdel(src)
-	return ..()
+		var/atom/item = current_option["result"] // Access the "result" key directly
+		stack_trace("Processing item: [item]")
+
+		if(istype(item, /obj/item/reagent_containers))
+			var/obj/item/reagent_containers/cup/coconutcup/cup = item
+
+			// Ensure the original atom has reagents to transfer
+			if(original_atom.reagents && original_atom.reagents.total_volume > 0)
+				// Ensure the coconutcup has a valid reagents datum
+				if(!cup.reagents)
+					stack_trace("Coconut cup has no reagents datum, creating one.")
+					cup.reagents = new /datum/reagents(cup)
+
+				// Transfer the reagents from the original atom to the coconutcup
+				original_atom.reagents.trans_to(cup.reagents, original_atom.reagents.total_volume)
+			else
+				stack_trace("Coconut has no reagents to transfer.")
+			break
+
