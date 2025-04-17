@@ -66,7 +66,7 @@
 	var/random_quality = rand()
 	pressure_limit = initial(pressure_limit) * (1 + 0.2 * random_quality)
 
-	update_icon()
+	update_appearance()
 	AddComponent(/datum/component/usb_port, list(/obj/item/circuit_component/canister_valve))
 	AddElement(/datum/element/atmos_sensitive, mapload)
 	AddElement(/datum/element/volatile_gas_storage)
@@ -109,11 +109,13 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/portable_atmospherics/canister)
 		air_contents.copy_from(existing_mixture)
 	else
 		create_gas()
-	update_icon()
 
-/obj/machinery/portable_atmospherics/canister/update_icon()
-	. = ..()
-	update_overlays()
+	update_appearance()
+
+/obj/machinery/portable_atmospherics/canister/update_icon_state()
+	if(machine_stat & BROKEN)
+		icon_state = "[base_icon_state]-1"
+	return ..()
 
 /obj/machinery/portable_atmospherics/canister/update_overlays()
 	. = ..()
@@ -246,7 +248,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/portable_atmospherics/canister)
 
 	set_density(FALSE)
 	playsound(src.loc, 'sound/effects/spray.ogg', 10, 1, -3)
-	update_icon()
 	investigate_log("was destroyed.", INVESTIGATE_ATMOS)
 
 	if(holding)
@@ -261,7 +262,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/portable_atmospherics/canister)
 		return
 	if(close_valve)
 		valve_open = FALSE
-		update_icon()
+		update_appearance()
 		investigate_log("Valve was <b>closed</b> by [key_name(user)].", INVESTIGATE_ATMOS)
 	else if(valve_open && holding)
 		user.investigate_log("started a transfer into [holding].", INVESTIGATE_ATMOS)
@@ -284,7 +285,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/portable_atmospherics/canister)
 		shielding_powered = FALSE
 		SSair.start_processing_machine(src)
 		investigate_log("shielding turned off due to power loss")
-		update_icon()
+		update_appearance()
 
 ///return the icon_state component for the canister's indicator light based on its current pressure reading
 /obj/machinery/portable_atmospherics/canister/proc/get_pressure_state()
@@ -317,13 +318,13 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/portable_atmospherics/canister)
 
 	// A bit different than other atmos devices. Wont stop if currently taking damage.
 	if(take_atmos_damage())
-		update_icon()
+		update_appearance()
 		excited = TRUE
 		return ..() //we have already updated appearance so dont need to update again below
 
 	var/new_pressure_state = get_pressure_state()
 	if(current_pressure_state != new_pressure_state) //update apperance only when its pressure changes significantly from its current value
-		update_icon()
+		update_appearance()
 		current_pressure_state = new_pressure_state
 
 	return ..()
@@ -413,7 +414,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/portable_atmospherics/canister)
 			toggle_shielding(usr)
 			. = TRUE
 	ui_update()
-	update_icon()
+	update_appearance()
 
 /obj/machinery/portable_atmospherics/canister/proc/toggle_valve(mob/user, wire_pulsed = FALSE)
 	valve_open = !valve_open
@@ -464,7 +465,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/portable_atmospherics/canister)
 	SSair.start_processing_machine(src)
 	message_admins("[ADMIN_LOOKUPFLW(user)] turned [shielding_powered ? "on" : "off"] [wire_pulsed ? "via wire pulse" : ""] the [src] powered shielding.")
 	user.investigate_log("turned [shielding_powered ? "on" : "off"] [wire_pulsed ? "via wire pulse" : ""] the [src] powered shielding.")
-	update_icon()
+	update_appearance()
 
 /// Ejects tank from canister, if any
 /obj/machinery/portable_atmospherics/canister/proc/eject_tank(mob/user, wire_pulsed = FALSE)

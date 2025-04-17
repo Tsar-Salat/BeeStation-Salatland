@@ -14,15 +14,20 @@
 	density = FALSE
 	layer = EDGED_TURF_LAYER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	var/amount = 3
 	animate_movement = NO_STEPS
+	var/static/list/blacklisted_turfs = typecacheof(
+		list(
+			/turf/open/space/transit,
+			/turf/open/chasm,
+			/turf/open/lava
+		)
+	)
+	var/amount = 3
 	var/metal = 0
-	var/lifetime = 40
 	var/reagent_divisor = 7
-	var/static/list/blacklisted_turfs = typecacheof(list(
-	/turf/open/space/transit,
-	/turf/open/chasm,
-	/turf/open/lava))
+	/// The amount of time this foam stick around for before it dissipates.
+	var/lifetime = 8 SECONDS
+	/// Whether or not this foam should be slippery.
 	var/slippery_foam = TRUE
 
 /obj/effect/particle_effect/foam/firefighting
@@ -32,8 +37,8 @@
 	slippery_foam = FALSE
 	var/absorbed_plasma = 0
 
-/obj/effect/particle_effect/foam/firefighting/ComponentInitialize()
-	..()
+/obj/effect/particle_effect/foam/firefighting/Initialize(mapload)
+	. = ..()
 	RemoveElement(/datum/element/atmos_sensitive)
 
 /obj/effect/particle_effect/foam/firefighting/process()
@@ -109,15 +114,12 @@
 
 /obj/effect/particle_effect/foam/Initialize(mapload)
 	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
+	if(slippery_foam)
+		AddComponent(/datum/component/slippery, 100)
 	create_reagents(1000) //limited by the size of the reagent holder anyway.
 	START_PROCESSING(SSfastprocess, src)
 	playsound(src, 'sound/effects/bubbles2.ogg', 80, 1, -3)
-
-/obj/effect/particle_effect/foam/ComponentInitialize()
-	. = ..()
-	if(slippery_foam)
-		AddComponent(/datum/component/slippery, 100)
+	AddElement(/datum/element/atmos_sensitive, mapload)
 
 /obj/effect/particle_effect/foam/Destroy()
 	STOP_PROCESSING(SSfastprocess, src)
@@ -214,17 +216,24 @@
 	return exposed_temperature > 475
 
 /obj/effect/particle_effect/foam/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	if(prob(max(0, exposed_temperature - 475)))   //foam dissolves when heated
+	if(prob(max(0, exposed_temperature - 475))) //foam dissolves when heated
 		kill_foam()
 
 ///////////////////////////////////////////////
 //FOAM EFFECT DATUM
 /datum/effect_system/foam_spread
-	var/amount = 10		// the size of the foam spread.
-	var/obj/chemholder
 	effect_type = /obj/effect/particle_effect/foam
+	var/amount = 10 // the size of the foam spread.
+	var/obj/chemholder
 	var/metal = 0
 
+/datum/effect_system/foam_spread/New()
+	..()
+	chemholder = new(1000, NO_REACT)
+
+/datum/effect_system/foam_spread/Destroy()
+	QDEL_NULL(chemholder)
+	return ..()
 
 /datum/effect_system/foam_spread/metal
 	effect_type = /obj/effect/particle_effect/foam/metal
@@ -236,18 +245,6 @@
 
 /datum/effect_system/foam_spread/long
 	effect_type = /obj/effect/particle_effect/foam/long_life
-
-/datum/effect_system/foam_spread/New()
-	..()
-	chemholder = new /obj()
-	var/datum/reagents/R = new/datum/reagents(1000)
-	chemholder.reagents = R
-	R.my_atom = chemholder
-
-/datum/effect_system/foam_spread/Destroy()
-	qdel(chemholder)
-	chemholder = null
-	return ..()
 
 /datum/effect_system/foam_spread/set_up(amt=5, loca, datum/reagents/carry = null)
 	if(isturf(loca))

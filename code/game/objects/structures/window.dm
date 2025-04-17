@@ -78,6 +78,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 	real_explosion_block = explosion_block
 	explosion_block = EXPLOSION_BLOCK_PROC
 
+	AddElement(/datum/element/atmos_sensitive, mapload)
 	AddComponent(/datum/component/simple_rotation, ROTATION_NEEDS_ROOM, AfterRotation = CALLBACK(src, PROC_REF(AfterRotation)))
 
 	var/static/list/loc_connections = list(
@@ -95,9 +96,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 	//Adds the component only once. We do it here & not in Initialize() because there are tons of windows & we don't want to add to their init times
 	LoadComponent(/datum/component/leanable, dropping)
 
-/obj/structure/window/ComponentInitialize()
-	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
 /obj/structure/window/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
 	if(the_rcd.mode == RCD_DECONSTRUCT)
 		return list("mode" = RCD_DECONSTRUCT, "delay" = 20, "cost" = 5)
@@ -453,7 +451,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 	glass_type = /obj/item/stack/sheet/plasmaglass
 	rad_insulation = RAD_NO_INSULATION
 
-/obj/structure/window/plasma/ComponentInitialize()
+/obj/structure/window/plasma/Initialize(mapload, direct)
 	. = ..()
 	RemoveElement(/datum/element/atmos_sensitive)
 

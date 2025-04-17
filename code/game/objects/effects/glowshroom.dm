@@ -179,6 +179,6 @@
 	I.desc = "Looks like this was \an [src] some time ago."
 	qdel(src)
 
-/obj/structure/glowshroom/ComponentInitialize()
+/obj/structure/glowshroom/Initialize(mapload)
 	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
+	AddElement(/datum/element/atmos_sensitive, mapload)

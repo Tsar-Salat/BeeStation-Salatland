@@ -25,9 +25,9 @@
 		pipe_astar_cost = 1\
 	)
 
-/obj/structure/grille/ComponentInitialize()
+/obj/structure/grille/Initialize(mapload)
 	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
+	AddElement(/datum/element/atmos_sensitive, mapload)
 
 
 /datum/armor/structure_grille

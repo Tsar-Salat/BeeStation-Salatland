@@ -104,40 +104,34 @@
 	if(!start_with_cell || no_emergency)
 		has_mock_cell = FALSE
 
-	spawn(2)
-		switch(fitting)
-			if("tube")
-				brightness = A.lighting_brightness_tube
-				if(prob(2))
-					break_light_tube(1)
-			if("bulb")
-				brightness = A.lighting_brightness_bulb
-				if(prob(5))
-					break_light_tube(1)
-		if(!mapload)
-			spawn(1)
-				update(FALSE, FALSE, FALSE)
-	if(mapload)
-		return INITIALIZE_HINT_LATELOAD
+	AddElement(/datum/element/atmos_sensitive, mapload)
+	return INITIALIZE_HINT_LATELOAD
 
-/obj/machinery/light/LateInitialize()
+/obj/machinery/light/LateInitialize(mapload)
 	. = ..()
 	var/area/A = get_area(src)
-	if(A.apc)
-		var/obj/machinery/power/apc/temp_apc = A.apc
-		nightshift_enabled = temp_apc?.nightshift_lights
-		if(nightshift_enabled)
-			update(FALSE, TRUE, TRUE)
-
-/obj/machinery/light/ComponentInitialize()
-	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
+	switch(fitting)
+		if("tube")
+			brightness = A.lighting_brightness_tube
+			if(prob(2))
+				break_light_tube(1)
+		if("bulb")
+			brightness = A.lighting_brightness_bulb
+			if(prob(5))
+				break_light_tube(1)
+	if(!mapload)
+		addtimer(CALLBACK(src, PROC_REF(update), FALSE, FALSE, FALSE), 1)
+	else
+		if(A.apc)
+			var/obj/machinery/power/apc/temp_apc = A.apc
+			nightshift_enabled = temp_apc?.nightshift_lights
+			if(nightshift_enabled)
+				update(FALSE, TRUE, TRUE)
 
 /obj/machinery/light/Destroy()
 	var/area/A = get_area(src)
 	if(A)
 		on = FALSE
-//		A.update_lights()
 	QDEL_NULL(cell)
 	return ..()
 

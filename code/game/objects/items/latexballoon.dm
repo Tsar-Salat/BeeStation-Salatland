@@ -11,6 +11,10 @@
 	var/state
 	var/datum/gas_mixture/air_contents = null
 
+/obj/item/latexballon/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/atmos_sensitive, mapload)
+
 /obj/item/latexballon/proc/blow(obj/item/tank/tank, mob/user)
 	if (icon_state == "latexballon_bursted")
 		return

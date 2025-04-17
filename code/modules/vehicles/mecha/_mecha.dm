@@ -225,11 +225,8 @@
 	diag_hud_set_mechstat()
 	update_appearance()
 
+	AddElement(/datum/element/atmos_sensitive, mapload)
 	become_hearing_sensitive(trait_source = ROUNDSTART_TRAIT)
-
-/obj/mecha/ComponentInitialize()
-	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
 
 //separate proc so that the ejection mechanism can be easily triggered by other things, such as admins
 /obj/vehicle/sealed/mecha/proc/Eject()
