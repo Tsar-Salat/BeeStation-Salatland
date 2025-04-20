@@ -22,7 +22,7 @@ $elevator-selected: #e2e2e2 !default;
     background: linear-gradient(to bottom, #bcc6cc, #eee, #bcc6cc);
   }
   // Components
-  @include meta.load-css('../components/Button.scss', $with: ('color-default': $elevator-gray-fg));
+  @include meta.load-css('pkg:tgui-styles/components/Button', $with: ('color-default': $elevator-gray-fg));
 
   .button-container {
     background-color: $elevator-label;
@@ -84,8 +84,8 @@ $elevator-selected: #e2e2e2 !default;
       }
     }
   }
-  @include meta.load-css('../components/ProgressBar.scss');
-  @include meta.load-css('../components/Section.scss');
+  @include meta.load-css('pkg:tgui-styles/components/ProgressBar');
+  @include meta.load-css('pkg:tgui-styles/components/Section');
 
   // Layouts
   @include meta.load-css('../layouts/Layout.scss');

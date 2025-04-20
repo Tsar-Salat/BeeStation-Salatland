@@ -23,7 +23,7 @@
 
   // Components
   @include meta.load-css(
-    '../components/Button.scss',
+    'pkg:tgui-styles/components/Button',
     $with: (
       'color-default': colors.$primary,
       'color-disabled': #02426d,
@@ -32,12 +32,12 @@
       'color-danger': #b30707
     )
   );
-  @include meta.load-css('../components/Input.scss', $with: ('border-color': #404b6e));
-  @include meta.load-css('../components/NoticeBox.scss', $with: ('background-color': #a82d55));
-  @include meta.load-css('../components/NumberInput.scss', $with: ('border-color': #404b6e));
-  @include meta.load-css('../components/ProgressBar.scss', $with: ('background-color': rgba(0, 0, 0, 0.5)));
-  @include meta.load-css('../components/Section.scss');
-  @include meta.load-css('../components/Tooltip.scss', $with: ('background-color': #2da848));
+  @include meta.load-css('pkg:tgui-styles/components/Input', $with: ('border-color': #404b6e));
+  @include meta.load-css('pkg:tgui-styles/components/NoticeBox', $with: ('background-color': #a82d55));
+  @include meta.load-css('pkg:tgui-styles/components/NumberInput', $with: ('border-color': #404b6e));
+  @include meta.load-css('pkg:tgui-styles/components/ProgressBar', $with: ('background-color': rgba(0, 0, 0, 0.5)));
+  @include meta.load-css('pkg:tgui-styles/components/Section');
+  @include meta.load-css('pkg:tgui-styles/components/Tooltip', $with: ('background-color': #2da848));
 
   // Layouts
   @include meta.load-css('../layouts/Layout.scss');

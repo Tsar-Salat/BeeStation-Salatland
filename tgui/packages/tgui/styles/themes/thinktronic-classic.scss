@@ -11,9 +11,9 @@
 $disabled-color: #303030;
 
 .theme-thinktronic-classic {
-  @include meta.load-css('../components/Tabs.scss');
-  @include meta.load-css('../components/Section.scss');
-  @include meta.load-css('../components/Button.scss');
+  @include meta.load-css('pkg:tgui-styles/components/Tabs');
+  @include meta.load-css('pkg:tgui-styles/components/Section');
+  @include meta.load-css('pkg:tgui-styles/components/Button');
   @include meta.load-css('../layouts/Layout.scss');
   @include meta.load-css('../layouts/Window.scss');
   @include meta.load-css('../layouts/TitleBar.scss');
