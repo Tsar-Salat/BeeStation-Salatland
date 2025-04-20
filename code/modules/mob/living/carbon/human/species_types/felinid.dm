@@ -20,11 +20,6 @@
 	if(!ishuman(C))
 		return ..()
 	var/mob/living/carbon/human/H = C
-	if(!pref_load) //Hah! They got forcefully purrbation'd. Force default felinid parts on them if they have no mutant parts in those areas!
-		if(H.dna.features["tail_human"] == "None")
-			H.dna.features["tail_human"] = "Cat"
-		if(H.dna.features["ears"] == "None")
-			H.dna.features["ears"] = "Cat"
 	if(H.dna.features["ears"] == "Cat")
 		var/obj/item/organ/ears/cat/ears = new
 		ears.Insert(H, drop_if_replaced = FALSE, pref_load = pref_load)
@@ -35,46 +30,6 @@
 		tail.Insert(H, drop_if_replaced = FALSE, pref_load = pref_load)
 	else
 		mutant_organs = list()
-
-/proc/mass_purrbation()
-	for(var/M in GLOB.mob_list)
-		if(ishumanbasic(M))
-			purrbation_apply(M)
-		CHECK_TICK
-
-/proc/mass_remove_purrbation()
-	for(var/M in GLOB.mob_list)
-		if(ishumanbasic(M))
-			purrbation_remove(M)
-		CHECK_TICK
-
-/proc/purrbation_toggle(mob/living/carbon/human/H, silent = FALSE)
-	if(!ishumanbasic(H))
-		return
-	if(!istype(target_human.get_organ_slot(ORGAN_SLOT_EARS), /obj/item/organ/ears/cat))
-		purrbation_apply(H, silent)
-		. = TRUE
-	else
-		purrbation_remove(H, silent)
-		. = FALSE
-
-/proc/purrbation_apply(mob/living/carbon/human/H, silent = FALSE)
-	if(!ishuman(H) || iscatperson(H))
-		return
-	H.set_species(/datum/species/human/felinid)
-
-	if(!silent)
-		to_chat(H, "Something is nya~t right.")
-		playsound(get_turf(H), 'sound/effects/meow1.ogg', 50, 1, -1)
-
-/proc/purrbation_remove(mob/living/carbon/human/H, silent = FALSE)
-	if(!ishuman(H) || !iscatperson(H))
-		return
-
-	H.set_species(/datum/species/human)
-
-	if(!silent)
-		to_chat(H, "You are no longer a cat.")
 
 /datum/species/human/felinid/prepare_human_for_preview(mob/living/carbon/human/human)
 	human.hair_style = "Hime Cut"

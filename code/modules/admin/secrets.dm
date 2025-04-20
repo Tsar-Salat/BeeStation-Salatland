@@ -87,8 +87,6 @@ GLOBAL_DATUM_INIT(admin_secrets, /datum/admin_secrets, new)
 			list("Set each movement direction manually", "custommovement"),
 			list("Reset movement directions to default", "resetmovement"),
 			list("Change bomb cap", "changebombcap"),
-			list("Mass Purrbation", "masspurrbation"),
-			list("Mass Remove Purrbation", "massremovepurrbation"),
 			list("Fully Immerse Everyone", "massimmerse"),
 			list("Un-Fully Immerse Everyone", "unmassimmerse"),
 			list("Make All Animals Playable", "animalsentience")
@@ -683,20 +681,6 @@ GLOBAL_DATUM_INIT(admin_secrets, /datum/admin_secrets, new)
 			if(!check_rights(R_ADMIN))
 				return
 			toggle_id_ctf(usr, "centcom")
-		if("masspurrbation")
-			if(!check_rights(R_FUN))
-				return
-			mass_purrbation()
-			message_admins("[key_name_admin(usr)] has put everyone on \
-				purrbation!")
-			log_admin("[key_name(usr)] has put everyone on purrbation.")
-		if("massremovepurrbation")
-			if(!check_rights(R_FUN))
-				return
-			mass_remove_purrbation()
-			message_admins("[key_name_admin(usr)] has removed everyone from \
-				purrbation.")
-			log_admin("[key_name(usr)] has removed everyone from purrbation.")
 
 		if("massimmerse")
 			if(!check_rights(R_FUN))
