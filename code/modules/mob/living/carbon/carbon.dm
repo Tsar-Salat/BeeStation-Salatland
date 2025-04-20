@@ -1289,3 +1289,13 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 /// Returns if the carbon is wearing shock proof gloves
 /mob/living/carbon/proc/wearing_shock_proof_gloves()
 	return gloves?.siemens_coefficient == 0
+
+/// Returns bool if the carbon has a tail
+/mob/living/carbon/proc/check_tailed_mob()
+	var/obj/item/organ/tail/el_tail = src.getorganslot(ORGAN_SLOT_TAIL)
+	return !!el_tail
+
+/// Returns bool if the carbon likes a foodtype
+/mob/living/carbon/proc/check_liked_foodtype(foodtype)
+	var/obj/item/organ/tongue/tongue_organ = src.getorganslot(ORGAN_SLOT_TONGUE)
+	return !!(tongue_organ?.liked_food & foodtype)

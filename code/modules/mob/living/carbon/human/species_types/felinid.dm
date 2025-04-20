@@ -16,56 +16,25 @@
 	swimming_component = /datum/component/swimming/felinid
 	inert_mutation = /datum/mutation/catclaws
 
-	species_height = SPECIES_HEIGHTS(2, 1, 0)
-
-/datum/species/human/felinid/qualifies_for_rank(rank, list/features)
-	return TRUE
-
-//Curiosity killed the cat's wagging tail.
-/datum/species/human/felinid/spec_death(gibbed, mob/living/carbon/human/H)
-	if(H)
-		stop_wagging_tail(H)
-
-/datum/species/human/felinid/spec_stun(mob/living/carbon/human/H,amount)
-	if(H)
-		stop_wagging_tail(H)
-	. = ..()
-
 /datum/species/human/felinid/on_species_gain(mob/living/carbon/C, datum/species/old_species, pref_load)
-	if(ishuman(C))
-		var/mob/living/carbon/human/H = C
-		if(!pref_load)			//Hah! They got forcefully purrbation'd. Force default felinid parts on them if they have no mutant parts in those areas!
-			if(H.dna.features["tail_human"] == "None")
-				H.dna.features["tail_human"] = "Cat"
-			if(H.dna.features["ears"] == "None")
-				H.dna.features["ears"] = "Cat"
-		if(H.dna.features["ears"] == "Cat")
-			var/obj/item/organ/ears/cat/ears = new
-			ears.Insert(H, drop_if_replaced = FALSE, pref_load = pref_load)
-		else
-			mutantears = /obj/item/organ/ears
-		if(H.dna.features["tail_human"] == "Cat")
-			var/obj/item/organ/tail/cat/tail = new
-			tail.Insert(H, drop_if_replaced = FALSE, pref_load = pref_load)
-		else
-			mutant_organs = list()
-	return ..()
-
-/datum/species/human/felinid/handle_chemicals(datum/reagent/chem, mob/living/carbon/human/M)
-	if(istype(chem, /datum/reagent/consumable/cocoa))
-		if(prob(40))
-			M.adjust_disgust(20)
-		if(prob(5))
-			M.visible_message(span_warning("[M] [pick("dry heaves!","coughs!","sputters!")]"))
-		if(prob(10))
-			var/sick_message = pick("You feel nauseous.", "You feel like your insides are melting.")
-			to_chat(M, span_notice("[sick_message]"))
-		if(prob(15))
-			if(locate(/obj/item/organ/stomach) in M.internal_organs)
-				var/obj/item/organ/stomach/cat_stomach = M.internal_organs_slot[ORGAN_SLOT_STOMACH]
-				cat_stomach.applyOrganDamage(15)
-		return FALSE
-	return ..() //second part of this effect is handled elsewhere
+	if(!ishuman(C))
+		return ..()
+	var/mob/living/carbon/human/H = C
+	if(!pref_load) //Hah! They got forcefully purrbation'd. Force default felinid parts on them if they have no mutant parts in those areas!
+		if(H.dna.features["tail_human"] == "None")
+			H.dna.features["tail_human"] = "Cat"
+		if(H.dna.features["ears"] == "None")
+			H.dna.features["ears"] = "Cat"
+	if(H.dna.features["ears"] == "Cat")
+		var/obj/item/organ/ears/cat/ears = new
+		ears.Insert(H, drop_if_replaced = FALSE, pref_load = pref_load)
+	else
+		mutantears = /obj/item/organ/ears
+	if(H.dna.features["tail_human"] == "Cat")
+		var/obj/item/organ/tail/cat/tail = new
+		tail.Insert(H, drop_if_replaced = FALSE, pref_load = pref_load)
+	else
+		mutant_organs = list()
 
 /proc/mass_purrbation()
 	for(var/M in GLOB.mob_list)
@@ -82,7 +51,7 @@
 /proc/purrbation_toggle(mob/living/carbon/human/H, silent = FALSE)
 	if(!ishumanbasic(H))
 		return
-	if(!iscatperson(H))
+	if(!istype(target_human.get_organ_slot(ORGAN_SLOT_EARS), /obj/item/organ/ears/cat))
 		purrbation_apply(H, silent)
 		. = TRUE
 	else

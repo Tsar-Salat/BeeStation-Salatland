@@ -51,16 +51,6 @@
 		if(findname(.))
 			. = .(gender, TRUE, null, ++attempts)
 
-//I wag in death
-/datum/species/lizard/spec_death(gibbed, mob/living/carbon/human/H)
-	if(H)
-		stop_wagging_tail(H)
-
-/datum/species/lizard/spec_stun(mob/living/carbon/human/H,amount)
-	if(H)
-		stop_wagging_tail(H)
-	. = ..()
-
 /datum/species/lizard/get_scream_sound(mob/living/carbon/user)
 	return pick('sound/voice/lizard/lizard_scream_1.ogg', 'sound/voice/lizard/lizard_scream_2.ogg', 'sound/voice/lizard/lizard_scream_3.ogg', 'sound/voice/lizard/lizard_scream_4.ogg')
 

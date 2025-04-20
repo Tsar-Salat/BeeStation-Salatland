@@ -82,7 +82,7 @@
 		to_chat(user, "<span class='warning'>Your fingers can't press the button!</span>")
 		return
 	add_fingerprint(user)
-	
+
 	//nothing happens if the battery is drained
 	if(recharge_locked)
 		to_chat(user, span_notice("You point [src] at [target], but it's still charging."))
@@ -138,10 +138,10 @@
 
 	// For luring whatever mobs that are "interested" in laser pointers
 	for(var/mob/M as() in viewers(1,targloc))
-		if(M.incapacitated())
-			return
+		if(M.stat == DEAD || M.is_blind() || M.incapacitated())
+			continue
 		var/mob/living/carbon/human/H = M
-		if(iscatperson(H) && !H.is_blind()) //catpeople!
+		if(is_species(H, /datum/species/human/felinid))
 			if(user.body_position == STANDING_UP)
 				H.setDir(get_dir(H,targloc)) // kitty always looks at the light
 				if(prob(effectchance))

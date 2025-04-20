@@ -407,6 +407,7 @@
 	var/obj/item/organ/wings/bee/bee_wings = owner.getorganslot(ORGAN_SLOT_WINGS)
 	if(istype(bee_wings))
 		bee_wings.jumpdist = initial(bee_wings.jumpdist) + (6 * GET_MUTATION_POWER(src)) - 3
+
 /datum/mutation/catclaws
 	name = "Cat Claws"
 	desc = "Subject's hands grow sharpened claws."

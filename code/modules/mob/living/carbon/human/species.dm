@@ -1169,6 +1169,8 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		handle_flight(H)
 
 /datum/species/proc/spec_death(gibbed, mob/living/carbon/human/H)
+	if(H)
+		stop_wagging_tail(H)
 	return
 
 /datum/species/proc/spec_gib(no_brain, no_organs, no_bodyparts, mob/living/carbon/human/H)
@@ -1398,6 +1400,9 @@ GLOBAL_LIST_EMPTY(features_by_species)
 // Other return values will cause weird badness
 
 /datum/species/proc/handle_chemicals(datum/reagent/chem, mob/living/carbon/human/H, delta_time, times_fired)
+	if(istype(chem, /datum/reagent/consumable/cocoa) && HAS_TRAIT(H, TRAIT_CHOCOLATE_DISGUST))
+		chocolate_check(H)
+		return FALSE
 	if(chem.type == exotic_blood)
 		H.blood_volume = min(H.blood_volume + round(chem.volume, 0.1), BLOOD_VOLUME_MAXIMUM)
 		H.reagents.del_reagent(chem.type)
@@ -1412,6 +1417,15 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		chem.holder.remove_reagent(chem.type, chem.metabolization_rate)
 		return TRUE
 	return FALSE
+
+/datum/species/proc/chocolate_check(mob/living/carbon/human/H)
+	if(prob(40))
+		H.adjust_disgust(20)
+	if(prob(5))
+		H.visible_message(span_warning("[H] [pick("dry heaves!","coughs!","sputters!")]"))
+	if(prob(10))
+		var/sick_message = pick("You feel nauseous.", "You feel like your insides are melting.")
+		to_chat(H, span_notice("[sick_message]"))
 
 /datum/species/proc/check_species_weakness(obj/item, mob/living/attacker)
 	return 0 //This is not a boolean, it's the multiplier for the damage that the user takes from the item.It is added onto the check_weakness value of the mob, and then the force of the item is multiplied by this value
@@ -1445,7 +1459,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			H.update_inv_wear_suit()
 	else
 		if(H.overeatduration >= (200 SECONDS))
-			to_chat(H, "<span class='danger'>You suddenly feel blubbery!</span>")
+			to_chat(H, span_danger("You suddenly feel blubbery!"))
 			ADD_TRAIT(H, TRAIT_FAT, OBESITY)
 			ADD_TRAIT(H, TRAIT_OFF_BALANCE_TACKLER, OBESITY)
 			H.add_movespeed_modifier(/datum/movespeed_modifier/obesity)
@@ -2317,7 +2331,10 @@ GLOBAL_LIST_EMPTY(features_by_species)
 //  Stun  //
 ////////////
 
-/datum/species/proc/spec_stun(mob/living/carbon/human/H,amount)
+/datum/species/proc/spec_stun(mob/living/carbon/human/H, amount)
+	if(!H)
+		return
+	stop_wagging_tail(H)
 	var/obj/item/organ/wings/wings = H.getorganslot(ORGAN_SLOT_WINGS)
 	if(H.getorgan(/obj/item/organ/wings))
 		if(wings.flight_level >= WINGS_FLYING && H.movement_type & FLYING)
