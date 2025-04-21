@@ -1078,6 +1078,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/carbon/human/species)
 /mob/living/carbon/human/species/ethereal
 	race = /datum/species/ethereal
 
+/mob/living/carbon/human/species/alclades
+	race = /datum/species/human/alclades
+
 /mob/living/carbon/human/species/fly
 	race = /datum/species/fly
 

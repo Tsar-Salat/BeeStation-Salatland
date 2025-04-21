@@ -486,6 +486,18 @@
 	spawned_disease = /datum/disease/advance/random/necropolis
 	label_icon = null
 
+/obj/item/reagent_containers/cup/bottle/felinid
+	name = "Nano-Feline Assimilative Toxoplasmosis culture bottle"
+	label_name = "Nano-Feline Assimilative Toxoplasmosis culture"
+	desc = "A small bottle. Contains a sample of nano-feline toxoplasma in synthblood medium."
+	spawned_disease = /datum/disease/transformation/felinid/contagious
+
+/obj/item/reagent_containers/cup/bottle/advanced_felinid
+	name = "Feline Hysteria culture bottle"
+	label_name = "Feline Hysteria culture"
+	desc = "A small bottle. Contains a sample of a dangerous A.R.C. experimental disease"
+	spawned_disease = /datum/disease/advance/feline_hysteria
+
 /obj/item/reagent_containers/cup/bottle/psyphoza
 	name = "Acute Fungal Infection culture bottle"
 	label_name = "Acute Fungal Infection culture"

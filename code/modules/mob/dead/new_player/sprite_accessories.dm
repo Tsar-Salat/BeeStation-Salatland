@@ -3309,9 +3309,6 @@
 	/// Psuedo sprite accessories, only meant to wrap the combination of multiple organ changes
 	icon = null
 
-/datum/sprite_accessory/cladia/human/unmodded
-	name = "Unmodded"
-
 /datum/sprite_accessory/cladia/human/felyss
 	name = "Felyss"
 

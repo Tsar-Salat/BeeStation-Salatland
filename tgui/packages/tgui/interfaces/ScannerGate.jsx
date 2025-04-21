@@ -19,6 +19,10 @@ const TARGET_SPECIES_LIST = [
     value: 'fly',
   },
   {
+    name: 'Alclades',
+    value: 'alclades',
+  },
+  {
     name: 'Plasmaman',
     value: 'plasma',
   },

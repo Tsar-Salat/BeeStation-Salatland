@@ -3,8 +3,7 @@
 	id = SPECIES_HUMAN
 	default_color = "FFFFFF"
 	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS)
-	mutant_bodyparts = list("body_size" = "Normal", "cladia" = "Unmodded")
-	forced_features = list()
+	mutant_bodyparts = list("body_size" = "Normal")
 	use_skintones = 1
 	skinned_type = /obj/item/stack/sheet/animalhide/human
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | ERT_SPAWN | RACE_SWAP | SLIME_EXTRACT
@@ -47,40 +46,12 @@
 /datum/species/human/get_giggle_sound(mob/living/carbon/user)
 	return SPECIES_DEFAULT_GIGGLE_SOUND(user)
 
-/datum/species/human/on_species_gain(mob/living/carbon/C, datum/species/old_species, pref_load)
-	if(ishuman(C))
-		var/mob/living/carbon/human/H = C
-		var/cladia_feature = H.dna.features["cladia"]
-		switch(cladia_feature)
-			if("Unmodded")
-				mutantears = /obj/item/organ/ears
-				mutant_organs = null
-				mutanttongue = /obj/item/organ/tongue
-			if("Felyss")
-				mutantears = /obj/item/organ/ears/human/cat
-				mutant_organs = list(/obj/item/organ/tail/human/cat)
-				mutanttongue = /obj/item/organ/tongue/cat
-			if("Renari")
-				mutantears = /obj/item/organ/ears/human/fox
-				mutant_organs = list(/obj/item/organ/tail/human/fox)
-				mutanttongue = /obj/item/organ/tongue
-			/* Wolfdog race
-			if("Lupos")
-				mutantears = /obj/item/organ/ears/lupine
-				mutant_organs = list(/obj/item/organ/tail/lupine)
-				mutanttongue = /obj/item/organ/lupine
-			*/
-	return ..()
+
 
 /datum/species/human/prepare_human_for_preview(mob/living/carbon/human/human)
 	human.hair_style = "Business Hair"
 	human.hair_color = "b96" // brown
 	human.update_hair()
-
-	var/obj/item/organ/ears/clad_ears = human.getorgan(/obj/item/organ/ears)
-	if (clad_ears)
-		clad_ears.color = human.hair_color
-		human.update_body()
 
 /datum/species/human/get_species_description()
 	return "Humans are the dominant species in the known galaxy. \

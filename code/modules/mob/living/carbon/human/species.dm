@@ -1022,7 +1022,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 					S = GLOB.horns_list[H.dna.features["horns"]]
 				if("ears")
 					S = GLOB.ears_list[H.dna.features["ears"]]
-				if("cladia")
+				if("cladia_human")
 					S = GLOB.human_cladia_list[H.dna.features["cladia"]]
 				if("body_markings")
 					S = GLOB.body_markings_list[H.dna.features["body_markings"]]

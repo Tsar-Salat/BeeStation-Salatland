@@ -295,7 +295,7 @@
 
 	if(species)
 		if(species == /datum/species/human)
-			if(ishumanbasic(host_mob))
+			if(ishumanbasic(host_mob) && !is_species(host_mob, /datum/species/human/alclades))
 				species_match = TRUE
 		else if(is_species(host_mob, species))
 			species_match = TRUE
@@ -304,7 +304,7 @@
 		for(var/name in allowed_species)
 			var/species_other = allowed_species[name]
 			if (species_other == /datum/species/human)
-				if(ishumanbasic(host_mob))
+				if(ishumanbasic(host_mob) && !is_species(host_mob, /datum/species/human/alclades))
 					species_match = FALSE
 			else if(is_species(host_mob, species_other))
 				species_match = FALSE

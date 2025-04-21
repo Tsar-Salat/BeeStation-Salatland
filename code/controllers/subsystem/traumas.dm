@@ -237,6 +237,7 @@ SUBSYSTEM_DEF(traumas)
 							"robots" = typecacheof(list(/datum/species/android)),
 							"the supernatural" = typecacheof(list(/datum/species/golem/clockwork, /datum/species/golem/runic)),
 							"aliens" = typecacheof(list(/datum/species/abductor, /datum/species/diona, /datum/species/shadow)),
+							"anime" = typecacheof(list(/datum/species/human/alclades))
 						)
 
 	return SS_INIT_SUCCESS
