@@ -32382,7 +32382,7 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/table,
 /obj/item/surgical_drapes,
-/obj/item/organ/ears/cat,
+/obj/item/organ/ears/human/cat,
 /turf/open/floor/plating,
 /area/maintenance/port/central)
 "ioV" = (

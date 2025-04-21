@@ -29832,7 +29832,7 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/table,
 /obj/item/surgical_drapes,
-/obj/item/organ/ears/cat,
+/obj/item/organ/ears/human/cat,
 /turf/open/floor/plating,
 /area/maintenance/aft)
 "dXm" = (
@@ -71561,7 +71561,7 @@
 "raG" = (
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
 /obj/structure/closet/crate/freezer/surplus_limbs,
-/obj/item/organ/ears/cat,
+/obj/item/organ/ears/human/cat,
 /turf/open/floor/iron/dark,
 /area/medical/surgery)
 "raI" = (

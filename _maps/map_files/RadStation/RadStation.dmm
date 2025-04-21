@@ -47617,7 +47617,7 @@
 	dir = 8
 	},
 /obj/structure/closet/crate/freezer/surplus_limbs,
-/obj/item/organ/ears/cat,
+/obj/item/organ/ears/human/cat,
 /turf/open/floor/iron,
 /area/medical/surgery)
 "pLo" = (
