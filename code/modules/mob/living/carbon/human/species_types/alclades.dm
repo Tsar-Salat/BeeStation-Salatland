@@ -18,8 +18,8 @@
 				mutantears = /obj/item/organ/ears/human/cat
 				mutant_organs = list(/obj/item/organ/tail/human/cat)
 				mutanttongue = /obj/item/organ/tongue/cat
-				swimming_component = /datum/component/swimming/felinid
-				inert_mutation = /datum/mutation/catclaws
+				//swimming_component = /datum/component/swimming/felinid
+				//inert_mutation = /datum/mutation/catclaws
 			if("Renari")
 				mutantears = /obj/item/organ/ears/human/fox
 				mutant_organs = list(/obj/item/organ/tail/human/fox)
