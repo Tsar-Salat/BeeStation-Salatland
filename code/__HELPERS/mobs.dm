@@ -123,7 +123,7 @@
 		"snout" = pick(GLOB.snouts_list),
 		"horns" = pick(GLOB.horns_list),
 		"ears" = "None",
-		"cladia_human" = pick(GLOB.human_cladia_list),
+		"cladia" = pick(GLOB.human_cladia_list),
 		"frills" = pick(GLOB.frills_list),
 		"spines" = pick(GLOB.spines_list),
 		"body_markings" = pick(GLOB.body_markings_list),

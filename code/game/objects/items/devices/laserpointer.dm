@@ -140,19 +140,7 @@
 	for(var/mob/M as() in viewers(1,targloc))
 		if(M.stat == DEAD || M.is_blind() || M.incapacitated())
 			continue
-		var/mob/living/carbon/human/H = M
-		if(is_species(H, /datum/species/human/alclades))
-			if(user.body_position == STANDING_UP)
-				H.setDir(get_dir(H,targloc)) // kitty always looks at the light
-				if(prob(effectchance))
-					H.visible_message(span_warning("[H] makes a grab for the light!"),span_userdanger("LIGHT!"))
-					H.Move(targloc)
-					log_combat(user, H, "moved with a laser pointer",src, important = FALSE)
-				else
-					H.visible_message(span_notice("[H] looks briefly distracted by the light."),span_warning(" You're briefly tempted by the shiny light... "))
-			else
-				M.visible_message(span_notice("[M] stares at the light"),span_warning(" You stare at the light... "))
-		else if(iscat(M)) //cats!
+		if(iscat(M)) //cats!
 			var/mob/living/simple_animal/pet/cat/C = M
 			if(prob(50))
 				if(C.resting)

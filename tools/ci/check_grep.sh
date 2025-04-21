@@ -227,11 +227,6 @@ if $grep 'NanoTrasen' $code_files; then
     echo -e "${RED}ERROR: Misspelling(s) of Nanotrasen detected in code, please uncapitalize the T(s).${NC}"
     st=1
 fi;
-if $grep 'alcades' $code_files; then
-	echo
-    echo -e "${RED}ERROR: Misspelling(s) of alclades detected in code, please remove the L.${NC}"
-    st=1
-fi;
 if $grep -i'eciev' $code_files; then
 	echo
     echo -e "${RED}ERROR: Common I-before-E typo detected in code.${NC}"
