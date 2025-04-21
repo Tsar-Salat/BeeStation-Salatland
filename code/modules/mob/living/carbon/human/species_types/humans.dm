@@ -3,7 +3,7 @@
 	id = SPECIES_HUMAN
 	default_color = "FFFFFF"
 	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS)
-	mutant_bodyparts = list("body_size" = "Normal", "cladia" = "Baseline")
+	mutant_bodyparts = list("body_size" = "Normal", "cladia" = "Unmodded")
 	forced_features = list()
 	use_skintones = 1
 	skinned_type = /obj/item/stack/sheet/animalhide/human
@@ -52,25 +52,23 @@
 		var/mob/living/carbon/human/H = C
 		var/cladia_feature = H.dna.features["cladia"]
 		switch(cladia_feature)
-			if("Felyss")
-				mutantears = /obj/item/organ/ears/cat
-				mutant_organs = list(/obj/item/organ/tail/cat)
-				mutanttongue = /obj/item/organ/tongue/cat
-			if("Baseline")
+			if("Unmodded")
 				mutantears = /obj/item/organ/ears
 				mutant_organs = null
+				mutanttongue = /obj/item/organ/tongue
+			if("Felyss")
+				mutantears = /obj/item/organ/ears/human/cat
+				mutant_organs = list(/obj/item/organ/tail/human/cat)
+				mutanttongue = /obj/item/organ/tongue/cat
+			if("Renari")
+				mutantears = /obj/item/organ/ears/human/fox
+				mutant_organs = list(/obj/item/organ/tail/human/fox)
 				mutanttongue = /obj/item/organ/tongue
 			/* Wolfdog race
 			if("Lupos")
 				mutantears = /obj/item/organ/ears/lupine
 				mutant_organs = list(/obj/item/organ/tail/lupine)
 				mutanttongue = /obj/item/organ/lupine
-			*/
-			/* Fox race
-			if("Renari")
-				mutantears = /obj/item/organ/ears
-				mutant_organs = list(/obj/item/organ/tail/cat)
-				mutanttongue = /obj/item/organ/tongue
 			*/
 	return ..()
 

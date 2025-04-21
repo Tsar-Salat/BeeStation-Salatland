@@ -91,16 +91,9 @@
 	if(ears)
 		ears.minimumDeafTicks(value)
 
+/obj/item/organ/ears/human
 
-/obj/item/organ/ears/cat
-	name = "cat ears"
-	icon = 'icons/obj/clothing/head/costume.dmi'
-	worn_icon = 'icons/mob/clothing/head/costume.dmi'
-	icon_state = "kitty"
-	visual = TRUE
-	bang_protect = -2
-
-/obj/item/organ/ears/cat/Insert(mob/living/carbon/human/H, special = 0, drop_if_replaced = TRUE, pref_load = FALSE)
+/obj/item/organ/ears/human/Insert(mob/living/carbon/human/H, special = 0, drop_if_replaced = TRUE, pref_load = FALSE)
 	..()
 	if(pref_load)
 		H.update_body()
@@ -110,7 +103,7 @@
 		H.dna.features["ears"] = H.dna.species.mutant_bodyparts["ears"] = "Cat"
 		H.update_body()
 
-/obj/item/organ/ears/cat/Remove(mob/living/carbon/human/H, special = 0, pref_load = FALSE)
+/obj/item/organ/ears/human/Remove(mob/living/carbon/human/H, special = 0, pref_load = FALSE)
 	..()
 	if(pref_load && istype(H))
 		H.update_body()
@@ -120,6 +113,19 @@
 		H.dna.features["ears"] = "None"
 		H.dna.species.mutant_bodyparts -= "ears"
 		H.update_body()
+
+/obj/item/organ/ears/human/cat
+	name = "cat ears"
+	icon = 'icons/obj/clothing/head/costume.dmi'
+	worn_icon = 'icons/mob/clothing/head/costume.dmi'
+	icon_state = "kitty"
+	visual = TRUE
+	bang_protect = -2
+
+/obj/item/organ/ears/human/fox
+	name = "fox ears"
+	icon_state = "kitty"
+	visual = TRUE
 
 /obj/item/organ/ears/penguin
 	name = "penguin ears"
