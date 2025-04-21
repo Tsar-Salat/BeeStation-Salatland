@@ -141,7 +141,7 @@
 		if(M.stat == DEAD || M.is_blind() || M.incapacitated())
 			continue
 		var/mob/living/carbon/human/H = M
-		if(is_species(H, /datum/species/human/felinid))
+		if(is_species(H, /datum/species/human/alclades))
 			if(user.body_position == STANDING_UP)
 				H.setDir(get_dir(H,targloc)) // kitty always looks at the light
 				if(prob(effectchance))

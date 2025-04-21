@@ -472,7 +472,7 @@ FALLBACK_DEFAULT_SPECIES human
 ROUNDSTART_RACES human
 
 ## Races that are strictly worse than humans that could probably be turned on without balance concerns
-ROUNDSTART_RACES felinid
+ROUNDSTART_RACES alclades
 ROUNDSTART_RACES lizard
 ROUNDSTART_RACES moth
 #ROUNDSTART_RACES fly
@@ -523,7 +523,7 @@ ROUNDSTART_RACES plasmaman
 ##-------------------------------------------------------------------------------------------
 ## Uncommenting races will restrict them behind the patreon paywall
 
-#PAYWALL_RACES felinid
+#PAYWALL_RACES alclades
 
 ##-------------------------------------------------------------------------------------------
 

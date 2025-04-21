@@ -204,7 +204,7 @@
 	var/static/list/allowed_species = list(
 		/datum/species/lizard,
 		/datum/species/moth,
-		/datum/species/human/felinid,
+		/datum/species/human/alclades,
 		/datum/species/ipc,
 		/datum/species/oozeling,
 		/datum/species/ethereal,

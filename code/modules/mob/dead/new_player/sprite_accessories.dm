@@ -3288,3 +3288,13 @@
 /datum/sprite_accessory/apid_headstripes/arachnid
 	name = "Arachnid Headstripes"
 	icon_state = "arachnid"
+
+/datum/sprite_accessory/cladia
+	/// Psuedo sprite accessories, only meant to wrap the combination of multiple organ changes
+	icon = null
+
+/datum/sprite_accessory/cladia/human/felyss
+	name = "Felyss"
+
+/datum/sprite_accessory/cladia/human/baseline
+	name = "Baseline"

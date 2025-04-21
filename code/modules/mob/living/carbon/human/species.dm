@@ -1022,6 +1022,8 @@ GLOBAL_LIST_EMPTY(features_by_species)
 					S = GLOB.horns_list[H.dna.features["horns"]]
 				if("ears")
 					S = GLOB.ears_list[H.dna.features["ears"]]
+				if("cladia_human")
+					S = GLOB.human_cladia_list[H.dna.features["cladia"]]
 				if("body_markings")
 					S = GLOB.body_markings_list[H.dna.features["body_markings"]]
 				if("wings")
@@ -1169,8 +1171,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		handle_flight(H)
 
 /datum/species/proc/spec_death(gibbed, mob/living/carbon/human/H)
-	if(H)
-		stop_wagging_tail(H)
+	stop_wagging_tail(H)
 	return
 
 /datum/species/proc/spec_gib(no_brain, no_organs, no_bodyparts, mob/living/carbon/human/H)
@@ -2332,8 +2333,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 ////////////
 
 /datum/species/proc/spec_stun(mob/living/carbon/human/H, amount)
-	if(!H)
-		return
 	stop_wagging_tail(H)
 	var/obj/item/organ/wings/wings = H.getorganslot(ORGAN_SLOT_WINGS)
 	if(H.getorgan(/obj/item/organ/wings))

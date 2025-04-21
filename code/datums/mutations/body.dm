@@ -416,7 +416,7 @@
 	difficulty = 12
 	instability = 25
 	power_coeff = 1
-	species_allowed = list(SPECIES_FELINID)
+	species_allowed = list(SPECIES_ALCLADES)
 	var/added_damage = 6
 
 /datum/mutation/catclaws/on_acquiring()
