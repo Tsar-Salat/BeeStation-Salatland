@@ -75,6 +75,10 @@
 #define FLAG_PSYPHOZA		(1<<12)
 #define FLAG_DIONA			(1<<13)
 
+//Defines for cladia
+#define CLADIA_FELYSS "Felyss"
+#define CLADIA_RENARI "Renari"
+
 #define FEATURE_NONE "None" //For usage in species_features, for checking for marking names.
 
 // Defines for used in creating "perks" for the species preference pages.

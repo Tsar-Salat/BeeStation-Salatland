@@ -104,6 +104,11 @@ GLOBAL_LIST_INIT(turfs_without_ground, typecacheof(list(
 #define isandroid(A) (is_species(A, /datum/species/android))
 #define ispsyphoza(A) (is_species(A, /datum/species/psyphoza))
 
+//Human cladias
+#define iscladia(A, cladia_type) (A?.species?.cladia == cladia_type)
+#define isfelyss(A) iscladia(A, CLADIA_FELYSS)
+#define isrenari(A) iscladia(A, CLADIA_RENARI)
+
 //more carbon mobs
 #define ismonkey(A) (istype(A, /mob/living/carbon/monkey))
 
