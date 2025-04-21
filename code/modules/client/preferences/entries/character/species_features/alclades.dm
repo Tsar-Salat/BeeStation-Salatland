@@ -4,7 +4,7 @@
 	category = PREFERENCE_CATEGORY_SECONDARY_FEATURES
 	can_randomize = FALSE
 	randomize_by_default = FALSE
-	relevant_mutant_bodypart = "cladia_human"
+	relevant_mutant_bodypart = "cladia"
 
 /datum/preference/choiced/human_cladia/init_possible_values()
 	return assoc_to_keys(GLOB.human_cladia_list)
