@@ -91,7 +91,16 @@
 	if(ears)
 		ears.minimumDeafTicks(value)
 
+
+
+
 /obj/item/organ/ears/human
+	icon = 'icons/obj/clothing/head/costume.dmi'
+	worn_icon = 'icons/mob/clothing/head/costume.dmi'
+	icon_state = "kitty"
+	visual = TRUE
+	bang_protect = -2
+	var/meow_or_gekker
 
 /obj/item/organ/ears/human/Insert(mob/living/carbon/human/H, special = 0, drop_if_replaced = TRUE, pref_load = FALSE)
 	..()
@@ -100,7 +109,7 @@
 		return
 	if(istype(H))
 		color = H.hair_color
-		H.dna.features["ears"] = H.dna.species.mutant_bodyparts["ears"] = "Cat"
+		H.dna.features["ears"] = H.dna.species.mutant_bodyparts["ears"] = meow_or_gekker
 		H.update_body()
 
 /obj/item/organ/ears/human/Remove(mob/living/carbon/human/H, special = 0, pref_load = FALSE)
@@ -116,16 +125,15 @@
 
 /obj/item/organ/ears/human/cat
 	name = "cat ears"
-	icon = 'icons/obj/clothing/head/costume.dmi'
-	worn_icon = 'icons/mob/clothing/head/costume.dmi'
-	icon_state = "kitty"
-	visual = TRUE
-	bang_protect = -2
+	meow_or_gekker = "Cat"
 
 /obj/item/organ/ears/human/fox
 	name = "fox ears"
-	icon_state = "kitty"
-	visual = TRUE
+	meow_or_gekker = "Fox"
+
+
+
+
 
 /obj/item/organ/ears/penguin
 	name = "penguin ears"

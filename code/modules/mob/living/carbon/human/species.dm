@@ -1046,8 +1046,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 					S = GLOB.moth_wingsopen_list[H.dna.features["moth_wings"]]
 				if("moth_markings")
 					S = GLOB.moth_markings_list[H.dna.features["moth_markings"]]
-				if("caps")
-					S = GLOB.caps_list[H.dna.features["caps"]]
 				if("ipc_screen")
 					S = GLOB.ipc_screens_list[H.dna.features["ipc_screen"]]
 				if("ipc_antenna")
