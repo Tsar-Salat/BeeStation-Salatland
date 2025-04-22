@@ -23,14 +23,14 @@ $accent: #4b00c4;
 .theme-neutral {
   // Components
   @include meta.load-css(
-    'pkg:tgui-styles/components/Button',
+    '../components/Button.scss',
     $with: ('color-default': $accent, 'color-transparent-text': rgba(227, 240, 255, 0.75))
   );
   @include meta.load-css(
-    'pkg:tgui-styles/components/ProgressBar',
+    '../components/ProgressBar.scss',
     $with: ('color-default-fill': $accent, 'background-color': rgba(0, 0, 0, 0.5))
   );
-  @include meta.load-css('pkg:tgui-styles/components/Section');
+  @include meta.load-css('../components/Section.scss');
 
   // Layouts
   @include meta.load-css('../layouts/Layout.scss');

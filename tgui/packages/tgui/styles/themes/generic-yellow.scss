@@ -18,7 +18,7 @@ $accent-2: #ffbf00;
 .theme-generic-yellow {
   // Components
   @include meta.load-css(
-    'pkg:tgui-styles/components/Button',
+    '../components/Button.scss',
     $with: ('color-default': $accent, 'color-transparent-text': rgba(227, 240, 255, 0.75))
   );
   @include meta.load-css(
@@ -26,12 +26,12 @@ $accent-2: #ffbf00;
     $with: ('color-default': color.scale($generic, $lightness: -20%))
   );
   @include meta.load-css(
-    'pkg:tgui-styles/components/ProgressBar',
+    '../components/ProgressBar.scss',
     $with: ('color-default-fill': $accent, 'background-color': rgba(0, 0, 0, 0.5))
   );
-  @include meta.load-css('pkg:tgui-styles/components/Section');
+  @include meta.load-css('../components/Section.scss');
 
-  @include meta.load-css('pkg:tgui-styles/components/Input', $with: ('border-color': #7b86ff));
+  @include meta.load-css('../components/Input.scss', $with: ('border-color': #7b86ff));
 
   // Layouts
   @include meta.load-css('../layouts/Layout.scss');

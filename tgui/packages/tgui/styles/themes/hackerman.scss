@@ -22,15 +22,12 @@
 
   // Components
   @include meta.load-css(
-    'pkg:tgui-styles/components/Button',
+    '../components/Button.scss',
     $with: ('color-default': colors.$primary, 'color-disabled': #4a6a4a, 'color-selected': #00ff00)
   );
-  @include meta.load-css(
-    'pkg:tgui-styles/components/Input',
-    $with: ('border-color': colors.$primary)
-  );
-  @include meta.load-css('pkg:tgui-styles/components/Modal');
-  @include meta.load-css('pkg:tgui-styles/components/Section');
+  @include meta.load-css('../components/Input.scss', $with: ('border-color': colors.$primary));
+  @include meta.load-css('../components/Modal.scss');
+  @include meta.load-css('../components/Section.scss');
 
   // Layouts
   @include meta.load-css('../layouts/Layout.scss');

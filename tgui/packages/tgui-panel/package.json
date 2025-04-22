@@ -10,7 +10,6 @@
     "react-dom": "^18.2.0",
     "tgui": "workspace:*",
     "tgui-dev-server": "workspace:*",
-    "tgui-polyfill": "workspace:*",
-    "tgui-styles": "^0.0.10"
+    "tgui-polyfill": "workspace:*"
   }
 }

@@ -2,6 +2,8 @@
 @use '../colors.scss';
 @use '../atomic/color.scss';
 
+@use '../components/Button.scss';
+
 //Colors for obscured slots, based on Button.scss
 $button-gray: darken(Button.$color-default, 20%);
 $button-gray-hover: Button.$color-default;

@@ -10702,7 +10702,6 @@ __metadata:
     tgui: "workspace:*"
     tgui-dev-server: "workspace:*"
     tgui-polyfill: "workspace:*"
-    tgui-styles: ^0.0.10
   languageName: unknown
   linkType: soft
 
@@ -10730,16 +10729,8 @@ __metadata:
     tgui: "workspace:*"
     tgui-dev-server: "workspace:*"
     tgui-polyfill: "workspace:*"
-    tgui-styles: ^0.0.10
   languageName: unknown
   linkType: soft
-
-"tgui-styles@npm:^0.0.10":
-  version: 0.0.10
-  resolution: "tgui-styles@npm:0.0.10"
-  checksum: e91df2a1a8c80b9ce478c8fe584e2c0da5de53b60517368f0f68963778193c8bb150b171c7e6a394c706a2972aaa2a43659e643c38975c3f2f3a82dc8646c3b7
-  languageName: node
-  linkType: hard
 
 "tgui-workspace@workspace:.":
   version: 0.0.0-use.local
@@ -10797,7 +10788,6 @@ __metadata:
     react-dom: ^18.2.0
     tgui-dev-server: "workspace:*"
     tgui-polyfill: "workspace:*"
-    tgui-styles: ^0.0.10
   languageName: unknown
   linkType: soft
 
