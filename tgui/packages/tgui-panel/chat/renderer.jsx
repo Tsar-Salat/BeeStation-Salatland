@@ -372,7 +372,7 @@ class ChatRenderer {
     const to = Math.max(0, len - COMBINE_MAX_MESSAGES);
     for (let i = from; i >= to; i--) {
       const message = this.visibleMessages[i];
-     const matches =
+      const matches =
         // Is not an internal message
         !message.type.startsWith(MESSAGE_TYPE_INTERNAL) &&
         // Text payload must fully match
@@ -510,11 +510,7 @@ class ChatRenderer {
       // Query all possible selectors to find out the message type
       if (!message.type) {
         const typeDef =
-          !Byond.IS_LTE_IE8 &&
-          MESSAGE_TYPES.find(
-            (typeDef) =>
-              typeDef.selector && node.querySelector(typeDef.selector),
-          );
+          !Byond.IS_LTE_IE8 && MESSAGE_TYPES.find((typeDef) => typeDef.selector && node.querySelector(typeDef.selector));
         message.type = typeDef?.type || MESSAGE_TYPE_UNKNOWN;
       }
       updateMessageBadge(message);
@@ -569,9 +565,7 @@ class ChatRenderer {
           message.node = 'pruned';
         }
         // Remove pruned messages from the message array
-        this.messages = this.messages.filter(
-          (message) => message.node !== 'pruned',
-        );
+        this.messages = this.messages.filter((message) => message.node !== 'pruned');
         logger.log(`pruned ${fromIndex} visible messages`);
       }
     }
