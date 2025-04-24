@@ -438,7 +438,7 @@
 /obj/item/reagent_containers/cup/coconutcup
 	name = "coconut cup"
 	desc = "A showy form of cup typically intended for both use and display."
-	icon = 'icons/obj/drinks.dmi'
+	icon = 'icons/obj/drinks/drinks.dmi'
 	icon_state = "coconutcup_empty"
 	possible_transfer_amounts = list(5, 10, 15, 20, 25, 30, 50, 100)
 	volume = 50
@@ -454,3 +454,18 @@
 	else
 		icon_state = "coconutcup_empty"
 
+//Coffeepots: for reference, a standard cup is 30u, to allow 20u for sugar/sweetener/milk/creamer
+/obj/item/reagent_containers/cup/coffeepot
+	name = "coffeepot"
+	desc = "A large pot for dispensing that ambrosia of corporate life known to mortals only as coffee. Contains 4 standard cups."
+	volume = 120
+	icon_state = "coffeepot"
+	fill_icon_state = "coffeepot"
+	fill_icon_thresholds = list(0, 1, 30, 60, 100)
+
+/obj/item/reagent_containers/cup/coffeepot/bluespace
+	name = "bluespace coffeepot"
+	desc = "The most advanced coffeepot the eggheads could cook up: sleek design; graduated lines; connection to a pocket dimension for coffee containment; yep, it's got it all. Contains 8 standard cups."
+	volume = 240
+	icon_state = "coffeepot_bluespace"
+	fill_icon_thresholds = list(0)
