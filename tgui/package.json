@@ -2,7 +2,7 @@
   "private": true,
   "name": "tgui-workspace",
   "version": "5.0.0",
-  "packageManager": "yarn@3.4.1",
+  "packageManager": "yarn@4.9.1",
   "workspaces": [
     "packages/*"
   ],
@@ -14,7 +14,7 @@
     "tgui:lint": "eslint packages --ext .js,.cjs,.jsx,.ts,.tsx",
     "tgui:prettier": "prettierx --check .",
     "tgui:prettier-format": "prettierx --write packages",
-    "tgui:sonar": "eslint packages --ext .js,.cjs,.jsx,.ts,.tsx -c .eslintrc-sonar.yml",
+    "tgui:sonar": "eslint packages --ext .js,.cjs,.ts,.jsx,.tsx -c .eslintrc-sonar.yml",
     "tgui:test": "jest --watch",
     "tgui:test-simple": "CI=true jest --color",
     "tgui:test-ci": "CI=true jest --color --collect-coverage",
@@ -56,7 +56,7 @@
     "sass": "1.69.5",
     "sass-loader": "13.3.2",
     "style-loader": "3.3.3",
-    "typescript": "^4.9.5",
+    "typescript": "5.4.3",
     "url-loader": "^4.1.1",
     "webpack": "^5.97.1",
     "webpack-bundle-analyzer": "^4.10.2",
