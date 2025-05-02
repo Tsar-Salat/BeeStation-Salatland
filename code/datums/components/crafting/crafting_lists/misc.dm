@@ -51,8 +51,8 @@
 	result = /obj/item/clothing/head/costume/kitty/genuine
 	time = 1 SECONDS
 	reqs = list(
-		/obj/item/organ/tail/cat = 1,
-		/obj/item/organ/ears/cat = 1
+		/obj/item/organ/tail/human/cat = 1,
+		/obj/item/organ/ears/human/cat = 1
 	)
 	category = CAT_MISC
 

@@ -386,7 +386,7 @@
 
 /datum/reagent/consumable/cocoa/on_mob_add(mob/living/carbon/M)
 	.=..()
-	if(iscatperson(M))
+	if(HAS_TRAIT(M, TRAIT_CHOCOLATE_DISGUST))
 		to_chat(M, span_warning("Your insides revolt at the presence of lethal chocolate!"))
 		M.vomit(20)
 

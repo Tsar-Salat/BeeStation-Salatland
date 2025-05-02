@@ -215,3 +215,7 @@
 	name = "nutrient vessel"
 	desc = "A group of plant matter and vines, useful for digestion of light and radiation."
 	icon_state = "diona_stomach"
+
+//Visually indistinguisa
+/obj/item/organ/stomach/cat
+

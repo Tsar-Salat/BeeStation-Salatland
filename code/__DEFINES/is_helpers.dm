@@ -96,7 +96,6 @@ GLOBAL_LIST_INIT(turfs_without_ground, typecacheof(list(
 #define isshadow(A) (is_species(A, /datum/species/shadow))
 #define ismoth(A) (is_species(A, /datum/species/moth))
 #define ishumanbasic(A) (is_species(A, /datum/species/human) && !is_species(A, /datum/species/human/krokodil_addict))
-#define iscatperson(A) (is_species(A, /datum/species/human/felinid) )
 #define isethereal(A) (is_species(A, /datum/species/ethereal))
 #define isvampire(A) (is_species(A,/datum/species/vampire))
 #define isdullahan(A) (is_species(A, /datum/species/dullahan))
@@ -104,6 +103,11 @@ GLOBAL_LIST_INIT(turfs_without_ground, typecacheof(list(
 #define isapid(A) (is_species(A, /datum/species/apid))
 #define isandroid(A) (is_species(A, /datum/species/android))
 #define ispsyphoza(A) (is_species(A, /datum/species/psyphoza))
+
+//Human cladias
+#define iscladia(A, cladia_type) (A?.species?.cladia == cladia_type)
+#define isfelyss(A) iscladia(A, CLADIA_FELYSS)
+#define isrenari(A) iscladia(A, CLADIA_RENARI)
 
 //more carbon mobs
 #define ismonkey(A) (istype(A, /mob/living/carbon/monkey))

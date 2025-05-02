@@ -24,7 +24,7 @@
 %A% %ADJECTIVE% ethereal
 %A% %ADJECTIVE% explosion
 %A% %ADJECTIVE% familiar face
-%A% %ADJECTIVE% felinid
+%A% %ADJECTIVE% alcade
 %A% %ADJECTIVE% foe
 %A% %ADJECTIVE% friend
 %A% %ADJECTIVE% ghost

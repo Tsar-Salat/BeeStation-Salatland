@@ -771,7 +771,6 @@
 	VV_DROPDOWN_OPTION(VV_HK_MAKE_SLIME, "Make Slime")
 	VV_DROPDOWN_OPTION(VV_HK_MAKE_ALIEN, "Make Alien")
 	VV_DROPDOWN_OPTION(VV_HK_SET_SPECIES, "Set Species")
-	VV_DROPDOWN_OPTION(VV_HK_PURRBATION, "Toggle Purrbation")
 	VV_DROPDOWN_OPTION(VV_HK_RANDOM_NAME, "Randomize Name")
 
 /mob/living/carbon/human/vv_do_topic(list/href_list)
@@ -839,26 +838,6 @@
 			return
 		admin_ticket_log("[key_name_admin(usr)] has modified the bodyparts of [src] to [result]")
 		set_species(newtype)
-	if(href_list[VV_HK_PURRBATION])
-		if(!check_rights(R_SPAWN))
-			return
-		if(!ishumanbasic(src))
-			to_chat(usr, "This can only be done to the basic human species at the moment.")
-			return
-		var/success = purrbation_toggle(src)
-		if(success)
-			to_chat(usr, "Put [src] on purrbation.")
-			log_admin("[key_name(usr)] has put [key_name(src)] on purrbation.")
-			var/msg = span_notice("[key_name_admin(usr)] has put [key_name(src)] on purrbation.")
-			message_admins(msg)
-			admin_ticket_log(src, msg)
-
-		else
-			to_chat(usr, "Removed [src] from purrbation.")
-			log_admin("[key_name(usr)] has removed [key_name(src)] from purrbation.")
-			var/msg = span_notice("[key_name_admin(usr)] has removed [key_name(src)] from purrbation.")
-			message_admins(msg)
-			admin_ticket_log(src, msg)
 	if(href_list[VV_HK_RANDOM_NAME])
 		if(!check_rights(R_ADMIN))//mods can rename people with VV so they should be able to do this too
 			return
@@ -1099,8 +1078,8 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/carbon/human/species)
 /mob/living/carbon/human/species/ethereal
 	race = /datum/species/ethereal
 
-/mob/living/carbon/human/species/felinid
-	race = /datum/species/human/felinid
+/mob/living/carbon/human/species/alclades
+	race = /datum/species/human/alclades
 
 /mob/living/carbon/human/species/fly
 	race = /datum/species/fly

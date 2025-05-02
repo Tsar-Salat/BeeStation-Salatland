@@ -107,7 +107,7 @@
 	RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(checkObstacle))
 	playsound(user, 'sound/weapons/thudswoosh.ogg', 40, TRUE, -1)
 
-	var/leap_word = iscatperson(user) ? "pounce" : "leap" //If cat, "pounce" instead of "leap".
+	var/leap_word = user.check_tailed_mob() ? "pounce" : "leap" //If tailed, "pounce" instead of "leap".
 	if(can_see(user, clicked_atom, 7))
 		user.visible_message("<span class='warning'>[user] [leap_word]s at [clicked_atom]!</span>",
 							"<span class='danger'>You [leap_word] at [clicked_atom]!</span>")
@@ -155,7 +155,7 @@
 		return
 
 	var/mob/living/carbon/human/target = hit
-	var/tackle_word = iscatperson(user) ? "pounce" : "tackle" //If cat, "pounce" instead of "tackle".
+	var/tackle_word = user.check_tailed_mob() ? "pounce" : "tackle" //If tailed, "pounce" instead of "tackle".
 
 	var/roll = rollTackle(target)
 	tackling = FALSE
@@ -484,7 +484,7 @@
 	else if(istype(hit, /obj/machinery/disposal/bin))
 		var/obj/machinery/disposal/bin/bin = hit
 		user.forceMove(bin)
-		var/leap_word = iscatperson(user) ? "pounce" : "leap" //If cat, "pounce" instead of "leap".
+		var/leap_word = user.check_tailed_mob() ? "pounce" : "leap" //If tailed, "pounce" instead of "leap".
 		user.visible_message("<span class='warning'>[user] [leap_word]s into \the [hit]!</span>",
 							"<span class='danger'>You [leap_word] into \the [hit]!</span>")
 		return COMPONENT_MOVABLE_IMPACT_NEVERMIND

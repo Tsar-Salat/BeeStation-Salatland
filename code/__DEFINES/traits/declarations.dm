@@ -198,6 +198,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_STEALTH_PICKPOCKET "stealth_pickpocket" // The user can take something off of someone via the strip menu without sending a message.
 /// Trait that prevents you from being moved when pulled.
 #define TRAIT_NO_MOVE_PULL "no_move_pull"
+/// Indicates the mob has a violent reaction when consuming chocolate
+#define TRAIT_CHOCOLATE_DISGUST "chocolate_disgust"
 
 /// This mob has no soul
 #define TRAIT_NO_SOUL "no_soul"
