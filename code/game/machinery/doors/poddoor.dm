@@ -32,49 +32,85 @@
 	fire = 100
 	acid = 70
 
-/obj/machinery/door/poddoor/attackby(obj/item/W, mob/user, params)
+/obj/machinery/door/poddoor/screwdriver_act(mob/living/user, obj/item/tool)
 	. = ..()
+	if (density)
+		balloon_alert(user, "open the door first!")
+		return TOOL_ACT_TOOLTYPE_SUCCESS
+	else if (default_deconstruction_screwdriver(user, icon_state, icon_state, tool))
+		return TOOL_ACT_TOOLTYPE_SUCCESS
 
-	if(W.tool_behaviour == TOOL_SCREWDRIVER)
-		if(density)
-			to_chat(user, span_warning("You need to open [src] before opening its maintenance panel."))
-			return
-		else if(default_deconstruction_screwdriver(user, icon_state, icon_state, W))
-			to_chat(user, span_notice("You [panel_open ? "open" : "close"] the maintenance hatch of [src]."))
-			return TRUE
+/obj/machinery/door/poddoor/multitool_act(mob/living/user, obj/item/tool)
+	. = ..()
+	if (density)
+		balloon_alert(user, "open the door first!")
+		return TOOL_ACT_TOOLTYPE_SUCCESS
+	if (!panel_open)
+		return
+	if (deconstruction != BLASTDOOR_FINISHED)
+		return
+	var/change_id = tgui_input_number(user, "Set the door controllers ID (Current: [id])", "Door Controller ID", isnum(id) ? id : null, 100)
+	if(!change_id || QDELETED(usr) || QDELETED(src) || !usr.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
+		return
+	id = change_id
+	to_chat(user, span_notice("You change the ID to [id]."))
+	balloon_alert(user, "id changed")
+	return TOOL_ACT_TOOLTYPE_SUCCESS
 
-	if(panel_open)
-		if(W.tool_behaviour == TOOL_MULTITOOL && deconstruction == BLASTDOOR_FINISHED)
-			var/change_id = input("Set the shutters/blast door controller's ID. It must be a number between 1 and 100.", "ID", id) as num|null
-			if(change_id)
-				id = clamp(round(change_id, 1), 1, 100)
-				to_chat(user, span_notice("You change the ID to [id]."))
+/obj/machinery/door/poddoor/crowbar_act(mob/living/user, obj/item/tool)
+	. = ..()
+	if(machine_stat & NOPOWER)
+		open(TRUE)
+		return TOOL_ACT_TOOLTYPE_SUCCESS
+	if (density)
+		balloon_alert(user, "open the door first!")
+		return TOOL_ACT_TOOLTYPE_SUCCESS
+	if (!panel_open)
+		return
+	if (deconstruction != BLASTDOOR_FINISHED)
+		return
+	balloon_alert(user, "removing airlock electronics...")
+	if(tool.use_tool(src, user, 10 SECONDS, volume = 50))
+		new /obj/item/electronics/airlock(loc)
+		id = null
+		deconstruction = BLASTDOOR_NEEDS_ELECTRONICS
+		balloon_alert(user, "removed airlock electronics")
+	return TOOL_ACT_TOOLTYPE_SUCCESS
 
-		if(W.tool_behaviour == TOOL_CROWBAR &&deconstruction == BLASTDOOR_FINISHED)
-			to_chat(user, span_notice("You start to remove the airlock electronics."))
-			if(do_after(user, 10 SECONDS, target = src))
-				new /obj/item/electronics/airlock(loc)
-				id = null
-				deconstruction = BLASTDOOR_NEEDS_ELECTRONICS
+/obj/machinery/door/poddoor/wirecutter_act(mob/living/user, obj/item/tool)
+	. = ..()
+	if (density)
+		balloon_alert(user, "open the door first!")
+		return TOOL_ACT_TOOLTYPE_SUCCESS
+	if (!panel_open)
+		return
+	if (deconstruction != BLASTDOOR_NEEDS_ELECTRONICS)
+		return
+	balloon_alert(user, "removing internal cables...")
+	if(tool.use_tool(src, user, 10 SECONDS, volume = 50))
+		var/datum/crafting_recipe/recipe = locate(recipe_type) in GLOB.crafting_recipes
+		var/amount = recipe.reqs[/obj/item/stack/cable_coil]
+		new /obj/item/stack/cable_coil(loc, amount)
+		deconstruction = BLASTDOOR_NEEDS_WIRES
+		balloon_alert(user, "removed internal cables")
+	return TOOL_ACT_TOOLTYPE_SUCCESS
 
-		else if(W.tool_behaviour == TOOL_WIRECUTTER && deconstruction == BLASTDOOR_NEEDS_ELECTRONICS)
-			to_chat(user, span_notice("You start to remove the internal cables."))
-			if(do_after(user, 10 SECONDS, target = src))
-				deconstruction = TRUE
-				var/datum/crafting_recipe/recipe = locate(recipe_type) in GLOB.crafting_recipes
-				var/amount = recipe.reqs[/obj/item/stack/cable_coil]
-				new /obj/item/stack/cable_coil(loc, amount)
-				deconstruction = BLASTDOOR_NEEDS_WIRES
-
-		else if(W.tool_behaviour == TOOL_WELDER && deconstruction == BLASTDOOR_NEEDS_WIRES)
-			if(!W.tool_start_check(user, amount=0))
-				return
-
-			to_chat(user, span_notice("You start tearing apart the [src]."))
-			playsound(src.loc, 'sound/items/welder.ogg', 50, 1)
-			if(do_after(user, 15 SECONDS, target = src))
-				new /obj/item/stack/sheet/plasteel(loc, 15)
-				qdel(src)
+/obj/machinery/door/poddoor/welder_act(mob/living/user, obj/item/tool)
+	. = ..()
+	if (density)
+		balloon_alert(user, "open the door first!")
+		return TOOL_ACT_TOOLTYPE_SUCCESS
+	if (!panel_open)
+		return
+	if (deconstruction != BLASTDOOR_NEEDS_WIRES)
+		return
+	to_chat(user, span_notice("You start tearing apart the [src]."))
+	playsound(src.loc, 'sound/items/welder.ogg', 50, 1)
+	if(tool.use_tool(src, user, 15 SECONDS, volume = 50))
+		new /obj/item/stack/sheet/plasteel(loc, 15)
+		user.balloon_alert(user, "torn apart")
+		qdel(src)
+	return TOOL_ACT_TOOLTYPE_SUCCESS
 
 /obj/machinery/door/poddoor/examine(mob/user)
 	. = ..()
