@@ -4,10 +4,9 @@
  * @license MIT
  */
 
-const webpack = require('webpack');
 const path = require('path');
-const ExtractCssPlugin = require('mini-css-extract-plugin');
-const { createBabelConfig } = require('./babel.config.js');
+const { defineConfig } = require('@rspack/cli');
+const { rspack } = require('@rspack/core');
 
 const createStats = (verbose) => ({
   assets: verbose,
@@ -27,7 +26,12 @@ const createStats = (verbose) => ({
 module.exports = (env = {}, argv) => {
   const mode = argv.mode || 'production';
   const bench = env.TGUI_BENCH;
-  const config = {
+
+  /** @type {import('@rspack/core').Configuration} */
+  const config = defineConfig({
+    experiments: {
+      css: true,
+    },
     mode: mode === 'production' ? 'production' : 'development',
     context: path.resolve(__dirname),
     target: ['web', 'es5', 'browserslist:ie 11'],
@@ -41,52 +45,89 @@ module.exports = (env = {}, argv) => {
       filename: '[name].bundle.js',
       chunkFilename: '[name].bundle.js',
       chunkLoadTimeout: 15000,
+      assetModuleFilename: '[name][ext]',
     },
     resolve: {
+      pnp: true,
       extensions: ['.tsx', '.ts', '.js', '.jsx'],
-      alias: {},
+      alias: {
+        tgui: path.resolve(__dirname, './packages/tgui'),
+        'tgui-panel': path.resolve(__dirname, './packages/tgui-panel'),
+        'tgui-say': path.resolve(__dirname, './packages/tgui-say'),
+        'tgui-dev-server': path.resolve(
+          __dirname,
+          './packages/tgui-dev-server',
+        ),
+      },
     },
     module: {
       rules: [
         {
-          test: /\.(js(x)?|cjs|ts(x)?)$/,
+          test: /\.([tj]s(x)?|cjs)$/,
           use: [
             {
-              loader: require.resolve('babel-loader'),
-              options: createBabelConfig({
-                removeConsole: !bench,
-              }),
+              loader: 'builtin:swc-loader',
+              options: {
+                jsc: {
+                  parser: {
+                    syntax: 'typescript',
+                    tsx: true,
+                  },
+                  transform: {
+                    react: {
+                      runtime: 'automatic',
+                    },
+                  },
+                },
+              },
             },
           ],
+          type: 'javascript/auto',
         },
         {
           test: /\.(s)?css$/,
           use: [
             {
-              loader: ExtractCssPlugin.loader,
-              options: {
-                esModule: false,
-              },
-            },
-            {
-              loader: require.resolve('css-loader'),
-              options: {
-                esModule: false,
-              },
-            },
-            {
               loader: require.resolve('sass-loader'),
+              options: {
+                api: 'modern-compiler',
+                implementation: 'sass-embedded',
+              },
             },
           ],
+          type: 'css',
         },
         {
-          test: /\.(png|jpg|svg)$/,
+          test: /\.(png|jpg)$/,
           use: [
             {
               loader: require.resolve('url-loader'),
               options: {
                 esModule: false,
+                outputPath: 'assets/',
+                publicPath: '/assets/',
               },
+            },
+          ],
+        },
+        {
+          test: /\.svg$/,
+          oneOf: [
+            {
+              issuer: /\.(s)?css$/,
+              type: 'asset/inline',
+            },
+            {
+              use: [
+                {
+                  loader: require.resolve('url-loader'),
+                  options: {
+                    esModule: false,
+                    outputPath: 'assets/',
+                    publicPath: '/assets/',
+                  },
+                },
+              ],
             },
           ],
         },
@@ -99,42 +140,25 @@ module.exports = (env = {}, argv) => {
       hints: false,
     },
     devtool: false,
-    cache: {
-      type: 'filesystem',
-      cacheLocation: path.resolve(__dirname, `.yarn/webpack/${mode}`),
-      buildDependencies: {
-        config: [__filename],
-      },
-    },
+
     stats: createStats(true),
     plugins: [
-      new webpack.EnvironmentPlugin({
+      new rspack.EnvironmentPlugin({
         NODE_ENV: env.NODE_ENV || mode,
         WEBPACK_HMR_ENABLED: env.WEBPACK_HMR_ENABLED || argv.hot || false,
         DEV_SERVER_IP: env.DEV_SERVER_IP || null,
       }),
-      new ExtractCssPlugin({
+      new rspack.CssExtractRspackPlugin({
         filename: '[name].bundle.css',
         chunkFilename: '[name].bundle.css',
       }),
     ],
-  };
+  });
 
   if (bench) {
     config.entry = {
       'tgui-bench': ['./packages/tgui-polyfill', './packages/tgui-bench/entrypoint'],
     };
-  }
-
-  // Production build specific options
-  if (mode === 'production') {
-    const { EsbuildPlugin } = require('esbuild-loader');
-    config.optimization.minimizer = [
-      new EsbuildPlugin({
-        target: 'ie11',
-        css: true,
-      }),
-    ];
   }
 
   // Development build specific options
