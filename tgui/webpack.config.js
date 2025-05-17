@@ -7,6 +7,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const ExtractCssPlugin = require('mini-css-extract-plugin');
+const { createBabelConfig } = require('./babel.config.js');
 
 const createStats = (verbose) => ({
   assets: verbose,
@@ -48,10 +49,13 @@ module.exports = (env = {}, argv) => {
     module: {
       rules: [
         {
-          test: /\.([tj]s(x)?|cjs)$/,
+          test: /\.(js(x)?|cjs|ts(x)?)$/,
           use: [
             {
-              loader: require.resolve('swc-loader'),
+              loader: require.resolve('babel-loader'),
+              options: createBabelConfig({
+                removeConsole: !bench,
+              }),
             },
           ],
         },
