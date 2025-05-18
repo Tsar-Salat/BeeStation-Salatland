@@ -5,7 +5,7 @@
  */
 
 import { useLocalState } from '../backend';
-import { Box, Button, ByondUi, Section } from '../components';
+import { Box, Button, ByondUi, Section, TextArea } from '../components';
 import { logger } from '../logging';
 
 export const meta = {
@@ -13,8 +13,9 @@ export const meta = {
   render: () => <Story />,
 };
 
-const Story = (props) => {
+function Story() {
   const [code, setCode] = useLocalState('byondUiEvalCode', `Byond.winset('${Byond.windowId}', {\n  'is-visible': true,\n})`);
+
   return (
     <>
       <Section title="Button">
@@ -48,10 +49,10 @@ const Story = (props) => {
             Evaluate
           </Button>
         }>
-        <Box as="textarea" width="100%" height="10em" onChange={(e) => setCode(e.target.value)}>
+        <TextArea as="textarea" width="100%" height="10em" onChange={(event, value) => setCode(value)}>
           {code}
-        </Box>
+        </TextArea>
       </Section>
     </>
   );
-};
+}

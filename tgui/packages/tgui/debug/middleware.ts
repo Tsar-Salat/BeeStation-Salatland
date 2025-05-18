@@ -11,7 +11,7 @@ import { openExternalBrowser, toggleDebugLayout, toggleKitchenSink } from './act
 
 const relayedTypes = ['backend/update', 'chat/message'];
 
-export const debugMiddleware = (store) => {
+export function debugMiddleware(store) {
   acquireHotKey(KEY_F11);
   acquireHotKey(KEY_F12);
   globalEvents.on('keydown', (key) => {
@@ -28,16 +28,16 @@ export const debugMiddleware = (store) => {
         throw new Error(
           'OOPSIE WOOPSIE!! UwU We made a fucky wucky!! A wittle' +
             ' fucko boingo! The code monkeys at our headquarters are' +
-            ' working VEWY HAWD to fix this!'
+            ' working VEWY HAWD to fix this!',
         );
       });
     }
   });
   return (next) => (action) => next(action);
-};
+}
 
-export const relayMiddleware = (store) => {
-  const devServer = require('tgui-dev-server/link/client.cjs');
+export function relayMiddleware(store) {
+  const devServer = require('tgui-dev-server/link/client.mjs');
   const externalBrowser = location.search === '?external';
   if (externalBrowser) {
     devServer.subscribe((msg) => {
@@ -58,7 +58,7 @@ export const relayMiddleware = (store) => {
     });
   }
   return (next) => (action) => {
-    const { type, payload, relayed } = action;
+    const { type, relayed } = action;
     if (type === openExternalBrowser.type) {
       window.open(location.href + '?external', '_blank');
       return;
@@ -74,4 +74,4 @@ export const relayMiddleware = (store) => {
     }
     return next(action);
   };
-};
+}

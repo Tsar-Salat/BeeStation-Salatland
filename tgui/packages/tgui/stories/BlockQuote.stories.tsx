@@ -12,7 +12,7 @@ export const meta = {
   render: () => <Story />,
 };
 
-const Story = (props) => {
+function Story() {
   return (
     <Section>
       <BlockQuote>
@@ -20,4 +20,4 @@ const Story = (props) => {
       </BlockQuote>
     </Section>
   );
-};
+}

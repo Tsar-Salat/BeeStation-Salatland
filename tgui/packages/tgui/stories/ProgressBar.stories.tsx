@@ -4,7 +4,7 @@
  * @license MIT
  */
 
-import { useLocalState } from '../backend';
+import { useState } from 'react';
 import { Box, Button, Input, LabeledList, ProgressBar, Section } from '../components';
 
 export const meta = {
@@ -12,9 +12,9 @@ export const meta = {
   render: () => <Story />,
 };
 
-const Story = (props) => {
-  const [progress, setProgress] = useLocalState('progress', 0.5);
-  const [color, setColor] = useLocalState('color', '');
+function Story() {
+  const [progress, setProgress] = useState(0.5);
+  const [color, setColor] = useState('');
 
   const color_data = color
     ? { color: color }
@@ -23,7 +23,7 @@ const Story = (props) => {
         good: [0.5, Infinity],
         bad: [-Infinity, 0.1],
         average: [0, 0.5],
-      },
+      } as Record<string, [number, number]>,
     };
 
   return (
@@ -32,16 +32,16 @@ const Story = (props) => {
         Value: {Number(progress).toFixed(1)}
       </ProgressBar>
       <Box mt={1}>
-        <LabeledList mt="2em">
+        <LabeledList>
           <LabeledList.Item label="Adjust value">
-            <Button content="-0.1" onClick={() => setProgress(progress - 0.1)} />
-            <Button content="+0.1" onClick={() => setProgress(progress + 0.1)} />
+            <Button onClick={() => setProgress(progress - 0.1)}>-0.1</Button>
+            <Button onClick={() => setProgress(progress + 0.1)}>+0.1</Button>
           </LabeledList.Item>
           <LabeledList.Item label="Override color">
-            <Input value={color} onChange={(e, value) => setColor(value)} />
+            <Input value={color} onChange={(event, value) => setColor(value)} />
           </LabeledList.Item>
         </LabeledList>
       </Box>
     </Section>
   );
-};
+}

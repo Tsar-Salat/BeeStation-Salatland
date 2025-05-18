@@ -10,7 +10,7 @@ import './styles/themes/light.scss';
 
 import { perf } from 'common/perf';
 import { combineReducers } from 'common/redux';
-import { setupHotReloading } from 'tgui-dev-server/link/client.cjs';
+import { setupHotReloading } from 'tgui-dev-server/link/client.mjs';
 import { setupGlobalEvents } from 'tgui/events';
 import { captureExternalLinks } from 'tgui/links';
 import { createRenderer } from 'tgui/renderer';
@@ -91,10 +91,10 @@ const setupApp = () => {
   based_winset();
 
   // Enable hot module reloading
-  if (module.hot) {
+  if (import.meta.webpackHot) {
     setupHotReloading();
 
-    module.hot.accept(
+    import.meta.webpackHot.accept(
       ['./audio', './chat', './game', './Notifications', './Panel', './ping', './settings', './stat', './telemetry'],
       () => {
         renderApp();

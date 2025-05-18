@@ -13,10 +13,11 @@ export const meta = {
   render: () => <Story />,
 };
 
-const Story = (props) => {
+function Story() {
   if (!window.localStorage) {
     return <NoticeBox>Local storage is not available.</NoticeBox>;
   }
+  
   return (
     <Section
       title="Local Storage"
@@ -36,4 +37,4 @@ const Story = (props) => {
       </LabeledList>
     </Section>
   );
-};
+}

@@ -50,7 +50,7 @@ import { createRenderer } from './renderer';
 import { perf } from 'common/perf';
 import { setupGlobalEvents } from './events';
 import { setupHotKeys } from './hotkeys';
-import { setupHotReloading } from 'tgui-dev-server/link/client.cjs';
+import { setupHotReloading } from 'tgui-dev-server/link/client.mjs';
 import { setGlobalStore } from './backend';
 import { loadIconRefMap } from './icons';
 
@@ -86,9 +86,9 @@ const setupApp = () => {
   Byond.subscribe((type, payload) => store.dispatch({ type, payload }));
 
   // Enable hot module reloading
-  if (module.hot) {
+  if (import.meta.webpackHot) {
     setupHotReloading();
-    module.hot.accept(['./components', './debug', './layouts', './routes'], () => {
+    import.meta.webpackHot.accept(['./components', './debug', './layouts', './routes'], () => {
       renderApp();
     });
   }

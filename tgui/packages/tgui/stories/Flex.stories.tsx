@@ -12,7 +12,7 @@ export const meta = {
   render: () => <Story />,
 };
 
-const Story = (props) => {
+function Story() {
   const [grow, setGrow] = useLocalState('fs_grow', 1);
   const [direction, setDirection] = useLocalState('fs_direction', 'column');
   const [fill, setFill] = useLocalState('fs_fill', true);
@@ -51,4 +51,4 @@ const Story = (props) => {
       </Flex.Item>
     </Flex>
   );
-};
+}
