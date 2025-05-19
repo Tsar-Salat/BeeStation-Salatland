@@ -179,6 +179,8 @@
 	toxLethality = 1.1 * LIVER_DEFAULT_TOX_LETHALITY
 	maxHealth = STANDARD_ORGAN_THRESHOLD*0.5
 
+	var/emp_vulnerability = 60
+
 /obj/item/organ/liver/cybernetic/tier2
 	name = "cybernetic liver"
 	icon_state = "liver-c-u"
@@ -186,6 +188,7 @@
 	maxHealth = 1.5 * STANDARD_ORGAN_THRESHOLD
 	toxTolerance = 5 //can shrug off up to 5u of toxins
 	toxLethality = 0.8 * LIVER_DEFAULT_TOX_LETHALITY //20% less damage than a normal liver
+	emp_vulnerability = 40
 
 /obj/item/organ/liver/cybernetic/tier2/ipc
 	name = "substance processor"
@@ -197,9 +200,14 @@
 	toxTolerance = -1
 	toxLethality = 0
 	status = ORGAN_ROBOTIC
+	emp_vulnerability = 35
 
 /obj/item/organ/liver/cybernetic/tier2/ipc/emp_act(severity)
-	if(prob(30/severity))
+	if(. & EMP_PROTECT_SELF)
+		return
+	if(!COOLDOWN_FINISHED(src, emp_cooldown)) //To fight against two emp guns
+		COOLDOWN_START(src, emp_cooldown, 0.05 SECONDS)
+	if(prob(emp_vulnerability/severity))
 		to_chat(owner, span_warning("Alert: Your Substance Processor has been damaged. An internal chemical leak is affecting performance."))
 		owner.adjustToxLoss(8/severity)
 
@@ -212,7 +220,9 @@
 	. = ..()
 	if(. & EMP_PROTECT_SELF)
 		return
-	if(prob(30/severity))
+	if(!COOLDOWN_FINISHED(src, emp_cooldown)) //To fight against two emp guns
+		COOLDOWN_START(src, emp_cooldown, 0.05 SECONDS)
+	if(prob(emp_vulnerability/severity))
 		damage += (30/severity)
 
 #undef LIVER_DEFAULT_TOX_TOLERANCE

@@ -2307,16 +2307,16 @@ All effects don't start immediately, but rather get worse over time; the rate is
 
 	var/stored_teleports = 0
 
-/datum/reagent/consumable/ethanol/blazaam/on_mob_life(mob/living/carbon/M, delta_time, times_fired)
-	if(M.drunkenness > 40)
+/datum/reagent/consumable/ethanol/blazaam/on_mob_life(mob/living/carbon/drinker, delta_time, times_fired)
+	if(drinker.drunkenness > 40)
 		if(stored_teleports)
-			do_teleport(M, get_turf(M), rand(1,3), channel = TELEPORT_CHANNEL_WORMHOLE)
+			do_teleport(drinker, get_turf(drinker), rand(1,3), channel = TELEPORT_CHANNEL_WORMHOLE)
 			stored_teleports--
 
 		if(DT_PROB(5, delta_time))
 			stored_teleports += rand(2, 6)
 			if(prob(70))
-				M.vomit()
+				drinker.vomit(vomit_type = VOMIT_PURPLE)
 	return ..()
 
 

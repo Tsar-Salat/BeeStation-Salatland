@@ -51,12 +51,12 @@
 		addtimer(CALLBACK(src, PROC_REF(stop_if_unowned)), 80)
 
 /obj/item/organ/heart/proc/Stop()
-	beating = 0
+	beating = FALSE
 	update_icon()
 	return 1
 
 /obj/item/organ/heart/proc/Restart()
-	beating = 1
+	beating = TRUE
 	update_icon()
 	return 1
 
@@ -182,22 +182,44 @@
 	colour = "red"
 
 /obj/item/organ/heart/cybernetic
-	name = "cybernetic heart"
+	name = "basic cybernetic heart"
 	desc = "An electronic device designed to mimic the functions of an organic human heart. Also holds an emergency dose of epinephrine, used automatically after facing severe trauma."
 	icon_state = "heart-c-on"
 	icon_base = "heart-c"
 	organ_flags = ORGAN_SYNTHETIC
 	status = ORGAN_ROBOTIC
+
 	var/dose_available = TRUE
 	var/rid = /datum/reagent/medicine/epinephrine
 	var/ramount = 10
+	var/emp_vulnerability = 60
+
+/obj/item/organ/heart/cybernetic/upgraded
+	name = "upgraded cybernetic heart"
+	desc = "An electronic device designed to mimic the functions of an organic human heart. Also holds an emergency dose of epinephrine, used automatically after facing severe trauma. This upgraded model can regenerate its dose after use."
+	icon_state = "heart-c-u-on"
+	icon_base = "heart-c-u"
+	emp_vulnerability = 40
+
+/obj/item/organ/heart/cybernetic/ipc
+	desc = "An electronic device that appears to mimic the functions of an organic heart."
+	dose_available = FALSE
+	emp_vulnerability = 35
 
 /obj/item/organ/heart/cybernetic/emp_act(severity)
 	. = ..()
+
+	if(!owner.needs_heart())
+		return
+
 	if(. & EMP_PROTECT_SELF)
 		return
-	if(prob(30/severity))
+	if(!COOLDOWN_FINISHED(src, emp_cooldown)) //To fight against two emp guns
+		COOLDOWN_START(src, emp_cooldown, 0.25 SECONDS)
+	if(prob(emp_vulnerability/severity))
 		Stop()
+		owner.visible_message(span_danger("[owner] clutches at [owner.p_their()] chest as if [owner.p_their()] heart is stopping!"), \
+						span_userdanger("You feel a terrible pain in your chest, as if your heart has stopped!"))
 		addtimer(CALLBACK(src, PROC_REF(Restart)), 10 SECONDS)
 
 /obj/item/organ/heart/cybernetic/on_life(delta_time, times_fired)
@@ -209,19 +231,9 @@
 /obj/item/organ/heart/cybernetic/proc/used_dose()
 	dose_available = FALSE
 
-/obj/item/organ/heart/cybernetic/upgraded
-	name = "upgraded cybernetic heart"
-	desc = "An electronic device designed to mimic the functions of an organic human heart. Also holds an emergency dose of epinephrine, used automatically after facing severe trauma. This upgraded model can regenerate its dose after use."
-	icon_state = "heart-c-u-on"
-	icon_base = "heart-c-u"
-
 /obj/item/organ/heart/cybernetic/upgraded/used_dose()
 	. = ..()
 	addtimer(VARSET_CALLBACK(src, dose_available, TRUE), 5 MINUTES)
-
-/obj/item/organ/heart/cybernetic/ipc
-	desc = "An electronic device that appears to mimic the functions of an organic heart."
-	dose_available = FALSE
 
 /obj/item/organ/heart/freedom
 	name = "heart of freedom"

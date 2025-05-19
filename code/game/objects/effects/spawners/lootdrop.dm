@@ -229,7 +229,7 @@
 		/obj/item/organ/eyes/night_vision = 1,
 		/obj/item/organ/liver/plasmaman = 3,
 		/obj/item/organ/liver/alien = 3,
-		/obj/item/organ/stomach/plasmaman = 3,
+		/obj/item/organ/stomach/bone/plasmaman = 3,
 		/obj/item/organ/lungs/plasmaman = 3,
 		/obj/item/organ/lungs/slime = 3,
 		/obj/item/organ/tongue/abductor = 1,

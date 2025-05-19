@@ -83,11 +83,11 @@
 
 /datum/species/ipc/on_species_gain(mob/living/carbon/C)
 	. = ..()
-	var/obj/item/organ/appendix/A = C.getorganslot("appendix") //See below.
+	var/obj/item/organ/appendix/A = C.getorganslot(ORGAN_SLOT_APPENDIX) //See below.
 	if(A)
 		A.Remove(C)
 		QDEL_NULL(A)
-	var/obj/item/organ/lungs/L = C.getorganslot("lungs") //Hacky and bad. Will be rewritten entirely in KapuCarbons anyway.
+	var/obj/item/organ/lungs/L = C.getorganslot(ORGAN_SLOT_LUNGS) //Hacky and bad. Will be rewritten entirely in KapuCarbons anyway. //Uh huh, whens that comin bud?
 	if(L)
 		L.Remove(C)
 		QDEL_NULL(L)
