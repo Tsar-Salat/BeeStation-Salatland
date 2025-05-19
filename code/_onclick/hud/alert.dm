@@ -546,10 +546,20 @@ Recharging stations are available in robotics, the dormitory bathrooms, and the 
 
 //Ethereal
 
-/atom/movable/screen/alert/etherealcharge
+//Ethereal
+
+/atom/movable/screen/alert/lowcell/ethereal
 	name = "Low Blood Charge"
-	desc = "Your blood's electric charge is running low, find a source of charge for your blood. Use a recharging station found in robotics or the dormitory bathrooms, or eat some Ethereal-friendly food."
-	icon_state = "etherealcharge"
+	desc = "Your charge is running low, find a source of energy! Use a recharging station, eat some Ethereal-friendly food, or syphon some power from lights, a power cell, or an APC (done by right clicking on combat mode)."
+
+/atom/movable/screen/alert/emptycell/ethereal
+	name = "No Blood Charge"
+	desc = "You are out of juice, find a source of energy! Use a recharging station, eat some Ethereal-friendly food, or syphon some power from lights, a power cell, or an APC (done by right clicking on combat mode)."
+
+/atom/movable/screen/alert/ethereal_overcharge
+	name = "Blood Overcharge"
+	desc = "Your charge is running dangerously high, find an outlet for your energy! Right click an APC while not in combat mode."
+	icon_state = "cell_overcharge"
 
 //Need to cover all use cases - emag, illegal upgrade module, malf AI hack, traitor cyborg
 /atom/movable/screen/alert/hacked

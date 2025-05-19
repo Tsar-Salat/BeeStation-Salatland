@@ -36,7 +36,7 @@
 	if(istype(owner, /mob/living/carbon/human))
 		var/mob/living/carbon/human/humi = owner
 		if(!(organ_flags & ORGAN_FAILING))
-			humi.dna.species.handle_digestion(humi, delta_time, times_fired)
+			handle_hunger(humi, delta_time, times_fired)
 
 	var/mob/living/carbon/body = owner
 
@@ -96,6 +96,93 @@
 		body.vomit(damage)
 		to_chat(body, "<span class='warning'>Your stomach reels in pain as you're incapable of holding down all that food!</span>")
 
+/obj/item/organ/stomach/proc/handle_hunger(mob/living/carbon/human/human, delta_time, times_fired)
+	if(HAS_TRAIT(human, TRAIT_NOHUNGER))
+		return //hunger is for BABIES
+
+	//The fucking TRAIT_FAT mutation is the dumbest shit ever. It makes the code so difficult to work with
+	if(HAS_TRAIT_FROM(human, TRAIT_FAT, OBESITY))//I share your pain, past coder.
+		if(human.overeatduration < (200 SECONDS))
+			to_chat(human, span_notice("You feel fit again!"))
+			REMOVE_TRAIT(human, TRAIT_FAT, OBESITY)
+			human.remove_movespeed_modifier(/datum/movespeed_modifier/obesity)
+			human.update_inv_w_uniform()
+			human.update_inv_wear_suit()
+	else
+		if(human.overeatduration >= (200 SECONDS))
+			to_chat(human, span_danger("You suddenly feel blubbery!"))
+			ADD_TRAIT(human, TRAIT_FAT, OBESITY)
+			human.add_movespeed_modifier(/datum/movespeed_modifier/obesity)
+			human.update_inv_w_uniform()
+			human.update_inv_wear_suit()
+
+	// nutrition decrease and satiety
+	if (human.nutrition > 0 && human.stat != DEAD)
+		// THEY HUNGER
+		var/hunger_rate = HUNGER_FACTOR
+		var/datum/component/mood/mood = human.GetComponent(/datum/component/mood)
+		if(mood && mood.sanity > SANITY_DISTURBED)
+			hunger_rate *= max(1 - 0.002 * mood.sanity, 0.5) //0.85 to 0.75
+		// Whether we cap off our satiety or move it towards 0
+		if(human.satiety > MAX_SATIETY)
+			human.satiety = MAX_SATIETY
+		else if(human.satiety > 0)
+			human.satiety--
+		else if(human.satiety < -MAX_SATIETY)
+			human.satiety = -MAX_SATIETY
+		else if(human.satiety < 0)
+			human.satiety++
+			if(DT_PROB(round(-human.satiety/77), delta_time))
+				human.Jitter(5)
+			hunger_rate = 3 * HUNGER_FACTOR
+		hunger_rate *= human.physiology.hunger_mod
+		human.adjust_nutrition(-hunger_rate * delta_time)
+
+	if(human.nutrition > NUTRITION_LEVEL_FULL)
+		if(human.overeatduration < 20 MINUTES) //capped so people don't take forever to unfat
+			human.overeatduration = min(human.overeatduration + (1 SECONDS * delta_time), 20 MINUTES)
+	else
+		if(human.overeatduration > 0)
+			human.overeatduration = max(human.overeatduration - (2 SECONDS * delta_time), 0) //doubled the unfat rate
+
+	//metabolism change
+	if(human.nutrition > NUTRITION_LEVEL_FAT)
+		human.metabolism_efficiency = 1
+	else if(human.nutrition > NUTRITION_LEVEL_FED && human.satiety > 80)
+		if(human.metabolism_efficiency != 1.25)
+			to_chat(human, span_notice("You feel vigorous."))
+			human.metabolism_efficiency = 1.25
+	else if(human.nutrition < NUTRITION_LEVEL_STARVING + 50)
+		if(human.metabolism_efficiency != 0.8)
+			to_chat(human, span_notice("You feel sluggish."))
+		human.metabolism_efficiency = 0.8
+	else
+		if(human.metabolism_efficiency == 1.25)
+			to_chat(human, span_notice("You no longer feel vigorous."))
+		human.metabolism_efficiency = 1
+
+	//Hunger slowdown for if mood isn't enabled
+	if(CONFIG_GET(flag/disable_human_mood))
+		handle_hunger_slowdown(human)
+
+	switch(human.nutrition)
+		if(NUTRITION_LEVEL_FULL to INFINITY)
+			human.throw_alert("nutrition", /atom/movable/screen/alert/fat)
+		if(NUTRITION_LEVEL_HUNGRY to NUTRITION_LEVEL_FULL)
+			human.clear_alert("nutrition")
+		if(NUTRITION_LEVEL_STARVING to NUTRITION_LEVEL_HUNGRY)
+			human.throw_alert("nutrition", /atom/movable/screen/alert/hungry)
+		if(0 to NUTRITION_LEVEL_STARVING)
+			human.throw_alert("nutrition", /atom/movable/screen/alert/starving)
+
+///for when mood is disabled and hunger should handle slowdowns
+/obj/item/organ/stomach/proc/handle_hunger_slowdown(mob/living/carbon/human/human)
+	var/hungry = (500 - human.nutrition) / 5 //So overeat would be 100 and default level would be 80
+	if(hungry >= 70)
+		human.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/hunger, multiplicative_slowdown = (hungry / 50))
+	else
+		human.remove_movespeed_modifier(/datum/movespeed_modifier/hunger)
+
 /obj/item/organ/stomach/get_availability(datum/species/S)
 	return !(NOSTOMACH in S.species_traits)
 
@@ -134,11 +221,12 @@
 			H.throw_alert("disgust", /atom/movable/screen/alert/disgusted)
 			SEND_SIGNAL(H, COMSIG_ADD_MOOD_EVENT, "disgust", /datum/mood_event/disgusted)
 
-/obj/item/organ/stomach/Remove(mob/living/carbon/M, special = 0, pref_load = FALSE)
-	if(istype(owner, /mob/living/carbon/human))
-		var/mob/living/carbon/human/H = owner
-		H.clear_alert("disgust")
-		SEND_SIGNAL(H, COMSIG_CLEAR_MOOD_EVENT, "disgust")
+/obj/item/organ/stomach/Remove(mob/living/carbon/stomach_owner, special = 0, pref_load = FALSE)
+	if(ishuman(stomach_owner))
+		var/mob/living/carbon/human/human_owner = owner
+		human_owner.clear_alert("disgust")
+		SEND_SIGNAL(human_owner, COMSIG_CLEAR_MOOD_EVENT, "disgust")
+		SEND_SIGNAL(human_owner, COMSIG_CLEAR_MOOD_EVENT, "nutrition")
 
 	return ..()
 
@@ -187,97 +275,6 @@
 		body.heal_bodypart_damage(1.5,0, 0)
 		reagents.remove_reagent(milk.type, milk.metabolization_rate)
 	return ..()
-
-/obj/item/organ/stomach/battery
-	name = "implantable battery"
-	icon_state = "implant-power"
-	desc = "A battery that stores charge for species that run on electricity."
-	var/max_charge = 5000 //same as upgraded+ cell
-	var/charge = 5000
-
-/obj/item/organ/stomach/battery/Insert(mob/living/carbon/M, special = 0, pref_load = FALSE)
-	. = ..()
-	RegisterSignal(owner, COMSIG_PROCESS_BORGCHARGER_OCCUPANT, PROC_REF(charge))
-	update_nutrition()
-
-/obj/item/organ/stomach/battery/Remove(mob/living/carbon/M, special = 0, pref_load = FALSE)
-	UnregisterSignal(owner, COMSIG_PROCESS_BORGCHARGER_OCCUPANT)
-	if(!HAS_TRAIT(owner, TRAIT_NOHUNGER) && HAS_TRAIT(owner, TRAIT_POWERHUNGRY))
-		owner.nutrition = 0
-		owner.throw_alert("nutrition", /atom/movable/screen/alert/nocell)
-	return ..()
-
-/obj/item/organ/stomach/battery/proc/charge(datum/source, amount, repairs)
-	SIGNAL_HANDLER
-	adjust_charge(amount)
-
-/obj/item/organ/stomach/battery/proc/adjust_charge(amount)
-	if(amount > 0)
-		charge = clamp((charge + amount)*(1-(damage/maxHealth)), 0, max_charge)
-	else
-		charge = clamp(charge + amount, 0, max_charge)
-	update_nutrition()
-
-/obj/item/organ/stomach/battery/proc/adjust_charge_scaled(amount)
-	adjust_charge(amount*max_charge/NUTRITION_LEVEL_FULL)
-
-/obj/item/organ/stomach/battery/proc/set_charge(amount)
-	charge = clamp(amount*(1-(damage/maxHealth)), 0, max_charge)
-	update_nutrition()
-
-/obj/item/organ/stomach/battery/proc/set_charge_scaled(amount)
-	set_charge(amount*max_charge/NUTRITION_LEVEL_FULL)
-
-/obj/item/organ/stomach/battery/proc/update_nutrition()
-	if(!HAS_TRAIT(owner, TRAIT_NOHUNGER) && HAS_TRAIT(owner, TRAIT_POWERHUNGRY))
-		owner.nutrition = (charge/max_charge)*NUTRITION_LEVEL_FULL
-
-/obj/item/organ/stomach/battery/emp_act(severity)
-	. = ..()
-	adjust_charge((-0.3 * max_charge) / severity)
-
-/obj/item/organ/stomach/battery/ipc
-	name = "micro-cell"
-	icon_state = "microcell"
-	w_class = WEIGHT_CLASS_NORMAL
-	attack_verb_continuous = list("assault and batteries")
-	attack_verb_simple = list("assault and battery")
-	desc = "A micro-cell, for IPC use. Do not swallow."
-	status = ORGAN_ROBOTIC
-	organ_flags = ORGAN_SYNTHETIC
-	max_charge = 2750 //50 nutrition from 250 charge
-	charge = 2750
-
-/obj/item/organ/stomach/battery/ipc/emp_act(severity)
-	. = ..()
-	switch(severity)
-		if(1)
-			to_chat(owner, span_warning("Alert: Heavy EMP Detected. Rebooting power cell to prevent damage."))
-		if(2)
-			to_chat(owner, span_warning("Alert: EMP Detected. Cycling battery."))
-
-/obj/item/organ/stomach/battery/ethereal
-	name = "biological battery"
-	icon_state = "stomach-p" //Welp. At least it's more unique in functionaliy.
-	desc = "A crystal-like organ that stores the electric charge of ethereals."
-	max_charge = 2500 //same as upgraded cell
-	charge = 2500
-
-/obj/item/organ/stomach/battery/ethereal/Insert(mob/living/carbon/M, special = 0, pref_load = FALSE)
-	RegisterSignal(owner, COMSIG_LIVING_ELECTROCUTE_ACT, PROC_REF(on_electrocute))
-	return ..()
-
-/obj/item/organ/stomach/battery/ethereal/Remove(mob/living/carbon/M, special = 0, pref_load = FALSE)
-	UnregisterSignal(owner, COMSIG_LIVING_ELECTROCUTE_ACT)
-	return ..()
-
-/obj/item/organ/stomach/battery/ethereal/proc/on_electrocute(datum/source, shock_damage, siemens_coeff = 1, flags = NONE)
-	SIGNAL_HANDLER
-
-	if(flags & SHOCK_ILLUSION)
-		return
-	adjust_charge(shock_damage * siemens_coeff * 20)
-	to_chat(owner, span_notice("You absorb some of the shock into your body!"))
 
 /obj/item/organ/stomach/cybernetic
 	name = "basic cybernetic stomach"

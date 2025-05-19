@@ -20,7 +20,7 @@
 	current_cycle++
 	if(ishuman(M))
 		var/mob/living/carbon/human/H = M
-		if(!HAS_TRAIT(H, TRAIT_NOHUNGER) && !HAS_TRAIT(H, TRAIT_POWERHUNGRY))
+		if(!HAS_TRAIT(H, TRAIT_NOHUNGER))
 			H.adjust_nutrition(nutriment_factor * REM * delta_time)
 	if(length(reagent_removal_skip_list))
 		return
@@ -804,11 +804,22 @@
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
 	taste_description = "pure electrictiy"
 
+/datum/reagent/consumable/liquidelectricity/expose_mob(mob/living/exposed_mob, method=TOUCH, reac_volume) //can't be on life because of the way blood works.
+	. = ..()
+	if(!(method in list(INGEST, INJECT, PATCH)) || !iscarbon(exposed_mob))
+		return
+
+	var/mob/living/carbon/exposed_carbon = exposed_mob
+	//IPCs and Ethereals benefit from charge
+	var/obj/item/organ/stomach/electrical/stomach = exposed_carbon.getorganslot(ORGAN_SLOT_STOMACH)
+	if(istype(stomach))
+		stomach.adjust_charge(reac_volume * 30)
+
 /datum/reagent/consumable/liquidelectricity/on_mob_life(mob/living/carbon/M, delta_time, times_fired)
-	if(HAS_TRAIT(M, TRAIT_POWERHUNGRY))
-		var/obj/item/organ/stomach/battery/stomach = M.getorganslot(ORGAN_SLOT_STOMACH)
-		if(istype(stomach))
-			stomach.adjust_charge(40*REM)
+	//Only Ethereals get more blood
+	var/obj/item/organ/stomach/electrical/ethereal/stomach = M.getorganslot(ORGAN_SLOT_STOMACH)
+	if(istype(stomach))
+		M.blood_volume += 1 * delta_time
 	else if(DT_PROB(1.5, delta_time)) //scp13 optimization
 		M.electrocute_act(rand(3,5), "Liquid Electricity in their body", 1) //lmao at the newbs who eat energy bars
 		playsound(M, "sparks", 50, 1)

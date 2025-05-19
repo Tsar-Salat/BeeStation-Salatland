@@ -266,6 +266,22 @@ GLOBAL_LIST_INIT(available_random_trauma_list, list(
 //Used as an upper limit for species that continuously gain nutriment
 #define NUTRITION_LEVEL_ALMOST_FULL 535
 
+//Charge levels for Ethereals
+#define ETHEREAL_CHARGE_NONE 0
+#define ETHEREAL_CHARGE_LOWPOWER 400
+#define ETHEREAL_CHARGE_NORMAL 1000
+#define ETHEREAL_CHARGE_ALMOSTFULL 1500
+#define ETHEREAL_CHARGE_FULL 2000
+#define ETHEREAL_CHARGE_OVERLOAD 2500
+#define ETHEREAL_CHARGE_DANGEROUS 3000
+
+/*
+#define CRYSTALIZE_COOLDOWN_LENGTH 120 SECONDS
+#define CRYSTALIZE_PRE_WAIT_TIME 40 SECONDS
+#define CRYSTALIZE_DISARM_WAIT_TIME 120 SECONDS
+#define CRYSTALIZE_HEAL_TIME 60 SECONDS
+*/
+
 //Base nutrition value used for newly initialized slimes
 #define SLIME_DEFAULT_NUTRITION 700
 
@@ -396,6 +412,7 @@ GLOBAL_LIST_INIT(available_random_trauma_list, list(
 #define DOOR_CRUSH_DAMAGE	15	//! the amount of damage that airlocks deal when they crush you
 
 #define HUNGER_FACTOR 0.05 //factor at which mob nutrition decreases
+#define ETHEREAL_CHARGE_FACTOR 0.8 //factor at which ethereal's charge decreases per second
 #define REAGENTS_METABOLISM 0.2 //How many units of reagent are consumed per second, by default.
 #define REAGENTS_EFFECT_MULTIPLIER (REAGENTS_METABOLISM / 0.4) // By defining the effect multiplier this way, it'll exactly adjust all effects according to how they originally were with the 0.4 metabolism
 
