@@ -293,3 +293,11 @@
 	. = ..()
 	if(prob(20))
 		. += "[pick(descs)]"
+
+
+/obj/item/reagent_containers/pill/iron
+	name = "iron pill"
+	desc = "Used to reduce bloodloss slowly."
+	icon_state = "pill8"
+	list_reagents = list(/datum/reagent/iron = 30)
+	rename_with_volume = TRUE

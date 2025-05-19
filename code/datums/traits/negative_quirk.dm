@@ -459,7 +459,7 @@
 	process = TRUE
 
 /datum/quirk/insanity/on_process(delta_time)
-	if(quirk_target.has_reagent(/datum/reagent/toxin/mindbreaker, needs_metabolizing = TRUE))
+	if(quirk_target.reagents.has_reagent(/datum/reagent/toxin/mindbreaker, needs_metabolizing = TRUE))
 		quirk_target.hallucination = 0
 		return
 	if(DT_PROB(2, delta_time)) //we'll all be mad soon enough

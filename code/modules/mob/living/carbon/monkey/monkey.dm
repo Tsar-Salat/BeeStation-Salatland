@@ -108,9 +108,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/carbon/monkey)
 /mob/living/carbon/monkey/on_reagent_change()
 	. = ..()
 	var/amount
-	if(has_reagent(/datum/reagent/medicine/morphine))
+	if(reagents.has_reagent(/datum/reagent/medicine/morphine))
 		amount = -1
-	if(has_reagent(/datum/reagent/consumable/nuka_cola))
+	if(reagents.has_reagent(/datum/reagent/consumable/nuka_cola))
 		amount = -1
 	if(amount)
 		add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/monkey_reagent_speedmod, TRUE, amount)

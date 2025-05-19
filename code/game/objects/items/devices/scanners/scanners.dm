@@ -522,7 +522,12 @@ GENE SCANNER
 				message += span_notice("Subject contains the following reagents in their stomach:\n")
 				for(var/bile in belly.reagents.reagent_list)
 					var/datum/reagent/bit = bile
-					message += span_notice("[round(bit.volume, 0.001)] units of [bit.name][bit.overdosed ? "</span> - <span class='boldannounce'>OVERDOSING</span>" : ".</span>"]\n")
+					if(!belly.food_reagents[bit.type])
+						message += "<span class='notice ml-2'>[round(bit.volume, 0.001)] units of [bit.name][bit.overdosed ? "</span> - <span class='boldannounce'>OVERDOSING</span>" : ".</span>"]\n"
+					else
+						var/bit_vol = bit.volume - belly.food_reagents[bit.type]
+						if(bit_vol > 0)
+							message += "<span class='notice ml-2'>[round(bit_vol, 0.001)] units of [bit.name][bit.overdosed ? "</span> - <span class='boldannounce'>OVERDOSING</span>" : ".</span>"]\n"
 			else
 				message += span_notice("Subject contains no reagents in their stomach.\n")
 		if(M.reagents.addiction_list.len)

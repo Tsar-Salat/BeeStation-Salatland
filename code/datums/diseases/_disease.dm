@@ -95,7 +95,7 @@
 
 	. = cures.len
 	for(var/C_id in cures)
-		if(!affected_mob.has_reagent(C_id))
+		if(!affected_mob.reagents.has_reagent(C_id))
 			.--
 	if(!. || (needs_all_cures && . < cures.len))
 		return FALSE
@@ -111,7 +111,7 @@
 	if (affected_mob.stat == DEAD && !spread_dead && !force_spread)
 		return
 
-	if(affected_mob.has_reagent(/datum/reagent/medicine/spaceacillin) || (affected_mob.satiety > 0 && prob(affected_mob.satiety/10)))
+	if(affected_mob.reagents.has_reagent(/datum/reagent/medicine/spaceacillin) || (affected_mob.satiety > 0 && prob(affected_mob.satiety/10)))
 		return
 
 	var/spread_range = 2

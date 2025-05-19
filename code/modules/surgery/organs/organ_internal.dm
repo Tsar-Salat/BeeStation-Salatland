@@ -1,10 +1,11 @@
 /obj/item/organ
 	name = "organ"
 	icon = 'icons/obj/surgery.dmi'
-	var/mob/living/carbon/owner = null
-	var/status = ORGAN_ORGANIC
 	w_class = WEIGHT_CLASS_SMALL
 	throwforce = 0
+	juice_typepath = /datum/reagent/liquidgibs
+	var/mob/living/carbon/owner = null
+	var/status = ORGAN_ORGANIC
 	var/zone = BODY_ZONE_CHEST
 	var/slot
 	// DO NOT add slots with matching names to different zones - it will break internal_organs_slot list!
@@ -29,7 +30,9 @@
 	///When you take a bite you cant jam it in for surgery anymore.
 	var/useable = TRUE
 	var/list/food_reagents = list(/datum/reagent/consumable/nutriment = 5)
-	juice_typepath = /datum/reagent/liquidgibs
+	///The size of the reagent container
+	var/reagent_vol = 10
+
 
 	///Do we effect the appearance of our mob. Used to save time in preference code
 	var/visual = TRUE
@@ -49,7 +52,7 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 		AddComponent(/datum/component/edible,\
 		initial_reagents = food_reagents,\
 		foodtypes = RAW | MEAT | GORE,\
-		volume = 10,\
+		volume = reagent_vol,\
 		pre_eat = CALLBACK(src, PROC_REF(pre_eat)),\
 		on_compost = CALLBACK(src, PROC_REF(pre_compost)),\
 		after_eat = CALLBACK(src, PROC_REF(on_eat_from)))

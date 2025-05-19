@@ -428,7 +428,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 	if(HAS_TRAIT(src, TRAIT_NOVOMIT))
 		return TRUE
 
-	if(nutrition < 100 && !blood)
+	if(nutrition < 100 && !blood && !force)
 		if(message)
 			visible_message(span_warning("[src] dry heaves!"), \
 							span_userdanger("You try to throw up, but there's nothing in your stomach!"))

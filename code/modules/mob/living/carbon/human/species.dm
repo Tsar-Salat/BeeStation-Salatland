@@ -476,7 +476,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		C.setToxLoss(0, TRUE, TRUE)
 
 	if(TRAIT_NOMETABOLISM in inherent_traits)
-		C.end_metabolization(keep_liverless = TRUE)
+		C.reagents.end_metabolization(C, keep_liverless = TRUE)
 
 	if(inherent_factions)
 		for(var/i in inherent_factions)

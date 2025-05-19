@@ -12,15 +12,7 @@
 		. = ..()
 	else
 		//Reagent processing needs to come before breathing, to prevent edge cases.
-		if(stat != DEAD)
-			for(var/V in internal_organs)
-				var/obj/item/organ/O = V
-				O.on_life(delta_time, times_fired)
-		else
-			if(reagents && !reagents.has_reagent(/datum/reagent/toxin/formaldehyde, 1)) // No organ decay if the body contains formaldehyde.
-				for(var/V in internal_organs)
-					var/obj/item/organ/O = V
-					O.on_death() //Needed so organs decay while inside the body.
+		handle_organs(delta_time, times_fired)
 
 		. = ..()
 		if(QDELETED(src))
@@ -89,7 +81,7 @@
 //Second link in a breath chain, calls check_breath()
 /mob/living/carbon/proc/breathe(delta_time, times_fired)
 	var/obj/item/organ/lungs = getorganslot(ORGAN_SLOT_LUNGS)
-	if(has_reagent(/datum/reagent/toxin/lexorin, needs_metabolizing = TRUE))
+	if(reagents.has_reagent(/datum/reagent/toxin/lexorin, needs_metabolizing = TRUE))
 		return
 
 	var/datum/gas_mixture/environment
@@ -160,7 +152,7 @@
 
 	//CRIT
 	if(!breath || (breath.total_moles() == 0) || !lungs)
-		if(has_reagent(/datum/reagent/medicine/epinephrine, needs_metabolizing = TRUE) && lungs)
+		if(reagents.has_reagent(/datum/reagent/medicine/epinephrine, needs_metabolizing = TRUE) && lungs)
 			return
 		adjustOxyLoss(1)
 
@@ -701,28 +693,6 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 		return FALSE
 	return belly.reagents.has_reagent(reagent, amount, needs_metabolizing)
 
-/mob/living/carbon/remove_reagent(reagent, custom_amount, safety)
-	if(!custom_amount)
-		custom_amount = get_reagent_amount(reagent)
-	var/amount_body = reagents.get_reagent_amount(reagent)
-	if(custom_amount <= amount_body)
-		reagents.remove_reagent(reagent, custom_amount, safety)
-		return	TRUE
-	reagents.remove_reagent(reagent, amount_body, safety)
-	custom_amount -= amount_body
-	var/obj/item/organ/stomach/belly = getorganslot(ORGAN_SLOT_STOMACH)
-	if(!belly)
-		return FALSE
-	belly.reagents.remove_reagent(reagent, custom_amount, safety)
-	return TRUE
-
-/mob/living/carbon/get_reagent_amount(reagent)
-	. = ..()
-	var/obj/item/organ/stomach/belly = getorganslot(ORGAN_SLOT_STOMACH)
-	if(!belly)
-		return
-	. += belly.reagents.get_reagent_amount(reagent)
-
 /////////
 //LIVER//
 /////////
@@ -749,19 +719,6 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 	adjustToxLoss(2 * delta_time, TRUE,  TRUE)
 	if(DT_PROB(15, delta_time))
 		to_chat(src, span_warning("You feel a stabbing pain in your abdomen!"))
-
-/**
- * Ends metabolization on the mob
- *
- * This stop all reagents in the body and organs from metabolizing
- * Vars:
- * * keep_liverless (bool)(optional)(default:TRUE) Will keep working without a liver
- */
-/mob/living/carbon/proc/end_metabolization(keep_liverless = TRUE)
-	reagents.end_metabolization(src, keep_liverless = keep_liverless)
-	var/obj/item/organ/stomach/belly = getorganslot(ORGAN_SLOT_STOMACH)
-	if(belly)
-		belly.reagents.end_metabolization(src, keep_liverless = keep_liverless)
 
 /////////////////////////////////////
 //MONKEYS WITH TOO MUCH CHOLOESTROL//
@@ -806,5 +763,18 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 		return
 
 	heart.beating = !status
+
+/mob/living/carbon/proc/handle_organs(delta_time, times_fired)
+	if(stat != DEAD)
+		for(var/organ_slot in GLOB.organ_process_order)
+			var/obj/item/organ/organ = getorganslot(organ_slot)
+			if(organ?.owner) // This exist mostly because reagent metabolization can cause organ reshuffling
+				organ.on_life(delta_time, times_fired)
+	else
+		if(reagents.has_reagent(/datum/reagent/toxin/formaldehyde, 1)) // No organ decay if the body contains formaldehyde.
+			return
+		for(var/V in internal_organs)
+			var/obj/item/organ/organ = V
+			organ.on_death(delta_time, times_fired) //Needed so organs decay while inside the body.
 
 #undef BALLMER_POINTS

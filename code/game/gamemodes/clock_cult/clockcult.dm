@@ -270,7 +270,7 @@ GLOBAL_VAR(clockcult_eminence)
 	if(!isliving(M) || QDELETED(M))
 		return
 	if(M.reagents)
-		if(M.has_reagent(/datum/reagent/water/holywater, 1))
+		if(M.reagents.has_reagent(/datum/reagent/water/holywater, 1))
 			if(pick(20))
 				to_chat(M, span_nezbere("You hear the cogs whispering to you, but cannot understand their words."))
 			return

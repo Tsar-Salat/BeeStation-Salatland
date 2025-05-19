@@ -534,11 +534,12 @@ CREATION_TEST_IGNORE_SELF(/turf)
 		V.desc = "A puddle of metallic slurry that looks vaguely like very fine sand. It almost seems like it's moving..."
 		V.icon_state = "vomitnanite_[pick(1,4)]"
 	if (purge && iscarbon(M))
-		var/mob/living/carbon/C = M
-		if(C.reagents)
-			clear_reagents_to_vomit_pool(C,V, purge)
+		clear_reagents_to_vomit_pool(M, V, purge)
 
 /proc/clear_reagents_to_vomit_pool(mob/living/carbon/M, obj/effect/decal/cleanable/vomit/V, purge = FALSE)
+	var/obj/item/organ/stomach/belly = M.getorganslot(ORGAN_SLOT_STOMACH)
+	if(!belly?.reagents.total_volume)
+		return
 	var/chemicals_lost = M.reagents.total_volume / 10
 	if(purge)
 		chemicals_lost = (2 * M.reagents.total_volume)/3 //For detoxification surgery, we're manually pumping the stomach out of chemcials, so it's far more efficient.
