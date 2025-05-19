@@ -2357,3 +2357,11 @@ Basically, we fill the time between now and 2s from now with hands based off the
 	var/spilled_ants = (round(reac_volume,1) - 5) // To account for ant decals giving 3-5 ants on initialize.
 	pests.reagents.add_reagent(/datum/reagent/ants, spilled_ants)
 	pests.update_ant_damage()
+
+/datum/reagent/cellulose
+	name = "Cellulose Fibers"
+	description = "A crystaline polydextrose polymer, plants swear by this stuff."
+	reagent_state = SOLID
+	color = "#E6E6DA"
+	taste_mult = 0
+	chem_flags = NONE
