@@ -251,8 +251,8 @@
 	switch(current_cycle)
 		if(1 to 15)
 			heating = 5
-			if(holder.has_reagent(/datum/reagent/cryostylane))
-				holder.remove_reagent(/datum/reagent/cryostylane, 5 * REM * delta_time)
+			if(M.has_reagent(/datum/reagent/cryostylane))
+				M.remove_reagent(/datum/reagent/cryostylane, 5 * REM * delta_time)
 			if(isslime(M))
 				heating = rand(5, 20)
 		if(15 to 25)
@@ -284,8 +284,8 @@
 	switch(current_cycle)
 		if(1 to 15)
 			cooling = -10
-			if(holder.has_reagent(/datum/reagent/consumable/capsaicin))
-				holder.remove_reagent(/datum/reagent/consumable/capsaicin, 5 * REM * delta_time)
+			if(M.has_reagent(/datum/reagent/consumable/capsaicin))
+				M.remove_reagent(/datum/reagent/consumable/capsaicin, 5 * REM * delta_time)
 			if(isslime(M))
 				cooling = -rand(5, 20)
 		if(15 to 25)

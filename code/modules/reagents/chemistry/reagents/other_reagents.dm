@@ -520,7 +520,7 @@
 	if(current_cycle >= cycles_to_turn)
 		var/datum/species/species_type = pick(race) //this worked with the old code, somehow, and it works here...
 		H.set_species(species_type)
-		H.reagents.del_reagent(type)
+		holder.del_reagent(type)
 		to_chat(H, span_warning("You've become \a [LOWER_TEXT(initial(species_type.name))]!"))
 		return
 	..()

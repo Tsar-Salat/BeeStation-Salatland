@@ -204,8 +204,8 @@
 
 
 /datum/reagent/cryostylane/on_mob_life(mob/living/carbon/M, delta_time, times_fired) //TODO: code freezing into an ice cube
-	if(M.reagents.has_reagent(/datum/reagent/oxygen))
-		M.reagents.remove_reagent(/datum/reagent/oxygen, 0.5 * REM * delta_time)
+	if(M.has_reagent(/datum/reagent/oxygen))
+		M.remove_reagent(/datum/reagent/oxygen, 0.5 * REM * delta_time)
 		M.adjust_bodytemperature(-15 * REM * delta_time)
 		if(ishuman(M))
 			var/mob/living/carbon/human/humi = M

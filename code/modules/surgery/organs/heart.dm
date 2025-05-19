@@ -202,7 +202,7 @@
 
 /obj/item/organ/heart/cybernetic/on_life(delta_time, times_fired)
 	. = ..()
-	if(dose_available && owner.stat == UNCONSCIOUS && !owner.reagents.has_reagent(rid))
+	if(dose_available && owner.stat == UNCONSCIOUS && !owner.has_reagent(rid))
 		owner.reagents.add_reagent(rid, ramount)
 		used_dose()
 

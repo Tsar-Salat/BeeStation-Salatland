@@ -200,7 +200,7 @@ GLOBAL_VAR(clockcult_eminence)
 		return
 	var/hierophant_message = "[span]"
 	if(sender?.reagents)
-		if(sender.reagents.has_reagent(/datum/reagent/water/holywater, 1))
+		if(sender.has_reagent(/datum/reagent/water/holywater, 1))
 			to_chat(sender, span_nezbere("[pick("You fail to transmit your cries for help.", "Your calls into the void go unanswered.", "You try to transmit your message, but the hierophant network is silent.")]"))
 			return FALSE
 	if(!msg)
@@ -270,7 +270,7 @@ GLOBAL_VAR(clockcult_eminence)
 	if(!isliving(M) || QDELETED(M))
 		return
 	if(M.reagents)
-		if(M.reagents.has_reagent(/datum/reagent/water/holywater, 1))
+		if(M.has_reagent(/datum/reagent/water/holywater, 1))
 			if(pick(20))
 				to_chat(M, span_nezbere("You hear the cogs whispering to you, but cannot understand their words."))
 			return

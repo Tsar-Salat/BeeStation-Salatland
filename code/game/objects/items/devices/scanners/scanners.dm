@@ -511,17 +511,26 @@ GENE SCANNER
 	var/message = list()
 	if(istype(M) && M.reagents)
 		if(M.reagents.reagent_list.len)
-			message += span_notice("Subject contains the following reagents:")
+			message += span_notice("Subject contains the following reagents in their blood:")
 			for(var/datum/reagent/R in M.reagents.reagent_list)
 				message += "[span_notice("[round(R.volume, 0.001)] units of [R.name]")] [R.overdosed == 1 ? " - [span_boldannounce("OVERDOSING")]" : ""]"
 		else
-			message += span_notice("Subject contains no reagents.")
+			message += span_notice("Subject contains no reagents in their blood.\n")
+		var/obj/item/organ/stomach/belly = M.getorganslot(ORGAN_SLOT_STOMACH)
+		if(belly)
+			if(belly.reagents.reagent_list.len)
+				message += span_notice("Subject contains the following reagents in their stomach:\n")
+				for(var/bile in belly.reagents.reagent_list)
+					var/datum/reagent/bit = bile
+					message += span_notice("[round(bit.volume, 0.001)] units of [bit.name][bit.overdosed ? "</span> - <span class='boldannounce'>OVERDOSING</span>" : ".</span>"]\n")
+			else
+				message += span_notice("Subject contains no reagents in their stomach.\n")
 		if(M.reagents.addiction_list.len)
 			message += span_boldannounce("Subject is addicted to the following reagents:")
 			for(var/datum/reagent/R in M.reagents.addiction_list)
 				message += span_alert("[R.name]")
 		else
-			message += "<span class='notice'>Subject is not addicted to any types of drug.</span>"
+			message += span_notice("Subject is not addicted to any types of drug.")
 	if(to_chat)
 		to_chat(user, examine_block(jointext(message, "\n")), trailing_newline = FALSE, type = MESSAGE_TYPE_INFO)
 	else

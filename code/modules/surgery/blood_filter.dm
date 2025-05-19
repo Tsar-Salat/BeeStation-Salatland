@@ -1,14 +1,17 @@
 /datum/surgery/blood_filter
 	name = "Filter Blood"
 	desc = "A surgical procedure that filters toxins from the patient's blood."
-	steps = list(/datum/surgery_step/incise,
-				/datum/surgery_step/retract_skin,
-				/datum/surgery_step/incise,
-				/datum/surgery_step/filter_blood,
-				/datum/surgery_step/close)
+	steps = list(
+		/datum/surgery_step/incise,
+		/datum/surgery_step/retract_skin,
+		/datum/surgery_step/incise,
+		/datum/surgery_step/filter_blood,
+		/datum/surgery_step/close
+	)
 
 	target_mobtypes = list(/mob/living/carbon/human, /mob/living/carbon/monkey)
 	possible_locs = list(BODY_ZONE_CHEST)
+	requires_bodypart_type = TRUE
 	ignore_clothes = FALSE
 	replaced_by = /datum/surgery/blood_filter/upgraded
 	var/antispam = FALSE
@@ -17,11 +20,13 @@
 /datum/surgery/blood_filter/New(surgery_target, surgery_location, surgery_bodypart)
 	..()
 	if(filtering_step_type)
-		steps = list(/datum/surgery_step/incise,
-				/datum/surgery_step/retract_skin,
-				/datum/surgery_step/incise,
-				filtering_step_type,
-				/datum/surgery_step/close)
+		steps = list(
+			/datum/surgery_step/incise,
+			/datum/surgery_step/retract_skin,
+			/datum/surgery_step/incise,
+			filtering_step_type,
+			/datum/surgery_step/close
+		)
 
 /datum/surgery/blood_filter/can_start(mob/user, mob/living/carbon/target, target_zone)
 	if(HAS_TRAIT(target, TRAIT_HUSK)) //Can't filter husk

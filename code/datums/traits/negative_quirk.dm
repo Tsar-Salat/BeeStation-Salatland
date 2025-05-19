@@ -71,7 +71,7 @@
 	var/notified = FALSE
 
 /datum/quirk/brainproblems/on_process(delta_time)
-	if(!quirk_target.reagents.has_reagent(/datum/reagent/medicine/mannitol))
+	if(!quirk_target.has_reagent(/datum/reagent/medicine/mannitol))
 		if(prob(80))
 			quirk_target.adjustOrganLoss(ORGAN_SLOT_BRAIN, 0.1 * delta_time)
 	var/obj/item/organ/brain/B = quirk_target.getorgan(/obj/item/organ/brain)
@@ -459,7 +459,7 @@
 	process = TRUE
 
 /datum/quirk/insanity/on_process(delta_time)
-	if(quirk_target.reagents.has_reagent(/datum/reagent/toxin/mindbreaker, needs_metabolizing = TRUE))
+	if(quirk_target.has_reagent(/datum/reagent/toxin/mindbreaker, needs_metabolizing = TRUE))
 		quirk_target.hallucination = 0
 		return
 	if(DT_PROB(2, delta_time)) //we'll all be mad soon enough
