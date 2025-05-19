@@ -33,6 +33,7 @@
 	///The size of the reagent container
 	var/reagent_vol = 10
 
+	var/failure_time = 0
 
 	///Do we effect the appearance of our mob. Used to save time in preference code
 	var/visual = TRUE
@@ -78,6 +79,7 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 	M.internal_organs |= src
 	M.internal_organs_slot[slot] = src
 	moveToNullspace()
+	RegisterSignal(owner, COMSIG_PARENT_EXAMINE, .proc/on_owner_examine)
 	for(var/trait in organ_traits)
 		ADD_TRAIT(M, trait, REF(src))
 	for(var/datum/action/action as anything in actions)
@@ -86,6 +88,9 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 
 //Special is for instant replacement like autosurgeons
 /obj/item/organ/proc/Remove(mob/living/carbon/organ_owner, special = FALSE, pref_load = FALSE)
+
+	UnregisterSignal(owner, COMSIG_PARENT_EXAMINE)
+
 	owner = null
 	if(organ_owner)
 		organ_owner.internal_organs -= src
@@ -120,6 +125,9 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 		return
 	REMOVE_TRAIT(owner, trait, REF(src))
 
+/obj/item/organ/proc/on_owner_examine(datum/source, mob/user, list/examine_list)
+	return
+
 /obj/item/organ/proc/on_find(mob/living/finder)
 	return
 
@@ -133,7 +141,12 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 
 /obj/item/organ/proc/on_life(delta_time, times_fired) //repair organ damage if the organ is not failing
 	if(organ_flags & ORGAN_FAILING)
+		handle_failing_organs(delta_time)
 		return
+
+	if(failure_time > 0)
+		failure_time--
+
 	///Damage decrements by a percent of its maxhealth
 	var/healing_amount = healing_factor
 	///Damage decrements again by a percent of its maxhealth, up to a total of 4 extra times depending on the owner's health
@@ -278,6 +291,23 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 			ears = new()
 			ears.Insert(src)
 		ears.setOrganDamage(0)
+
+///Organs don't die instantly, and neither should you when you get fucked up
+/obj/item/organ/proc/handle_failing_organs(delta_time)
+	if(owner.stat == DEAD)
+		return
+
+	failure_time += delta_time
+	organ_failure(delta_time)
+
+/** organ_failure
+ * generic proc for handling dying organs
+ *
+ * Arguments:
+ * delta_time - seconds since last tick
+ */
+/obj/item/organ/proc/organ_failure(delta_time)
+	return
 
 /** get_availability
   * returns whether the species should innately have this organ.
