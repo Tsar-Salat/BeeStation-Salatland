@@ -96,6 +96,11 @@
 
 	data = taste_amounts
 
+/datum/reagent/consumable/nutriment/organ_tissue
+	name = "Organ Tissue"
+	description = "Natural tissues that make up the bulk of organs, providing many vitamins and minerals."
+	taste_description = "rich earthy pungent"
+
 /datum/reagent/consumable/nutriment/vitamin
 	name = "Vitamin"
 	description = "All the best vitamins, minerals, and carbohydrates the body needs in pure form."

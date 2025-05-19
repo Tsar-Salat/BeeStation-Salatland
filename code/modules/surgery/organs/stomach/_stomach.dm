@@ -20,6 +20,7 @@
 	high_threshold_cleared = span_info("The pain in your stomach dies down for now, but food still seems unappealing.")
 	low_threshold_cleared = span_info("The last bouts of pain in your stomach have died out.")
 
+	food_reagents = list(/datum/reagent/consumable/nutriment/organ_tissue = 5)
 	//This is a reagent user and needs more then the 10u from edible component
 	reagent_vol = 1000
 
@@ -28,6 +29,12 @@
 
 	///The rate that the stomach will transfer reagents to the body
 	var/metabolism_efficiency = 0.1 // the lowest we should go is 0.05
+
+/obj/item/organ/stomach/Initialize(mapload)
+	. = ..()
+	//None edible organs do not get a reagent holder by default
+	if(!reagents)
+		create_reagents(reagent_vol)
 
 /obj/item/organ/stomach/on_life(delta_time, times_fired)
 	. = ..()
