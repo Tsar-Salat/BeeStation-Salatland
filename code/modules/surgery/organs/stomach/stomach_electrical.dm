@@ -2,6 +2,7 @@
 	name = "PARENT electric stomach"
 	icon_state = "stomach-p"
 	desc = "You spawned the parent, dumbass"
+	organ_traits = list(TRAIT_NOHUNGER) // We have our own hunger mechanic.
 	/*
 	 * The normal charge at roundstart. DO NOT use this as the upper limit, DO NOT override.
 	 * Our charge is allowed to be higher than this, but it won't under most circumstances.
@@ -26,12 +27,10 @@
 	. = ..()
 	RegisterSignal(owner, COMSIG_PROCESS_BORGCHARGER_OCCUPANT, PROC_REF(charge))
 	RegisterSignal(owner, COMSIG_LIVING_ELECTROCUTE_ACT, PROC_REF(on_electrocute))
-	ADD_TRAIT(owner, TRAIT_NOHUNGER, src)
 
 /obj/item/organ/stomach/electrical/Remove(mob/living/carbon/carbon, special = 0, pref_load)
 	UnregisterSignal(owner, COMSIG_PROCESS_BORGCHARGER_OCCUPANT)
 	UnregisterSignal(owner, COMSIG_LIVING_ELECTROCUTE_ACT)
-	REMOVE_TRAIT(owner, TRAIT_NOHUNGER, src)
 
 	carbon.clear_alert("ethereal_charge")
 	carbon.clear_alert("ethereal_overcharge")

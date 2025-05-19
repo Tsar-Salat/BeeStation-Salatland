@@ -29,8 +29,8 @@
 	if(M)
 		M.adjustToxLoss(2 * delta_time, TRUE, TRUE)//forced to ensure people don't use it to gain tox as slime person
 
-/obj/item/organ/appendix/get_availability(datum/species/S)
-	return !((TRAIT_NOHUNGER in S.species_traits))
+/obj/item/organ/appendix/get_availability(datum/species/owner_species)
+	return !((TRAIT_NOHUNGER in owner_species.inherent_traits) || (NOAPPENDIX in owner_species.species_traits))
 
 /obj/item/organ/appendix/Remove(mob/living/carbon/M, special = 0, pref_load = FALSE)
 	for(var/datum/disease/appendicitis/A in M.diseases)

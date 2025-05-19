@@ -80,7 +80,7 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 	M.internal_organs |= src
 	M.internal_organs_slot[slot] = src
 	moveToNullspace()
-	RegisterSignal(owner, COMSIG_PARENT_EXAMINE, .proc/on_owner_examine)
+	RegisterSignal(owner, COMSIG_PARENT_EXAMINE, PROC_REF(on_owner_examine))
 	for(var/trait in organ_traits)
 		ADD_TRAIT(M, trait, REF(src))
 	for(var/datum/action/action as anything in actions)
@@ -314,7 +314,9 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
   * returns whether the species should innately have this organ.
   *
   * regenerate organs works with generic organs, so we need to get whether it can accept certain organs just by what this returns.
-  * This is set to return true or false, depending on if a species has a specific organless trait. stomach for example checks if the species has NOSTOMACH and return based on that.
+  * This is set to return true or false, depending on if a species has a trait that would nulify the purpose of the organ.
+ * For example, lungs won't be given if you have NO_BREATH, stomachs check for NO_HUNGER, and livers check for NO_METABOLISM.
+ * If you want a carbon to have a trait that normally blocks an organ but still want the organ. Attach the trait to the organ using the organ_traits var
   * Arguments:
   * S - species, needed to return whether the species has an organ specific trait
   */
