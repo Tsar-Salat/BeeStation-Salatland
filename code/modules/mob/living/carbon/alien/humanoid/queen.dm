@@ -18,22 +18,6 @@
 /mob/living/carbon/alien/humanoid/royal/can_inject(mob/user, target_zone, injection_flags)
 	return FALSE
 
-/mob/living/carbon/alien/humanoid/royal/queen/proc/maidify()
-	name = "alien queen maid"
-	desc = "Lusty, Sexy"
-	icon = 'icons/mob/alienqueen.dmi'
-	icon_state = "alienqmaid"
-	caste = "qmaid"
-	update_icons()
-
-/mob/living/carbon/alien/humanoid/royal/queen/proc/unmaidify()
-	name = "alien queen"
-	desc = ""
-	icon = 'icons/mob/alienqueen.dmi'
-	icon_state = "alienq"
-	caste = "q"
-	update_icons()
-
 /mob/living/carbon/alien/humanoid/royal/queen
 	name = "alien queen"
 	caste = "q"
@@ -100,6 +84,22 @@
 	UnregisterSignal(src, COMSIG_MOVABLE_Z_CHANGED)
 	SSshuttle.clearInfestation(src)
 	..()
+
+/mob/living/carbon/alien/humanoid/royal/queen/proc/maidify()
+	name = "alien queen maid"
+	desc = "Lusty, Sexy"
+	icon = 'icons/mob/alienqueen.dmi'
+	icon_state = "alienqmaid"
+	caste = "qmaid"
+	update_icons()
+
+/mob/living/carbon/alien/humanoid/royal/queen/proc/unmaidify()
+	name = "alien queen"
+	desc = ""
+	icon = 'icons/mob/alienqueen.dmi'
+	icon_state = "alienq"
+	caste = "q"
+	update_icons()
 
 //Queen verbs
 /datum/action/alien/make_structure/lay_egg

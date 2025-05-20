@@ -11,13 +11,17 @@
 	initial_language_holder = /datum/language_holder/alien
 	bubble_icon = "alien"
 	type_of_meat = /obj/item/food/meat/slab/xeno
+	blocks_emissive = EMISSIVE_BLOCK_UNIQUE
+
 	status_flags = CANUNCONSCIOUS|CANPUSH
+
 	gib_type = /obj/effect/decal/cleanable/xenoblood/xgibs
 	unique_name = 1
 	mobchatspan = "alienmobsay"
 
 	heat_protection = 0.5 // minor heat insulation
 
+	///Whether or not the alien is leaping. Only used by hunters.
 	var/leaping = FALSE
 	var/move_delay_add = 0 // movement delay to add
 
@@ -28,6 +32,8 @@
 		/obj/item/toy/toy_xeno,
 		/obj/item/sticker,
 		/obj/item/toy/plush/rouny,
+		/obj/item/hand_item,
+		/obj/item/queen_promotion,
 	))
 
 /mob/living/carbon/alien/Initialize(mapload)
