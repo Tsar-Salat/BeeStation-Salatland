@@ -16,19 +16,34 @@
 	unique_name = 1
 	mobchatspan = "alienmobsay"
 
-	var/static/regex/alien_name_regex = new("alien (larva|sentinel|drone|hunter|praetorian|queen)( \\(\\d+\\))?")
 	heat_protection = 0.5 // minor heat insulation
 
 	var/leaping = FALSE
 	var/move_delay_add = 0 // movement delay to add
+
+	var/static/regex/alien_name_regex = new("alien (larva|sentinel|drone|hunter|praetorian|queen)( \\(\\d+\\))?")
+	var/static/list/xeno_allowed_items = typecacheof(list(
+		/obj/item/clothing/mask/facehugger,
+		/obj/item/reagent_containers/cup/rag, //You get the joke
+		/obj/item/toy/toy_xeno,
+		/obj/item/sticker,
+		/obj/item/toy/plush/rouny,
+	))
 
 /mob/living/carbon/alien/Initialize(mapload)
 	add_verb(/mob/living/proc/mob_sleep)
 	add_verb(/mob/living/proc/toggle_resting)
 
 	create_bodyparts() //initialize bodyparts
+
 	create_internal_organs()
-	return ..()
+
+	. = ..()
+	LoadComponent( \
+		/datum/component/itempicky, \
+		xeno_allowed_items, \
+		span_alien("Your claws lack the dexterity to hold %TARGET."), \
+		CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(_has_trait), src, TRAIT_ADVANCEDTOOLUSER))
 
 /mob/living/carbon/alien/create_internal_organs()
 	internal_organs += new /obj/item/organ/brain/alien
@@ -117,9 +132,6 @@ Des: Removes all infected images from the alien.
 	if(mind)
 		mind.transfer_to(new_xeno)
 	qdel(src)
-
-/mob/living/carbon/alien/can_hold_items(obj/item/I)
-	return (I && (I.item_flags & XENOMORPH_HOLDABLE || ISADVANCEDTOOLUSER(src)) && ..())
 
 /mob/living/carbon/alien/on_lying_down(new_lying_angle)
 	. = ..()

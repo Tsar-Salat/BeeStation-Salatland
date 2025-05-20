@@ -214,4 +214,29 @@
 /proc/_step_away(ref, trg, max)
 	step_away(ref, trg, max)
 
+/proc/_has_trait(datum/thing, trait)
+	return HAS_TRAIT(thing, trait)
 
+/proc/_add_trait(datum/thing, trait, source)
+	ADD_TRAIT(thing, trait, source)
+
+/proc/_remove_trait(datum/thing, trait, source)
+	REMOVE_TRAIT(thing, trait, source)
+
+/proc/_winset(player, control_id, params)
+	winset(player, control_id, params)
+
+/proc/_winget(player, control_id, params)
+	return winget(player, control_id, params)
+
+/proc/_text2path(text)
+	return text2path(text)
+
+/proc/_turn(dir, angle)
+	return turn(dir, angle)
+
+/proc/_view(Dist, Center = usr)
+	return view(Dist, Center)
+
+/proc/_viewers(Dist, Center = usr)
+	return viewers(Dist, Center)
