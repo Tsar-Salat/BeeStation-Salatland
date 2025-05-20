@@ -935,10 +935,7 @@
 					if(needs_metabolizing && !holder_reagent.metabolizing)
 						return
 					return holder_reagent
-				else
-					return
-
-	return
+	return FALSE
 
 /**
  * Get the amount of this reagent or the sum of all its subtypes if specified
