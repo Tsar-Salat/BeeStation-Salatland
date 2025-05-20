@@ -172,7 +172,7 @@ I am begging someone to remake this to be more like the paper UI, it's so bad.
 			var/s = stripped_input(user, "Write something", "Newspaper")
 			if (!s)
 				return
-			if(!user.canUseTopic(src, BE_CLOSE))
+			if(!user.can_perform_action(src))
 				return
 			scribble_page = curr_page
 			scribble = s

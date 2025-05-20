@@ -196,7 +196,7 @@ Slimecrossing Items
 	if(alert(M, "Would you like to enter [user]'s capture device?", "Gold Capture Device", "Yes", "No") != "Yes")
 		to_chat(user, span_warning("[M] refused to enter the device."))
 		return
-	if(!user.canUseTopic(src, BE_CLOSE) || !user.canUseTopic(M, BE_CLOSE))
+	if(!user.can_perform_action(src) || !user.can_perform_action(M))
 		to_chat(user, span_warning("You were too far away from [M]."))
 		to_chat(M, span_warning("You were too far away from [user]."))
 		return

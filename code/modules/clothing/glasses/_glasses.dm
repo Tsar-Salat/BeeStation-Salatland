@@ -647,7 +647,7 @@
 	return TRUE
 */
 /obj/item/clothing/glasses/AltClick(mob/user)
-	if(!user.canUseTopic(src, BE_CLOSE))
+	if(!user.can_perform_action(src))
 		return
 	if(glass_colour_type && !force_glass_colour && ishuman(user))
 		var/mob/living/carbon/human/H = user

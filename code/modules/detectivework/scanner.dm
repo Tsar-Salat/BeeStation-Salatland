@@ -195,7 +195,7 @@
 
 /obj/item/detective_scanner/AltClick(mob/living/user)
 	// Best way for checking if a player can use while not incapacitated, etc
-	if(!user.canUseTopic(src, be_close=TRUE))
+	if(!user.can_perform_action(src))
 		return
 	if(!LAZYLEN(log))
 		to_chat(user, span_notice("Cannot clear logs, the scanner has no logs."))

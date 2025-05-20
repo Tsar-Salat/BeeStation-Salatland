@@ -269,7 +269,7 @@
 
 	if (!message || !sending_and_receiving)
 		return
-	if(!user.canUseTopic(computer, BE_CLOSE))
+	if(!user.can_perform_action(computer))
 		return
 	return sanitize(message)
 
@@ -420,7 +420,7 @@
 	if(computer.active_program != src)
 		if(!computer.open_program(usr, src, in_background = TRUE))
 			return
-	if(!href_list["close"] && usr.canUseTopic(computer, BE_CLOSE, FALSE, NO_TK))
+	if(!href_list["close"] && usr.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 		switch(href_list["choice"])
 			if("Message")
 				send_message(usr, list(locate(href_list["target"])))

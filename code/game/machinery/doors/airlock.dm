@@ -880,7 +880,7 @@
 	// Otherwise it will runtime with this kind of error: null.Topic()
 	if(!nowindow)
 		..()
-	if(!usr.canUseTopic(src) && !IsAdminGhost(usr))
+	if(!usr.can_perform_action(src) && !IsAdminGhost(usr))
 		return
 	add_fingerprint(usr)
 

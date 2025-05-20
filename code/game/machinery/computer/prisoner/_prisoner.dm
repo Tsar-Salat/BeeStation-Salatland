@@ -15,7 +15,7 @@
 
 
 /obj/machinery/computer/prisoner/AltClick(mob/user)
-	if(!user.canUseTopic(src, !issilicon(user)))
+	if(!user.can_perform_action(src, ALLOW_SILICON_REACH))
 		return
 	id_eject(user)
 

@@ -7,7 +7,7 @@ import { Window } from '../layouts';
 
 const PEAK_DRAW = 500000;
 
-const powerRank = (str) => {
+export const powerRank = (str) => {
   const unit = String(str.split(' ')[1]).toLowerCase();
   return ['w', 'kw', 'mw', 'gw'].indexOf(unit);
 };
@@ -147,7 +147,7 @@ export const PowerMonitorContent = (props) => {
   );
 };
 
-const AreaCharge = (props) => {
+export const AreaCharge = (props) => {
   const { charging, charge } = props;
   return (
     <>

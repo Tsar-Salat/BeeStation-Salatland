@@ -122,7 +122,7 @@
 		to_chat(user, span_notice("[src] is empty."))
 
 /obj/machinery/aug_manipulator/AltClick(mob/living/user)
-	if(!user.canUseTopic(src, !issilicon(user)))
+	if(!user.can_perform_action(src, ALLOW_SILICON_REACH))
 		return
 	else
 		eject_part(user)

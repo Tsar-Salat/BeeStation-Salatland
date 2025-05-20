@@ -549,8 +549,8 @@
 	if(!SScommunications.can_announce(user, is_ai))
 		to_chat(user, span_alert("Intercomms recharging. Please stand by."))
 		return
-	var/input = stripped_input(user, "Please choose a message to announce to the station crew.", "What?")
-	if(!input || !user.canUseTopic(src, !issilicon(usr)))
+	var/input = tgui_input_text(user, "Message to announce to the station crew", "Announcement")
+	if(!input || !user.can_perform_action(src, ALLOW_SILICON_REACH))
 		return
 	if(CHAT_FILTER_CHECK(input))
 		to_chat(user, span_warning("You cannot send an announcement that contains prohibited words."))

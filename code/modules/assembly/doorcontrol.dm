@@ -14,10 +14,11 @@
 		. += span_notice("Its channel ID is '[id]'.")
 
 /obj/item/assembly/control/multitool_act(mob/living/user)
-	var/change_id = input("Set the shutters/blast door controller's ID. It must be a number between 1 and 100.", "ID", id) as num|null
-	if(change_id)
-		id = clamp(round(change_id, 1), 1, 100)
-		to_chat(user, span_notice("You change the ID to [id]."))
+	var/change_id = tgui_input_number(user, "Set the door controllers ID", "Door ID", id, 100)
+	if(!change_id || QDELETED(user) || QDELETED(src) || !usr.can_perform_action(src, FORBID_TELEKINESIS_REACH))
+		return
+	id = change_id
+	balloon_alert(user, "id changed")
 
 /obj/item/assembly/control/activate()
 	var/openclose

@@ -139,7 +139,7 @@
 	update_appearance()
 
 /obj/item/clothing/head/utility/hardhat/welding/AltClick(mob/user)
-	if(user.canUseTopic(src, BE_CLOSE))
+	if(user.can_perform_action(src))
 		toggle_welding_screen(user)
 
 /obj/item/clothing/head/utility/hardhat/welding/ui_action_click(mob/user, actiontype)

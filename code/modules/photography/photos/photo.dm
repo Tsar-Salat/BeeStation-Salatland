@@ -62,7 +62,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/photo)
 
 		var/txt = stripped_input(user, "What would you like to write on the back? 256 characters max.", "Photo Writing", max_length=256)
 
-		if(txt && user.canUseTopic(src, BE_CLOSE))
+		if(txt && user.can_perform_action(src))
 			scribble = txt
 	else
 		return ..()

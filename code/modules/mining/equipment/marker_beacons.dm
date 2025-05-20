@@ -35,13 +35,14 @@ GLOBAL_LIST_INIT(marker_beacon_colors, sort_list(list(
 
 /obj/item/stack/marker_beacon/Initialize(mapload)
 	. = ..()
-	update_icon()
+	update_appearance()
 
 /obj/item/stack/marker_beacon/examine(mob/user)
 	. = ..()
 	. += span_notice("Use in-hand to place a [singular_name].\nAlt-click to select a color. Current color is [picked_color].")
 
-/obj/item/stack/marker_beacon/update_icon()
+/obj/item/stack/marker_beacon/update_icon_state()
+	. = ..()
 	icon_state = "marker[LOWER_TEXT(picked_color)]"
 
 /obj/item/stack/marker_beacon/attack_self(mob/user)
@@ -58,14 +59,15 @@ GLOBAL_LIST_INIT(marker_beacon_colors, sort_list(list(
 		transfer_fingerprints_to(M)
 
 /obj/item/stack/marker_beacon/AltClick(mob/living/user)
-	if(!istype(user) || !user.canUseTopic(src, BE_CLOSE))
+	if(!istype(user) || !user.can_perform_action(src))
 		return
-	var/input_color = input(user, "Choose a color.", "Beacon Color") as null|anything in GLOB.marker_beacon_colors
-	if(!istype(user) || !user.canUseTopic(src, BE_CLOSE))
+	var/input_color = tgui_input_list(user, "Choose a color", "Beacon Color", GLOB.marker_beacon_colors)
+	if(isnull(input_color))
 		return
-	if(input_color)
-		picked_color = input_color
-		update_icon()
+	if(!istype(user) || !user.can_perform_action(src))
+		return
+	picked_color = input_color
+	update_appearance()
 
 /obj/structure/marker_beacon
 	name = "marker beacon"
@@ -110,11 +112,16 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/marker_beacon)
 	. = ..()
 	. += span_notice("Alt-click to select a color. Current color is [picked_color].")
 
-/obj/structure/marker_beacon/update_icon()
+/obj/structure/marker_beacon/update_appearance(updates)
 	while(!picked_color || !GLOB.marker_beacon_colors[picked_color])
 		picked_color = pick(GLOB.marker_beacon_colors)
-	icon_state = "marker[LOWER_TEXT(picked_color)]-on"
+
+	. = ..()
 	set_light(light_range, light_power, GLOB.marker_beacon_colors[picked_color])
+
+/obj/structure/marker_beacon/update_icon_state()
+	icon_state = "marker[LOWER_TEXT(picked_color)]-on"
+	return ..()
 
 /obj/structure/marker_beacon/attack_hand(mob/living/user)
 	. = ..()
@@ -153,11 +160,13 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/marker_beacon)
 	return ..()
 
 /obj/structure/marker_beacon/AltClick(mob/living/user)
-	if(!istype(user) || !user.canUseTopic(src, BE_CLOSE))
+	..()
+	if(!istype(user) || !user.can_perform_action(src))
 		return
-	var/input_color = input(user, "Choose a color.", "Beacon Color") as null|anything in GLOB.marker_beacon_colors
-	if(!istype(user) || !user.canUseTopic(src, BE_CLOSE))
+	var/input_color = tgui_input_list(user, "Choose a color", "Beacon Color", GLOB.marker_beacon_colors)
+	if(isnull(input_color))
 		return
-	if(input_color)
-		picked_color = input_color
-		update_icon()
+	if(!istype(user) || !user.can_perform_action(src))
+		return
+	picked_color = input_color
+	update_appearance()

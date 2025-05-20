@@ -20,6 +20,10 @@
 	var/boom_sizes = list(0, 0, 3)
 	var/can_attach_mob = FALSE
 	var/full_damage_on_mobs = FALSE
+	/// Minimum timer for c4 charges
+	var/minimum_timer = 10
+	/// Maximum timer for c4 charges
+	var/maximum_timer = 60000
 
 /obj/item/grenade/plastic/Initialize(mapload)
 	. = ..()
@@ -104,11 +108,11 @@
 	if(nadeassembly)
 		nadeassembly.attack_self(user)
 		return
-	var/newtime = input(usr, "Please set the timer.", "Timer", 10) as num
-	if(user.get_active_held_item() == src)
-		newtime = clamp(newtime, 10, 60000)
-		det_time = newtime
-		to_chat(user, "Timer set for [det_time] seconds.")
+	var/newtime = tgui_input_number(user, "Please set the timer", "C4 Timer", minimum_timer, maximum_timer, minimum_timer)
+	if(!newtime || QDELETED(user) || QDELETED(src) || !usr.can_perform_action(src, FORBID_TELEKINESIS_REACH))
+		return
+	det_time = newtime
+	to_chat(user, "Timer set for [det_time] seconds.")
 
 /obj/item/grenade/plastic/afterattack(atom/movable/AM, mob/user, flag)
 	. = ..()

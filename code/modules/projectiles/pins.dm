@@ -274,7 +274,7 @@
 		if(credit_card_details && !active_prompt)
 			var/license_request = alert(usr, "Do you wish to pay [payment_amount] credit[( payment_amount > 1 ) ? "s" : ""] for [( multi_payment ) ? "each shot of [gun.name]" : "usage license of [gun.name]"]?", "Weapon Purchase", "Yes", "No")
 			active_prompt = TRUE
-			if(!user.canUseTopic(src, BE_CLOSE))
+			if(!user.can_perform_action(src))
 				active_prompt = FALSE
 				return FALSE
 			switch(license_request)

@@ -374,7 +374,7 @@
 	var/obj/item/grinded
 
 /obj/item/reagent_containers/cup/mortar/AltClick(mob/user)
-	if(!user.canUseTopic(src, BE_CLOSE))
+	if(!user.can_perform_action(src))
 		return
 	if(grinded)
 		grinded.forceMove(drop_location())

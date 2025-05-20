@@ -24,7 +24,7 @@
 	quick_burst_mod = 1
 
 /obj/item/resonator/AltClick(mob/user)
-	if(!user.canUseTopic(src, BE_CLOSE))
+	if(!user.can_perform_action(src))
 		return
 	if(burst_time == 50)
 		burst_time = 30

@@ -134,8 +134,10 @@ Stabilized extracts:
 	generate_mobtype()
 
 /obj/item/slimecross/stabilized/gold/attack_self(mob/user)
-	var/choice = input(user, "Which do you want to reset?", "Familiar Adjustment") as null|anything in sort_list(list("Familiar Location", "Familiar Species", "Familiar Sentience", "Familiar Name"))
-	if(!user.canUseTopic(src, BE_CLOSE))
+	var/choice = tgui_input_list(user, "Which do you want to reset?", "Familiar Adjustment", sort_list(list("Familiar Location", "Familiar Species", "Familiar Sentience", "Familiar Name")))
+	if(isnull(choice))
+		return
+	if(!user.can_perform_action(src))
 		return
 	if(isliving(user))
 		var/mob/living/L = user

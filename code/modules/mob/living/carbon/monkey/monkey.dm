@@ -140,6 +140,12 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/carbon/monkey)
 	internal = null
 	return
 
+/mob/living/carbon/monkey/can_use_guns(obj/item/G)
+	if(G.trigger_guard == TRIGGER_GUARD_NONE)
+		to_chat(src, "<span class='warning'>You are unable to fire this!</span>")
+		return FALSE
+	return TRUE
+
 /mob/living/carbon/monkey/reagent_check(datum/reagent/R) //can metabolize all reagents
 	return FALSE
 
@@ -188,9 +194,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/carbon/monkey)
 	if(!getorganslot(ORGAN_SLOT_LUNGS))
 		return 0
 	return 1
-
-/mob/living/carbon/monkey/can_use_guns(obj/item/G)
-	return TRUE
 
 /mob/living/carbon/monkey/angry
 	ai_controller = /datum/ai_controller/monkey/angry

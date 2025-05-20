@@ -255,7 +255,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/mineral/processing_unit_console)
 	smelt_amount = round(smelt_amount_temp, 1)
 
 /obj/machinery/mineral/processing_unit/AltClick(mob/living/user)
-	if(!user.canUseTopic(src, BE_CLOSE))
+	if(!user.can_perform_action(src))
 		return
 	if(panel_open)
 		input_dir = turn(input_dir, -90)

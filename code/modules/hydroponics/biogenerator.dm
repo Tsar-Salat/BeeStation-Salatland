@@ -168,7 +168,7 @@
 		to_chat(user, span_warning("You cannot put this in [src.name]!"))
 
 /obj/machinery/biogenerator/AltClick(mob/living/user)
-	if(user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK) && can_interact(user))
+	if(user.can_perform_action(src, FORBID_TELEKINESIS_REACH) && can_interact(user))
 		detach(user)
 
 /**

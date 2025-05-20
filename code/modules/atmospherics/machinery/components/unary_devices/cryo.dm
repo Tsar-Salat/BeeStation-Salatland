@@ -492,13 +492,13 @@
 				. = TRUE
 
 /obj/machinery/cryo_cell/CtrlClick(mob/user)
-	if(user.canUseTopic(src, !issilicon(user)) && !state_open && occupant != user)
+	if(user.can_perform_action(src, ALLOW_SILICON_REACH) && !state_open && occupant != user)
 		set_on(!on)
 		update_icon()
 	return ..()
 
 /obj/machinery/cryo_cell/AltClick(mob/user)
-	if(user.canUseTopic(src, !issilicon(user)) && occupant != user)
+	if(user.can_perform_action(src, ALLOW_SILICON_REACH) && occupant != user)
 		if(state_open)
 			close_machine()
 		else

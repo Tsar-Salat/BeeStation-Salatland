@@ -888,6 +888,9 @@
 //ATTACK HAND IGNORING PARENT RETURN VALUE
 //ATTACK HAND NOT CALLING PARENT
 /obj/item/toy/cards/deck/attack_hand(mob/user, list/modifiers)
+	if(!ishuman(user) || !user.can_perform_action(src, NEED_DEXTERITY|FORBID_TELEKINESIS_REACH))
+		return
+
 	draw_card(user)
 
 /obj/item/toy/cards/deck/proc/draw_card(mob/user)
@@ -991,6 +994,9 @@
 	var/choice = null
 
 /obj/item/toy/cards/cardhand/attack_self(mob/user)
+	if(!isliving(user) || !user.can_perform_action(src, NEED_DEXTERITY| FORBID_TELEKINESIS_REACH))
+		return
+
 	var/list/handradial = list()
 	interact(user)
 
@@ -1110,7 +1116,7 @@
 	set name = "Flip Card"
 	set category = "Object"
 	set src in range(1)
-	if(!ishuman(usr) || !usr.canUseTopic(src, BE_CLOSE))
+	if(!ishuman(usr) || !usr.can_perform_action(src))
 		return
 	if(!flipped)
 		src.flipped = 1

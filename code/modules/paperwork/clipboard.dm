@@ -72,7 +72,7 @@
 
 /obj/item/clipboard/AltClick(mob/user)
 	..()
-	if(!user.canUseTopic(src, BE_CLOSE))
+	if(!user.can_perform_action(src))
 		return
 	if(pen)
 		remove_pen(user)

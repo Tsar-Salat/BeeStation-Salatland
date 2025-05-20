@@ -173,7 +173,7 @@
 
 /obj/item/airlock_painter/AltClick(mob/user)
 	. = ..()
-	if(!user.canUseTopic(src, BE_CLOSE))
+	if(!user.can_perform_action(src))
 		return
 	if(ink)
 		playsound(src.loc, 'sound/machines/click.ogg', 50, 1)

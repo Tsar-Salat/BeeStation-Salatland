@@ -15,7 +15,7 @@
 
 /obj/item/clothing/head/soft/AltClick(mob/user)
 	..()
-	if(user.canUseTopic(src, BE_CLOSE, NO_DEXTERITY, FALSE, !iscyborg(user)))
+	if(user.can_perform_action(src, NEED_DEXTERITY))
 		flip(user)
 
 /obj/item/clothing/head/soft/proc/flip(mob/user)

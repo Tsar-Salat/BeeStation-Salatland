@@ -15,12 +15,14 @@
 	QDEL_NULL(song)
 	return ..()
 
-/obj/structure/musician/proc/should_stop_playing(mob/user)
-	if(!(anchored || can_play_unanchored))
+/obj/structure/musician/proc/should_stop_playing(atom/music_player)
+	if(!(anchored || can_play_unanchored) || !ismob(music_player))
 		return TRUE
-	if(!user)
+	var/mob/user = music_player
+
+	if(!ISADVANCEDTOOLUSER(user))
+		to_chat(src, span_warning("You don't have the dexterity to do this!"))
 		return FALSE
-	return !user.canUseTopic(src, FALSE, TRUE, FALSE, FALSE)		//can play with TK and while resting because fun.
 
 /obj/structure/musician/ui_interact(mob/user)
 	. = ..()

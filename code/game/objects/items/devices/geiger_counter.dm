@@ -177,7 +177,7 @@
 		return ..()
 
 /obj/item/geiger_counter/AltClick(mob/living/user)
-	if(!istype(user) || !user.canUseTopic(src, BE_CLOSE))
+	if(!istype(user) || !user.can_perform_action(src))
 		return ..()
 	if(!scanning)
 		to_chat(usr, span_warning("[src] must be on to reset its radiation level!"))

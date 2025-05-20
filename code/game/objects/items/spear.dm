@@ -124,7 +124,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/spear/explosive)
 	. += span_notice("Alt-click to set your war cry.")
 
 /obj/item/spear/explosive/AltClick(mob/user)
-	if(user.canUseTopic(src, BE_CLOSE))
+	if(user.can_perform_action(src))
 		..()
 		if(istype(user) && loc == user)
 			var/input = stripped_input(user,"What do you want your war cry to be? You will shout it when you hit someone in melee.", ,"", 50)

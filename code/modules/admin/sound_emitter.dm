@@ -52,7 +52,7 @@
 	edit_emitter(user)
 
 /obj/effect/sound_emitter/AltClick(mob/user)
-	if(!user.canUseTopic(src))
+	if(!user.can_perform_action(src))
 		return
 	if(check_rights_for(user.client, R_SOUND))
 		activate(user)

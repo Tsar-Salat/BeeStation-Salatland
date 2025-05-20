@@ -63,7 +63,7 @@ GENE SCANNER
 	return ..()
 
 /obj/item/t_scanner/AltClick(mob/user)
-	if(user.canUseTopic(src, BE_CLOSE))
+	if(user.can_perform_action(src))
 		toggle_mode(user)
 
 /obj/item/t_scanner/attack_self(mob/user)
@@ -693,47 +693,48 @@ GENE SCANNER
 
 /obj/item/analyzer/AltClick(mob/user) //Barometer output for measuring when the next storm happens
 
-	if(user.canUseTopic(src, BE_CLOSE))
+	if(!user.can_perform_action(src, NEED_LITERACY|NEED_LIGHT))
+		return
 
-		if(cooldown)
-			to_chat(user, span_warning("[src]'s barometer function is preparing itself."))
+	if(cooldown)
+		to_chat(user, span_warning("[src]'s barometer function is preparing itself."))
+		return
+
+	var/turf/T = get_turf(user)
+	if(!T)
+		return
+
+	playsound(src, 'sound/effects/pop.ogg', 100)
+	var/area/user_area = T.loc
+	var/datum/weather/ongoing_weather = null
+
+	if(!user_area.outdoors)
+		to_chat(user, span_warning("[src]'s barometer function won't work indoors!"))
+		return
+
+	for(var/V in SSweather.processing)
+		var/datum/weather/W = V
+		if(W.barometer_predictable && (T.z in W.impacted_z_levels) && W.area_type == user_area.type && !(W.stage == END_STAGE))
+			ongoing_weather = W
+			break
+
+	if(ongoing_weather)
+		if((ongoing_weather.stage == MAIN_STAGE) || (ongoing_weather.stage == WIND_DOWN_STAGE))
+			to_chat(user, span_warning("[src]'s barometer function can't trace anything while the storm is [ongoing_weather.stage == MAIN_STAGE ? "already here!" : "winding down."]"))
 			return
 
-		var/turf/T = get_turf(user)
-		if(!T)
-			return
-
-		playsound(src, 'sound/effects/pop.ogg', 100)
-		var/area/user_area = T.loc
-		var/datum/weather/ongoing_weather = null
-
-		if(!user_area.outdoors)
-			to_chat(user, span_warning("[src]'s barometer function won't work indoors!"))
-			return
-
-		for(var/V in SSweather.processing)
-			var/datum/weather/W = V
-			if(W.barometer_predictable && (T.z in W.impacted_z_levels) && W.area_type == user_area.type && !(W.stage == END_STAGE))
-				ongoing_weather = W
-				break
-
-		if(ongoing_weather)
-			if((ongoing_weather.stage == MAIN_STAGE) || (ongoing_weather.stage == WIND_DOWN_STAGE))
-				to_chat(user, span_warning("[src]'s barometer function can't trace anything while the storm is [ongoing_weather.stage == MAIN_STAGE ? "already here!" : "winding down."]"))
-				return
-
-			to_chat(user, span_notice("The next [ongoing_weather] will hit in [butchertime(ongoing_weather.next_hit_time - world.time)]."))
-			if(ongoing_weather.aesthetic)
-				to_chat(user, span_warning("[src]'s barometer function says that the next storm will breeze on by."))
+		to_chat(user, span_notice("The next [ongoing_weather] will hit in [butchertime(ongoing_weather.next_hit_time - world.time)]."))
+		if(ongoing_weather.aesthetic)
+			to_chat(user, span_warning("[src]'s barometer function says that the next storm will breeze on by."))
+	else
+		var/next_hit = SSweather.next_hit_by_zlevel["[T.z]"]
+		var/fixed = next_hit ? next_hit - world.time : -1
+		if(fixed < 0)
+			to_chat(user, span_warning("[src]'s barometer function was unable to trace any weather patterns."))
 		else
-			var/next_hit = SSweather.next_hit_by_zlevel["[T.z]"]
-			var/fixed = next_hit ? next_hit - world.time : -1
-			if(fixed < 0)
-				to_chat(user, span_warning("[src]'s barometer function was unable to trace any weather patterns."))
-			else
-				to_chat(user, span_warning("[src]'s barometer function says a storm will land in approximately [butchertime(fixed)]."))
-		cooldown = TRUE
-		addtimer(CALLBACK(src, TYPE_PROC_REF(/obj/item/analyzer, ping)), cooldown_time)
+			to_chat(user, span_warning("[src]'s barometer function says a storm will land in approximately [butchertime(fixed)]."))
+	cooldown = TRUE
+	addtimer(CALLBACK(src, TYPE_PROC_REF(/obj/item/analyzer, ping)), cooldown_time)
 
 /obj/item/analyzer/proc/ping()
 	if(isliving(loc))
@@ -1024,26 +1025,30 @@ GENE SCANNER
 	for(var/A in buffer)
 		options += get_display_name(A)
 
-	var/answer = input(user, "Analyze Potential", "Sequence Analyzer")  as null|anything in sort_list(options)
-	if(answer && ready && user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
-		var/sequence
-		for(var/A in buffer) //this physically hurts but i dont know what anything else short of an assoc list
-			if(get_display_name(A) == answer)
-				sequence = buffer[A]
-				break
+	var/answer = tgui_input_list(user, "Analyze Potential", "Sequence Analyzer", sort_list(options))
+	if(isnull(answer))
+		return
+	if(!ready || !user.can_perform_action(src, NEED_LITERACY|NEED_LIGHT|FORBID_TELEKINESIS_REACH))
+		return
 
-		if(sequence)
-			var/display
-			for(var/i in 0 to length_char(sequence) / DNA_MUTATION_BLOCKS-1)
-				if(i)
-					display += "-"
-				display += copytext_char(sequence, 1 + i*DNA_MUTATION_BLOCKS, DNA_MUTATION_BLOCKS*(1+i) + 1)
+	var/sequence
+	for(var/A in buffer) //this physically hurts but i dont know what anything else short of an assoc list
+		if(get_display_name(A) == answer)
+			sequence = buffer[A]
+			break
 
-			to_chat(user, "[span_boldnotice("[display]")]<br>")
+	if(sequence)
+		var/display
+		for(var/i in 0 to length_char(sequence) / DNA_MUTATION_BLOCKS-1)
+			if(i)
+				display += "-"
+			display += copytext_char(sequence, 1 + i*DNA_MUTATION_BLOCKS, DNA_MUTATION_BLOCKS*(1+i) + 1)
 
-		ready = FALSE
-		icon_state = "[icon_state]_recharging"
-		addtimer(CALLBACK(src, PROC_REF(recharge)), cooldown, TIMER_UNIQUE)
+		to_chat(user, "[span_boldnotice("[display]")]<br>")
+
+	ready = FALSE
+	icon_state = "[icon_state]_recharging"
+	addtimer(CALLBACK(src, PROC_REF(recharge)), cooldown, TIMER_UNIQUE)
 
 /obj/item/sequence_scanner/proc/recharge()
 	icon_state = initial(icon_state)

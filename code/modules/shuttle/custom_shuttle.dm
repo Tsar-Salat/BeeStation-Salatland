@@ -207,7 +207,7 @@
 		playsound(src, 'sound/machines/terminal_insert_disc.ogg', 50, 0)
 
 /obj/machinery/computer/shuttle_flight/custom_shuttle/AltClick(mob/user)
-	if(!user.canUseTopic(src, BE_CLOSE))
+	if(!user.can_perform_action(src))
 		return
 	var/obj/item/shuttle_creator/designator = designator_ref?.resolve()
 	if(!designator)

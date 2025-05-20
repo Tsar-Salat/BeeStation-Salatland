@@ -118,7 +118,7 @@
 
 // Eject the pen if the ID was not ejected
 /obj/item/modular_computer/tablet/AltClick(mob/user)
-	if(..() || issilicon(user) || !user.canUseTopic(src, BE_CLOSE))
+	if(..() || issilicon(user) || !user.can_perform_action(src))
 		return
 	remove_pen(user)
 
@@ -126,7 +126,7 @@
 /obj/item/modular_computer/tablet/CtrlClick(mob/user)
 	..()
 	// We want to allow the user to drag the tablet still
-	if(isturf(loc) || issilicon(user) || !user.canUseTopic(src, BE_CLOSE))
+	if(isturf(loc) || issilicon(user) || !user.can_perform_action(src))
 		return
 	remove_pen(user)
 
@@ -134,7 +134,7 @@
 /obj/item/modular_computer/tablet/CtrlShiftClick(mob/user)
 	..()
 	// We want to allow the user to drag the tablet still
-	if(isturf(loc) || issilicon(user) || !user.canUseTopic(src, BE_CLOSE))
+	if(isturf(loc) || issilicon(user) || !user.can_perform_action(src))
 		return
 	var/obj/item/computer_hardware/hard_drive/role/disk = all_components[MC_HDD_JOB]
 	if(istype(disk))
@@ -153,7 +153,7 @@
 	remove_pen(usr)
 
 /obj/item/modular_computer/tablet/proc/remove_pen(mob/user)
-	if(issilicon(user) || !user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK)) //TK doesn't work even with this removed but here for readability
+	if(issilicon(user) || !user.can_perform_action(src, FORBID_TELEKINESIS_REACH)) //TK doesn't work even with this removed but here for readability
 		return
 	if(inserted_item)
 		to_chat(user, span_notice("You remove [inserted_item] from [src]."))

@@ -183,7 +183,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 
 /obj/machinery/computer/cloning/AltClick(mob/user)
 	. = ..()
-	if(!user.canUseTopic(src, !issilicon(user)))
+	if(!user.can_perform_action(src, ALLOW_SILICON_REACH))
 		return
 	EjectDisk(user)
 

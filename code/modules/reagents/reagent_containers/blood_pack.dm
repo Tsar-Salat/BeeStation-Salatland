@@ -93,7 +93,7 @@
 			to_chat(user, span_notice("You scribble illegibly on the label of [src]!"))
 			return
 		var/t = stripped_input(user, "What would you like to label the blood pack?", name, null, 53)
-		if(!user.canUseTopic(src, BE_CLOSE))
+		if(!user.can_perform_action(src))
 			return
 		if(user.get_active_held_item() != I)
 			return

@@ -195,7 +195,7 @@
 	return ..()
 
 /obj/machinery/mineral/ore_redemption/AltClick(mob/living/user)
-	if(!user.canUseTopic(src, BE_CLOSE))
+	if(!user.can_perform_action(src))
 		return
 	if(panel_open)
 		input_dir = turn(input_dir, -90)

@@ -76,7 +76,7 @@
 	to_chat(user, span_notice("[src] linked to [C]."))
 
 /obj/item/supplypod_beacon/AltClick(mob/user)
-	if (!user.canUseTopic(src, !issilicon(user)))
+	if (!user.can_perform_action(src, ALLOW_SILICON_REACH))
 		return
 	if (express_console)
 		unlink_console()
@@ -86,7 +86,7 @@
 /obj/item/supplypod_beacon/attackby(obj/item/W, mob/user)
 	if(istype(W, /obj/item/pen)) //give a tag that is visible from the linked express console
 		var/new_beacon_name = stripped_input(user, "What would you like the tag to be?")
-		if(!user.canUseTopic(src, BE_CLOSE))
+		if(!user.can_perform_action(src))
 			return
 		if(new_beacon_name)
 			name += " ([tag])"

@@ -228,7 +228,7 @@
 					L[avoid_assoc_duplicate_keys("[M.real_name] ([get_area(M)])", areaindex)] = I
 
 		var/desc = tgui_input_list(usr, "Select a location to lock in", "Locking Computer", sort_list(L))
-		if(isnull(desc)|| !user.canUseTopic(src, be_close = !issilicon(user)))
+		if(isnull(desc)|| !user.can_perform_action(src, ALLOW_SILICON_REACH))
 			return
 		target_ref = WEAKREF(L[desc])
 		var/turf/T = get_turf(L[desc])
@@ -244,7 +244,7 @@
 			to_chat(user, span_alert("No active connected stations located."))
 			return
 		var/desc = tgui_input_list(usr, "Select a station to lock in", "Locking Computer", sort_list(L))
-		if(isnull(desc)|| !user.canUseTopic(src, be_close = !issilicon(user)))
+		if(isnull(desc)|| !user.can_perform_action(src, ALLOW_SILICON_REACH))
 			return
 		var/obj/machinery/teleport/station/target_station = L[desc]
 		if(!target_station || !target_station.teleporter_hub)

@@ -39,14 +39,14 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/mirror)
 			if("Hair")
 				//handle normal hair
 				var/new_style = tgui_input_list(user, "Select a hair style", "Grooming", GLOB.hair_styles_list, H.hair_style)
-				if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
+				if(!user.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 					return	//no tele-grooming
 				if(new_style)
 					H.hair_style = new_style
 			if("Facial")
 				//handle facial hair
 				var/new_style = tgui_input_list(user, "Select a facial hair style", "Grooming", GLOB.facial_hair_styles_list, H.facial_hair_style)
-				if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
+				if(!user.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 					return	//no tele-grooming
 				if(new_style)
 					H.facial_hair_style = new_style
@@ -139,7 +139,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/mirror)
 
 	var/choice = input(user, "Something to change?", "Magical Grooming") as null|anything in list("name", "race", "gender", "hair", "eyes")
 
-	if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
+	if(!user.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 		return
 
 	switch(choice)
@@ -148,7 +148,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/mirror)
 
 			if(!newname)
 				return
-			if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
+			if(!user.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 				return
 			H.real_name = newname
 			H.name = newname
@@ -164,13 +164,13 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/mirror)
 
 			if(!newrace)
 				return
-			if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
+			if(!user.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 				return
 			H.set_species(newrace, icon_update=0)
 
 			if(H.dna.species.use_skintones)
 				var/new_s_tone = input(user, "Choose your skin tone:", "Race change")  as null|anything in GLOB.skin_tones
-				if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
+				if(!user.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 					return
 
 				if(new_s_tone)
@@ -179,7 +179,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/mirror)
 
 			if(MUTCOLORS in H.dna.species.species_traits)
 				var/new_mutantcolor = tgui_color_picker(user, "Choose your skin color:", "Race change","#"+H.dna.features["mcolor"])
-				if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
+				if(!user.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 					return
 				if(new_mutantcolor)
 					var/temp_hsv = RGBtoHSV(new_mutantcolor)
@@ -200,7 +200,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/mirror)
 				return
 			if(H.gender == "male")
 				if(alert(H, "Become a Witch?", "Confirmation", "Yes", "No") == "Yes")
-					if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
+					if(!user.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 						return
 					H.gender = "female"
 					to_chat(H, span_notice("Man, you feel like a woman!"))
@@ -209,7 +209,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/mirror)
 
 			else
 				if(alert(H, "Become a Warlock?", "Confirmation", "Yes", "No") == "Yes")
-					if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
+					if(!user.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 						return
 					H.gender = "male"
 					to_chat(H, span_notice("Whoa man, you feel like a man!"))
@@ -221,17 +221,17 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/mirror)
 
 		if("hair")
 			var/hairchoice = alert(H, "Hair style or hair color?", "Change Hair", "Style", "Color")
-			if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
+			if(!user.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 				return
 			if(hairchoice == "Style") //So you just want to use a mirror then?
 				var/new_style = tgui_input_list(user, "Select a hair style", "Hair Style", GLOB.hair_styles_list, H.hair_style)
-				if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
+				if(!user.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 					return
 				if(new_style)
 					H.hair_style = new_style
 			else
 				var/new_hair_color = tgui_color_picker(H, "Choose your hair color", "Hair Color","#"+H.hair_color)
-				if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
+				if(!user.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 					return
 				if(new_hair_color)
 					H.hair_color = sanitize_hexcolor(new_hair_color)
@@ -245,7 +245,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/mirror)
 
 		if(BODY_ZONE_PRECISE_EYES)
 			var/new_eye_color = tgui_color_picker(H, "Choose your eye color", "Eye Color","#"+H.eye_color)
-			if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
+			if(!user.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 				return
 			if(new_eye_color)
 				H.eye_color = sanitize_hexcolor(new_eye_color)

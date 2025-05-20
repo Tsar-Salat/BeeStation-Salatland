@@ -157,7 +157,7 @@
 /obj/item/radio/AltClick(mob/user)
 	if(headset)
 		. = ..()
-	else if(user.canUseTopic(src, !issilicon(user), TRUE, FALSE))
+	else if(user.can_perform_action(src, ALLOW_SILICON_REACH))
 		broadcasting = !broadcasting
 		to_chat(user, span_notice("You toggle broadcasting [broadcasting ? "on" : "off"]."))
 		ui_update()
@@ -165,7 +165,7 @@
 /obj/item/radio/CtrlShiftClick(mob/user)
 	if(headset)
 		. = ..()
-	else if(user.canUseTopic(src, !issilicon(user), TRUE, FALSE))
+	else if(user.can_perform_action(src, ALLOW_SILICON_REACH))
 		listening = !listening
 		to_chat(user, span_notice("You toggle speaker [listening ? "on" : "off"]."))
 		ui_update()

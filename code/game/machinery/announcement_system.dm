@@ -124,7 +124,7 @@ GLOBAL_LIST_EMPTY(announcement_systems)
 	. = ..()
 	if(.)
 		return
-	if(!usr.canUseTopic(src, !issilicon(usr)))
+	if(!usr.can_perform_action(src, ALLOW_SILICON_REACH))
 		return
 	if(machine_stat & BROKEN)
 		visible_message(span_warning("[src] buzzes."), span_hear("You hear a faint buzz."))
@@ -133,7 +133,7 @@ GLOBAL_LIST_EMPTY(announcement_systems)
 	switch(action)
 		if("ArrivalText")
 			var/NewMessage = trim(html_encode(param["newText"]), MAX_MESSAGE_LEN)
-			if(!usr.canUseTopic(src, !issilicon(usr)))
+			if(!usr.can_perform_action(src, ALLOW_SILICON_REACH))
 				return
 			if(NewMessage)
 				arrival = NewMessage
@@ -141,7 +141,7 @@ GLOBAL_LIST_EMPTY(announcement_systems)
 				. = TRUE
 		if("NewheadText")
 			var/NewMessage = trim(html_encode(param["newText"]), MAX_MESSAGE_LEN)
-			if(!usr.canUseTopic(src, !issilicon(usr)))
+			if(!usr.can_perform_action(src, ALLOW_SILICON_REACH))
 				return
 			if(NewMessage)
 				newhead = NewMessage
@@ -157,7 +157,7 @@ GLOBAL_LIST_EMPTY(announcement_systems)
 			. = TRUE
 
 /obj/machinery/announcement_system/attack_silicon(mob/user)
-	if(!user.canUseTopic(src, !issilicon(user)))
+	if(!user.can_perform_action(src, ALLOW_SILICON_REACH))
 		return
 	if(machine_stat & BROKEN)
 		to_chat(user, span_warning("[src]'s firmware appears to be malfunctioning!"))

@@ -121,7 +121,7 @@
 			open_machine()
 
 /obj/machinery/species_converter/AltClick(mob/user)
-	if(!user.canUseTopic(src, BE_CLOSE) || processing)
+	if(!user.can_perform_action(src) || processing)
 		return
 	if(user == occupant)
 		to_chat(user, span_warning("You can't reach the controls from inside!"))

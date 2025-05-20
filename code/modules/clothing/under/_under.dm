@@ -246,7 +246,7 @@
 	..()
 
 /obj/item/clothing/under/AltClick(mob/user)
-	if(!user.canUseTopic(src, BE_CLOSE, NO_DEXTERITY, FALSE, !iscyborg(user)))
+	if(!user.can_perform_action(src, NEED_DEXTERITY))
 		return
 	if(attached_accessory)
 		remove_accessory(user)

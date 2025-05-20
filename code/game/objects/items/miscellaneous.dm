@@ -29,7 +29,7 @@
 	return list()
 
 /obj/item/choice_beacon/proc/canUseBeacon(mob/living/user)
-	if(user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
+	if(user.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 		return TRUE
 	else
 		playsound(src, 'sound/machines/buzz-sigh.ogg', 40, 1)
@@ -40,7 +40,7 @@
 	if(!display_names.len)
 		return
 	var/choice = input(M,"Which item would you like to order?","Select an Item") as null|anything in sort_list(display_names)
-	if(!choice || !M.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
+	if(!choice || !M.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 		return
 
 	spawn_option(display_names[choice],M)

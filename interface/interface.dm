@@ -20,7 +20,7 @@
 	set hidden = 1
 	var/forumurl = CONFIG_GET(string/forumurl)
 	if(forumurl)
-		if(alert("This will open the forum in your browser. Are you sure?",,"Yes","No")!="Yes")
+		if(tgui_alert(src, "This will open the forum in your browser. Are you sure?",, list("Yes","No"))!="Yes")
 			return
 		src << link(forumurl)
 	else
@@ -33,7 +33,7 @@
 	set hidden = 1
 	var/rulesurl = CONFIG_GET(string/rulesurl)
 	if(rulesurl)
-		if(alert("This will open the rules in your browser. Are you sure?",,"Yes","No")!="Yes")
+		if(tgui_alert(src, "This will open the rules in your browser. Are you sure?",, list("Yes","No"))!="Yes")
 			return
 		src << link(rulesurl)
 	else
@@ -46,7 +46,7 @@
 	set hidden = 1
 	var/githuburl = CONFIG_GET(string/githuburl)
 	if(githuburl)
-		if(alert("This will open the Github repository in your browser. Are you sure?",,"Yes","No")!="Yes")
+		if(tgui_alert(src, "This will open the Github repository in your browser. Are you sure?",, list("Yes","No"))!="Yes")
 			return
 		src << link(githuburl)
 	else
@@ -235,7 +235,7 @@ Any-Mode: (hotkey doesn't need to be on)
 	set hidden = 1
 	var/donateurl = CONFIG_GET(string/donateurl)
 	if(donateurl)
-		if(alert("This will open the Donation page in your browser. Are you sure?",,"Yes","No")!="Yes")
+		if(tgui_alert("This will open the Donation page in your browser. Are you sure?",, list("Yes","No"))!="Yes")
 			return
 		src << link(donateurl)
 	else
@@ -248,7 +248,7 @@ Any-Mode: (hotkey doesn't need to be on)
 	set hidden = 1
 	var/discordurl = CONFIG_GET(string/discordurl)
 	if(discordurl)
-		if(alert("This will open the Discord invite in your browser. Are you sure?",,"Yes","No")!="Yes")
+		if(tgui_alert("This will open the Discord invite in your browser. Are you sure?",, list("Yes","No"))!="Yes")
 			return
 		src << link(discordurl)
 	else
@@ -262,7 +262,7 @@ Any-Mode: (hotkey doesn't need to be on)
 	if(SSmapping.config.map_link == "None")
 		to_chat(src,span_danger("The current map does not have a webmap. "))
 	else if(SSmapping.config.map_link)
-		if(alert("This will open the current map in your browser. Are you sure?",,"Yes","No")!="Yes")
+		if(tgui_alert("This will open the current map in your browser. Are you sure?",, list("Yes","No"))!="Yes")
 			return
 		src << link("https://webmap.affectedarc07.co.uk/maps/bee/[SSmapping.config.map_link]")
 	else

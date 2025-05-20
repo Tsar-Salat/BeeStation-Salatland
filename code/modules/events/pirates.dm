@@ -140,7 +140,7 @@ GLOBAL_VAR_INIT(pirates_spawned, FALSE)
 	if(!active)
 		if(alert(user, "Turning the scrambler on will make the shuttle trackable by GPS. Are you sure you want to do it?", "Scrambler", "Yes", "Cancel") != "Yes")
 			return
-		if(active || !user.canUseTopic(src, BE_CLOSE))
+		if(active || !user.can_perform_action(src))
 			return
 		toggle_on(user)
 		update_icon()

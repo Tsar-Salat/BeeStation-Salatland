@@ -89,7 +89,7 @@
 /obj/vehicle/ridden/wheelchair/proc/can_user_rotate(mob/living/user)
 	var/mob/living/L = user
 	if(istype(L))
-		if(!user.canUseTopic(src, BE_CLOSE, ismonkey(user)))
+		if(!user.can_perform_action(src))
 			return FALSE
 	if(isobserver(user) && CONFIG_GET(flag/ghost_interaction))
 		return TRUE

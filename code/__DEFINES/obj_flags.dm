@@ -16,33 +16,34 @@
 
 // Flags for the item_flags var on /obj/item
 
-#define BEING_REMOVED			(1<<0)
-#define PICKED_UP				(1<<1)  //! Has this item been picked up by a mob and on their person? Handles pickup() behaviour, tooltips and outlining. Does not include backpack contents, that is covered by IN_STORAGE>
-#define FORCE_STRING_OVERRIDE	(1<<2)  //! used for tooltips
-#define NEEDS_PERMIT			(1<<3)  //! Used by security bots to determine if this item is safe for public use.
-#define SLOWS_WHILE_IN_HAND		(1<<4)
-#define NO_MAT_REDEMPTION		(1<<5)  //! Stops you from putting things like an RCD or other items into an ORM or protolathe for materials.
-#define DROPDEL					(1<<6)  //! When dropped, it calls qdel on itself
-#define NOBLUDGEON				(1<<7)	//! when an item has this it produces no "X has been hit by Y with Z" message in the default attackby()
-#define ABSTRACT				(1<<9) 	//! for all things that are technically items but used for various different stuff
-#define IMMUTABLE_SLOW			(1<<10) //! When players should not be able to change the slowdown of the item (Speed potions, etc)
-#define IN_STORAGE				(1<<11) //! is this item in the storage item, such as backpack? used for tooltips
-#define ILLEGAL					(1<<12)	//! this item unlocks illegal tech
-#define NO_PIXEL_RANDOM_DROP 	(1<<13) //if dropped, it wont have a randomized pixel_x/pixel_y
-#define WAS_THROWN				(1<<14) //if the item was thrown and shouldn't have the drop_item animation applied
-#define ISWEAPON				(1<<15) //! If this item should hit living mobs when used on harm intent
-#define EXAMINE_SKIP			(1<<16) //! Examine will not read out this item
-#define ISCARVABLE			    (1<<17) //! Examine will not read out this item
-#define NO_WORN_SLOWDOWN		(1<<18)	//! Doesn't slow you down while worn, which is only useful in combination with SLOWS_WHILE_IN_HAND
-#define HAND_ITEM (1<<18) // If an item is just your hand (circled hand, slapper) and shouldn't block things like riding
+#define BEING_REMOVED (1<<0)
+#define PICKED_UP (1<<1)  //! Has this item been picked up by a mob and on their person? Handles pickup() behaviour, tooltips and outlining. Does not include backpack contents, that is covered by IN_STORAGE>
+#define FORCE_STRING_OVERRIDE (1<<2)  //! used for tooltips
+#define NEEDS_PERMIT (1<<3)  //! Used by security bots to determine if this item is safe for public use.
+#define SLOWS_WHILE_IN_HAND (1<<4)
+#define NO_MAT_REDEMPTION (1<<5)  //! Stops you from putting things like an RCD or other items into an ORM or protolathe for materials.
+#define DROPDEL (1<<6) //! When dropped, it calls qdel on itself
+#define NOBLUDGEON (1<<7) //! when an item has this it produces no "X has been hit by Y with Z" message in the default attackby()
+#define ABSTRACT (1<<9) //! for all things that are technically items but used for various different stuff
+#define IMMUTABLE_SLOW (1<<10) //! When players should not be able to change the slowdown of the item (Speed potions, etc)
+#define IN_STORAGE (1<<11) //! is this item in the storage item, such as backpack? used for tooltips
+#define ILLEGAL (1<<12)	//! this item unlocks illegal tech
+#define NO_PIXEL_RANDOM_DROP (1<<13) //if dropped, it wont have a randomized pixel_x/pixel_y
+#define WAS_THROWN (1<<14) //if the item was thrown and shouldn't have the drop_item animation applied
+#define ISWEAPON (1<<15) //! If this item should hit living mobs when used on harm intent
+#define EXAMINE_SKIP (1<<16) //! Examine will not read out this item
+#define ISCARVABLE (1<<17) //! Examine will not read out this item
+#define NO_WORN_SLOWDOWN (1<<18) //! Doesn't slow you down while worn, which is only useful in combination with SLOWS_WHILE_IN_HAND
+#define HAND_ITEM (1<<19) // If an item is just your hand (circled hand, slapper) and shouldn't block things like riding
+#define XENOMORPH_HOLDABLE (1<<20) // A Xenomorph can hold this item.
 
 // Flags for the clothing_flags var on /obj/item/clothing
 
-#define LAVAPROTECT             (1<<0)
-#define STOPSPRESSUREDAMAGE		(1<<1)	//! SUIT and HEAD items which stop pressure damage. To stop you taking all pressure damage you must have both a suit and head item with this flag.
-#define BLOCK_GAS_SMOKE_EFFECT	(1<<2)	//! blocks the effect that chemical clouds would have on a mob --glasses, mask and helmets ONLY!
-#define MASKINTERNALS		    (1<<3)	//! mask allows internals
-#define NOSLIP                  (1<<4)  //! prevents from slipping on wet floors, in space etc
+#define LAVAPROTECT (1<<0)
+#define STOPSPRESSUREDAMAGE (1<<1)	//! SUIT and HEAD items which stop pressure damage. To stop you taking all pressure damage you must have both a suit and head item with this flag.
+#define BLOCK_GAS_SMOKE_EFFECT (1<<2)	//! blocks the effect that chemical clouds would have on a mob --glasses, mask and helmets ONLY!
+#define MASKINTERNALS (1<<3) //! mask allows internals
+#define NOSLIP (1<<4) //! prevents from slipping on wet floors, in space etc
 #define THICKMATERIAL			(1<<5)	//! prevents syringes, parapens and hypos if the external suit or helmet (if targeting head) has this flag. Example: space suits, biosuit, bombsuits, thick suits that cover your body.
 #define VOICEBOX_TOGGLABLE      (1<<6)  //! The voicebox in this clothing can be toggled.
 #define VOICEBOX_DISABLED       (1<<7)  //! The voicebox is currently turned off.

@@ -38,22 +38,22 @@
 				else
 					to_chat(user, span_warning("[src] fails to implant [M]."))
 
-/obj/item/implanter/attackby(obj/item/W, mob/user, params)
-	if(istype(W, /obj/item/pen))
-		if(!user.is_literate())
-			to_chat(user, span_notice("You prod at [src] with [W]!"))
-			return
-		var/t = stripped_input(user, "What would you like the label to be?", name, null)
-		if(user.get_active_held_item() != W)
-			return
-		if(!user.canUseTopic(src, BE_CLOSE))
-			return
-		if(t)
-			name = "implanter ([t])"
-		else
-			name = "implanter"
-	else
+/obj/item/implanter/attackby(obj/item/I, mob/user, params)
+	if(!istype(I, /obj/item/pen))
 		return ..()
+
+	if(!user.is_literate())
+		return
+
+	var/new_name = tgui_input_text(user, "What would you like the label to be?", name, max_length = MAX_NAME_LEN)
+	if(user.get_active_held_item() != I)
+		return
+	if(!user.can_perform_action(src))
+		return
+	if(new_name)
+		name = "implanter ([new_name])"
+	else
+		name = "implanter"
 
 /obj/item/implanter/Initialize(mapload)
 	. = ..()

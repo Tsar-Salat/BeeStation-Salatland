@@ -78,8 +78,8 @@
 /obj/structure/bed/roller/MouseDrop(over_object, src_location, over_location)
 	. = ..()
 	if(over_object == usr && Adjacent(usr))
-		if(!ishuman(usr) || !usr.canUseTopic(src, BE_CLOSE))
-			return 0
+		if(!ishuman(usr) || !usr.can_perform_action(src))
+			return
 		if(has_buckled_mobs())
 			return 0
 		usr.visible_message("[usr] collapses \the [src.name].", span_notice("You collapse \the [src.name]."))

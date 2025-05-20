@@ -97,7 +97,7 @@
 		COOLDOWN_START(src, play_cooldown, added_cooldown + get_sound_length(user))
 
 /obj/item/soundsynth/AltClick(mob/living/carbon/user)
-	if(!user.canUseTopic(src, BE_CLOSE))
+	if(!user.can_perform_action(src))
 		return
 	pick_sound()
 

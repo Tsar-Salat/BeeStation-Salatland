@@ -514,13 +514,13 @@
 			return new childspawn(target)
 
 /mob/living/simple_animal/stripPanelUnequip(obj/item/what, mob/who, where)
-	if(!canUseTopic(who, BE_CLOSE))
+	if(!can_perform_action(who))
 		return
 	else
 		..()
 
 /mob/living/simple_animal/stripPanelEquip(obj/item/what, mob/who, where)
-	if(!canUseTopic(who, BE_CLOSE))
+	if(!can_perform_action(who))
 		return
 	else
 		..()

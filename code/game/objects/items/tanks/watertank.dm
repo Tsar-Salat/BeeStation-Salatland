@@ -455,7 +455,7 @@
 
 
 /obj/item/extinguisher/mini/nozzle/AltClick(mob/user)
-	if((tank?.upgrade_flags & FIREPACK_UPGRADE_SMARTFOAM) && user.canUseTopic(src, BE_CLOSE))
+	if((tank?.upgrade_flags & FIREPACK_UPGRADE_SMARTFOAM) && user.can_perform_action(src))
 		toggled = !toggled
 		balloon_alert(user, "[toggled ? "Advanced" : "Normal"] foam mode")
 		playsound(src, 'sound/machines/click.ogg', 50)

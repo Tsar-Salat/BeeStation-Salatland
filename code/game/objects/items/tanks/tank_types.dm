@@ -10,7 +10,7 @@
 /// Allows carbon to toggle internals via AltClick of the equipped tank.
 /obj/item/tank/internals/AltClick(mob/user)
 	..()
-	if((loc == user) && (user.canUseTopic(src, TRUE, FALSE, TRUE)))
+	if((loc == user) && user.can_perform_action(src, FORBID_TELEKINESIS_REACH|NEED_HANDS))
 		toggle_internals(user)
 
 /obj/item/tank/internals/examine(mob/user)

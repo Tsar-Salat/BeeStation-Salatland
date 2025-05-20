@@ -184,7 +184,7 @@
 
 /obj/item/storage/fancy/cigarettes/AltClick(mob/user)
 	. = ..()
-	if(!user.canUseTopic(src, BE_CLOSE))
+	if(!user.can_perform_action(src))
 		return
 	var/obj/item/lighter = locate(/obj/item/lighter) in contents
 	if(lighter)

@@ -281,6 +281,6 @@
 	to_chat(user, span_notice("The modulator is now [voice_change ? "on" : "off"]!"))
 
 /obj/item/clothing/mask/gas/old/modulator/AltClick(mob/user)
-	if(user.canUseTopic(src, BE_CLOSE))
+	if(user.can_perform_action(src))
 		voice_change = !voice_change
 		to_chat(user, span_notice("The modulator is now [voice_change ? "on" : "off"]!"))

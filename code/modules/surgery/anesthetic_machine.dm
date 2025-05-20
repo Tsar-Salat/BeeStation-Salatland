@@ -42,7 +42,7 @@
 
 /obj/machinery/anesthetic_machine/AltClick(mob/user)
 	. = ..()
-	if(!user.canUseTopic(src, BE_CLOSE))
+	if(!user.can_perform_action(src))
 		return
 	if(attached_tank)// If attached tank, remove it.
 		attached_tank.forceMove(loc)

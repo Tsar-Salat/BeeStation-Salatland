@@ -122,8 +122,9 @@
 	chassis.toggle_strafe()
 
 /obj/vehicle/sealed/mecha/AltClick(mob/living/user)
-	if((user in occupants) && user.canUseTopic(src))
-		toggle_strafe()
+	if(!(user in occupants) || !user.can_perform_action(src))
+		return
+	toggle_strafe()
 
 /obj/vehicle/sealed/mecha/proc/toggle_strafe()
 	if(!(mecha_flags & CANSTRAFE))

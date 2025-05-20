@@ -206,7 +206,7 @@
 			to_chat(user, span_notice("[src] is empty."))
 
 /obj/machinery/pdapainter/AltClick(mob/user)
-	if(!user.canUseTopic(src, !issilicon(user)) || user.stat != CONSCIOUS || HAS_TRAIT(user, TRAIT_HANDS_BLOCKED))
+	if(!user.can_perform_action(src, ALLOW_SILICON_REACH) || user.stat != CONSCIOUS || HAS_TRAIT(user, TRAIT_HANDS_BLOCKED))
 		return
 	if(stored_pda || stored_id_card)
 		eject_id_card(user)

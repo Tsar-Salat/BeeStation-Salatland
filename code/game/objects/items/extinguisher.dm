@@ -213,7 +213,7 @@
 			source.delay = multiplier + 2
 
 /obj/item/extinguisher/AltClick(mob/user)
-	if(!user.canUseTopic(src, BE_CLOSE, ismonkey(user)))
+	if(!user.can_perform_action(src, NEED_DEXTERITY|NEED_HANDS))
 		return
 	EmptyExtinguisher(user)
 
