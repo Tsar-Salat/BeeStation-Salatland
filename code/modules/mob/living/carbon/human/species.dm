@@ -105,7 +105,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	//List is called in health analyzer and displays all missing organs
 	var/list/required_organs = list()
 
-	//Do NOT remove by setting to null. use OR make a RESPECTIVE TRAIT (removing stomach? add the NOSTOMACH trait to your species)
+	//Do NOT remove by setting to null. use OR make an ASSOCIATED TRAIT.
 	//why does it work this way? because traits also disable the downsides of not having an organ, removing organs but not having the trait will make your species die
 
 	///Replaces default brain with a different organ
@@ -1426,129 +1426,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	outfit_important_for_life= new()
 	outfit_important_for_life.equip(human_to_equip)
 
-////////
-//LIFE//
-////////
-
-/datum/species/proc/handle_digestion(mob/living/carbon/human/H, delta_time, times_fired)
-	if(HAS_TRAIT(src, TRAIT_NOHUNGER))
-		return //hunger is for BABIES
-
-	//The fucking TRAIT_FAT mutation is the dumbest shit ever. It makes the code so difficult to work with
-	if(HAS_TRAIT_FROM(H, TRAIT_FAT, OBESITY))//I share your pain, past coder.
-		if(H.overeatduration < (200 SECONDS))
-			to_chat(H, "<span class='notice'>You feel fit again!</span>")
-			REMOVE_TRAIT(H, TRAIT_FAT, OBESITY)
-			REMOVE_TRAIT(H, TRAIT_OFF_BALANCE_TACKLER, OBESITY)
-			H.remove_movespeed_modifier(/datum/movespeed_modifier/obesity)
-			H.update_inv_w_uniform()
-			H.update_inv_wear_suit()
-	else
-		if(H.overeatduration >= (200 SECONDS))
-			to_chat(H, "<span class='danger'>You suddenly feel blubbery!</span>")
-			ADD_TRAIT(H, TRAIT_FAT, OBESITY)
-			ADD_TRAIT(H, TRAIT_OFF_BALANCE_TACKLER, OBESITY)
-			H.add_movespeed_modifier(/datum/movespeed_modifier/obesity)
-			H.update_inv_w_uniform()
-			H.update_inv_wear_suit()
-
-	// nutrition decrease and satiety
-	if (H.nutrition > 0 && H.stat != DEAD && !HAS_TRAIT(H, TRAIT_NOHUNGER))
-		// THEY HUNGER
-		var/hunger_rate = HUNGER_FACTOR
-		var/datum/component/mood/mood = H.GetComponent(/datum/component/mood)
-		if(mood && mood.sanity > SANITY_DISTURBED)
-			hunger_rate *= max(1 - 0.002 * mood.sanity, 0.5) //0.85 to 0.75
-		// Whether we cap off our satiety or move it towards 0
-		if(H.satiety > MAX_SATIETY)
-			H.satiety = MAX_SATIETY
-		else if(H.satiety > 0)
-			H.satiety--
-		else if(H.satiety < -MAX_SATIETY)
-			H.satiety = -MAX_SATIETY
-		else if(H.satiety < 0)
-			H.satiety++
-			if(DT_PROB(round(-H.satiety/77), delta_time))
-				H.Jitter(5)
-			hunger_rate = 3 * HUNGER_FACTOR
-		hunger_rate *= H.physiology.hunger_mod
-		H.adjust_nutrition(-hunger_rate * delta_time)
-
-	if(H.nutrition > NUTRITION_LEVEL_FULL)
-		if(H.overeatduration < 20 MINUTES) //capped so people don't take forever to unfat
-			H.overeatduration = min(H.overeatduration + (1 SECONDS * delta_time), 20 MINUTES)
-	else
-		if(H.overeatduration > 0)
-			H.overeatduration = max(H.overeatduration - (2 SECONDS * delta_time), 0) //doubled the unfat rate
-
-	//metabolism change
-	if(H.nutrition > NUTRITION_LEVEL_FAT)
-		H.metabolism_efficiency = 1
-	else if(H.nutrition > NUTRITION_LEVEL_FED && H.satiety > 80)
-		if(H.metabolism_efficiency != 1.25 && !HAS_TRAIT(H, TRAIT_NOHUNGER))
-			to_chat(H, span_notice("You feel vigorous."))
-			H.metabolism_efficiency = 1.25
-	else if(H.nutrition < NUTRITION_LEVEL_STARVING + 50)
-		if(H.metabolism_efficiency != 0.8)
-			to_chat(H, span_notice("You feel sluggish."))
-		H.metabolism_efficiency = 0.8
-	else
-		if(H.metabolism_efficiency == 1.25)
-			to_chat(H, span_notice("You no longer feel vigorous."))
-		H.metabolism_efficiency = 1
-
-	if(HAS_TRAIT(H, TRAIT_POWERHUNGRY))
-		handle_charge(H)
-	else
-		switch(H.nutrition)
-			if(NUTRITION_LEVEL_FULL to INFINITY)
-				H.throw_alert("nutrition", /atom/movable/screen/alert/fat)
-				H.remove_movespeed_modifier(MOVESPEED_ID_VISIBLE_HUNGER)
-				H.remove_actionspeed_modifier(ACTIONSPEED_ID_SATIETY)
-			if(NUTRITION_LEVEL_FED to NUTRITION_LEVEL_FULL)
-				H.clear_alert("nutrition")
-				H.remove_movespeed_modifier(MOVESPEED_ID_VISIBLE_HUNGER)
-				H.add_actionspeed_modifier(/datum/actionspeed_modifier/well_fed)
-			if(NUTRITION_LEVEL_HUNGRY to NUTRITION_LEVEL_FED)
-				H.clear_alert("nutrition")
-				H.remove_movespeed_modifier(MOVESPEED_ID_VISIBLE_HUNGER)
-				H.remove_actionspeed_modifier(ACTIONSPEED_ID_SATIETY)
-			if(NUTRITION_LEVEL_STARVING to NUTRITION_LEVEL_HUNGRY)
-				H.throw_alert("nutrition", /atom/movable/screen/alert/hungry)
-				H.add_movespeed_modifier(/datum/movespeed_modifier/visible_hunger/hungry)
-				H.add_actionspeed_modifier(/datum/actionspeed_modifier/starving)
-			if(0 to NUTRITION_LEVEL_STARVING)
-				H.throw_alert("nutrition", /atom/movable/screen/alert/starving)
-				H.add_movespeed_modifier(/datum/movespeed_modifier/visible_hunger/starving)
-				H.add_actionspeed_modifier(/datum/actionspeed_modifier/starving)
-
-/datum/species/proc/handle_charge(mob/living/carbon/human/H)
-	switch(H.nutrition)
-		if(NUTRITION_LEVEL_FED to INFINITY)
-			H.clear_alert("nutrition")
-			H.remove_movespeed_modifier(MOVESPEED_ID_VISIBLE_HUNGER)
-			H.add_actionspeed_modifier(/datum/actionspeed_modifier/well_fed)
-		if(NUTRITION_LEVEL_HUNGRY to NUTRITION_LEVEL_FED)
-			H.throw_alert("nutrition", /atom/movable/screen/alert/lowcell, 1)
-			H.remove_movespeed_modifier(MOVESPEED_ID_VISIBLE_HUNGER)
-			H.remove_actionspeed_modifier(ACTIONSPEED_ID_SATIETY)
-		if(NUTRITION_LEVEL_STARVING to NUTRITION_LEVEL_HUNGRY)
-			H.throw_alert("nutrition", /atom/movable/screen/alert/lowcell, 2)
-			H.add_movespeed_modifier(/datum/movespeed_modifier/visible_hunger/hungry)
-			H.add_actionspeed_modifier(/datum/actionspeed_modifier/starving)
-		if(1 to NUTRITION_LEVEL_STARVING)
-			H.throw_alert("nutrition", /atom/movable/screen/alert/lowcell, 3)
-			H.add_movespeed_modifier(/datum/movespeed_modifier/visible_hunger/starving)
-			H.add_actionspeed_modifier(/datum/actionspeed_modifier/starving)
-		else
-			H.add_movespeed_modifier(/datum/movespeed_modifier/visible_hunger/starving)
-			H.add_actionspeed_modifier(/datum/actionspeed_modifier/starving)
-			var/obj/item/organ/stomach/battery/battery = H.getorganslot(ORGAN_SLOT_STOMACH)
-			if(!istype(battery))
-				H.throw_alert("nutrition", /atom/movable/screen/alert/nocell)
-			else
-				H.throw_alert("nutrition", /atom/movable/screen/alert/emptycell)
-
 /datum/species/proc/update_health_hud(mob/living/carbon/human/H)
 	return 0
 
@@ -1929,14 +1806,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 /datum/species/proc/bullet_act(obj/projectile/P, mob/living/carbon/human/H)
 	// called before a projectile hit
 	return 0
-
-/////////////
-//BREATHING//
-/////////////
-
-/datum/species/proc/breathe(mob/living/carbon/human/H)
-	if(HAS_TRAIT(H, TRAIT_NOBREATH))
-		return TRUE
 
 //////////////////////////
 // ENVIRONMENT HANDLERS //
@@ -2946,14 +2815,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			SPECIES_PERK_ICON = "syringe",
 			SPECIES_PERK_NAME = "Tough Skin",
 			SPECIES_PERK_DESC = "[plural_form] have tough skin, blocking piercing and embedding of sharp objects, including needles.",
-		))
-
-	if(TRAIT_POWERHUNGRY in inherent_traits)
-		to_add += list(list(
-			SPECIES_PERK_TYPE = SPECIES_POSITIVE_PERK,
-			SPECIES_PERK_ICON = "bolt",
-			SPECIES_PERK_NAME = "Shockingly Tasty",
-			SPECIES_PERK_DESC = "[plural_form] can feed on electricity from APCs and powercells; and do not otherwise need to eat.",
 		))
 
 	return to_add

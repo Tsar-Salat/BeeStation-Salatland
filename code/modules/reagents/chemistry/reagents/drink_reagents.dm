@@ -233,8 +233,8 @@
 	if(M.getBruteLoss() && DT_PROB(10, delta_time))
 		M.heal_bodypart_damage(1,0, 0)
 		. = TRUE
-	if(holder.has_reagent(/datum/reagent/consumable/capsaicin))
-		holder.remove_reagent(/datum/reagent/consumable/capsaicin, 1 * delta_time)
+	if(M.reagents.has_reagent(/datum/reagent/consumable/capsaicin))
+		M.reagents.remove_reagent(/datum/reagent/consumable/capsaicin, 1 * delta_time)
 	..()
 
 /*See block comment in ../milk/overdose_process(mob/living/M) for calculation and explanation of why this exists and why 5 was chosen
@@ -324,8 +324,8 @@
 	M.AdjustSleeping(-40 * REM * delta_time)
 	//310.15 is the normal bodytemp.
 	M.adjust_bodytemperature(25 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * delta_time, 0, M.get_body_temp_normal())
-	if(holder.has_reagent(/datum/reagent/consumable/frostoil))
-		holder.remove_reagent(/datum/reagent/consumable/frostoil, 5 * REM * delta_time)
+	if(M.reagents.has_reagent(/datum/reagent/consumable/frostoil))
+		M.reagents.remove_reagent(/datum/reagent/consumable/frostoil, 5 * REM * delta_time)
 	..()
 	. = TRUE
 
@@ -920,8 +920,8 @@
 	if(M.getBruteLoss() && DT_PROB(10, delta_time))
 		M.heal_bodypart_damage(1, 0, 0)
 		. = TRUE
-	if(holder.has_reagent(/datum/reagent/consumable/capsaicin))
-		holder.remove_reagent(/datum/reagent/consumable/capsaicin, 2 * REM * delta_time)
+	if(M.reagents.has_reagent(/datum/reagent/consumable/capsaicin))
+		M.reagents.remove_reagent(/datum/reagent/consumable/capsaicin, 2 * REM * delta_time)
 	..()
 
 /datum/reagent/consumable/menthol
@@ -1123,4 +1123,4 @@
 	glass_icon_state = "glass_white"
 	glass_name = "glass of coconut juice"
 	glass_desc = "a glass of coconut juice"
-	
+

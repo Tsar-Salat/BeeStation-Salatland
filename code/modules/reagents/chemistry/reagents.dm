@@ -61,13 +61,15 @@ GLOBAL_LIST_INIT(name2reagent, build_name2reagent())
 	// What can process this? ORGANIC, SYNTHETIC, or ORGANIC | SYNTHETIC?. We'll assume by default that it affects organics.
 	var/process_flags = ORGANIC
 	/// You fucked up and this is now triggering its overdose effects, purge that shit quick.
-	var/overdosed = 0
+	var/overdosed = FALSE
 	///if false stops metab in liverless mobs
 	var/self_consuming = FALSE
 	///affects how far it travels when sprayed
 	var/reagent_weight = 1
 	///is it currently metabolizing
 	var/metabolizing = FALSE
+	///A list of causes why this chem should skip being removed, if the length is 0 it will be removed from holder naturally, if this is >0 it will not be removed from the holder.
+	var/list/reagent_removal_skip_list = list()
 
 /datum/reagent/Destroy() // This should only be called by the holder, so it's already handled clearing its references
 	. = ..()
@@ -129,6 +131,15 @@ GLOBAL_LIST_INIT(name2reagent, build_name2reagent())
 /// Called when this reagent stops being metabolized by a liver
 /datum/reagent/proc/on_mob_end_metabolize(mob/living/L)
 	return
+
+/// Called when a reagent is inside of a mob when they are dead
+/datum/reagent/proc/on_mob_dead(mob/living/carbon/C, delta_time)
+	if(!(chem_flags & CHEMICAL_DEAD_PROCESS))
+		return
+	current_cycle++
+	if(length(reagent_removal_skip_list))
+		return
+	holder.remove_reagent(type, metabolization_rate * C.metabolism_efficiency * delta_time)
 
 /// Called by [/datum/reagents/proc/conditional_update_move]
 /datum/reagent/proc/on_move(mob/M)

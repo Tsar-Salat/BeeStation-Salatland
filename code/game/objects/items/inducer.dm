@@ -94,17 +94,17 @@
 
 	return ..()
 
-/obj/item/inducer/proc/recharge(atom/movable/A, mob/user)
+/obj/item/inducer/proc/recharge(atom/movable/A, mob/living/user)
 	if(!isturf(A) && user.loc == A)
 		return FALSE
 	if(recharging)
 		return TRUE
 	else
 		recharging = TRUE
-	var/obj/item/stock_parts/cell/C = A.get_cell()
+	var/obj/item/stock_parts/cell/powercell = A.get_cell()
 	var/obj/O
 	var/coefficient = 1
-	var/obj/item/organ/stomach/battery/battery
+	var/obj/item/organ/stomach/electrical/biobattery
 	if(istype(A, /obj/item/gun/energy))
 		to_chat(user, span_alert("Error unable to interface with device."))
 		return FALSE
@@ -113,28 +113,28 @@
 		return FALSE
 	if(istype(A, /obj))
 		O = A
-	if(iscarbon(A))
+	else if(iscarbon(A))
 		var/mob/living/carbon/human_target = A
-		if(HAS_TRAIT(human_target, TRAIT_POWERHUNGRY))
-			battery = human_target.getorganslot(ORGAN_SLOT_STOMACH)
-			if(!istype(battery))
-				return
+		biobattery = human_target.getorganslot(ORGAN_SLOT_STOMACH)
+		if(!istype(biobattery))
+			to_chat(user, span_alert("Error unable to interface with this entity."))
+			return
 
-	var/maxcharge = battery?.max_charge || C?.maxcharge
-	if(C || battery)
+	var/maxcharge = biobattery?.get_full_charge() || powercell?.maxcharge
+	if(powercell || biobattery)
 		var/done_any = FALSE
-		if((battery?.charge || C.charge) >= maxcharge)
+		if((biobattery?.crystal_charge || powercell.charge) >= maxcharge)
 			to_chat(user, span_notice("[A] is fully charged!"))
 			recharging = FALSE
 			return TRUE
 		user.visible_message("[user] starts recharging [A] with [src].",span_notice("You start recharging [A] with [src]."))
-		while((battery?.charge || C.charge) < maxcharge)
+		while((biobattery?.crystal_charge || powercell.charge) < maxcharge)
 			if(do_after(user, 10, target = user) && cell.charge)
 				done_any = TRUE
-				if(battery)
-					battery.adjust_charge(min(cell.charge,250))
+				if(biobattery)
+					biobattery.adjust_charge(min(cell.charge,250))
 				else
-					induce(C, coefficient)
+					induce(powercell, coefficient)
 				do_sparks(1, FALSE, A)
 				if(O)
 					O.update_icon()

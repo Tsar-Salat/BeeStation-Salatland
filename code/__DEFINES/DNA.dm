@@ -53,28 +53,29 @@
 #define CLONER_MATURE_CLONE "mature"
 
 //! ## species traits for mutantraces
-#define MUTCOLORS		1
-#define HAIR			2
-#define FACEHAIR		3
-#define EYECOLOR		4
-#define LIPS			5
-#define NOBLOOD			6
-#define NOTRANSSTING	7
-#define NOZOMBIE		8
-#define NO_UNDERWEAR	9
-#define NOLIVER			10
-#define NOSTOMACH		11
-#define NO_DNA_COPY     12
-#define NOFLASH			13
-#define DYNCOLORS		14 //! Use this if you want to change the race's color without the player being able to pick their own color. AKA special color shifting TRANSLATION: AWFUL.
-#define AGENDER			15
-#define NOEYESPRITES	16 //! Do not draw eyes or eyeless overlay
-#define NOREAGENTS     17 //! DO NOT PROCESS REAGENTS
+#define MUTCOLORS 1
+#define HAIR 2
+#define FACEHAIR 3
+#define EYECOLOR 4
+#define LIPS 5
+#define NOBLOOD 6
+#define NOTRANSSTING 7
+#define NOZOMBIE 8
+#define NO_UNDERWEAR 9
+#define NOLIVER 10
+#define NOSTOMACH 11
+#define NO_DNA_COPY 12
+#define NOFLASH 13
+#define DYNCOLORS 14 //! Use this if you want to change the race's color without the player being able to pick their own color. AKA special color shifting TRANSLATION: AWFUL.
+#define AGENDER 15
+#define NOEYESPRITES 16 //! Do not draw eyes or eyeless overlay
+#define NOREAGENTS 17 //! DO NOT PROCESS REAGENTS
 #define REVIVESBYHEALING 18 // Will revive on heal when healing and total HP > 0.
-#define NOHUSK			19 // Can't be husked.
-#define NOMOUTH			20
-#define NOSOCKS       21 // You cannot wear socks.
-#define ENVIROSUIT		22 //! spawns with an envirosuit
+#define NOHUSK 19 // Can't be husked.
+#define NOMOUTH 20
+#define NOSOCKS 21 // You cannot wear socks.
+#define ENVIROSUIT 22 //! spawns with an envirosuit
+#define NOAPPENDIX 23
 
 /// Used for determining which wounds are applicable to this species.
 /// if we have flesh (can suffer slash/piercing/burn wounds, requires they don't have NOBLOOD)
@@ -131,3 +132,29 @@
 
 //Size / height stuff
 #define SPECIES_HEIGHTS(x, y, z) list("Short" = x, "Normal" = y, "Tall" = z)
+
+///Organ slot processing order for life proc
+GLOBAL_LIST_INIT(organ_process_order, list(
+	ORGAN_SLOT_BRAIN,
+	ORGAN_SLOT_APPENDIX,
+	ORGAN_SLOT_RIGHT_ARM_AUG,
+	ORGAN_SLOT_LEFT_ARM_AUG,
+	ORGAN_SLOT_STOMACH,
+	ORGAN_SLOT_STOMACH_AID,
+	ORGAN_SLOT_BREATHING_TUBE,
+	ORGAN_SLOT_EARS,
+	ORGAN_SLOT_EYES,
+	ORGAN_SLOT_LUNGS,
+	ORGAN_SLOT_HEART,
+	ORGAN_SLOT_ZOMBIE,
+	ORGAN_SLOT_THRUSTERS,
+	ORGAN_SLOT_HUD,
+	ORGAN_SLOT_LIVER,
+	ORGAN_SLOT_TONGUE,
+	ORGAN_SLOT_VOICE,
+	ORGAN_SLOT_ADAMANTINE_RESONATOR,
+	ORGAN_SLOT_HEART_AID,
+	ORGAN_SLOT_BRAIN_ANTIDROP,
+	ORGAN_SLOT_BRAIN_ANTISTUN,
+	ORGAN_SLOT_TAIL
+	))

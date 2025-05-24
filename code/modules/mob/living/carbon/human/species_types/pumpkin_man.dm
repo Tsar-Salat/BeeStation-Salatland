@@ -5,7 +5,7 @@
 	sexes = 0
 	meat = /obj/item/food/pieslice/pumpkin
 	species_traits = list(NOEYESPRITES,MUTCOLORS,EYECOLOR)
-	inherent_traits = list(TRAIT_ALWAYS_CLEAN, TRAIT_BEEFRIEND, TRAIT_NONECRODISEASE)
+	inherent_traits = list(TRAIT_BEEFRIEND, TRAIT_NONECRODISEASE)
 	inherent_factions = list(FACTION_PLANTS, FACTION_VINES)
 	burnmod = 1.25
 	heatmod = 1.5

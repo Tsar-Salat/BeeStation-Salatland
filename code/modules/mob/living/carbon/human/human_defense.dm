@@ -732,7 +732,7 @@
 			else if(oxyloss > 30)
 				to_chat(src, span_danger("You're choking!"))
 
-	if(!HAS_TRAIT(src, TRAIT_NOHUNGER) && !HAS_TRAIT(src, TRAIT_POWERHUNGRY))
+	if(!HAS_TRAIT(src, TRAIT_NOHUNGER))
 		switch(nutrition)
 			if(NUTRITION_LEVEL_FULL to INFINITY)
 				to_chat(src, span_info("You're completely stuffed!"))
@@ -743,7 +743,7 @@
 			if(NUTRITION_LEVEL_HUNGRY to NUTRITION_LEVEL_FED)
 				to_chat(src, span_info("You could use a bite to eat."))
 			if(NUTRITION_LEVEL_STARVING to NUTRITION_LEVEL_HUNGRY)
-				to_chat(src, span_info("You feel quite hungry."))
+				to_chat(src, span_info("You feel quite hungry.")) //Look, Henry's come to see us!
 			if(0 to NUTRITION_LEVEL_STARVING)
 				to_chat(src, span_danger("You're starving!"))
 

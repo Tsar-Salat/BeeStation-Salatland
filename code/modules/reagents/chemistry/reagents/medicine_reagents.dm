@@ -12,6 +12,8 @@
 
 /datum/reagent/medicine/on_mob_life(mob/living/carbon/M, delta_time, times_fired)
 	current_cycle++
+	if(length(reagent_removal_skip_list))
+		return
 	holder.remove_reagent(type, metabolization_rate * delta_time / M.metabolism_efficiency) //medicine reagents stay longer if you have a better metabolism
 	if(!QDELETED(holder) && metabolite) // removing a reagent can sometimes delete the holder
 		holder.add_reagent(metabolite, metabolization_rate / M.metabolism_efficiency * METABOLITE_RATE)
@@ -112,8 +114,8 @@
 	M.AdjustUnconscious(-20 * REM * delta_time)
 	M.AdjustImmobilized(-20 * REM * delta_time)
 	M.AdjustParalyzed(-20 * REM * delta_time)
-	if(holder.has_reagent(/datum/reagent/toxin/mindbreaker))
-		holder.remove_reagent(/datum/reagent/toxin/mindbreaker, 5 * REM * delta_time)
+	if(M.reagents.has_reagent(/datum/reagent/toxin/mindbreaker))
+		M.reagents.remove_reagent(/datum/reagent/toxin/mindbreaker, 5 * REM * delta_time)
 	M.hallucination = max(M.hallucination - (10 * REM * delta_time), 0)
 	if(DT_PROB(16, delta_time))
 		M.adjustToxLoss(1, 0)
@@ -128,10 +130,10 @@
 
 /datum/reagent/medicine/synaphydramine/on_mob_life(mob/living/carbon/M, delta_time, times_fired)
 	M.drowsyness = max(M.drowsyness - (5 * REM * delta_time), 0)
-	if(holder.has_reagent(/datum/reagent/toxin/mindbreaker))
-		holder.remove_reagent(/datum/reagent/toxin/mindbreaker, 5 * REM * delta_time)
-	if(holder.has_reagent(/datum/reagent/toxin/histamine))
-		holder.remove_reagent(/datum/reagent/toxin/histamine, 5 * REM * delta_time)
+	if(M.reagents.has_reagent(/datum/reagent/toxin/mindbreaker))
+		M.reagents.remove_reagent(/datum/reagent/toxin/mindbreaker, 5 * REM * delta_time)
+	if(M.reagents.has_reagent(/datum/reagent/toxin/histamine))
+		M.reagents.remove_reagent(/datum/reagent/toxin/histamine, 5 * REM * delta_time)
 	M.hallucination = max(M.hallucination - (10 * REM * delta_time), 0)
 	if(DT_PROB(16, delta_time))
 		M.adjustToxLoss(1, 0)
@@ -777,7 +779,7 @@
 	if(DT_PROB(5, delta_time))
 		M.drowsyness++
 	M.jitteriness -= 1 * REM * delta_time
-	holder.remove_reagent(/datum/reagent/toxin/histamine, 3 * REM * delta_time)
+	M.reagents.remove_reagent(/datum/reagent/toxin/histamine, 3 * REM * delta_time)
 	..()
 
 /datum/reagent/medicine/morphine
@@ -1019,8 +1021,8 @@
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
 
 /datum/reagent/medicine/neurine/on_mob_life(mob/living/carbon/C, delta_time, times_fired)
-	if(holder.has_reagent(/datum/reagent/consumable/ethanol/neurotoxin))
-		holder.remove_reagent(/datum/reagent/consumable/ethanol/neurotoxin, 5 * REM * delta_time)
+	if(C.reagents.has_reagent(/datum/reagent/consumable/ethanol/neurotoxin))
+		C.reagents.remove_reagent(/datum/reagent/consumable/ethanol/neurotoxin, 5 * REM * delta_time)
 	if(DT_PROB(8, delta_time))
 		C.cure_trauma_type(resilience = TRAUMA_RESILIENCE_BASIC)
 	..()
@@ -1145,7 +1147,7 @@
 /datum/reagent/medicine/insulin/on_mob_life(mob/living/carbon/M, delta_time, times_fired)
 	if(M.AdjustSleeping(-20 * REM * delta_time))
 		. = TRUE
-	holder.remove_reagent(/datum/reagent/consumable/sugar, 3 * REM * delta_time)
+	M.reagents.remove_reagent(/datum/reagent/consumable/sugar, 3 * REM * delta_time)
 	..()
 
 //Trek Chems, used primarily by medibots. Only heals a specific damage type, but is very efficient.

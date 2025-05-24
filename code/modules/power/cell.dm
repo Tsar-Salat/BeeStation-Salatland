@@ -1,3 +1,7 @@
+#define CELL_DRAIN_TIME 35
+#define CELL_POWER_GAIN 60
+#define CELL_POWER_DRAIN 750
+
 /obj/item/stock_parts/cell
 	name = "power cell"
 	desc = "A rechargeable electrochemical power cell."
@@ -170,44 +174,34 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/stock_parts/cell)
 					corrupt()
 
 /obj/item/stock_parts/cell/attack_self(mob/user)
-	if(isethereal(user))
+	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
-		var/datum/species/ethereal/E = H.dna.species
-		if(E.drain_time > world.time)
-			return
-		var/obj/item/organ/stomach/battery/stomach = H.getorganslot(ORGAN_SLOT_STOMACH)
-		if(!istype(stomach))
-			to_chat(H, span_warning("You can't receive charge!"))
-			return
-		if(H.nutrition >= NUTRITION_LEVEL_ALMOST_FULL)
-			to_chat(user, span_warning("You are already fully charged!"))
-			return
+		var/obj/item/organ/stomach/maybe_stomach = H.getorganslot(ORGAN_SLOT_STOMACH)
 
-		to_chat(H, span_notice("You clumsily channel power through the [src] and into your body, wasting some in the process."))
-		E.drain_time = world.time + 25
-		while(do_after(user, 20, target = src))
-			if(!istype(stomach))
-				to_chat(H, span_warning("You can't receive charge!"))
-				return
-			E.drain_time = world.time + 25
-			if(charge > 300)
-				stomach.adjust_charge(75)
-				charge -= 300 //you waste way more than you receive, so that ethereals cant just steal one cell and forget about hunger
-				to_chat(H, span_notice("You receive some charge from the [src]."))
-			else
-				stomach.adjust_charge(charge/4)
-				charge = 0
-				to_chat(H, span_notice("You drain the [src]."))
-				E.drain_time = 0
-				return
+		if(istype(maybe_stomach, /obj/item/organ/stomach/electrical/ethereal))
 
-			if(stomach.charge >= stomach.max_charge)
-				to_chat(H, span_notice("You are now fully charged."))
-				E.drain_time = 0
+			var/charge_limit = ETHEREAL_CHARGE_DANGEROUS - CELL_POWER_GAIN
+			var/obj/item/organ/stomach/electrical/ethereal/stomach = maybe_stomach
+			if((stomach.drain_time > world.time) || !stomach)
 				return
-		to_chat(H, span_warning("You fail to receive charge from the [src]!"))
-		E.drain_time = 0
-	return
+			if(charge < CELL_POWER_DRAIN)
+				to_chat(H, span_warning("[src] doesn't have enough power!"))
+				return
+			if(stomach.crystal_charge > charge_limit)
+				to_chat(H, span_warning("Your charge is full!"))
+				return
+			to_chat(H, span_notice("You begin clumsily channeling power from [src] into your body."))
+			stomach.drain_time = world.time + CELL_DRAIN_TIME
+			if(do_after(user, CELL_DRAIN_TIME, target = src))
+				if((charge < CELL_POWER_DRAIN) || (stomach.crystal_charge > charge_limit))
+					return
+				if(istype(stomach))
+					to_chat(H, span_notice("You receive some charge from [src], wasting some in the process."))
+					stomach.adjust_charge(CELL_POWER_GAIN)
+					charge -= CELL_POWER_DRAIN //you waste way more than you receive, so that ethereals cant just steal one cell and forget about hunger
+				else
+					to_chat(H, span_warning("You can't receive charge from [src]!"))
+			return
 
 /obj/item/stock_parts/cell/blob_act(obj/structure/blob/B)
 	SSexplosions.high_mov_atom += src
@@ -422,3 +416,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/stock_parts/cell)
 	var/area/A = get_area(src)
 	if(!A.lightswitch || !A.light_power)
 		charge = 0 //For naturally depowered areas, we start with no power
+
+#undef CELL_DRAIN_TIME
+#undef CELL_POWER_GAIN
+#undef CELL_POWER_DRAIN

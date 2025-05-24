@@ -159,7 +159,7 @@
 				to_chat(victim, span_warning("[H] tries to bite you, but stops before touching you!"))
 				to_chat(H, span_warning("[victim] is blessed! You stop just in time to avoid catching fire."))
 				return
-			if(victim?.reagents?.has_reagent(/datum/reagent/consumable/garlic))
+			if(victim.has_reagent(/datum/reagent/consumable/garlic))
 				to_chat(victim, span_warning("[H] tries to bite you, but recoils in disgust!"))
 				to_chat(H, span_warning("[victim] reeks of garlic! you can't bring yourself to drain such tainted blood."))
 				return

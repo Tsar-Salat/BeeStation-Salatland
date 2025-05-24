@@ -20,8 +20,10 @@
 	current_cycle++
 	if(ishuman(M))
 		var/mob/living/carbon/human/H = M
-		if(!HAS_TRAIT(H, TRAIT_NOHUNGER) && !HAS_TRAIT(H, TRAIT_POWERHUNGRY))
+		if(!HAS_TRAIT(H, TRAIT_NOHUNGER))
 			H.adjust_nutrition(nutriment_factor * REM * delta_time)
+	if(length(reagent_removal_skip_list))
+		return
 	holder.remove_reagent(type, metabolization_rate * delta_time)
 
 /datum/reagent/consumable/expose_mob(mob/living/M, method=TOUCH, reac_volume)
@@ -93,6 +95,11 @@
 	counterlist_normalise(taste_amounts)
 
 	data = taste_amounts
+
+/datum/reagent/consumable/nutriment/organ_tissue
+	name = "Organ Tissue"
+	description = "Natural tissues that make up the bulk of organs, providing many vitamins and minerals."
+	taste_description = "rich earthy pungent"
 
 /datum/reagent/consumable/nutriment/vitamin
 	name = "Vitamin"
@@ -251,8 +258,8 @@
 	switch(current_cycle)
 		if(1 to 15)
 			heating = 5
-			if(holder.has_reagent(/datum/reagent/cryostylane))
-				holder.remove_reagent(/datum/reagent/cryostylane, 5 * REM * delta_time)
+			if(M.reagents.has_reagent(/datum/reagent/cryostylane))
+				M.reagents.remove_reagent(/datum/reagent/cryostylane, 5 * REM * delta_time)
 			if(isslime(M))
 				heating = rand(5, 20)
 		if(15 to 25)
@@ -284,8 +291,8 @@
 	switch(current_cycle)
 		if(1 to 15)
 			cooling = -10
-			if(holder.has_reagent(/datum/reagent/consumable/capsaicin))
-				holder.remove_reagent(/datum/reagent/consumable/capsaicin, 5 * REM * delta_time)
+			if(M.reagents.has_reagent(/datum/reagent/consumable/capsaicin))
+				M.reagents.remove_reagent(/datum/reagent/consumable/capsaicin, 5 * REM * delta_time)
 			if(isslime(M))
 				cooling = -rand(5, 20)
 		if(15 to 25)
@@ -802,11 +809,22 @@
 	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
 	taste_description = "pure electrictiy"
 
+/datum/reagent/consumable/liquidelectricity/expose_mob(mob/living/exposed_mob, method=TOUCH, reac_volume) //can't be on life because of the way blood works.
+	. = ..()
+	if(!(method in list(INGEST, INJECT, PATCH)) || !iscarbon(exposed_mob))
+		return
+
+	var/mob/living/carbon/exposed_carbon = exposed_mob
+	//IPCs and Ethereals benefit from charge
+	var/obj/item/organ/stomach/electrical/stomach = exposed_carbon.getorganslot(ORGAN_SLOT_STOMACH)
+	if(istype(stomach))
+		stomach.adjust_charge(reac_volume * 30)
+
 /datum/reagent/consumable/liquidelectricity/on_mob_life(mob/living/carbon/M, delta_time, times_fired)
-	if(HAS_TRAIT(M, TRAIT_POWERHUNGRY))
-		var/obj/item/organ/stomach/battery/stomach = M.getorganslot(ORGAN_SLOT_STOMACH)
-		if(istype(stomach))
-			stomach.adjust_charge(40*REM)
+	//Only Ethereals get more blood
+	var/obj/item/organ/stomach/electrical/ethereal/stomach = M.getorganslot(ORGAN_SLOT_STOMACH)
+	if(istype(stomach))
+		M.blood_volume += 1 * delta_time
 	else if(DT_PROB(1.5, delta_time)) //scp13 optimization
 		M.electrocute_act(rand(3,5), "Liquid Electricity in their body", 1) //lmao at the newbs who eat energy bars
 		playsound(M, "sparks", 50, 1)

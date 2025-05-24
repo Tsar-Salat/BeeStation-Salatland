@@ -1,10 +1,11 @@
 /obj/item/organ
 	name = "organ"
 	icon = 'icons/obj/surgery.dmi'
-	var/mob/living/carbon/owner = null
-	var/status = ORGAN_ORGANIC
 	w_class = WEIGHT_CLASS_SMALL
 	throwforce = 0
+	juice_typepath = /datum/reagent/liquidgibs
+	var/mob/living/carbon/owner = null
+	var/status = ORGAN_ORGANIC
 	var/zone = BODY_ZONE_CHEST
 	var/slot
 	// DO NOT add slots with matching names to different zones - it will break internal_organs_slot list!
@@ -12,10 +13,11 @@
 	var/maxHealth = STANDARD_ORGAN_THRESHOLD
 	var/damage = 0		//total damage this organ has sustained
 	///Healing factor and decay factor function on % of maxhealth, and do not work by applying a static number per tick
-	var/healing_factor 	= 0										//fraction of maxhealth healed per on_life(), set to 0 for generic organs
-	var/decay_factor 	= 0										//same as above but when without a living owner, set to 0 for generic organs
-	var/high_threshold	= STANDARD_ORGAN_THRESHOLD * 0.45		//when severe organ damage occurs
-	var/low_threshold	= STANDARD_ORGAN_THRESHOLD * 0.1		//when minor organ damage occurs
+	var/healing_factor = 0 //fraction of maxhealth healed per on_life(), set to 0 for generic organs
+	var/decay_factor = 0 //same as above but when without a living owner, set to 0 for generic organs
+	var/high_threshold = STANDARD_ORGAN_THRESHOLD * 0.45 //when severe organ damage occurs
+	var/low_threshold = STANDARD_ORGAN_THRESHOLD * 0.1 //when minor organ damage occurs
+	var/emp_cooldown //cooldown for emp effects
 
 	///Organ variables for determining what we alert the owner with when they pass/clear the damage thresholds
 	var/prev_damage = 0
@@ -29,7 +31,10 @@
 	///When you take a bite you cant jam it in for surgery anymore.
 	var/useable = TRUE
 	var/list/food_reagents = list(/datum/reagent/consumable/nutriment = 5)
-	juice_typepath = /datum/reagent/liquidgibs
+	///The size of the reagent container
+	var/reagent_vol = 10
+
+	var/failure_time = 0
 
 	///Do we effect the appearance of our mob. Used to save time in preference code
 	var/visual = TRUE
@@ -49,7 +54,7 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 		AddComponent(/datum/component/edible,\
 		initial_reagents = food_reagents,\
 		foodtypes = RAW | MEAT | GORE,\
-		volume = 10,\
+		volume = reagent_vol,\
 		pre_eat = CALLBACK(src, PROC_REF(pre_eat)),\
 		on_compost = CALLBACK(src, PROC_REF(pre_compost)),\
 		after_eat = CALLBACK(src, PROC_REF(on_eat_from)))
@@ -75,6 +80,7 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 	M.internal_organs |= src
 	M.internal_organs_slot[slot] = src
 	moveToNullspace()
+	RegisterSignal(owner, COMSIG_PARENT_EXAMINE, PROC_REF(on_owner_examine))
 	for(var/trait in organ_traits)
 		ADD_TRAIT(M, trait, REF(src))
 	for(var/datum/action/action as anything in actions)
@@ -83,6 +89,9 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 
 //Special is for instant replacement like autosurgeons
 /obj/item/organ/proc/Remove(mob/living/carbon/organ_owner, special = FALSE, pref_load = FALSE)
+
+	UnregisterSignal(owner, COMSIG_PARENT_EXAMINE)
+
 	owner = null
 	if(organ_owner)
 		organ_owner.internal_organs -= src
@@ -117,6 +126,9 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 		return
 	REMOVE_TRAIT(owner, trait, REF(src))
 
+/obj/item/organ/proc/on_owner_examine(datum/source, mob/user, list/examine_list)
+	return
+
 /obj/item/organ/proc/on_find(mob/living/finder)
 	return
 
@@ -130,7 +142,12 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 
 /obj/item/organ/proc/on_life(delta_time, times_fired) //repair organ damage if the organ is not failing
 	if(organ_flags & ORGAN_FAILING)
+		handle_failing_organs(delta_time)
 		return
+
+	if(failure_time > 0)
+		failure_time--
+
 	///Damage decrements by a percent of its maxhealth
 	var/healing_amount = healing_factor
 	///Damage decrements again by a percent of its maxhealth, up to a total of 4 extra times depending on the owner's health
@@ -211,7 +228,7 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
   * input: M (a mob, the owner of the organ we call the proc on)
   * output: returns a message should get displayed.
   * description: By checking our current damage against our previous damage, we can decide whether we've passed an organ threshold.
-  *				 If we have, send the corresponding threshold message to the owner, if such a message exists.
+  * If we have, send the corresponding threshold message to the owner, if such a message exists.
   */
 /obj/item/organ/proc/check_damage_thresholds(var/M)
 	if(damage == prev_damage)
@@ -276,11 +293,30 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 			ears.Insert(src)
 		ears.setOrganDamage(0)
 
+///Organs don't die instantly, and neither should you when you get fucked up
+/obj/item/organ/proc/handle_failing_organs(delta_time)
+	if(owner.stat == DEAD)
+		return
+
+	failure_time += delta_time
+	organ_failure(delta_time)
+
+/** organ_failure
+ * generic proc for handling dying organs
+ *
+ * Arguments:
+ * delta_time - seconds since last tick
+ */
+/obj/item/organ/proc/organ_failure(delta_time)
+	return
+
 /** get_availability
   * returns whether the species should innately have this organ.
   *
   * regenerate organs works with generic organs, so we need to get whether it can accept certain organs just by what this returns.
-  * This is set to return true or false, depending on if a species has a specific organless trait. stomach for example checks if the species has NOSTOMACH and return based on that.
+  * This is set to return true or false, depending on if a species has a trait that would nulify the purpose of the organ.
+ * For example, lungs won't be given if you have NO_BREATH, stomachs check for NO_HUNGER, and livers check for NO_METABOLISM.
+ * If you want a carbon to have a trait that normally blocks an organ but still want the organ. Attach the trait to the organ using the organ_traits var
   * Arguments:
   * S - species, needed to return whether the species has an organ specific trait
   */

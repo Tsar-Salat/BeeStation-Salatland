@@ -1,5 +1,6 @@
 #define LIVER_DEFAULT_TOX_TOLERANCE 3 //amount of toxins the liver can filter out
 #define LIVER_DEFAULT_TOX_LETHALITY 0.005 //lower values lower how harmful toxins are to the liver
+#define LIVER_FAILURE_STAGE_SECONDS 60 //amount of seconds before liver failure reaches a new stage
 
 /obj/item/organ/liver
 	name = "liver"
@@ -28,38 +29,125 @@
 #define HAS_PAINFUL_TOXIN 2
 
 /obj/item/organ/liver/on_life(delta_time, times_fired)
-	var/mob/living/carbon/C = owner
+	var/mob/living/carbon/liver_owner = owner
 	..() //perform general on_life()
-	if(istype(C))
-		if(!(organ_flags & ORGAN_FAILING) && !HAS_TRAIT(C, TRAIT_NOMETABOLISM))//can't process reagents with a failing liver
+	if(istype(liver_owner))
+		if(!(organ_flags & ORGAN_FAILING) && !HAS_TRAIT(liver_owner, TRAIT_NOMETABOLISM))//can't process reagents with a failing liver
 
 			var/provide_pain_message = HAS_NO_TOXIN
+			var/obj/belly = liver_owner.getorganslot(ORGAN_SLOT_STOMACH)
 			if(filterToxins && !HAS_TRAIT(owner, TRAIT_TOXINLOVER))
 				//handle liver toxin filtration
-				for(var/datum/reagent/toxin/T in C.reagents.reagent_list)
-					var/thisamount = C.reagents.get_reagent_amount(T.type)
-					if (thisamount && thisamount <= toxTolerance)
-						C.reagents.remove_reagent(T.type, 0.5 * delta_time)
+				for(var/datum/reagent/toxin/toxin in liver_owner.reagents.reagent_list)
+					var/thisamount = liver_owner.reagents.get_reagent_amount(toxin.type)
+					if(belly)
+						thisamount += belly.reagents.get_reagent_amount(toxin.type)
+					if (thisamount && thisamount <= toxTolerance * (maxHealth - damage) / maxHealth ) //toxTolerance is effectively multiplied by the % that your liver's health is at
+						liver_owner.reagents.remove_reagent(toxin.type, 0.5 * delta_time)
 					else
 						damage += (thisamount * toxLethality * delta_time)
 						if(provide_pain_message != HAS_PAINFUL_TOXIN)
-							provide_pain_message = T.silent_toxin ? HAS_SILENT_TOXIN : HAS_PAINFUL_TOXIN
+							provide_pain_message = toxin.silent_toxin ? HAS_SILENT_TOXIN : HAS_PAINFUL_TOXIN
+
 
 			//metabolize reagents
-			C.reagents.metabolize(C, delta_time, times_fired, can_overdose=TRUE)
+			liver_owner.reagents.metabolize(liver_owner, delta_time, times_fired, can_overdose=TRUE)
 
 			if(provide_pain_message && damage > 10 && DT_PROB(damage/6, delta_time)) //the higher the damage the higher the probability
-				to_chat(C, span_warning("You feel a dull pain in your abdomen."))
-
-		else //for when our liver's failing
-			C.liver_failure(delta_time, times_fired)
+				to_chat(liver_owner, span_warning("You feel a dull pain in your abdomen."))
 
 	if(damage > maxHealth)//cap liver damage
 		damage = maxHealth
 
+/obj/item/organ/liver/handle_failing_organs(delta_time)
+	if(HAS_TRAIT(src, TRAIT_STABLELIVER) || HAS_TRAIT(src, TRAIT_NOMETABOLISM))
+		return
+	return ..()
+
+/obj/item/organ/liver/organ_failure(delta_time)
+
+	switch(failure_time/LIVER_FAILURE_STAGE_SECONDS)
+		if(1)
+			to_chat(owner,"<span class='danger'>You feel stabbing pain in your abdomen!</danger>")
+		if(2)
+			to_chat(owner,"<span class='danger'>You feel a burning sensation in your gut!</danger>")
+			owner.vomit()
+		if(3)
+			to_chat(owner,"<span class='danger'>You feel painful acid in your throat!</danger>")
+			owner.vomit(blood = TRUE)
+		if(4)
+			to_chat(owner,"<span class='danger'>Overwhelming pain knocks you out!</danger>")
+			owner.vomit(blood = TRUE, distance = rand(1,2))
+			owner.emote("Scream")
+			owner.AdjustUnconscious(2.5 SECONDS)
+		if(5)
+			to_chat(owner,"<span class='danger'>You feel as if your guts are about to melt!</danger>")
+			owner.vomit(blood = TRUE,distance = rand(1,3))
+			owner.emote("Scream")
+			owner.AdjustUnconscious(5 SECONDS)
+
+	switch(failure_time)
+			//After 60 seconds we begin to feel the effects
+		if(1 * LIVER_FAILURE_STAGE_SECONDS to 2 * LIVER_FAILURE_STAGE_SECONDS - 1)
+			owner.adjustToxLoss(0.2 * delta_time,forced = TRUE)
+			owner.adjust_disgust(0.1 * delta_time)
+
+		if(2 * LIVER_FAILURE_STAGE_SECONDS to 3 * LIVER_FAILURE_STAGE_SECONDS - 1)
+			owner.adjustToxLoss(0.4 * delta_time,forced = TRUE)
+			owner.drowsyness += 0.25 * delta_time
+			owner.adjust_disgust(0.3 * delta_time)
+
+		if(3 * LIVER_FAILURE_STAGE_SECONDS to 4 * LIVER_FAILURE_STAGE_SECONDS - 1)
+			owner.adjustToxLoss(0.6 * delta_time,forced = TRUE)
+			owner.adjustOrganLoss(pick(ORGAN_SLOT_HEART,ORGAN_SLOT_LUNGS,ORGAN_SLOT_STOMACH,ORGAN_SLOT_EYES,ORGAN_SLOT_EARS),0.2 * delta_time)
+			owner.drowsyness += 0.5 * delta_time
+			owner.adjust_disgust(0.6 * delta_time)
+
+			if(DT_PROB(1.5, delta_time))
+				owner.emote("drool")
+
+		if(4 * LIVER_FAILURE_STAGE_SECONDS to INFINITY)
+			owner.adjustToxLoss(0.8 * delta_time,forced = TRUE)
+			owner.adjustOrganLoss(pick(ORGAN_SLOT_HEART,ORGAN_SLOT_LUNGS,ORGAN_SLOT_STOMACH,ORGAN_SLOT_EYES,ORGAN_SLOT_EARS),0.5 * delta_time)
+			owner.drowsyness += 0.8 * delta_time
+			owner.adjust_disgust(1.2 * delta_time)
+
+			if(DT_PROB(3, delta_time))
+				owner.emote("drool")
+
+/obj/item/organ/liver/on_owner_examine(datum/source, mob/user, list/examine_list)
+	if(!ishuman(owner) || !(organ_flags & ORGAN_FAILING))
+		return
+
+	var/mob/living/carbon/human/humie_owner = owner
+	if(!humie_owner.getorganslot(ORGAN_SLOT_EYES) || humie_owner.is_eyes_covered())
+		return
+	switch(failure_time)
+		if(0 to 3 * LIVER_FAILURE_STAGE_SECONDS - 1)
+			examine_list += "<span class='notice'>[owner]'s eyes are slightly yellow.</span>"
+		if(3 * LIVER_FAILURE_STAGE_SECONDS to 4 * LIVER_FAILURE_STAGE_SECONDS - 1)
+			examine_list += "<span class='notice'>[owner]'s eyes are completely yellow, and he is visibly suffering.</span>"
+		if(4 * LIVER_FAILURE_STAGE_SECONDS to INFINITY)
+			examine_list += "<span class='danger'>[owner]'s eyes are completely yellow and swelling with pus. [owner.p_they()] don't look like they will be alive for much longer.</span>"
+
+/obj/item/organ/liver/on_death(delta_time, times_fired)
+	. = ..()
+	var/mob/living/carbon/carbon_owner = owner
+	if(!owner)//If we're outside of a mob
+		return
+	if(!iscarbon(carbon_owner))
+		CRASH("on_death() called for [src] ([type]) with invalid owner ([isnull(owner) ? "null" : owner.type])")
+	if(carbon_owner.stat != DEAD)
+		CRASH("on_death() called for [src] ([type]) with not-dead owner ([owner])")
+	if((organ_flags & ORGAN_FAILING) && HAS_TRAIT(carbon_owner, TRAIT_NOMETABOLISM))//can't process reagents with a failing liver
+		return
+	for(var/datum/reagent/chem as anything in carbon_owner.reagents.reagent_list)
+		chem.on_mob_dead(carbon_owner, delta_time)
+
 #undef HAS_SILENT_TOXIN
 #undef HAS_NO_TOXIN
 #undef HAS_PAINFUL_TOXIN
+#undef LIVER_FAILURE_STAGE_SECONDS
 
 /obj/item/organ/liver/get_availability(datum/species/S)
 	return !(TRAIT_NOMETABOLISM in S.species_traits)
@@ -83,32 +171,26 @@
 	toxLethality = 2.5 * LIVER_DEFAULT_TOX_LETHALITY // rejects its owner early after too much punishment
 
 /obj/item/organ/liver/cybernetic
-	name = "cybernetic liver"
+	name = "basic cybernetic liver"
 	icon_state = "liver-c"
-	desc = "An electronic device designed to mimic the functions of a human liver. Handles toxins slightly better than an organic liver."
+	desc = "A very basic device designed to mimic the functions of a human liver. Handles toxins slightly worse than an organic liver."
 	organ_flags = ORGAN_SYNTHETIC
-	status = ORGAN_ROBOTIC
-	maxHealth = 1.1 * STANDARD_ORGAN_THRESHOLD
-	toxTolerance = 3.3
-	toxLethality = 0.8 * LIVER_DEFAULT_TOX_LETHALITY //20% less damage than a normal liver
+	toxTolerance = 2
+	toxLethality = 1.1 * LIVER_DEFAULT_TOX_LETHALITY
+	maxHealth = STANDARD_ORGAN_THRESHOLD*0.5
 
-/obj/item/organ/liver/cybernetic/upgraded
-	name = "upgraded cybernetic liver"
+	var/emp_vulnerability = 60
+
+/obj/item/organ/liver/cybernetic/tier2
+	name = "cybernetic liver"
 	icon_state = "liver-c-u"
-	desc = "An upgraded version of the cybernetic liver, designed to improve further upon organic livers. It is resistant to alcohol poisoning and is very robust at filtering toxins."
-	alcohol_tolerance = 0.001
-	maxHealth = 2 * STANDARD_ORGAN_THRESHOLD
-	toxTolerance = 15 //can shrug off up to 15u of toxins
+	desc = "An electronic device designed to mimic the functions of a human liver. Handles toxins slightly better than an organic liver."
+	maxHealth = 1.5 * STANDARD_ORGAN_THRESHOLD
+	toxTolerance = 5 //can shrug off up to 5u of toxins
 	toxLethality = 0.8 * LIVER_DEFAULT_TOX_LETHALITY //20% less damage than a normal liver
+	emp_vulnerability = 40
 
-/obj/item/organ/liver/cybernetic/emp_act(severity)
-	. = ..()
-	if(. & EMP_PROTECT_SELF)
-		return
-	if(prob(30/severity))
-		damage += (30/severity)
-
-/obj/item/organ/liver/cybernetic/upgraded/ipc
+/obj/item/organ/liver/cybernetic/tier2/ipc
 	name = "substance processor"
 	icon_state = "substance_processor"
 	attack_verb_continuous = list("processes")
@@ -118,9 +200,14 @@
 	toxTolerance = -1
 	toxLethality = 0
 	status = ORGAN_ROBOTIC
+	emp_vulnerability = 35
 
-/obj/item/organ/liver/cybernetic/upgraded/ipc/emp_act(severity)
-	if(prob(30/severity))
+/obj/item/organ/liver/cybernetic/tier2/ipc/emp_act(severity)
+	if(. & EMP_PROTECT_SELF)
+		return
+	if(!COOLDOWN_FINISHED(src, emp_cooldown)) //To fight against two emp guns
+		COOLDOWN_START(src, emp_cooldown, 0.05 SECONDS)
+	if(prob(emp_vulnerability/severity))
 		to_chat(owner, span_warning("Alert: Your Substance Processor has been damaged. An internal chemical leak is affecting performance."))
 		owner.adjustToxLoss(8/severity)
 
@@ -128,6 +215,15 @@
 	name = "liverwort"
 	desc = "A mass of plant vines and leaves, seeming to be responsible for chemical digestion."
 	icon_state = "diona_liver"
+
+/obj/item/organ/liver/cybernetic/emp_act(severity)
+	. = ..()
+	if(. & EMP_PROTECT_SELF)
+		return
+	if(!COOLDOWN_FINISHED(src, emp_cooldown)) //To fight against two emp guns
+		COOLDOWN_START(src, emp_cooldown, 0.05 SECONDS)
+	if(prob(emp_vulnerability/severity))
+		damage += (30/severity)
 
 #undef LIVER_DEFAULT_TOX_TOLERANCE
 #undef LIVER_DEFAULT_TOX_LETHALITY

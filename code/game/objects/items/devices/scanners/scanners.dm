@@ -504,24 +504,44 @@ GENE SCANNER
 	else
 		return(jointext(message, "\n"))
 
-/proc/chemscan(mob/living/user, mob/living/M, to_chat = TRUE)
+/proc/chemscan(mob/living/user, mob/living/target, to_chat = TRUE)
 	if(user.incapacitated())
 		return
 
 	var/message = list()
-	if(istype(M) && M.reagents)
-		if(M.reagents.reagent_list.len)
-			message += span_notice("Subject contains the following reagents:")
-			for(var/datum/reagent/R in M.reagents.reagent_list)
-				message += "[span_notice("[round(R.volume, 0.001)] units of [R.name]")] [R.overdosed == 1 ? " - [span_boldannounce("OVERDOSING")]" : ""]"
+	if(istype(target) && target.reagents)
+
+		// Blood reagents
+		if(target.reagents.reagent_list.len)
+			message += span_notice("Subject contains the following reagents in their blood:\n")
+			for(var/datum/reagent/reagent in target.reagents.reagent_list)
+				message += "[span_notice("[round(reagent.volume, 0.001)] units of [reagent.name]")] [reagent.overdosed == 1 ? " - [span_boldannounce("OVERDOSING")]" : ""]\n"
 		else
-			message += span_notice("Subject contains no reagents.")
-		if(M.reagents.addiction_list.len)
+			message += span_notice("Subject contains no reagents in their blood.\n")
+
+		// Stomach reagents
+		var/obj/item/organ/stomach/belly = target.getorganslot(ORGAN_SLOT_STOMACH)
+		if(belly)
+			if(belly.reagents.reagent_list.len)
+				message += span_notice("Subject contains the following reagents in their stomach:\n")
+				for(var/bile in belly.reagents.reagent_list)
+					var/datum/reagent/bit = bile
+					if(!belly.food_reagents[bit.type])
+						message += "[span_notice("[round(bit.volume, 0.001)] units of [bit.name]")] [bit.overdosed ? " - [span_boldannounce("OVERDOSING")]" : ""]\n"
+					else
+						var/bit_vol = bit.volume - belly.food_reagents[bit.type]
+						if(bit_vol > 0)
+							message += "[span_notice("[round(bit_vol, 0.001)] units of [bit.name]")] [bit.overdosed ? " - [span_boldannounce("OVERDOSING")]" : ""]\n"
+			else
+				message += span_notice("Subject contains no reagents in their stomach.\n")
+
+		// Addictions
+		if(target.reagents.addiction_list.len)
 			message += span_boldannounce("Subject is addicted to the following reagents:")
-			for(var/datum/reagent/R in M.reagents.addiction_list)
+			for(var/datum/reagent/R in target.reagents.addiction_list)
 				message += span_alert("[R.name]")
 		else
-			message += "<span class='notice'>Subject is not addicted to any types of drug.</span>"
+			message += span_notice("Subject is not addicted to any types of drug.")
 	if(to_chat)
 		to_chat(user, examine_block(jointext(message, "\n")), trailing_newline = FALSE, type = MESSAGE_TYPE_INFO)
 	else

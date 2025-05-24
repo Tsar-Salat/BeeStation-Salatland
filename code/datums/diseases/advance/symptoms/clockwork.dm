@@ -74,14 +74,8 @@
 					O.organ_flags = ORGAN_SYNTHETIC
 					return TRUE
 				if(ORGAN_SLOT_STOMACH)
-					if(HAS_TRAIT(H, TRAIT_POWERHUNGRY))
-						var/obj/item/organ/stomach/battery/clockwork/organ = new()
-						if(robustbits)
-							organ.max_charge = 15000
-						organ.Insert(H, TRUE, FALSE)
-					else
-						var/obj/item/organ/stomach/clockwork/organ = new()
-						organ.Insert(H, TRUE, FALSE)
+					var/obj/item/organ/stomach/clockwork/organ = new()
+					organ.Insert(H, TRUE, FALSE)
 					if(prob(40) && H.stat != DEAD)
 						to_chat(H, span_userdanger("You feel a stabbing pain in your abdomen!"))
 						H.emote("scream")
@@ -264,15 +258,6 @@
 
 /obj/item/organ/stomach/clockwork/emp_act(severity)
 	owner.adjust_nutrition(-200/severity)
-
-/obj/item/organ/stomach/battery/clockwork
-	name = "biometallic flywheel"
-	desc = "A biomechanical battery which stores mechanical energy."
-	icon_state = "stomach-clock"
-	status = ORGAN_ROBOTIC
-	organ_flags = ORGAN_SYNTHETIC
-	max_charge = 7500
-	charge = 7500
 
 /obj/item/organ/tongue/robot/clockwork
 	name = "dynamic micro-phonograph"
