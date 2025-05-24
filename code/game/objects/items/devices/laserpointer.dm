@@ -130,10 +130,10 @@
 
 	// For luring whatever mobs that are "interested" in laser pointers
 	for(var/mob/M as() in viewers(1,targloc))
-		if(M.incapacitated())
-			return
+		if(M.stat == DEAD || M.is_blind() || M.incapacitated())
+			continue
 		var/mob/living/carbon/human/H = M
-		if(iscatperson(H) && !H.is_blind()) //catpeople!
+		if(is_species(H, /datum/species/human/alclades))
 			if(user.body_position == STANDING_UP)
 				H.setDir(get_dir(H,targloc)) // kitty always looks at the light
 				if(prob(effectchance))

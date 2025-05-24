@@ -539,7 +539,7 @@
 	chem_flags = CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
 	race = list(/datum/species/oozeling/slime,
 						/datum/species/human,
-						/datum/species/human/felinid,
+						/datum/species/human/alclades,
 						/datum/species/lizard,
 						/datum/species/fly,
 						/datum/species/moth,
@@ -552,7 +552,7 @@
 	name = "Felinid Mutation Toxin"
 	color = "#5EFF3B" //RGB: 94, 255, 59
 	chem_flags = CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
-	race = /datum/species/human/felinid
+	race = /datum/species/human/alclades
 	taste_description = "something nyat good"
 
 /datum/reagent/mutationtoxin/lizard

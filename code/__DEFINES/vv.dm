@@ -169,7 +169,6 @@
 #define VV_HK_MAKE_SLIME "human_slimeify"
 #define VV_HK_MAKE_ALIEN "human_alienify"
 #define VV_HK_SET_SPECIES "setspecies"
-#define VV_HK_PURRBATION "purrbation"
 #define VV_HK_RANDOM_NAME "random_name"
 
 // misc

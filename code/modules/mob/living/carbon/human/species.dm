@@ -12,10 +12,15 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	/// The formatting of the name of the species in plural context. Defaults to "[name]\s" if unset.
 	/// Ex "[Plasmamen] are weak", "[Mothmen] are strong", "[Lizardpeople] don't like", "[Golems] hate"
 	var/plural_form
-	var/bodyflag = FLAG_HUMAN //Species flags currently used for species restriction on items
-	var/default_color = "#FFF"	// if alien colors are disabled, this is the color that will be used by that race
+	//Species flags currently used for species restriction on items
+	var/bodyflag = FLAG_HUMAN
+	// if alien colors are disabled, this is the color that will be used by that race
+	var/default_color = "#FFF"
 	var/bodytype = BODYTYPE_HUMANOID
-	var/sexes = 1		// whether or not the race has sexual characteristics. at the moment this is only 0 for skeletons and shadows
+	// whether or not the race has sexual characteristics. at the moment this is only 0 for skeletons and shadows
+	var/sexes = 1
+	// Var for checking cladia. Set in alclades species code
+	var/cladia = null
 
 	var/list/offset_features = list(OFFSET_UNIFORM = list(0,0), OFFSET_ID = list(0,0), OFFSET_GLOVES = list(0,0), OFFSET_GLASSES = list(0,0), OFFSET_EARS = list(0,0), OFFSET_SHOES = list(0,0), OFFSET_S_STORE = list(0,0), OFFSET_FACEMASK = list(0,0), OFFSET_HEAD = list(0,0), OFFSET_FACE = list(0,0), OFFSET_BELT = list(0,0), OFFSET_BACK = list(0,0), OFFSET_SUIT = list(0,0), OFFSET_NECK = list(0,0), OFFSET_RIGHT_HAND = list(0,0), OFFSET_LEFT_HAND = list(0,0))
 	var/max_bodypart_count = 6 //The maximum number of bodyparts this species can have.
@@ -1022,6 +1027,8 @@ GLOBAL_LIST_EMPTY(features_by_species)
 					S = GLOB.horns_list[H.dna.features["horns"]]
 				if("ears")
 					S = GLOB.ears_list[H.dna.features["ears"]]
+				if("cladia")
+					S = GLOB.human_cladia_list[H.dna.features["cladia"]]
 				if("body_markings")
 					S = GLOB.body_markings_list[H.dna.features["body_markings"]]
 				if("wings")
@@ -1044,8 +1051,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 					S = GLOB.moth_wingsopen_list[H.dna.features["moth_wings"]]
 				if("moth_markings")
 					S = GLOB.moth_markings_list[H.dna.features["moth_markings"]]
-				if("caps")
-					S = GLOB.caps_list[H.dna.features["caps"]]
 				if("ipc_screen")
 					S = GLOB.ipc_screens_list[H.dna.features["ipc_screen"]]
 				if("ipc_antenna")
@@ -1169,6 +1174,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		handle_flight(H)
 
 /datum/species/proc/spec_death(gibbed, mob/living/carbon/human/H)
+	stop_wagging_tail(H)
 	return
 
 /datum/species/proc/spec_gib(no_brain, no_organs, no_bodyparts, mob/living/carbon/human/H)
@@ -1398,6 +1404,9 @@ GLOBAL_LIST_EMPTY(features_by_species)
 // Other return values will cause weird badness
 
 /datum/species/proc/handle_chemicals(datum/reagent/chem, mob/living/carbon/human/H, delta_time, times_fired)
+	if(istype(chem, /datum/reagent/consumable/cocoa) && HAS_TRAIT(H, TRAIT_CHOCOLATE_DISGUST))
+		chocolate_check(H)
+		return FALSE
 	if(chem.type == exotic_blood)
 		H.blood_volume = min(H.blood_volume + round(chem.volume, 0.1), BLOOD_VOLUME_MAXIMUM)
 		H.reagents.del_reagent(chem.type)
@@ -1412,6 +1421,15 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		chem.holder.remove_reagent(chem.type, chem.metabolization_rate)
 		return TRUE
 	return FALSE
+
+/datum/species/proc/chocolate_check(mob/living/carbon/human/H)
+	if(prob(40))
+		H.adjust_disgust(20)
+	if(prob(5))
+		H.visible_message(span_warning("[H] [pick("dry heaves!","coughs!","sputters!")]"))
+	if(prob(10))
+		var/sick_message = pick("You feel nauseous.", "You feel like your insides are melting.")
+		to_chat(H, span_notice("[sick_message]"))
 
 /datum/species/proc/check_species_weakness(obj/item, mob/living/attacker)
 	return 0 //This is not a boolean, it's the multiplier for the damage that the user takes from the item.It is added onto the check_weakness value of the mob, and then the force of the item is multiplied by this value
@@ -1445,7 +1463,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			H.update_inv_wear_suit()
 	else
 		if(H.overeatduration >= (200 SECONDS))
-			to_chat(H, "<span class='danger'>You suddenly feel blubbery!</span>")
+			to_chat(H, span_danger("You suddenly feel blubbery!"))
 			ADD_TRAIT(H, TRAIT_FAT, OBESITY)
 			ADD_TRAIT(H, TRAIT_OFF_BALANCE_TACKLER, OBESITY)
 			H.add_movespeed_modifier(/datum/movespeed_modifier/obesity)
@@ -2318,7 +2336,8 @@ GLOBAL_LIST_EMPTY(features_by_species)
 //  Stun  //
 ////////////
 
-/datum/species/proc/spec_stun(mob/living/carbon/human/H,amount)
+/datum/species/proc/spec_stun(mob/living/carbon/human/H, amount)
+	stop_wagging_tail(H)
 	var/obj/item/organ/wings/wings = H.getorganslot(ORGAN_SLOT_WINGS)
 	if(H.getorgan(/obj/item/organ/wings))
 		if(wings.flight_level >= WINGS_FLYING && H.movement_type & FLYING)

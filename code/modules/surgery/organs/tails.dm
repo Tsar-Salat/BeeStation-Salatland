@@ -18,14 +18,10 @@
 /obj/item/organ/tail/proc/toggle_wag(mob/living/carbon/human/H)
 	return set_wagging(H, !is_wagging(H))
 
-/obj/item/organ/tail/cat
-	name = "cat tail"
-	desc = "A severed cat tail. Who's wagging now?"
-	tail_type = "Cat"
 
-	organ_traits = list(TRAIT_LIGHT_LANDING)
+/obj/item/organ/tail/human
 
-/obj/item/organ/tail/cat/Insert(mob/living/carbon/human/H, special = 0, drop_if_replaced = TRUE, pref_load = FALSE)
+/obj/item/organ/tail/human/Insert(mob/living/carbon/human/H, special = 0, drop_if_replaced = TRUE, pref_load = FALSE)
 	..()
 	if(pref_load && istype(H))
 		H.update_body()
@@ -37,7 +33,19 @@
 			H.dna.features["tail_human"] = tail_type
 			H.update_body()
 
-/obj/item/organ/tail/cat/Remove(mob/living/carbon/human/H,  special = 0, pref_load = FALSE)
+/obj/item/organ/tail/human/Insert(mob/living/carbon/human/H, special = 0, drop_if_replaced = TRUE, pref_load = FALSE)
+	..()
+	if(pref_load && istype(H))
+		H.update_body()
+		return
+	if(istype(H))
+		var/default_part = H.dna.species.mutant_bodyparts["tail_human"]
+		if(!default_part || default_part == "None")
+			H.dna.species.mutant_bodyparts["tail_human"] = tail_type
+			H.dna.features["tail_human"] = tail_type
+			H.update_body()
+
+/obj/item/organ/tail/human/Remove(mob/living/carbon/human/H,  special = 0, pref_load = FALSE)
 	..()
 	if(pref_load && istype(H))
 		color = H.hair_color
@@ -49,12 +57,12 @@
 		color = H.hair_color
 		H.update_body()
 
-/obj/item/organ/tail/cat/is_wagging(mob/living/carbon/human/H)
+/obj/item/organ/tail/human/is_wagging(mob/living/carbon/human/H)
 	if(!H?.dna?.species)
 		return FALSE
 	return (H.dna.species.mutant_bodyparts["waggingtail_human"])
 
-/obj/item/organ/tail/cat/set_wagging(mob/living/carbon/human/H, wagging = FALSE)
+/obj/item/organ/tail/human/set_wagging(mob/living/carbon/human/H, wagging = FALSE)
 	. = FALSE
 	if(!H?.dna?.species)
 		return FALSE
@@ -67,6 +75,21 @@
 		species.mutant_bodyparts["tail_human"] = species.mutant_bodyparts["waggingtail_human"]
 		species.mutant_bodyparts -= "waggingtail_human"
 	H.update_body()
+
+/obj/item/organ/tail/human/cat
+	name = "cat tail"
+	desc = "A severed cat tail. Who's wagging now?"
+	tail_type = "Cat"
+
+	organ_traits = list(TRAIT_LIGHT_LANDING)
+
+/obj/item/organ/tail/human/fox
+	name = "fox tail"
+	desc = "A severed fox tail. Sad."
+	tail_type = "Fox"
+
+
+//Liznerds
 
 /obj/item/organ/tail/lizard
 	name = "lizard tail"
@@ -153,3 +176,5 @@
 										"spines" = species.mutant_bodyparts["waggingspines"])
 		species.mutant_bodyparts -= list("waggingtail_lizard", "waggingspines")
 	H.update_body()
+
+

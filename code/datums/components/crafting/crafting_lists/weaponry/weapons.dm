@@ -150,7 +150,7 @@
 	result = /obj/item/melee/chainofcommand/tailwhip/kitty
 	time = 4 SECONDS
 	reqs = list(
-		/obj/item/organ/tail/cat = 1,
+		/obj/item/organ/tail/human/cat = 1,
 		/obj/item/stack/cable_coil = 1
 	)
 	category = CAT_WEAPONRY

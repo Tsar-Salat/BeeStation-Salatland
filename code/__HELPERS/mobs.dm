@@ -59,6 +59,8 @@
 		init_sprite_accessory_subtypes(/datum/sprite_accessory/horns, GLOB.horns_list)
 	if(!GLOB.ears_list.len)
 		init_sprite_accessory_subtypes(/datum/sprite_accessory/ears, GLOB.horns_list)
+	if(!GLOB.human_cladia_list.len)
+		init_sprite_accessory_subtypes(/datum/sprite_accessory/cladia, GLOB.human_cladia_list)
 	if(!GLOB.frills_list.len)
 		init_sprite_accessory_subtypes(/datum/sprite_accessory/frills, GLOB.frills_list)
 	if(!GLOB.spines_list.len)
@@ -121,11 +123,11 @@
 		"snout" = pick(GLOB.snouts_list),
 		"horns" = pick(GLOB.horns_list),
 		"ears" = "None",
+		"cladia" = pick(GLOB.human_cladia_list),
 		"frills" = pick(GLOB.frills_list),
 		"spines" = pick(GLOB.spines_list),
 		"body_markings" = pick(GLOB.body_markings_list),
 		"legs" = "Normal Legs",
-		"caps" = pick(GLOB.caps_list),
 		"moth_wings" = pick(GLOB.moth_wings_roundstart_list),
 		"moth_antennae" = pick(GLOB.moth_antennae_roundstart_list),
 		"moth_markings" = pick(GLOB.moth_markings_roundstart_list),

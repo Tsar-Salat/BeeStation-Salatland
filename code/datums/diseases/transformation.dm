@@ -310,7 +310,7 @@
 	stage4	= list(span_danger("You start thinking that felinids are not that bad after all!"), span_danger("You feel scared at the thought of eating chocolate."))
 	stage5	= list(span_danger("You have become a catperson."))
 	infectable_biotypes = list(MOB_ORGANIC, MOB_INORGANIC, MOB_UNDEAD) //Nothing evades the curse!
-	new_form = /mob/living/carbon/human/species/felinid
+	new_form = /mob/living/carbon/human/species/alclades
 
 /datum/disease/transformation/felinid/stage_act()
 	..()
@@ -383,7 +383,7 @@
 /datum/disease/transformation/felinid/contagious/form_mutagen(mob/living/affected_mob)
 	if(ishuman(affected_mob))
 		var/mob/living/carbon/human/affected_human = affected_mob
-		if(iscatperson(affected_human))
+		if(is_species(affected_human, /datum/species/human/alclades))
 			if (prob(10))
 				affected_mob.say(pick("", ";", ".h")+pick("Nya", "MIAOW", "Ny- NYAAA", "meow", "NYAAA", "nya", "Ny- meow", "mrrrr", "Mew- Nya")+pick("!", "!!", "~!!", "!~", "", "", "", ""), forced = "felinid transformation")
 			if (prob(3))

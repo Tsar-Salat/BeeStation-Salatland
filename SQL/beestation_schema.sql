@@ -140,6 +140,7 @@ CREATE TABLE IF NOT EXISTS `SS13_characters` (
 	`feature_mcolor` VARCHAR(64) COLLATE 'utf8mb4_general_ci',
 	`feature_human_tail` VARCHAR(64) COLLATE 'utf8mb4_general_ci',
 	`feature_human_ears` VARCHAR(64) COLLATE 'utf8mb4_general_ci',
+	`feature_human_cladia` VARCHAR(64) COLLATE 'utf8mb4_general_ci',
 	`feature_psyphoza_cap` VARCHAR(64) COLLATE 'utf8mb4_general_ci',
 	`feature_diona_leaves` VARCHAR(64) COLLATE 'utf8mb4_general_ci',
 	`feature_diona_thorns` VARCHAR(64) COLLATE 'utf8mb4_general_ci',
