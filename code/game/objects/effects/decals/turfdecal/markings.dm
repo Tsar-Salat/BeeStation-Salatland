@@ -1,6 +1,6 @@
 /obj/effect/turf_decal/stripes
 	layer = TURF_DECAL_STRIPE_LAYER
-	name = "Stripes"
+	name = null //It screams at you if you're a lazy cunt
 
 /obj/effect/turf_decal/stripes/line
 	name = "Warning Line"
@@ -29,6 +29,7 @@
 /obj/effect/turf_decal/stripes/full
 	name = "Warning Box"
 	icon_state = "warn_full"
+	nondirectional = TRUE
 
 /obj/effect/turf_decal/stripes/asteroid/line
 	name = "Asteroid Warning Line"
@@ -93,6 +94,7 @@
 /obj/effect/turf_decal/delivery
 	name = "Delivery Marker"
 	icon_state = "delivery"
+	nondirectional = TRUE
 
 /obj/effect/turf_decal/delivery/white
 	name = "White Delivery Marker"
@@ -105,6 +107,7 @@
 /obj/effect/turf_decal/bot
 	name = "Bot"
 	icon_state = "bot"
+	nondirectional = TRUE
 
 /obj/effect/turf_decal/bot/right
 	name = "Bot Right"
@@ -189,6 +192,7 @@
 /obj/effect/turf_decal/box
 	name = "Box"
 	icon_state = "box"
+	nondirectional = TRUE
 
 /obj/effect/turf_decal/box/corners
 	name = "Box Corner"

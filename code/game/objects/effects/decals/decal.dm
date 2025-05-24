@@ -38,12 +38,15 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/turf_decal)
 	icon_state = "warningline"
 	layer = TURF_DECAL_LAYER
 	anchored = TRUE
+	var/nondirectional = FALSE
 
 // This is with the intent of optimizing mapload
 // See spawners for more details since we use the same pattern
 // Basically rather then creating and deleting ourselves, why not just do the bare minimum?
 /obj/effect/turf_decal/Initialize(mapload)
 	SHOULD_CALL_PARENT(FALSE)
+	if(!isturf(loc))
+		return INITIALIZE_HINT_QDEL
 	loc.AddElement(/datum/element/decal, icon, icon_state, dir, FALSE, color, TURF_LAYER + (layer - TURF_DECAL_LOWEST_LAYER), null, alpha, FALSE)
 	return INITIALIZE_HINT_QDEL
 
