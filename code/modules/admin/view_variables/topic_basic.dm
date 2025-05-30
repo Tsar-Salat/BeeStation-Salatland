@@ -79,6 +79,14 @@
 			to_chat(usr, "That thing doesn't exist anymore!")
 			return
 
+		var/add_source
+		if(ispath(result, /datum/component))
+			var/datum/component/comp_path = result
+			if(initial(comp_path.dupe_mode) == COMPONENT_DUPE_SOURCES)
+				add_source = tgui_input_text(usr, "Enter a source for the component", "Add Component", "ADMIN-ABUSE")
+				if(isnull(add_source))
+					return
+
 		var/list/lst = get_callproc_args()
 		if(!lst)
 			return
@@ -87,7 +95,7 @@
 		lst.Insert(1, result)
 		if(result in componentsubtypes)
 			datumname = "component"
-			target._AddComponent(lst)
+			target._AddComponent(lst, add_source)
 		else
 			datumname = "element"
 			target._AddElement(lst)

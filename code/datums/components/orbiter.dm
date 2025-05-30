@@ -55,10 +55,10 @@
 	current_orbiters += newcomp.current_orbiters
 	newcomp.current_orbiters = null
 
-/datum/component/orbiter/PostTransfer()
-	if(!isatom(parent) || isarea(parent) || !get_turf(parent))
+/datum/component/orbiter/PostTransfer(datum/new_parent)
+	if(!isatom(parent) || isarea(new_parent) || !get_turf(new_parent))
 		return COMPONENT_INCOMPATIBLE
-	move_react(parent)
+	move_react(new_parent)
 
 /datum/component/orbiter/proc/begin_orbit(atom/movable/orbiter, radius, clockwise, rotation_speed, rotation_segments, pre_rotation)
 	if(orbiter.orbiting)

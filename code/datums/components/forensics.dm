@@ -33,7 +33,7 @@
 /datum/component/forensics/UnregisterFromParent()
 	UnregisterSignal(parent, list(COMSIG_COMPONENT_CLEAN_ACT))
 
-/datum/component/forensics/PostTransfer()
+/datum/component/forensics/PostTransfer(datum/new_parent)
 	if(!isatom(parent))
 		return COMPONENT_INCOMPATIBLE
 
