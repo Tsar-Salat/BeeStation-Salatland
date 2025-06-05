@@ -14,9 +14,9 @@
 	var/hair_style = "Bald"
 
 	///Colour used for the hair gradient.
-	var/gradient_color = "#000000"
+	var/list/gradient_color
 	///Style used for the hair gradient.
-	var/gradient_style
+	var/list/gradient_style
 
 	//Facial hair colour and style
 	var/facial_hair_color = "#000000"

@@ -68,9 +68,12 @@
 	GLOB.emote_list = init_emote_list()
 
 	// Hair Gradients - Initialise all /datum/sprite_accessory/hair_gradient into an list indexed by gradient-style name
-	for(var/path in subtypesof(/datum/sprite_accessory/hair_gradient))
-		var/datum/sprite_accessory/hair_gradient/H = new path()
-		GLOB.hair_gradients_list[H.name] = H
+	for(var/path in subtypesof(/datum/sprite_accessory/gradient))
+		var/datum/sprite_accessory/gradient/gradient = new path()
+		if(gradient.gradient_category  & GRADIENT_APPLIES_TO_HAIR)
+			GLOB.hair_gradients_list[gradient.name] = gradient
+		if(gradient.gradient_category & GRADIENT_APPLIES_TO_FACIAL_HAIR)
+			GLOB.facial_hair_gradients_list[gradient.name] = gradient
 
 	// Keybindings
 	init_keybindings()

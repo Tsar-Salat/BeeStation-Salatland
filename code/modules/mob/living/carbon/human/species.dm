@@ -23,7 +23,8 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	var/list/offset_features = list(OFFSET_UNIFORM = list(0,0), OFFSET_ID = list(0,0), OFFSET_GLOVES = list(0,0), OFFSET_GLASSES = list(0,0), OFFSET_EARS = list(0,0), OFFSET_SHOES = list(0,0), OFFSET_S_STORE = list(0,0), OFFSET_FACEMASK = list(0,0), OFFSET_HEAD = list(0,0), OFFSET_FACE = list(0,0), OFFSET_BELT = list(0,0), OFFSET_BACK = list(0,0), OFFSET_SUIT = list(0,0), OFFSET_NECK = list(0,0), OFFSET_RIGHT_HAND = list(0,0), OFFSET_LEFT_HAND = list(0,0))
 	var/max_bodypart_count = 6 //The maximum number of bodyparts this species can have.
 	var/hair_color	// this allows races to have specific hair colors... if null, it uses the H's hair/facial hair colors. if "mutcolor", it uses the H's mutant_color
-	var/hair_alpha = 255	// the alpha used by the hair. 255 is completely solid, 0 is transparent.
+	///The alpha used by the hair. 255 is completely solid, 0 is invisible.
+	var/hair_alpha = 255
 	var/examine_limb_id //This is used for children, felinids and ashwalkers namely
 
 	var/digitigrade_customization = DIGITIGRADE_NEVER //Never, Optional, or Forced digi legs?
@@ -607,6 +608,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 				fhair_file = 'icons/mob/facialhair_extensions.dmi'
 
 			var/mutable_appearance/facial_overlay = mutable_appearance(fhair_file, fhair_state, CALCULATE_MOB_OVERLAY_LAYER(HAIR_LAYER))
+			var/mutable_appearance/gradient_overlay
 
 			if(!forced_colour)
 				if(hair_color)
@@ -618,12 +620,19 @@ GLOBAL_LIST_EMPTY(features_by_species)
 						facial_overlay.color = hair_color
 				else
 					facial_overlay.color = H.facial_hair_color
+				//Gradients
+				var/gradient_style = LAZYACCESS(H.gradient_style, GRADIENT_FACIAL_HAIR_KEY)
+				if(gradient_style)
+					var/gradient_color = LAZYACCESS(H.gradient_color, GRADIENT_FACIAL_HAIR_KEY)
+					gradient_overlay = make_gradient_overlay(fhair_file, fhair_state, HAIR_LAYER, GLOB.facial_hair_gradients_list[gradient_style], gradient_color)
 			else
 				facial_overlay.color = forced_colour
 
 			facial_overlay.alpha = hair_alpha
 
 			standing += facial_overlay
+			if(gradient_overlay)
+				standing += gradient_overlay
 			standing += emissive_blocker(facial_overlay.icon, facial_overlay.icon_state, facial_overlay.layer, facial_overlay.alpha)
 
 	if(H.head)
@@ -644,7 +653,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 
 	if(!hair_hidden || dynamic_hair_suffix || worn_wig)
 		var/mutable_appearance/hair_overlay = mutable_appearance(layer = CALCULATE_MOB_OVERLAY_LAYER(HAIR_LAYER))
-		var/mutable_appearance/gradient_overlay = mutable_appearance(layer = CALCULATE_MOB_OVERLAY_LAYER(HAIR_LAYER))
+		var/mutable_appearance/gradient_overlay
 		if(!hair_hidden && !H.getorgan(/obj/item/organ/brain)) //Applies the debrained overlay if there is no brain
 			if(!(NOBLOOD in species_traits))
 				hair_overlay.icon = 'icons/mob/human_face.dmi'
@@ -695,16 +704,10 @@ GLOBAL_LIST_EMPTY(features_by_species)
 					if(worn_wig)//Total override
 						hair_overlay.color = current_hair_color
 					//Gradients
-					var/gradient_style = current_gradient_style
-					var/gradient_color = current_gradient_color
+					var/gradient_style = LAZYACCESS(current_gradient_style, GRADIENT_HAIR_KEY)
 					if(gradient_style)
-						var/datum/sprite_accessory/gradient = GLOB.hair_gradients_list[gradient_style]
-						var/icon/temp = icon(gradient.icon, gradient.icon_state)
-						var/icon/temp_hair = icon(hair_file, hair_state)
-						temp.Blend(temp_hair, ICON_ADD)
-						gradient_overlay.icon = temp
-						gradient_overlay.color = gradient_color
-
+						var/gradient_color = LAZYACCESS(current_gradient_color, GRADIENT_HAIR_KEY)
+						gradient_overlay = make_gradient_overlay(hair_file, hair_state, HAIR_LAYER, GLOB.hair_gradients_list[gradient_style], gradient_color)
 				else
 					hair_overlay.color = forced_colour
 
@@ -714,15 +717,26 @@ GLOBAL_LIST_EMPTY(features_by_species)
 				if(OFFSET_FACE in H.dna.species.offset_features)
 					hair_overlay.pixel_x += H.dna.species.offset_features[OFFSET_FACE][1]
 					hair_overlay.pixel_y += H.dna.species.offset_features[OFFSET_FACE][2]
+					
 		if(hair_overlay.icon)
 			standing += hair_overlay
-			standing += gradient_overlay
+			if(gradient_overlay)
+				standing += gradient_overlay
 			standing += emissive_blocker(hair_overlay.icon, hair_overlay.icon_state, hair_overlay.layer, hair_overlay.alpha)
 
 	if(standing.len)
 		H.overlays_standing[HAIR_LAYER] = standing
 
 	H.apply_overlay(HAIR_LAYER)
+
+/datum/species/proc/make_gradient_overlay(file, icon, layer, datum/sprite_accessory/gradient, gradient_color)
+	var/mutable_appearance/gradient_overlay = mutable_appearance(layer = -layer)
+	var/icon/temp = icon(gradient.icon, gradient.icon_state)
+	var/icon/temp_hair = icon(file, icon)
+	temp.Blend(temp_hair, ICON_ADD)
+	gradient_overlay.icon = temp
+	gradient_overlay.color = gradient_color
+	return gradient_overlay
 
 /datum/species/proc/handle_body(mob/living/carbon/human/H)
 	H.remove_overlay(BODY_LAYER)

@@ -97,6 +97,33 @@
 	var/hair_colour = preferences.read_character_preference(/datum/preference/color/hair_color)
 	return hair_colour
 
+/datum/preference/choiced/facial_hair_gradient
+	category = PREFERENCE_CATEGORY_SECONDARY_FEATURES
+	preference_type = PREFERENCE_CHARACTER
+	db_key = "facial_hair_gradient"
+	relevant_species_trait = FACEHAIR
+
+/datum/preference/choiced/facial_hair_gradient/init_possible_values()
+	return assoc_to_keys(GLOB.facial_hair_gradients_list)
+
+/datum/preference/choiced/facial_hair_gradient/apply_to_human(mob/living/carbon/human/target, value)
+	LAZYSETLEN(target.gradient_style, GRADIENTS_LEN)
+	target.gradient_style[GRADIENT_FACIAL_HAIR_KEY] = value
+
+/datum/preference/choiced/facial_hair_gradient/create_default_value()
+	return "None"
+
+/datum/preference/color/facial_hair_gradient
+	category = PREFERENCE_CATEGORY_SUPPLEMENTAL_FEATURES
+	preference_type = PREFERENCE_CHARACTER
+	db_key = "facial_hair_gradient_color"
+	relevant_species_trait = FACEHAIR
+
+/datum/preference/color/facial_hair_gradient/apply_to_human(mob/living/carbon/human/target, value)
+	LAZYSETLEN(target.gradient_color, GRADIENTS_LEN)
+	target.gradient_color[GRADIENT_FACIAL_HAIR_KEY] = value
+	target.update_hair()
+
 /datum/preference/color/hair_color
 	db_key = "hair_color"
 	preference_type = PREFERENCE_CHARACTER
@@ -160,15 +187,15 @@
 	var/datum/sprite_accessory/picked = pick_default_accessory(GLOB.hair_styles_list, required_gender = gender)
 	return picked.name
 
-/datum/preference/choiced/gradient_style
+/datum/preference/choiced/hair_gradient_style
 	db_key = "gradient_style"
 	preference_type = PREFERENCE_CHARACTER
 	category = PREFERENCE_CATEGORY_FEATURES
-	main_feature_name = "Gradient Style"
+	main_feature_name = "Hair Gradient Style"
 	should_generate_icons = TRUE
 	relevant_species_trait = HAIR
 
-/datum/preference/choiced/gradient_style/init_possible_values()
+/datum/preference/choiced/hair_gradient_style/init_possible_values()
 	var/list/values = possible_values_for_sprite_accessory_list(GLOB.hair_gradients_list)
 
 	var/list/body_parts = list(
@@ -215,17 +242,18 @@
 
 	return values
 
-/datum/preference/choiced/gradient_style/apply_to_human(mob/living/carbon/human/target, value)
-	target.gradient_style = value
+/datum/preference/choiced/hair_gradient_style/apply_to_human(mob/living/carbon/human/target, value)
+	LAZYSETLEN(target.gradient_style, GRADIENTS_LEN)
+	target.gradient_style[GRADIENT_HAIR_KEY] = value
 
-/datum/preference/choiced/gradient_style/compile_constant_data()
+/datum/preference/choiced/hair_gradient_style/compile_constant_data()
 	var/list/data = ..()
 
 	data[SUPPLEMENTAL_FEATURE_KEY] = "gradient_color"
 
 	return data
 
-/datum/preference/choiced/gradient_style/create_default_value()
+/datum/preference/choiced/hair_gradient_style/create_default_value()
 	var/datum/sprite_accessory/accessory = pick_default_accessory(GLOB.hair_gradients_list)
 	return accessory.name
 
@@ -237,10 +265,11 @@
 	informed = TRUE
 	priority = PREFERENCE_PRIORITY_GRADIENT_COLOR
 
-/datum/preference/color/gradient_color/apply_to_human(mob/living/carbon/human/target, value)
-	target.gradient_color = value
+/datum/preference/color/hair_gradient_color/apply_to_human(mob/living/carbon/human/target, value)
+	LAZYSETLEN(target.gradient_color, GRADIENTS_LEN)
+	target.gradient_color[GRADIENT_HAIR_KEY] = value
 
-/datum/preference/color/gradient_color/create_informed_default_value(datum/preferences/preferences)
+/datum/preference/color/hair_gradient_color/create_informed_default_value(datum/preferences/preferences)
 	// Makes characters a bit more interesting if we have a lot of gradients
 	if (prob(40))
 		return preferences.read_character_preference(/datum/preference/color/hair_color)
