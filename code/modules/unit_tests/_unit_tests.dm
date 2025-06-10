@@ -39,6 +39,7 @@
 #include "find_reference_sanity.dm"
 #endif
 
+#include "focus_only_tests.dm"
 #include "food_edibility_check.dm"
 #include "gamemode_sanity.dm"
 #include "gas_transfer.dm"
