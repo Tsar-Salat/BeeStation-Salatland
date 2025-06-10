@@ -39,6 +39,7 @@
 	)
 	AddElement(/datum/element/connect_loc, loc_connections)
 	AddElement(/datum/element/mechanical_repair)
+
 	GLOB.human_list += src
 
 /mob/living/carbon/human/proc/setup_human_dna()
@@ -1071,6 +1072,12 @@
 		src.emote("scream")
 	src.apply_damage(power, BRUTE, def_zone = pick(BODY_ZONE_PRECISE_R_FOOT, BODY_ZONE_PRECISE_L_FOOT))
 	src.Paralyze(10 * power)
+
+/mob/living/carbon/human/get_exp_list(minutes)
+	. = ..()
+
+	if(mind.assigned_role.title in SSjob.name_occupations)
+		.[mind.assigned_role.title] = minutes
 
 /mob/living/carbon/human/monkeybrain
 	ai_controller = /datum/ai_controller/monkey

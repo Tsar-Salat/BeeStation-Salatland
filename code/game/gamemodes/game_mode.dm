@@ -70,7 +70,8 @@
 ///Checks to see if the game can be setup and ran with the current number of players or whatnot.
 /datum/game_mode/proc/can_start()
 	var/playerC = 0
-	for(var/mob/dead/new_player/player in GLOB.player_list)
+	for(var/i in GLOB.new_player_list)
+		var/mob/dead/new_player/player = i
 		if(player.client && (player.ready == PLAYER_READY_TO_PLAY) && player.check_preferences())
 			playerC++
 	if(!GLOB.Debug2)
@@ -272,7 +273,7 @@
 	if(CONFIG_GET(flag/protect_assistant_from_antagonist))
 		replacementmode.restricted_jobs += JOB_NAME_ASSISTANT
 	if(CONFIG_GET(flag/protect_heads_from_antagonist))
-		replacementmode.restricted_jobs += SSdepartment.get_jobs_by_dept_id(DEPT_NAME_COMMAND)
+		replacementmode.restricted_jobs += SSdepartment.get_jobs_by_dept_id(DEPARTMENT_COMMAND_NAME)
 
 	message_admins("The roundtype will be converted. If you have other plans for the station or feel the station is too messed up to inhabit <A HREF='BYOND://?_src_=holder;[HrefToken()];toggle_midround_antag=[REF(usr)]'>stop the creation of antags</A> or <A HREF='BYOND://?_src_=holder;[HrefToken()];end_round=[REF(usr)]'>end the round now</A>.")
 	log_game("Roundtype converted to [replacementmode.name]")
@@ -506,7 +507,8 @@
 	var/datum/mind/applicant = null
 
 	// Ultimate randomizing code right here
-	for(var/mob/dead/new_player/player in GLOB.player_list)
+	for(var/i in GLOB.new_player_list)
+		var/mob/dead/new_player/player = i
 		if(player.client && player.ready == PLAYER_READY_TO_PLAY)
 			players += player
 
@@ -603,7 +605,8 @@
 
 /datum/game_mode/proc/num_players()
 	. = 0
-	for(var/mob/dead/new_player/P in GLOB.player_list)
+	for(var/i in GLOB.new_player_list)
+		var/mob/dead/new_player/P = i
 		if(P.client && P.ready == PLAYER_READY_TO_PLAY)
 			. ++
 
@@ -629,7 +632,7 @@
 /datum/game_mode/proc/get_living_silicon()
 	. = list()
 	for(var/mob/living/silicon/player in GLOB.mob_list)
-		if(player.stat != DEAD && player.mind && (player.mind.assigned_role in SSdepartment.get_jobs_by_dept_id(DEPT_NAME_SILICON)))
+		if(player.stat != DEAD && player.mind && (player.mind.assigned_role in SSdepartment.get_jobs_by_dept_id(DEPARTMENT_SILICON_NAME)))
 			. |= player.mind
 
 ///////////////////////////////////////
@@ -638,22 +641,22 @@
 /datum/game_mode/proc/get_all_silicon()
 	. = list()
 	for(var/mob/living/silicon/player in GLOB.mob_list)
-		if(player.mind && (player.mind.assigned_role in SSdepartment.get_jobs_by_dept_id(DEPT_NAME_SILICON)))
+		if(player.mind && (player.mind.assigned_role in SSdepartment.get_jobs_by_dept_id(DEPARTMENT_SILICON_NAME)))
 			. |= player.mind
 
 /proc/reopen_roundstart_suicide_roles()
 	stack_trace("reopen_roundstart_suicide_roles called")
 	var/list/valid_positions = list()
-	valid_positions += SSdepartment.get_jobs_by_dept_id(DEPT_NAME_ENGINEERING)
-	valid_positions += SSdepartment.get_jobs_by_dept_id(DEPT_NAME_MEDICAL)
-	valid_positions += SSdepartment.get_jobs_by_dept_id(DEPT_NAME_SCIENCE)
-	valid_positions += SSdepartment.get_jobs_by_dept_id(DEPT_NAME_CARGO)
-	valid_positions += SSdepartment.get_jobs_by_dept_id(DEPT_NAME_CIVILIAN)
-	valid_positions += SSdepartment.get_jobs_by_dept_id(DEPT_NAME_SECURITY)
+	valid_positions += SSdepartment.get_jobs_by_dept_id(DEPARTMENT_ENGINEERING_NAME)
+	valid_positions += SSdepartment.get_jobs_by_dept_id(DEPARTMENT_MEDICAL_NAME)
+	valid_positions += SSdepartment.get_jobs_by_dept_id(DEPARTMENT_SCIENCE_NAME)
+	valid_positions += SSdepartment.get_jobs_by_dept_id(DEPARTMENT_CARGO_NAME)
+	valid_positions += SSdepartment.get_jobs_by_dept_id(DEPARTMENT_CIVILIAN_NAME)
+	valid_positions += SSdepartment.get_jobs_by_dept_id(DEPARTMENT_SECURITY_NAME)
 	if(CONFIG_GET(flag/reopen_roundstart_suicide_roles_command_positions))
-		valid_positions += SSdepartment.get_jobs_by_dept_id(DEPT_NAME_COMMAND) //add any remaining command positions
+		valid_positions += SSdepartment.get_jobs_by_dept_id(DEPARTMENT_COMMAND_NAME) //add any remaining command positions
 	else
-		valid_positions -= SSdepartment.get_jobs_by_dept_id(DEPT_NAME_COMMAND) //remove all command positions that were added from their respective department positions lists.
+		valid_positions -= SSdepartment.get_jobs_by_dept_id(DEPARTMENT_COMMAND_NAME) //remove all command positions that were added from their respective department positions lists.
 
 	var/list/reopened_jobs = list()
 	for(var/X in GLOB.suicided_mob_list)
@@ -803,7 +806,7 @@
 	// HEADS OF STAFF
 	round_credits += "<center><h1>The Glorious Command Staff:</h1>"
 	len_before_addition = round_credits.len
-	for(var/datum/mind/current in SSticker.mode.get_all_by_department(SSdepartment.get_jobs_by_dept_id(DEPT_NAME_COMMAND)))
+	for(var/datum/mind/current in SSticker.mode.get_all_by_department(SSdepartment.get_jobs_by_dept_id(DEPARTMENT_COMMAND_NAME)))
 		custom_title_holder = get_custom_title_from_id(current, newline=TRUE)
 		round_credits += "<center><h2>[current.name] as the [current.assigned_role][custom_title_holder]</h2>"
 	if(round_credits.len == len_before_addition)
@@ -822,7 +825,7 @@
 	// SECURITY
 	round_credits += "<center><h1>The Brave Security Officers:</h1>"
 	len_before_addition = round_credits.len
-	for(var/datum/mind/current in SSticker.mode.get_all_by_department(SSdepartment.get_jobs_by_dept_id(DEPT_NAME_SECURITY)))
+	for(var/datum/mind/current in SSticker.mode.get_all_by_department(SSdepartment.get_jobs_by_dept_id(DEPARTMENT_SECURITY_NAME)))
 		custom_title_holder = get_custom_title_from_id(current, newline=TRUE)
 		round_credits += "<center><h2>[current.name] as the [current.assigned_role][custom_title_holder]</h2>"
 	if(round_credits.len == len_before_addition)
@@ -832,7 +835,7 @@
 	// MEDICAL
 	round_credits += "<center><h1>The Wise Medical Department:</h1>"
 	len_before_addition = round_credits.len
-	for(var/datum/mind/current in SSticker.mode.get_all_by_department(SSdepartment.get_jobs_by_dept_id(DEPT_NAME_MEDICAL)))
+	for(var/datum/mind/current in SSticker.mode.get_all_by_department(SSdepartment.get_jobs_by_dept_id(DEPARTMENT_MEDICAL_NAME)))
 		custom_title_holder = get_custom_title_from_id(current, newline=TRUE)
 		round_credits += "<center><h2>[current.name] as the [current.assigned_role][custom_title_holder]</h2>"
 	if(round_credits.len == len_before_addition)
@@ -842,7 +845,7 @@
 	// ENGINEERING
 	round_credits += "<center><h1>The Industrious Engineers:</h1>"
 	len_before_addition = round_credits.len
-	for(var/datum/mind/current in SSticker.mode.get_all_by_department(SSdepartment.get_jobs_by_dept_id(DEPT_NAME_ENGINEERING)))
+	for(var/datum/mind/current in SSticker.mode.get_all_by_department(SSdepartment.get_jobs_by_dept_id(DEPARTMENT_ENGINEERING_NAME)))
 		custom_title_holder = get_custom_title_from_id(current, newline=TRUE)
 		round_credits += "<center><h2>[current.name] as the [current.assigned_role][custom_title_holder]</h2>"
 	if(round_credits.len == len_before_addition)
@@ -852,7 +855,7 @@
 	// SCIENCE
 	round_credits += "<center><h1>The Inventive Science Employees:</h1>"
 	len_before_addition = round_credits.len
-	for(var/datum/mind/current in SSticker.mode.get_all_by_department(SSdepartment.get_jobs_by_dept_id(DEPT_NAME_SCIENCE)))
+	for(var/datum/mind/current in SSticker.mode.get_all_by_department(SSdepartment.get_jobs_by_dept_id(DEPARTMENT_SCIENCE_NAME)))
 		custom_title_holder = get_custom_title_from_id(current, newline=TRUE)
 		round_credits += "<center><h2>[current.name] as the [current.assigned_role][custom_title_holder]</h2>"
 	if(round_credits.len == len_before_addition)
@@ -862,7 +865,7 @@
 	// CARGO
 	round_credits += "<center><h1>The Rugged Cargo Crew:</h1>"
 	len_before_addition = round_credits.len
-	for(var/datum/mind/current in SSticker.mode.get_all_by_department(SSdepartment.get_jobs_by_dept_id(DEPT_NAME_CARGO)))
+	for(var/datum/mind/current in SSticker.mode.get_all_by_department(SSdepartment.get_jobs_by_dept_id(DEPARTMENT_CARGO_NAME)))
 		custom_title_holder = get_custom_title_from_id(current, newline=TRUE)
 		round_credits += "<center><h2>[current.name] as the [current.assigned_role][custom_title_holder]</h2>"
 	if(round_credits.len == len_before_addition)
@@ -873,7 +876,7 @@
 	var/list/human_garbage = list()
 	round_credits += "<center><h1>The Hardy Civilians:</h1>"
 	len_before_addition = round_credits.len
-	for(var/datum/mind/current in SSticker.mode.get_all_by_department(SSdepartment.get_jobs_by_dept_id(DEPT_NAME_CIVILIAN))) // gimmicks shouldn't be here, but let's not make the code dirty
+	for(var/datum/mind/current in SSticker.mode.get_all_by_department(SSdepartment.get_jobs_by_dept_id(DEPARTMENT_CIVILIAN_NAME))) // gimmicks shouldn't be here, but let's not make the code dirty
 		if(current.assigned_role == JOB_NAME_ASSISTANT)
 			human_garbage += current
 		else

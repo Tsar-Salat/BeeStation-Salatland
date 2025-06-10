@@ -87,11 +87,31 @@ GLOBAL_LIST_INIT(exp_removed_jobsmap, list(
 GLOBAL_PROTECT(exp_removed_jobsmap)
 
 // DO NOT INITIALIZE HERE. department subsystem initializes this.
+// TO DO: Replace this with job datum flags instead.
 GLOBAL_LIST_EMPTY(exp_jobsmap)
 GLOBAL_LIST_INIT(exp_specialmap, list(
 	EXP_TYPE_LIVING = list(), // all living mobs
 	EXP_TYPE_ANTAG = list(),
-	EXP_TYPE_SPECIAL = list("Lifebringer","Ash Walker","Exile","Servant Golem","Free Golem","Hermit","Translocated Vet","Escaped Prisoner","Hotel Staff","SuperFriend","Space Syndicate","Ancient Crew","Space Doctor","Beach Bum","Skeleton","Zombie","Lavaland Syndicate",JOB_NAME_PAI,"Ghost Role"), // Ghost roles
+	EXP_TYPE_SPECIAL = list(
+		ROLE_LIFEBRINGER,
+		ROLE_ASHWALKER,
+		ROLE_SERVANT_GOLEM,
+		ROLE_FREE_GOLEM,
+		ROLE_HERMIT,
+		ROLE_TRANSLOCATED_VET,
+		ROLE_ESCAPED_PRISONER,
+		ROLE_HOTEL_STAFF,
+		ROLE_SPACE_SYNDICATE,
+		ROLE_ANCIENT_CREW,
+		ROLE_SPACE_DOCTOR,
+		ROLE_SPACE_BARTENDER,
+		ROLE_BEACH_BUM,
+		ROLE_SKELETON,
+		ROLE_ZOMBIE,
+		ROLE_LAVALAND_SYNDICATE,
+		JOB_NAME_PAI,
+		ROLE_GHOST_ROLE,
+		), // Ghost roles
 	EXP_TYPE_GHOST = list() // dead people, observers
 ))
 GLOBAL_PROTECT(exp_jobsmap)
@@ -103,9 +123,9 @@ GLOBAL_PROTECT(exp_specialmap)
 	if(!job_title)
 		return list()
 
-	for(var/datum/job/J in SSjob.occupations)
-		if(J.title == job_title)
-			return J.department_head //this is a list
+	for(var/datum/job/job as anything in SSjob.joinable_occupations)
+		if(job.title == job_title)
+			return job.department_head //this is a list
 
 /proc/get_full_job_name(job)
 	var/static/regex/cap_expand = new("cap(?!tain)")

@@ -31,6 +31,8 @@
 #define COMSIG_GLOB_CREWMEMBER_JOINED "!crewmember_joined"
 /// job subsystem has spawned and equipped a new mob
 #define COMSIG_GLOB_JOB_AFTER_SPAWN "!job_after_spawn"
+/// job datum has been called to deal with the aftermath of a latejoin spawn
+#define COMSIG_GLOB_JOB_AFTER_LATEJOIN_SPAWN "!job_after_latejoin_spawn"
 /// Called when a cargo resupply is triggered
 #define COMSIG_GLOB_RESUPPLY "!resupply"
 /// research has been researched
@@ -43,3 +45,6 @@
 #define COMSIG_GLOB_CREW_MANIFEST_UPDATE "!crew_manifest_update"
 /// Called whenever something is sold through exports
 #define COMSIG_GLOB_ATOM_SOLD "!atom_sold"
+
+///from SSJob when DivideOccupations is called
+#define COMSIG_OCCUPATIONS_DIVIDED "occupations_divided"

@@ -8,7 +8,6 @@
 	antag_moodlet = /datum/mood_event/focused
 	hijack_speed = 0.5
 	var/you_are_greet = TRUE
-	var/team_mode = FALSE //Should assign team objectives ?
 	var/competitive_objectives = FALSE //Should we assign objectives in competition with other lings?
 
 	//Changeling Stuff
@@ -460,19 +459,13 @@
 		if(prob(70))
 			var/datum/objective/assassinate/kill_objective = new
 			kill_objective.owner = owner
-			if(team_mode) //No backstabbing while in a team
-				kill_objective.find_target_by_role(role = ROLE_CHANGELING, role_type = TRUE, invert = TRUE)
-			else
-				kill_objective.find_target()
+			kill_objective.find_target()
 			objectives += kill_objective
 			log_objective(owner, kill_objective.explanation_text)
 		else
 			var/datum/objective/maroon/maroon_objective = new
 			maroon_objective.owner = owner
-			if(team_mode)
-				maroon_objective.find_target_by_role(role = ROLE_CHANGELING, role_type = TRUE, invert = TRUE)
-			else
-				maroon_objective.find_target()
+			maroon_objective.find_target()
 			objectives += maroon_objective
 			log_objective(owner, maroon_objective.explanation_text)
 
@@ -497,10 +490,7 @@
 		else
 			var/datum/objective/escape/escape_with_identity/identity_theft = new
 			identity_theft.owner = owner
-			if(team_mode)
-				identity_theft.find_target_by_role(role = ROLE_CHANGELING, role_type = TRUE, invert = TRUE)
-			else
-				identity_theft.find_target()
+			identity_theft.find_target()
 			objectives += identity_theft
 			log_objective(owner, identity_theft.explanation_text)
 		escape_objective_possible = FALSE

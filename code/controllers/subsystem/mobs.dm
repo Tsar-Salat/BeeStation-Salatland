@@ -52,9 +52,7 @@ SUBSYSTEM_DEF(mobs)
 				continue
 			var/turf/T = get_turf(M)
 			if(!T)
-				for(var/obj/effect/landmark/error/E in GLOB.landmarks_list)
-					M.forceMove(E.loc)
-					break
+				M.move_to_error_room()
 				var/msg = "[ADMIN_LOOKUPFLW(M)] was found to have no .loc with an attached client, if the cause is unknown it would be wise to ask how this was accomplished."
 				message_admins(msg)
 				send2tgs_adminless_only("Mob", msg, R_ADMIN)

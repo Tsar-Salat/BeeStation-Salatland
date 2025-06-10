@@ -1,10 +1,10 @@
 /datum/job/scientist
 	title = JOB_NAME_SCIENTIST
 	description = "Engage in Xenobiology, Xenoarchaeology, Nanites, and Toxins; research new technology; and upgrade the machine parts around the station."
-	department_for_prefs = DEPT_NAME_SCIENCE
+	department_for_prefs = DEPARTMENT_SCIENCE_NAME
 	department_head = list(JOB_NAME_RESEARCHDIRECTOR)
 	supervisors = "the research director"
-	faction = "Station"
+	faction = FACTION_STATION
 	total_positions = 5
 	spawn_positions = 3
 	selection_color = "#ffeeff"
@@ -18,7 +18,7 @@
 						ACCESS_MINERAL_STOREROOM, ACCESS_AUX_BASE, ACCESS_EXPLORATION)
 	extra_access = list(ACCESS_ROBOTICS, ACCESS_TECH_STORAGE)
 
-	departments = DEPT_BITFLAG_SCI
+	departments = DEPARTMENT_SCIENCE_BITFLAG
 	bank_account_department = ACCOUNT_SCI_BITFLAG
 	payment_per_department = list(ACCOUNT_SCI_ID = PAYCHECK_MEDIUM)
 
@@ -39,6 +39,8 @@
 		/area/science/storage,
 		/area/science/xenobiology
 	)
+
+	job_flags = JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK | JOB_CREW_MEMBER | JOB_NEW_PLAYER_JOINABLE
 
 /datum/outfit/job/scientist
 	name = JOB_NAME_SCIENTIST

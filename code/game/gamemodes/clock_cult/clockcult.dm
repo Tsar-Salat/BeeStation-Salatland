@@ -63,7 +63,6 @@ GLOBAL_VAR(clockcult_eminence)
 			continue
 		antag_candidates -= clockie
 		selected_servants += clockie
-		clockie.assigned_role = ROLE_SERVANT_OF_RATVAR
 		clockie.special_role = ROLE_SERVANT_OF_RATVAR
 		GLOB.pre_setup_antags += clockie
 	generate_clockcult_scriptures()
@@ -228,15 +227,15 @@ GLOBAL_VAR(clockcult_eminence)
 			if(CLOCKCULT_PREFIX_RECRUIT)
 				var/role = sender.mind?.assigned_role
 				//Ew, this could be done better with a dictionary list, but this isn't much slower
-				if(role in SSdepartment.get_jobs_by_dept_id(DEPT_NAME_COMMAND))
+				if(role in SSdepartment.get_jobs_by_dept_id(DEPARTMENT_COMMAND_NAME))
 					prefix = "High Priest"
-				else if(role in SSdepartment.get_jobs_by_dept_id(DEPT_NAME_ENGINEERING))
+				else if(role in SSdepartment.get_jobs_by_dept_id(DEPARTMENT_ENGINEERING_NAME))
 					prefix = "Cogturner"
-				else if(role in SSdepartment.get_jobs_by_dept_id(DEPT_NAME_MEDICAL))
+				else if(role in SSdepartment.get_jobs_by_dept_id(DEPARTMENT_MEDICAL_NAME))
 					prefix = "Rejuvinator"
-				else if(role in SSdepartment.get_jobs_by_dept_id(DEPT_NAME_SCIENCE))
+				else if(role in SSdepartment.get_jobs_by_dept_id(DEPARTMENT_SCIENCE_NAME))
 					prefix = "Calculator"
-				else if(role in SSdepartment.get_jobs_by_dept_id(DEPT_NAME_CARGO))
+				else if(role in SSdepartment.get_jobs_by_dept_id(DEPARTMENT_CARGO_NAME))
 					prefix = "Pathfinder"
 				else if(role in JOB_NAME_ASSISTANT)
 					prefix = "Helper"
@@ -244,11 +243,11 @@ GLOBAL_VAR(clockcult_eminence)
 					prefix = "Cogwatcher"
 				else if(role in JOB_NAME_CLOWN)
 					prefix = "Clonker"
-				else if((role in SSdepartment.get_jobs_by_dept_id(DEPT_NAME_CIVILIAN)))
+				else if((role in SSdepartment.get_jobs_by_dept_id(DEPARTMENT_CIVILIAN_NAME)))
 					prefix = "Cogworker"
-				else if(role in SSdepartment.get_jobs_by_dept_id(DEPT_NAME_SECURITY))
+				else if(role in SSdepartment.get_jobs_by_dept_id(DEPARTMENT_SECURITY_NAME))
 					prefix = "Warrior"
-				else if(role in SSdepartment.get_jobs_by_dept_id(DEPT_NAME_SILICON))
+				else if(role in SSdepartment.get_jobs_by_dept_id(DEPARTMENT_SILICON_NAME))
 					prefix = "CPU"
 			//Fallthrough is default of "Clockbrother"
 		hierophant_message += "<b>[prefix] [sender.name]</b> transmits, \"[msg]\""

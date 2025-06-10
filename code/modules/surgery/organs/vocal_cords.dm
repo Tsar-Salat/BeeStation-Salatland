@@ -156,18 +156,7 @@
 		cooldown = COOLDOWN_NONE
 		return cooldown
 
-	var/power_multiplier = base_multiplier
-
-	if(user.mind)
-		//Chaplains are very good at speaking with the voice of god
-		if(user.mind.assigned_role == JOB_NAME_CHAPLAIN)
-			power_multiplier *= 2
-		//Curators are very good at speaking in other languages, but not as good as Chaplain with this one
-		if(user.mind.assigned_role == "Curator")
-			power_multiplier *= 1.5
-		//Why are you speaking
-		if(user.mind.assigned_role == JOB_NAME_MIME)
-			power_multiplier *= 0.5
+	var/power_multiplier = base_multiplier * (user.mind?.assigned_role.voice_of_god_power || 1)
 
 	//Cultists are closer to their gods and are more powerful, but they'll give themselves away
 	if(iscultist(user))
@@ -195,7 +184,7 @@
 		else if(L.mind && L.mind.assigned_role && findtext(message, L.mind.assigned_role, 1, length(L.mind.assigned_role) + 1))
 			specific_listeners += L //focus on those with the specified job
 			//Cut out the job so it doesn't trigger commands
-			found_string = L.mind.assigned_role
+			found_string = L.mind.assigned_role.title
 
 	if(specific_listeners.len)
 		listeners = specific_listeners
@@ -506,7 +495,7 @@
 	else if((findtext(message, honk_words)))
 		cooldown = COOLDOWN_MEME
 		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound), get_turf(user), 'sound/items/bikehorn.ogg', 300, 1), 25)
-		if(user.mind?.assigned_role == JOB_NAME_CLOWN)
+		if(is_clown_job(user.mind?.assigned_role))
 			for(var/mob/living/carbon/C in listeners)
 				C.slip(140 * power_multiplier)
 			cooldown = COOLDOWN_MEME

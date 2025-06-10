@@ -25,10 +25,9 @@ SUBSYSTEM_DEF(ticker)
 	var/list/datum/mind/minds = list()		//The characters in the game. Used for objective tracking.
 
 	var/delay_end = 0						//if set true, the round will not restart on it's own
-	var/admin_delay_notice = ""				//a message to display to anyone who tries to restart the world after a delay
-	var/ready_for_reboot = FALSE			//all roundend preparation done with, all that's left is reboot
+	var/admin_delay_notice = "" //a message to display to anyone who tries to restart the world after a delay
+	var/ready_for_reboot = FALSE //all roundend preparation done with, all that's left is reboot
 
-	var/triai = 0							//Global holder for Triumvirate
 	var/tipped = 0							//Did we broadcast the tip of the day yet?
 	var/selected_tip						// What will be the tip of the day?
 
@@ -167,10 +166,10 @@ SUBSYSTEM_DEF(ticker)
 				//lobby stats for statpanels
 			if(isnull(timeLeft))
 				timeLeft = max(0,start_at - world.time)
-			totalPlayers = 0
+			totalPlayers = LAZYLEN(GLOB.new_player_list)
 			totalPlayersReady = 0
-			for(var/mob/dead/new_player/player in GLOB.player_list)
-				++totalPlayers
+			for(var/i in GLOB.new_player_list)
+				var/mob/dead/new_player/player = i
 				if(player.ready == PLAYER_READY_TO_PLAY)
 					++totalPlayersReady
 
@@ -422,16 +421,22 @@ SUBSYSTEM_DEF(ticker)
 				M.gib(TRUE)
 
 /datum/controller/subsystem/ticker/proc/create_characters()
-	for(var/mob/dead/new_player/player in GLOB.player_list)
+	for(var/i in GLOB.new_player_list)
+		var/mob/dead/new_player/player = i
 		if(player.ready == PLAYER_READY_TO_PLAY && player.mind)
 			GLOB.joined_player_list += player.ckey
-			player.create_character(FALSE)
+			var/atom/destination = player.mind.assigned_role.get_roundstart_spawn_point()
+			if(!destination) // Failed to fetch a proper roundstart location, won't be going anywhere.
+				player.new_player_panel()
+				continue
+			player.create_character(destination)
 		else
 			player.new_player_panel()
 		CHECK_TICK
 
 /datum/controller/subsystem/ticker/proc/collect_minds()
-	for(var/mob/dead/new_player/P in GLOB.player_list)
+	for(var/i in GLOB.new_player_list)
+		var/mob/dead/new_player/P = i
 		if(P.new_character?.mind)
 			SSticker.minds += P.new_character.mind
 		CHECK_TICK
@@ -439,35 +444,36 @@ SUBSYSTEM_DEF(ticker)
 
 /datum/controller/subsystem/ticker/proc/equip_characters()
 	var/captainless = TRUE
+
 	var/highest_rank = length(SSjob.chain_of_command) + 1
 	var/list/spare_id_candidates = list()
 	var/enforce_coc = CONFIG_GET(flag/spare_enforce_coc)
 
-	for(var/mob/dead/new_player/N in GLOB.player_list)
-		var/mob/living/carbon/human/player = N.new_character
-		var/datum/mind/mind = player?.mind
-		if(istype(player) && mind && mind.assigned_role)
+	for(var/mob/dead/new_player/new_player_mob as anything in GLOB.new_player_list)
+		var/mob/living/carbon/human/new_player_human = new_player_mob.new_character
+		var/datum/mind/mind = new_player_human?.mind
+		if(istype(new_player_human) && mind && mind.assigned_role)
 			if(mind.assigned_role == JOB_NAME_CAPTAIN)
 				captainless = FALSE
-				spare_id_candidates += N
-			else if(captainless && (mind.assigned_role in SSdepartment.get_jobs_by_dept_id(DEPT_NAME_COMMAND)) && !(is_banned_from(N.ckey, JOB_NAME_CAPTAIN)))
+				spare_id_candidates += new_player_mob
+			else if(captainless && (mind.assigned_role in SSdepartment.get_jobs_by_dept_id(DEPARTMENT_COMMAND_NAME)) && !(is_banned_from(new_player_mob.ckey, JOB_NAME_CAPTAIN)))
 				if(!enforce_coc)
-					spare_id_candidates += N
+					spare_id_candidates += new_player_mob
 				else
 					var/spare_id_priority = SSjob.chain_of_command[mind.assigned_role]
 					if(spare_id_priority)
 						if(spare_id_priority < highest_rank)
 							spare_id_candidates.Cut()
-							spare_id_candidates += N
+							spare_id_candidates += new_player_mob
 							highest_rank = spare_id_priority
 						else if(spare_id_priority == highest_rank)
-							spare_id_candidates += N
+							spare_id_candidates += new_player_mob
 			if(mind.assigned_role != mind.special_role)
-				SSjob.EquipRank(N, mind.assigned_role, FALSE)
+				SSjob.EquipRank(new_player_mob, mind.assigned_role, FALSE)
 			if(CONFIG_GET(flag/roundstart_traits))
-				SSquirks.AssignQuirks(mind, N.client, TRUE)
+				SSquirks.AssignQuirks(mind, new_player_mob.client, TRUE)
 		CHECK_TICK
-	if(length(spare_id_candidates))			//No captain, time to choose acting captain
+	if(length(spare_id_candidates)) //No captain, time to choose acting captain
 		if(!enforce_coc)
 			for(var/mob/dead/new_player/player in spare_id_candidates)
 				SSjob.promote_to_captain(player, captainless)
@@ -479,7 +485,8 @@ SUBSYSTEM_DEF(ticker)
 
 /datum/controller/subsystem/ticker/proc/transfer_characters()
 	var/list/livings = list()
-	for(var/mob/dead/new_player/player in GLOB.mob_list)
+	for(var/i in GLOB.new_player_list)
+		var/mob/dead/new_player/player = i
 		var/mob/living = player.transfer_character()
 		if(living)
 			qdel(player)
@@ -578,7 +585,6 @@ SUBSYSTEM_DEF(ticker)
 
 	delay_end = SSticker.delay_end
 
-	triai = SSticker.triai
 	tipped = SSticker.tipped
 	selected_tip = SSticker.selected_tip
 
@@ -669,7 +675,8 @@ SUBSYSTEM_DEF(ticker)
 
 //Everyone who wanted to be an observer gets made one now
 /datum/controller/subsystem/ticker/proc/create_observers()
-	for(var/mob/dead/new_player/player in GLOB.player_list)
+	for(var/i in GLOB.new_player_list)
+		var/mob/dead/new_player/player = i
 		if(player.ready == PLAYER_READY_TO_OBSERVE && player.mind)
 			//Break chain since this has a sleep input in it
 			addtimer(CALLBACK(player, TYPE_PROC_REF(/mob/dead/new_player, make_me_an_observer)), 1)

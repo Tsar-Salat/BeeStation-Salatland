@@ -10,13 +10,6 @@
 
 /datum/antagonist/ert
 	name = "Emergency Response Officer"
-	var/datum/team/ert/ert_team
-	var/leader = FALSE
-	var/datum/outfit/outfit = /datum/outfit/centcom/ert/security
-	var/datum/outfit/plasmaman_outfit = /datum/outfit/plasmaman/ert
-	var/role = JOB_NAME_SECURITYOFFICER
-	var/list/name_source
-	var/random_names = TRUE
 	can_elimination_hijack = ELIMINATION_PREVENT
 	show_in_antagpanel = FALSE
 	show_to_ghosts = TRUE
@@ -24,6 +17,15 @@
 	count_against_dynamic_roll_chance = FALSE
 	banning_key = ROLE_ERT
 	required_living_playtime = 2
+	var/datum/team/ert/ert_team
+	var/leader = FALSE
+	var/datum/outfit/outfit = /datum/outfit/centcom/ert/security
+	var/datum/outfit/plasmaman_outfit = /datum/outfit/plasmaman/ert
+	var/role = JOB_NAME_SECURITYOFFICER
+	var/list/name_source
+	var/random_names = TRUE
+	/// Typepath indicating the kind of job datum this ert member will have.
+	var/ert_job_path = /datum/job/ert_generic
 
 /datum/antagonist/ert/on_gain()
 	if(random_names)

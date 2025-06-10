@@ -337,7 +337,7 @@
 			return //picked nothing, admin disabled it, cheating to respawn faster, cheating to respawn... while in game?
 		chosen_class = ctf_gear[result]
 	var/mob/living/carbon/human/M = new /mob/living/carbon/human(get_turf(src))
-	new_team_member.prefs.apply_prefs_to(M)
+	new_team_member.prefs.safe_transfer_prefs_to(M, is_antag = TRUE)
 	if(!(M.dna.species.type in allowed_species))
 		M.set_species(/datum/species/human) //default to human if not whitelisted
 	M.key = new_team_member.key

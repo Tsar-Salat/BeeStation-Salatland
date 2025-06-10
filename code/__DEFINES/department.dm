@@ -1,35 +1,46 @@
 // station departments
-#define DEPT_NAME_COMMAND "Command"
-#define DEPT_BITFLAG_COM (1<<0)
-#define DEPT_NAME_CIVILIAN "Civilian"
-#define DEPT_BITFLAG_CIV (1<<1)
-#define DEPT_NAME_SERVICE "Service"
-#define DEPT_BITFLAG_SRV (1<<2)
-#define DEPT_NAME_CARGO "Cargo"
-#define DEPT_BITFLAG_CAR (1<<3)
-#define DEPT_NAME_SCIENCE "Science"
-#define DEPT_BITFLAG_SCI (1<<4)
-#define DEPT_NAME_ENGINEERING "Engineering"
-#define DEPT_BITFLAG_ENG (1<<5)
-#define DEPT_NAME_MEDICAL "Medical"
-#define DEPT_BITFLAG_MED (1<<6)
-#define DEPT_NAME_SECURITY "Security"
-#define DEPT_BITFLAG_SEC (1<<7)
-#define DEPT_NAME_VIP "VIP"
-#define DEPT_BITFLAG_VIP (1<<8)
-#define DEPT_NAME_SILICON "Silicon"
-#define DEPT_BITFLAG_SILICON  (1<<9)
-#define DEPT_NAME_UNASSIGNED "Misc"
-#define DEPT_BITFLAG_UNASSIGNED (1<<10)
+#define DEPARTMENT_COMMAND_NAME "Command"
+#define DEPARTMENT_COMMAND_BITFLAG (1<<0)
 
-#define DEPT_NAME_CENTCOM "CentCom"
-#define DEPT_BITFLAG_CENTCOM (1<<11)
-#define DEPT_NAME_OTHER "Other"
-#define DEPT_BITFLAG_OTHER (1<<12)
+#define DEPARTMENT_CIVILIAN_NAME "Civilian"
+#define DEPARTMENT_CIVILIAN_BITFLAG (1<<1)
+
+#define DEPARTMENT_SERVICE_NAME "Service"
+#define DEPARTMENT_SERVICE_BITFLAG (1<<2)
+
+#define DEPARTMENT_CARGO_NAME "Cargo"
+#define DEPARTMENT_CARGO_BITFLAG (1<<3)
+
+#define DEPARTMENT_SCIENCE_NAME "Science"
+#define DEPARTMENT_SCIENCE_BITFLAG (1<<4)
+
+#define DEPARTMENT_ENGINEERING_NAME "Engineering"
+#define DEPARTMENT_ENGINEERING_BITFLAG (1<<5)
+
+#define DEPARTMENT_MEDICAL_NAME "Medical"
+#define DEPARTMENT_MEDICAL_BITFLAG (1<<6)
+
+#define DEPARTMENT_SECURITY_NAME "Security"
+#define DEPARTMENT_SECURITY_BITFLAG (1<<7)
+
+#define DEPARTMENT_VIP_NAME "VIP"
+#define DEPARTMENT_VIP_BITFLAG (1<<8)
+
+#define DEPARTMENT_SILICON_NAME "Silicon"
+#define DEPARTMENT_SILICON_BITFLAG (1<<9)
+
+#define DEPARTMENT_UNASSIGNED_NAME "Misc"
+#define DEPARTMENT_UNASSIGNED_BITFLAG (1<<10)
+
+#define DEPARTMENT_CENTCOM_NAME "CentCom"
+#define DEPARTMENT_CENTCOM_BITFLAG (1<<11)
+
+#define DEPARTMENT_OTHER_NAME "Other"
+#define DEPARTMENT_OTHER_BITFLAG (1<<12)
 
 // not real department. These exist for pref grouping
-#define DEPT_NAME_ASSISTANT "Assistant"
-#define DEPT_NAME_CAPTAIN "Captain"
+#define DEPARTMENT_ASSISTANT_NAME "Assistant"
+#define DEPARTMENT_CAPTAIN_NAME "Captain"
 
 
 // Crew Manifest will show crew data in this order

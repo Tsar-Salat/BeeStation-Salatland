@@ -42,7 +42,7 @@
 	explanation_text = "Eat everything and anything to sate your never-ending hunger."
 	completed = TRUE
 
-/datum/antagonist/morph/admin_add(datum/mind/new_owner,mob/admin)
+/datum/antagonist/morph/admin_add(datum/mind/new_owner, mob/admin)
 	if(alert(admin,"Transform the player into a morph?","Species Change","Yes","No") != "Yes")
 		return ..()
 	var/mob/living/M = new_owner.current
@@ -53,7 +53,7 @@
 		if(istype(new_mob))
 			new_mob.set_combat_mode(TRUE)
 			M.mind.transfer_to(new_mob)
-			new_owner.assigned_role = ROLE_MORPH
+			new_owner.set_assigned_role(SSjob.GetJobType(/datum/job/morph))
 			new_owner.special_role = ROLE_MORPH
 			new_mob.name = "morph"
 			new_mob.real_name = "morph"

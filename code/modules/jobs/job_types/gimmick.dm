@@ -1,9 +1,9 @@
 /datum/job/gimmick //gimmick var must be set to true for all gimmick jobs BUT the parent
 	title = JOB_NAME_GIMMICK
 	description = "Use your unique position to provide a service or entertain the crew."
-	department_for_prefs = DEPT_NAME_ASSISTANT
+	department_for_prefs = DEPARTMENT_ASSISTANT_NAME
 	show_in_prefs = TRUE
-	faction = "Station"
+	faction = FACTION_STATION
 	total_positions = 0
 	spawn_positions = 0
 	supervisors = "no one"
@@ -12,7 +12,7 @@
 	base_access = list(ACCESS_MAINT_TUNNELS)
 	extra_access = list()
 
-	departments = DEPT_BITFLAG_CIV
+	departments = DEPARTMENT_CIVILIAN_BITFLAG
 	bank_account_department = ACCOUNT_CIV_BITFLAG
 	payment_per_department = list(ACCOUNT_CIV_ID = PAYCHECK_ASSISTANT)
 
@@ -40,7 +40,7 @@
 	base_access = list(ACCESS_MORGUE, ACCESS_MAINT_TUNNELS)
 	extra_access = list()
 
-	departments = DEPT_BITFLAG_SRV
+	departments = DEPARTMENT_SERVICE_BITFLAG
 	bank_account_department = ACCOUNT_SRV_BITFLAG
 	payment_per_department = list(ACCOUNT_SRV_ID = PAYCHECK_ASSISTANT)
 
@@ -73,7 +73,7 @@
 	base_access = list(ACCESS_THEATRE, ACCESS_MAINT_TUNNELS)
 	extra_access = list()
 
-	departments = DEPT_BITFLAG_SRV
+	departments = DEPARTMENT_SERVICE_BITFLAG
 	bank_account_department = ACCOUNT_SRV_BITFLAG
 	payment_per_department = list(ACCOUNT_SRV_ID = PAYCHECK_MINIMAL)
 
@@ -112,7 +112,7 @@
 	base_access = list(ACCESS_MAINT_TUNNELS, ACCESS_MEDICAL)
 	extra_access = list()
 
-	departments = DEPT_BITFLAG_MED
+	departments = DEPARTMENT_MEDICAL_BITFLAG
 	bank_account_department = ACCOUNT_MED_BITFLAG
 	payment_per_department = list(ACCOUNT_MED_ID = PAYCHECK_EASY)
 	mind_traits = list(TRAIT_MADNESS_IMMUNE, TRAIT_MEDICAL_METABOLISM)
@@ -141,7 +141,7 @@
 	base_access = list(ACCESS_MAINT_TUNNELS) //Assistants with shitloads of money, what could go wrong?
 	extra_access = list()
 
-	departments = DEPT_BITFLAG_VIP
+	departments = DEPARTMENT_VIP_BITFLAG
 	bank_account_department = ACCOUNT_VIP_BITFLAG
 	payment_per_department = list(ACCOUNT_VIP_ID = PAYCHECK_VIP)  //our power is being fucking rich
 

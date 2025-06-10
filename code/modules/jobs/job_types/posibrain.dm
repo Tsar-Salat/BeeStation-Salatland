@@ -3,10 +3,10 @@ GLOBAL_LIST_EMPTY(on_station_posis)
 /datum/job/posibrain
 	title = JOB_NAME_POSIBRAIN
 	description = "Follow your AI's interpretation of your laws above all else, or your own interpretation if not connected to an AI. Choose one of many modules with different tools, ask robotics for maintenance and upgrades."
-	department_for_prefs = DEPT_BITFLAG_SILICON
+	department_for_prefs = DEPARTMENT_SILICON_BITFLAG
 	department_head_for_prefs = JOB_NAME_AI
 	auto_deadmin_role_flags = DEADMIN_POSITION_SILICON
-	faction = "Station"
+	faction = FACTION_STATION
 	total_positions = 0
 	spawn_positions = 0
 	supervisors = "your laws" //No AI yet as you are just a cube
@@ -17,22 +17,24 @@ GLOBAL_LIST_EMPTY(on_station_posis)
 	random_spawns_possible = FALSE
 
 	display_order = JOB_DISPLAY_ORDER_CYBORG
-	departments = DEPT_BITFLAG_SILICON
+	departments = DEPARTMENT_SILICON_BITFLAG
 
 	show_in_prefs = FALSE //No reason to show in preferences
 
-/datum/job/posibrain/equip(mob/living/carbon/human/H, visualsOnly = FALSE, announce = TRUE, latejoin = FALSE, datum/outfit/outfit_override = null, client/preference_source = null)
+	job_flags = JOB_NEW_PLAYER_JOINABLE | JOB_EQUIP_RANK
 
+/datum/job/posibrain/after_spawn(mob/living/spawned, client/player_client)
+	. = ..()
 	var/obj/item/mmi/posibrain/P = pick(GLOB.on_station_posis)
 
 	//Never show number of current posis
 	current_positions = 0
 
-	if(!P.activate(H)) //If we failed to activate a posi, kick them back to the lobby.
-		to_chat(H, span_warning("Failed to Late Join as a Posibrain. Look higher in chat for the reason."))
+	if(!P.activate(spawned)) //If we failed to activate a posi, kick them back to the lobby.
+		to_chat(spawned, span_warning("Failed to Late Join as a Posibrain. Look higher in chat for the reason."))
 		return FALSE //Returning False is considered a failure, rather than null or a mob, which is a success.
 
-	qdel(H)
+	qdel(spawned)
 	return P
 
 /datum/job/posibrain/radio_help_message(mob/M)

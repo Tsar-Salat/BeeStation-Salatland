@@ -38,7 +38,7 @@
 			if(ishuman(M.current))
 				if(M.special_role)
 					possible_targets[M] = 0						//bad-guy
-				else if(M.assigned_role in SSdepartment.get_jobs_by_dept_id(DEPT_NAME_COMMAND))
+				else if(M.assigned_role in SSdepartment.get_jobs_by_dept_id(DEPARTMENT_COMMAND_NAME))
 					possible_targets[M] = 1						//good-guy
 
 	var/list/possible_objectives = list(1,2,3,4)
@@ -109,8 +109,8 @@
 		equip_space_ninja(owner.current)
 	. = ..()
 
-/datum/antagonist/ninja/admin_add(datum/mind/new_owner,mob/admin)
-	new_owner.assigned_role = ROLE_NINJA
+/datum/antagonist/ninja/admin_add(datum/mind/new_owner, mob/admin)
+	new_owner.set_assigned_role(SSjob.GetJobType(/datum/job/space_ninja))
 	new_owner.special_role = ROLE_NINJA
 	new_owner.add_antag_datum(src)
 	message_admins("[key_name_admin(admin)] has ninja'd [key_name_admin(new_owner)].")

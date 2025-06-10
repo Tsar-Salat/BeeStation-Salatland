@@ -1,11 +1,11 @@
 /datum/job/security_officer
 	title = JOB_NAME_SECURITYOFFICER
 	description = "Follow Space Law, patrol the station, arrest criminals and bring them to the Brig."
-	department_for_prefs = DEPT_NAME_SECURITY
+	department_for_prefs = DEPARTMENT_SECURITY_NAME
 	auto_deadmin_role_flags = DEADMIN_POSITION_SECURITY
 	department_head = list(JOB_NAME_HEADOFSECURITY)
 	supervisors = "the head of security, and the head of your assigned department (if applicable)"
-	faction = "Station"
+	faction = FACTION_STATION
 	total_positions = 5 //Handled in /datum/controller/occupations/proc/setup_officer_positions()
 	spawn_positions = 5 //Handled in /datum/controller/occupations/proc/setup_officer_positions()
 	selection_color = "#ffeeee"
@@ -26,7 +26,7 @@
 	var/list/dept_access_science = list(ACCESS_RESEARCH, ACCESS_TOX, ACCESS_AUX_BASE)
 	var/list/dept_access_engineering = list(ACCESS_ENGINE, ACCESS_CONSTRUCTION, ACCESS_ATMOSPHERICS, ACCESS_AUX_BASE)
 
-	departments = DEPT_BITFLAG_SEC
+	departments = DEPARTMENT_SECURITY_BITFLAG
 	bank_account_department = ACCOUNT_SEC_BITFLAG
 	payment_per_department = list(ACCOUNT_SEC_ID = PAYCHECK_HARD)
 	mind_traits = list(TRAIT_LAW_ENFORCEMENT_METABOLISM)
@@ -40,6 +40,8 @@
 	biohazard = 25 //clean your baton, man
 
 	minimal_lightup_areas = list(/area/construction/mining/aux_base)
+
+	job_flags = JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK | JOB_CREW_MEMBER | JOB_NEW_PLAYER_JOINABLE
 
 /datum/job/security_officer/get_access()
 	. = ..()

@@ -182,23 +182,23 @@
 		add_to_upgrades(board)
 
 	//MMI stuff. Held togheter by magic. ~Miauw
-	else if(!mmi || !mmi.brainmob)
-		mmi = new (src)
-		mmi.brain = new /obj/item/organ/brain(mmi)
-		mmi.brain.organ_flags |= ORGAN_FROZEN
-		mmi.brain.name = "[real_name]'s brain"
-		mmi.name = "[initial(mmi.name)]: [real_name]"
-		mmi.set_brainmob(new /mob/living/brain(mmi))
-		mmi.brainmob.name = src.real_name
-		mmi.brainmob.real_name = src.real_name
-		mmi.brainmob.container = mmi
-		mmi.update_icon()
-
-	updatename()
+	else
+		//MMI stuff. Held togheter by magic. ~Miauw
+		if(!mmi?.brainmob)
+			mmi = new (src)
+			mmi.brain = new /obj/item/organ/brain(mmi)
+			mmi.brain.organ_flags |= ORGAN_FROZEN
+			mmi.brain.name = "[real_name]'s brain"
+			mmi.name = "[initial(mmi.name)]: [real_name]"
+			mmi.set_brainmob(new /mob/living/brain(mmi))
+			mmi.brainmob.name = src.real_name
+			mmi.brainmob.real_name = src.real_name
+			mmi.brainmob.container = mmi
+			mmi.update_appearance()
+		setup_default_name()
 
 	blacklisted_hats = typecacheof(blacklisted_hats)
 
-	playsound(loc, 'sound/voice/liveagain.ogg', 75, 1)
 	aicamera = new/obj/item/camera/siliconcam/robot_camera(src)
 	toner = tonermax
 	diag_hud_set_borgcell()
@@ -306,6 +306,15 @@
 
 	module.transform_to(modulelist[input_module])
 
+/// Used to setup the a basic and (somewhat) unique name for the robot.
+/mob/living/silicon/robot/proc/setup_default_name()
+	var/new_name
+	if(custom_name)
+		new_name = custom_name
+	else
+		new_name = get_standard_name()
+	if(new_name != real_name)
+		fully_replace_character_name(real_name, new_name)
 
 /mob/living/silicon/robot/proc/updatename(client/C)
 	if(shell)
@@ -1359,3 +1368,10 @@
 		cell.charge = min(cell.charge + amount, cell.maxcharge)
 	if(repairs)
 		heal_bodypart_damage(repairs, repairs - 1)
+
+/mob/living/silicon/robot/get_exp_list(minutes)
+	. = ..()
+
+	var/datum/job/cyborg/cyborg_job_ref = SSjob.GetJobType(/datum/job/cyborg)
+
+	.[cyborg_job_ref.title] = minutes

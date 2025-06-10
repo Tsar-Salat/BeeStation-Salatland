@@ -760,27 +760,27 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 	return (BODYTEMP_AUTORECOVERY_DIVISOR / 2) * log(1 + (temp_diff * change_rate))
 
 //// Generalised helper proc for letting mobs rename themselves. Used to be clname() and ainame()
-/mob/proc/apply_pref_name(preference_type, client/C)
-	if(!C)
-		C = client
+/mob/proc/apply_pref_name(preference_type, client/requesting_client)
+	if(!requesting_client)
+		requesting_client = client
 	var/oldname = real_name
 	var/newname
 	var/loop = 1
 	var/safety = 0
 
-	var/banned = C ? is_banned_from(C.ckey, "Appearance") : null
+	var/random = CONFIG_GET(flag/force_random_names) || (requesting_client ? is_banned_from(requesting_client.ckey, "Appearance") : FALSE)
 
 	while(loop && safety < 5)
-		if(!safety && !banned)
-			newname = C?.prefs?.read_character_preference(preference_type)
+		if(!safety && !random)
+			newname = requesting_client?.prefs?.read_character_preference(preference_type)
 		else
 			var/datum/preference/preference = GLOB.preference_entries[preference_type]
-			newname = preference.create_informed_default_value(C.prefs)
+			newname = preference.create_informed_default_value(requesting_client.prefs)
 
-		for(var/mob/living/M in GLOB.player_list)
-			if(M == src)
+		for(var/mob/living/checked_mob in GLOB.player_list)
+			if(checked_mob == src)
 				continue
-			if(!newname || M.real_name == newname)
+			if(!newname || checked_mob.real_name == newname)
 				newname = null
 				loop++ // name is already taken so we roll again
 				break

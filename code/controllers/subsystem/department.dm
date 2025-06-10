@@ -36,14 +36,14 @@ SUBSYSTEM_DEF(department)
 	// I don't like this here, but this globallist can't take proper values on its declaration.
 	GLOB.exp_jobsmap = list(
 		EXP_TYPE_CREW = 	get_all_jobs(),
-		EXP_TYPE_COMMAND = SSdepartment.get_jobs_by_dept_id(DEPT_NAME_COMMAND),
-		EXP_TYPE_ENGINEERING = SSdepartment.get_jobs_by_dept_id(DEPT_NAME_ENGINEERING),
-		EXP_TYPE_MEDICAL = 	SSdepartment.get_jobs_by_dept_id(DEPT_NAME_MEDICAL),
-		EXP_TYPE_SCIENCE = 	SSdepartment.get_jobs_by_dept_id(DEPT_NAME_SCIENCE),
-		EXP_TYPE_SUPPLY = 	SSdepartment.get_jobs_by_dept_id(DEPT_NAME_CARGO),
-		EXP_TYPE_SECURITY = SSdepartment.get_jobs_by_dept_id(DEPT_NAME_SECURITY),
-		EXP_TYPE_SERVICE = SSdepartment.get_jobs_by_dept_id(DEPT_NAME_SERVICE),
-		EXP_TYPE_SILICON = 	SSdepartment.get_jobs_by_dept_id(DEPT_NAME_SILICON)
+		EXP_TYPE_COMMAND = SSdepartment.get_jobs_by_dept_id(DEPARTMENT_COMMAND_NAME),
+		EXP_TYPE_ENGINEERING = SSdepartment.get_jobs_by_dept_id(DEPARTMENT_ENGINEERING_NAME),
+		EXP_TYPE_MEDICAL = 	SSdepartment.get_jobs_by_dept_id(DEPARTMENT_MEDICAL_NAME),
+		EXP_TYPE_SCIENCE = 	SSdepartment.get_jobs_by_dept_id(DEPARTMENT_SCIENCE_NAME),
+		EXP_TYPE_SUPPLY = 	SSdepartment.get_jobs_by_dept_id(DEPARTMENT_CARGO_NAME),
+		EXP_TYPE_SECURITY = SSdepartment.get_jobs_by_dept_id(DEPARTMENT_SECURITY_NAME),
+		EXP_TYPE_SERVICE = SSdepartment.get_jobs_by_dept_id(DEPARTMENT_SERVICE_NAME),
+		EXP_TYPE_SILICON = 	SSdepartment.get_jobs_by_dept_id(DEPARTMENT_SILICON_NAME)
 	)
 
 	return SS_INIT_SUCCESS
@@ -164,9 +164,9 @@ SUBSYSTEM_DEF(department)
 //                                COMMAND
 // ---------------------------------------------------------------------
 /datum/department_group/command
-	dept_name = DEPT_NAME_COMMAND
-	dept_id = DEPT_NAME_COMMAND
-	dept_bitflag = DEPT_BITFLAG_COM
+	dept_name = DEPARTMENT_COMMAND_NAME
+	dept_id = DEPARTMENT_COMMAND_NAME
+	dept_bitflag = DEPARTMENT_COMMAND_BITFLAG
 	dept_colour = "#ddddff"
 	dept_radio_channel = FREQ_COMMAND
 	is_station = TRUE
@@ -179,19 +179,19 @@ SUBSYSTEM_DEF(department)
 				JOB_NAME_CHIEFMEDICALOFFICER,
 				JOB_NAME_HEADOFSECURITY)
 
-	pref_category_name = DEPT_NAME_COMMAND
+	pref_category_name = DEPARTMENT_COMMAND_NAME
 	pref_category_order = DEPT_PREF_ORDER_COMMAND
 
-	manifest_category_name = DEPT_NAME_COMMAND
+	manifest_category_name = DEPARTMENT_COMMAND_NAME
 	manifest_category_order = DEPT_MANIFEST_ORDER_COMMAND
 
 // ---------------------------------------------------------------------
 //                                SERVICE
 // ---------------------------------------------------------------------
 /datum/department_group/service
-	dept_name = DEPT_NAME_SERVICE
-	dept_id = DEPT_NAME_SERVICE
-	dept_bitflag = DEPT_BITFLAG_SRV
+	dept_name = DEPARTMENT_SERVICE_NAME
+	dept_id = DEPARTMENT_SERVICE_NAME
+	dept_bitflag = DEPARTMENT_SERVICE_BITFLAG
 	dept_colour = "#bbe291"
 	dept_radio_channel = FREQ_SERVICE
 	is_station = TRUE
@@ -205,19 +205,19 @@ SUBSYSTEM_DEF(department)
 				JOB_NAME_MIME,
 				JOB_NAME_CLOWN)
 
-	pref_category_name = DEPT_NAME_SERVICE
+	pref_category_name = DEPARTMENT_SERVICE_NAME
 	pref_category_order = DEPT_PREF_ORDER_SERVICE
 
-	manifest_category_name = DEPT_NAME_SERVICE
+	manifest_category_name = DEPARTMENT_SERVICE_NAME
 	manifest_category_order = DEPT_MANIFEST_ORDER_SERVICE
 
 // ---------------------------------------------------------------------
 //                                CIVILIAN
 // ---------------------------------------------------------------------
 /datum/department_group/civilian
-	dept_name = DEPT_NAME_CIVILIAN
-	dept_id = DEPT_NAME_CIVILIAN
-	dept_bitflag = DEPT_BITFLAG_CIV
+	dept_name = DEPARTMENT_CIVILIAN_NAME
+	dept_id = DEPARTMENT_CIVILIAN_NAME
+	dept_bitflag = DEPARTMENT_CIVILIAN_BITFLAG
 	dept_colour = "#bbe291"
 	is_station = TRUE
 
@@ -232,19 +232,19 @@ SUBSYSTEM_DEF(department)
 				JOB_NAME_CURATOR,
 				JOB_NAME_LAWYER)
 
-	pref_category_name = DEPT_NAME_CIVILIAN
+	pref_category_name = DEPARTMENT_CIVILIAN_NAME
 	pref_category_order = DEPT_PREF_ORDER_CIVILIAN
 
-	manifest_category_name = DEPT_NAME_CIVILIAN
+	manifest_category_name = DEPARTMENT_CIVILIAN_NAME
 	manifest_category_order = DEPT_MANIFEST_ORDER_CIVILIAN
 
 // ---------------------------------------------------------------------
 //                               SUPPLY (CARGO)
 // ---------------------------------------------------------------------
 /datum/department_group/cargo
-	dept_name = DEPT_NAME_CARGO
-	dept_id = DEPT_NAME_CARGO
-	dept_bitflag = DEPT_BITFLAG_CAR
+	dept_name = DEPARTMENT_CARGO_NAME
+	dept_id = DEPARTMENT_CARGO_NAME
+	dept_bitflag = DEPARTMENT_CARGO_BITFLAG
 	dept_colour = "#d7b088"
 	dept_radio_channel = FREQ_SUPPLY
 	is_station = TRUE
@@ -255,19 +255,19 @@ SUBSYSTEM_DEF(department)
 				JOB_NAME_CARGOTECHNICIAN,
 				JOB_NAME_SHAFTMINER)
 
-	pref_category_name = DEPT_NAME_CARGO
+	pref_category_name = DEPARTMENT_CARGO_NAME
 	pref_category_order = DEPT_PREF_ORDER_CARGO
 
-	manifest_category_name = DEPT_NAME_CARGO
+	manifest_category_name = DEPARTMENT_CARGO_NAME
 	manifest_category_order = DEPT_MANIFEST_ORDER_CARGO
 
 // ---------------------------------------------------------------------
 //                              SCIENCE
 // ---------------------------------------------------------------------
 /datum/department_group/science
-	dept_name = DEPT_NAME_SCIENCE
-	dept_id = DEPT_NAME_SCIENCE
-	dept_bitflag = DEPT_BITFLAG_SCI
+	dept_name = DEPARTMENT_SCIENCE_NAME
+	dept_id = DEPARTMENT_SCIENCE_NAME
+	dept_bitflag = DEPARTMENT_SCIENCE_BITFLAG
 	dept_colour = "#ffddff"
 	dept_radio_channel = FREQ_SCIENCE
 	is_station = TRUE
@@ -278,19 +278,19 @@ SUBSYSTEM_DEF(department)
 				JOB_NAME_EXPLORATIONCREW,
 				JOB_NAME_ROBOTICIST)
 
-	pref_category_name = DEPT_NAME_SCIENCE
+	pref_category_name = DEPARTMENT_SCIENCE_NAME
 	pref_category_order = DEPT_PREF_ORDER_SCIENCE
 
-	manifest_category_name = DEPT_NAME_SCIENCE
+	manifest_category_name = DEPARTMENT_SCIENCE_NAME
 	manifest_category_order = DEPT_MANIFEST_ORDER_SCIENCE
 
 // ---------------------------------------------------------------------
 //                            ENGINEERING
 // ---------------------------------------------------------------------
 /datum/department_group/engineering
-	dept_name = DEPT_NAME_ENGINEERING
-	dept_id = DEPT_NAME_ENGINEERING
-	dept_bitflag = DEPT_BITFLAG_ENG
+	dept_name = DEPARTMENT_ENGINEERING_NAME
+	dept_id = DEPARTMENT_ENGINEERING_NAME
+	dept_bitflag = DEPARTMENT_ENGINEERING_BITFLAG
 	dept_colour = "#ffeeaa"
 	dept_radio_channel = FREQ_ENGINEERING
 	is_station = TRUE
@@ -300,19 +300,19 @@ SUBSYSTEM_DEF(department)
 				JOB_NAME_STATIONENGINEER,
 				JOB_NAME_ATMOSPHERICTECHNICIAN)
 
-	pref_category_name = DEPT_NAME_ENGINEERING
+	pref_category_name = DEPARTMENT_ENGINEERING_NAME
 	pref_category_order = DEPT_PREF_ORDER_ENGINEERING
 
-	manifest_category_name = DEPT_NAME_ENGINEERING
+	manifest_category_name = DEPARTMENT_ENGINEERING_NAME
 	manifest_category_order = DEPT_MANIFEST_ORDER_ENGINEERING
 
 // ---------------------------------------------------------------------
 //                               MEDICAL
 // ---------------------------------------------------------------------
 /datum/department_group/medical
-	dept_name = DEPT_NAME_MEDICAL
-	dept_id = DEPT_NAME_MEDICAL
-	dept_bitflag = DEPT_BITFLAG_MED
+	dept_name = DEPARTMENT_MEDICAL_NAME
+	dept_id = DEPARTMENT_MEDICAL_NAME
+	dept_bitflag = DEPARTMENT_MEDICAL_BITFLAG
 	dept_colour = "#c1e1ec"
 	dept_radio_channel = FREQ_MEDICAL
 	is_station = TRUE
@@ -326,19 +326,19 @@ SUBSYSTEM_DEF(department)
 				JOB_NAME_VIROLOGIST,
 				JOB_NAME_PSYCHIATRIST)
 
-	pref_category_name = DEPT_NAME_MEDICAL
+	pref_category_name = DEPARTMENT_MEDICAL_NAME
 	pref_category_order = DEPT_PREF_ORDER_MEDICAL
 
-	manifest_category_name = DEPT_NAME_MEDICAL
+	manifest_category_name = DEPARTMENT_MEDICAL_NAME
 	manifest_category_order = DEPT_MANIFEST_ORDER_MEDICAL
 
 // ---------------------------------------------------------------------
 //                               SECURITY
 // ---------------------------------------------------------------------
 /datum/department_group/security
-	dept_name = DEPT_NAME_SECURITY
-	dept_id = DEPT_NAME_SECURITY
-	dept_bitflag = DEPT_BITFLAG_SEC
+	dept_name = DEPARTMENT_SECURITY_NAME
+	dept_id = DEPARTMENT_SECURITY_NAME
+	dept_bitflag = DEPARTMENT_SECURITY_BITFLAG
 	dept_colour = "#ffdddd"
 	dept_radio_channel = FREQ_SECURITY
 	is_station = TRUE
@@ -351,10 +351,10 @@ SUBSYSTEM_DEF(department)
 				JOB_NAME_BRIGPHYSICIAN,
 				JOB_NAME_DEPUTY)
 
-	pref_category_name = DEPT_NAME_SECURITY
+	pref_category_name = DEPARTMENT_SECURITY_NAME
 	pref_category_order = DEPT_PREF_ORDER_SECURITY
 
-	manifest_category_name = DEPT_NAME_SECURITY
+	manifest_category_name = DEPARTMENT_SECURITY_NAME
 	manifest_category_order = DEPT_MANIFEST_ORDER_SECURITY
 
 // ---------------------------------------------------------------------
@@ -363,9 +363,9 @@ SUBSYSTEM_DEF(department)
 // ---------------------------------------------------------------------
 // in fact, nobody belongs here even VIPs don't because how system works. This is dummy department actually.
 /datum/department_group/vip
-	dept_name = DEPT_NAME_VIP
-	dept_id = DEPT_NAME_VIP
-	dept_bitflag = DEPT_BITFLAG_VIP
+	dept_name = DEPARTMENT_VIP_NAME
+	dept_id = DEPARTMENT_VIP_NAME
+	dept_bitflag = DEPARTMENT_VIP_BITFLAG
 
 	manifest_category_name = "Very Important People"
 	manifest_category_order = DEPT_MANIFEST_ORDER_VIP
@@ -376,10 +376,10 @@ SUBSYSTEM_DEF(department)
 // ---------------------------------------------------------------------
 // This is a dummy department for crew manifest of people who have no department assigned
 /datum/department_group/unassigned
-	dept_name = DEPT_NAME_UNASSIGNED
-	dept_id = DEPT_NAME_UNASSIGNED
+	dept_name = DEPARTMENT_UNASSIGNED_NAME
+	dept_id = DEPARTMENT_UNASSIGNED_NAME
 
-	manifest_category_name = DEPT_NAME_UNASSIGNED
+	manifest_category_name = DEPARTMENT_UNASSIGNED_NAME
 	manifest_category_order = DEPT_MANIFEST_ORDER_UNASSIGNED
 
 // ---------------------------------------------------------------------
@@ -388,9 +388,9 @@ SUBSYSTEM_DEF(department)
 //                 (currently not for crew manifest)
 // ---------------------------------------------------------------------
 /datum/department_group/silicon
-	dept_name = DEPT_NAME_SILICON
-	dept_id = DEPT_NAME_SILICON
-	dept_bitflag = DEPT_BITFLAG_SILICON
+	dept_name = DEPARTMENT_SILICON_NAME
+	dept_id = DEPARTMENT_SILICON_NAME
+	dept_bitflag = DEPARTMENT_SILICON_BITFLAG
 	dept_colour = "#ccffcc"
 	// is_station = TRUE // It's station department, but silicon list... maybe not a good idea using this
 
@@ -398,11 +398,11 @@ SUBSYSTEM_DEF(department)
 	jobs = list(JOB_NAME_AI,
 				JOB_NAME_CYBORG)
 
-	pref_category_name = DEPT_NAME_SILICON
+	pref_category_name = DEPARTMENT_SILICON_NAME
 	pref_category_order = DEPT_PREF_ORDER_SILICON
 
 	// currently not used, but just in case
-	manifest_category_name = DEPT_NAME_SILICON
+	manifest_category_name = DEPARTMENT_SILICON_NAME
 	manifest_category_order = DEPT_MANIFEST_ORDER_SILICON
 
 // ---------------------------------------------------------------------
@@ -410,14 +410,14 @@ SUBSYSTEM_DEF(department)
 //     Used for: access sorting (mainly), cerw manifest (admin gimmick)
 // ---------------------------------------------------------------------
 /datum/department_group/centcom
-	dept_name = DEPT_NAME_CENTCOM
-	dept_id = DEPT_NAME_CENTCOM
-	dept_bitflag = DEPT_BITFLAG_CENTCOM
+	dept_name = DEPARTMENT_CENTCOM_NAME
+	dept_id = DEPARTMENT_CENTCOM_NAME
+	dept_bitflag = DEPARTMENT_CENTCOM_BITFLAG
 	dept_colour = "#00eba4"
 	dept_radio_channel = FREQ_CENTCOM
 
 	// currently not used, but just in case
-	manifest_category_name = DEPT_NAME_CENTCOM
+	manifest_category_name = DEPARTMENT_CENTCOM_NAME
 	manifest_category_order = DEPT_MANIFEST_ORDER_CENTCOM
 
 // ---------------------------------------------------------------------
@@ -425,12 +425,12 @@ SUBSYSTEM_DEF(department)
 //     Used for: access sorting (mainly), cerw manifest (admin gimmick)
 // ---------------------------------------------------------------------
 /datum/department_group/other
-	dept_name = DEPT_NAME_OTHER
-	dept_id = DEPT_NAME_OTHER
-	dept_bitflag = DEPT_BITFLAG_OTHER
+	dept_name = DEPARTMENT_OTHER_NAME
+	dept_id = DEPARTMENT_OTHER_NAME
+	dept_bitflag = DEPARTMENT_OTHER_BITFLAG
 	dept_colour = "#00eba4"
 	dept_radio_channel = FREQ_CENTCOM
 
 	// currently not used, but just in case
-	manifest_category_name = DEPT_NAME_OTHER
+	manifest_category_name = DEPARTMENT_OTHER_NAME
 	manifest_category_order = 1000

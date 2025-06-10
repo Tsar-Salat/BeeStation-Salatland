@@ -26,20 +26,28 @@
 /datum/computer_file/program/proc/job_blacklisted(jobtitle)
 	return jobtitle == SSjob.overflow_role ? TRUE : (jobtitle in SSjob.job_manager_blacklisted)
 
+/datum/computer_file/program/job_management/proc/can_edit_job(datum/job/job)
+	if(!job || !(job.job_flags & JOB_CREW_MEMBER) || (job_blacklisted(job?.title)))
+		return FALSE
+	return TRUE
+
 /datum/computer_file/program/job_management/proc/can_open_job(datum/job/job)
-	if(!job_blacklisted(job?.title))
-		if((job.total_positions <= length(GLOB.player_list) * (max_relative_positions / 100)))
-			var/delta = (world.time / 10) - GLOB.time_last_changed_position
-			if((change_position_cooldown < delta) || (opened_positions[job.title] < 0))
-				return TRUE
+	if(!can_edit_job(job))
+		return FALSE
+	if((job.total_positions <= length(GLOB.player_list) * (max_relative_positions / 100)))
+		var/delta = (world.time / 10) - GLOB.time_last_changed_position
+		if((change_position_cooldown < delta) || (opened_positions[job.title] < 0))
+			return TRUE
 	return FALSE
 
+
 /datum/computer_file/program/job_management/proc/can_close_job(datum/job/job)
-	if(!job_blacklisted(job?.title))
-		if(job.total_positions > length(GLOB.player_list) * (max_relative_positions / 100))
-			var/delta = (world.time / 10) - GLOB.time_last_changed_position
-			if((change_position_cooldown < delta) || (opened_positions[job.title] > 0))
-				return TRUE
+	if(!can_edit_job(job))
+		return FALSE
+	if(job.total_positions > length(GLOB.player_list) * (max_relative_positions / 100))
+		var/delta = (world.time / 10) - GLOB.time_last_changed_position
+		if((change_position_cooldown < delta) || (opened_positions[job.title] > 0))
+			return TRUE
 	return FALSE
 
 /datum/computer_file/program/job_management/ui_act(action, params, datum/tgui/ui)
@@ -79,7 +87,7 @@
 		if("PRG_priority")
 			var/priority_target = params["target"]
 			var/datum/job/j = SSjob.GetJob(priority_target)
-			if(!j)
+			if(!j || !can_edit_job(j))
 				return TRUE
 			if(j.total_positions <= j.current_positions)
 				return TRUE
@@ -106,7 +114,7 @@
 	data["authed"] = authed
 
 	var/list/pos = list()
-	for(var/j in SSjob.occupations)
+	for(var/j in SSjob.joinable_occupations)
 		var/datum/job/job = j
 		if(job_blacklisted(job.title))
 			continue

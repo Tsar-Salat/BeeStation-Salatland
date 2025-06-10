@@ -1788,6 +1788,18 @@
 		</font>
 	"}
 
+/mob/living/proc/move_to_error_room()
+	var/obj/effect/landmark/error/error_landmark = locate(/obj/effect/landmark/error) in GLOB.landmarks_list
+	if(error_landmark)
+		forceMove(error_landmark.loc)
+	else
+		forceMove(locate(4,4,1)) //Even if the landmark is missing, this should put them in the error room.
+		//If you're here from seeing this error, I'm sorry. I'm so very sorry. The error landmark should be a sacred object that nobody has any business messing with, and someone did!
+		//Consider seeing a therapist.
+		var/ERROR_ERROR_LANDMARK_ERROR = "ERROR-ERROR: ERROR landmark missing!"
+		log_mapping(ERROR_ERROR_LANDMARK_ERROR)
+		CRASH(ERROR_ERROR_LANDMARK_ERROR)
+
 /mob/living/eminence_act(mob/living/simple_animal/eminence/eminence)
 	if(is_servant_of_ratvar(src) && !iseminence(src))
 		eminence.selected_mob = src
@@ -1995,6 +2007,23 @@
 			return FALSE
 		return style.harm_act(src, target)
 	return style.help_act(src, target)
+
+/**
+ * Returns an assoc list of assignments and minutes for updating a client's exp time in the databse.
+ *
+ * Arguments:
+ * * minutes - The number of minutes to allocate to each valid role.
+ */
+/mob/living/proc/get_exp_list(minutes)
+	var/list/exp_list = list()
+
+	if(mind && mind.special_role && !(mind.datum_flags & DF_VAR_EDITED))
+		exp_list[mind.special_role] = minutes
+
+	if(mind.assigned_role.title in GLOB.exp_specialmap[EXP_TYPE_SPECIAL])
+		exp_list[mind.assigned_role.title] = minutes
+
+	return exp_list
 
 /// Actually does the shapeshift
 /mob/living/proc/do_shapeshift(shapeshift_type = /mob/living/basic/pet/dog/corgi)

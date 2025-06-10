@@ -4,59 +4,92 @@
 
 //Hour requirements before players can choose to be specific jobs
 
-#define MINUTES_REQUIRED_BASIC 120 			//For jobs that are easy to grief with, but not necessarily hard for new players
-#define MINUTES_REQUIRED_INTERMEDIATE 600 	//For jobs that require a more detailed understanding of either the game in general, or a specific department.
-#define MINUTES_REQUIRED_ADVANCED 900 		//For jobs that aren't command, but hold a similar level of importance to either their department or the round as a whole.
-#define MINUTES_REQUIRED_COMMAND 1200 		//For command positions, to be weighed against the relevant department
+#define MINUTES_REQUIRED_BASIC 120    //For jobs that are easy to grief with, but not necessarily hard for new players
+#define MINUTES_REQUIRED_INTERMEDIATE 600  //For jobs that require a more detailed understanding of either the game in general, or a specific department.
+#define MINUTES_REQUIRED_ADVANCED 900   //For jobs that aren't command, but hold a similar level of importance to either their department or the round as a whole.
+#define MINUTES_REQUIRED_COMMAND 1200   //For command positions, to be weighed against the relevant department
 
 
 // Banning snowflake - global antag ban. Does not include ghost roles that aren't antagonists or forced antagonists
-#define BAN_ROLE_ALL_ANTAGONISTS			"All Antagonists"
+#define BAN_ROLE_ALL_ANTAGONISTS   "All Antagonists"
 
 //These are synced with the Database, if you change the values of the defines
 //then you MUST update the database!
-#define ROLE_TRAITOR			"Traitor"
-#define ROLE_OPERATIVE			"Nuclear Operative"
-#define ROLE_CHANGELING			"Changeling"
-#define ROLE_WIZARD				"Wizard"
-#define ROLE_MALF				"Malfunctioning AI"
-#define ROLE_REV				"Revolutionary"
-#define ROLE_REV_HEAD			"Head Revolutionary"
-#define ROLE_ALIEN				"Xenomorph"
-#define ROLE_CULTIST			"Cultist"
-#define ROLE_SERVANT_OF_RATVAR	"Servant of Ratvar"
-#define ROLE_HERETIC			"Heretic"
-#define ROLE_BLOB				"Blob"
-#define ROLE_NINJA				"Space Ninja"
-#define ROLE_ABDUCTOR			"Abductor"
-#define ROLE_REVENANT			"Revenant"
-#define ROLE_DEVIL				"Devil"
-#define ROLE_BROTHER			"Blood Brother"
-#define ROLE_HIVE				"Hivemind Host"
-#define ROLE_OBSESSED			"Obsessed"
-#define ROLE_SPACE_DRAGON		"Space Dragon"
-#define ROLE_INTERNAL_AFFAIRS	"Internal Affairs Agent"
-#define ROLE_GANG				"Gangster"
-#define ROLE_HOLOPARASITE		"Holoparasite"
-#define ROLE_TERATOMA			"Teratoma"
-#define ROLE_SPIDER				"Spider"
-#define ROLE_SWARMER			"Swarmer"
-#define ROLE_MORPH				"Morph"
-#define ROLE_NIGHTMARE			"Nightmare"
-#define ROLE_SPACE_PIRATE		"Space Pirate"
-#define ROLE_FUGITIVE			"Fugitive"
-#define ROLE_FUGITIVE_HUNTER	"Fugitive Hunter"
-#define ROLE_SLAUGHTER_DEMON	"Slaughter Demon"
+#define ROLE_TRAITOR "Traitor"
+#define ROLE_NUCLEAR_OPERATIVE "Nuclear Operative"
+#define ROLE_CLOWN_OPERATIVE "Clown Operative"
+#define ROLE_LONE_OPERATIVE "Lone Operative"
+#define ROLE_CHANGELING "Changeling"
+#define ROLE_WIZARD "Wizard"
+#define ROLE_MALF "Malfunctioning AI"
+#define ROLE_REV "Revolutionary"
+#define ROLE_REV_HEAD "Head Revolutionary"
+#define ROLE_ALIEN "Xenomorph"
+#define ROLE_CULTIST "Cultist"
+#define ROLE_SERVANT_OF_RATVAR "Servant of Ratvar"
+#define ROLE_HERETIC "Heretic"
+#define ROLE_BLOB "Blob"
+#define ROLE_NINJA "Space Ninja"
+#define ROLE_ABDUCTOR "Abductor"
+#define ROLE_REVENANT "Revenant"
+#define ROLE_BROTHER "Blood Brother"
+#define ROLE_OBSESSED "Obsessed"
+#define ROLE_SPACE_DRAGON "Space Dragon"
+#define ROLE_INTERNAL_AFFAIRS "Internal Affairs Agent"
+#define ROLE_HOLOPARASITE "Holoparasite"
+#define ROLE_TERATOMA "Teratoma"
+#define ROLE_SPIDER "Spider"
+#define ROLE_SWARMER "Swarmer"
+#define ROLE_MORPH "Morph"
+#define ROLE_SANTA "Santa"
+#define ROLE_NIGHTMARE "Nightmare"
+#define ROLE_SPACE_PIRATE "Space Pirate"
+#define ROLE_SLAUGHTER_DEMON "Slaughter Demon"
 #define ROLE_CONTRACTOR_SUPPORT_UNIT "Contractor Support Unit"
-#define ROLE_PYRO_SLIME			"Pyroclastic Anomaly Slime"
-#define ROLE_MONKEY_HELMET		"Sentient Monkey"
-#define ROLE_PRISONER			"Prisoner"
+#define ROLE_PYRO_SLIME "Pyroclastic Anomaly Slime"
+#define ROLE_MONKEY_HELMET "Sentient Monkey"
+#define ROLE_PRISONER "Prisoner"
 #define ROLE_WIZARD_APPRENTICE "apprentice"
+
+//Spawner roles
+#define ROLE_ANCIENT_CREW "Ancient Crew"
+#define ROLE_ASHWALKER "Ashwalker"
+#define ROLE_BEACH_BUM "Beach Bum"
+#define ROLE_DRONE "Drone"
+#define ROLE_ESCAPED_PRISONER "Escaped Prisoner"
+#define ROLE_EXPERIMENTAL_CLONE "Experimental Clone"
+#define ROLE_EXPLORATION_VIP "Exploration VIP"
+#define ROLE_FREE_GOLEM "Free Golem"
+#define ROLE_FUGITIVE "Fugitive"
+#define ROLE_FUGITIVE_HUNTER "Fugitive Hunter"
+#define ROLE_GHOST_ROLE "Ghost Role"
+#define ROLE_SPACE_DOCTOR "Space Doctor"
+#define ROLE_SPACE_BARTENDER "Space Bartender"
+#define ROLE_SPACE_SYNDICATE "Space Syndicate"
+#define ROLE_HERMIT "Hermit"
+#define ROLE_HOLY_SUMMONED "Holy Summoned"
+#define ROLE_HOTEL_STAFF "Hotel Staff"
+#define ROLE_LAVALAND_ELITE "Lavaland Elite"
+#define ROLE_LAVALAND_ESCAPED_PRISONER "Lavaland Escaped Prisoner"
+#define ROLE_LAVALAND_SYNDICATE "Lavaland Syndicate"
+#define ROLE_LIFEBRINGER "Lifebringer"
+#define ROLE_PAI "pAI"
+#define ROLE_POSIBRAIN "Posibrain"
+#define ROLE_SENTIENCE "Sentience Potion Spawn"
+#define ROLE_SENTIENT_ANIMAL "Sentient Animal"
+#define ROLE_SENTIENT_XENOARTIFACT "Sentient Xenoartifact"
+#define ROLE_SERVANT_GOLEM "Servant Golem"
+#define ROLE_SKELETAL_REMAINS "Skeletal Remains"
+#define ROLE_SKELETON "Skeleton"
+#define ROLE_SPECTRAL_BLADE "Spectral Blade"
+#define ROLE_SURVIVALIST "Exploration Survivalist"
+#define ROLE_TRANSLOCATED_VET "Translocated Vet"
+#define ROLE_ZOMBIE "Zombie"
 
 /// Roles that are antagonists, roundstart or not, and have passes to do.. antagonistry
 GLOBAL_LIST_INIT(antagonist_bannable_roles, list(
 	ROLE_TRAITOR,
-	ROLE_OPERATIVE,
+	ROLE_NUCLEAR_OPERATIVE,
 	ROLE_CHANGELING,
 	ROLE_WIZARD,
 	ROLE_MALF,
@@ -70,13 +103,10 @@ GLOBAL_LIST_INIT(antagonist_bannable_roles, list(
 	ROLE_NINJA,
 	ROLE_ABDUCTOR,
 	ROLE_REVENANT,
-	ROLE_DEVIL,
 	ROLE_BROTHER,
-	ROLE_HIVE,
 	ROLE_OBSESSED,
 	ROLE_SPACE_DRAGON,
 	ROLE_INTERNAL_AFFAIRS,
-	ROLE_GANG,
 	ROLE_HOLOPARASITE,
 	ROLE_TERATOMA,
 	ROLE_SPIDER,
@@ -90,45 +120,18 @@ GLOBAL_LIST_INIT(antagonist_bannable_roles, list(
 	ROLE_CONTRACTOR_SUPPORT_UNIT,
 ))
 
-#define BAN_ROLE_FORCED_ANTAGONISTS			"Forced Antagonists"
+#define BAN_ROLE_FORCED_ANTAGONISTS "Forced Antagonists"
 
-#define ROLE_BRAINWASHED		"Brainwashed Victim"
-#define ROLE_HYPNOTIZED			"Hypnotized Victim"
-#define ROLE_HIVE_VESSEL		"Awakened Vessel"
+#define ROLE_BRAINWASHED "Brainwashed Victim"
+#define ROLE_HYPNOTIZED "Hypnotized Victim"
 
 /// Forced antagonist roles
 GLOBAL_LIST_INIT(forced_bannable_roles, list(
 	ROLE_BRAINWASHED,
 	ROLE_HYPNOTIZED,
-	ROLE_HIVE_VESSEL,
 ))
 
-#define BAN_ROLE_ALL_GHOST	"Non-Antagonist Ghost Roles"
-
-#define ROLE_PAI				"pAI"
-#define ROLE_POSIBRAIN			"Posibrain"
-#define ROLE_DRONE				"Drone"
-#define ROLE_SENTIENCE			"Sentience Potion Spawn"
-#define ROLE_EXPERIMENTAL_CLONE "Experimental Clone"
-#define ROLE_LAVALAND_ELITE		"Lavaland Elite"
-#define ROLE_SPECTRAL_BLADE		"Spectral Blade"
-#define ROLE_ASHWALKER			"Ashwalker"
-#define ROLE_LIFEBRINGER		"Lifebringer"
-#define ROLE_FREE_GOLEM			"Free Golem"
-#define ROLE_HERMIT				"Hermit"
-#define ROLE_TRANSLOCATED_VET	"Translocated Vet"
-#define ROLE_LAVALAND_ESCAPED_PRISONER	"Lavaland Escaped Prisoner"
-#define ROLE_BEACH_BUM			"Beach Bum"
-#define ROLE_HOTEL_STAFF		"Hotel Staff"
-#define ROLE_LAVALAND_SYNDICATE	"Lavaland Syndicate"
-#define ROLE_DEMONIC_FRIEND		"Demonic Friend"
-#define ROLE_ANCIENT_CREW		"Ancient Crew"
-#define ROLE_SKELETAL_REMAINS	"Skeletal Remains"
-#define ROLE_SENTIENT_ANIMAL	"Sentient Animal"
-#define ROLE_HOLY_SUMMONED		"Holy Summoned"
-#define ROLE_SURVIVALIST		"Exploration Survivalist"
-#define ROLE_EXPLORATION_VIP	"Exploration VIP"
-#define ROLE_SENTIENT_XENOARTIFACT "Sentient Xenoartifiact"
+#define BAN_ROLE_ALL_GHOST "Non-Antagonist Ghost Roles"
 
 /// Any ghost role that is not really an antagonist or doesn't antagonize (lavaland, sentience potion, etc)
 GLOBAL_LIST_INIT(ghost_role_bannable_roles, list(
@@ -148,17 +151,16 @@ GLOBAL_LIST_INIT(ghost_role_bannable_roles, list(
 	ROLE_BEACH_BUM,
 	ROLE_HOTEL_STAFF,
 	ROLE_LAVALAND_SYNDICATE,
-	ROLE_DEMONIC_FRIEND,
 	ROLE_ANCIENT_CREW,
 	ROLE_SKELETAL_REMAINS,
 	ROLE_SENTIENT_ANIMAL,
 	ROLE_HOLY_SUMMONED,
 ))
 
-#define ROLE_IMAGINARY_FRIEND	"Imaginary Friend"
-#define ROLE_SPLIT_PERSONALITY	"Split Personality"
-#define ROLE_MIND_TRANSFER		"Mind Transfer Potion"
-#define ROLE_ERT				"Emergency Response Team"
+#define ROLE_IMAGINARY_FRIEND "Imaginary Friend"
+#define ROLE_SPLIT_PERSONALITY "Split Personality"
+#define ROLE_MIND_TRANSFER  "Mind Transfer Potion"
+#define ROLE_ERT    "Emergency Response Team"
 
 /// Other roles that don't really fit any of the above, and probably shouldn't be banned with the others as a group
 /// Little to no impact on anything
@@ -231,9 +233,9 @@ GLOBAL_LIST_INIT(other_bannable_roles, list(
 	return TRUE
 
 //Job defines for what happens when you fail to qualify for any job during job selection
-#define BEOVERFLOW 	1
-#define BERANDOMJOB 	2
-#define RETURNTOLOBBY 	3
+#define BEOVERFLOW 1
+#define BERANDOMJOB 2
+#define RETURNTOLOBBY 3
 
 #define ROLE_PREFERENCE_CATEGORY_ANAGONIST "Antagonists"
 #define ROLE_PREFERENCE_CATEGORY_MIDROUND_LIVING "Midrounds (Living)"

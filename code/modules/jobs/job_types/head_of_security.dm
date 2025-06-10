@@ -1,12 +1,12 @@
 /datum/job/head_of_security
 	title = JOB_NAME_HEADOFSECURITY
 	description = "Oversee the members of security and ensure they follow Space Law. Deputize other crew members when the station is in need of additional protection."
-	department_for_prefs = DEPT_NAME_SECURITY
+	department_for_prefs = DEPARTMENT_SECURITY_NAME
 	auto_deadmin_role_flags = DEADMIN_POSITION_HEAD|DEADMIN_POSITION_SECURITY
 	department_head = list(JOB_NAME_CAPTAIN)
 	supervisors = "the captain"
 	head_announce = list(RADIO_CHANNEL_SECURITY)
-	faction = "Station"
+	faction = FACTION_STATION
 	total_positions = 1
 	spawn_positions = 1
 	selection_color = "#ffdddd"
@@ -23,7 +23,7 @@
 						ACCESS_HEADS, ACCESS_HOS, ACCESS_RC_ANNOUNCE, ACCESS_KEYCARD_AUTH, ACCESS_GATEWAY, ACCESS_MAINT_TUNNELS)
 	extra_access = list()
 
-	departments = DEPT_BITFLAG_SEC | DEPT_BITFLAG_COM
+	departments = DEPARTMENT_SECURITY_BITFLAG | DEPARTMENT_COMMAND_BITFLAG
 	bank_account_department = ACCOUNT_SEC_BITFLAG | ACCOUNT_COM_BITFLAG
 	payment_per_department = list(
 		ACCOUNT_COM_ID = PAYCHECK_COMMAND_NT,
@@ -41,6 +41,13 @@
 		/area/security/detectives_office,
 		/area/security/warden
 	)
+
+	job_flags = JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK | JOB_CREW_MEMBER | JOB_NEW_PLAYER_JOINABLE
+
+	voice_of_god_power = 1.4 //Command staff has authority
+
+/datum/job/head_of_security/get_captaincy_announcement(mob/living/captain)
+	return "Due to staffing shortages, newly promoted Acting Captain [captain.real_name] on deck!"
 
 /datum/outfit/job/head_of_security
 	name = JOB_NAME_HEADOFSECURITY

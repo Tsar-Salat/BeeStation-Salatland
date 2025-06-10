@@ -1,10 +1,10 @@
 /datum/job/bartender
 	title = JOB_NAME_BARTENDER
 	description = "Brew a variety of drinks for the crew, cooperate with Botany and Chemistry for more exotic recipes, create a comfy atmosphere in your Bar."
-	department_for_prefs = DEPT_NAME_SERVICE
+	department_for_prefs = DEPARTMENT_SERVICE_NAME
 	department_head = list(JOB_NAME_HEADOFPERSONNEL)
 	supervisors = "the head of personnel"
-	faction = "Station"
+	faction = FACTION_STATION
 	total_positions = 1
 	spawn_positions = 1
 	selection_color = "#bbe291"
@@ -14,7 +14,7 @@
 	base_access = list(ACCESS_BAR, ACCESS_MINERAL_STOREROOM, ACCESS_THEATRE, ACCESS_WEAPONS)
 	extra_access = list(ACCESS_HYDROPONICS, ACCESS_KITCHEN, ACCESS_MORGUE)
 
-	departments = DEPT_BITFLAG_SRV
+	departments = DEPARTMENT_SERVICE_BITFLAG
 	bank_account_department = ACCOUNT_SRV_BITFLAG
 	payment_per_department = list(ACCOUNT_SRV_ID = PAYCHECK_EASY)
 
@@ -30,6 +30,8 @@
 		/area/medical/morgue,
 		/area/crew_quarters/kitchen
 	)
+
+	job_flags = JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK | JOB_CREW_MEMBER | JOB_NEW_PLAYER_JOINABLE
 
 /datum/outfit/job/bartender
 	name = JOB_NAME_BARTENDER

@@ -8,11 +8,12 @@
 /datum/preferences/proc/render_new_preview_appearance(mob/living/carbon/human/dummy/mannequin)
 	var/datum/job/preview_job = get_highest_priority_job()
 
-	// Silicons only need a very basic preview since there is no customization for them.
-	if (istype(preview_job, /datum/job/ai))
-		return image('icons/mob/ai.dmi', icon_state = resolve_ai_icon_sync(read_character_preference(/datum/preference/choiced/ai_core_display)), dir = SOUTH)
-	if (istype(preview_job, /datum/job/cyborg))
-		return image('icons/mob/robots.dmi', icon_state = "robot", dir = SOUTH)
+	if(preview_job)
+		// Silicons only need a very basic preview since there is no customization for them.
+		if (istype(preview_job, /datum/job/ai))
+			return image('icons/mob/ai.dmi', icon_state = resolve_ai_icon_sync(read_character_preference(/datum/preference/choiced/ai_core_display)), dir = SOUTH)
+		if (istype(preview_job, /datum/job/cyborg))
+			return image('icons/mob/robots.dmi', icon_state = "robot", dir = SOUTH)
 
 	// Set up the dummy for its photoshoot
 	apply_prefs_to(mannequin, TRUE, log = FALSE)
@@ -22,8 +23,7 @@
 
 	if(preview_job)
 		mannequin.job = preview_job.title
-		preview_job.equip(mannequin, TRUE, preference_source = parent)
-		preview_job.after_spawn(mannequin, mannequin, preference_source = parent, on_dummy = TRUE)
+		mannequin.dress_up_as_job(preview_job, TRUE)
 	else
 		apply_loadout_to_mob(mannequin, mannequin, preference_source = parent, on_dummy = TRUE)
 

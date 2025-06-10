@@ -19,7 +19,6 @@
 #define DIAG_AIRLOCK_HUD "15"//! Airlock shock overlay
 #define DIAG_PATH_HUD "16"//! Bot path indicators
 #define GLAND_HUD "17"//! Gland indicators for abductors
-#define SENTIENT_DISEASE_HUD	"18"
 #define AI_DETECT_HUD	"19"
 #define NANITE_HUD "20"
 #define DIAG_NANITE_FULL_HUD "21"
@@ -41,7 +40,6 @@
 #define DATA_HUD_DIAGNOSTIC_BASIC		5
 #define DATA_HUD_DIAGNOSTIC_ADVANCED	6
 #define DATA_HUD_ABDUCTOR				7
-#define DATA_HUD_SENTIENT_DISEASE		8
 #define DATA_HUD_AI_DETECT				9
 
 //antag HUD defines

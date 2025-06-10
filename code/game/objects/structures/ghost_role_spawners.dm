@@ -16,7 +16,7 @@
 	the universe to every planet they could chart. You are in one such seed vault. \
 	Your goal is to cultivate and spread life wherever it will go while waiting for contact from your creators. \
 	Estimated time of last contact: Deployment, 5000 millennia ago."
-	assignedrole = "Lifebringer"
+	spawner_job_path = /datum/job/lifebringer
 	use_cooldown = TRUE
 	banType = ROLE_LIFEBRINGER
 
@@ -49,7 +49,7 @@
 	flavour_text = "The wastes are sacred ground, its monsters a blessed bounty. \
 	You have seen lights in the distance... they foreshadow the arrival of outsiders that seek to tear apart the Necropolis and its domain. \
 	Fresh sacrifices for your nest."
-	assignedrole = "Ash Walker"
+	spawner_job_path = /datum/job/ash_walker
 	var/datum/team/ashwalkers/team
 	use_cooldown = TRUE
 	banType = ROLE_ASHWALKER
@@ -142,9 +142,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/mob_spawn/human/golem)
 		else
 			H.fully_replace_character_name(null, name)
 	if(has_owner)
-		new_spawn.mind.assigned_role = "Servant Golem"
+		new_spawn.mind.set_assigned_role(SSjob.GetJobType(/datum/job/servant_golem))
 	else
-		new_spawn.mind.assigned_role = "Free Golem"
+		new_spawn.mind.set_assigned_role(SSjob.GetJobType(/datum/job/free_golem))
 		var/obj/item/card/id/I = new_spawn.get_idcard()
 		if(I)
 			I.registered_name = new_spawn.name
@@ -198,7 +198,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/mob_spawn/human/golem)
 	flavour_text = "Each day you barely scrape by, and between the terrible conditions of your makeshift shelter, \
 	the hostile creatures, and the ash drakes swooping down from the cloudless skies, all you can wish for is the feel of soft grass between your toes and \
 	the fresh air of Earth. These thoughts are dispelled by yet another recollection of how you got here... "
-	assignedrole = "Hermit"
+	spawner_job_path = /datum/job/hermit
 	use_cooldown = TRUE
 	banType = ROLE_HERMIT
 
@@ -242,7 +242,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/mob_spawn/human/golem)
 	flavour_text = "What...? Where are you? What's the purpose of this place? This is still the animal hospital - you should know, you've been an intern here for weeks - but \
 	all you did was apply bruise packs. Why is this place full of advanced medical equipment? And what are those screams you hear? The world outside is desolate - tormented with fire and brimstone. But you took an oath. \
 	You have to save these people! You might not have a fancy cloning machine like a real hospital, but surely there must be some way to save these people with the tools you have. Right?"
-	assignedrole = "Translocated Vet"
+	spawner_job_path = /datum/job/veterinarian
 	banType = ROLE_TRANSLOCATED_VET
 
 /obj/effect/mob_spawn/human/doctor/alive/lavaland/Destroy()
@@ -263,7 +263,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/mob_spawn/human/golem)
 	short_desc = "You're a prisoner, sentenced to hard work in one of Nanotrasen's labor camps, but it seems as \
 	though fate has other plans for you."
 	flavour_text = "Good. It seems as though your ship crashed. You remember that you were convicted of "
-	assignedrole = "Escaped Prisoner"
+	spawner_job_path = /datum/job/escaped_prisoner
 	use_cooldown = TRUE
 	banType = ROLE_LAVALAND_ESCAPED_PRISONER
 
@@ -304,7 +304,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/mob_spawn/human/golem)
 	short_desc = "You are a staff member of a top-of-the-line space hotel!"
 	flavour_text = "You are a staff member of a top-of-the-line space hotel! Cater to guests and make sure the manager doesn't fire you."
 	important_info = "DON'T leave the hotel"
-	assignedrole = "Hotel Staff"
+	spawner_job_path = /datum/job/hotel_staff
 	use_cooldown = TRUE
 	banType = ROLE_HOTEL_STAFF
 
@@ -360,7 +360,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/mob_spawn/human/golem)
 	id = /obj/item/card/id/away/old/sec
 	r_pocket = /obj/item/restraints/handcuffs
 	l_pocket = /obj/item/assembly/flash/handheld
-	assignedrole = "Ancient Crew"
+	spawner_job_path = /datum/job/ancient_crew
 	use_cooldown = TRUE
 	banType = ROLE_ANCIENT_CREW
 
@@ -388,7 +388,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/mob_spawn/human/golem)
 	id = /obj/item/card/id/away/old/eng
 	gloves = /obj/item/clothing/gloves/color/fyellow/old
 	l_pocket = /obj/item/tank/internals/emergency_oxygen
-	assignedrole = "Ancient Crew"
+	spawner_job_path = /datum/job/ancient_crew
 	use_cooldown = TRUE
 	banType = ROLE_ANCIENT_CREW
 
@@ -415,7 +415,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/mob_spawn/human/golem)
 	shoes = /obj/item/clothing/shoes/laceup
 	id = /obj/item/card/id/away/old/sci
 	l_pocket = /obj/item/stack/medical/bruise_pack
-	assignedrole = "Ancient Crew"
+	spawner_job_path = /datum/job/ancient_crew
 	use_cooldown = TRUE
 	banType = ROLE_ANCIENT_CREW
 
@@ -439,7 +439,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/mob_spawn/human/golem)
 	show_flavour = FALSE //Flavour only exists for spawners menu
 	short_desc = "You are a space pirate."
 	flavour_text = "The station refused to pay for your protection, protect the ship, siphon the credits from the station and raid it for even more loot."
-	assignedrole = ROLE_SPACE_PIRATE
+	spawner_job_path = /datum/job/space_pirate
 	banType = ROLE_SPACE_PIRATE
 	is_antagonist = TRUE
 	var/rank = "Mate"
@@ -460,7 +460,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/mob_spawn/human/golem)
 /obj/effect/mob_spawn/human/pirate/captain
 	rank = "Captain"
 	outfit = /datum/outfit/pirate/space/captain
-	assignedrole = "Space Pirate Captain"
+	spawner_job_path = /datum/job/space_pirate/captain
 
 /obj/effect/mob_spawn/human/pirate/captain/special(mob/living/new_spawn)
 	new_spawn.fully_replace_character_name(new_spawn.real_name,generate_pirate_name())

@@ -37,8 +37,8 @@
 	new /obj/effect/dummy/phased_mob(chosen, S)
 
 	player_mind.transfer_to(S)
-	player_mind.assigned_role = "Slaughter Demon"
-	player_mind.special_role = "Slaughter Demon"
+	player_mind.set_assigned_role(SSjob.GetJobType(/datum/job/slaughter_demon))
+	player_mind.special_role = ROLE_SLAUGHTER_DEMON
 	player_mind.add_antag_datum(/datum/antagonist/slaughter)
 	to_chat(S, ("<span class='bold'>You are currently not currently in the same plane of existence as the station. \
 		Use your Blood Crawl ability near a pool of blood to manifest and wreak havoc.</span>"))

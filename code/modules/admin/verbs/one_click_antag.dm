@@ -56,7 +56,7 @@
 		temp.restricted_jobs += JOB_NAME_ASSISTANT
 
 	if(CONFIG_GET(flag/protect_heads_from_antagonist))
-		temp.restricted_jobs += SSdepartment.get_jobs_by_dept_id(DEPT_NAME_COMMAND)
+		temp.restricted_jobs += SSdepartment.get_jobs_by_dept_id(DEPARTMENT_COMMAND_NAME)
 
 	var/list/mob/living/carbon/human/candidates = list()
 	var/mob/living/carbon/human/H = null
@@ -90,7 +90,7 @@
 		temp.restricted_jobs += JOB_NAME_ASSISTANT
 
 	if(CONFIG_GET(flag/protect_heads_from_antagonist))
-		temp.restricted_jobs += SSdepartment.get_jobs_by_dept_id(DEPT_NAME_COMMAND)
+		temp.restricted_jobs += SSdepartment.get_jobs_by_dept_id(DEPARTMENT_COMMAND_NAME)
 
 	var/list/mob/living/carbon/human/candidates = list()
 	var/mob/living/carbon/human/H = null
@@ -160,7 +160,7 @@
 		temp.restricted_jobs += JOB_NAME_ASSISTANT
 
 	if(CONFIG_GET(flag/protect_heads_from_antagonist))
-		temp.restricted_jobs += SSdepartment.get_jobs_by_dept_id(DEPT_NAME_COMMAND)
+		temp.restricted_jobs += SSdepartment.get_jobs_by_dept_id(DEPARTMENT_COMMAND_NAME)
 
 	var/list/mob/living/carbon/human/candidates = list()
 	var/mob/living/carbon/human/H = null
@@ -185,7 +185,7 @@
 
 
 /datum/admins/proc/makeNukeTeam(maxCount = 5)
-	var/list/mob/dead/observer/candidates = poll_ghost_candidates("Do you wish to be considered for a nuke team being sent in?", ROLE_OPERATIVE, /datum/role_preference/midround_ghost/nuclear_operative)
+	var/list/mob/dead/observer/candidates = poll_ghost_candidates("Do you wish to be considered for a nuke team being sent in?", ROLE_NUCLEAR_OPERATIVE, /datum/role_preference/midround_ghost/nuclear_operative)
 	var/list/mob/dead/observer/chosen = list()
 	var/mob/dead/observer/theghost = null
 

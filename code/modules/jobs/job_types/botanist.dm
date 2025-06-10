@@ -1,10 +1,10 @@
 /datum/job/botanist
 	title = JOB_NAME_BOTANIST
 	description = "Grow plants for the Kitchen, Bar and Chemistry. Sell cannabis and other goods to the crew."
-	department_for_prefs = DEPT_NAME_SERVICE
+	department_for_prefs = DEPARTMENT_SERVICE_NAME
 	department_head = list(JOB_NAME_HEADOFPERSONNEL)
 	supervisors = "the head of personnel"
-	faction = "Station"
+	faction = FACTION_STATION
 	total_positions = 3
 	spawn_positions = 2
 	selection_color = "#bbe291"
@@ -15,7 +15,7 @@
 	base_access = list(ACCESS_HYDROPONICS, ACCESS_MORGUE, ACCESS_MINERAL_STOREROOM)
 	extra_access = list(ACCESS_BAR, ACCESS_KITCHEN)
 
-	departments = DEPT_BITFLAG_SRV
+	departments = DEPARTMENT_SERVICE_BITFLAG
 	bank_account_department = ACCOUNT_SRV_BITFLAG
 	payment_per_department = list(ACCOUNT_SRV_ID = PAYCHECK_EASY)
 
@@ -27,6 +27,8 @@
 	)
 
 	minimal_lightup_areas = list(/area/hydroponics, /area/medical/morgue)
+
+	job_flags = JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK | JOB_CREW_MEMBER | JOB_NEW_PLAYER_JOINABLE
 
 /datum/outfit/job/botanist
 	name = JOB_NAME_BOTANIST

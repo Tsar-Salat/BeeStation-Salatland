@@ -1,10 +1,10 @@
 /datum/job/curator
 	title = JOB_NAME_CURATOR
 	description = "Be in charge of maintaining the library, engage in peace talks with alien races using your knowledge of all languages, cosplay to your heart's content."
-	department_for_prefs = DEPT_NAME_CIVILIAN
+	department_for_prefs = DEPARTMENT_CIVILIAN_NAME
 	department_head = list(JOB_NAME_HEADOFPERSONNEL)
 	supervisors = "the head of personnel"
-	faction = "Station"
+	faction = FACTION_STATION
 	total_positions = 1
 	spawn_positions = 1
 	selection_color = "#dddddd"
@@ -15,7 +15,7 @@
 	base_access = list(ACCESS_LIBRARY, ACCESS_AUX_BASE, ACCESS_MINING_STATION)
 	extra_access = list()
 
-	departments = DEPT_BITFLAG_CIV
+	departments = DEPARTMENT_CIVILIAN_BITFLAG
 	bank_account_department = ACCOUNT_CIV_BITFLAG
 	payment_per_department = list(ACCOUNT_CIV_ID = PAYCHECK_EASY)
 
@@ -32,6 +32,10 @@
 		/area/library,
 		/area/construction/mining/aux_base
 	)
+
+	job_flags = JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK | JOB_CREW_MEMBER | JOB_NEW_PLAYER_JOINABLE
+
+	voice_of_god_silence_power = 3
 
 /datum/outfit/job/curator
 	name = JOB_NAME_CURATOR

@@ -1,10 +1,10 @@
 /datum/job/quartermaster
 	title = JOB_NAME_QUARTERMASTER
 	description = "Oversee and direct cargo technicians to fulfill requests for supplies and keep the station well stocked, request funds from department budgets to cover costs, deny frivolous orders when money is tight, and sell anything the station doesn't need."
-	department_for_prefs = DEPT_NAME_CARGO
+	department_for_prefs = DEPARTMENT_CARGO_NAME
 	department_head = list(JOB_NAME_HEADOFPERSONNEL)
 	supervisors = "the head of personnel"
-	faction = "Station"
+	faction = FACTION_STATION
 	total_positions = 1
 	spawn_positions = 1
 	selection_color = "#d7b088"
@@ -16,7 +16,7 @@
 	base_access = list(ACCESS_MAINT_TUNNELS, ACCESS_MAILSORTING, ACCESS_CARGO, ACCESS_QM, ACCESS_MINING, ACCESS_MECH_MINING, ACCESS_MINING_STATION, ACCESS_MINERAL_STOREROOM, ACCESS_VAULT, ACCESS_AUX_BASE, ACCESS_EXPLORATION, ACCESS_GATEWAY)
 	extra_access = list()
 
-	departments = DEPT_BITFLAG_CAR
+	departments = DEPARTMENT_CARGO_BITFLAG
 	bank_account_department = ACCOUNT_CAR_BITFLAG
 	payment_per_department = list(ACCOUNT_CAR_ID = PAYCHECK_MEDIUM)
 
@@ -33,6 +33,8 @@
 		/area/quartermaster/exploration_prep,
 		/area/quartermaster/exploration_dock
 	)
+
+	job_flags = JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK | JOB_CREW_MEMBER | JOB_NEW_PLAYER_JOINABLE
 
 /datum/outfit/job/quartermaster
 	name = JOB_NAME_QUARTERMASTER

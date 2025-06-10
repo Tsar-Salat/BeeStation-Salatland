@@ -46,8 +46,6 @@ GLOBAL_LIST_EMPTY(suit_sensors_list) 		//all people with suit sensors on
 GLOBAL_LIST_EMPTY(language_datum_instances)
 GLOBAL_LIST_EMPTY(all_languages)
 
-GLOBAL_LIST_EMPTY(sentient_disease_instances)
-
 GLOBAL_LIST_EMPTY(latejoin_ai_cores)
 
 GLOBAL_LIST_EMPTY(mob_config_movespeed_type_lookup)

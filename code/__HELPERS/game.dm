@@ -3,6 +3,9 @@
 /// 200 proc calls deep and shit breaks, this is a bit lower to give some safety room
 #define MAX_PROC_DEPTH 195 // no idea where to put this
 
+/// Returns either the error landmark or the location of the room. Needless to say, if this is used, it means things have gone awry.
+#define GET_ERROR_ROOM ((locate(/obj/effect/landmark/error) in GLOB.landmarks_list) || locate(4,4,1))
+
 /proc/get_area_name(atom/X, format_text = FALSE)
 	var/area/A = isarea(X) ? X : get_area(X)
 	if(!A)
@@ -280,6 +283,9 @@
 	return poll_candidates(question, jobban_type, role_preference_key, poll_time, ignore_category, flashwindow, candidates, req_hours)
 
 /proc/poll_candidates(question, banning_key, role_preference_key = null, poll_time = 300, poll_ignore_key = null, flashwindow = TRUE, list/group = null, req_hours = 0)
+	if (group.len == 0)
+		return list()
+
 	var/time_passed = world.time
 	if (!question)
 		question = "Would you like to be a special role?"
@@ -402,7 +408,7 @@
 	deadchat_broadcast(message, follow_target = character, message_type=DEADCHAT_ARRIVALRATTLE)
 	if((!GLOB.announcement_systems.len) || (!character.mind))
 		return
-	if((character.mind.assigned_role == JOB_NAME_CYBORG) || (character.mind.assigned_role == character.mind.special_role))
+	if(!(character.mind.assigned_role.job_flags & JOB_ANNOUNCE_ARRIVAL))
 		return
 
 	var/obj/machinery/announcement_system/announcer = pick(GLOB.announcement_systems)

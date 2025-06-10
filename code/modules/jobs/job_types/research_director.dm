@@ -1,12 +1,12 @@
 /datum/job/research_director
 	title = JOB_NAME_RESEARCHDIRECTOR
 	description = "Oversee the scientists and roboticists and keep up with their research projects, take care of any issues with the station's AI that may arise, ensure research is being prioritized in accordance with the needs of the station."
-	department_for_prefs = DEPT_NAME_SCIENCE
+	department_for_prefs = DEPARTMENT_SCIENCE_NAME
 	auto_deadmin_role_flags = DEADMIN_POSITION_HEAD
 	department_head = list(JOB_NAME_CAPTAIN)
 	supervisors = "the captain"
 	head_announce = list("Science")
-	faction = "Station"
+	faction = FACTION_STATION
 	total_positions = 1
 	spawn_positions = 1
 	selection_color = "#ffddff"
@@ -24,7 +24,7 @@
 						ACCESS_TECH_STORAGE, ACCESS_MINISAT, ACCESS_MAINT_TUNNELS, ACCESS_NETWORK, ACCESS_AUX_BASE, ACCESS_RD_SERVER, ACCESS_WEAPONS)
 	extra_access = list()
 
-	departments = DEPT_BITFLAG_SCI | DEPT_BITFLAG_COM
+	departments = DEPARTMENT_SCIENCE_BITFLAG | DEPARTMENT_COMMAND_BITFLAG
 	bank_account_department = ACCOUNT_SCI_BITFLAG | ACCOUNT_COM_BITFLAG
 	payment_per_department = list(
 		ACCOUNT_COM_ID = PAYCHECK_COMMAND_NT,
@@ -49,6 +49,14 @@
 		/area/science/storage,
 		/area/science/xenobiology
 	)
+
+	job_flags = JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK | JOB_CREW_MEMBER | JOB_NEW_PLAYER_JOINABLE
+
+	voice_of_god_power = 1.4 //Command staff has authority
+
+
+/datum/job/research_director/get_captaincy_announcement(mob/living/captain)
+	return "Due to staffing shortages, newly promoted Acting Captain [captain.real_name] on deck!"
 
 /datum/outfit/job/research_director
 	name = JOB_NAME_RESEARCHDIRECTOR

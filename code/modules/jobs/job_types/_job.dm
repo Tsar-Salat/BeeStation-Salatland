@@ -53,6 +53,9 @@
 	///Overhead chat message colour
 	var/chat_color = "#ffffff"
 
+	// What kind of mob type joining players with this job as their assigned role are spawned as.
+	var/spawn_type = /mob/living/carbon/human
+
 	///If this is set to 1, a text is printed to the player when jobs are assigned, telling him that he should let admins know that he has to disconnect.
 	var/req_admin_notify
 
@@ -120,6 +123,17 @@
 	 */
 	var/list/minimal_lightup_areas = list()
 
+	/// All values = (JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK)
+	var/job_flags = NONE
+
+	/// Multiplier for general usage of the voice of god.
+	var/voice_of_god_power = 1
+	/// Multiplier for the silence command of the voice of god.
+	var/voice_of_god_silence_power = 1
+
+	/// String. If set to a non-empty one, it will be the key for the policy text value to show this role on spawn.
+	var/policy_index = ""
+
 
 /datum/job/New()
 	. = ..()
@@ -133,25 +147,28 @@
 	if(lock_flags || gimmick)
 		SSjob.job_manager_blacklisted |= title
 
-/// Only override this proc, unless altering loadout code. Loadouts act on H but get info from M
+/// Executes after the mob has been spawned in the map. Client might not be yet in the mob, and is thus a separate variable.
 /// H is usually a human unless an /equip override transformed it
 /// do actions on H but send messages to M as the key may not have been transferred_yet
 /// preference_source allows preferences to be retrieved if the original mob (M) is null - for use on preference dummies.
 /// Don't do non-visual changes if M.client is null, since that means it's just a dummy and doesn't need them.
-/datum/job/proc/after_spawn(mob/living/H, mob/M, latejoin = FALSE, client/preference_source, on_dummy = FALSE)
+/datum/job/proc/after_spawn(mob/living/spawned, client/preference_source, on_dummy = FALSE)
+	SHOULD_CALL_PARENT(TRUE)
 	if(!on_dummy) // Bad dummy
-		//do actions on H but send messages to M as the key may not have been transferred_yet
-		SEND_GLOBAL_SIGNAL(COMSIG_GLOB_JOB_AFTER_SPAWN, src, H, M, latejoin)
-		if(mind_traits && H?.mind)
+		//do actions on spawned mob since it has the key
+		SEND_GLOBAL_SIGNAL(COMSIG_GLOB_JOB_AFTER_SPAWN, src, spawned, preference_source)
+		if(mind_traits && spawned?.mind)
 			for(var/t in mind_traits)
-				ADD_TRAIT(H.mind, t, JOB_TRAIT)
+				ADD_TRAIT(spawned.mind, t, JOB_TRAIT)
 
-	if(!ishuman(H))
+	if(!ishuman(spawned))
 		return
-	apply_loadout_to_mob(H, M, preference_source, on_dummy)
+	apply_loadout_to_mob(spawned, preference_source, on_dummy)
 
-/proc/apply_loadout_to_mob(mob/living/carbon/human/H, mob/M, client/preference_source, on_dummy = FALSE)
-	var/mob/living/carbon/human/human = H
+/proc/apply_loadout_to_mob(mob/living/spawned, client/preference_source, on_dummy = FALSE)
+	if(!ishuman(spawned))
+		return
+	var/mob/living/carbon/human/human = spawned
 	var/list/gear_leftovers = list()
 	var/jumpsuit_style = preference_source.prefs.read_character_preference(/datum/preference/choiced/jumpsuit_style)
 	if(preference_source && LAZYLEN(preference_source.prefs.equipped_gear))
@@ -162,7 +179,7 @@
 					continue
 				var/permitted = FALSE
 
-				if(G.allowed_roles && H.mind && (H.mind.assigned_role in G.allowed_roles))
+				if(G.allowed_roles && spawned.mind && (spawned.mind.assigned_role in G.allowed_roles))
 					permitted = TRUE
 				else if(!G.allowed_roles)
 					permitted = TRUE
@@ -176,18 +193,18 @@
 					permitted = FALSE
 
 				if(!permitted)
-					if(M.client)
-						to_chat(M, span_warning("Your current species or role does not permit you to spawn with [G.display_name]!"))
+					if(spawned.client)
+						to_chat(spawned, span_warning("Your current species or role does not permit you to spawn with [G.display_name]!"))
 					continue
 
 				if(G.slot)
 					var/obj/o
 					if(on_dummy) // remove the old item
-						o = H.get_item_by_slot(G.slot)
-						H.doUnEquip(H.get_item_by_slot(G.slot), newloc = H.drop_location(), invdrop = FALSE, silent = TRUE)
-					if(H.equip_to_slot_or_del(G.spawn_item(H, skirt_pref = jumpsuit_style), G.slot))
-						if(M.client)
-							to_chat(M, span_notice("Equipping you with [G.display_name]!"))
+						o = spawned.get_item_by_slot(G.slot)
+						spawned.doUnEquip(human.get_item_by_slot(G.slot), newloc = human.drop_location(), invdrop = FALSE, silent = TRUE)
+					if(spawned.equip_to_slot_or_del(G.spawn_item(human, skirt_pref = jumpsuit_style), G.slot))
+						if(spawned.client)
+							to_chat(spawned, span_notice("Equipping you with [G.display_name]!"))
 						if(on_dummy && o)
 							qdel(o)
 					else
@@ -207,38 +224,35 @@
 
 			if(istype(placed_in))
 				if(isturf(placed_in))
-					if(M.client)
-						to_chat(M, span_notice("Placing [G.display_name] on [placed_in]!"))
+					if(spawned.client)
+						to_chat(spawned, span_notice("Placing [G.display_name] on [placed_in]!"))
 				else
-					if(M.client)
-						to_chat(M, span_notice("Placing [G.display_name] in [placed_in.name]]"))
+					if(spawned.client)
+						to_chat(spawned, span_notice("Placing [G.display_name] in [placed_in.name]]"))
 				continue
 
-			if(H.equip_to_appropriate_slot(item))
-				if(M.client)
-					to_chat(M, span_notice("Placing [G.display_name] in your inventory!"))
+			if(human.equip_to_appropriate_slot(item))
+				if(spawned.client)
+					to_chat(spawned, span_notice("Placing [G.display_name] in your inventory!"))
 				continue
-			if(H.put_in_hands(item))
-				if(M.client)
-					to_chat(M, span_notice("Placing [G.display_name] in your hands!"))
+			if(human.put_in_hands(item))
+				if(spawned.client)
+					to_chat(spawned, span_notice("Placing [G.display_name] in your hands!"))
 				continue
 
-			var/obj/item/storage/B = (locate() in H)
+			var/obj/item/storage/B = (locate() in human)
 			if(B)
 				G.spawn_item(B, metadata, jumpsuit_style)
-				if(M.client)
-					to_chat(M, span_notice("Placing [G.display_name] in [B.name]!"))
+				if(spawned.client)
+					to_chat(spawned, span_notice("Placing [G.display_name] in [B.name]!"))
 				continue
-			if(M.client)
-				to_chat(M, span_danger("Failed to locate a storage object on your mob, either you spawned with no hands free and no backpack or this is a bug."))
+			if(spawned.client)
+				to_chat(spawned, span_danger("Failed to locate a storage object on your mob, either you spawned with no hands free and no backpack or this is a bug."))
 			qdel(item)
 
-/datum/job/proc/announce(mob/living/carbon/human/H)
+/datum/job/proc/announce_job(mob/living/joining_mob)
 	if(head_announce)
-		announce_head(H, head_announce)
-
-/datum/job/proc/override_latejoin_spawn(mob/living/carbon/human/H)		//Return TRUE to force latejoining to not automatically place the person in latejoin shuttle/whatever.
-	return FALSE
+		announce_head(joining_mob, head_announce)
 
 //Used for a special check of whether to allow a client to latejoin as this job.
 /datum/job/proc/special_check_latejoin(client/C)
@@ -254,36 +268,40 @@
 	if(. == null)
 		return antag_rep
 
-//Don't override this unless the job transforms into a non-human (Silicons do this for example)
-//Returning FALSE is considered a failure. A null or mob return is a successful equip.
-/datum/job/proc/equip(mob/living/carbon/human/H, visualsOnly = FALSE, announce = TRUE, latejoin = FALSE, datum/outfit/outfit_override = null, client/preference_source)
-	if(!H)
-		return FALSE
-	if(CONFIG_GET(flag/enforce_human_authority) && (title in SSdepartment.get_jobs_by_dept_id(DEPT_NAME_COMMAND)))
-		if(H.dna.species.id != SPECIES_HUMAN)
-			H.set_species(/datum/species/human)
-			H.apply_pref_name(/datum/preference/name/backup_human, preference_source)
-	if(!visualsOnly)
-		var/datum/bank_account/bank_account = new(H.real_name, src)
-		bank_account.payday(STARTING_PAYCHECKS, TRUE)
-		H.mind?.account_id = bank_account.account_id
+/mob/living/proc/on_job_equipping(datum/job/equipping)
+	return
 
-	//Equip the rest of the gear
-	H.dna.species.before_equip_job(src, H, visualsOnly)
+/mob/living/carbon/human/on_job_equipping(datum/job/equipping)
+	if(CONFIG_GET(flag/enforce_human_authority) && (equipping.title in SSdepartment.get_jobs_by_dept_id(DEPARTMENT_COMMAND_NAME)))
+		if(dna.species.id != SPECIES_HUMAN)
+			set_species(/datum/species/human)
+			apply_pref_name(/datum/preference/name/backup_human, client)
 
-	if(src.species_outfits)
-		if(H.dna.species.id in src.species_outfits)
-			var/datum/outfit/O = species_outfits[H.dna.species.id]
-			H.equipOutfit(O, visualsOnly)
+	// Create bank account
+	var/datum/bank_account/bank_account = new(real_name, equipping)
+	bank_account.payday(STARTING_PAYCHECKS, TRUE)
+	mind?.account_id = bank_account.account_id
 
-	if(outfit_override || outfit)
-		H.equipOutfit(outfit_override ? outfit_override : outfit, visualsOnly)
+	dress_up_as_job(equipping)
 
-	H.dna.species.after_equip_job(src, H, visualsOnly, preference_source)
+/mob/living/proc/dress_up_as_job(datum/job/equipping, visual_only = FALSE)
+	return
 
-	if(!visualsOnly && announce)
-		announce(H)
-	H.give_random_dormant_disease(biohazard, (title == JOB_NAME_CLOWN || title == JOB_NAME_MIME) ? 0 : 4)
+/mob/living/carbon/human/dress_up_as_job(datum/job/equipping, visual_only = FALSE)
+	// Handle species-specific outfits first
+	if(equipping.species_outfits)
+		if(dna.species.id in equipping.species_outfits)
+			var/datum/outfit/O = equipping.species_outfits[dna.species.id]
+			equipOutfit(O, visual_only)
+
+	// Then handle regular outfit
+	equipOutfit(equipping.outfit, visual_only)
+
+	dna.species.after_equip_job(equipping, src, visual_only, client)
+
+	// Handle disease chance
+	if(!visual_only)
+		give_random_dormant_disease(equipping.biohazard, (equipping.title == JOB_NAME_CLOWN || equipping.title == JOB_NAME_MIME) ? 0 : 4)
 
 /datum/job/proc/get_access()
 	if(!config)	//Needed for robots.
@@ -302,39 +320,50 @@
 		SSticker.OnRoundstart(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(_addtimer), CALLBACK(pick(GLOB.announcement_systems), /obj/machinery/announcement_system/proc/announce, "NEWHEAD", H.real_name, H.job, channels), 1))
 
 //If the configuration option is set to require players to be logged as old enough to play certain jobs, then this proc checks that they are, otherwise it just returns 1
-/datum/job/proc/player_old_enough(client/C)
-	if(available_in_days(C) == 0)
-		return TRUE	//Available in 0 days = available right now = player is old enough to play.
+/datum/job/proc/player_old_enough(client/player)
+	if(!player || !available_in_days(player))
+		return TRUE //Available in 0 days = available right now = player is old enough to play.
 	return FALSE
+
+/datum/job/proc/available_in_days(client/player)
+	if(!player)
+		return 0
+
+	if(!CONFIG_GET(flag/use_age_restriction_for_jobs))
+		return 0
+
+	//Without a database connection we can't get a player's age so we'll assume they're old enough for all jobs
+	if(!SSdbcore.Connect())
+		return 0
+
+	// As of the time of writing this comment, verifying database connection isn't "solved". Sometimes rust-g will report a
+	// connection mid-shift despite the database dying.
+	// If the client age is -1, it means that no code path has overwritten it. Even first time connections get it set to 0,
+	// so it's a pretty good indication of a database issue. We'll again just assume they're old enough for all jobs.
+	if(player.player_age == -1)
+		return 0
+
+	if(!isnum(minimal_player_age))
+		return 0
+
+	return max(0, minimal_player_age - player.player_age)
 
 /datum/job/proc/areas_to_light_up(minimal_access = TRUE)
 	. = minimal_lightup_areas.Copy()
 	if(!minimal_access)
 		. |= lightup_areas
-	if(CHECK_BITFIELD(departments, DEPT_BITFLAG_COM))
+	if(CHECK_BITFIELD(departments, DEPARTMENT_COMMAND_BITFLAG))
 		. |= GLOB.command_lightup_areas
-	if(CHECK_BITFIELD(departments, DEPT_BITFLAG_ENG))
+	if(CHECK_BITFIELD(departments, DEPARTMENT_ENGINEERING_BITFLAG))
 		. |= GLOB.engineering_lightup_areas
-	if(CHECK_BITFIELD(departments, DEPT_BITFLAG_MED))
+	if(CHECK_BITFIELD(departments, DEPARTMENT_MEDICAL_BITFLAG))
 		. |= GLOB.medical_lightup_areas
-	if(CHECK_BITFIELD(departments, DEPT_BITFLAG_SCI))
+	if(CHECK_BITFIELD(departments, DEPARTMENT_SCIENCE_BITFLAG))
 		. |= GLOB.science_lightup_areas
-	if(CHECK_BITFIELD(departments, DEPT_BITFLAG_CAR))
+	if(CHECK_BITFIELD(departments, DEPARTMENT_CARGO_BITFLAG))
 		. |= GLOB.supply_lightup_areas
-	if(CHECK_BITFIELD(departments, DEPT_BITFLAG_SEC))
+	if(CHECK_BITFIELD(departments, DEPARTMENT_SECURITY_BITFLAG))
 		. |= GLOB.security_lightup_areas
-
-/datum/job/proc/available_in_days(client/C)
-	if(!C)
-		return 0
-	if(!CONFIG_GET(flag/use_age_restriction_for_jobs))
-		return 0
-	if(!SSdbcore.Connect())
-		return 0 //Without a database connection we can't get a player's age so we'll assume they're old enough for all jobs
-	if(!isnum_safe(minimal_player_age))
-		return 0
-
-	return max(0, minimal_player_age - C.player_age)
 
 /datum/job/proc/config_check()
 	return TRUE
@@ -462,15 +491,17 @@
 	if(!player_client)
 		return // Disconnected while checking for the appearance ban.
 
-	var/require_human = CONFIG_GET(flag/enforce_human_authority) && (job.departments & DEPT_BITFLAG_COM)
+	var/require_human = CONFIG_GET(flag/enforce_human_authority) && (job.departments & DEPARTMENT_COMMAND_BITFLAG)
+
+	src.job = job.title
 
 	if(fully_randomize)
-		if(require_human)
-			player_client.prefs.randomize_appearance_prefs(~RANDOMIZE_SPECIES)
-		else
-			player_client.prefs.randomize_appearance_prefs()
-
 		player_client.prefs.apply_prefs_to(src)
+
+		if(require_human)
+			randomize_human_appearance(~RANDOMIZE_SPECIES)
+		else
+			randomize_human_appearance()
 
 		if (require_human)
 			set_species(/datum/species/human)
@@ -518,3 +549,71 @@
 	// If this checks fails, then the name will have been handled during initialization.
 	if(player_client.prefs.read_character_preference(/datum/preference/name/cyborg) != DEFAULT_CYBORG_NAME && check_cyborg_name(player_client, mmi))
 		apply_pref_name(/datum/preference/name/cyborg, player_client)
+
+/datum/job/proc/award_service(client/winner, award)
+	return
+
+
+/datum/job/proc/get_captaincy_announcement(mob/living/captain)
+	return "Due to extreme staffing shortages, newly promoted Acting Captain [captain.real_name] on deck!"
+
+
+/// Returns an atom where the mob should spawn in.
+/datum/job/proc/get_roundstart_spawn_point()
+	if(random_spawns_possible)
+		if(HAS_TRAIT(SSstation, STATION_TRAIT_LATE_ARRIVALS))
+			return get_latejoin_spawn_point()
+		if(HAS_TRAIT(SSstation, STATION_TRAIT_RANDOM_ARRIVALS))
+			return get_safe_random_station_turfs(typesof(/area/hallway)) || get_latejoin_spawn_point()
+		if(HAS_TRAIT(SSstation, STATION_TRAIT_HANGOVER))
+			return get_safe_random_station_turfs(typesof(/area/hallway) | typesof(/area/crew_quarters/bar) | typesof(/area/crew_quarters/dorms))
+	if(length(GLOB.jobspawn_overrides[title]))
+		return pick(GLOB.jobspawn_overrides[title])
+	var/obj/effect/landmark/start/spawn_point = get_default_roundstart_spawn_point()
+	if(!spawn_point) //if there isn't a spawnpoint send them to latejoin, if there's no latejoin go yell at your mapper
+		return get_latejoin_spawn_point()
+	return spawn_point
+
+/// Handles finding and picking a valid roundstart effect landmark spawn point, in case no uncommon different spawning events occur.
+/datum/job/proc/get_default_roundstart_spawn_point()
+	for(var/obj/effect/landmark/start/spawn_point as anything in GLOB.start_landmarks_list)
+		if(spawn_point.name != title)
+			continue
+		. = spawn_point
+		if(spawn_point.used) //so we can revert to spawning them on top of eachother if something goes wrong
+			continue
+		spawn_point.used = TRUE
+		break
+	if(!.)
+		log_world("Couldn't find a round start spawn point for [title]")
+
+
+/// Finds a valid latejoin spawn point, checking for events and special conditions.
+/datum/job/proc/get_latejoin_spawn_point()
+	if(length(GLOB.jobspawn_overrides[title])) //We're doing something special today.
+		return pick(GLOB.jobspawn_overrides[title])
+	if(length(SSjob.latejoin_trackers))
+		return pick(SSjob.latejoin_trackers)
+	return SSjob.get_last_resort_spawn_points()
+
+
+/// Called after a successful latejoin spawn.
+/datum/job/proc/after_latejoin_spawn(mob/living/spawning)
+	SHOULD_CALL_PARENT(TRUE)
+	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_JOB_AFTER_LATEJOIN_SPAWN, src, spawning)
+
+
+/// Spawns the mob to be played as, taking into account preferences and the desired spawn point.
+/datum/job/proc/get_spawn_mob(client/player_client, atom/spawn_point)
+	var/mob/living/spawn_instance
+	if(ispath(spawn_type, /mob/living/silicon/ai))
+		// This is unfortunately necessary because of snowflake AI init code. To be refactored.
+		spawn_instance = new spawn_type(get_turf(spawn_point), null, player_client.mob)
+	else
+		spawn_instance = new spawn_type(player_client.mob.loc)
+		spawn_point.JoinPlayerHere(spawn_instance, TRUE)
+	spawn_instance.apply_prefs_job(player_client, src)
+	if(!player_client)
+		qdel(spawn_instance)
+		return // Disconnected while checking for the appearance ban.
+	return spawn_instance

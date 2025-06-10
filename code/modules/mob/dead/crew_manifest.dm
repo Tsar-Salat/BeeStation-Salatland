@@ -27,7 +27,7 @@ GLOBAL_DATUM_INIT(crew_manifest_tgui, /datum/crew_manifest, new)
 		"command" = list(
 			"name" = "Command",
 			"huds" = GLOB.command_huds,
-			"jobs" = SSdepartment.get_jobs_by_dept_id(DEPT_NAME_COMMAND),
+			"jobs" = SSdepartment.get_jobs_by_dept_id(DEPARTMENT_COMMAND_NAME),
 			"order" = SSjob.chain_of_command
 		),
 		"order" = ordering,

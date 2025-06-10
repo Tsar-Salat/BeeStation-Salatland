@@ -1,12 +1,12 @@
 /datum/job/captain
 	title = JOB_NAME_CAPTAIN
 	description = "Supreme leader of the station, oversee and appoint missing heads of staff, manage alert levels and contact CentCom if needed. Don't forget to secure the nuclear authentication disk."
-	department_for_prefs = DEPT_NAME_CAPTAIN
+	department_for_prefs = DEPARTMENT_CAPTAIN_NAME
 	department_head_for_prefs = JOB_NAME_CAPTAIN
 	auto_deadmin_role_flags = DEADMIN_POSITION_HEAD|DEADMIN_POSITION_SECURITY
 	department_head = list("CentCom")
 	supervisors = "Nanotrasen officials and Space law"
-	faction = "Station"
+	faction = FACTION_STATION
 	total_positions = 1
 	spawn_positions = 1
 	selection_color = "#ccccff"
@@ -20,7 +20,7 @@
 	base_access = list()  //See get_access()
 	extra_access = list() //See get_access()
 
-	departments = DEPT_BITFLAG_COM
+	departments = DEPARTMENT_COMMAND_BITFLAG
 	bank_account_department = ACCOUNT_SEC_BITFLAG | ACCOUNT_COM_BITFLAG
 	payment_per_department = list(
 		ACCOUNT_COM_ID = PAYCHECK_COMMAND_NT,
@@ -40,12 +40,15 @@
 		/area/security
 	)
 
+	job_flags = JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK | JOB_CREW_MEMBER | JOB_NEW_PLAYER_JOINABLE
+
+	voice_of_god_power = 1.4 //Command staff has authority
+
+/datum/job/captain/get_captaincy_announcement(mob/living/captain)
+	return "Captain [captain.real_name] on deck!"
+
 /datum/job/captain/get_access()
 	return get_all_accesses()
-
-/datum/job/captain/announce(mob/living/carbon/human/H)
-	..()
-	SSticker.OnRoundstart(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(minor_announce), "Captain [H.real_name] on deck!"))
 
 /datum/outfit/job/captain
 	name = JOB_NAME_CAPTAIN

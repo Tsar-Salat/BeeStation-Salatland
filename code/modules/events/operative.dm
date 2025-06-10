@@ -11,7 +11,7 @@
 	fakeable = FALSE
 
 /datum/round_event/ghost_role/operative/spawn_role()
-	var/list/candidates = get_candidates(ROLE_OPERATIVE, /datum/role_preference/midround_ghost/nuclear_operative)
+	var/list/candidates = get_candidates(ROLE_NUCLEAR_OPERATIVE, /datum/role_preference/midround_ghost/nuclear_operative)
 	if(!candidates.len)
 		return NOT_ENOUGH_PLAYERS
 
@@ -29,13 +29,13 @@
 	if(!spawn_locs.len)
 		return MAP_ERROR
 
-	var/mob/living/carbon/human/operative = new (pick(spawn_locs))
+	var/mob/living/carbon/human/operative = new(pick(spawn_locs))
 	operative.randomize_human_appearance(~RANDOMIZE_SPECIES)
 	operative.dna.update_dna_identity()
 	var/datum/mind/Mind = new /datum/mind(selected.key)
-	Mind.assigned_role = "Lone Operative"
-	Mind.special_role = "Lone Operative"
-	Mind.active = 1
+	Mind.set_assigned_role(SSjob.GetJobType(/datum/job/lone_operative))
+	Mind.special_role = ROLE_LONE_OPERATIVE
+	Mind.active = TRUE
 	Mind.transfer_to(operative)
 	Mind.add_antag_datum(/datum/antagonist/nukeop/lone)
 

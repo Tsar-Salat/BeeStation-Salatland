@@ -20,7 +20,7 @@
 	mob_name = "a swarmer"
 	death = FALSE
 	roundstart = FALSE
-	assignedrole = ROLE_SWARMER
+	spawner_job_path = /datum/job/swarmer
 	banType = ROLE_SWARMER
 	is_antagonist = TRUE
 
@@ -823,7 +823,7 @@
 			if(istype(new_mob))
 				new_mob.set_combat_mode(TRUE)
 				M.mind.transfer_to(new_mob)
-				new_owner.assigned_role = ROLE_SWARMER
+				new_owner.set_assigned_role(SSjob.GetJobType(/datum/job/swarmer))
 				new_owner.special_role = ROLE_SWARMER
 			qdel(M)
 	return ..()

@@ -1,10 +1,10 @@
 /datum/job/chaplain
 	title = JOB_NAME_CHAPLAIN
 	description = "Tend to the spiritual well-being of the crew, conduct rites and rituals in your Chapel, exorcise evil spirits and other supernatural beings."
-	department_for_prefs = DEPT_NAME_CIVILIAN
+	department_for_prefs = DEPARTMENT_CIVILIAN_NAME
 	department_head = list(JOB_NAME_HEADOFPERSONNEL)
 	supervisors = "the head of personnel"
-	faction = "Station"
+	faction = FACTION_STATION
 	total_positions = 1
 	spawn_positions = 1
 	selection_color = "#dddddd"
@@ -15,7 +15,7 @@
 	base_access = list(ACCESS_CHAPEL_OFFICE, ACCESS_CREMATORIUM, ACCESS_MORGUE, ACCESS_THEATRE)
 	extra_access = list()
 
-	departments = DEPT_BITFLAG_CIV
+	departments = DEPARTMENT_CIVILIAN_BITFLAG
 	bank_account_department = ACCOUNT_CIV_BITFLAG
 	payment_per_department = list(ACCOUNT_CIV_ID = PAYCHECK_EASY)
 
@@ -33,11 +33,18 @@
 		/area/crew_quarters/theatre
 	)
 
-/datum/job/chaplain/after_spawn(mob/living/H, mob/M, latejoin = FALSE, client/preference_source, on_dummy = FALSE)
+	job_flags = JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK | JOB_CREW_MEMBER | JOB_NEW_PLAYER_JOINABLE
+
+	voice_of_god_power = 2 //Chaplains are very good at speaking with the voice of god
+
+/datum/job/chaplain/after_spawn(mob/living/spawned, client/player_client, latejoin = FALSE, client/preference_source, on_dummy = FALSE)
 	. = ..()
-	if(!M.client || on_dummy)
+	if(!spawned.client || on_dummy)
+		return
+	if(!ishuman(spawned))
 		return
 
+	var/mob/living/carbon/human/H = spawned
 	var/obj/item/storage/book/bible/booze/B = new
 
 	if(GLOB.religion)

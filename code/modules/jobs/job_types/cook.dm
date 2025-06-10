@@ -1,10 +1,10 @@
 /datum/job/cook
 	title = JOB_NAME_COOK
 	description = "Whip up meals for the crew, get creative and cook different meals, request ingredients from Botany and Cargo. Make sure everyone stays well fed and happy."
-	department_for_prefs = DEPT_NAME_SERVICE
+	department_for_prefs = DEPARTMENT_SERVICE_NAME
 	department_head = list(JOB_NAME_HEADOFPERSONNEL)
 	supervisors = "the head of personnel"
-	faction = "Station"
+	faction = FACTION_STATION
 	total_positions = 2
 	spawn_positions = 1
 	selection_color = "#bbe291"
@@ -15,7 +15,7 @@
 	base_access = list(ACCESS_KITCHEN, ACCESS_MORGUE, ACCESS_MINERAL_STOREROOM)
 	extra_access = list(ACCESS_HYDROPONICS, ACCESS_BAR)
 
-	departments = DEPT_BITFLAG_SRV
+	departments = DEPARTMENT_SERVICE_BITFLAG
 	bank_account_department = ACCOUNT_SRV_BITFLAG
 	payment_per_department = list(ACCOUNT_SRV_ID = PAYCHECK_EASY)
 
@@ -29,6 +29,8 @@
 
 	minimal_lightup_areas = list(/area/crew_quarters/kitchen, /area/medical/morgue)
 	lightup_areas = list(/area/hydroponics)
+
+	job_flags = JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK | JOB_CREW_MEMBER | JOB_NEW_PLAYER_JOINABLE
 
 /datum/outfit/job/cook
 	name = JOB_NAME_COOK

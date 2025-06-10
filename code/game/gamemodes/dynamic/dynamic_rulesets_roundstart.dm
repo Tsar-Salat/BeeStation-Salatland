@@ -209,7 +209,7 @@
 	var/mob/M = antag_pick_n_take(candidates)
 	if (M)
 		assigned += M.mind
-		M.mind.assigned_role = ROLE_WIZARD
+		M.mind.set_assigned_role(SSjob.GetJobType(/datum/job/space_wizard))
 		M.mind.special_role = ROLE_WIZARD
 		GLOB.pre_setup_antags += M.mind
 
@@ -311,8 +311,8 @@
 			break
 		var/mob/M = antag_pick_n_take(candidates)
 		assigned += M.mind
-		M.mind.assigned_role = ROLE_OPERATIVE
-		M.mind.special_role = ROLE_OPERATIVE
+		M.mind.set_assigned_role(SSjob.GetJobType(/datum/job/nuclear_operative))
+		M.mind.special_role = ROLE_NUCLEAR_OPERATIVE
 		GLOB.pre_setup_antags += M.mind
 	return TRUE
 
@@ -490,8 +490,8 @@
 				qdel(S)
 				new /obj/machinery/nuclearbomb/syndicate/bananium(T)
 		for(var/datum/mind/V in assigned)
-			V.assigned_role = "Clown Operative"
-			V.special_role = "Clown Operative"
+			V.set_assigned_role(SSjob.GetJobType(/datum/job/clown_operative))
+			V.special_role = ROLE_CLOWN_OPERATIVE
 			GLOB.pre_setup_antags += V
 
 //////////////////////////////////////////////
@@ -562,7 +562,6 @@
 	for (var/i in 1 to starter_servants)
 		var/mob/servant = antag_pick_n_take(candidates)
 		assigned += servant.mind
-		servant.mind.assigned_role = ROLE_SERVANT_OF_RATVAR
 		servant.mind.special_role = ROLE_SERVANT_OF_RATVAR
 		GLOB.pre_setup_antags += servant.mind
 	//Generate scriptures

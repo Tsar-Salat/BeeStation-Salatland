@@ -1,10 +1,10 @@
 /datum/job/mime
 	title = JOB_NAME_MIME
 	description = "Be the Clown's mute counterpart and arch nemesis. Conduct pantomimes and performances, create interesting situations with your mime powers. Remember your job is to keep things funny for others, not just yourself."
-	department_for_prefs = DEPT_NAME_SERVICE
+	department_for_prefs = DEPARTMENT_SERVICE_NAME
 	department_head = list(JOB_NAME_HEADOFPERSONNEL)
 	supervisors = "the head of personnel"
-	faction = "Station"
+	faction = FACTION_STATION
 	total_positions = 1
 	spawn_positions = 1
 	selection_color = "#dddddd"
@@ -14,7 +14,7 @@
 	base_access = list(ACCESS_THEATRE)
 	extra_access = list()
 
-	departments = DEPT_BITFLAG_SRV
+	departments = DEPARTMENT_SERVICE_BITFLAG
 	bank_account_department = ACCOUNT_SRV_BITFLAG
 	payment_per_department = list(ACCOUNT_SRV_ID = PAYCHECK_MINIMAL)
 
@@ -27,13 +27,18 @@
 
 	minimal_lightup_areas = list(/area/crew_quarters/theatre)
 
-/datum/job/mime/after_spawn(mob/living/carbon/human/H, mob/M, latejoin = FALSE, client/preference_source, on_dummy = FALSE)
+	job_flags = JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK | JOB_CREW_MEMBER | JOB_NEW_PLAYER_JOINABLE
+
+	voice_of_god_power = 0.5 //Why are you speaking
+	voice_of_god_silence_power = 3
+
+/datum/job/mime/after_spawn(mob/living/spawned, client/player_client, latejoin = FALSE, client/preference_source, on_dummy = FALSE)
 	. = ..()
-	if(!ishuman(H))
+	if(!ishuman(spawned))
 		return
-	if(!M.client || on_dummy)
+	if(on_dummy)
 		return
-	H.apply_pref_name(/datum/preference/name/mime, preference_source)
+	spawned.apply_pref_name(/datum/preference/name/mime, preference_source)
 
 
 /datum/outfit/job/mime

@@ -22,7 +22,7 @@
 	/// assoc-ing to head names, so that we give their name an officer mark on crew manifest
 	var/static/list/heads
 	if(!heads) // do not do this in pre-runtime.
-		heads = make_associative(SSdepartment.get_jobs_by_dept_id(DEPT_NAME_COMMAND))
+		heads = make_associative(SSdepartment.get_jobs_by_dept_id(DEPARTMENT_COMMAND_NAME))
 	/// Takes a result of each crew data in a format
 	var/list/manifest_out = list()
 
@@ -36,7 +36,7 @@
 			for(var/datum/department_group/department as anything in SSdepartment.get_department_by_bitflag(dept_bitflags))
 				LAZYINITLIST(manifest_out[department.dept_id])
 				// Append to beginning of list if captain or department head
-				var/put_at_top = (hud == JOB_HUD_CAPTAIN) || (hud == JOB_HUD_ACTINGCAPTAIN) || (department.dept_id != DEPT_NAME_COMMAND && heads[rank])
+				var/put_at_top = (hud == JOB_HUD_CAPTAIN) || (hud == JOB_HUD_ACTINGCAPTAIN) || (department.dept_id != DEPARTMENT_COMMAND_NAME && heads[rank])
 				var/list/_internal = manifest_out[department.dept_id]
 				_internal.Insert(put_at_top, list(entry))
 		else

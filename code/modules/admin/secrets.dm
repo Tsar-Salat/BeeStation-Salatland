@@ -2,7 +2,6 @@ GLOBAL_DATUM_INIT(admin_secrets, /datum/admin_secrets, new)
 
 /datum/admin_secrets
 
-
 /datum/admin_secrets/ui_state(mob/user)
 	return GLOB.admin_state
 
@@ -314,7 +313,8 @@ GLOBAL_DATUM_INIT(admin_secrets, /datum/admin_secrets, new)
 				return
 			var/dat = "<B>Showing DNA from blood.</B><HR>"
 			dat += "<table cellspacing=5><tr><th>Name</th><th>DNA</th><th>Blood Type</th></tr>"
-			for(var/mob/living/carbon/human/H in GLOB.carbon_list)
+			for(var/i in GLOB.human_list)
+				var/mob/living/carbon/human/H = i
 				if(H.ckey)
 					dat += "<tr><td>[H]</td><td>[H.dna.unique_enzymes]</td><td>[H.dna.blood_type]</td></tr>"
 			dat += "</table>"
@@ -324,7 +324,8 @@ GLOBAL_DATUM_INIT(admin_secrets, /datum/admin_secrets, new)
 				return
 			var/dat = "<B>Showing Fingerprints.</B><HR>"
 			dat += "<table cellspacing=5><tr><th>Name</th><th>Fingerprints</th></tr>"
-			for(var/mob/living/carbon/human/H in GLOB.carbon_list)
+			for(var/i in GLOB.human_list)
+				var/mob/living/carbon/human/H = i
 				if(H.ckey)
 					dat += "<tr><td>[H]</td><td>[rustg_hash_string(RUSTG_HASH_MD5, H.dna.unique_identity)]</td></tr>"
 			dat += "</table>"
@@ -334,9 +335,9 @@ GLOBAL_DATUM_INIT(admin_secrets, /datum/admin_secrets, new)
 			if(!check_rights(R_FUN))
 				return
 			SSblackbox.record_feedback("nested tally", "admin_secrets_fun_used", 1, list("Monkeyize All Humans"))
-			for(var/mob/living/carbon/human/H in GLOB.carbon_list)
-				spawn(0)
-					H.monkeyize()
+			for(var/i in GLOB.human_list)
+				var/mob/living/carbon/human/H = i
+				INVOKE_ASYNC(H, /mob/living/carbon.proc/monkeyize)
 			ok = 1
 
 		if("allspecies")
@@ -352,7 +353,8 @@ GLOBAL_DATUM_INIT(admin_secrets, /datum/admin_secrets, new)
 			log_admin("[key_name(usr)] turned all humans into [result]", 1)
 			message_admins("\blue [key_name_admin(usr)] turned all humans into [result]")
 			var/newtype = GLOB.species_list[result]
-			for(var/mob/living/carbon/human/H in GLOB.carbon_list)
+			for(var/i in GLOB.human_list)
+				var/mob/living/carbon/human/H = i
 				H.set_species(newtype)
 
 		if("tripleAI")
@@ -487,7 +489,8 @@ GLOBAL_DATUM_INIT(admin_secrets, /datum/admin_secrets, new)
 				return
 			SSblackbox.record_feedback("nested tally", "admin_secrets_fun_used", 1, list("Chinese Cartoons"))
 			message_admins("[key_name_admin(usr)] made everything kawaii.")
-			for(var/mob/living/carbon/human/H in GLOB.carbon_list)
+			for(var/i in GLOB.human_list)
+				var/mob/living/carbon/human/H = i
 				SEND_SOUND(H, sound(SSstation.announcer.event_sounds[ANNOUNCER_ANIMES]))
 
 				if(H.dna.species.id == SPECIES_HUMAN)
@@ -633,7 +636,8 @@ GLOBAL_DATUM_INIT(admin_secrets, /datum/admin_secrets, new)
 			if(!check_rights(R_FUN))
 				return
 			SSblackbox.record_feedback("nested tally", "admin_secrets_fun_used", 1, list("Dwarf Beards"))
-			for(var/mob/living/carbon/human/B in GLOB.carbon_list)
+			for(var/i in GLOB.human_list)
+				var/mob/living/carbon/human/B = i
 				B.facial_hair_style = "Dward Beard"
 				B.update_hair()
 			message_admins("[key_name_admin(usr)] activated dorf mode")
@@ -672,11 +676,9 @@ GLOBAL_DATUM_INIT(admin_secrets, /datum/admin_secrets, new)
 		if("infinite_sec")
 			if(!check_rights(R_DEBUG))
 				return
-			var/datum/job/J = SSjob.GetJob(JOB_NAME_SECURITYOFFICER)
-			if(!J)
-				return
-			J.total_positions = -1
-			J.spawn_positions = -1
+			var/datum/job/sec_job = SSjob.GetJobType(/datum/job/security_officer)
+			sec_job.total_positions = -1
+			sec_job.spawn_positions = -1
 			message_admins("[key_name_admin(usr)] has removed the cap on security officers.")
 
 		if("ctfbutton")
@@ -874,7 +876,7 @@ GLOBAL_DATUM_INIT(admin_secrets, /datum/admin_secrets, new)
 			var/mob/chosen = players[1]
 			if (chosen.client)
 				if(ishuman(spawnedMob))
-					chosen.client.prefs.apply_prefs_to(spawnedMob)
+					chosen.client.prefs.safe_transfer_prefs_to(spawnedMob, is_antag = TRUE)
 				spawnedMob.key = chosen.key
 			players -= chosen
 		if (ishuman(spawnedMob) && ispath(humanoutfit, /datum/outfit))

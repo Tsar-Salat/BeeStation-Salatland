@@ -1,12 +1,12 @@
 /datum/job/chief_engineer
 	title = JOB_NAME_CHIEFENGINEER
 	description = "Oversee the engineers and atmospheric technicians, keep a watchful eye on the station's engine, gravity generator, and telecomms. Send your staff to repair hull breaches and damaged equipment as necessary."
-	department_for_prefs = DEPT_NAME_ENGINEERING
+	department_for_prefs = DEPARTMENT_ENGINEERING_NAME
 	auto_deadmin_role_flags = DEADMIN_POSITION_HEAD
 	department_head = list(JOB_NAME_CAPTAIN)
 	supervisors = "the captain"
 	head_announce = list("Engineering")
-	faction = "Station"
+	faction = FACTION_STATION
 	total_positions = 1
 	spawn_positions = 1
 	selection_color = "#ffeeaa"
@@ -23,7 +23,7 @@
 						ACCESS_CE, ACCESS_RC_ANNOUNCE, ACCESS_KEYCARD_AUTH, ACCESS_TCOMSAT, ACCESS_MINERAL_STOREROOM, ACCESS_WEAPONS)
 	extra_access = list()
 
-	departments = DEPT_BITFLAG_ENG | DEPT_BITFLAG_COM
+	departments = DEPARTMENT_ENGINEERING_BITFLAG | DEPARTMENT_COMMAND_BITFLAG
 	bank_account_department = ACCOUNT_ENG_BITFLAG | ACCOUNT_COM_BITFLAG
 	payment_per_department = list(
 		ACCOUNT_COM_ID = PAYCHECK_COMMAND_NT,
@@ -38,6 +38,13 @@
 	)
 
 	minimal_lightup_areas = list(/area/crew_quarters/heads/chief, /area/engine/atmos)
+
+	job_flags = JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK | JOB_CREW_MEMBER | JOB_NEW_PLAYER_JOINABLE
+
+	voice_of_god_power = 1.4 //Command staff has authority
+
+/datum/job/chief_engineer/get_captaincy_announcement(mob/living/captain)
+	return "Due to staffing shortages, newly promoted Acting Captain [captain.real_name] on deck!"
 
 /datum/outfit/job/chief_engineer
 	name = JOB_NAME_CHIEFENGINEER

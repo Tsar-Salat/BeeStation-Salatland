@@ -1,11 +1,11 @@
 /datum/job/brig_physician
 	title = JOB_NAME_BRIGPHYSICIAN
 	description = "Tend to the health of Security Officers and Prisoners, help out at Medbay if you have free time."
-	department_for_prefs = DEPT_NAME_SECURITY
+	department_for_prefs = DEPARTMENT_SECURITY_NAME
 	department_head_for_prefs = JOB_NAME_HEADOFSECURITY
 	department_head = list(JOB_NAME_HEADOFSECURITY)
 	supervisors = "the head of security"
-	faction = "Station"
+	faction = FACTION_STATION
 	total_positions = 1
 	spawn_positions = 1
 	selection_color = "#ffeeee"
@@ -17,7 +17,7 @@
 	base_access = list(ACCESS_BRIGPHYS, ACCESS_SEC_DOORS, ACCESS_COURT,  ACCESS_MECH_MEDICAL, ACCESS_MAINT_TUNNELS, ACCESS_MORGUE)
 	extra_access = list(ACCESS_MEDICAL, ACCESS_SURGERY)
 
-	departments = DEPT_BITFLAG_SEC
+	departments = DEPARTMENT_SECURITY_BITFLAG
 	bank_account_department = ACCOUNT_MED_BITFLAG | ACCOUNT_SEC_BITFLAG
 	payment_per_department = list(ACCOUNT_SEC_ID = PAYCHECK_MEDIUM)
 	mind_traits = list(TRAIT_MEDICAL_METABOLISM)
@@ -31,6 +31,8 @@
 	biohazard = 25 //still deals with the sick and injured, just less than a medical doctor
 
 	minimal_lightup_areas = list(/area/medical/morgue)
+
+	job_flags = JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK | JOB_CREW_MEMBER | JOB_NEW_PLAYER_JOINABLE
 
 /datum/outfit/job/brig_physician
 	name = JOB_NAME_BRIGPHYSICIAN

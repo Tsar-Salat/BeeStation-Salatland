@@ -41,7 +41,7 @@
 		restricted_jobs += JOB_NAME_ASSISTANT
 
 	if(CONFIG_GET(flag/protect_heads_from_antagonist))
-		restricted_jobs += SSdepartment.get_jobs_by_dept_id(DEPT_NAME_COMMAND)
+		restricted_jobs += SSdepartment.get_jobs_by_dept_id(DEPARTMENT_COMMAND_NAME)
 
 	var/num_traitors = 1
 

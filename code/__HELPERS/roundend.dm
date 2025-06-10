@@ -43,7 +43,7 @@
 					var/mob/living/carbon/human/H = L
 					category = "humans"
 					if(H.mind)
-						mob_data["job"] = H.mind.assigned_role
+						mob_data["job"] = H.mind.assigned_role.title
 					else
 						mob_data["job"] = "Unknown"
 					mob_data["species"] = H.dna.species.name
@@ -669,7 +669,7 @@
 	var/jobtext = ""
 	if(ply.assigned_role || ply.special_role)
 		if(ply.assigned_role != "Unassigned")
-			jobtext = ply.assigned_role
+			jobtext = ply.assigned_role.title
 		if(!jobtext)
 			jobtext = ply.special_role
 		if(jobtext)

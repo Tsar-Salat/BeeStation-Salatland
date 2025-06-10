@@ -263,9 +263,9 @@ GLOBAL_LIST_EMPTY(cryopod_computers)
 /obj/machinery/cryopod/proc/despawn_occupant()
 	var/mob/living/mob_occupant = occupant
 
-	if(mob_occupant.mind && mob_occupant.mind.assigned_role)
-		//Handle job slot/tater cleanup.
-		var/job = mob_occupant.mind.assigned_role
+	if(mob_occupant.mind)
+		// Handle job slot/tater cleanup.
+		var/job = mob_occupant.mind.assigned_role.title
 		SSjob.FreeRole(job)
 
 	// Delete them from manifest.
@@ -375,7 +375,7 @@ GLOBAL_LIST_EMPTY(cryopod_computers)
 	if(target == user && world.time - target.client.cryo_warned > 5 MINUTES)//if we haven't warned them in the last 5 minutes
 		var/caught = FALSE
 		var/datum/antagonist/A = target.mind.has_antag_datum(/datum/antagonist)
-		if(target.mind.assigned_role in SSdepartment.get_jobs_by_dept_id(DEPT_NAME_COMMAND))
+		if(target.mind.assigned_role in SSdepartment.get_jobs_by_dept_id(DEPARTMENT_COMMAND_NAME))
 			alert("You're a Head of Staff![generic_plsnoleave_message]")
 			caught = TRUE
 		if(A)

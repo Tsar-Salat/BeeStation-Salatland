@@ -59,18 +59,20 @@
 	report_message = "Ohh.... Man.... That mandatory office party from last shift... God that was awesome... I woke up in some random toilet 3 sectors away..."
 	trait_to_give = STATION_TRAIT_HANGOVER
 	blacklist = list(/datum/station_trait/late_arrivals, /datum/station_trait/random_spawns)
-	possible_announcements = list("That was one hell of a night. Now, get back to work.",
-								"Party's over. Get back to work.")
+	possible_announcements = list(
+		"That was one hell of a night. Now, get back to work.",
+		"Party's over. Get back to work."
+	)
 
 /datum/station_trait/hangover/New()
 	. = ..()
-	RegisterSignal(SSdcs, COMSIG_GLOB_JOB_AFTER_SPAWN, PROC_REF(on_job_after_spawn))
-	RegisterSignal(SSmapping, COMSIG_SUBSYSTEM_POST_INITIALIZE, PROC_REF(create_spawners))
+	RegisterSignal(SSdcs, COMSIG_GLOB_JOB_AFTER_LATEJOIN_SPAWN, PROC_REF(on_job_after_spawn))
+	RegisterSignal(SSmapping, COMSIG_SUBSYSTEM_POST_INITIALIZE, .proc/create_spawners)
 
 /datum/station_trait/hangover/proc/create_spawners()
 	SIGNAL_HANDLER
 
-	INVOKE_ASYNC(src, PROC_REF(pick_turfs_and_spawn))
+	INVOKE_ASYNC(src, .proc/pick_turfs_and_spawn)
 	UnregisterSignal(SSmapping, COMSIG_SUBSYSTEM_POST_INITIALIZE)
 
 /datum/station_trait/hangover/proc/pick_turfs_and_spawn()
@@ -78,13 +80,13 @@
 	for(var/turf/T as() in turfs)
 		new /obj/effect/spawner/hangover_spawn(T)
 
-/datum/station_trait/hangover/proc/on_job_after_spawn(datum/source, datum/job/job, mob/living/living_mob, mob/spawned_mob, joined_late)
+/datum/station_trait/hangover/proc/on_job_after_spawn(datum/source, datum/job/job, mob/living/spawned_mob)
 	SIGNAL_HANDLER
 
-	if(joined_late || !iscarbon(living_mob))
+	if(!iscarbon(spawned_mob))
 		return
 
-	var/mob/living/carbon/spawned_carbon = living_mob
+	var/mob/living/carbon/spawned_carbon = spawned_mob
 	spawned_carbon.set_resting(TRUE, silent = TRUE)
 	if(prob(50))
 		spawned_carbon.adjust_drugginess(rand(15, 20))
@@ -92,10 +94,19 @@
 		spawned_carbon.drunkenness += rand(15, 25)
 	spawned_carbon.adjust_disgust(rand(5, 55)) //How hungover are you?
 
-	if(prob(35) && !spawned_carbon.head)
-		var/obj/item/hat = pick(list(/obj/item/clothing/head/costume/sombrero, /obj/item/clothing/head/fedora, /obj/item/clothing/mask/balaclava, /obj/item/clothing/head/costume/ushanka, /obj/item/clothing/head/costume/cardborg, /obj/item/clothing/head/costume/pirate, /obj/item/clothing/head/cone))
-		hat = new hat(spawned_mob)
-		spawned_mob.equip_to_slot(hat, ITEM_SLOT_HEAD)
+	if(!prob(35) && spawned_carbon.head)
+		return
+	var/obj/item/hat = pick(
+		/obj/item/clothing/head/costume/sombrero,
+		/obj/item/clothing/head/fedora,
+		/obj/item/clothing/mask/balaclava,
+		/obj/item/clothing/head/costume/ushanka,
+		/obj/item/clothing/head/costume/cardborg,
+		/obj/item/clothing/head/costume/pirate,
+		/obj/item/clothing/head/cone,
+		)
+	hat = new hat(spawned_mob)
+	spawned_mob.equip_to_slot_or_del(hat, ITEM_SLOT_HEAD)
 
 /datum/station_trait/blackout
 	name = "Blackout"

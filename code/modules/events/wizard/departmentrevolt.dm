@@ -38,15 +38,16 @@
 	var/datum/team/nation/nation = new
 	nation.name = nation_name
 
-	for(var/mob/living/carbon/human/H in GLOB.carbon_list)
-		if(H.mind)
-			var/datum/mind/M = H.mind
-			if(M.assigned_role && !(M.has_antag_datum(/datum/antagonist)))
-				for(var/job in jobs_to_revolt)
-					if(M.assigned_role == job)
-						citizens += H
-						M.add_antag_datum(/datum/antagonist/separatist,nation)
-						H.log_message("Was made into a separatist, long live [nation_name]!", LOG_ATTACK, color="red")
+	for(var/mob/living/carbon/human/possible_separatist as anything in GLOB.human_list)
+		if(!possible_separatist.mind)
+			continue
+		var/datum/mind/separatist_mind = possible_separatist.mind
+		if(!(separatist_mind.assigned_role.title in jobs_to_revolt))
+			continue
+		citizens += possible_separatist
+		separatist_mind.add_antag_datum(/datum/antagonist/separatist, nation)
+		nation.add_member(separatist_mind)
+		possible_separatist.log_message("Was made into a separatist, long live [nation_name]!", LOG_ATTACK, color="red")
 
 	if(citizens.len)
 		var/message
