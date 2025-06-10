@@ -61,4 +61,4 @@
 		/obj/item/melee/classic_baton/police/telescopic=1
 	)
 
-	chameleon_extras = list(/obj/item/gun/energy/e_gun, /obj/item/stamp/head_of_personnel)
+	chameleon_extras = list(/obj/item/gun/energy/e_gun, /obj/item/stamp/head/hop)

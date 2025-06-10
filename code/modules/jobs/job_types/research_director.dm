@@ -68,7 +68,7 @@
 	satchel = /obj/item/storage/backpack/satchel/tox
 	duffelbag = /obj/item/storage/backpack/duffelbag/science
 
-	chameleon_extras = /obj/item/stamp/research_director
+	chameleon_extras = /obj/item/stamp/head/rd
 
 /datum/outfit/job/research_director/rig
 	name = "Research Director (Hardsuit)"

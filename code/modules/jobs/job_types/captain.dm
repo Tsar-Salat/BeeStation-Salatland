@@ -69,7 +69,7 @@
 	implants = list(/obj/item/implant/mindshield)
 	accessory = /obj/item/clothing/accessory/medal/gold/captain
 
-	chameleon_extras = list(/obj/item/gun/energy/e_gun, /obj/item/stamp/captain)
+	chameleon_extras = list(/obj/item/gun/energy/e_gun, /obj/item/stamp/head/captain)
 
 /datum/outfit/job/captain/hardsuit
 	name = "Captain (Hardsuit)"

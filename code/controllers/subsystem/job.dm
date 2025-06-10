@@ -550,7 +550,7 @@ SUBSYSTEM_DEF(job)
 		if(S)
 			S.JoinPlayerHere(living_mob, FALSE)
 		if(!S && !spawning_handled) //if there isn't a spawnpoint send them to latejoin, if there's no latejoin go yell at your mapper
-			log_world("Couldn't find a round start spawn point for [rank]")
+			log_mapping("Job ([type]) couldn't find a round start spawn point.")
 			SendToLateJoin(living_mob)
 
 

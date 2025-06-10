@@ -394,6 +394,9 @@ GLOBAL_LIST_INIT(strippable_corgi_items, create_strippable_list(list(
 
 /mob/living/basic/pet/dog/corgi/Ian/Initialize(mapload)
 	. = ..()
+	// Ensure Ian exists
+	REGISTER_REQUIRED_MAP_ITEM(1, 1)
+
 	//parent call must happen first to ensure IAN
 	//is not in nullspace when child puppies spawn
 	Read_Memory()

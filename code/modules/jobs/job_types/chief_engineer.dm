@@ -58,7 +58,7 @@
 	duffelbag = /obj/item/storage/backpack/duffelbag/engineering
 	box = /obj/item/storage/box/survival/engineer
 	pda_slot = ITEM_SLOT_LPOCKET
-	chameleon_extras = /obj/item/stamp/chief_engineer
+	chameleon_extras = /obj/item/stamp/head/ce
 
 /datum/outfit/job/chief_engineer/rig
 	name = "Chief Engineer (Hardsuit)"

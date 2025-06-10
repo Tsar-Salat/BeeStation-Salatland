@@ -10,6 +10,9 @@
 	var/memory_saved = FALSE
 
 /mob/living/carbon/monkey/punpun/Initialize(mapload)
+	// 1 Pun Pun should exist
+	REGISTER_REQUIRED_MAP_ITEM(1, 1)
+
 	// Init our blacklists.
 	relic_hat_blacklist = typecacheof(list(/obj/item/clothing/head/chameleon,/obj/item/clothing/head/helmet/monkey_sentience_helmet), only_root_path = TRUE)
 	relic_mask_blacklist = typecacheof(list(/obj/item/clothing/mask/facehugger, /obj/item/clothing/mask/chameleon), only_root_path = TRUE)
