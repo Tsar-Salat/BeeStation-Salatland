@@ -1,0 +1,7 @@
+/obj/item/stamp/captain : /obj/item/stamp/head/captain {@OLD}
+/obj/item/stamp/chief_engineer : /obj/item/stamp/head/ce {@OLD}
+/obj/item/stamp/cmo : /obj/item/stamp/head/cmo {@OLD}
+/obj/item/stamp/head_of_personnel : /obj/item/stamp/head/hop {@OLD}
+/obj/item/stamp/hos : /obj/item/stamp/head/hos {@OLD}
+/obj/item/stamp/quartermaster : /obj/item/stamp/head/qm {@OLD}
+/obj/item/stamp/research_director : /obj/item/stamp/head/rd {@OLD}

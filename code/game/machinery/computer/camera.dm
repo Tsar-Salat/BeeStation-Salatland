@@ -275,6 +275,7 @@
 	desc = "Used for watching an empty arena."
 	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "telescreen"
+	icon_keyboard = null
 
 	//these muthafuckas arent supposed to smooth
 	base_icon_state = null

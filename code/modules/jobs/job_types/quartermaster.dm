@@ -46,5 +46,5 @@
 	glasses = /obj/item/clothing/glasses/sunglasses/advanced
 	l_hand = /obj/item/clipboard
 
-	chameleon_extras = /obj/item/stamp/quartermaster
+	chameleon_extras = /obj/item/stamp/head/qm
 

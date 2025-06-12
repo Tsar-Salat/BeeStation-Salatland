@@ -27981,7 +27981,7 @@
 	pixel_x = -6
 	},
 /obj/machinery/airalarm/directional/west,
-/obj/item/stamp/quartermaster{
+/obj/item/stamp/head/qm{
 	pixel_x = 8;
 	pixel_y = 10
 	},
@@ -32327,7 +32327,7 @@
 /obj/item/paper_bin{
 	pixel_y = 5
 	},
-/obj/item/stamp/head_of_personnel{
+/obj/item/stamp/head/hop{
 	pixel_x = -12;
 	pixel_y = 5
 	},
@@ -40493,7 +40493,7 @@
 	pixel_y = 3;
 	pixel_x = 5
 	},
-/obj/item/stamp/chief_engineer,
+/obj/item/stamp/head/ce,
 /obj/structure/window/reinforced/spawner{
 	dir = 1
 	},
@@ -41453,7 +41453,7 @@
 	pixel_y = 5
 	},
 /obj/item/pen,
-/obj/item/stamp/cmo{
+/obj/item/stamp/head/cmo{
 	pixel_y = 9
 	},
 /obj/effect/turf_decal/siding/dark_blue{
@@ -47702,7 +47702,7 @@
 /obj/effect/turf_decal/trimline/dark_red/filled/line{
 	dir = 9
 	},
-/obj/item/stamp/hos{
+/obj/item/stamp/head/hos{
 	pixel_x = 3;
 	pixel_y = 12
 	},
@@ -60928,7 +60928,7 @@
 	},
 /obj/item/pen,
 /obj/structure/table/reinforced,
-/obj/item/stamp/research_director{
+/obj/item/stamp/head/rd{
 	pixel_y = 5
 	},
 /obj/item/sticky_note_pile{
@@ -63172,7 +63172,7 @@
 "mWI" = (
 /obj/structure/table/wood,
 /obj/item/folder/blue,
-/obj/item/stamp/captain,
+/obj/item/stamp/head/captain,
 /obj/machinery/firealarm{
 	dir = 4;
 	pixel_x = -26

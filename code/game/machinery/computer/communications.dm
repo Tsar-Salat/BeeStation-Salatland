@@ -41,6 +41,9 @@
 
 /obj/machinery/computer/communications/Initialize(mapload)
 	. = ..()
+	// All maps should have at least 1 comms console
+	REGISTER_REQUIRED_MAP_ITEM(1, INFINITY)
+
 	GLOB.shuttle_caller_list += src
 
 /// Are we NOT a silicon, AND we're logged in as the captain?

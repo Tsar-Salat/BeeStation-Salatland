@@ -6017,7 +6017,7 @@
 	dir = 5
 	},
 /obj/item/folder/yellow,
-/obj/item/stamp/quartermaster,
+/obj/item/stamp/head/qm,
 /turf/open/floor/iron/half,
 /area/centcom/supply)
 "aoN" = (

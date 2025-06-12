@@ -25415,7 +25415,7 @@
 /obj/structure/table/wood,
 /obj/item/storage/secure/briefcase,
 /obj/item/clothing/glasses/hud/health,
-/obj/item/stamp/cmo,
+/obj/item/stamp/head/cmo,
 /obj/machinery/firealarm/directional/east,
 /turf/open/floor/carpet/blue,
 /area/crew_quarters/heads/cmo)
@@ -33991,7 +33991,7 @@
 	pixel_y = 4
 	},
 /obj/item/folder,
-/obj/item/stamp/chief_engineer,
+/obj/item/stamp/head/ce,
 /obj/effect/turf_decal/bot,
 /obj/effect/turf_decal/tile/yellow/opposingcorners{
 	dir = 1
@@ -42632,7 +42632,7 @@
 	pixel_x = -3;
 	pixel_y = 7
 	},
-/obj/item/stamp/quartermaster{
+/obj/item/stamp/head/qm{
 	pixel_x = 8;
 	pixel_y = 10
 	},
@@ -45446,7 +45446,7 @@
 	pixel_x = 8;
 	pixel_y = 16
 	},
-/obj/item/stamp/hos{
+/obj/item/stamp/head/hos{
 	pixel_x = 3;
 	pixel_y = 12
 	},
@@ -83846,7 +83846,7 @@
 /obj/item/folder/blue{
 	pixel_x = 8
 	},
-/obj/item/stamp/captain{
+/obj/item/stamp/head/captain{
 	pixel_x = 8
 	},
 /obj/structure/desk_bell/speed_demon{
@@ -90416,7 +90416,7 @@
 	pixel_x = 5;
 	pixel_y = 3
 	},
-/obj/item/stamp/research_director{
+/obj/item/stamp/head/rd{
 	pixel_x = -6;
 	pixel_y = 2
 	},
@@ -90527,7 +90527,7 @@
 	pixel_x = 8;
 	pixel_y = 2
 	},
-/obj/item/stamp/head_of_personnel{
+/obj/item/stamp/head/hop{
 	pixel_x = 8;
 	pixel_y = -2
 	},

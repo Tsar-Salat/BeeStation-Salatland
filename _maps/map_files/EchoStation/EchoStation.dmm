@@ -2291,7 +2291,7 @@
 	pixel_x = -8;
 	pixel_y = 6
 	},
-/obj/item/stamp/research_director{
+/obj/item/stamp/head/rd{
 	pixel_x = -5;
 	pixel_y = -1
 	},
@@ -14073,7 +14073,7 @@
 	pixel_x = 4;
 	pixel_y = 4
 	},
-/obj/item/stamp/hos,
+/obj/item/stamp/head/hos,
 /obj/structure/cable/yellow{
 	icon_state = "1-2"
 	},
@@ -18067,7 +18067,7 @@
 	pixel_x = 8;
 	pixel_y = 4
 	},
-/obj/item/stamp/chief_engineer{
+/obj/item/stamp/head/ce{
 	pixel_x = -5;
 	pixel_y = 5
 	},
@@ -27827,7 +27827,7 @@
 	pixel_x = 5;
 	pixel_y = 9
 	},
-/obj/item/stamp/cmo{
+/obj/item/stamp/head/cmo{
 	pixel_x = -2
 	},
 /obj/effect/turf_decal/siding/wideplating/dark{
@@ -30331,7 +30331,7 @@
 	pixel_x = -15;
 	pixel_y = 4
 	},
-/obj/item/stamp/head_of_personnel{
+/obj/item/stamp/head/hop{
 	pixel_x = -15;
 	pixel_y = 7
 	},
@@ -33966,7 +33966,7 @@
 	pixel_x = 1;
 	pixel_y = 4
 	},
-/obj/item/stamp/captain{
+/obj/item/stamp/head/captain{
 	pixel_x = 9
 	},
 /obj/structure/sign/painting/library{
@@ -44059,7 +44059,7 @@
 	pixel_x = -6;
 	pixel_y = 4
 	},
-/obj/item/stamp/quartermaster{
+/obj/item/stamp/head/qm{
 	pixel_x = 7;
 	pixel_y = 8
 	},

@@ -205,7 +205,7 @@
 "acQ" = (
 /obj/structure/table/wood,
 /obj/item/folder/red,
-/obj/item/stamp/hos,
+/obj/item/stamp/head/hos,
 /turf/open/floor/carpet/red,
 /area/crew_quarters/heads/hos)
 "acW" = (
@@ -2229,7 +2229,7 @@
 	},
 /obj/item/pen,
 /obj/item/folder/white,
-/obj/item/stamp/research_director{
+/obj/item/stamp/head/rd{
 	pixel_x = 3;
 	pixel_y = -2
 	},
@@ -11333,7 +11333,7 @@
 "cfa" = (
 /obj/structure/table/glass,
 /obj/item/folder/white,
-/obj/item/stamp/cmo,
+/obj/item/stamp/head/cmo,
 /obj/item/clothing/glasses/hud/health,
 /obj/machinery/atmospherics/pipe/smart/simple/supply/hidden/layer2{
 	dir = 10
@@ -32434,7 +32434,7 @@
 /obj/item/pen{
 	pixel_x = 4
 	},
-/obj/item/stamp/head_of_personnel{
+/obj/item/stamp/head/hop{
 	pixel_x = -6;
 	pixel_y = -1
 	},
@@ -41227,7 +41227,7 @@
 	pixel_x = -3;
 	pixel_y = 7
 	},
-/obj/item/stamp/quartermaster,
+/obj/item/stamp/head/qm,
 /obj/effect/turf_decal/tile/brown/half/contrasted{
 	dir = 8
 	},
@@ -50930,7 +50930,7 @@
 /obj/item/folder/blue{
 	pixel_x = -11
 	},
-/obj/item/stamp/captain{
+/obj/item/stamp/head/captain{
 	pixel_x = -10
 	},
 /obj/item/pinpointer/nuke{
@@ -57676,7 +57676,7 @@
 "tGL" = (
 /obj/structure/table/reinforced,
 /obj/item/folder/yellow,
-/obj/item/stamp/chief_engineer,
+/obj/item/stamp/head/ce,
 /obj/structure/disposalpipe/segment,
 /obj/effect/landmark/event_spawn,
 /obj/machinery/atmospherics/pipe/smart/simple/scrubbers/hidden/layer4{
