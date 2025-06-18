@@ -666,7 +666,7 @@
 			if(!M.is_mouth_covered() && !M.is_eyes_covered())
 				unprotected = TRUE
 	if(unprotected)
-		if(!M.getorganslot(ORGAN_SLOT_EYES))	//can't blind somebody with no eyes
+		if(!M.get_organ_slot(ORGAN_SLOT_EYES))	//can't blind somebody with no eyes
 			to_chat(M, span_notice("Your eye sockets feel wet."))
 		else
 			if(!M.eye_blurry)
@@ -817,7 +817,7 @@
 
 /datum/reagent/consumable/liquidelectricity/on_mob_life(mob/living/carbon/M, delta_time, times_fired)
 	if(HAS_TRAIT(M, TRAIT_POWERHUNGRY))
-		var/obj/item/organ/stomach/battery/stomach = M.getorganslot(ORGAN_SLOT_STOMACH)
+		var/obj/item/organ/stomach/battery/stomach = M.get_organ_slot(ORGAN_SLOT_STOMACH)
 		if(istype(stomach))
 			stomach.adjust_charge(40*REM)
 	else if(DT_PROB(1.5, delta_time)) //scp13 optimization
@@ -858,18 +858,8 @@
 	color = "#C65A00"
 	chem_flags = NONE
 	taste_mult = 2
-	taste_description = "bitter sweetness"
+	taste_description = "caramel"
 	reagent_state = SOLID
-
-/datum/reagent/consumable/bbqsauce
-	name = "BBQ Sauce"
-	description = "Sweet, Smokey, Savory, and gets everywhere. Perfect for Grilling."
-	nutriment_factor = 5 * REAGENTS_METABOLISM
-	color = "#78280A" // rgb: 120 40, 10
-	chem_flags = NONE
-	taste_mult = 2.5 //sugar's 1.5, capsacin's 1.5, so a good middle ground.
-	taste_description = "smokey sweetness"
-	default_container = /obj/item/reagent_containers/condiment/bbqsauce
 
 /datum/reagent/consumable/char
 	name = "Char"
@@ -886,6 +876,32 @@
 	if(DT_PROB(13, delta_time))
 		M.say(pick("I hate my wife.", "I just want to grill for God's sake.", "I wish I could just go on my lawnmower and cut the grass.", "Yep, Quake. That was a good game...", "Yeah, my PDA has wi-fi. A wife I hate."), forced = /datum/reagent/consumable/char)
 	..()
+
+/datum/reagent/consumable/bbqsauce
+	name = "BBQ Sauce"
+	description = "Sweet, Smokey, Savory, and gets everywhere. Perfect for Grilling."
+	nutriment_factor = 5 * REAGENTS_METABOLISM
+	color = "#78280A" // rgb: 120 40, 10
+	chem_flags = NONE
+	taste_mult = 2.5 //sugar's 1.5, capsacin's 1.5, so a good middle ground.
+	taste_description = "smokey sweetness"
+
+/datum/reagent/consumable/laughsyrup
+	name = "Laughin' Syrup"
+	description = "The product of juicing Laughin' Peas. Fizzy, and seems to change flavour based on what it's used with!"
+	color = "#803280"
+	nutriment_factor = 5 * REAGENTS_METABOLISM
+	taste_mult = 2
+	taste_description = "fizzy sweetness"
+	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_GOAL_BOTANIST_HARVEST
+
+/datum/reagent/consumable/creamer
+	name = "Coffee Creamer"
+	description = "Powdered milk for cheap coffee. How delightful."
+	taste_description = "milk"
+	color = "#efeff0"
+	nutriment_factor = 1.5 * REAGENTS_METABOLISM
+	chem_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_GOAL_BOTANIST_HARVEST
 
 /datum/reagent/consumable/nutriment/cloth
 	name = "Cloth"
