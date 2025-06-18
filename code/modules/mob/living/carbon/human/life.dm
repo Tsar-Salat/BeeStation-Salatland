@@ -87,7 +87,7 @@
 
 /mob/living/carbon/human/check_breath(datum/gas_mixture/breath)
 
-	var/L = getorganslot(ORGAN_SLOT_LUNGS)
+	var/L = get_organ_slot(ORGAN_SLOT_LUNGS)
 
 	if(!L)
 		if(health >= crit_threshold)
@@ -101,7 +101,7 @@
 
 		if(S.breathid == GAS_O2)
 			throw_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
-		else if(S.breathid == "tox")
+		else if(S.breathid == GAS_PLASMA)
 			throw_alert("not_enough_tox", /atom/movable/screen/alert/not_enough_tox)
 		else if(S.breathid == "co2")
 			throw_alert("not_enough_co2", /atom/movable/screen/alert/not_enough_co2)
