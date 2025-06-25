@@ -432,7 +432,7 @@ GENE SCANNER
 		// Embedded Items
 		for(var/obj/item/bodypart/limb as anything in H.bodyparts)
 			for(var/obj/item/embed as anything in limb.embedded_objects)
-				message += "\t[span_alert("Foreign object embedded in subject's [limb.name].")]"
+				message += "\t[span_alert("Foreign object embedded in subject's [capitalize(parse_zone(limb.body_zone))].")]"
 
 	// Species and body temperature
 	if(ishuman(M))
