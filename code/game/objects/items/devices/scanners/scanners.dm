@@ -296,7 +296,7 @@ GENE SCANNER
 	if(advanced)
 		if(iscarbon(M))
 			var/mob/living/carbon/C = M
-			var/obj/item/organ/ears/ears = C.get_organ_slot(ORGAN_SLOT_EARS)
+			var/obj/item/organ/internal/ears/ears = C.get_organ_slot(ORGAN_SLOT_EARS)
 			message += "\t[span_info("<b>==EAR STATUS==</b>")]"
 			if(istype(ears))
 				var/healthy = TRUE
@@ -315,7 +315,7 @@ GENE SCANNER
 						healthy = FALSE
 				if(healthy)
 					message += "\t[span_info("Healthy.")]"
-			var/obj/item/organ/eyes/eyes = C.get_organ_slot(ORGAN_SLOT_EYES)
+			var/obj/item/organ/internal/eyes/eyes = C.get_organ_slot(ORGAN_SLOT_EYES)
 			message += "\t[span_info("<b>==EYE STATUS==</b>")]"
 			if(istype(eyes))
 				var/healthy = TRUE
@@ -375,7 +375,7 @@ GENE SCANNER
 		var/report_organs = FALSE
 
 		//Piece together the lists to be reported
-		for(var/O in H.internal_organs)
+		for(var/O in H.organs)
 			var/obj/item/organ/organ = O
 			if(organ.organ_flags & ORGAN_FAILING)
 				report_organs = TRUE	//if we report one organ, we report all organs, even if the lists are empty, just for consistency
@@ -495,7 +495,7 @@ GENE SCANNER
 				message += span_info("Blood level: [blood_percent] %, [C.blood_volume] cl, type: [blood_info]")
 
 		var/list/cyberimp_detect = list()
-		for(var/obj/item/organ/cyberimp/CI in C.internal_organs)
+		for(var/obj/item/organ/internal/cyberimp/CI in C.organs)
 			if(CI.status == ORGAN_ROBOTIC && !CI.syndicate_implant)
 				cyberimp_detect += CI.name
 		if(length(cyberimp_detect))
