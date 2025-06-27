@@ -899,7 +899,7 @@
 	if(!istype(target))
 		return
 
-	target.update_inv_hands()
+	target.update_held_items()
 
 	//SEND_SIGNAL(src, COMSIG_ATOM_UPDATE_INHAND_ICON, target)
 
