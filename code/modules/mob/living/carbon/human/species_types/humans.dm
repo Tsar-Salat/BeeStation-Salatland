@@ -1,18 +1,25 @@
 /datum/species/human
 	name = "\improper Human"
 	id = SPECIES_HUMAN
-	default_color = "FFFFFF"
-	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS)
-	mutant_bodyparts = list("body_size" = "Normal")
+	species_traits = list(
+		EYECOLOR,
+		HAIR,
+		FACEHAIR,
+		LIPS
+	)
+	inherent_traits = list(
+		TRAIT_CAN_USE_FLIGHT_POTION,
+	)
+	mutant_bodyparts = list("wings" = "None", "body_size" = "Normal")
 	use_skintones = 1
 	skinned_type = /obj/item/stack/sheet/animalhide/human
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | ERT_SPAWN | RACE_SWAP | SLIME_EXTRACT
 
-/datum/species/human/qualifies_for_rank(rank, list/features)
-	return TRUE	//Pure humans are always allowed in all roles.
-
 /datum/species/human/get_laugh_sound(mob/living/carbon/user)
 	return user.gender == FEMALE ? 'sound/voice/human/womanlaugh.ogg' : pick('sound/voice/human/manlaugh1.ogg', 'sound/voice/human/manlaugh2.ogg')
+
+/datum/species/human/randomize_features(mob/living/carbon/human/human_mob)
+	human_mob.skin_tone = random_skin_tone()
 
 /datum/species/human/get_scream_sound(mob/living/carbon/user)
 	return user.gender == FEMALE ? pick(
@@ -49,7 +56,7 @@
 /datum/species/human/prepare_human_for_preview(mob/living/carbon/human/human)
 	human.hair_style = "Business Hair"
 	human.hair_color = "b96" // brown
-	human.update_hair()
+	human.update_body_parts()
 
 /datum/species/human/get_species_description()
 	return "Humans are the dominant species in the known galaxy. \

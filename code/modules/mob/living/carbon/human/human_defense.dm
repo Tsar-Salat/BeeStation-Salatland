@@ -401,7 +401,7 @@
 				probability = 50
 		for(var/obj/item/bodypart/BP as() in bodyparts)
 			if(prob(probability) && !prob(getarmor(BP, BOMB)) && BP.body_zone != BODY_ZONE_HEAD && BP.body_zone != BODY_ZONE_CHEST)
-				BP.brute_dam = BP.max_damage
+				BP.receive_damage(INFINITY) //Capped by proc
 				BP.dismember()
 				max_limb_loss--
 				if(!max_limb_loss)
@@ -442,7 +442,7 @@
 	//If they can't, they're missing their heart and this would runtime
 	if(undergoing_cardiac_arrest() && can_heartattack() && !(flags & SHOCK_ILLUSION))
 		if(shock_damage * siemens_coeff >= 1 && prob(25))
-			var/obj/item/organ/heart/heart = get_organ_slot(ORGAN_SLOT_HEART)
+			var/obj/item/organ/internal/heart/heart = get_organ_slot(ORGAN_SLOT_HEART)
 			if(heart.Restart() && stat == CONSCIOUS)
 				to_chat(src, span_notice("You feel your heart beating again!"))
 	electrocution_animation(40)
@@ -452,7 +452,7 @@
 	if(. & EMP_PROTECT_CONTENTS)
 		return
 	var/informed = FALSE
-	for(var/obj/item/bodypart/bodypart in src.bodyparts)
+	for(var/obj/item/bodypart/bodypart as anything in src.bodyparts)
 		if(!IS_ORGANIC_LIMB(bodypart))
 			if(!informed)
 				to_chat(src, span_userdanger("You feel a sharp pain as [bodypart] overloads!"))
@@ -484,10 +484,10 @@
 		if(head_clothes)
 			if(!(head_clothes.resistance_flags & (UNACIDABLE | INDESTRUCTIBLE)))
 				head_clothes.acid_act(acidpwr, acid_volume)
-				update_inv_glasses()
-				update_inv_wear_mask()
-				update_inv_neck()
-				update_inv_head()
+				update_worn_glasses()
+				update_worn_mask()
+				update_worn_neck()
+				update_worn_head()
 			else
 				to_chat(src, span_notice("Your [head_clothes.name] protects your head and face from the acid!"))
 		else
@@ -507,8 +507,8 @@
 		if(chest_clothes)
 			if(!(chest_clothes.resistance_flags & (UNACIDABLE | INDESTRUCTIBLE)))
 				chest_clothes.acid_act(acidpwr, acid_volume)
-				update_inv_w_uniform()
-				update_inv_wear_suit()
+				update_worn_undersuit()
+				update_worn_oversuit()
 			else
 				to_chat(src, span_notice("Your [chest_clothes.name] protects your body from the acid!"))
 		else
@@ -538,9 +538,9 @@
 		if(arm_clothes)
 			if(!(arm_clothes.resistance_flags & (UNACIDABLE | INDESTRUCTIBLE)))
 				arm_clothes.acid_act(acidpwr, acid_volume)
-				update_inv_gloves()
-				update_inv_w_uniform()
-				update_inv_wear_suit()
+				update_worn_gloves()
+				update_worn_undersuit()
+				update_worn_oversuit()
 			else
 				to_chat(src, span_notice("Your [arm_clothes.name] protects your arms and hands from the acid!"))
 		else
@@ -564,9 +564,9 @@
 		if(leg_clothes)
 			if(!(leg_clothes.resistance_flags & (UNACIDABLE | INDESTRUCTIBLE)))
 				leg_clothes.acid_act(acidpwr, acid_volume)
-				update_inv_shoes()
-				update_inv_w_uniform()
-				update_inv_wear_suit()
+				update_worn_shoes()
+				update_worn_undersuit()
+				update_worn_oversuit()
 			else
 				to_chat(src, span_notice("Your [leg_clothes.name] protects your legs and feet from the acid!"))
 		else
@@ -588,7 +588,7 @@
 				emote("scream")
 				facial_hair_style = "Shaved"
 				hair_style = "Bald"
-				update_hair()
+				update_body_parts()
 				ADD_TRAIT(src, TRAIT_DISFIGURED, TRAIT_GENERIC)
 
 		update_damage_overlays()
@@ -764,7 +764,7 @@
 	var/broken_plural
 	var/damaged_plural
 	//Sets organs into their proper list
-	for(var/obj/item/organ/organ as anything in internal_organs)
+	for(var/obj/item/organ/organ as anything in organs)
 		if(organ.organ_flags & ORGAN_FAILING)
 			if(broken.len)
 				broken += ", "

@@ -1,7 +1,6 @@
 /datum/species/vampire
 	name = "\improper Vampire"
 	id = SPECIES_VAMPIRE
-	default_color = "FFFFFF"
 	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS)
 	inherent_traits = list(TRAIT_NOHUNGER,TRAIT_NOBREATH,TRAIT_DRINKSBLOOD)
 	inherent_biotypes = list(MOB_UNDEAD, MOB_HUMANOID)
@@ -9,8 +8,8 @@
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | MIRROR_MAGIC | ERT_SPAWN
 	exotic_bloodtype = "U"
 	use_skintones = TRUE
-	mutantheart = /obj/item/organ/heart/vampire
-	mutanttongue = /obj/item/organ/tongue/vampire
+	mutantheart = /obj/item/organ/internal/heart/vampire
+	mutanttongue = /obj/item/organ/internal/tongue/vampire
 	mutantstomach = null
 	mutantlungs = null
 	examine_limb_id = SPECIES_HUMAN
@@ -31,6 +30,7 @@
 	if(isnull(batform))
 		batform = new
 		batform.Grant(C)
+	C.set_safe_hunger_level()
 
 /datum/species/vampire/on_species_loss(mob/living/carbon/C)
 	. = ..()
@@ -126,7 +126,7 @@
 
 	return to_add
 
-/obj/item/organ/tongue/vampire
+/obj/item/organ/internal/tongue/vampire
 	name = "vampire tongue"
 	actions_types = list(/datum/action/item_action/organ_action/vampire)
 	color = "#1C1C1C"
@@ -141,7 +141,7 @@
 /datum/action/item_action/organ_action/vampire/on_activate(mob/user, atom/target)
 	if(iscarbon(owner))
 		var/mob/living/carbon/H = owner
-		var/obj/item/organ/tongue/vampire/V = target
+		var/obj/item/organ/internal/tongue/vampire/V = target
 		if(V.drain_cooldown >= world.time)
 			to_chat(H, span_notice("You just drained blood, wait a few seconds."))
 			return
@@ -179,7 +179,7 @@
 
 #undef VAMP_DRAIN_AMOUNT
 
-/obj/item/organ/heart/vampire
+/obj/item/organ/internal/heart/vampire
 	name = "vampire heart"
 	actions_types = list(/datum/action/item_action/organ_action/vampire_heart)
 	color = "#1C1C1C"

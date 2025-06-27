@@ -119,7 +119,7 @@
 	icon_state = "[initial(icon_state)][up ? "up" : ""]"
 	to_chat(user, span_notice("[up ? alt_toggle_message : toggle_message] \the [src]."))
 
-	user.update_inv_head()
+	user.update_worn_head()
 	if(iscarbon(user))
 		var/mob/living/carbon/carbon_user = user
 		carbon_user.head_update(src, forced = TRUE)
@@ -233,7 +233,7 @@
 	name = "police officer's hat"
 	desc = "A police officer's Hat. This hat emphasizes that you are THE LAW."
 	icon_state = "policehelm"
-	dynamic_hair_suffix = ""
+
 
 /obj/item/clothing/head/helmet/swat/nanotrasen
 	name = "\improper SWAT helmet"

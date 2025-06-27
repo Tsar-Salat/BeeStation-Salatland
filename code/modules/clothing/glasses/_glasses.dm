@@ -64,7 +64,7 @@
 /obj/item/clothing/glasses/proc/thermal_overload()
 	if(ishuman(src.loc))
 		var/mob/living/carbon/human/H = src.loc
-		var/obj/item/organ/eyes/eyes = H.get_organ_slot(ORGAN_SLOT_EYES)
+		var/obj/item/organ/internal/eyes/eyes = H.get_organ_slot(ORGAN_SLOT_EYES)
 		if(!H.is_blind())
 			if(H.glasses == src)
 				to_chat(H, span_danger("[src] overloads and blinds you!"))
@@ -442,7 +442,7 @@
 /obj/item/clothing/glasses/blindfold/white/visual_equipped(mob/living/carbon/human/user, slot)
 	if(ishuman(user) && slot == ITEM_SLOT_EYES)
 		update_icon(user=user)
-		user.update_inv_glasses() //Color might have been changed by update_icon.
+		user.update_worn_glasses() //Color might have been changed by update_icon.
 	..()
 
 /obj/item/clothing/glasses/blindfold/white/update_icon(updates=ALL, mob/living/carbon/human/user)
@@ -601,7 +601,7 @@
 			W.desc = "A pair of strange eyes, said to have been torn from an omniscient creature that used to roam the wastes. There's no real reason to have two, but that isn't stopping you."
 			if(iscarbon(user))
 				var/mob/living/carbon/C = user
-				C.update_inv_wear_mask()
+				C.update_worn_mask()
 		else
 			to_chat(user, span_notice("The eye winks at you and vanishes into the abyss, you feel really unlucky."))
 		qdel(src)

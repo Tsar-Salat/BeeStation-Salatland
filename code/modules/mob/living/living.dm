@@ -330,7 +330,7 @@
 		log_combat(src, M, "grabbed", addition="passive grab")
 		if(!supress_message && !(iscarbon(AM) && HAS_TRAIT(src, TRAIT_STRONG_GRABBER))) //Everything in this if statement handles chat messages for grabbing
 			var/mob/living/L = M
-			if (L.get_organ_by_type(/obj/item/organ/tail) && (is_zone_selected(BODY_ZONE_PRECISE_GROIN, precise_only = TRUE) || is_group_selected(BODY_GROUP_LEGS))) //Does the target have a tail?
+			if (L.get_organ_by_type(/obj/item/organ/external/tail) && (is_zone_selected(BODY_ZONE_PRECISE_GROIN, precise_only = TRUE) || is_group_selected(BODY_GROUP_LEGS))) //Does the target have a tail?
 				M.visible_message(span_warning("[src] grabs [L] by [L.p_their()] tail!"),\
 								span_warning(" [src] grabs you by the tail!"), null, null, src) //Message sent to area, Message sent to grabbee
 				to_chat(src, span_notice("You grab [L] by [L.p_their()] tail!"))  //Message sent to grabber
@@ -788,6 +788,8 @@
 
 //proc used to completely heal a mob.
 /mob/living/proc/fully_heal(admin_revive = FALSE)
+	SHOULD_CALL_PARENT(TRUE)
+
 	restore_blood()
 	setToxLoss(0, 0) //zero as second argument not automatically call updatehealth().
 	setOxyLoss(0, 0)
@@ -808,7 +810,7 @@
 	set_dizziness(0)
 	cure_nearsighted()
 	//Some eye logic
-	var/obj/item/organ/eyes/eyes = get_organ_slot(ORGAN_SLOT_EYES)
+	var/obj/item/organ/internal/eyes/eyes = get_organ_slot(ORGAN_SLOT_EYES)
 	cure_blind(null, eyes?.can_see)
 	cure_husk()
 	hallucination = 0
@@ -822,6 +824,7 @@
 	slurring = 0
 	jitteriness = 0
 	stop_sound_channel(CHANNEL_HEARTBEAT)
+	SEND_SIGNAL(src, COMSIG_LIVING_POST_FULLY_HEAL, admin_revive)
 
 
 //proc called by revive(), to check if we can actually ressuscitate the mob (we don't want to revive him and have him instantly die again)
@@ -1393,8 +1396,7 @@
 
 			// Randomize everything but the species, which was already handled above.
 			new_human.randomize_human_appearance(~RANDOMIZE_SPECIES)
-			new_human.update_hair()
-			new_human.update_body() // is_creating = TRUE
+			new_human.update_body(is_creating = TRUE)
 			new_human.dna.update_dna_identity()
 			new_mob = new_human
 
@@ -1927,6 +1929,25 @@
 	else if(!(movement_type & (FLYING | FLOATING)) && !usable_hands && !usable_legs) //Lost a hand, not flying, no hands left, no legs.
 		ADD_TRAIT(src, TRAIT_IMMOBILIZED, LACKING_LOCOMOTION_APPENDAGES_TRAIT)
 
+/// Sets the mob's hunger levels to a safe overall level. Useful for TRAIT_NOHUNGER species changes.
+/mob/living/proc/set_safe_hunger_level()
+	// Nutrition reset and alert clearing.
+	nutrition = NUTRITION_LEVEL_FED
+	clear_alert("nutrition")
+	satiety = 0
+
+	// Trait removal if obese
+	if(HAS_TRAIT_FROM(src, TRAIT_FAT, OBESITY))
+		if(overeatduration >= (200 SECONDS))
+			to_chat(src, span_notice("Your transformation restores your body's natural fitness!"))
+
+		REMOVE_TRAIT(src, TRAIT_FAT, OBESITY)
+		remove_movespeed_modifier(/datum/movespeed_modifier/obesity)
+		update_worn_undersuit()
+		update_worn_oversuit()
+
+	// Reset overeat duration.
+	overeatduration = 0
 
 /// Changes the value of the [living/body_position] variable.
 /mob/living/proc/set_body_position(new_value)

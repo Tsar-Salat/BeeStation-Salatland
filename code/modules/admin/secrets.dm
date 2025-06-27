@@ -492,8 +492,8 @@ GLOBAL_DATUM_INIT(admin_secrets, /datum/admin_secrets, new)
 
 				if(H.dna.species.id == SPECIES_HUMAN)
 					if(H.dna.features["tail_human"] == "None" || H.dna.features["ears"] == "None")
-						var/obj/item/organ/ears/cat/ears = new
-						var/obj/item/organ/tail/cat/tail = new
+						var/obj/item/organ/internal/ears/cat/ears = new
+						var/obj/item/organ/external/tail/cat/tail = new
 						ears.Insert(H, drop_if_replaced=FALSE)
 						tail.Insert(H, drop_if_replaced=FALSE)
 					var/list/honorifics = list("[MALE]" = list("kun"), "[FEMALE]" = list("chan","tan"), "[NEUTER]" = list("san"), "[PLURAL]" = list("san")) //John Robust -> Robust-kun
@@ -635,7 +635,7 @@ GLOBAL_DATUM_INIT(admin_secrets, /datum/admin_secrets, new)
 			SSblackbox.record_feedback("nested tally", "admin_secrets_fun_used", 1, list("Dwarf Beards"))
 			for(var/mob/living/carbon/human/B in GLOB.carbon_list)
 				B.facial_hair_style = "Dward Beard"
-				B.update_hair()
+				B.update_body_parts()
 			message_admins("[key_name_admin(usr)] activated dorf mode")
 
 		if("onlyone")

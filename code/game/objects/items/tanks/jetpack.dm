@@ -22,6 +22,7 @@
 	if(use_ion_trail)
 		ion_trail = new
 		ion_trail.set_up(src)
+	AddElement(/datum/element/update_icon_updates_onmob, ITEM_SLOT_SUITSTORE)
 
 /obj/item/tank/jetpack/Destroy()
 	QDEL_NULL(ion_trail)
@@ -459,7 +460,7 @@
 	return FALSE
 
 /mob/living/carbon/has_jetpack_power(movement_dir = FALSE, thrust = THRUST_REQUIREMENT_SPACEMOVE, require_stabilization = FALSE, use_fuel = TRUE)
-	var/obj/item/organ/cyberimp/chest/thrusters/T = get_organ_slot(ORGAN_SLOT_THRUSTERS)
+	var/obj/item/organ/internal/cyberimp/chest/thrusters/T = get_organ_slot(ORGAN_SLOT_THRUSTERS)
 	if(istype(T) && movement_dir && T.allow_thrust(thrust, use_fuel = use_fuel))
 		return TRUE
 

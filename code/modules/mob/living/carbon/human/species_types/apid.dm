@@ -2,21 +2,31 @@
 	// Beepeople, god damn it. It's hip, and alive! - Fuck ubunutu edition
 	name = "\improper Apid"
 	id = SPECIES_APID
-	bodyflag = FLAG_APID
-	default_color = "FFE800"
-	species_traits = list(LIPS,NOEYESPRITES,MUTCOLORS)
-	inherent_traits = list(TRAIT_BEEFRIEND)
+	species_traits = list(
+		LIPS,
+		NOEYESPRITES,
+		MUTCOLORS
+	)
+	inherent_traits = list(
+		TRAIT_BEEFRIEND
+	)
 	inherent_biotypes = list(MOB_ORGANIC,MOB_HUMANOID,MOB_BUG)
-	mutant_bodyparts = list("apid_stripes" = "thick","apid_headstripes" = "thick", "apid_antenna" = "curled")
+	mutant_bodyparts = list(
+		"apid_stripes" = "thick",
+		"apid_headstripes" = "thick",
+		"apid_antenna" = "curled"
+	)
+	external_organs = list(
+		/obj/item/organ/external/wings/bee = "Bee"
+	)
 	hair_color = "fixedmutcolor"
 	attack_verb = "slash"
 	attack_sound = 'sound/weapons/slash.ogg'
 	miss_sound = 'sound/weapons/slashmiss.ogg'
 	meat = /obj/item/food/meat/slab/human/mutant/apid
-	mutanteyes = /obj/item/organ/eyes/apid
-	mutantlungs = /obj/item/organ/lungs/apid
-	mutantwings = /obj/item/organ/wings/bee
-	mutanttongue = /obj/item/organ/tongue/bee
+	mutanteyes = /obj/item/organ/internal/eyes/apid
+	mutantlungs = /obj/item/organ/internal/lungs/apid
+	mutanttongue = /obj/item/organ/internal/tongue/bee
 	burnmod = 1.5
 	toxmod = 1.5
 	staminamod = 1.25
@@ -25,12 +35,14 @@
 	inert_mutation = /datum/mutation/wax_saliva
 	var/cold_cycle = 0
 
-	species_chest = /obj/item/bodypart/chest/apid
-	species_head = /obj/item/bodypart/head/apid
-	species_l_arm = /obj/item/bodypart/l_arm/apid
-	species_r_arm = /obj/item/bodypart/r_arm/apid
-	species_l_leg = /obj/item/bodypart/l_leg/apid
-	species_r_leg = /obj/item/bodypart/r_leg/apid
+	bodypart_overrides = list(
+		BODY_ZONE_HEAD = /obj/item/bodypart/head/apid,
+		BODY_ZONE_CHEST = /obj/item/bodypart/chest/apid,
+		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/apid,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/apid,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/apid,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/apid
+	)
 
 	species_height = SPECIES_HEIGHTS(2, 1, 0)
 

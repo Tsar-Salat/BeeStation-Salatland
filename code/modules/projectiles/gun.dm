@@ -347,7 +347,7 @@
 					process_fire(user, user, FALSE, params, BODY_ZONE_HEAD)
 					user.dropItemToGround(src, TRUE)
 					if(chambered.harmful)
-						var/obj/item/organ/brain/target_brain = user.get_organ_slot(ORGAN_SLOT_BRAIN)
+						var/obj/item/organ/internal/brain/target_brain = user.get_organ_slot(ORGAN_SLOT_BRAIN)
 						target_brain.Remove(user) //Rip you, unlucky
 						target_brain.forceMove(get_turf(user))
 				else
@@ -436,7 +436,7 @@
 		fire_shot_at(user, target, message, params, zone_override, aimed)
 
 	if(user)
-		user.update_inv_hands()
+		user.update_held_items()
 	SSblackbox.record_feedback("tally", "gun_fired", 1, type)
 	return TRUE
 

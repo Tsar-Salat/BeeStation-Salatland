@@ -47,17 +47,10 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/dummy)
 			current_organ.Remove(src, special = TRUE) //Please don't somehow kill our dummy
 			SSwardrobe.stash_object(current_organ)
 
-	/*
-	for(var/obj/item/organ/external/organ in internal_organs)
-		if(organ.type in current_species.external_organs)
-			organ.Remove(src)
-			SSwardrobe.stash_object(organ)
-	*/
-
 //Instead of just deleting our equipment, we save what we can and reinsert it into SSwardrobe's store
 //Hopefully this makes preference reloading not the worst thing ever
 /mob/living/carbon/human/dummy/delete_equipment()
-	var/list/items_to_check = get_all_slots() + held_items
+	var/list/items_to_check = get_all_worn_items() + held_items
 	var/list/to_nuke = list() //List of items queued for deletion, can't qdel them before iterating their contents in case they hold something
 	///Travel to the bottom of the contents chain, expanding it out
 	for(var/i = 1; i <= length(items_to_check); i++) //Needs to be a c style loop since it can expand
@@ -114,6 +107,7 @@ GLOBAL_LIST_EMPTY(dummy_mob_list)
 		GLOB.dummy_mob_list += D
 	else
 		D.regenerate_icons() //they were cut in wipe_state()
+		D.update_body_parts(update_limb_data = TRUE)
 	D.in_use = TRUE
 	return D
 
@@ -170,21 +164,26 @@ GLOBAL_LIST_EMPTY(dummy_mob_list)
 /mob/living/carbon/human/dummy/remove_from_alive_mob_list()
 	return
 
+/// Takes in an accessory list and returns the first entry from that list, ensuring that we dont return SPRITE_ACCESSORY_NONE in the process.
+/proc/get_consistent_feature_entry(list/accessory_feature_list)
+	var/consistent_entry = (accessory_feature_list- SPRITE_ACCESSORY_NONE)[1]
+	ASSERT(!isnull(consistent_entry))
+	return consistent_entry
+
 /proc/create_consistent_human_dna(mob/living/carbon/human/target)
-	target.create_dna()
-	target.dna.features["body_markings"] = "None"
-	target.dna.features["ears"] = "Cat"
-	target.dna.features["ethcolor"] = GLOB.color_list_ethereal["Cyan"]
-	target.dna.features["frills"] = "None"
-	target.dna.features["horns"] = "None"
 	target.dna.features["mcolor"] = "4c4"
-	target.dna.features["moth_antennae"] = "Plain"
-	target.dna.features["moth_markings"] = "None"
-	target.dna.features["moth_wings"] = "Plain"
-	target.dna.features["snout"] = "Round"
-	target.dna.features["spines"] = "None"
-	target.dna.features["tail_human"] = "Cat"
-	target.dna.features["tail_lizard"] = "Smooth"
+	target.dna.features["ethcolor"] = GLOB.color_list_ethereal["Cyan"]
+	target.dna.features["body_markings"] = get_consistent_feature_entry(GLOB.body_markings_list)
+	target.dna.features["ears"] = get_consistent_feature_entry(GLOB.ears_list)
+	target.dna.features["frills"] = get_consistent_feature_entry(GLOB.frills_list)
+	target.dna.features["horns"] = get_consistent_feature_entry(GLOB.horns_list)
+	target.dna.features["moth_antennae"] = get_consistent_feature_entry(GLOB.moth_antennae_list)
+	target.dna.features["moth_markings"] = get_consistent_feature_entry(GLOB.moth_markings_list)
+	target.dna.features["moth_wings"] = get_consistent_feature_entry(GLOB.moth_wings_list)
+	target.dna.features["snout"] = get_consistent_feature_entry(GLOB.snouts_list)
+	target.dna.features["spines"] = get_consistent_feature_entry(GLOB.spines_list)
+	target.dna.features["tail_cat"] = get_consistent_feature_entry(GLOB.tails_list_human) // it's a lie
+	target.dna.features["tail_lizard"] = get_consistent_feature_entry(GLOB.tails_list_lizard)
 	target.dna.features["apid_stripes"] = "thick"
 	target.dna.features["apid_headstripes"] = "thick"
 	target.dna.features["apid_antenna"] = "curled"

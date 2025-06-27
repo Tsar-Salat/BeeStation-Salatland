@@ -7,33 +7,46 @@
 
 /datum/species/moth
 	name = "\improper Mothman"
-	plural_form = "Mothpeople"
+	plural_form = "Mothmen"
 	id = SPECIES_MOTH
-	bodyflag = FLAG_MOTH
-	default_color = "00FF00"
-	species_traits = list(LIPS, NOEYESPRITES, HAS_MARKINGS)
-	inherent_traits = list(TRAIT_TACKLING_WINGED_ATTACKER)
+	species_traits = list(
+		LIPS,
+		HAS_MARKINGS
+	)
+	inherent_traits = list(
+		TRAIT_CAN_USE_FLIGHT_POTION,
+		TRAIT_TACKLING_WINGED_ATTACKER,
+	)
 	inherent_biotypes = list(MOB_ORGANIC, MOB_HUMANOID, MOB_BUG)
-	mutant_bodyparts = list("moth_wings" = "Plain", "moth_antennae" = "Plain", "moth_markings" = "None", "body_size" = "Normal")
+	mutant_bodyparts = list(
+		"moth_markings" = "None",
+		"body_size" = "Normal"
+	)
+	external_organs = list(
+		/obj/item/organ/external/wings/moth = "Plain",
+		/obj/item/organ/external/antennae = "Plain"
+	)
 	attack_verb = "slash"
 	attack_sound = 'sound/weapons/slash.ogg'
 	miss_sound = 'sound/weapons/slashmiss.ogg'
 	var/datum/action/innate/cocoon/cocoon_action
 	meat = /obj/item/food/meat/slab/human/mutant/moth
-	mutanteyes = /obj/item/organ/eyes/moth
-	mutantwings = /obj/item/organ/wings/moth
-	mutanttongue = /obj/item/organ/tongue/moth
+	mutanteyes = /obj/item/organ/internal/eyes/moth
+	mutanttongue = /obj/item/organ/internal/tongue/moth
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | ERT_SPAWN | RACE_SWAP | SLIME_EXTRACT
 	species_language_holder = /datum/language_holder/moth
-	inert_mutation = /datum/mutation/strongwings
+	wing_types = list(/obj/item/organ/external/wings/functional/moth/megamoth, /obj/item/organ/external/wings/functional/moth/mothra)
+	//inert_mutation = /datum/mutation/strongwings
 	deathsound = 'sound/voice/moth/moth_deathgasp.ogg'
 
-	species_chest = /obj/item/bodypart/chest/moth
-	species_head = /obj/item/bodypart/head/moth
-	species_l_arm = /obj/item/bodypart/l_arm/moth
-	species_r_arm = /obj/item/bodypart/r_arm/moth
-	species_l_leg = /obj/item/bodypart/l_leg/moth
-	species_r_leg = /obj/item/bodypart/r_leg/moth
+	bodypart_overrides = list(
+		BODY_ZONE_HEAD = /obj/item/bodypart/head/moth,
+		BODY_ZONE_CHEST = /obj/item/bodypart/chest/moth,
+		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/moth,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/moth,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/moth,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/moth,
+	)
 
 	species_height = SPECIES_HEIGHTS(2, 1, 0)
 
@@ -60,12 +73,17 @@
 		return 9 //flyswatters deal 10x damage to moths
 	return 0
 
+/datum/species/moth/randomize_features(mob/living/carbon/human/human_mob)
+	human_mob.dna.features["moth_markings"] = pick(GLOB.moth_markings_list)
+	randomize_external_organs(human_mob)
+
 /datum/species/moth/get_laugh_sound(mob/living/carbon/user)
 	return 'sound/emotes/moth/mothlaugh.ogg'
 
 /datum/species/moth/get_scream_sound(mob/living/carbon/user)
 	return 'sound/voice/moth/scream_moth.ogg'
 
+/*
 /datum/species/moth/on_species_gain(mob/living/carbon/human/H)
 	..()
 	cocoon_action = new()
@@ -89,7 +107,7 @@
 
 /datum/action/innate/cocoon/on_activate()
 	var/mob/living/carbon/H = owner
-	var/obj/item/organ/wingcheck = H.get_organ_by_type(/obj/item/organ/wings/moth)
+	var/obj/item/organ/wingcheck = H.get_organ_by_type(/obj/item/organ/external/wings/moth)
 	if(!wingcheck) //This is to stop easy organ farms
 		to_chat(H, span_warning("You don't have any wings to regenerate!"))
 		return
@@ -138,7 +156,7 @@
 		SEND_SIGNAL(H, COMSIG_CLEAR_MOOD_EVENT, "burnt_wings")
 		if(ismoth(H) && HAS_TRAIT(H, TRAIT_MOTH_BURNT))
 			REMOVE_TRAIT(H, TRAIT_MOTH_BURNT, "fire")
-			var/obj/item/organ/wings/moth/W = H.get_organ_by_type(/obj/item/organ/wings/moth)
+			var/obj/item/organ/external/wings/moth/W = H.get_organ_by_type(/obj/item/organ/external/wings/moth)
 			if(W)
 				W.flight_level = WINGS_FLIGHTLESS//The check for wings getting burned makes them cosmetic, so this allows the burned off effect to be applied again
 				if(locate(/datum/mutation/strongwings) in H.dna.mutations)
@@ -199,6 +217,7 @@
 #undef COCOON_HARM_AMOUNT
 #undef COCOON_HEAL_AMOUNT
 #undef COCOON_NUTRITION_AMOUNT
+*/
 
 /datum/species/moth/get_species_description()
 	return "Mothpeople are an intelligent species, known for their affinity to all things moth - lights, cloth, wings, and friendship."

@@ -438,7 +438,7 @@
 		/obj/item/stack/ore,
 		/obj/item/reagent_containers/cup/glass,
 		/obj/item/reagent_containers/cup/glass/bottle,
-		/obj/item/organ/regenerative_core,
+		/obj/item/organ/internal/regenerative_core,
 		/obj/item/wormhole_jaunter,
 		/obj/item/storage/bag/plants,
 		/obj/item/stack/marker_beacon,
@@ -801,7 +801,7 @@
 /obj/item/storage/belt/fannypack/worn/detective //Starting contents defined in detective.dm where the rest of their loadout is handled.
 	name = "Worn belt"
 	desc = "A weathered belt that is used for storing various gadgets"
-	
+
 /obj/item/storage/belt/fannypack/black
 	name = "black fannypack"
 	icon_state = "fannypack_black"

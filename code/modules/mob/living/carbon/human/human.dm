@@ -9,18 +9,19 @@
 	add_verb(/mob/living/proc/mob_sleep)
 	add_verb(/mob/living/proc/toggle_resting)
 
-	icon_state = ""		//Remove the inherent human icon that is visible on the map editor. We're rendering ourselves limb by limb, having it still be there results in a bug where the basic human icon appears below as south in all directions and generally looks nasty.
+	icon_state = "" //Remove the inherent human icon that is visible on the map editor. We're rendering ourselves limb by limb, having it still be there results in a bug where the basic human icon appears below as south in all directions and generally looks nasty.
 
 	//initialize limbs first
 	create_bodyparts()
 
+	create_dna()
+	dna.species.create_fresh_body(src)
 	setup_human_dna()
 
+	create_carbon_reagents()
+	set_species(dna.species.type)
 
 	prepare_huds() //Prevents a nasty runtime on human init
-
-	if(dna.species)
-		set_species(dna.species.type) //This generates new limbs based on the species, beware.
 
 	//initialise organs
 	create_internal_organs() //most of it is done in set_species now, this is only for parent call
@@ -43,8 +44,7 @@
 
 /mob/living/carbon/human/proc/setup_human_dna()
 	//initialize dna. for spawned humans; overwritten by other code
-	create_dna(src)
-	randomize_human(src, TRUE)
+	randomize_human(src)
 	dna.initialize_dna()
 
 /mob/living/carbon/human/ComponentInitialize()
@@ -459,8 +459,7 @@
 	hair_style = pick("Bedhead", "Bedhead 2", "Bedhead 3")
 	underwear = "Nude"
 	socks = "Nude"
-	update_body()
-	update_hair()
+	update_body(is_creating = TRUE)
 
 /mob/living/carbon/human/singularity_pull(S, current_size)
 	..()
@@ -560,10 +559,10 @@
 
 	if(gloves)
 		if(gloves.wash(clean_types))
-			update_inv_gloves()
+			update_worn_gloves()
 	else if((clean_types & CLEAN_TYPE_BLOOD) && blood_in_hands > 0)
 		blood_in_hands = 0
-		update_inv_gloves()
+		update_worn_gloves()
 
 	return TRUE
 
@@ -586,12 +585,12 @@
 		. = TRUE
 
 	if(glasses && is_eyes_covered(FALSE, TRUE, TRUE) && glasses.wash(clean_types))
-		update_inv_glasses()
+		update_worn_glasses()
 		. = TRUE
 
 	var/list/obscured = check_obscured_slots()
 	if(wear_mask && !(ITEM_SLOT_MASK in obscured) && wear_mask.wash(clean_types))
-		update_inv_wear_mask()
+		update_worn_mask()
 		. = TRUE
 
 /**
@@ -602,18 +601,18 @@
 
 	// Wash equipped stuff that cannot be covered
 	if(wear_suit?.wash(clean_types))
-		update_inv_wear_suit()
+		update_worn_oversuit()
 		. = TRUE
 
 	if(belt?.wash(clean_types))
-		update_inv_belt()
+		update_worn_belt()
 		. = TRUE
 
 	// Check and wash stuff that can be covered
 	var/list/obscured = check_obscured_slots()
 
 	if(w_uniform && !(ITEM_SLOT_ICLOTHING in obscured) && w_uniform.wash(clean_types))
-		update_inv_w_uniform()
+		update_worn_undersuit()
 		. = TRUE
 
 	if(!is_mouth_covered() && clean_lips())
@@ -622,7 +621,7 @@
 	// Wash hands if exposed
 	if(!gloves && (clean_types & CLEAN_TYPE_BLOOD) && blood_in_hands > 0 && !(ITEM_SLOT_GLOVES in obscured))
 		blood_in_hands = 0
-		update_inv_gloves()
+		update_worn_gloves()
 		. = TRUE
 
 //Turns a mob black, flashes a skeleton overlay
@@ -1047,7 +1046,7 @@
 	if(HAS_TRAIT(src, TRAIT_NOHUNGER))
 		return FALSE
 	if(HAS_TRAIT(src, TRAIT_POWERHUNGRY))
-		var/obj/item/organ/stomach/battery/battery = get_organ_slot(ORGAN_SLOT_STOMACH)
+		var/obj/item/organ/internal/stomach/battery/battery = get_organ_slot(ORGAN_SLOT_STOMACH)
 		if(istype(battery))
 			battery.adjust_charge_scaled(change)
 		return FALSE
@@ -1057,7 +1056,7 @@
 	if(HAS_TRAIT(src, TRAIT_NOHUNGER))
 		return FALSE
 	if(HAS_TRAIT(src, TRAIT_POWERHUNGRY))
-		var/obj/item/organ/stomach/battery/battery = get_organ_slot(ORGAN_SLOT_STOMACH)
+		var/obj/item/organ/internal/stomach/battery/battery = get_organ_slot(ORGAN_SLOT_STOMACH)
 		if(istype(battery))
 			battery.set_charge_scaled(change)
 		return FALSE
@@ -1080,9 +1079,10 @@
 
 CREATION_TEST_IGNORE_SUBTYPES(/mob/living/carbon/human/species)
 
-/mob/living/carbon/human/species/Initialize(mapload, specific_race)
-	. = ..()
-	set_species(race || specific_race)
+/mob/living/carbon/human/species/create_dna()
+	dna = new /datum/dna(src)
+	if (!isnull(race))
+		dna.species = new race
 
 /mob/living/carbon/human/species/abductor
 	race = /datum/species/abductor
@@ -1107,9 +1107,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/carbon/human/species)
 
 /mob/living/carbon/human/species/golem
 	race = /datum/species/golem
-
-/mob/living/carbon/human/species/golem/random
-	race = /datum/species/golem/random
 
 /mob/living/carbon/human/species/golem/adamantine
 	race = /datum/species/golem/adamantine
@@ -1240,9 +1237,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/carbon/human/species)
 
 /mob/living/carbon/human/species/zombie/infectious
 	race = /datum/species/zombie/infectious
-
-/mob/living/carbon/human/species/zombie/krokodil_addict
-	race = /datum/species/human/krokodil_addict
 
 /mob/living/carbon/human/species/pumpkin_man
 	race = /datum/species/pumpkin_man

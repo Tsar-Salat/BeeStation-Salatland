@@ -31,28 +31,39 @@
 /proc/random_underwear(gender)
 	if(!GLOB.underwear_list.len)
 		init_sprite_accessory_subtypes(/datum/sprite_accessory/underwear, GLOB.underwear_list, GLOB.underwear_m, GLOB.underwear_f)
-	var/datum/sprite_accessory/picked = pick_default_accessory(GLOB.underwear_list, required_gender = gender)
-	return picked.name
+	switch(gender)
+		if(MALE)
+			return pick(GLOB.underwear_m)
+		if(FEMALE)
+			return pick(GLOB.underwear_f)
+		else
+			return pick(GLOB.underwear_list)
 
 /proc/random_undershirt(gender)
 	if(!GLOB.undershirt_list.len)
 		init_sprite_accessory_subtypes(/datum/sprite_accessory/undershirt, GLOB.undershirt_list, GLOB.undershirt_m, GLOB.undershirt_f)
-	var/datum/sprite_accessory/picked = pick_default_accessory(GLOB.undershirt_list, required_gender = gender)
-	return picked.name
+	switch(gender)
+		if(MALE)
+			return pick(GLOB.undershirt_m)
+		if(FEMALE)
+			return pick(GLOB.undershirt_f)
+		else
+			return pick(GLOB.undershirt_list)
 
-/proc/random_socks(gender)
+/proc/random_socks()
 	if(!GLOB.socks_list.len)
 		init_sprite_accessory_subtypes(/datum/sprite_accessory/socks, GLOB.socks_list)
-	var/datum/sprite_accessory/picked = pick_default_accessory(GLOB.socks_list, required_gender = gender)
-	return picked.name
+	return pick(GLOB.socks_list)
 
 /proc/random_features(gender)
+	if(!GLOB.tails_list.len)
+		init_sprite_accessory_subtypes(/datum/sprite_accessory/tails/, GLOB.tails_list,  add_blank = TRUE)
 	if(!GLOB.tails_list_human.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/tails/human, GLOB.tails_list_human)
+		init_sprite_accessory_subtypes(/datum/sprite_accessory/tails/human, GLOB.tails_list_human,  add_blank = TRUE)
 	if(!GLOB.tails_roundstart_list_human.len)
 		init_sprite_accessory_subtypes(/datum/sprite_accessory/tails/human, GLOB.tails_roundstart_list_human)
 	if(!GLOB.tails_list_lizard.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/tails/lizard, GLOB.tails_list_lizard)
+		init_sprite_accessory_subtypes(/datum/sprite_accessory/tails/lizard, GLOB.tails_list_lizard, add_blank = TRUE)
 	if(!GLOB.snouts_list.len)
 		init_sprite_accessory_subtypes(/datum/sprite_accessory/snouts, GLOB.snouts_list)
 	if(!GLOB.horns_list.len)
@@ -115,8 +126,8 @@
 		"body_size" = "Normal",
 		"mcolor" = pick("FFFFFF","7F7F7F", "7FFF7F", "7F7FFF", "FF7F7F", "7FFFFF", "FF7FFF", "FFFF7F"),
 		"ethcolor" = GLOB.color_list_ethereal[pick(GLOB.color_list_ethereal)],
-		"tail_lizard" = pick(GLOB.tails_list_lizard),
-		"tail_human" = "None",
+		"tail_cat" = "None",
+		"tail_lizard" = "Smooth",
 		"wings" = "None",
 		"snout" = pick(GLOB.snouts_list),
 		"horns" = pick(GLOB.horns_list),
@@ -125,7 +136,6 @@
 		"spines" = pick(GLOB.spines_list),
 		"body_markings" = pick(GLOB.body_markings_list),
 		"legs" = "Normal Legs",
-		"caps" = pick(GLOB.caps_list),
 		"moth_wings" = pick(GLOB.moth_wings_roundstart_list),
 		"moth_antennae" = pick(GLOB.moth_antennae_roundstart_list),
 		"moth_markings" = pick(GLOB.moth_markings_roundstart_list),
@@ -150,12 +160,22 @@
 	)
 
 /proc/random_hair_style(gender)
-	var/datum/sprite_accessory/picked = pick_default_accessory(GLOB.hair_styles_list, required_gender = gender)
-	return picked.name
+	switch(gender)
+		if(MALE)
+			return pick(GLOB.hair_styles_male_list)
+		if(FEMALE)
+			return pick(GLOB.hair_styles_female_list)
+		else
+			return pick(GLOB.hair_styles_list)
 
 /proc/random_facial_hair_style(gender)
-	var/datum/sprite_accessory/picked = pick_default_accessory(GLOB.facial_hair_styles_list, required_gender = gender)
-	return picked.name
+	switch(gender)
+		if(MALE)
+			return pick(GLOB.facial_hair_styles_male_list)
+		if(FEMALE)
+			return pick(GLOB.facial_hair_styles_female_list)
+		else
+			return pick(GLOB.facial_hair_styles_list)
 
 /proc/random_unique_name(gender, attempts_to_find_unique_name=10)
 	for(var/i in 1 to attempts_to_find_unique_name)
@@ -623,6 +643,8 @@ GLOBAL_LIST_EMPTY(species_list)
 			return "left foot"
 		if(BODY_ZONE_PRECISE_R_FOOT)
 			return "right foot"
+		if(BODY_ZONE_PRECISE_GROIN)
+			return "groin"
 		else
 			return zone
 
@@ -674,7 +696,7 @@ GLOBAL_LIST_EMPTY(species_list)
 		mob_occupant = head.brainmob
 
 	else if(isorgan(occupant))
-		var/obj/item/organ/brain/brain = occupant
+		var/obj/item/organ/internal/brain/brain = occupant
 		mob_occupant = brain.brainmob
 
 	return mob_occupant

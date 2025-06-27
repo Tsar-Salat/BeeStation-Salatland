@@ -4,6 +4,7 @@ GLOBAL_LIST_EMPTY(hair_styles_list)			//stores /datum/sprite_accessory/hair inde
 GLOBAL_LIST_EMPTY(hair_styles_male_list)		//stores only hair names
 GLOBAL_LIST_EMPTY(hair_styles_female_list)	//stores only hair names
 GLOBAL_LIST_EMPTY(hair_gradients_list) //stores /datum/sprite_accessory/hair_gradient indexed by name
+GLOBAL_LIST_EMPTY(facial_hair_gradients_list) //stores /datum/sprite_accessory/facial_hair_gradient indexed by name
 GLOBAL_LIST_EMPTY(facial_hair_styles_list)	//stores /datum/sprite_accessory/facial_hair indexed by name
 GLOBAL_LIST_EMPTY(facial_hair_styles_male_list)	//stores only hair names
 GLOBAL_LIST_EMPTY(facial_hair_styles_female_list)	//stores only hair names
@@ -25,8 +26,6 @@ GLOBAL_LIST_INIT(body_sizes, list(
 ))
 	//Lizard Bits (all datum lists indexed by name)
 GLOBAL_LIST_EMPTY(body_markings_list)
-GLOBAL_LIST_EMPTY(tails_list_lizard)
-GLOBAL_LIST_EMPTY(animated_tails_list_lizard)
 GLOBAL_LIST_EMPTY(snouts_list)
 GLOBAL_LIST_EMPTY(horns_list)
 GLOBAL_LIST_EMPTY(frills_list)
@@ -35,8 +34,9 @@ GLOBAL_LIST_EMPTY(legs_list)
 GLOBAL_LIST_EMPTY(animated_spines_list)
 
 	//Mutant Human bits
-GLOBAL_LIST_EMPTY(tails_list_human)
-GLOBAL_LIST_EMPTY(animated_tails_list_human)
+GLOBAL_LIST_EMPTY(tails_list)
+GLOBAL_LIST_EMPTY(tails_list_human) //Only exists for preference choices. Use "tails_list" otherwise.
+GLOBAL_LIST_EMPTY(tails_list_lizard) //See above!
 GLOBAL_LIST_EMPTY(tails_roundstart_list_human)
 GLOBAL_LIST_EMPTY(ears_list)
 GLOBAL_LIST_EMPTY(wings_list)
@@ -48,7 +48,6 @@ GLOBAL_LIST_EMPTY(moth_antennae_roundstart_list)//this lacks the blacklisted ant
 GLOBAL_LIST_EMPTY(moth_markings_list)
 GLOBAL_LIST_EMPTY(moth_markings_roundstart_list)//this lacks the blacklisted markings such as burned, clockwork and angel
 GLOBAL_LIST_EMPTY(moth_wingsopen_list)
-GLOBAL_LIST_EMPTY(caps_list)
 GLOBAL_LIST_EMPTY(ipc_screens_list)
 GLOBAL_LIST_EMPTY(ipc_antennas_list)
 GLOBAL_LIST_EMPTY(ipc_chassis_list)

@@ -75,37 +75,50 @@
 #define MOB_REPTILE		"reptile"
 #define MOB_SPIRIT		"spirit"
 
+
 //Organ defines for carbon mobs
-#define ORGAN_ORGANIC   1
-#define ORGAN_ROBOTIC   2
+#define ORGAN_ORGANIC 1
+#define ORGAN_ROBOTIC 2
 
-
-//Bodytype defines for how things can be worn.
-#define BODYTYPE_ORGANIC		(1<<0)
-#define BODYTYPE_ROBOTIC		(1<<1)
-#define BODYTYPE_HUMANOID		(1<<2) //Everything that isnt Grod
-#define BODYTYPE_BOXHEAD		(1<<3) //TV Head
-#define BODYTYPE_DIGITIGRADE	(1<<4) //Cancer
-#define NUMBER_OF_BODYTYPES	5 //KEEP THIS UPDATED OR SHIT WILL BREAK
-
-#define DEFAULT_BODYPART_ICON_ORGANIC 'icons/mob/human_parts_greyscale.dmi'
+#define DEFAULT_BODYPART_ICON_ORGANIC 'icons/mob/species/human/bodyparts_greyscale.dmi'
 #define DEFAULT_BODYPART_ICON_ROBOTIC 'icons/mob/augmentation/augments.dmi'
 
 #define MONKEY_BODYPART "monkey"
 #define TERATOMA_BODYPART "teratoma"
 #define ALIEN_BODYPART "alien"
 #define LARVA_BODYPART "larva"
-#define DEVIL_BODYPART "devil"
 
 //Bodypart change blocking flags
 #define BP_BLOCK_CHANGE_SPECIES	(1<<0)
+
+//Bodytype defines for how things can be worn, surgery, and other misc things.
+///The limb is organic.
+#define BODYTYPE_ORGANIC (1<<0)
+///The limb is robotic.
+#define BODYTYPE_ROBOTIC (1<<1)
+///The limb fits the human mold. This is not meant to be literal, if the sprite "fits" on a human, it is "humanoid", regardless of origin.
+#define BODYTYPE_HUMANOID (1<<2)
+///The limb is digitigrade.
+#define BODYTYPE_DIGITIGRADE (1<<3)
+///The limb fits the monkey mold.
+#define BODYTYPE_MONKEY (1<<4)
+///The limb is snouted.
+#define BODYTYPE_SNOUTED (1<<5)
+///A placeholder bodytype for xeno larva, so their limbs cannot be attached to anything.
+#define BODYTYPE_LARVA_PLACEHOLDER (1<<6)
+///The limb is from a xenomorph.
+#define BODYTYPE_ALIEN (1<<7)
 
 //Species gib types
 #define GIB_TYPE_HUMAN "human"
 #define GIB_TYPE_ROBOTIC "robotic"
 
+//See: datum/species/var/digitigrade_customization
+///The species does not have digitigrade legs in generation.
 #define DIGITIGRADE_NEVER 0
+///The species can have digitigrade legs in generation
 #define DIGITIGRADE_OPTIONAL 1
+///The species is forced to have digitigrade legs in generation.
 #define DIGITIGRADE_FORCED 2
 
 // Health/damage defines
@@ -383,8 +396,6 @@ GLOBAL_LIST_INIT(available_random_trauma_list, list(
 #define OFFSET_BACK "back"
 #define OFFSET_SUIT "suit"
 #define OFFSET_NECK "neck"
-#define OFFSET_LEFT_HAND "l_hand"
-#define OFFSET_RIGHT_HAND "r_hand"
 
 //MINOR TWEAKS/MISC
 #define AGE_MIN				18	//! youngest a character can be
@@ -446,6 +457,16 @@ GLOBAL_LIST_INIT(available_random_trauma_list, list(
 
 //Saves a proc call, life is suffering. If who has no targets_from var, we assume it's just who
 #define GET_TARGETS_FROM(who) (who.targets_from ? who.get_targets_from() : who)
+
+//defines for grad_color and grad_styles list access keys
+#define GRADIENT_HAIR_KEY 1
+#define GRADIENT_FACIAL_HAIR_KEY 2
+//Keep up to date with the highest key value
+#define GRADIENTS_LEN 2
+
+// /datum/sprite_accessory/gradient defines
+#define GRADIENT_APPLIES_TO_HAIR (1<<0)
+#define GRADIENT_APPLIES_TO_FACIAL_HAIR (1<<1)
 
 ///Define for spawning megafauna instead of a mob for cave gen
 #define SPAWN_MEGAFAUNA "bluh bluh huge boss"
@@ -560,6 +581,24 @@ GLOBAL_LIST_INIT(available_random_trauma_list, list(
 #define TYPING_LAYER 2
 /// Fire layer when you're on fire
 #define FIRE_LAYER 1
+
+//Bitflags for the layers a bodypart overlay can draw on (can be drawn on multiple layers)
+/// Draws overlay on the BODY_FRONT_LAYER
+#define EXTERNAL_FRONT (1 << 0)
+/// Draws overlay on the BODY_ADJ_LAYER
+#define EXTERNAL_ADJACENT (1 << 1)
+/// Draws overlay on the BODY_BEHIND_LAYER
+#define EXTERNAL_BEHIND (1 << 2)
+/// Draws organ on all EXTERNAL layers
+#define ALL_EXTERNAL_OVERLAYS EXTERNAL_FRONT | EXTERNAL_ADJACENT | EXTERNAL_BEHIND
+
+// Bitflags for external organs restylability
+/// This organ allows restyle through plant restyling (like secateurs)
+#define EXTERNAL_RESTYLE_PLANT (1 << 1)
+/// This organ allows restyling with flesh restyling stuff (surgery or something idk)
+#define EXTERNAL_RESTYLE_FLESH (1 << 2)
+/// This organ allows restyling with enamel restyling (like a fucking file or something?). It's for horns and shit
+#define EXTERNAL_RESTYLE_ENAMEL (1 << 3)
 
 //Mob Overlay Index Shortcuts for alternate_worn_layer, layers
 //Because I *KNOW* somebody will think layer+1 means "above"

@@ -5,7 +5,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 
 /mob/living/carbon/Initialize(mapload)
 	. = ..()
-	create_reagents(1000)
+	create_carbon_reagents()
 	update_body_parts() //to update the carbon's new bodyparts appearance
 
 	GLOB.carbon_list += src
@@ -18,7 +18,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 	. =  ..()
 
 	QDEL_LIST(hand_bodyparts)
-	QDEL_LIST(internal_organs)
+	QDEL_LIST(organs)
 	QDEL_LIST(bodyparts)
 	QDEL_LIST(implants)
 	remove_from_all_data_huds()
@@ -64,11 +64,13 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 		mode() // Activate held item
 
 /mob/living/carbon/attackby(obj/item/I, mob/living/user, params)
-	for(var/datum/surgery/S in surgeries)
-		if(body_position == LYING_DOWN || !S.lying_required)
+	for(var/datum/surgery/operations as anything in surgeries)
+		if(user.combat_mode)
+			break
+		if(body_position == LYING_DOWN || !operations.lying_required)
 			var/list/modifiers = params2list(params)
-			if((S.self_operable || user != src) && !user.combat_mode)
-				if(S.next_step(user, modifiers))
+			if((operations.self_operable || user != src))
+				if(operations.next_step(user, modifiers))
 					return TRUE
 	return ..()
 
@@ -194,6 +196,12 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 
 /mob/living/carbon/proc/canBeHandcuffed()
 	return FALSE
+
+/mob/living/carbon/proc/create_carbon_reagents()
+	if (!isnull(reagents))
+		return
+
+	create_reagents(1000)
 
 /mob/living/carbon/Topic(href, href_list)
 	..()
@@ -336,7 +344,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 	if (legcuffed)
 		var/obj/item/W = legcuffed
 		legcuffed = null
-		update_inv_legcuffed()
+		update_worn_legcuffs()
 		if (client)
 			client.screen -= W
 		if (W)
@@ -374,7 +382,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 			legcuffed.forceMove(drop_location())
 			legcuffed = null
 			I.dropped(src)
-			update_inv_legcuffed()
+			update_worn_legcuffs()
 			return TRUE
 
 /mob/living/carbon/proc/accident(obj/item/I)
@@ -407,7 +415,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 
 /mob/living/carbon/get_stat_tab_status()
 	var/list/tab_data = ..()
-	var/obj/item/organ/alien/plasmavessel/vessel = get_organ_by_type(/obj/item/organ/alien/plasmavessel)
+	var/obj/item/organ/internal/alien/plasmavessel/vessel = get_organ_by_type(/obj/item/organ/internal/alien/plasmavessel)
 	if(vessel)
 		tab_data["Plasma Stored"] = GENERATE_STAT_TEXT("[vessel.stored_plasma]/[vessel.max_plasma]")
 	if(locate(/obj/item/assembly/health) in src)
@@ -479,9 +487,9 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 
 /mob/living/carbon/proc/spew_organ(power = 5, amt = 1)
 	for(var/i in 1 to amt)
-		if(!internal_organs.len)
+		if(!organs.len)
 			break //Guess we're out of organs!
-		var/obj/item/organ/guts = pick(internal_organs)
+		var/obj/item/organ/guts = pick(organs)
 		var/turf/T = get_turf(src)
 		guts.Remove(src)
 		guts.forceMove(T)
@@ -552,7 +560,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 
 	sight = initial(sight)
 	lighting_alpha = initial(lighting_alpha)
-	var/obj/item/organ/eyes/E = get_organ_slot(ORGAN_SLOT_EYES)
+	var/obj/item/organ/internal/eyes/E = get_organ_slot(ORGAN_SLOT_EYES)
 	if(!E)
 		update_tint()
 	else
@@ -616,7 +624,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 	if(isclothing(wear_mask))
 		. += wear_mask.tint
 
-	var/obj/item/organ/eyes/E = get_organ_slot(ORGAN_SLOT_EYES)
+	var/obj/item/organ/internal/eyes/E = get_organ_slot(ORGAN_SLOT_EYES)
 	if(E)
 		. += E.tint
 	else
@@ -823,7 +831,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 		clear_alert("handcuffed")
 		SEND_SIGNAL(src, COMSIG_CLEAR_MOOD_EVENT, "handcuffed")
 	update_action_buttons_icon() //some of our action buttons might be unusable when we're handcuffed.
-	update_inv_handcuffed()
+	update_worn_handcuffs()
 	update_hud_handcuffed()
 
 
@@ -833,11 +841,11 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 		return FALSE
 
 	// We can't heal them if they're missing their lungs
-	if(!HAS_TRAIT(src, TRAIT_NOBREATH) && !get_organ_slot(ORGAN_SLOT_LUNGS))
+	if(!HAS_TRAIT(src, TRAIT_NOBREATH) && !isnull(dna?.species.mutantlungs) && !get_organ_slot(ORGAN_SLOT_LUNGS))
 		return FALSE
 
 	// And we can't heal them if they're missing their liver
-	if(!get_organ_slot(ORGAN_SLOT_LIVER))
+	if(!HAS_TRAIT(src, TRAIT_NOMETABOLISM) && !isnull(dna?.species.mutantliver) && !get_organ_slot(ORGAN_SLOT_LIVER))
 		return FALSE
 
 	// We don't want walking husks god no
@@ -850,9 +858,9 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 		reagents.clear_reagents()
 		for(var/addi in reagents.addiction_list)
 			reagents.remove_addiction(addi)
-	for(var/obj/item/organ/organ as anything in internal_organs)
+	for(var/obj/item/organ/organ as anything in organs)
 		organ.set_organ_damage(0)
-	var/obj/item/organ/brain/B = get_organ_by_type(/obj/item/organ/brain)
+	var/obj/item/organ/internal/brain/B = get_organ_by_type(/obj/item/organ/internal/brain)
 	if(B)
 		B.brain_death = FALSE
 	for(var/thing in diseases)
@@ -877,21 +885,21 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 
 /mob/living/carbon/can_be_revived()
 	. = ..()
-	if(!get_organ_by_type(/obj/item/organ/brain) && (!mind || !mind.has_antag_datum(/datum/antagonist/changeling)))
+	if(!get_organ_by_type(/obj/item/organ/internal/brain) && (!mind || !mind.has_antag_datum(/datum/antagonist/changeling)))
 		return 0
 
 /mob/living/carbon/harvest(mob/living/user)
 	if(QDELETED(src))
 		return
 	var/organs_amt = 0
-	for(var/X in internal_organs)
-		var/obj/item/organ/O = X
+	for(var/obj/item/organ/organ as anything in organs)
 		if(prob(50))
 			organs_amt++
-			O.Remove(src)
-			O.forceMove(drop_location())
+			organ.Remove(src)
+			organ.forceMove(drop_location())
 	if(organs_amt)
 		to_chat(user, span_notice("You retrieve some of [src]\'s internal organs!"))
+	remove_all_embedded_objects()
 
 /mob/living/carbon/ExtinguishMob()
 	for(var/X in get_equipped_items())
@@ -910,11 +918,14 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 /mob/living/carbon/fakefireextinguish()
 	remove_overlay(FIRE_LAYER)
 
-/mob/living/carbon/proc/create_bodyparts()
+/// Creates body parts for this carbon completely from scratch.
+/// Optionally takes a map of body zones to what type to instantiate instead of them.
+/mob/living/carbon/proc/create_bodyparts(list/overrides)
 	var/l_arm_index_next = -1
 	var/r_arm_index_next = 0
-	for(var/bodypart_path in bodyparts)
-		var/obj/item/bodypart/bodypart_instance = new bodypart_path()
+	for(var/obj/item/bodypart/bodypart_path as anything in bodyparts)
+		var/real_body_part_path = overrides?[initial(bodypart_path.body_zone)] || bodypart_path
+		var/obj/item/bodypart/bodypart_instance = new real_body_part_path()
 		bodypart_instance.set_owner(src)
 		bodyparts.Remove(bodypart_path)
 		add_bodypart(bodypart_instance)
@@ -929,8 +940,10 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 				hand_bodyparts += bodypart_instance
 
 
-///Proc to hook behavior on bodypart additions.
+///Proc to hook behavior on bodypart additions. Do not directly call. You're looking for [/obj/item/bodypart/proc/attach_limb()].
 /mob/living/carbon/proc/add_bodypart(obj/item/bodypart/new_bodypart)
+	SHOULD_NOT_OVERRIDE(TRUE)
+
 	bodyparts += new_bodypart
 	new_bodypart.set_owner(src)
 
@@ -945,8 +958,10 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 				set_usable_hands(usable_hands + 1)
 
 
-///Proc to hook behavior on bodypart removals.
+///Proc to hook behavior on bodypart removals.  Do not directly call. You're looking for [/obj/item/bodypart/proc/drop_limb()].
 /mob/living/carbon/proc/remove_bodypart(obj/item/bodypart/old_bodypart)
+	SHOULD_NOT_OVERRIDE(TRUE)
+
 	bodyparts -= old_bodypart
 	switch(old_bodypart.body_part)
 		if(LEG_LEFT, LEG_RIGHT)
@@ -959,9 +974,11 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 				set_usable_hands(usable_hands - 1)
 
 /mob/living/carbon/proc/create_internal_organs()
-	for(var/X in internal_organs)
-		var/obj/item/organ/I = X
-		I.Insert(src)
+	for(var/obj/item/organ/internal/internal_organ in organs)
+		internal_organ.Insert(src)
+
+/proc/cmp_organ_slot_asc(slot_a, slot_b)
+	return GLOB.organ_process_order.Find(slot_a) - GLOB.organ_process_order.Find(slot_b)
 
 /mob/living/carbon/vv_get_dropdown()
 	. = ..()
@@ -1165,11 +1182,11 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 			. = TRUE
 
 	if(back?.wash(clean_types))
-		update_inv_back(0)
+		update_worn_back(0)
 		. = TRUE
 
 	if(head?.wash(clean_types))
-		update_inv_head()
+		update_worn_head()
 		. = TRUE
 
 	// Check and wash stuff that can be covered
@@ -1177,11 +1194,11 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 
 	// If the eyes are covered by anything but glasses, that thing will be covering any potential glasses as well.
 	if(glasses && is_eyes_covered(FALSE, TRUE, TRUE) && glasses.wash(clean_types))
-		update_inv_glasses()
+		update_worn_glasses()
 		. = TRUE
 
 	if(wear_mask && !(ITEM_SLOT_MASK in obscured) && wear_mask.wash(clean_types))
-		update_inv_wear_mask()
+		update_worn_mask()
 		. = TRUE
 
 	if(ears && !(ITEM_SLOT_EARS in obscured) && ears.wash(clean_types))
@@ -1189,15 +1206,15 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 		. = TRUE
 
 	if(wear_neck && !(ITEM_SLOT_NECK in obscured) && wear_neck.wash(clean_types))
-		update_inv_neck()
+		update_worn_neck()
 		. = TRUE
 
 	if(shoes && !(ITEM_SLOT_FEET in obscured) && shoes.wash(clean_types))
-		update_inv_shoes()
+		update_worn_shoes()
 		. = TRUE
 
 	if(gloves && !(ITEM_SLOT_GLOVES in obscured) && gloves.wash(clean_types))
-		update_inv_gloves()
+		update_worn_gloves()
 		. = TRUE
 
 /mob/living/carbon/set_gender(ngender = NEUTER, silent = FALSE, update_icon = TRUE, forced = FALSE)
