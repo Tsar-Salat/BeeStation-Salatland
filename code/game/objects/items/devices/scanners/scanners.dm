@@ -448,8 +448,7 @@ GENE SCANNER
 			|| S.mutanttongue != initial(S.mutanttongue) \
 			|| S.mutantliver != initial(S.mutantliver) \
 			|| S.mutantstomach != initial(S.mutantstomach) \
-			|| S.mutantappendix != initial(S.mutantappendix) \
-			|| S.mutantwings != initial(S.mutantwings)
+			|| S.mutantappendix != initial(S.mutantappendix)
 
 		message += span_info("Species: [S.name][mutant ? "-derived mutant" : ""]")
 		message += span_info("Core temperature: [round(H.coretemperature-T0C,0.1)] &deg;C ([round(H.coretemperature*1.8-459.67,0.1)] &deg;F)")
