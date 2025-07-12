@@ -4,22 +4,15 @@
 	worn_icon = 'icons/mob/clothing/head/default.dmi'
 	body_parts_covered = HEAD
 	slot_flags = ITEM_SLOT_HEAD
-	dynamic_hair_suffix = "+generic"
 	///Is the person wearing this trackable by the AI?
 	var/blockTracking = FALSE
 	var/obj/item/clothing/head/wig/attached_wig
-
-/obj/item/clothing/head/Initialize(mapload)
-	. = ..()
-	if(ishuman(loc) && dynamic_hair_suffix)
-		var/mob/living/carbon/human/H = loc
-		H.update_hair()
 
 /obj/item/clothing/head/equipped(mob/user, slot)
 	. = ..()
 	if(ishuman(user) && slot == ITEM_SLOT_HEAD)
 		var/mob/living/carbon/human/H = user
-		H.update_inv_head()
+		H.update_worn_head()
 	attached_wig?.equipped(user, slot)
 
 /obj/item/clothing/head/dropped(mob/user)
@@ -27,7 +20,7 @@
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if(H.head == src)
-			H.update_inv_head()
+			H.update_worn_head()
 	attached_wig?.dropped(user)
 
 /obj/item/clothing/head/attackby(obj/item/W, mob/user, params)
@@ -73,7 +66,7 @@
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if(H.head == src)
-			H.update_inv_head()
+			H.update_worn_head()
 
 /obj/item/clothing/head/Destroy()
 	if (attached_wig)
@@ -147,7 +140,7 @@
 	..()
 	if(ismob(loc))
 		var/mob/M = loc
-		M.update_inv_head()
+		M.update_worn_head()
 
 /obj/item/clothing/head/compile_monkey_icon()
 	var/identity = "[type]_[icon_state]" //Allows using multiple icon states for piece of clothing

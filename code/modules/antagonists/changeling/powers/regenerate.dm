@@ -19,9 +19,9 @@
 								span_userdanger("Your limbs regrow, making a loud, crunchy sound and giving you great pain!"),
 								span_italics("You hear organic matter ripping and tearing!"))
 			C.emote("scream")
-			C.regenerate_limbs(1)
+			C.regenerate_limbs()
 		if(!user.get_organ_slot(ORGAN_SLOT_BRAIN))
-			var/obj/item/organ/brain/B
+			var/obj/item/organ/internal/brain/B
 			if(C.has_dna() && C.dna.species.mutantbrain)
 				B = new C.dna.species.mutantbrain()
 			else

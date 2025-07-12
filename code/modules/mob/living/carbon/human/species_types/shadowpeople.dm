@@ -7,33 +7,32 @@
 	// Humans cursed to stay in the darkness, lest their life forces drain. They regain health in shadow and die in light.
 	name = "Shadow"
 	plural_form = "Shadowpeople"
-	id = SPECIES_SHADOWPERSON
-	sexes = 0
+	id = SPECIES_SHADOW
+	sexes = FALSE
 	meat = /obj/item/food/meat/slab/human/mutant/shadow
-	species_traits = list(
-		NOEYESPRITES,
-		NOFLASH
-	)
 	inherent_traits = list(
 		TRAIT_NOBREATH,
 		TRAIT_RADIMMUNE,
 		TRAIT_VIRUSIMMUNE,
 		TRAIT_NOBLOOD,
+		TRAIT_NOFLASH
 	)
 	inherent_factions = list(FACTION_FAITHLESS)
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | MIRROR_MAGIC
-	mutanteyes = /obj/item/organ/eyes/night_vision
+
+	mutantbrain = /obj/item/organ/internal/brain/shadow
+	mutanteyes = /obj/item/organ/internal/eyes/shadow
 	mutantheart = null
 	mutantlungs = null
 
 	species_language_holder = /datum/language_holder/shadowpeople
 
 	bodypart_overrides = list(
-		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/shadow,
-		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/shadow,
+		BODY_ZONE_L_ARM = /obj/item/bodypart/arm/left/shadow,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/arm/right/shadow,
 		BODY_ZONE_HEAD = /obj/item/bodypart/head/shadow,
-		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/shadow,
-		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/shadow,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/leg/left/shadow,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/shadow,
 		BODY_ZONE_CHEST = /obj/item/bodypart/chest/shadow,
 	)
 
@@ -102,40 +101,71 @@
 
 	return to_add
 
+
+/// the key to some of their powers
+/obj/item/organ/internal/brain/shadow
+	name = "shadowling tumor"
+	desc = "Something that was once a brain, before being remolded by a shadowling. It has adapted to the dark, irreversibly."
+	icon = 'icons/obj/medical/organs/shadow_organs.dmi'
+
+/obj/item/organ/internal/brain/shadow/on_life(delta_time, times_fired)
+	. = ..()
+	var/turf/owner_turf = owner.loc
+	if(!isturf(owner_turf))
+		return
+	var/light_amount = owner_turf.get_lumcount()
+
+	if(light_amount > SHADOW_SPECIES_LIGHT_THRESHOLD) //if there's enough light, start dying
+		owner.take_overall_damage(brute = 0.5 * delta_time, burn = 0.5 * delta_time, required_bodytype = BODYTYPE_ORGANIC)
+	else if (light_amount < SHADOW_SPECIES_LIGHT_THRESHOLD) //heal in the dark
+		owner.heal_overall_damage(brute = 0.5 * delta_time, burn = 0.5 * delta_time, required_bodytype = BODYTYPE_ORGANIC)
+
+/obj/item/organ/internal/eyes/shadow
+	name = "burning red eyes"
+	desc = "Even without their shadowy owner, looking at these eyes gives you a sense of dread."
+	icon = 'icons/obj/medical/organs/shadow_organs.dmi'
+
+
 /datum/species/shadow/nightmare
 	name = "Nightmare"
-	id = "nightmare"
+	id = SPECIES_NIGHTMARE
+	examine_limb_id = SPECIES_SHADOW
+	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE
 	burnmod = 1.5
 	no_equip = list(ITEM_SLOT_OCLOTHING, ITEM_SLOT_GLOVES, ITEM_SLOT_FEET, ITEM_SLOT_ICLOTHING, ITEM_SLOT_SUITSTORE)
-	species_traits = list(
-		NO_UNDERWEAR,
-		NO_DNA_COPY,
-		NOTRANSSTING,
-		NOEYESPRITES,
-		NOFLASH
-	)
 	inherent_traits = list(
+		TRAIT_NO_UNDERWEAR,
 		TRAIT_RESISTCOLD,
 		TRAIT_NOBREATH,
 		TRAIT_RESISTHIGHPRESSURE,
 		TRAIT_RESISTLOWPRESSURE,
-		TRAIT_CHUNKYFINGERS,
 		TRAIT_RADIMMUNE,
 		TRAIT_VIRUSIMMUNE,
 		TRAIT_PIERCEIMMUNE,
 		TRAIT_NODISMEMBER,
 		TRAIT_NOHUNGER,
 		TRAIT_NOBLOOD,
+		TRAIT_NO_DNA_COPY,
+		TRAIT_NO_TRANSFORMATION_STING,
+		TRAIT_NOFLASH
 	)
-	mutanteyes = /obj/item/organ/eyes/night_vision/nightmare
-	mutantheart = /obj/item/organ/heart/nightmare
-	mutantbrain = /obj/item/organ/brain/nightmare
+
+	mutantheart = /obj/item/organ/internal/heart/nightmare
+	mutantbrain = /obj/item/organ/internal/brain/nightmare
+	bodypart_overrides = list(
+		BODY_ZONE_L_ARM = /obj/item/bodypart/arm/left/shadow/nightmare,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/arm/right/shadow/nightmare,
+		BODY_ZONE_HEAD = /obj/item/bodypart/head/shadow,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/leg/left/shadow,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/shadow,
+		BODY_ZONE_CHEST = /obj/item/bodypart/chest/shadow,
+	)
 	nojumpsuit = 1
 
 	var/info_text = "You are a " + span_danger("Nightmare") + ". The ability " + span_warning("shadow walk") + " allows unlimited, unrestricted movement in the dark while activated. \
 					Your " + span_warning("light eater") + " will destroy any light producing objects you attack, as well as destroy any lights a living creature may be holding. You will automatically dodge gunfire and melee attacks when on a dark tile. If killed, you will eventually revive if left in darkness."
 
-/datum/species/shadow/nightmare/on_species_gain(mob/living/carbon/C, datum/species/old_species)
+/datum/species/shadow/nightmare/on_species_gain(mob/living/carbon/C, datum/species/old_species, pref_load, regenerate_icons)
 	. = ..()
 	to_chat(C, "[info_text]")
 
@@ -157,14 +187,14 @@
 
 //Organs
 
-/obj/item/organ/brain/nightmare
+/obj/item/organ/internal/brain/nightmare
 	name = "tumorous mass"
 	desc = "A fleshy growth that was dug out of the skull of a Nightmare."
 	icon_state = "brain-x-d"
 	var/datum/action/spell/jaunt/shadow_walk/our_jaunt
 
-/obj/item/organ/brain/nightmare/on_insert(mob/living/carbon/brain_owner)
-	..()
+/obj/item/organ/internal/brain/nightmare/Insert(mob/living/carbon/brain_owner, special, movement_flags)
+	. = ..()
 	if(brain_owner.dna.species.id != SPECIES_NIGHTMARE)
 		brain_owner.set_species(/datum/species/shadow/nightmare)
 		visible_message(span_warning("[brain_owner] thrashes as [src] takes root in [brain_owner.p_their()] body!"))
@@ -173,14 +203,14 @@
 	our_jaunt.Grant(brain_owner)
 
 
-/obj/item/organ/brain/nightmare/on_remove(mob/living/carbon/brain_owner)
+/obj/item/organ/internal/brain/nightmare/Remove(mob/living/carbon/M, special = FALSE, no_id_transfer = FALSE, pref_load)
 	QDEL_NULL(our_jaunt)
 	return ..()
 
-/obj/item/organ/heart/nightmare
+/obj/item/organ/internal/heart/nightmare
 	name = "heart of darkness"
 	desc = "An alien organ that twists and writhes when exposed to light."
-	icon = 'icons/obj/surgery.dmi'
+	icon = 'icons/obj/medical/organs/organs.dmi'
 	icon_state = "demon_heart-on"
 	visual = TRUE
 	color = "#1C1C1C"
@@ -189,7 +219,7 @@
 	decay_factor = 0
 
 
-/obj/item/organ/heart/nightmare/attack(mob/M, mob/living/carbon/user, obj/target)
+/obj/item/organ/internal/heart/nightmare/attack(mob/M, mob/living/carbon/user, obj/target)
 	if(M != user)
 		return ..()
 	user.visible_message(span_warning("[user] raises [src] to [user.p_their()] mouth and tears into it with [user.p_their()] teeth!"), \
@@ -202,26 +232,26 @@
 	user.temporarilyRemoveItemFromInventory(src, TRUE)
 	Insert(user)
 
-/obj/item/organ/heart/nightmare/on_insert(mob/living/carbon/heart_owner, special)
+/obj/item/organ/internal/heart/nightmare/on_mob_insert(mob/living/carbon/heart_owner, special)
 	. = ..()
 	if(special != HEART_SPECIAL_SHADOWIFY)
 		blade = new/obj/item/light_eater
 		heart_owner.put_in_hands(blade)
 
-/obj/item/organ/heart/nightmare/on_remove(mob/living/carbon/heart_owner, special)
+/obj/item/organ/internal/heart/nightmare/on_mob_remove(mob/living/carbon/heart_owner, special)
 	. = ..()
 	respawn_progress = 0
 	if(blade && special != HEART_SPECIAL_SHADOWIFY)
 		heart_owner.visible_message(span_warning("\The [blade] disintegrates!"))
 		QDEL_NULL(blade)
 
-/obj/item/organ/heart/nightmare/Stop()
+/obj/item/organ/internal/heart/nightmare/Stop()
 	return 0
 
-/obj/item/organ/heart/nightmare/update_icon()
+/obj/item/organ/internal/heart/nightmare/update_icon()
 	return //always beating visually
 
-/obj/item/organ/heart/nightmare/on_death(delta_time, times_fired)
+/obj/item/organ/internal/heart/nightmare/on_death(delta_time, times_fired)
 	if(!owner)
 		return
 	var/turf/T = get_turf(owner)
@@ -413,13 +443,13 @@
 	var/datum/religion_sect/shadow_sect/sect = GLOB.religious_sect
 	if(!isnightmare(C))
 		if(sect.grand_ritual_level == 1)
-			mutantheart = new/obj/item/organ/heart/shadow_ritual/first
+			mutantheart = new/obj/item/organ/internal/heart/shadow_ritual/first
 			mutantheart.Insert(C, 0, FALSE)
 		if(sect.grand_ritual_level == 2)
-			mutantheart = new/obj/item/organ/heart/shadow_ritual/second
+			mutantheart = new/obj/item/organ/internal/heart/shadow_ritual/second
 			mutantheart.Insert(C, 0, FALSE)
 		if(sect.grand_ritual_level == 3)
-			mutantheart = new/obj/item/organ/heart/shadow_ritual/third
+			mutantheart = new/obj/item/organ/internal/heart/shadow_ritual/third
 			mutantheart.Insert(C, 0, FALSE)
 
 /datum/species/shadow/blessed/bullet_act(obj/projectile/P, mob/living/carbon/human/H)
@@ -437,43 +467,43 @@
 	multiplicative_slowdown = -0.15
 
 
-/obj/item/organ/heart/shadow_ritual // This parent should never appear itself
+/obj/item/organ/internal/heart/shadow_ritual // This parent should never appear itself
 	visual = TRUE
 	decay_factor = 0
 	var/shadow_conversion = 0 // Determines progress of transforming owner into shadow person
 	var/sect_rituals_completed_granted = 0 // What level of sect_rituals_completed the heart grants
 	var/datum/action/innate/shadow_comms/comms/C = new // For granting shadow comms
 
-/obj/item/organ/heart/shadow_ritual/first
+/obj/item/organ/internal/heart/shadow_ritual/first
 	name = "shadowed heart"
 	desc = "An object resembling a heart, completely shrouded by a thick layer of darkness."
-	icon = 'icons/obj/surgery.dmi'
+	icon = 'icons/obj/medical/organs/organs.dmi'
 	icon_state = "shadow_heart_1"
 	sect_rituals_completed_granted = 1
 
-/obj/item/organ/heart/shadow_ritual/second
+/obj/item/organ/internal/heart/shadow_ritual/second
 	name = "faded heart"
 	desc = "A hard to distinguish heart-like organ covered by a shifting darkness."
-	icon = 'icons/obj/surgery.dmi'
+	icon = 'icons/obj/medical/organs/organs.dmi'
 	icon_state = "shadow_heart_2"
 	sect_rituals_completed_granted = 2
 
-/obj/item/organ/heart/shadow_ritual/third
+/obj/item/organ/internal/heart/shadow_ritual/third
 	name = "pulsing darkness"
 	desc = "An indistinguishable object cloaked in an undispellable darkness. The only thing that can be made out is the darkness pulsing."
-	icon = 'icons/obj/surgery.dmi'
+	icon = 'icons/obj/medical/organs/organs.dmi'
 	icon_state = "shadow_heart_3"
 	var/respawn_progress = 0
 	sect_rituals_completed_granted = 3
 
 
-/obj/item/organ/heart/shadow_ritual/Stop()
+/obj/item/organ/internal/heart/shadow_ritual/Stop()
 	return FALSE
 
-/obj/item/organ/heart/shadow_ritual/update_icon()
+/obj/item/organ/internal/heart/shadow_ritual/update_icon()
 	return
 
-/obj/item/organ/heart/shadow_ritual/on_insert(mob/living/carbon/heart_owner)
+/obj/item/organ/internal/heart/shadow_ritual/on_mob_insert(mob/living/carbon/heart_owner)
 	. = ..()
 	if(isblessedshadow(heart_owner))
 		var/mob/living/carbon/human/O = heart_owner
@@ -485,7 +515,7 @@
 		to_chat(heart_owner, span_userdanger("You feel a chill spreading throughout your body..."))
 
 
-/obj/item/organ/heart/shadow_ritual/on_remove(mob/living/carbon/heart_owner)
+/obj/item/organ/internal/heart/shadow_ritual/on_mob_remove(mob/living/carbon/heart_owner)
 	. = ..()
 	if(isblessedshadow(heart_owner))
 		var/mob/living/carbon/human/O = heart_owner
@@ -499,11 +529,11 @@
 		to_chat(heart_owner, span_bigboldinfo("You feel warmth returning to you once more."))
 		shadow_conversion = 0
 
-/obj/item/organ/heart/shadow_ritual/third/on_remove(mob/living/carbon/heart_owner)
+/obj/item/organ/internal/heart/shadow_ritual/third/on_mob_remove(mob/living/carbon/heart_owner)
 	..()
 	respawn_progress = 0
 
-/obj/item/organ/heart/shadow_ritual/on_life(delta_time, times_fired)
+/obj/item/organ/internal/heart/shadow_ritual/on_life(delta_time, times_fired)
 	..()
 	if(!isshadow(owner))
 		shadow_conversion += 1
@@ -528,7 +558,7 @@
 		old_owner.set_species(/datum/species/shadow/blessed)
 
 
-/obj/item/organ/heart/shadow_ritual/third/on_death(delta_time)
+/obj/item/organ/internal/heart/shadow_ritual/third/on_death(delta_time)
 	if(!owner)
 		return
 	var/turf/T = get_turf(owner)

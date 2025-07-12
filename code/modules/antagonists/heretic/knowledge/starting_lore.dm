@@ -47,7 +47,7 @@ GLOBAL_LIST_INIT(heretic_start_knowledge, initialize_starting_knowledge())
 		/obj/effect/decal/cleanable/blood = 1,
 		/obj/item/food/grown/flower = 1,
 	)
-	var/required_organ_type = /obj/item/organ/heart
+	var/required_organ_type = /obj/item/organ/internal/heart
 	cost = 0
 	priority = MAX_KNOWLEDGE_PRIORITY - 1 // Knowing how to remake your heart is important
 	route = HERETIC_PATH_START
@@ -55,12 +55,12 @@ GLOBAL_LIST_INIT(heretic_start_knowledge, initialize_starting_knowledge())
 /datum/heretic_knowledge/living_heart/on_research(mob/user, datum/antagonist/heretic/our_heretic)
 	. = ..()
 
-	var/obj/item/organ/heart/our_heart = user.get_organ_slot(ORGAN_SLOT_HEART)
+	var/obj/item/organ/internal/heart/our_heart = user.get_organ_slot(ORGAN_SLOT_HEART)
 	if(our_heart)
 		our_heart.AddComponent(/datum/component/living_heart)
 
 /datum/heretic_knowledge/living_heart/on_lose(mob/user, datum/antagonist/heretic/our_heretic)
-	var/obj/item/organ/heart/our_heart = user.get_organ_slot(ORGAN_SLOT_HEART)
+	var/obj/item/organ/internal/heart/our_heart = user.get_organ_slot(ORGAN_SLOT_HEART)
 	if(our_heart)
 		qdel(our_heart.GetComponent(/datum/component/living_heart))
 
@@ -110,18 +110,18 @@ GLOBAL_LIST_INIT(heretic_start_knowledge, initialize_starting_knowledge())
 
 /datum/heretic_knowledge/living_heart/on_finished_recipe(mob/living/user, list/selected_atoms, turf/loc)
 
-	var/obj/item/organ/heart/our_heart = user.get_organ_slot(ORGAN_SLOT_HEART)
+	var/obj/item/organ/internal/heart/our_heart = user.get_organ_slot(ORGAN_SLOT_HEART)
 
 	// Our heart is robotic or synthetic - we need to replace it, and we fortunately should have one by here
 	if(!is_valid_heart(our_heart))
-		var/obj/item/organ/heart/our_replacement_heart = locate() in selected_atoms
+		var/obj/item/organ/internal/heart/our_replacement_heart = locate() in selected_atoms
 		if(our_replacement_heart)
 			// Throw our current heart out of our chest, violently
 			user.visible_message(span_boldwarning("[user]'s [our_heart.name] bursts suddenly out of [user.p_their()] chest!"))
 			INVOKE_ASYNC(user, /mob/proc/emote, "scream")
 			user.apply_damage(20, BRUTE, BODY_ZONE_CHEST)
 			// And put our organic heart in its place
-			our_replacement_heart.Insert(user, special = TRUE, drop_if_replaced = TRUE)
+			our_replacement_heart.Insert(user, special = TRUE)
 			our_heart.throw_at(get_edge_target_turf(user, pick(GLOB.alldirs)), 2, 2)
 			our_heart = our_replacement_heart
 		else
@@ -144,9 +144,7 @@ GLOBAL_LIST_INIT(heretic_start_knowledge, initialize_starting_knowledge())
 		return FALSE
 	if(!new_heart.useable)
 		return FALSE
-	if(new_heart.status != ORGAN_ORGANIC)
-		return FALSE
-	if(new_heart.organ_flags & (ORGAN_SYNTHETIC|ORGAN_FAILING))
+	if(new_heart.organ_flags & (ORGAN_ROBOTIC|ORGAN_FAILING))
 		return FALSE
 
 	return TRUE
@@ -160,7 +158,7 @@ GLOBAL_LIST_INIT(heretic_start_knowledge, initialize_starting_knowledge())
 	desc = "Allows you to transmute a sheet of glass and a pair of eyes to create an Amber Focus. \
 		A focus must be worn in order to cast more advanced spells."
 	required_atoms = list(
-		/obj/item/organ/eyes = 1,
+		/obj/item/organ/internal/eyes = 1,
 		/obj/item/stack/sheet/glass = 1,
 	)
 	result_atoms = list(/obj/item/clothing/neck/heretic_focus)

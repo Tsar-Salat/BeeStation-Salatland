@@ -71,9 +71,17 @@ GLOBAL_LIST_INIT(preference_entries_by_key, init_preference_entries_by_key())
 	/// will show the feature as selectable.
 	var/relevant_mutant_bodypart = null
 
-	/// If the selected species has this in its /datum/species/species_traits,
+	// If the selected species has this in its /datum/species/inherent_traits,
 	/// will show the feature as selectable.
-	var/relevant_species_trait = null
+	var/relevant_inherent_trait = null
+
+	/// If the selected species has this in its /datum/species/var/external_organs,
+	/// will show the feature as selectable.
+	var/relevant_external_organ = null
+
+	/// If the selected species has this head_flag by default,
+	/// will show the feature as selectable.
+	var/relevant_head_flag = null
 
 	/// Indicates that create_informed_default_value is used.
 	var/informed = FALSE
@@ -275,7 +283,12 @@ GLOBAL_LIST_INIT(preference_entries_by_key, init_preference_entries_by_key())
 	SHOULD_CALL_PARENT(TRUE)
 	SHOULD_NOT_SLEEP(TRUE)
 
-	if (!isnull(relevant_mutant_bodypart) || !isnull(relevant_species_trait))
+	if ( \
+		!isnull(relevant_mutant_bodypart) \
+		|| !isnull(relevant_inherent_trait) \
+		|| !isnull(relevant_external_organ) \
+		|| !isnull(relevant_head_flag) \
+	)
 		var/species_type = preferences.read_character_preference(/datum/preference/choiced/species)
 
 		var/datum/species/species = new species_type
@@ -297,9 +310,8 @@ GLOBAL_LIST_INIT(preference_entries_by_key, init_preference_entries_by_key())
 /// A preference that is a choice of one option among a fixed set.
 /// Used for preferences such as clothing.
 /datum/preference/choiced
-	/// If this is TRUE, icons will be generated.
-	/// This is necessary for if your `init_possible_values()` override
-	/// returns an assoc list of names to atoms/icons.
+	/// If this is TRUE, an icon will be generated for every value.
+	/// If you implement this, you must implement `icon_for(value)` for every possible value.
 	var/should_generate_icons = FALSE
 
 	var/list/cached_values
@@ -329,33 +341,30 @@ GLOBAL_LIST_INIT(preference_entries_by_key, init_preference_entries_by_key())
 	return cached_values
 
 /// Returns a list of every possible value, serialized.
-/// Return value can be in the form of:
-/// - A flat list of serialized values, such as list(MALE, FEMALE, PLURAL).
-/// - An assoc list of serialized values to atoms/icons.
 /datum/preference/choiced/proc/get_choices_serialized()
 	// Override `init_values()` instead.
 	SHOULD_NOT_OVERRIDE(TRUE)
 
 	var/list/serialized_choices = list()
-	var/choices = get_choices()
 
-	if (should_generate_icons)
-		for (var/choice in choices)
-			serialized_choices[serialize(choice)] = choices[choice]
-	else
-		for (var/choice in choices)
-			serialized_choices += serialize(choice)
+	for (var/choice in get_choices())
+		serialized_choices += serialize(choice)
 
 	return serialized_choices
 
 /// Returns a list of every possible value.
 /// This must be overriden by `/datum/preference/choiced` subtypes.
-/// Return value can be in the form of:
-/// - A flat list of raw values, such as list(MALE, FEMALE, PLURAL).
-/// - An assoc list of raw values to atoms/icons, in which case
-/// icons will be generated.
+/// If `should_generate_icons` is TRUE, then you will also need to implement `icon_for(value)`
+/// for every possible value.
 /datum/preference/choiced/proc/init_possible_values()
 	CRASH("`init_possible_values()` was not implemented for [type]!")
+
+/// When `should_generate_icons` is TRUE, this proc is called for every value.
+/// It can return either an icon or a typepath to an atom to create.
+/datum/preference/choiced/proc/icon_for(value)
+	SHOULD_CALL_PARENT(FALSE)
+	SHOULD_NOT_SLEEP(TRUE)
+	CRASH("`icon_for()` was not implemented for [type], even though should_generate_icons = TRUE!")
 
 /datum/preference/choiced/is_valid(value)
 	return value in get_choices()
@@ -390,21 +399,6 @@ GLOBAL_LIST_INIT(preference_entries_by_key, init_preference_entries_by_key())
 
 	return data
 
-/// A preference that represents an RGB color of something, crunched down to 3 hex numbers.
-/// Was used heavily in the past, but doesn't provide as much range and only barely conserves space.
-/datum/preference/color_legacy
-	abstract_type = /datum/preference/color_legacy
-
-/datum/preference/color_legacy/deserialize(input, datum/preferences/preferences)
-	return sanitize_hexcolor(input)
-
-/datum/preference/color_legacy/create_default_value()
-	return random_short_color()
-
-/datum/preference/color_legacy/is_valid(value)
-	var/static/regex/is_legacy_color = regex(@"^[0-9a-fA-F]{3}$")
-	return findtext(value, is_legacy_color)
-
 /// A preference that represents an RGB color of something.
 /// Will give the value as 6 hex digits, without a hash.
 /datum/preference/color
@@ -421,68 +415,6 @@ GLOBAL_LIST_INIT(preference_entries_by_key, init_preference_entries_by_key())
 
 /datum/preference/color/is_valid(value)
 	return findtext(value, GLOB.is_color)
-
-/proc/pick_default_accessory(list/sprite_accessories, datum/sprite_accessory/default = null, default_probability = 0, required_gender = null)
-	if (default && prob(default_probability))
-		return default
-	var/list/allowed = list()
-	for (var/datum/sprite_accessory/accessory as() in sprite_accessories)
-		// Source list is an assoc list
-		if (!istype(accessory))
-			accessory = sprite_accessories[accessory]
-		if (!accessory.use_default)
-			continue
-		if (required_gender && accessory.use_default_gender != NEUTER && accessory.use_default_gender != required_gender)
-			continue
-		allowed += accessory
-	if (length(allowed) == 0)
-		if (default)
-			return default
-		return pick(sprite_accessories)
-	return pick(allowed)
-
-/// Takes an assoc list of names to /datum/sprite_accessory and returns a value
-/// fit for `/datum/preference/init_possible_values()`
-/proc/possible_values_for_sprite_accessory_list(list/datum/sprite_accessory/sprite_accessories)
-	var/list/possible_values = list()
-	for (var/name in sprite_accessories)
-		var/datum/sprite_accessory/sprite_accessory = sprite_accessories[name]
-		if (istype(sprite_accessory))
-			possible_values[name] = uni_icon(sprite_accessory.icon, sprite_accessory.icon_state)
-		else
-			// This means it didn't have an icon state
-			possible_values[name] = uni_icon('icons/mob/landmarks.dmi', "x")
-	return possible_values
-
-/// Takes an assoc list of names to /datum/sprite_accessory and returns a value
-/// fit for `/datum/preference/init_possible_values()`
-/// Different from `possible_values_for_sprite_accessory_list` in that it takes a list of layers
-/// such as BEHIND, FRONT, and ADJ.
-/// It also takes a "body part name", such as body_markings, moth_wings, etc
-/// They are expected to be in order from lowest to top.
-/proc/possible_values_for_sprite_accessory_list_for_body_part(
-	list/datum/sprite_accessory/sprite_accessories,
-	body_part,
-	list/layers,
-)
-	var/list/possible_values = list()
-
-	for (var/name in sprite_accessories)
-		var/datum/sprite_accessory/sprite_accessory = sprite_accessories[name]
-
-		var/datum/universal_icon/final_icon
-
-		for (var/layer in layers)
-			var/datum/universal_icon/icon = uni_icon(sprite_accessory.icon, "m_[body_part]_[sprite_accessory.icon_state]_[layer]")
-
-			if (isnull(final_icon))
-				final_icon = icon
-			else
-				final_icon.blend_icon(icon, ICON_OVERLAY)
-
-		possible_values[name] = final_icon
-
-	return possible_values
 
 /// A numeric preference with a minimum and maximum value
 /datum/preference/numeric

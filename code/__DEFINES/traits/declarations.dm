@@ -55,18 +55,21 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_IGNORESLOWDOWN "ignoreslow"
 #define TRAIT_IGNOREDAMAGESLOWDOWN "ignoredamageslowdown"
 #define TRAIT_DEATHCOMA "deathcoma" //Causes death-like unconsciousness
+/// The mob has the stasis effect.
+/// Does nothing on its own, applied via status effect.
+#define TRAIT_STASIS "in_stasis"
 #define TRAIT_REGEN_COMA "regencoma"
 #define TRAIT_FAKEDEATH "fakedeath" //Makes the owner appear as dead to most forms of medical examination
-#define TRAIT_DISFIGURED		"disfigured"
-#define TRAIT_XENO_HOST			"xeno_host"	//Tracks whether we're gonna be a baby alien's mummy.
-#define TRAIT_STUNIMMUNE		"stun_immunity"
-#define TRAIT_STUNRESISTANCE    "stun_resistance"
-#define TRAIT_CONFUSEIMMUNE		"confuse_immunity"
-#define TRAIT_SLEEPIMMUNE		"sleep_immunity"
-#define TRAIT_PUSHIMMUNE		"push_immunity"
-#define TRAIT_SHOCKIMMUNE		"shock_immunity"
-#define TRAIT_HOLY				"holy"
-#define TRAIT_ANTIMAGIC			"antimagic" //Unharmable
+#define TRAIT_DISFIGURED "disfigured"
+#define TRAIT_XENO_HOST "xeno_host"	//Tracks whether we're gonna be a baby alien's mummy.
+#define TRAIT_STUNIMMUNE "stun_immunity"
+#define TRAIT_STUNRESISTANCE "stun_resistance"
+#define TRAIT_CONFUSEIMMUNE "confuse_immunity"
+#define TRAIT_SLEEPIMMUNE "sleep_immunity"
+#define TRAIT_PUSHIMMUNE "push_immunity"
+#define TRAIT_SHOCKIMMUNE "shock_immunity"
+#define TRAIT_HOLY "holy"
+#define TRAIT_ANTIMAGIC "antimagic" //Unharmable
 #define TRAIT_RECENTLY_BLOCKED_MAGIC "recently_blocked_magic" /// This mob recently blocked magic with some form of antimagic
 #define TRAIT_ANTIMAGIC_NO_SELFBLOCK "anti_magic_no_selfblock" /// This allows a person who has antimagic to cast spells without getting blocked
 /// Are we immune to specifically tesla / SM shocks?
@@ -91,21 +94,58 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_NODISMEMBER		"dismember_immunity"
 #define TRAIT_NOFIRE			"nonflammable"
 #define TRAIT_NOGUNS			"no_guns"
-///This carbon doesn't get hungry
+/// Species with this trait are genderless
+#define TRAIT_AGENDER "agender"
+/// Species with this trait have a blood clan mechanic
+#define TRAIT_BLOOD_CLANS "blood_clans"
+/// Species with this trait have markings (this SUCKS, remove this later in favor of bodypart overlays)
+#define TRAIT_HAS_MARKINGS "has_markings"
+/// Species with this trait use skin tones for coloration
+#define TRAIT_USES_SKINTONES "uses_skintones"
+/// Species with this trait have mutant colors
+#define TRAIT_MUTANT_COLORS "mutcolors"
+/// Species with this trait have mutant colors that cannot be chosen by the player
+#define TRAIT_FIXED_MUTANT_COLORS "fixed_mutcolors"
+/// Humans with this trait won't get bloody hands, nor bloody feet
+#define TRAIT_NO_BLOOD_OVERLAY "no_blood_overlay"
+/// Humans with this trait cannot have underwear
+#define TRAIT_NO_UNDERWEAR "no_underwear"
+/// Humans with this trait cannot get augmentation surgery
+#define TRAIT_NO_AUGMENTS "no_augments"
+/// This carbon doesn't get hungry
 #define TRAIT_NOHUNGER "no_hunger"
-///This carbon doesn't bleed
+/// This carbon doesn't bleed
 #define TRAIT_NOBLOOD "noblood"
-#define TRAIT_NOMETABOLISM		"no_metabolism"
+/// This just means that the carbon will always have functional liverless metabolism
+#define TRAIT_LIVERLESS_METABOLISM "liverless_metabolism"
+/// Humans with this trait cannot be turned into zombies
+#define TRAIT_NO_ZOMBIFY "no_zombify"
+/// Humans with this trait cannot be affected by changeling transformation stings
+#define TRAIT_NO_TRANSFORMATION_STING "no_transformation_sting"
+/// Carbons with this trait can't have their DNA copied by diseases nor changelings
+#define TRAIT_NO_DNA_COPY "no_dna_copy"
+/// Carbons with this trait can eat blood to regenerate their own blood volume, instead of injecting it
+#define TRAIT_DRINKS_BLOOD "drinks_blood"
+/// Mob is immune to clone (cellular) damage
+#define TRAIT_NOCLONELOSS "no_cloneloss"
+/// Mob is immune to toxin damage
+#define TRAIT_TOXIMMUNE "toxin_immune"
+/// Mob is immune to oxygen damage, does not need to breathe
+#define TRAIT_NOBREATH "no_breath"
 #define TRAIT_POWERHUNGRY		"power_hungry" //uses electricity instead of food
-#define TRAIT_NOCLONELOSS		"no_cloneloss"
-#define TRAIT_TOXIMMUNE			"toxin_immune"
+#define TRAIT_NOHUSK "no_husk"
+#define TRAIT_REVIVESBYHEALING "revivesbyhealing"
+#define TRAIT_ENVIROSUIT "envirosuit"
+#define TRAIT_NOFLASH "noflash"
+#define TRAIT_NOMOUTH "nomouth"
+#define TRAIT_NOREAGENTS "noreagents"
+#define TRAIT_NOSOCKS "nosocks"
 #define TRAIT_EASYDISMEMBER		"easy_dismember"
 #define TRAIT_LIMBATTACHMENT 	"limb_attach"
 #define TRAIT_NOLIMBDISABLE		"no_limb_disable"
 #define TRAIT_EASYLIMBDISABLE	"easy_limb_disable"
 #define TRAIT_TOXINLOVER		"toxinlover"
 #define TRAIT_NOHAIRLOSS		"no_hair_loss"
-#define TRAIT_NOBREATH			"no_breath"
 #define TRAIT_SEE_ANTIMAGIC		"see_anti_magic"
 #define TRAIT_DEPRESSION		"depression"
 #define TRAIT_JOLLY				"jolly"
@@ -168,8 +208,6 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_DIAGNOSTIC_HUD "diag_hud"
 #define TRAIT_MEDIBOTCOMINGTHROUGH "medbot" //Is a medbot healing you
 #define TRAIT_PASSTABLE			"passtable"
-#define TRAIT_BLUSHING 			"blushing"
-#define TRAIT_CRYING			"crying"
 #define TRAIT_NOBLOCK			"noblock"
 #define TRAIT_NANITECOMPATIBLE	"nanitecompatible"
 #define TRAIT_WARDED       		"curse_immune"
@@ -329,6 +367,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_BRAIN_TUMOR		"brain_tumor"
 #define TRAIT_PROSKATER			"pro_skater"
 #define TRAIT_PLUSHIELOVER		"plushie lover"
+#define TRAIT_BALD "bald"
+#define TRAIT_SHAVED "shaved"
 
 ///Trait for dryable items
 #define TRAIT_DRYABLE "trait_dryable"

@@ -2,25 +2,22 @@
 	name = "\improper Plasmaman"
 	plural_form = "Plasmamen"
 	id = SPECIES_PLASMAMAN
-	bodyflag = FLAG_PLASMAMAN
 	sexes = 0
 	meat = /obj/item/stack/sheet/mineral/plasma
-	species_traits = list(
-		NOTRANSSTING,
-		ENVIROSUIT
-	)
 	inherent_traits = list(
 		TRAIT_GENELESS,
 		TRAIT_RESISTCOLD,
 		TRAIT_RADIMMUNE,
 		TRAIT_NOHUNGER,
 		TRAIT_NOBLOOD,
+		TRAIT_NO_TRANSFORMATION_STING,
+		TRAIT_ENVIROSUIT
 	)
 	inherent_biotypes = list(MOB_INORGANIC, MOB_HUMANOID)
-	mutantlungs = /obj/item/organ/lungs/plasmaman
-	mutanttongue = /obj/item/organ/tongue/bone/plasmaman
-	mutantliver = /obj/item/organ/liver/plasmaman
-	mutantstomach = /obj/item/organ/stomach/plasmaman
+	mutantlungs = /obj/item/organ/internal/lungs/plasmaman
+	mutanttongue = /obj/item/organ/internal/tongue/bone/plasmaman
+	mutantliver = /obj/item/organ/internal/liver/plasmaman
+	mutantstomach = /obj/item/organ/internal/stomach/plasmaman
 	mutantappendix = null
 	mutantheart = null
 	burnmod = 1.5
@@ -41,11 +38,11 @@
 	bodytemp_cold_damage_limit = (BODYTEMP_COLD_DAMAGE_LIMIT - 50) // about -50c
 
 	bodypart_overrides = list(
-		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/plasmaman,
-		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/plasmaman,
+		BODY_ZONE_L_ARM = /obj/item/bodypart/arm/left/plasmaman,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/arm/right/plasmaman,
 		BODY_ZONE_HEAD = /obj/item/bodypart/head/plasmaman,
-		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/plasmaman,
-		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/plasmaman,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/leg/left/plasmaman,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/plasmaman,
 		BODY_ZONE_CHEST = /obj/item/bodypart/chest/plasmaman,
 	)
 
@@ -107,13 +104,6 @@
 			qdel(H.head)
 			H.equip_to_slot(new helmet, ITEM_SLOT_HEAD)
 			H.open_internals(H.get_item_for_held_index(2))
-
-/datum/species/plasmaman/qualifies_for_rank(rank, list/features)
-	if(rank in SSdepartment.get_jobs_by_dept_id(DEPT_NAME_SECURITY))
-		return 0
-	if(rank == JOB_NAME_CLOWN || rank == JOB_NAME_MIME)//No funny bussiness
-		return 0
-	return ..()
 
 /datum/species/plasmaman/random_name(gender, unique, lastname, attempts)
 	. = "[pick(GLOB.plasmaman_names)] \Roman[rand(1,99)]"

@@ -104,7 +104,7 @@
 	//We'll be using this from now on
 	var/mob/living/carbon/C = owner.current
 	if(istype(C))
-		var/obj/item/organ/brain/B = C.get_organ_slot(ORGAN_SLOT_BRAIN)
+		var/obj/item/organ/internal/brain/B = C.get_organ_slot(ORGAN_SLOT_BRAIN)
 		if(B && (B.decoy_override != initial(B.decoy_override)))
 			B.organ_flags |= ORGAN_VITAL
 			B.decoy_override = FALSE
@@ -264,7 +264,7 @@
 		if(verbose)
 			to_chat(user, span_warning("We cannot absorb mechanical entities!"))
 		return
-	if(NO_DNA_COPY in target.dna.species.species_traits)
+	if(HAS_TRAIT(target, TRAIT_NO_DNA_COPY))
 		if(verbose)
 			to_chat(user, span_warning("[target] is not compatible with our biology."))
 		return
@@ -367,7 +367,7 @@
 /datum/antagonist/changeling/proc/create_initial_profile()
 	var/mob/living/carbon/C = owner.current	//only carbons have dna now, so we have to typecaste
 	//If you can't be turned into that creature, you shouldnt start as that creature
-	if(NOTRANSSTING in C.dna.species.species_traits)
+	if(TRAIT_NO_TRANSFORMATION_STING in C.dna.species.inherent_traits)
 		C.set_species(/datum/species/human)
 		C.fully_replace_character_name(C.real_name, C.client.prefs.read_character_preference(/datum/preference/name/backup_human))
 		for(var/datum/record/crew/E in GLOB.manifest.general)
@@ -391,7 +391,7 @@
 	//Brains optional.
 	var/mob/living/carbon/C = owner.current
 	if(istype(C))
-		var/obj/item/organ/brain/B = C.get_organ_slot(ORGAN_SLOT_BRAIN)
+		var/obj/item/organ/internal/brain/B = C.get_organ_slot(ORGAN_SLOT_BRAIN)
 		if(B)
 			B.organ_flags &= ~ORGAN_VITAL
 			B.decoy_override = TRUE
@@ -528,12 +528,13 @@
 /datum/antagonist/changeling/proc/admin_restore_appearance(mob/admin)
 	if(!stored_profiles.len || !iscarbon(owner.current))
 		to_chat(admin, span_danger("Resetting DNA failed!"))
-	else
-		var/mob/living/carbon/C = owner.current
-		first_prof.dna.transfer_identity(C, transfer_SE=1)
-		C.real_name = first_prof.name
-		C.updateappearance(mutcolor_update=1)
-		C.domutcheck()
+		return
+
+	var/mob/living/carbon/C = owner.current
+	first_prof.dna.transfer_identity(C, transfer_SE=1)
+	C.real_name = first_prof.name
+	C.updateappearance(mutcolor_update = TRUE)
+	C.domutcheck()
 
 // Profile
 

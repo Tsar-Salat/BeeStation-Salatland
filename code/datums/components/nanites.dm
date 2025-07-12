@@ -108,7 +108,7 @@
 		adjust_nanites(amount = amount) //just add to the nanite volume
 
 /datum/component/nanites/process(delta_time)
-	if(!IS_IN_STASIS(host_mob))
+	if(!HAS_TRAIT(host_mob, TRAIT_STASIS))
 		adjust_nanites(amount = (regen_rate + (SSresearch.science_tech.researched_nodes["nanite_harmonic"] ? HARMONIC_REGEN_BOOST : 0)) * delta_time)
 		add_research()
 		for(var/datum/nanite_program/program as anything in programs)
@@ -230,7 +230,7 @@
 			host_mob.Paralyze(12 SECONDS)
 			if(iscarbon(host_mob))
 				var/mob/living/carbon/C = host_mob
-				var/obj/item/organ/ears/ears = C.get_organ_slot(ORGAN_SLOT_EARS)
+				var/obj/item/organ/internal/ears/ears = C.get_organ_slot(ORGAN_SLOT_EARS)
 				if(ears)
 					ears.adjustEarDamage(0, 30) //nanites coming out of your ears
 				C.vomit(0, FALSE, TRUE, 2, FALSE, VOMIT_NANITE, FALSE) //nanites coming out of your mouth

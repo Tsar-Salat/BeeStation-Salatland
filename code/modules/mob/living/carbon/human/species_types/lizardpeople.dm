@@ -3,34 +3,28 @@
 	name = "\improper Lizardperson"
 	plural_form = "Lizardfolk"
 	id = SPECIES_LIZARD
-	bodyflag = FLAG_LIZARD
-	species_traits = list(
-		MUTCOLORS,
-		EYECOLOR,
-		LIPS
-	)
 	inherent_traits = list(
-		TRAIT_TACKLING_TAILED_DEFENDER
+		TRAIT_MUTANT_COLORS,
+		TRAIT_CAN_USE_FLIGHT_POTION,
+		TRAIT_TACKLING_TAILED_DEFENDER,
 	)
 	inherent_biotypes = list(MOB_ORGANIC, MOB_HUMANOID, MOB_REPTILE)
 	mutant_bodyparts = list(
-		"tail_lizard" = "Smooth",
-		"snout" = "Round",
-		"horns" = "None",
-		"frills" = "None",
-		"spines" = "None",
 		"body_markings" = "None",
 		"legs" = "Normal Legs",
 		"body_size" = "Normal"
 	)
-	mutanttongue = /obj/item/organ/tongue/lizard
-	mutant_organs = list(/obj/item/organ/tail/lizard)
+	external_organs = list(
+		/obj/item/organ/external/horns = SPRITE_ACCESSORY_NONE,
+		/obj/item/organ/external/frills = SPRITE_ACCESSORY_NONE,
+		/obj/item/organ/external/snout = "Round",
+		/obj/item/organ/external/spines = SPRITE_ACCESSORY_NONE,
+		/obj/item/organ/external/tail/lizard = "Smooth",
+	)
+	mutanttongue = /obj/item/organ/internal/tongue/lizard
 	coldmod = 1.5
 	heatmod = 0.67
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | MIRROR_MAGIC | RACE_SWAP | ERT_SPAWN | SLIME_EXTRACT
-	attack_verb = "slash"
-	attack_sound = 'sound/weapons/slash.ogg'
-	miss_sound = 'sound/weapons/slashmiss.ogg'
 	meat = /obj/item/food/meat/slab/human/mutant/lizard
 	skinned_type = /obj/item/stack/sheet/animalhide/lizard
 	exotic_bloodtype = "L"
@@ -46,10 +40,10 @@
 	bodypart_overrides = list(
 		BODY_ZONE_HEAD = /obj/item/bodypart/head/lizard,
 		BODY_ZONE_CHEST = /obj/item/bodypart/chest/lizard,
-		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/lizard,
-		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/lizard,
-		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/lizard,
-		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/lizard,
+		BODY_ZONE_L_ARM = /obj/item/bodypart/arm/left/lizard,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/arm/right/lizard,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/leg/left/lizard,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/lizard,
 	)
 
 /// Lizards are cold blooded and do not stabilize body temperature naturally
@@ -66,15 +60,10 @@
 		if(findname(.))
 			. = .(gender, TRUE, null, ++attempts)
 
-//I wag in death
-/datum/species/lizard/spec_death(gibbed, mob/living/carbon/human/H)
-	if(H)
-		stop_wagging_tail(H)
-
-/datum/species/lizard/spec_stun(mob/living/carbon/human/H,amount)
-	if(H)
-		stop_wagging_tail(H)
-	. = ..()
+/datum/species/lizard/randomize_features()
+	var/list/features = ..()
+	features["body_markings"] = pick(GLOB.body_markings_list)
+	return features
 
 /datum/species/lizard/get_scream_sound(mob/living/carbon/user)
 	return pick(
@@ -116,19 +105,21 @@
 	name = "Ash Walker"
 	id = SPECIES_LIZARD_ASH
 	examine_limb_id = SPECIES_LIZARD
-	species_traits = list(
-		MUTCOLORS,
-		EYECOLOR,
-		LIPS,
-		NO_UNDERWEAR
-	)
 	inherent_traits = list(
-		TRAIT_CHUNKYFINGERS,
+		TRAIT_MUTANT_COLORS,
 		TRAIT_VIRUSIMMUNE
 		)
 	species_language_holder = /datum/language_holder/lizard/ash
-	mutantlungs = /obj/item/organ/lungs/ashwalker
+	mutantlungs = /obj/item/organ/internal/lungs/ashwalker
 	digitigrade_customization = DIGITIGRADE_FORCED
+	bodypart_overrides = list(
+		BODY_ZONE_HEAD = /obj/item/bodypart/head/lizard,
+		BODY_ZONE_CHEST = /obj/item/bodypart/chest/lizard,
+		BODY_ZONE_L_ARM = /obj/item/bodypart/arm/left/lizard/ashwalker,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/arm/right/lizard/ashwalker,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/leg/left/lizard,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/lizard,
+	)
 
 /datum/species/lizard/ashwalker/spec_life(mob/living/carbon/human/H)
 	. = ..()

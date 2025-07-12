@@ -47,8 +47,8 @@
 	slot_flags = ITEM_SLOT_HEAD
 	worn_icon = 'icons/mob/species/human/human_face.dmi'
 	worn_icon_state = "bald"
-	var/hair_style = "Very Long Hair"
-	var/hair_color = "#000"
+	var/hairstyle = "Very Long Hair"
+	var/hair_color = "#000000"
 	var/gradient_style = "None"
 	var/gradient_color = "000"
 	var/adjustablecolor = TRUE //can color be changed manually?
@@ -69,11 +69,11 @@
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if(H.head == src)
-			H.update_inv_head()
+			H.update_worn_head()
 
 /obj/item/clothing/head/wig/update_icon()
 	cut_overlays()
-	var/datum/sprite_accessory/S = GLOB.hair_styles_list[hair_style]
+	var/datum/sprite_accessory/S = GLOB.hairstyles_list[hairstyle]
 	if(!S)
 		icon_state = "pwig"
 	else
@@ -83,11 +83,11 @@
 		add_overlay(M)
 
 /obj/item/clothing/head/wig/attack_self(mob/user)
-	var/new_style = input(user, "Select a hair style", "Wig Styling")  as null|anything in (GLOB.hair_styles_list - "Bald")
+	var/new_style = input(user, "Select a hair style", "Wig Styling")  as null|anything in (GLOB.hairstyles_list - "Bald")
 	if(!user.canUseTopic(src, BE_CLOSE))
 		return
-	if(new_style && new_style != hair_style)
-		hair_style = new_style
+	if(new_style && new_style != hairstyle)
+		hairstyle = new_style
 		user.visible_message(span_notice("[user] changes \the [src]'s hairstyle to [new_style]."), span_notice("You change \the [src]'s hairstyle to [new_style]."))
 	if(adjustablecolor)
 		hair_color = tgui_color_picker(usr,"","Choose Color",hair_color)
@@ -96,7 +96,7 @@
 		if(picked_gradient_style)
 			gradient_style = picked_gradient_style
 			if(gradient_style != "None")
-				var/picked_hair_gradient = tgui_color_picker(user, "", "Choose Gradient Color", "#" + gradient_color)
+				var/picked_hair_gradient = tgui_color_picker(user, "", "Choose Gradient Color", gradient_color)
 				if(picked_hair_gradient)
 					gradient_color = sanitize_hexcolor(picked_hair_gradient)
 				else
@@ -112,24 +112,24 @@
 /obj/item/clothing/head/wig/random/Initialize(mapload)
 	. = ..()
 
-	hair_style = pick(GLOB.hair_styles_list - "Bald") //Don't want invisible wig
-	hair_color = "#[random_short_color()]"
+	hairstyle = pick(GLOB.hairstyles_list - "Bald") //Don't want invisible wig
+	hair_color = random_short_color()
 
 /obj/item/clothing/head/wig/natural
 	name = "natural wig"
 	desc = "A bunch of hair without a head attached. This one changes color to match the hair of the wearer. Nothing natural about that."
-	hair_color = "#FFF"
+	hair_color = "#FFFFFF"
 	adjustablecolor = FALSE
 	custom_price = 25
 
 /obj/item/clothing/head/wig/natural/Initialize(mapload)
-	hair_style = pick(GLOB.hair_styles_list - "Bald")
+	hairstyle = pick(GLOB.hairstyles_list - "Bald")
 	. = ..()
 
 /obj/item/clothing/head/wig/natural/equipped(mob/user, slot)
 	if(ishuman(user) && slot == ITEM_SLOT_HEAD)
 		var/mob/living/carbon/human/human_mob = user
-		hair_color = "#[human_mob.hair_color]"
+		hair_color = human_mob.hair_color
 		update_icon()
 	. = ..()
 
@@ -137,7 +137,7 @@
 	. = ..()
 	if(ishuman(user) && (slot == ITEM_SLOT_HEAD || slot == ITEM_SLOT_NECK))
 		update_icon(ALL, user)
-		user.update_inv_head() //Color might have been changed by update_appearance.
+		user.update_worn_head() //Color might have been changed by update_appearance.
 	..()
 
 /obj/item/clothing/head/kitty/update_icon(updates=ALL, mob/living/carbon/human/user)

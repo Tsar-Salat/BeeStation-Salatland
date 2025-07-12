@@ -47,7 +47,7 @@
 		C.drunkenness = max((C.drunkenness + (sqrt(volume) * booze_power * ALCOHOL_RATE * REM * delta_time)), 0) //Volume, power, and server alcohol rate effect how quickly one gets drunk
 		if(C.drunkenness >= 250)
 			C.client?.give_award(/datum/award/achievement/misc/drunk, C)
-		var/obj/item/organ/liver/L = C.get_organ_slot(ORGAN_SLOT_LIVER)
+		var/obj/item/organ/internal/liver/L = C.get_organ_slot(ORGAN_SLOT_LIVER)
 		if (istype(L))
 			L.applyOrganDamage(((max(sqrt(volume) * (boozepwr ** ALCOHOL_EXPONENT) * L.alcohol_tolerance * delta_time, 0))/150))
 	return ..()
@@ -218,18 +218,18 @@
 		to_chat(M, span_notice("[pick("You have a really bad headache.", "Your eyes hurt.", "You find it hard to stay still.", "You feel your heart practically beating out of your chest.")]"))
 
 	if(DT_PROB(2.5, delta_time) && iscarbon(M))
-		var/obj/item/organ/eyes/eyes = M.get_organ_slot(ORGAN_SLOT_EYES)
-		if(M.is_blind())
-			if(istype(eyes))
+		var/obj/item/organ/internal/eyes/eyes = M.get_organ_slot(ORGAN_SLOT_EYES)
+		if(eyes && IS_ORGANIC_ORGAN(eyes)) // doesn't affect robotic eyes
+			if(M.is_blind())
 				eyes.Remove(M)
 				eyes.forceMove(get_turf(M))
 				to_chat(M, span_userdanger("You double over in pain as you feel your eyeballs liquify in your head!"))
 				M.emote("scream")
 				M.adjustBruteLoss(15)
-		else
-			to_chat(M, span_userdanger("You scream in terror as you go blind!"))
-			eyes.applyOrganDamage(eyes.maxHealth)
-			M.emote("scream")
+			else
+				to_chat(M, span_userdanger("You scream in terror as you go blind!"))
+				eyes.applyOrganDamage(eyes.maxHealth)
+				M.emote("scream")
 
 	if(DT_PROB(1.5, delta_time) && iscarbon(M))
 		M.visible_message(span_danger("[M] starts having a seizure!"), span_userdanger("You have a seizure!"))
@@ -2677,14 +2677,12 @@
 	if(DT_PROB(10, delta_time) && istype(metabolizer))
 		metabolizer.age += 1
 		if(metabolizer.age > 70)
-			metabolizer.facial_hair_color = "ccc"
-			metabolizer.hair_color = "ccc"
-			metabolizer.update_hair()
+			metabolizer.set_facial_haircolor("#cccccc", update = FALSE)
+			metabolizer.set_haircolor("#cccccc", update = TRUE)
 			if(metabolizer.age > 100)
 				metabolizer.become_nearsighted(type)
 				if(metabolizer.gender == MALE)
-					metabolizer.facial_hair_style = "Beard (Very Long)"
-					metabolizer.update_hair()
+					metabolizer.set_facial_hairstyle("Beard (Very Long)", update = TRUE)
 
 				if(metabolizer.age > 969) //Best not let people get older than this or i might incur G-ds wrath
 					metabolizer.visible_message(span_notice("[metabolizer] becomes older than any man should be.. and crumbles into dust!"))

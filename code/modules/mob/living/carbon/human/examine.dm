@@ -11,7 +11,7 @@
 	var/obscure_examine
 
 	var/obscured = check_obscured_slots()
-	var/skipface = ((wear_mask?.flags_inv & HIDEFACE) || (head?.flags_inv & HIDEFACE))
+	var/skipface = (wear_mask && (wear_mask.flags_inv & HIDEFACE)) || (head && (head.flags_inv & HIDEFACE))
 
 	if(isliving(user))
 		var/mob/living/L = user
@@ -57,9 +57,10 @@
 		. += "[t_He] [t_has] [back.get_examine_string(user)] on [t_his] back."
 
 	//Hands
-	for(var/obj/item/I in held_items)
-		if(!(I.item_flags & ABSTRACT) && !(I.item_flags & EXAMINE_SKIP))
-			. += "[t_He] [t_is] holding [I.get_examine_string(user)] in [t_his] [get_held_index_name(get_held_index_of_item(I))]."
+	for(var/obj/item/held_thing in held_items)
+		if(held_thing.item_flags & (ABSTRACT|EXAMINE_SKIP|HAND_ITEM))
+			continue
+		. += "[t_He] [t_is] holding [held_thing.get_examine_string(user)] in [t_his] [get_held_index_name(get_held_index_of_item(held_thing))]."
 
 	var/datum/component/forensics/FR = GetComponent(/datum/component/forensics)
 	//gloves
@@ -132,7 +133,7 @@
 			else
 				. += span_deadsay("[t_He] [t_is] limp and unresponsive; there are no signs of life...")
 
-	if(get_bodypart(BODY_ZONE_HEAD) && !get_organ_by_type(/obj/item/organ/brain))
+	if(get_bodypart(BODY_ZONE_HEAD) && !get_organ_by_type(/obj/item/organ/internal/brain))
 		. += span_deadsay("It appears that [t_his] brain is missing.")
 
 	var/temp = getBruteLoss() //no need to calculate each of these twice
@@ -313,7 +314,7 @@
 			if(CONSCIOUS)
 				if(HAS_TRAIT(src, TRAIT_DUMB))
 					msg += "[t_He] [t_has] a stupid expression on [t_his] face.\n"
-		if(get_organ_by_type(/obj/item/organ/brain))
+		if(get_organ_by_type(/obj/item/organ/internal/brain))
 			if(ai_controller?.ai_status == AI_STATUS_ON)
 				msg += "[span_deadsay("[t_He] do[t_es]n't appear to be [t_him]self.")]\n"
 			if(!key)
@@ -347,11 +348,11 @@
 		if(target_record)
 			. += "[span_deptradio("Rank:")] [target_record.rank]"
 		if(HAS_TRAIT(user, TRAIT_MEDICAL_HUD))
-			var/list/cyberimp_detect = list()
-			for(var/obj/item/organ/cyberimp/CI in internal_organs)
-				if(CI.status == ORGAN_ROBOTIC && !CI.syndicate_implant)
-					cyberimp_detect += CI.name
-			if(length(cyberimp_detect))
+			var/cyberimp_detect
+			for(var/obj/item/organ/internal/cyberimp/cyberimp in organs)
+				if(IS_ROBOTIC_ORGAN(cyberimp) && !(cyberimp.organ_flags & ORGAN_HIDDEN))
+					cyberimp_detect += "[!cyberimp_detect ? "[cyberimp.get_examine_string(user)]" : ", [cyberimp.get_examine_string(user)]"]"
+			if(cyberimp_detect)
 				. += "Detected cybernetic modifications: [english_list(cyberimp_detect)]"
 			if(target_record)
 				var/physical_status = target_record.physical_status
@@ -405,4 +406,4 @@
 	return !key && !get_ghost(FALSE, TRUE)
 
 /mob/living/soul_departed()
-	return get_organ_by_type(/obj/item/organ/brain) && !key && !get_ghost(FALSE, TRUE)
+	return get_organ_by_type(/obj/item/organ/internal/brain) && !key && !get_ghost(FALSE, TRUE)

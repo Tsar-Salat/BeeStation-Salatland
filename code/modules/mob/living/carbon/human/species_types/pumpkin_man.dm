@@ -4,14 +4,10 @@
 	id = SPECIES_PUMPKINPERSON
 	sexes = 0
 	meat = /obj/item/food/pieslice/pumpkin
-	species_traits = list(
-		NOEYESPRITES,
-		MUTCOLORS,
-		EYECOLOR
-	)
 	inherent_traits = list(
 		TRAIT_BEEFRIEND,
-		TRAIT_NONECRODISEASE
+		TRAIT_NONECRODISEASE,
+		TRAIT_MUTANT_COLORS,
 	)
 	inherent_factions = list(FACTION_PLANTS, FACTION_VINES)
 	burnmod = 1.25
@@ -20,22 +16,18 @@
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | RACE_SWAP | ERT_SPAWN | SLIME_EXTRACT
 	species_language_holder = /datum/language_holder/diona
 
-
-	attack_verb = "punch"
-	attack_sound = 'sound/weapons/punch1.ogg'
-	miss_sound = 'sound/weapons/punchmiss.ogg'
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | MIRROR_MAGIC | ERT_SPAWN
 
-	mutantbrain = /obj/item/organ/brain/pumpkin_brain
-	mutanttongue = /obj/item/organ/tongue/diona/pumpkin
+	mutantbrain = /obj/item/organ/internal/brain/pumpkin_brain
+	mutanttongue = /obj/item/organ/internal/tongue/diona/pumpkin
 
 	bodypart_overrides = list(
 		BODY_ZONE_HEAD = /obj/item/bodypart/head/pumpkin_man,
 		BODY_ZONE_CHEST = /obj/item/bodypart/chest/pumpkin_man,
-		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/pumpkin_man,
-		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/pumpkin_man,
-		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/pumpkin_man,
-		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/pumpkin_man
+		BODY_ZONE_L_ARM = /obj/item/bodypart/arm/left/pumpkin_man,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/arm/right/pumpkin_man,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/leg/left/pumpkin_man,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/pumpkin_man
 	)
 
 //Only allow race roundstart on Halloween
@@ -70,7 +62,7 @@
 			H.adjustOxyLoss(-1)
 
 	if(H.nutrition < NUTRITION_LEVEL_STARVING + 50)
-		H.take_overall_damage(2,0)
+		H.take_overall_damage(brute = 2, required_bodytype = BODYTYPE_ORGANIC)
 
 /datum/species/pumpkin_man/handle_chemicals(datum/reagent/chem, mob/living/carbon/human/H)
 	if(chem.type == /datum/reagent/toxin/plantbgone)
@@ -138,13 +130,13 @@
 			M.update_body_parts_head_only()
 			to_chat(_user, span_notice("You carve a face into [_source]."))
 			//Adjust the tongue
-			var/obj/item/organ/tongue/diona/pumpkin/P = M.internal_organs_slot[ORGAN_SLOT_TONGUE]
+			var/obj/item/organ/internal/tongue/diona/pumpkin/P = M.organs_slot[ORGAN_SLOT_TONGUE]
 			if(istype(P))
 				P?.carved = TRUE
 		else
 			to_chat(_user, span_warning("You fail to carve a face into [_source]!"))
 
-/obj/item/organ/brain/pumpkin_brain
+/obj/item/organ/internal/brain/pumpkin_brain
 	name = "pumpkinperson brain"
 	actions_types = list(/datum/action/item_action/organ_action/pumpkin_head_candy)
 	color = "#ff7b00"

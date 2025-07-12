@@ -1,7 +1,7 @@
 
 /mob/living/carbon/get_eye_protection()
 	. = ..()
-	var/obj/item/organ/eyes/E = get_organ_slot(ORGAN_SLOT_EYES)
+	var/obj/item/organ/internal/eyes/E = get_organ_slot(ORGAN_SLOT_EYES)
 	if(!E)
 		return INFINITY //Can't get flashed without eyes
 	. += E.flash_protect
@@ -14,7 +14,7 @@
 
 /mob/living/carbon/get_ear_protection()
 	. = ..()
-	var/obj/item/organ/ears/E = get_organ_slot(ORGAN_SLOT_EARS)
+	var/obj/item/organ/internal/ears/E = get_organ_slot(ORGAN_SLOT_EARS)
 	if(!E)
 		return INFINITY
 	. += E.bang_protect
@@ -72,7 +72,7 @@
 	if(!affecting) //missing limb? we select the first bodypart (you can never have zero, because of chest)
 		affecting = bodyparts[1]
 	SEND_SIGNAL(I, COMSIG_ITEM_ATTACK_ZONE, src, user, affecting)
-	send_item_attack_message(I, user, parse_zone(affecting.body_zone))
+	send_item_attack_message(I, user, affecting.plaintext_zone, affecting)
 	if (I.bleed_force)
 		var/armour_block = run_armor_check(affecting, BLEED, armour_penetration = I.armour_penetration, silent = (I.force > 0))
 		var/hit_amount = (100 - armour_block) / 100
@@ -91,13 +91,13 @@
 				if(affecting.body_zone == BODY_ZONE_HEAD)
 					if(wear_mask)
 						wear_mask.add_mob_blood(src)
-						update_inv_wear_mask()
+						update_worn_mask()
 					if(wear_neck)
 						wear_neck.add_mob_blood(src)
-						update_inv_neck()
+						update_worn_neck()
 					if(head)
 						head.add_mob_blood(src)
-						update_inv_head()
+						update_worn_head()
 		else if (I.damtype == BURN && is_bleeding() && IS_ORGANIC_LIMB(affecting))
 			cauterise_wounds(AMOUNT_TO_BLEED_INTENSITY(I.force / 3))
 			to_chat(src, span_userdanger("The heat from [I] cauterizes your bleeding!"))
@@ -289,9 +289,10 @@
 	. = ..()
 	if(. & EMP_PROTECT_CONTENTS)
 		return
-	for(var/X in internal_organs)
-		var/obj/item/organ/O = X
-		O.emp_act(severity)
+	for(var/obj/item/organ/organ as anything in organs)
+		organ.emp_act(severity)
+	for(var/obj/item/bodypart/bodypart as anything in src.bodyparts)
+		bodypart.emp_act(severity)
 
 ///Adds to the parent by also adding functionality to propagate shocks through pulling and doing some fluff effects.
 /mob/living/carbon/electrocute_act(shock_damage, source, siemens_coeff = 1, flags = NONE)
@@ -423,9 +424,9 @@
 	return embeds
 
 /mob/living/carbon/flash_act(intensity = 1, override_blindness_check = 0, affect_silicon = 0, visual = 0)
-	if(NOFLASH in dna?.species?.species_traits)
+	if(TRAIT_NOFLASH in dna?.species?.inherent_traits)
 		return
-	var/obj/item/organ/eyes/eyes = get_organ_slot(ORGAN_SLOT_EYES)
+	var/obj/item/organ/internal/eyes/eyes = get_organ_slot(ORGAN_SLOT_EYES)
 	if(!eyes || (!override_blindness_check && HAS_TRAIT(src, TRAIT_BLIND))) //can't flash what can't see!
 		return
 	. = ..()
@@ -476,7 +477,7 @@
 	SEND_SIGNAL(src, COMSIG_CARBON_SOUNDBANG, reflist)
 	intensity = reflist[1]
 	var/ear_safety = get_ear_protection()
-	var/obj/item/organ/ears/ears = get_organ_slot(ORGAN_SLOT_EARS)
+	var/obj/item/organ/internal/ears/ears = get_organ_slot(ORGAN_SLOT_EARS)
 	var/effect_amount = intensity - ear_safety
 	if(effect_amount > 0)
 		if(stun_pwr)
@@ -518,7 +519,7 @@
 
 /mob/living/carbon/can_hear()
 	. = FALSE
-	var/obj/item/organ/ears/ears = get_organ_slot(ORGAN_SLOT_EARS)
+	var/obj/item/organ/internal/ears/ears = get_organ_slot(ORGAN_SLOT_EARS)
 	if(istype(ears) && !ears.deaf)
 		. = TRUE
 

@@ -1,20 +1,16 @@
 /datum/species/ethereal
 	name = "\improper Ethereal"
 	id = SPECIES_ETHEREAL
-	attack_verb = "burn"
-	attack_sound = 'sound/weapons/etherealhit.ogg'
-	miss_sound = 'sound/weapons/etherealmiss.ogg'
 	meat = /obj/item/food/meat/slab/human/mutant/ethereal
-	mutantstomach = /obj/item/organ/stomach/battery/ethereal
-	mutanttongue = /obj/item/organ/tongue/ethereal
+	mutantstomach = /obj/item/organ/internal/stomach/battery/ethereal
+	mutanttongue = /obj/item/organ/internal/tongue/ethereal
 	exotic_blood = /datum/reagent/consumable/liquidelectricity //Liquid Electricity. fuck you think of something better gamer
 	siemens_coeff = 0.5 //They thrive on energy
 	brutemod = 1.25 //They're weak to punches
-	attack_type = BURN //burn bish
-	species_traits = list(
-		DYNCOLORS,
-		AGENDER,
-		HAIR
+	inherent_traits = list(
+		TRAIT_MUTANT_COLORS,
+		TRAIT_FIXED_MUTANT_COLORS,
+		TRAIT_AGENDER,
 	)
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | MIRROR_MAGIC | RACE_SWAP | ERT_SPAWN | SLIME_EXTRACT
 	species_language_holder = /datum/language_holder/ethereal
@@ -28,15 +24,17 @@
 	bodytemp_cold_damage_limit = (T20C - 10) // about 10c
 	hair_color = "fixedmutcolor"
 	hair_alpha = 140
+	facial_hair_alpha = 140
+
 	swimming_component = /datum/component/swimming/ethereal
 	inert_mutation = /datum/mutation/overload
 
 	bodypart_overrides = list(
-		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/ethereal,
-		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/ethereal,
+		BODY_ZONE_L_ARM = /obj/item/bodypart/arm/left/ethereal,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/arm/right/ethereal,
 		BODY_ZONE_HEAD = /obj/item/bodypart/head/ethereal,
-		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/ethereal,
-		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/ethereal,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/leg/left/ethereal,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/ethereal,
 		BODY_ZONE_CHEST = /obj/item/bodypart/chest/ethereal,
 	)
 
@@ -59,12 +57,13 @@
 		QDEL_NULL(ethereal_light)
 	return ..()
 
-/datum/species/ethereal/on_species_gain(mob/living/carbon/new_ethereal, datum/species/old_species, pref_load)
+/datum/species/ethereal/on_species_gain(mob/living/carbon/human/new_ethereal, datum/species/old_species, pref_load, regenerate_icons)
 	. = ..()
 	if(!ishuman(new_ethereal))
 		return
 	var/mob/living/carbon/human/ethereal = new_ethereal
-	default_color = "#[ethereal.dna.features["ethcolor"]]"
+	default_color = ethereal.dna.features["ethcolor"]
+	fixed_hair_color = default_color
 	r1 = GETREDPART(default_color)
 	g1 = GETGREENPART(default_color)
 	b1 = GETBLUEPART(default_color)
@@ -73,14 +72,14 @@
 	RegisterSignal(ethereal, COMSIG_ATOM_EMP_ACT, PROC_REF(on_emp_act))
 	ethereal_light = ethereal.mob_light(light_type = /obj/effect/dummy/lighting_obj/moblight/species)
 	spec_updatehealth(ethereal)
-
 	new_ethereal.set_safe_hunger_level()
 
-	//The following code is literally only to make admin-spawned ethereals not be black.
-	//new_ethereal.dna.features["mcolor"] = new_ethereal.dna.features["ethcolor"] //Ethcolor and Mut color are both dogshit and will be replaced
-	//for(var/obj/item/bodypart/limb as anything in new_ethereal.bodyparts)
-	//	if(limb.limb_id == SPECIES_ETHEREAL)
-	//		limb.update_limb(is_creating = TRUE)
+	//var/obj/item/organ/internal/heart/ethereal/ethereal_heart = new_ethereal.get_organ_slot(ORGAN_SLOT_HEART)
+	//ethereal_heart.ethereal_color = default_color
+
+	for(var/obj/item/bodypart/limb as anything in new_ethereal.bodyparts)
+		if(limb.limb_id == SPECIES_ETHEREAL)
+			limb.update_limb(is_creating = TRUE)
 
 /datum/species/ethereal/on_species_loss(mob/living/carbon/human/C, datum/species/new_species, pref_load)
 	UnregisterSignal(C, COMSIG_ATOM_SHOULD_EMAG)
@@ -98,10 +97,16 @@
 		if(findname(.))
 			. = .(gender, TRUE, lastname, ++attempts)
 
+/datum/species/ethereal/randomize_features()
+	var/list/features = ..()
+	features["ethcolor"] = GLOB.color_list_ethereal[pick(GLOB.color_list_ethereal)]
+	return features
+
 /datum/species/ethereal/spec_updatehealth(mob/living/carbon/human/ethereal)
 	. = ..()
 	if(!ethereal_light)
 		return
+
 	if(default_color != ethereal.dna.features["ethcolor"])
 		var/new_color = ethereal.dna.features["ethcolor"]
 		r1 = GETREDPART(new_color)
@@ -113,12 +118,19 @@
 			current_color = rgb(r2 + ((r1-r2)*healthpercent), g2 + ((g1-g2)*healthpercent), b2 + ((b1-b2)*healthpercent))
 		ethereal_light.set_light_range_power_color(1 + (2 * healthpercent), 1 + (1 * healthpercent), current_color)
 		ethereal_light.set_light_on(TRUE)
-		fixed_mut_color = copytext_char(current_color, 2)
+		fixed_mut_color = current_color
+		fixed_hair_color = current_color
+		ethereal.update_body()
+		ethereal.set_facial_haircolor(current_color, override = TRUE, update = FALSE)
+		ethereal.set_haircolor(current_color, override = TRUE,  update = TRUE)
 	else
 		ethereal_light.set_light_on(FALSE)
-		fixed_mut_color = rgb(128,128,128)
-	ethereal.update_body()
-	//ethereal.update_hair()
+		var/dead_color = rgb(128,128,128)
+		fixed_mut_color = dead_color
+		fixed_hair_color = dead_color
+		ethereal.update_body()
+		ethereal.set_facial_haircolor(dead_color, override = TRUE, update = FALSE)
+		ethereal.set_haircolor(dead_color, override = TRUE, update = TRUE)
 
 /datum/species/ethereal/proc/on_emp_act(mob/living/carbon/human/H, severity)
 	SIGNAL_HANDLER
@@ -231,6 +243,12 @@
 			SPECIES_PERK_ICON = "lightbulb",
 			SPECIES_PERK_NAME = "Disco Ball",
 			SPECIES_PERK_DESC = "Ethereals passively generate their own light.",
+		),
+		list(
+			SPECIES_PERK_TYPE = SPECIES_NEUTRAL_PERK,
+			SPECIES_PERK_ICON = "fist-raised",
+			SPECIES_PERK_NAME = "Elemental Attacker",
+			SPECIES_PERK_DESC = "Ethereals deal burn damage with their punches instead of brute.",
 		),
 		list(
 			SPECIES_PERK_TYPE = SPECIES_NEGATIVE_PERK,

@@ -8,11 +8,14 @@
 	usable_legs = 0 //Populated on init through list/bodyparts
 	num_hands = 0 //Populated on init through list/bodyparts
 	usable_hands = 0 //Populated on init through list/bodyparts
-	//List of /obj/item/organ in the mob. They don't go in the contents for some reason I don't want to know.
-	var/list/internal_organs = list()
-	//Same as above, but stores "slot ID" - "organ" pairs for easy access.
-	var/list/internal_organs_slot = list()
-	var/silent = FALSE 		//Can't talk. Value goes down every life proc. //NOTE TO FUTURE CODERS: DO NOT INITIALIZE NUMERICAL VARS AS NULL OR I WILL MURDER YOU.
+	// STOP_OVERLAY_UPDATE_BODY_PARTS is removed after we call update_body_parts() during init.
+	living_flags = STOP_OVERLAY_UPDATE_BODY_PARTS
+	///List of [/obj/item/organ/internal] in the mob. They don't go in the contents for some reason I don't want to know.
+	var/list/obj/item/organ/internal/organs = list()
+	///Same as [above][/mob/living/carbon/var/organs], but stores "slot ID" - "organ" pairs for easy access.
+	var/list/organs_slot = list()
+	///Can't talk. Value goes down every life proc. NOTE TO FUTURE CODERS: DO NOT INITIALIZE NUMERICAL VARS AS NULL OR I WILL MURDER YOU.
+	var/silent = FALSE
 	var/dreaming = 0 //How many dream images we have left to send
 	var/obj/item/handcuffed = null //Whether or not the mob is handcuffed
 	var/obj/item/legcuffed = null  //Same as handcuffs but for legs. Bear traps use this.
@@ -49,21 +52,24 @@
 
 	var/tinttotal = 0	// Total level of visualy impairing items
 
-	var/list/icon_render_keys = list()
+	/// Gets filled up in [/datum/species/proc/replace_body].
+	/// Will either contain a list of typepaths if nothing has been created yet,
+	/// or a list of the body part objects.
 	var/list/bodyparts = list(
 		/obj/item/bodypart/chest,
 		/obj/item/bodypart/head,
-		/obj/item/bodypart/l_arm,
-		/obj/item/bodypart/r_arm,
-		/obj/item/bodypart/r_leg,
-		/obj/item/bodypart/l_leg
+		/obj/item/bodypart/arm/left,
+		/obj/item/bodypart/arm/right,
+		/obj/item/bodypart/leg/right,
+		/obj/item/bodypart/leg/left
 	)
 
 	//Gets filled up in create_bodyparts()
 
 	var/list/hand_bodyparts = list() //a collection of arms (or actually whatever the fug /bodyparts you monsters use to wreck my systems)
 
-
+	///A cache of bodypart = icon to prevent excessive icon creation.
+	var/list/icon_render_keys = list()
 	var/static/list/limb_icon_cache = list()
 
 	//halucination vars
@@ -85,4 +91,7 @@
 
 	/// Only load in visual organs
 	var/visual_only_organs = FALSE
+
+	/// A bitfield of "bodytypes", updated by /obj/item/bodypart/proc/synchronize_bodytypes()
+	var/bodytype = BODYTYPE_HUMANOID | BODYTYPE_ORGANIC
 

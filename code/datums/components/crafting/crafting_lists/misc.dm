@@ -100,7 +100,7 @@
 
 /datum/crafting_recipe/flashlight_eyes
 	name = "Flashlight Eyes"
-	result = /obj/item/organ/eyes/robotic/flashlight
+	result = /obj/item/organ/internal/eyes/robotic/flashlight
 	time = 1 SECONDS
 	reqs = list(
 		/obj/item/flashlight = 2,
@@ -157,7 +157,7 @@
 	result = /obj/item/extendohand
 	time = 1 SECONDS
 	reqs = list(
-		/obj/item/bodypart/r_arm/robot = 1,
+		/obj/item/bodypart/arm/right/robot = 1,
 		/obj/item/clothing/gloves/boxing = 1
 	)
 	category = CAT_MISC

@@ -3,31 +3,38 @@
 	plural_form = "Dionae"
 	id = SPECIES_DIONA
 	sexes = 0 //no sex for bug/plant people!
-	bodyflag = FLAG_DIONA
-	species_traits = list(
-		MUTCOLORS,
-		EYECOLOR,
-		AGENDER,
-		NOHUSK,
-		NO_DNA_COPY,
-		NO_UNDERWEAR,
-		NOSOCKS,
-		NOTRANSSTING,
-		NOEYESPRITES
-	)
 	inherent_traits = list(
+		TRAIT_AGENDER,
 		TRAIT_BEEFRIEND,
+		TRAIT_MUTANT_COLORS,
 		TRAIT_NONECRODISEASE,
 		TRAIT_RESISTLOWPRESSURE,
 		TRAIT_RESISTCOLD,
-		TRAIT_NORADDAMAGE
+		TRAIT_NORADDAMAGE,
+		TRAIT_NO_DNA_COPY,
+		TRAIT_NO_UNDERWEAR,
+		TRAIT_NO_TRANSFORMATION_STING,
+		TRAIT_NOHUSK
 	)
 	inherent_biotypes = list(MOB_HUMANOID, MOB_ORGANIC, MOB_BUG)
-	mutant_bodyparts = list("diona_leaves", "diona_thorns", "diona_flowers", "diona_moss", "diona_mushroom", "diona_antennae", "diona_eyes", "diona_pbody")
-	mutant_organs = list(/obj/item/organ/nymph_organ/r_arm, /obj/item/organ/nymph_organ/l_arm, /obj/item/organ/nymph_organ/l_leg, /obj/item/organ/nymph_organ/r_leg, /obj/item/organ/nymph_organ/chest)
+	mutant_bodyparts = list(
+		"diona_leaves",
+		"diona_thorns",
+		"diona_flowers",
+		"diona_moss",
+		"diona_mushroom",
+		"diona_antennae",
+		"diona_eyes",
+		"diona_pbody"
+	)
+	mutant_organs = list(
+		/obj/item/organ/nymph_organ/r_arm,
+		/obj/item/organ/nymph_organ/l_arm,
+		/obj/item/organ/nymph_organ/l_leg,
+		/obj/item/organ/nymph_organ/r_leg,
+		/obj/item/organ/nymph_organ/chest
+	)
 	inherent_factions = list(FACTION_PLANTS, FACTION_VINES, FACTION_DIONA)
-	attack_verb = "slash"
-	attack_sound = 'sound/emotes/diona/hit.ogg'
 	burnmod = 1.25
 	heatmod = 1.5
 	brutemod = 0.8
@@ -38,29 +45,28 @@
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | ERT_SPAWN | RACE_SWAP
 	species_language_holder = /datum/language_holder/diona
 	bodytemp_normal = (BODYTEMP_NORMAL - 22) // Body temperature for dionae is much lower then humans as they are plants, supposed to be 15 celsius
-	speedmod = 1.2 // Dionae are slow.
 	species_height = SPECIES_HEIGHTS(0, -1, -2) //Naturally tall.
 	swimming_component = /datum/component/swimming/diona
 	inert_mutation = /datum/mutation/drone
 	deathsound = "sound/emotes/diona/death.ogg"
 	species_bitflags = NOT_TRANSMORPHIC
 
-	mutanteyes = /obj/item/organ/eyes/diona //SS14 sprite
-	mutanttongue = /obj/item/organ/tongue/diona //Dungeon's sprite
-	mutantbrain = /obj/item/organ/brain/diona //SS14 sprite
-	mutantliver = /obj/item/organ/liver/diona //Dungeon's sprite
-	mutantlungs = /obj/item/organ/lungs/diona //Dungeon's sprite
-	mutantstomach = /obj/item/organ/stomach/diona //SS14 sprite
-	mutantears = /obj/item/organ/ears/diona //SS14 sprite
-	mutantheart = /obj/item/organ/heart/diona //Dungeon's sprite
+	mutanteyes = /obj/item/organ/internal/eyes/diona //SS14 sprite
+	mutanttongue = /obj/item/organ/internal/tongue/diona //Dungeon's sprite
+	mutantbrain = /obj/item/organ/internal/brain/diona //SS14 sprite
+	mutantliver = /obj/item/organ/internal/liver/diona //Dungeon's sprite
+	mutantlungs = /obj/item/organ/internal/lungs/diona //Dungeon's sprite
+	mutantstomach = /obj/item/organ/internal/stomach/diona //SS14 sprite
+	mutantears = /obj/item/organ/internal/ears/diona //SS14 sprite
+	mutantheart = /obj/item/organ/internal/heart/diona //Dungeon's sprite
 	mutantappendix = null
 
 	bodypart_overrides = list(
-		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/diona,
-		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/diona,
+		BODY_ZONE_L_ARM = /obj/item/bodypart/arm/left/diona,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/arm/right/diona,
 		BODY_ZONE_HEAD = /obj/item/bodypart/head/diona,
-		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/diona,
-		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/diona,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/leg/left/diona,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/diona,
 		BODY_ZONE_CHEST = /obj/item/bodypart/chest/diona,
 	)
 
@@ -75,7 +81,7 @@
 	if(H.fire_stacks < 1)
 		H.adjust_fire_stacks(1) //VERY flammable
 	if(H.nutrition < NUTRITION_LEVEL_STARVING)
-		H.take_overall_damage(1,0)
+		H.take_overall_damage(brute = 1, required_bodytype = BODYTYPE_ORGANIC)
 	if(H.stat != CONSCIOUS)
 		H.remove_status_effect(/datum/status_effect/planthealing)
 	if((H.health <= H.crit_threshold)) //Shit, we're dying! Scatter!
@@ -114,7 +120,7 @@
 	//Dionae heal and eat radiation for a living.
 	H.adjust_nutrition(clamp(radiation, 0, 7))
 	if(radiation > 50)
-		H.heal_overall_damage(1,1, 0, BODYTYPE_ORGANIC)
+		H.heal_overall_damage(brute = 1, burn = 1, required_bodytype = BODYTYPE_ORGANIC)
 		H.adjustToxLoss(-2)
 		H.adjustOxyLoss(-1)
 
@@ -284,7 +290,7 @@
 	icon = 'icons/mob/animal.dmi'
 	icon_state = "nymph"
 
-/obj/item/organ/nymph_organ/Remove(mob/living/carbon/organ_owner, special, pref_load)
+/obj/item/organ/nymph_organ/Remove(mob/living/carbon/organ_owner, special, movement_flags)
 	. = ..()
 	if(istype(organ_owner, /mob/living/carbon/human/dummy) || special)
 		return
@@ -299,10 +305,6 @@
 	QDEL_NULL(body_part)
 	QDEL_NULL(src)
 	organ_owner.update_body()
-
-/obj/item/organ/nymph_organ/transfer_to_limb(obj/item/bodypart/LB, mob/living/carbon/C)
-	Remove(C, FALSE)
-	forceMove(LB)
 
 /obj/item/organ/nymph_organ/r_arm
 	zone = BODY_ZONE_R_ARM

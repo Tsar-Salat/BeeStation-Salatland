@@ -90,7 +90,7 @@
 ///for lizard snouts, because some HIDEFACE clothes don't actually conceal that portion of the head.
 #define HIDESNOUT (1<<12)
 ///hides mutant/moth wings, does not apply to functional wings
-//#define HIDEMUTWINGS (1<<13)
+#define HIDEMUTWINGS (1<<13)
 
 
 //bitflags for clothing coverage - also used for limbs
@@ -134,16 +134,13 @@
 //flags for outfits that have mutantrace variants (try not to use this): Currently only needed if you're trying to add tight fitting bootyshorts
 //This system takes priority over Sprite Sheets.
 
+//Flags (actual flags, fucker ^) for /obj/item/var/supports_variations_flags
 ///No alternative sprites based on bodytype
-#define NO_VARIATION (1<<0)
+#define CLOTHING_NO_VARIATION (1<<0)
 ///Has a sprite for digitigrade legs specifically.
-#define DIGITIGRADE_VARIATION (1<<1)
+#define CLOTHING_DIGITIGRADE_VARIATION (1<<1)
 ///The sprite works fine for digitigrade legs as-is.
-#define DIGITIGRADE_VARIATION_NO_NEW_ICON (1<<2)
-
-#define NOT_DIGITIGRADE				0
-#define FULL_DIGITIGRADE			1
-#define SQUISHED_DIGITIGRADE		2
+#define CLOTHING_DIGITIGRADE_VARIATION_NO_NEW_ICON (1<<2)
 
 //! ## flags for covering body parts
 #define GLASSESCOVERSEYES	(1<<0)
@@ -238,3 +235,20 @@ GLOBAL_LIST_INIT(security_wintercoat_allowed, typecacheof(list(
 #define COLLECT_ONE 0
 #define COLLECT_EVERYTHING 1
 #define COLLECT_SAME 2
+
+/// String for items placed into the left pocket.
+#define LOCATION_LPOCKET "in your left pocket"
+/// String for items placed into the right pocket
+#define LOCATION_RPOCKET "in your right pocket"
+/// String for items placed into the backpack.
+#define LOCATION_BACKPACK "in your backpack"
+/// String for items placed into the hands.
+#define LOCATION_HANDS "in your hands"
+/// String for items placed in the glove slot.
+#define LOCATION_GLOVES "on your hands"
+/// String for items placed in the eye/glasses slot.
+#define LOCATION_EYES "covering your eyes"
+/// String for items placed on the head/hat slot.
+#define LOCATION_HEAD "on your head"
+/// String for items placed in the neck slot.
+#define LOCATION_NECK "around your neck"

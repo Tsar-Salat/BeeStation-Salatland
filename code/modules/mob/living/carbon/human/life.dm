@@ -27,7 +27,7 @@
 	if(QDELETED(src))
 		return FALSE
 
-	if(!IS_IN_STASIS(src))
+	if(!HAS_TRAIT(src, TRAIT_NOCRITDAMAGE))
 		if(stat != DEAD)
 			if(undergoing_cardiac_arrest())
 				//heart attack stuff
@@ -110,8 +110,8 @@
 
 		return FALSE
 	else
-		if(istype(L, /obj/item/organ/lungs))
-			var/obj/item/organ/lungs/lun = L
+		if(istype(L, /obj/item/organ/internal/lungs))
+			var/obj/item/organ/internal/lungs/lun = L
 			lun.check_breath(breath,src)
 
 /// Environment handlers for species

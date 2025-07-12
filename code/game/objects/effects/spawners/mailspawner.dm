@@ -19,28 +19,29 @@
 
 /obj/effect/spawner/mail/organminor/Initialize(mapload)
 	var/static/list/mail_organminor = pick(
-		/obj/item/organ/tongue,
-		/obj/item/organ/tongue/lizard,
-		/obj/item/organ/tail/cat,
-		/obj/item/organ/stomach,
-		/obj/item/organ/tongue/zombie,
-		/obj/item/organ/tongue/fly,
-		/obj/item/organ/stomach/fly,
-		/obj/item/organ/ears,
-		/obj/item/organ/ears/cat,
-		/obj/item/organ/eyes/snail,
-		/obj/item/organ/eyes/moth,
-		/obj/item/organ/eyes,
-		/obj/item/organ/heart,
-		/obj/item/organ/liver,
-		/obj/item/organ/tail/lizard,
-		/obj/item/organ/tongue/snail,
-		/obj/item/organ/appendix,
+		/obj/item/organ/internal/tongue,
+		/obj/item/organ/internal/tongue/lizard,
+		/obj/item/organ/external/tail/cat,
+		/obj/item/organ/internal/stomach,
+		/obj/item/organ/internal/tongue/zombie,
+		/obj/item/organ/internal/tongue/fly,
+		/obj/item/organ/internal/stomach/fly,
+		/obj/item/organ/internal/ears,
+		/obj/item/organ/internal/ears/cat,
+		/obj/item/organ/internal/eyes/snail,
+		/obj/item/organ/internal/eyes/moth,
+		/obj/item/organ/internal/eyes,
+		/obj/item/organ/internal/heart,
+		/obj/item/organ/internal/liver,
+		/obj/item/organ/external/tail/lizard,
+		/obj/item/organ/internal/tongue/snail,
+		/obj/item/organ/internal/appendix,
 		/obj/effect/gibspawner/human,
-		/obj/item/organ/wings,
-		/obj/item/organ/wings/moth,
-		/obj/item/organ/wings/bee,
-		/obj/item/organ/wings/dragon/fake,)
+		/obj/item/organ/external/wings,
+		/obj/item/organ/external/wings/moth,
+		/obj/item/organ/external/wings/functional/bee,
+		/obj/item/organ/external/wings/functional/dragon,
+	)
 	new mail_organminor(loc)
 	return ..()
 
@@ -50,23 +51,24 @@
 /obj/effect/spawner/mail/organmajor/Initialize(mapload)
 	var/static/list/mail_organmajor= pick(
 		/obj/item/organ/adamantine_resonator,
-		/obj/item/organ/ears/penguin,
-		/obj/item/organ/heart/gland/viral,
-		/obj/item/organ/eyes/night_vision,
-		/obj/item/organ/liver/plasmaman,
-		/obj/item/organ/liver/alien,
-		/obj/item/organ/stomach/plasmaman,
-		/obj/item/organ/lungs/plasmaman,
-		/obj/item/organ/lungs/slime,
-		/obj/item/organ/tongue/abductor,
-		/obj/item/organ/tongue/alien,
-		/obj/item/organ/tongue/bone,
-		/obj/item/organ/tongue/bone/plasmaman,
+		/obj/item/organ/internal/ears/penguin,
+		/obj/item/organ/internal/heart/gland/viral,
+		/obj/item/organ/internal/eyes/night_vision,
+		/obj/item/organ/internal/liver/plasmaman,
+		/obj/item/organ/internal/liver/alien,
+		/obj/item/organ/internal/stomach/plasmaman,
+		/obj/item/organ/internal/lungs/plasmaman,
+		/obj/item/organ/internal/lungs/slime,
+		/obj/item/organ/internal/tongue/abductor,
+		/obj/item/organ/internal/tongue/alien,
+		/obj/item/organ/internal/tongue/bone,
+		/obj/item/organ/internal/tongue/bone/plasmaman,
 		/obj/item/organ/vocal_cords/adamantine,
 		/obj/effect/gibspawner/xeno,
 		/obj/effect/mob_spawn/human/corpse/assistant,
-		/obj/item/organ/wings/moth/robust,
-		/obj/item/organ/wings/dragon,)
+		/obj/item/organ/external/wings/moth, //TODO: MAKE USABLE
+		/obj/item/organ/external/wings/functional/dragon,
+	)
 	new mail_organmajor(loc)
 	return ..()
 
@@ -145,7 +147,7 @@
 		/obj/item/nanite_scanner,
 		/obj/item/disk/tech_disk,
 		/obj/item/assembly/prox_sensor,
-		/obj/item/bodypart/r_arm/robot,
+		/obj/item/bodypart/arm/right/robot,
 		/obj/item/assembly/flash/handheld/weak,
 		/obj/item/stock_parts/cell/high,
 		/obj/item/stock_parts/manipulator/nano,

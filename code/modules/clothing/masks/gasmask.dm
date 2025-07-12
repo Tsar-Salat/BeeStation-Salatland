@@ -113,7 +113,7 @@
 
 	if(src && choice && !user.incapacitated() && in_range(user,src))
 		icon_state = options[choice]
-		user.update_inv_wear_mask()
+		user.update_worn_mask()
 		for(var/X in actions)
 			var/datum/action/A = X
 			A.update_buttons()
@@ -164,7 +164,7 @@
 
 	if(src && choice && !user.incapacitated() && in_range(user,src))
 		icon_state = options[choice]
-		user.update_inv_wear_mask()
+		user.update_worn_mask()
 		for(var/X in actions)
 			var/datum/action/A = X
 			A.update_buttons()
@@ -246,7 +246,7 @@
 
 	if(src && choice && !M.stat && in_range(M,src))
 		icon_state = options[choice]
-		user.update_inv_wear_mask()
+		user.update_worn_mask()
 		for(var/X in actions)
 			var/datum/action/A = X
 			A.update_buttons()
@@ -266,7 +266,7 @@
 	name = "modified gas mask"
 	desc = "A face-covering mask that can be connected to an air supply. This one appears to be one of the older models."
 	voice_change = TRUE
-	chosen_tongue = /obj/item/organ/tongue/robot
+	chosen_tongue = /obj/item/organ/internal/tongue/robot
 
 /obj/item/clothing/mask/gas/old/modulator/get_name(mob/user, default_name)
 	return voice_change ? "Unknown" : default_name

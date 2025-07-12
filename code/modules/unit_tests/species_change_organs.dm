@@ -11,10 +11,10 @@
 	// Give a trauma
 	dummy.gain_trauma(/datum/brain_trauma/severe/blindness)
 	// Give a cyber heart
-	var/obj/item/organ/heart/cybernetic/cyber_heart = allocate(/obj/item/organ/heart/cybernetic)
-	cyber_heart.Insert(dummy, special = TRUE, drop_if_replaced = FALSE)
+	var/obj/item/organ/internal/heart/cybernetic/cyber_heart = allocate(/obj/item/organ/internal/heart/cybernetic)
+	cyber_heart.Insert(dummy, special = TRUE, movement_flags = DELETE_IF_REPLACED)
 	// Give one of their organs a bit of damage
-	var/obj/item/organ/appendix/existing_appendix = dummy.get_organ_slot(ORGAN_SLOT_APPENDIX)
+	var/obj/item/organ/internal/appendix/existing_appendix = dummy.get_organ_slot(ORGAN_SLOT_APPENDIX)
 	existing_appendix.set_organ_damage(25)
 
 	// Changing species should
@@ -36,7 +36,7 @@
 
 	// Grab the lizard's appendix for comparison later
 	// They should've been given a new one, but our damage should also have transferred over
-	var/obj/item/organ/appendix/lizard_appendix = dummy.get_organ_slot(ORGAN_SLOT_APPENDIX)
+	var/obj/item/organ/internal/appendix/lizard_appendix = dummy.get_organ_slot(ORGAN_SLOT_APPENDIX)
 
 	// They should have the trauma still
 	TEST_ASSERT(dummy.has_trauma_type(/datum/brain_trauma/severe/blindness), "Dummy, upon changing species, did not carry over their brain trauma!")
@@ -44,3 +44,21 @@
 	TEST_ASSERT_EQUAL(dummy.get_organ_slot(ORGAN_SLOT_HEART), cyber_heart, "Dummy, upon changing species, did not carry over their cybernetic organs!")
 	// They should have appendix damage still
 	TEST_ASSERT_EQUAL(lizard_appendix.damage, 25, "Dummy, upon changing species, did not carry over appendix damage!")
+
+///Gives a Human items in both hands, then swaps them to be another species. Held items should remain.
+/datum/unit_test/species_change_held_items
+
+/datum/unit_test/species_change_held_items/Run()
+	var/mob/living/carbon/human/morphing_human = allocate(/mob/living/carbon/human/dummy/consistent)
+	var/obj/item/item_a = allocate(/obj/item/storage/toolbox)
+	var/obj/item/item_b = allocate(/obj/item/melee/baton/loaded)
+	morphing_human.put_in_hands(item_a)
+	morphing_human.put_in_hands(item_b)
+
+	var/pre_change_num = length(morphing_human.get_empty_held_indexes())
+	TEST_ASSERT_EQUAL(pre_change_num, 0, "Human had empty hands before the species change happened.")
+
+	morphing_human.set_species(/datum/species/lizard)
+
+	var/post_change_num = length(morphing_human.get_empty_held_indexes())
+	TEST_ASSERT_EQUAL(post_change_num, 0, "Human had empty hands after the species change happened, but they should've kept their items.")

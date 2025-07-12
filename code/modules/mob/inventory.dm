@@ -182,7 +182,7 @@
 			I.do_pickup_animation(src)
 		if(hand_index == null)
 			return FALSE
-		if(get_item_for_held_index(hand_index) != null)
+		if(get_item_for_held_index(hand_index))
 			dropItemToGround(get_item_for_held_index(hand_index), force = TRUE)
 		if(!(I.item_flags & PICKED_UP))
 			I.pickup(src)
@@ -192,7 +192,7 @@
 		I.equipped(src, ITEM_SLOT_HANDS)
 		if(I.pulledby)
 			I.pulledby.stop_pulling()
-		update_inv_hands()
+		update_held_items()
 		I.pixel_x = I.base_pixel_x
 		I.pixel_y = I.base_pixel_y
 		return hand_index || TRUE
@@ -333,7 +333,7 @@
 	var/hand_index = get_held_index_of_item(I)
 	if(hand_index)
 		held_items[hand_index] = null
-		update_inv_hands()
+		update_held_items()
 	if(I)
 		if(client)
 			client.screen -= I
@@ -345,6 +345,7 @@
 			else
 				I.forceMove(newloc)
 		I.dropped(src, was_thrown, silent)
+	SEND_SIGNAL(src, COMSIG_MOB_UNEQUIPPED_ITEM, I, force, newloc, no_move, invdrop, silent)
 	return TRUE
 
 //Outdated but still in use apparently. This should at least be a human proc.
@@ -438,7 +439,7 @@
 		return FALSE
 
 	if(M.equip_to_appropriate_slot(src))
-		M.update_inv_hands()
+		M.update_held_items()
 		return TRUE
 	else
 		if(equip_delay_self)
@@ -506,9 +507,9 @@
 	else if(amt > old_limbs)
 		hand_bodyparts.len = amt
 		for(var/i in old_limbs+1 to amt)
-			var/path = /obj/item/bodypart/l_arm
+			var/path = /obj/item/bodypart/arm/left
 			if(!(i % 2))
-				path = /obj/item/bodypart/r_arm
+				path = /obj/item/bodypart/arm/right
 
 			var/obj/item/bodypart/BP = new path ()
 			BP.owner = src

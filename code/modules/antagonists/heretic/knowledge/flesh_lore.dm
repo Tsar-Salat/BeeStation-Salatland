@@ -276,9 +276,9 @@
 		/datum/heretic_knowledge/curse/paralysis,
 	)
 	required_atoms = list(
-		/obj/item/organ/eyes = 1,
+		/obj/item/organ/internal/eyes = 1,
 		/obj/effect/decal/cleanable/blood = 1,
-		/obj/item/bodypart/l_arm = 1,
+		/obj/item/bodypart/arm/left = 1,
 	)
 	mob_to_summon = /mob/living/simple_animal/hostile/heretic_summon/raw_prophet
 	cost = 1
@@ -325,9 +325,9 @@
 		/datum/heretic_knowledge/spell/blood_siphon,
 	)
 	required_atoms = list(
-		/obj/item/organ/tail = 1,
-		/obj/item/organ/stomach = 1,
-		/obj/item/organ/tongue = 1,
+		/obj/item/organ/external/tail = 1,
+		/obj/item/organ/internal/stomach = 1,
+		/obj/item/organ/internal/tongue = 1,
 		/obj/item/pen = 1,
 		/obj/item/paper = 1,
 	)
