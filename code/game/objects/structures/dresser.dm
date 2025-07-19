@@ -28,8 +28,8 @@
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 
-		if(H.dna && H.dna.species && (NO_UNDERWEAR in H.dna.species.species_traits))
-			to_chat(user, span_warning("You are not capable of wearing underwear."))
+		if(HAS_TRAIT(H, TRAIT_NO_UNDERWEAR))
+			to_chat(H, span_warning("You are not capable of wearing underwear."))
 			return
 
 		var/choice = input(user, "Underwear, Undershirt, or Socks?", "Changing") as null|anything in list("Underwear","Underwear Color","Undershirt","Socks")
@@ -42,7 +42,7 @@
 				if(new_undies)
 					H.underwear = new_undies
 			if("Underwear Color")
-				var/new_underwear_color = tgui_color_picker(H, "Choose your underwear color", "Underwear Color","#"+H.underwear_color)
+				var/new_underwear_color = tgui_color_picker(H, "Choose your underwear color", "Underwear Color",H.underwear_color)
 				if(new_underwear_color)
 					H.underwear_color = sanitize_hexcolor(new_underwear_color)
 			if("Undershirt")

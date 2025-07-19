@@ -5,7 +5,6 @@
 	show_in_prefs = TRUE
 	faction = "Station"
 	total_positions = 0
-	spawn_positions = 0
 	supervisors = "no one"
 	selection_color = "#dddddd"
 
@@ -57,7 +56,7 @@
 	uniform = /obj/item/clothing/under/suit/sl
 	shoes = /obj/item/clothing/shoes/laceup
 	l_hand = /obj/item/storage/wallet
-	l_pocket = /obj/item/razor/straightrazor
+	l_pocket = /obj/item/razor
 	can_be_admin_equipped = TRUE
 
 /datum/job/gimmick/stage_magician

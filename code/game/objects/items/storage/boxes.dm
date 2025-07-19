@@ -880,7 +880,7 @@
 	illustration = "clown"
 
 /obj/item/storage/box/clown/attackby(obj/item/I, mob/user, params)
-	if((istype(I, /obj/item/bodypart/l_arm/robot)) || (istype(I, /obj/item/bodypart/r_arm/robot)))
+	if((istype(I, /obj/item/bodypart/arm/left/robot)) || (istype(I, /obj/item/bodypart/arm/right/robot)))
 		if(contents.len) //prevent accidently deleting contents
 			to_chat(user, span_warning("You need to empty [src] out first!"))
 			return
@@ -1045,7 +1045,7 @@
 		if("grains")
 			new /obj/item/food/grown/wheat(src)
 			new /obj/item/food/grown/cocoapod(src)
-			new /obj/item/reagent_containers/cup/glass/honeycomb(src)
+			new /obj/item/food/honeycomb(src)
 			new /obj/item/seeds/flower/poppy(src)
 			for(var/i in 1 to 3)
 				new /obj/item/food/grown/oat(src)
