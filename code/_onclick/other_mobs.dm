@@ -183,10 +183,16 @@
 /atom/proc/attack_animal_secondary(mob/user, list/modifiers)
 	return SECONDARY_ATTACK_CALL_NORMAL
 
-///Apparently this is only used by AI datums for basic mobs. A player controlling a basic mob will call attack_animal() when clicking another atom.
+///When a basic mob attacks something, either by AI or user.
 /atom/proc/attack_basic_mob(mob/user, list/modifiers)
+	SHOULD_CALL_PARENT(TRUE)
 	SEND_SIGNAL(src, COMSIG_ATOM_ATTACK_BASIC_MOB, user)
-	return
+	return handle_basic_attack(user, modifiers) //return value of attack animal, this is how much damage was dealt to the attacked thing
+
+///This exists so stuff can override the default call of attack_animal for attack_basic_mob
+///Remove this when simple animals are removed and everything can be handled on attack basic mob.
+/atom/proc/handle_basic_attack(user, modifiers)
+	return attack_animal(user, modifiers)
 
 /*
 	Monkeys
@@ -208,7 +214,8 @@
 				span_danger("You avoid [src]'s bite!"), span_hear("You hear jaws snapping shut!"), COMBAT_MESSAGE_RANGE, src)
 			to_chat(src, span_danger("Your bite misses [victim]!"))
 			return
-		victim.apply_damage(rand(1, 3), BRUTE, affecting, armor)
+		var/obj/item/bodypart/arm/mouth = victim.get_bodypart(BODY_ZONE_HEAD)
+		victim.apply_damage(mouth.unarmed_damage, BRUTE, affecting, armor)
 		victim.visible_message(span_danger("[name] bites [victim]!"),
 			span_userdanger("[name] bites you!"), span_hear("You hear a chomp!"), COMBAT_MESSAGE_RANGE, name)
 		to_chat(name, span_danger("You bite [victim]!"))
@@ -233,7 +240,7 @@
 	return target.attack_alien_secondary(src, modifiers)
 
 /atom/proc/attack_alien(mob/living/carbon/alien/user, list/modifiers)
-	attack_paw(user, modifiers)
+	return attack_paw(user, modifiers)
 
 /**
  * Called when an alien right clicks an atom.
@@ -330,14 +337,14 @@
 /mob/living/simple_animal/resolve_unarmed_attack(atom/attack_target, list/modifiers)
 	if(dextrous && (isitem(attack_target) || !combat_mode))
 		attack_target.attack_hand(src, modifiers)
-		update_inv_hands()
+		update_held_items()
 	else
 		return ..()
 
 /mob/living/simple_animal/resolve_right_click_attack(atom/target, list/modifiers)
 	if(dextrous && (isitem(target) || !combat_mode))
 		. = target.attack_hand_secondary(src, modifiers)
-		update_inv_hands()
+		update_held_items()
 	else
 		return ..()
 

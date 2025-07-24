@@ -10,6 +10,10 @@
 
 	for(var/obj/item/W in M)
 		if(!M.dropItemToGround(W))
+			// I hate that this is necessary, but the code is literally just dropping or deleting everything otherwise
+			// people should be allowed to keep their fucking organs
+			if(istype(W, /obj/item/organ) || istype(W, /obj/item/bodypart))
+				continue
 			qdel(W)
 			M.regenerate_icons()
 
@@ -431,7 +435,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 		var/datum/dna/found_dna = record_found.weakref_dna.resolve()
 		new_character.hardset_dna(found_dna.unique_identity, record_found.dna_string, null, record_found.name, record_found.blood_type, new record_found.species, found_dna.features)
 	else
-		randomize_human(new_character)
+		randomize_human_normie(new_character)
 		new_character.real_name = new_character.dna.species.random_name(new_character.gender, TRUE)
 		new_character.name = new_character.real_name
 		new_character.dna.update_dna_identity()
@@ -529,8 +533,8 @@ Traitors and the like can also be revived with the previous role mostly intact.
 
 	var/datum/round_event/ion_storm/add_law_only/ion = new()
 	ion.announceChance = announce_ion_laws
-	ion.ionMessage = input
-	ion.lawsource = "Admin fuckery by [key_name(usr)]"
+	ion.ion_message = input
+	ion.law_source = "Admin fuckery by [key_name(usr)]"
 
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Add Custom AI Law") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
@@ -1107,7 +1111,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	var/obj/item/food/cookie/cookie = new(src)
 	if(src.put_in_hands(cookie))
 		if(ishuman(src))
-			src.update_inv_hands()
+			src.update_held_items()
 		log_admin("[key_name(src)] got their cookie, spawned by [key_name(admin_client)].")
 		message_admins("[key_name_admin(src)] got their cookie, spawned by [ADMIN_LOOKUPFLW(admin_client)].")
 		to_chat(src, span_adminnotice("Your prayers have been answered!! You received the <b>best cookie</b>!"))

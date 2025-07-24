@@ -218,12 +218,13 @@
 		/obj/item/organ/wings = 1,
 		/obj/item/organ/wings/moth = 1,
 		/obj/item/organ/wings/bee = 1,
-		/obj/item/organ/wings/dragon/fake = 1)
+		/obj/item/organ/wings/dragon = 1
+	)
 
 /obj/effect/spawner/lootdrop/teratoma/major
 	name = "advanced teratoma spawner"
 	loot = list(
-		/obj/item/organ/adamantine_resonator = 2,,
+		/obj/item/organ/adamantine_resonator = 2,
 		/obj/item/organ/ears/penguin = 2,
 		/obj/item/organ/heart/gland/viral = 1,
 		/obj/item/organ/eyes/night_vision = 1,
@@ -254,11 +255,6 @@
 		/obj/item/organ/lungs/cybernetic = 4,
 		/obj/item/organ/lungs/cybernetic/upgraded= 2,
 		/obj/item/organ/stomach/battery/ipc = 4,
-		/obj/item/organ/heart/clockwork = 6,
-		/obj/item/organ/stomach/clockwork = 6,
-		/obj/item/organ/liver/clockwork = 6,
-		/obj/item/organ/lungs/clockwork = 6,
-		/obj/item/organ/tail/clockwork = 6,
 		/obj/item/organ/adamantine_resonator = 1,
 		/obj/item/organ/eyes/robotic/thermals = 2,
 		/obj/item/organ/heart/gland/viral = 1,
@@ -266,7 +262,6 @@
 		/obj/item/organ/eyes/robotic/glow = 2,
 		/obj/item/organ/heart/cybernetic = 2,
 		/obj/item/organ/wings/cybernetic = 2,
-		/obj/item/organ/tongue/robot/clockwork/better = 2,
 		/obj/effect/gibspawner/robot = 4,
 		/obj/effect/mob_spawn/drone = 1,
 		)
@@ -364,42 +359,55 @@
 	icon_state = "random_board"
 	name = "harmless AI module spawner"
 	loot = list(
-				/obj/item/aiModule/core/full/asimov,
-				/obj/item/aiModule/core/full/asimovpp,
-				/obj/item/aiModule/core/full/hippocratic,
-				/obj/item/aiModule/core/full/paladin_devotion,
-				/obj/item/aiModule/core/full/paladin
-				)
+			/obj/item/ai_module/core/full/asimovpp,
+			/obj/item/ai_module/core/full/hippocratic,
+			/obj/item/ai_module/core/full/paladin_devotion,
+			/obj/item/ai_module/core/full/paladin,
+			/obj/item/ai_module/core/full/corp,
+			/obj/item/ai_module/core/full/robocop,
+			/obj/item/ai_module/core/full/efficiency,
+			/obj/item/ai_module/core/full/liveandletlive,
+			/obj/item/ai_module/core/full/peacekeeper,
+			/obj/item/ai_module/core/full/ten_commandments,
+			/obj/item/ai_module/core/full/nutimov,
+			/obj/item/ai_module/core/full/drone,
+			/obj/item/ai_module/core/full/custom
+			)
 
 /obj/effect/spawner/lootdrop/aimodule_neutral // These shouldn't allow the AI to start butchering people without reason
 	icon_state = "random_board"
 	name = "neutral AI module spawner"
 	loot = list(
-				/obj/item/aiModule/core/full/corp,
-				/obj/item/aiModule/core/full/maintain,
-				/obj/item/aiModule/core/full/drone,
-				/obj/item/aiModule/core/full/peacekeeper,
-				/obj/item/aiModule/core/full/reporter,
-				/obj/item/aiModule/core/full/robocop,
-				/obj/item/aiModule/core/full/liveandletlive,
-				/obj/item/aiModule/core/full/hulkamania
-				)
+			/obj/item/ai_module/core/full/reporter,
+			/obj/item/ai_module/core/full/thinkermov,
+			/obj/item/ai_module/core/full/hulkamania,
+			/obj/item/ai_module/core/full/overlord,
+			/obj/item/ai_module/core/full/tyrant,
+			/obj/item/ai_module/core/full/painter,
+			/obj/item/ai_module/core/full/dungeon_master,
+			/obj/item/ai_module/core/full/yesman,
+			/obj/item/ai_module/supplied/safeguard,
+			/obj/item/ai_module/supplied/protect_station,
+			/obj/item/ai_module/supplied/quarantine,
+			/obj/item/ai_module/remove
+			)
 
 /obj/effect/spawner/lootdrop/aimodule_harmful // These will get the shuttle called
 	icon_state = "random_board"
 	name = "harmful AI module spawner"
 	loot = list(
-				/obj/item/aiModule/core/full/antimov,
-				/obj/item/aiModule/core/full/balance,
-				/obj/item/aiModule/core/full/tyrant,
-				/obj/item/aiModule/core/full/thermurderdynamic,
-				/obj/item/aiModule/core/full/damaged
-				)
+			/obj/item/ai_module/core/full/antimov,
+			/obj/item/ai_module/core/full/balance,
+			/obj/item/ai_module/core/full/thermodynamic,
+			/obj/item/ai_module/core/full/damaged,
+			/obj/item/ai_module/zeroth/onehuman,
+			/obj/item/ai_module/supplied/oxygen,
+			/obj/item/ai_module/core/freeformcore
+			)
 
 // Tech storage circuit board spawners
 
 /obj/effect/spawner/lootdrop/techstorage
-
 	name = "generic circuit board spawner"
 	icon_state = "random_board"
 	lootdoubles = FALSE

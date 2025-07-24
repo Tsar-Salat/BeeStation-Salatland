@@ -50,6 +50,13 @@
 		"smmon_4.gif" = 'icons/program_icons/smmon_4.gif',
 		"smmon_5.gif" = 'icons/program_icons/smmon_5.gif',
 		"smmon_6.gif" = 'icons/program_icons/smmon_6.gif',
+		"antivirus_0.gif" = 'icons/program_icons/antivirus_0.gif',
+		"antivirus_1.gif" = 'icons/program_icons/antivirus_1.gif',
+		"antivirus_2.gif" = 'icons/program_icons/antivirus_2.gif',
+		"antivirus_3.gif" = 'icons/program_icons/antivirus_3.gif',
+		"antivirus_4.gif" = 'icons/program_icons/antivirus_4.gif',
+		"power_drain.gif" = 'icons/program_icons/power_drain.gif',
+		"no_relay.gif" = 'icons/program_icons/no_relay.gif',
 		"borg_self_monitor.gif" = 'icons/program_icons/borg_self_monitor.gif'
 	)
 
@@ -322,7 +329,10 @@
 	name = "design"
 
 /datum/asset/spritesheet_batched/research_designs/create_spritesheets()
-	for (var/datum/design/D as() in subtypesof(/datum/design))
+	for (var/datum/design/D as anything in subtypesof(/datum/design))
+		if(initial(D.id) == DESIGN_ID_IGNORE)
+			continue
+
 		var/icon_file
 		var/icon_state
 		var/datum/icon_transformer/transform = null
@@ -348,17 +358,14 @@
 				if (machine)
 					item = machine
 
+			// GAGS icon short-circuit the rest of the checks
 			if (initial(item.greyscale_config) && initial(item.greyscale_colors))
 				insert_icon(initial(D.id), gags_to_universal_icon(item))
 				continue
-			if(ispath(item, /obj/item/bodypart)) // mmm snowflake limbcode as usual
-				var/obj/item/bodypart/body_part = item
-				icon_file = initial(body_part.icon_static)
 			else
 				icon_file = initial(item.icon)
 
 			icon_state = initial(item.icon_state)
-
 			if(initial(item.color))
 				transform = color_transform(initial(item.color))
 

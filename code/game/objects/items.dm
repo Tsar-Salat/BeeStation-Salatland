@@ -21,8 +21,6 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	/// The icon for holding in hand icon states for the right hand.
 	var/righthand_file = 'icons/mob/inhands/items_righthand.dmi'
 
-	var/supports_variations = null //This is a bitfield that defines what variations exist for bodyparts like Digi legs.
-
 	//Dimensions of the icon file used when this item is worn, eg: hats.dmi
 	//eg: 32x32 sprite, 64x64 sprite, etc.
 	//allows inhands/worn sprites to be of any size, but still centered on a mob properly
@@ -146,10 +144,9 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	var/list/attack_verb_simple
 	/// list() of species types, if a species cannot put items in a certain slot, but species type is in list, it will be able to wear that item
 	var/list/species_exception = null
-	///A bitfield of a species to use as an alternative sprite for any given item. DMIs are stored in the species datum and called via proc in update_icons.
-	var/sprite_sheets = null
-	///A bitfield of species that the item cannot be worn by.
-	var/species_restricted = null
+	///This is a bitfield that defines what variations exist for bodyparts like Digi legs. See: code\_DEFINES\inventory.dm
+	var/supports_variations_flags = NONE
+
 	///A weakref to the mob who threw the item
 	var/datum/weakref/thrownby = null
 
@@ -243,7 +240,6 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	var/throw_verb
 
 /obj/item/Initialize(mapload)
-
 	if(attack_verb_continuous)
 		attack_verb_continuous = typelist("attack_verb_continuous", attack_verb_continuous)
 	if(attack_verb_simple)
@@ -263,8 +259,8 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	if(istype(loc, /obj/item/storage))
 		item_flags |= IN_STORAGE
 
-	if(istype(loc, /obj/item/robot_module))
-		var/obj/item/robot_module/parent_module = loc
+	if(istype(loc, /obj/item/robot_model))
+		var/obj/item/robot_model/parent_module = loc
 		var/mob/living/silicon/parent_robot = parent_module.loc
 		if (istype(parent_robot))
 			pickup(parent_robot)
@@ -489,15 +485,13 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	add_fingerprint(usr)
 	return ..()
 
-/obj/item/attack_hand(mob/user, modifiers)
+/obj/item/attack_hand(mob/user, list/modifiers)
 	. = ..()
-	if(.)
+	if(. || !user || anchored)
 		return
-	if(!user)
-		return
-	if(anchored)
-		return
+	return attempt_pickup(user)
 
+/obj/item/proc/attempt_pickup(mob/user)
 	. = TRUE
 
 	if(resistance_flags & ON_FIRE)
@@ -605,7 +599,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	. = ..()
 	if(.)
 		return
-	if(istype(src.loc, /obj/item/robot_module))
+	if(istype(src.loc, /obj/item/robot_model))
 		//If the item is part of a cyborg module, equip it
 		var/mob/living/silicon/robot/R = user
 		if(!R.low_power_mode) //can't equip modules with an empty cell.
@@ -631,14 +625,14 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		return 0
 	if(owner.get_active_held_item() == src) //copypaste of this code for an edgecase-nodrops
 		if(owner.active_hand_index == 1)
-			blockhand = (locate(/obj/item/bodypart/l_arm) in owner.bodyparts)
+			blockhand = (locate(/obj/item/bodypart/arm/left) in owner.bodyparts)
 		else
-			blockhand = (locate(/obj/item/bodypart/r_arm) in owner.bodyparts)
+			blockhand = (locate(/obj/item/bodypart/arm/right) in owner.bodyparts)
 	else
 		if(owner.active_hand_index == 1)
-			blockhand = (locate(/obj/item/bodypart/r_arm) in owner.bodyparts)
+			blockhand = (locate(/obj/item/bodypart/arm/right) in owner.bodyparts)
 		else
-			blockhand = (locate(/obj/item/bodypart/l_arm) in owner.bodyparts)
+			blockhand = (locate(/obj/item/bodypart/arm/left) in owner.bodyparts)
 	if(!blockhand)
 		return 0
 	if(blockhand?.bodypart_disabled)
@@ -767,6 +761,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 /obj/item/proc/pickup(mob/user)
 	SHOULD_CALL_PARENT(TRUE)
 	SEND_SIGNAL(src, COMSIG_ITEM_PICKUP, user)
+	SEND_SIGNAL(user, COMSIG_LIVING_PICKED_UP_ITEM, src)
 	item_flags |= PICKED_UP
 	if(item_flags & WAS_THROWN)
 		item_flags &= ~WAS_THROWN
@@ -833,15 +828,22 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		return FALSE
 	return TRUE
 
-//the mob M is attempting to equip this item into the slot passed through as 'slot'. Return 1 if it can do this and 0 if it can't.
-//if this is being done by a mob other than M, it will include the mob equipper, who is trying to equip the item to mob M. equipper will be null otherwise.
-//If you are making custom procs but would like to retain partial or complete functionality of this one, include a 'return ..()' to where you want this to happen.
-//Set disable_warning to TRUE if you wish it to not give you outputs.
-/obj/item/proc/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
+/**
+ *the mob M is attempting to equip this item into the slot passed through as 'slot'. Return 1 if it can do this and 0 if it can't.
+ *if this is being done by a mob other than M, it will include the mob equipper, who is trying to equip the item to mob M. equipper will be null otherwise.
+ *If you are making custom procs but would like to retain partial or complete functionality of this one, include a 'return ..()' to where you want this to happen.
+ * Arguments:
+ * * disable_warning to TRUE if you wish it to not give you text outputs.
+ * * slot is the slot we are trying to equip to
+ * * bypass_equip_delay_self for whether we want to bypass the equip delay
+ * * ignore_equipped ignores any already equipped items in that slot
+ * * indirect_action allows inserting into "soft locked" bags, things that can be easily opened by the owner
+ */
+/obj/item/proc/mob_can_equip(mob/living/M, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE, ignore_equipped = FALSE)
 	if(!M)
 		return FALSE
 
-	return M.can_equip(src, slot, disable_warning, bypass_equip_delay_self)
+	return M.can_equip(src, slot, disable_warning, bypass_equip_delay_self, ignore_equipped)
 
 /obj/item/verb/verb_pickup()
 	set src in oview(1)
@@ -969,6 +971,28 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 
 		else
 			playsound(src, drop_sound, YEET_SOUND_VOLUME, ignore_walls = FALSE)
+		var/obj/item/modular_computer/comp
+		var/obj/item/computer_hardware/processor_unit/cpu
+		for(var/obj/item/modular_computer/M in contents)
+			cpu = comp.all_components[MC_CPU]
+			if(!cpu?.hacked)
+				comp = M
+			break
+		if(comp)
+			var/turf/target = comp.get_blink_destination(get_turf(src), dir, (cpu.max_idle_programs * 2))
+			var/turf/start = get_turf(src)
+			if(!comp.enabled)
+				new /obj/effect/particle_effect/sparks(start)
+				playsound(start, "sparks", 50, 1)
+				return
+			if(!target)
+				return
+			// The better the CPU the farther it goes, and the more battery it needs
+			playsound(target, 'sound/effects/phasein.ogg', 25, 1)
+			playsound(start, "sparks", 50, 1)
+			playsound(target, "sparks", 50, 1)
+			do_dash(src, start, target, 0, TRUE)
+			comp.use_power((250 * cpu.max_idle_programs) / GLOB.CELLRATE)
 		return hit_atom.hitby(src, 0, itempush, throwingdatum=throwingdatum)
 
 
@@ -1016,29 +1040,29 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	var/mob/owner = loc
 	var/flags = slot_flags
 	if(flags & ITEM_SLOT_OCLOTHING)
-		owner.update_inv_wear_suit()
+		owner.update_worn_oversuit()
 	if(flags & ITEM_SLOT_ICLOTHING)
-		owner.update_inv_w_uniform()
+		owner.update_worn_undersuit()
 	if(flags & ITEM_SLOT_GLOVES)
-		owner.update_inv_gloves()
+		owner.update_worn_gloves()
 	if(flags & ITEM_SLOT_EYES)
-		owner.update_inv_glasses()
+		owner.update_worn_glasses()
 	if(flags & ITEM_SLOT_EARS)
 		owner.update_inv_ears()
 	if(flags & ITEM_SLOT_MASK)
-		owner.update_inv_wear_mask()
+		owner.update_worn_mask()
 	if(flags & ITEM_SLOT_HEAD)
-		owner.update_inv_head()
+		owner.update_worn_head()
 	if(flags & ITEM_SLOT_FEET)
-		owner.update_inv_shoes()
+		owner.update_worn_shoes()
 	if(flags & ITEM_SLOT_ID)
-		owner.update_inv_wear_id()
+		owner.update_worn_id()
 	if(flags & ITEM_SLOT_BELT)
-		owner.update_inv_belt()
+		owner.update_worn_belt()
 	if(flags & ITEM_SLOT_BACK)
-		owner.update_inv_back()
+		owner.update_worn_back()
 	if(flags & ITEM_SLOT_NECK)
-		owner.update_inv_neck()
+		owner.update_worn_neck()
 
 /obj/item/proc/is_hot()
 	return heat
@@ -1077,11 +1101,6 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	return 0
 
 /obj/item/attack_animal(mob/living/simple_animal/M)
-	if (obj_flags & CAN_BE_HIT)
-		return ..()
-	return 0
-
-/obj/item/attack_basic_mob(mob/living/basic/user)
 	if (obj_flags & CAN_BE_HIT)
 		return ..()
 	return 0
@@ -1299,7 +1318,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		var/hand_index = M.get_held_index_of_item(src)
 		if(hand_index)
 			M.held_items[hand_index] = null
-			M.update_inv_hands()
+			M.update_held_items()
 			if(M.client)
 				M.client.screen -= src
 			layer = initial(layer)
@@ -1319,7 +1338,8 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	return !HAS_TRAIT(src, TRAIT_NODROP)
 
 /obj/item/proc/doStrip(mob/stripper, mob/owner)
-	return owner.dropItemToGround(src)
+	. = owner.doUnEquip(src, force, drop_location(), FALSE)
+	return stripper.put_in_hands(src)
 
 /obj/item/ex_act(severity, target)
 	if(resistance_flags & INDESTRUCTIBLE)

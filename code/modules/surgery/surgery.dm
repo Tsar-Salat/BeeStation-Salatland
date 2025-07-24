@@ -71,12 +71,12 @@
 		. = FALSE
 
 	if(iscyborg(user))
-		var/mob/living/silicon/robot/R = user
-		var/obj/item/surgical_processor/SP = locate() in R.module.modules
-		if(!isnull(SP))
-			if(replaced_by in SP.advanced_surgeries)
+		var/mob/living/silicon/robot/robot = user
+		var/obj/item/surgical_processor/surgical_processor = locate() in robot.model.modules
+		if(!isnull(surgical_processor))
+			if(replaced_by in surgical_processor.advanced_surgeries)
 				return FALSE
-			if(type in SP.advanced_surgeries)
+			if(type in surgical_processor.advanced_surgeries)
 				return TRUE
 
 	if(iscarbon(user))
@@ -119,22 +119,20 @@
 	if(LAZYACCESS(modifiers, RIGHT_CLICK))
 		try_to_fail = TRUE
 
-	var/datum/surgery_step/step = get_surgery_step()
+	var/datum/surgery_step/step = GLOB.surgery_steps[steps[status]]
 	if(isnull(step))
 		failed_step = TRUE
 		return FALSE
 	var/obj/item/tool = user.get_active_held_item()
 	if(step.try_op(user, target, location, tool, src, try_to_fail))
 		return TRUE
-	if(tool && tool.item_flags & SURGICAL_TOOL)
+	if(!tool)
+		return FALSE
+	if(tool.item_flags & SURGICAL_TOOL)
 		to_chat(user, span_warning("This step requires a different tool!"))
 		return TRUE
 	failed_step = TRUE
 	return FALSE
-
-/datum/surgery/proc/get_surgery_step()
-	var/step_type = steps[status]
-	return new step_type
 
 /datum/surgery/proc/get_surgery_next_step()
 	if(status < steps.len)

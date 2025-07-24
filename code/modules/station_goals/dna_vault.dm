@@ -73,16 +73,19 @@
 	var/list/animals = list()
 	var/list/plants = list()
 	var/list/dna = list()
+	///weak ref to the dna vault
+	var/datum/weakref/dna_vault_ref
 
 /obj/item/dna_probe/proc/clear_data()
 	animals = list()
 	plants = list()
 	dna = list()
 
-/obj/item/dna_probe/afterattack(atom/target, mob/user, proximity)
+/obj/item/dna_probe/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
 	. = ..()
-	if(!proximity || !target)
+	if(!proximity_flag || !target)
 		return
+
 	//tray plants
 	if(istype(target, /obj/machinery/hydroponics))
 		var/obj/machinery/hydroponics/H = target
@@ -98,18 +101,21 @@
 		to_chat(user, span_notice("Plant data added to local storage."))
 
 	//animals
-	var/static/list/non_simple_animals = typecacheof(list(/mob/living/carbon/monkey, /mob/living/carbon/alien))
-	if(isanimal(target) || is_type_in_typecache(target,non_simple_animals))
-		if(isanimal(target))
-			var/mob/living/simple_animal/A = target
-			if(!A.healable || (A.flags_1 & HOLOGRAM_1)) //simple approximation of being animal not a robot or similar. Also checking if holographic
-				to_chat(user, span_warning("No compatible DNA detected."))
-				return
-		if(animals[target.type])
+	var/obj/machinery/dna_vault/our_vault = dna_vault_ref?.resolve()
+	var/static/list/non_simple_animals = typecacheof(list(/mob/living/carbon/alien))
+	if(isanimal_or_basicmob(target) || is_type_in_typecache(target, non_simple_animals) || ismonkey(target))
+		var/mob/living/living_target = target
+		if(our_vault.animals[living_target.type])
+			to_chat(user, span_notice("Animal data already present in vault storage."))
+			return
+		if(animals[living_target.type])
 			to_chat(user, span_notice("Animal data already present in local storage."))
 			return
-		animals[target.type] = 1
-		to_chat(user, span_notice("Animal data added to local storage."))
+		if(!(MOB_ORGANIC in living_target.mob_biotypes))
+			to_chat(user, span_alert("No compatible DNA detected."))
+			return .
+		animals[living_target.type] = 1
+		balloon_alert(user, "data added")
 
 	//humans
 	if(ishuman(target))
@@ -257,12 +263,11 @@
 	if(!(upgrade_type in power_lottery[H]))
 		return
 	. = TRUE
-	var/datum/species/S = H.dna.species
 	switch(upgrade_type)
 		if(VAULT_TOXIN)
 			to_chat(H, span_notice("You feel resistant to airborne toxins."))
-			if(locate(/obj/item/organ/lungs) in H.internal_organs)
-				var/obj/item/organ/lungs/L = H.internal_organs_slot[ORGAN_SLOT_LUNGS]
+			if(locate(/obj/item/organ/lungs) in H.organs)
+				var/obj/item/organ/lungs/L = H.organs_slot[ORGAN_SLOT_LUNGS]
 				L.gas_max -= /datum/gas/plasma
 			ADD_TRAIT(H, TRAIT_VIRUSIMMUNE, "dna_vault")
 		if(VAULT_NOBREATH)
@@ -270,15 +275,15 @@
 			ADD_TRAIT(H, TRAIT_NOBREATH, "dna_vault")
 		if(VAULT_FIREPROOF)
 			to_chat(H, span_notice("You feel fireproof."))
-			S.burnmod = 0.5
+			H.physiology.burn_mod = 0.5
 			ADD_TRAIT(H, TRAIT_RESISTHEAT, "dna_vault")
 			ADD_TRAIT(H, TRAIT_NOFIRE, "dna_vault")
 		if(VAULT_STUNTIME)
 			to_chat(H, span_notice("Nothing can keep you down for long."))
-			S.stunmod = 0.5
+			H.physiology.stun_mod = 0.5
 		if(VAULT_ARMOUR)
 			to_chat(H, span_notice("You feel tough."))
-			S.armor = 30
+			H.physiology.damage_resistance = 30
 			ADD_TRAIT(H, TRAIT_PIERCEIMMUNE, "dna_vault")
 		if(VAULT_SPEED)
 			to_chat(H, span_notice("Your legs feel faster."))

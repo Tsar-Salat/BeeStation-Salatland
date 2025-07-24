@@ -65,6 +65,12 @@
 /proc/cmp_ruincost_priority(datum/map_template/ruin/A, datum/map_template/ruin/B)
 	return initial(A.cost) - initial(B.cost)
 
+/proc/cmp_list_size_asc(list/A, list/B)
+	return length(A) - length(B)
+
+/proc/cmp_list_size_dsc(list/A, list/B)
+	return length(B) - length(A)
+
 /proc/cmp_qdel_item_time(datum/qdel_item/A, datum/qdel_item/B)
 	. = B.hard_delete_time - A.hard_delete_time
 	if (!.)
@@ -138,6 +144,10 @@
 
 /proc/cmp_mob_realname_dsc(mob/A,mob/B)
 	return sorttext(A.real_name,B.real_name)
+
+/// Orders bodyparts by their body_part value, ascending.
+/proc/cmp_bodypart_by_body_part_asc(obj/item/bodypart/limb_one, obj/item/bodypart/limb_two)
+	return limb_one.body_part - limb_two.body_part
 
 /// Orders by integrated circuit weight
 /proc/cmp_port_order_asc(datum/port/compare1, datum/port/compare2)

@@ -78,13 +78,13 @@
 	icon_state = "yellowcut"
 	item_state = "ygloves"
 	worn_icon_state = "ygloves"
-	transfer_prints = TRUE
+	clothing_traits = list(TRAIT_FINGERPRINT_PASSTHROUGH)
 
 /obj/item/clothing/gloves/cut/heirloom
 	desc = "The old gloves your great grandfather stole from Engineering, many moons ago. They've seen some tough times recently."
 
 /obj/item/clothing/gloves/color/black
-	desc = "These gloves are fire-resistant."
+	desc = "These gloves are thick and fire-resistant."
 	name = "black gloves"
 	icon_state = "black"
 	item_state = "blackgloves"
@@ -201,7 +201,7 @@
 	worn_icon_state = "latex"
 	siemens_coefficient = 0.3
 	armor_type = /datum/armor/color_latex
-	transfer_prints = TRUE
+	clothing_traits = list(TRAIT_FINGERPRINT_PASSTHROUGH)
 	resistance_flags = NONE
 	var/carrytrait = TRAIT_QUICKER_CARRY
 
@@ -234,7 +234,6 @@
 	icon_state = "nitrile"
 	item_state = "nitrilegloves"
 	worn_icon_state = "nitrilegloves"
-	transfer_prints = FALSE
 	carrytrait = TRAIT_QUICKER_CARRY
 
 /obj/item/clothing/gloves/color/white
