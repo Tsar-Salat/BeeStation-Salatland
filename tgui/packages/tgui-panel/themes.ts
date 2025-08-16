@@ -6,9 +6,24 @@
 
 export const THEMES = ['light', 'dark'];
 
-const COLOR_DARK_BG = '#202020';
-const COLOR_DARK_BG_DARKER = '#171717';
-const COLOR_DARK_TEXT = '#a4bad6';
+const COLORS = {
+  DARK: {
+    BG_BASE: '#202020',
+    BG_SECOND: '#151515',
+    BUTTON: '#404040',
+    BUTTON_GITHUB: '#3a3a3a',
+    BUTTON_REPORT: '#492020',
+    TEXT: '#A4BAD6',
+  },
+  LIGHT: {
+    BG_BASE: '#EEEEEE',
+    BG_SECOND: '#FFFFFF',
+    BUTTON: '#FFFFFF',
+    BUTTON_GITHUB: 'none',
+    BUTTON_REPORT: 'none',
+    TEXT: '#000000',
+  },
+};
 
 /**
  * Darkmode preference, originally by Kmc2000.
@@ -21,96 +36,53 @@ const COLOR_DARK_TEXT = '#a4bad6';
  * It's painful but it works, and is the way Lummox suggested.
  */
 export const setClientTheme = (name) => {
-  if (name === 'light') {
-    return Byond.winset({
-      // Main windows
-      'infowindow.background-color': 'none',
-      'infowindow.text-color': '#000000',
-      'info.background-color': 'none',
-      'info.text-color': '#000000',
-      'browseroutput.background-color': 'none',
-      'browseroutput.text-color': '#000000',
-      'outputwindow.background-color': 'none',
-      'outputwindow.text-color': '#000000',
-      'mainwindow.background-color': 'none',
-      'split.background-color': 'none',
-      // Buttons
-      'changelog.background-color': 'none',
-      'changelog.text-color': '#000000',
-      'rules.background-color': 'none',
-      'rules.text-color': '#000000',
-      'wiki.background-color': 'none',
-      'wiki.text-color': '#000000',
-      'forum.background-color': 'none',
-      'forum.text-color': '#000000',
-      'github.background-color': 'none',
-      'github.text-color': '#000000',
-      'report-issue.background-color': 'none',
-      'report-issue.text-color': '#000000',
-      // Status and verb tabs
-      'output.background-color': 'none',
-      'output.text-color': '#000000',
-      // Say, OOC, me Buttons etc.
-      'saybutton.background-color': 'none',
-      'saybutton.text-color': '#000000',
-      'oocbutton.background-color': 'none',
-      'oocbutton.text-color': '#000000',
-      'mebutton.background-color': 'none',
-      'mebutton.text-color': '#000000',
-      'asset_cache_browser.background-color': 'none',
-      'asset_cache_browser.text-color': '#000000',
-      'tooltip.background-color': 'none',
-      'tooltip.text-color': '#000000',
-    });
+  const themeColor = COLORS[name.toUpperCase()];
+  if (!themeColor) {
+    return;
   }
-  let desired_background = COLOR_DARK_BG;
-  let desired_text = COLOR_DARK_TEXT;
-  let desired_background_darker = COLOR_DARK_BG_DARKER;
-  switch (name) {
-    case 'dark':
-      desired_background = COLOR_DARK_BG;
-      desired_text = COLOR_DARK_TEXT;
-      desired_background_darker = COLOR_DARK_BG_DARKER;
-      break;
-  }
-  Byond.winset({
+
+  return Byond.winset({
     // Main windows
-    'infowindow.background-color': desired_background,
-    'infowindow.text-color': desired_text,
-    'info.background-color': desired_background,
-    'info.text-color': desired_text,
-    'browseroutput.background-color': desired_background,
-    'browseroutput.text-color': desired_text,
-    'outputwindow.background-color': desired_background,
-    'outputwindow.text-color': desired_text,
-    'mainwindow.background-color': desired_background,
-    'split.background-color': desired_background,
+    'infowindow.background-color': themeColor.BG_BASE,
+    'infowindow.text-color': themeColor.TEXT,
+    'info.background-color': themeColor.BG_BASE,
+    'info.text-color': themeColor.TEXT,
+    'browseroutput.background-color': themeColor.BG_BASE,
+    'browseroutput.text-color': themeColor.TEXT,
+    'outputwindow.background-color': themeColor.BG_BASE,
+    'outputwindow.text-color': themeColor.TEXT,
+    'mainwindow.background-color': themeColor.BG_BASE,
+    'split.background-color': themeColor.BG_BASE,
     // Buttons
-    'changelog.background-color': '#494949',
-    'changelog.text-color': desired_text,
-    'rules.background-color': '#494949',
-    'rules.text-color': desired_text,
-    'wiki.background-color': '#494949',
-    'wiki.text-color': desired_text,
-    'forum.background-color': '#494949',
-    'forum.text-color': desired_text,
-    'github.background-color': '#3a3a3a',
-    'github.text-color': desired_text,
-    'report-issue.background-color': '#492020',
-    'report-issue.text-color': desired_text,
+    'changelog.background-color': themeColor.BUTTON,
+    'changelog.text-color': themeColor.TEXT,
+    'rules.background-color': themeColor.BUTTON,
+    'rules.text-color': themeColor.TEXT,
+    'wiki.background-color': themeColor.BUTTON,
+    'wiki.text-color': themeColor.TEXT,
+    'forum.background-color': themeColor.BUTTON,
+    'forum.text-color': themeColor.TEXT,
+    'github.background-color': themeColor.BUTTON_GITHUB,
+    'github.text-color': themeColor.TEXT,
+    'report-issue.background-color': themeColor.BUTTON_REPORT,
+    'report-issue.text-color': themeColor.TEXT,
+    'fullscreen-toggle.background-color': themeColor.BUTTON,
+    'fullscreen-toggle.text-color': themeColor.TEXT,
     // Status and verb tabs
-    'output.background-color': desired_background_darker,
-    'output.text-color': desired_text,
+    'output.background-color': themeColor.BG_BASE,
+    'output.text-color': themeColor.TEXT,
     // Say, OOC, me Buttons etc.
-    'saybutton.background-color': desired_background,
-    'saybutton.text-color': desired_text,
-    'oocbutton.background-color': desired_background,
-    'oocbutton.text-color': desired_text,
-    'mebutton.background-color': desired_background,
-    'mebutton.text-color': desired_text,
-    'asset_cache_browser.background-color': desired_background,
-    'asset_cache_browser.text-color': desired_text,
-    'tooltip.background-color': desired_background,
-    'tooltip.text-color': desired_text,
+    'saybutton.background-color': themeColor.BG_BASE,
+    'saybutton.text-color': themeColor.TEXT,
+    'oocbutton.background-color': themeColor.BG_BASE,
+    'oocbutton.text-color': themeColor.TEXT,
+    'mebutton.background-color': themeColor.BG_BASE,
+    'mebutton.text-color': themeColor.TEXT,
+    'asset_cache_browser.background-color': themeColor.BG_BASE,
+    'asset_cache_browser.text-color': themeColor.TEXT,
+    'tooltip.background-color': themeColor.BG_BASE,
+    'tooltip.text-color': themeColor.TEXT,
+    'input.background-color': themeColor.BG_SECOND,
+    'input.text-color': themeColor.TEXT,
   });
 };

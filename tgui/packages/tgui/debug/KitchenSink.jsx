@@ -9,6 +9,8 @@ import { useState } from 'react';
 import { Flex, Section, Tabs } from '../components';
 import { Pane, Window } from '../layouts';
 
+import { useLocalState } from '../backend';
+
 const r = require.context('../stories', false, /\.stories\.jsx$/);
 
 /**
@@ -23,7 +25,7 @@ const getStories = () => r.keys().map((path) => r(path));
 
 export const KitchenSink = (props) => {
   const { panel } = props;
-  const [theme] = useState(null);
+  const [theme, setTheme] = useLocalState('kitchenSinkTheme');
   const [pageIndex, setPageIndex] = useState(0);
   const stories = getStories();
   const story = stories[pageIndex];

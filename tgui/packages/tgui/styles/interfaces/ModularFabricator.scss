@@ -1,7 +1,4 @@
 @use 'sass:color';
-@use '../base.scss';
-@use '../colors.scss';
-@use '../functions.scss' as *;
 
 $thickness: base.em(2px) !default;
 
@@ -29,11 +26,11 @@ $thickness: base.em(2px) !default;
 
   .browser {
     flex-grow: 1;
-    margin-right: 5px;
+    margin-right: var(--space-s);
     height: 100%;
     overflow-y: scroll;
-    background-color: color.adjust(base.$color-bg, $lightness: -5%);
-    padding: 8px;
+    background-color: hsl(from var(--color-bg) h s calc(l - 5%));
+    padding: var(--space-m);
   }
 
   .grow {
@@ -47,13 +44,13 @@ $thickness: base.em(2px) !default;
   }
 
   .data {
-    margin-right: 5px;
-    margin-bottom: 5px;
+    margin-right: var(--space-s);
+    margin-bottom: var(--space-s);
   }
 
   .material_warning {
     text-align: center;
-    animation: 2s pulse_warning infinite;
+    animation: var(--transition-time-slowest) pulse_warning infinite;
   }
 
   .fill_width {
@@ -82,7 +79,7 @@ $thickness: base.em(2px) !default;
   }
 
   .item_row:nth-child(even) {
-    background-color: rgba(255, 255, 255, 0.01);
+    background-color: hsla(0, 0%, 100%, 0.01);
   }
 
   .item_property_container {
@@ -90,22 +87,22 @@ $thickness: base.em(2px) !default;
     flex-direction: column;
     justify-content: center;
     height: 100%;
-    border-bottom: 1px rgba(255, 255, 255, 0.1) solid;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    border-bottom: 1px hsla(0, 0%, 100%, 0.1) solid;
+    padding-top: var(--space-s);
+    padding-bottom: var(--space-s);
   }
 
   .item_name,
   .item_desc {
     display: block;
-    margin-left: 5px;
+    margin-left: var(--space-s);
     word-wrap: break-word;
     overflow-wrap: break-word;
   }
 
   .item_desc {
-    color: color.mix(base.$color-bg, base.$color-fg, $weight: 50%);
-    font-size: calc(base.$font-size - 1px);
+    color: hsl(from var(--color-bg) h s calc((l + var(--color-fg-lightness)) / 2));
+    font-size: calc(var(--font-size-base) - 1px);
   }
 
   .processing_bar {
@@ -116,12 +113,12 @@ $thickness: base.em(2px) !default;
 
 @keyframes pulse_warning {
   0% {
-    color: colors.$bad;
+    color: var(--color-bad);
   }
   50% {
-    color: colors.$white;
+    color: var(--color-white);
   }
   100% {
-    color: colors.$bad;
+    color: var(--color-bad);
   }
 }

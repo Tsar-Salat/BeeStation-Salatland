@@ -15,28 +15,34 @@
   }
 
   &__Cell {
-    padding: 3px 0;
+    padding: var(--space-s) 0;
     vertical-align: middle;
 
     &--Rank {
-      color: colors.$label;
+      color: var(--color-label);
       text-align: right;
     }
   }
 
+  &__Icons {
+    padding: var(--space-s) var(--space-l);
+    text-align: right;
+  }
+
   &__Icon {
+    color: var(--color-label);
     position: relative;
 
     &:not(:last-child) {
-      margin-right: 7px;
+      margin-right: var(--space-m);
     }
 
     &--Chevron {
-      margin-right: 4px;
+      padding-right: var(--space-xs);
     }
 
     &--Command {
-      color: colors.$yellow;
+      color: var(--color-yellow);
     }
   }
 }

@@ -2,7 +2,7 @@ import { filter, map } from 'common/collections';
 import { useState } from 'react';
 
 import { useBackend, useLocalState } from '../backend';
-import { Button, Section, Modal, Dropdown, Tabs, Box, Input, Flex, ProgressBar, Collapsible, Icon, Divider, Tooltip } from '../components';
+import { Button, Section, Modal, Dropdown, Tabs, Box, Input, Flex, ProgressBar, Collapsible, Icon, Divider, Tooltip, Stack } from '../components';
 import { Window, NtosWindow } from '../layouts';
 
 // Data reshaping / ingestion (thanks stylemistake for the help, very cool!)
@@ -677,14 +677,14 @@ const TechNode = (props) => {
         </>
       )}
       {tier !== 0 && !!compact && !destructive && (
-        <Flex className="Techweb__NodeProgress">
+        <Stack className="Techweb__NodeProgress">
           {!!costs &&
             Object.keys(costs).map((key) => {
               const cost = costs[key];
               const reqPts = Math.max(0, cost);
               const nodeProg = Math.min(reqPts, points[key]) || 0;
               return (
-                <Flex.Item key={key} grow={1} basis={0}>
+                <Stack.Item key={key} grow={1} basis={0}>
                   <ProgressBar
                     ranges={{
                       good: [0.5, Infinity],
@@ -694,10 +694,10 @@ const TechNode = (props) => {
                     value={reqPts === 0 ? 1 : Math.min(1, (points[key] || 0) / reqPts)}>
                     {abbreviateName(key)} ({nodeProg}/{reqPts})
                   </ProgressBar>
-                </Flex.Item>
+                </Stack.Item>
               );
             })}
-        </Flex>
+        </Stack>
       )}
       <Box className="Techweb__NodeDescription">{description}</Box>
       {!!compact && (

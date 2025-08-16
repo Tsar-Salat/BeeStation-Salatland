@@ -11,7 +11,7 @@ body {
   padding: 0;
   margin: 0;
   height: 100%;
-  color: hsl(0, 0%, 0%);
+  color: var(--color-black);
 }
 body {
   background: #fff;
@@ -61,16 +61,20 @@ img.icon {
 }
 
 a {
-  color: hsl(240, 100%, 50%);
+  color: hsl(from var(--color-hyperlink) h s calc(l - 40));
+
+  &:hover {
+    color: hsl(from var(--color-hyperlink) h s calc(l - 20));
+  }
 }
-a.visited {
-  color: hsl(300, 100%, 50%);
-}
+
+a.visited,
 a:visited {
-  color: hsl(300, 100%, 50%);
-}
-a.popt {
-  text-decoration: none;
+  color: hsl(from var(--color-hyperlink-visited) h s calc(l - 40));
+
+  &:hover {
+    color: hsl(from var(--color-hyperlink-visited) h s calc(l - 20));
+  }
 }
 
 /*****************************************
@@ -390,7 +394,7 @@ h6 {
 }
 h1.alert,
 h2.alert {
-  color: hsl(0, 0%, 0%);
+  color: var(--color-black);
 }
 
 em {
@@ -466,7 +470,7 @@ em {
 }
 .binarysay {
   color: hsl(114, 86.5%, 40.8%);
-  background-color: hsl(0, 0%, 0%);
+  background-color: var(--color-black);
   display: block;
 }
 .binarysay a {
@@ -531,7 +535,7 @@ em {
 }
 h1.alert,
 h2.alert {
-  color: hsl(0, 0%, 0%);
+  color: var(--color-black);
 }
 
 .emote {
@@ -572,23 +576,56 @@ h2.alert {
   color: hsl(0, 100%, 50%);
   font-weight: bold;
 }
+
 .boldwarning {
   color: hsl(0, 100%, 50%);
   font-style: italic;
   font-weight: bold;
 }
+
 .announce {
   color: hsl(120, 60.7%, 33.9%);
   font-weight: bold;
 }
+
 .boldannounce {
   color: hsl(0, 100%, 50%);
   font-weight: bold;
 }
+
+.minorannounce {
+  color: hsl(0, 100%, 50%);
+  font-weight: bold;
+  font-size: 185%;
+}
+
+.minoralert {
+  color: var(--color-black);
+  font-size: 125%;
+}
+
+.priorityannounce {
+  color: var(--color-black);
+  font-weight: bold;
+  font-size: 225%;
+}
+
+.prioritytitle {
+  color: hsl(240, 100%, 50%);
+  font-weight: bold;
+  font-size: 185%;
+}
+
+.priorityalert {
+  color: hsl(0, 100%, 50%);
+  font-size: 140%;
+}
+
 .greenannounce {
   color: hsl(120, 100%, 50%);
   font-weight: bold;
 }
+
 .rose {
   color: hsl(0, 100%, 65.7%);
 }

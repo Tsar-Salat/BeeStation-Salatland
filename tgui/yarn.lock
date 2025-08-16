@@ -717,6 +717,58 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@floating-ui/core@npm:^1.7.3":
+  version: 1.7.3
+  resolution: "@floating-ui/core@npm:1.7.3"
+  dependencies:
+    "@floating-ui/utils": "npm:^0.2.10"
+  checksum: 10c0/edfc23800122d81df0df0fb780b7328ae6c5f00efbb55bd48ea340f4af8c5b3b121ceb4bb81220966ab0f87b443204d37105abdd93d94846468be3243984144c
+  languageName: node
+  linkType: hard
+
+"@floating-ui/dom@npm:^1.7.3":
+  version: 1.7.3
+  resolution: "@floating-ui/dom@npm:1.7.3"
+  dependencies:
+    "@floating-ui/core": "npm:^1.7.3"
+    "@floating-ui/utils": "npm:^0.2.10"
+  checksum: 10c0/cba30e9af1a52fb7cb443ae516d7aec032b33da2fa50914dcb18fc834dc31c71922f5c7653431e70d493f347018b2ce6435c98b3f154d92082345689b4458e59
+  languageName: node
+  linkType: hard
+
+"@floating-ui/react-dom@npm:^2.1.5":
+  version: 2.1.5
+  resolution: "@floating-ui/react-dom@npm:2.1.5"
+  dependencies:
+    "@floating-ui/dom": "npm:^1.7.3"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 10c0/2dc9571845138e5f39952900fa4d1ad077968c97c1fd1eae30e624db42a29f6fc897c11f926b5e63c468d541eff78b41c2aa1ec45eed2f3a1cc8aa95898f3260
+  languageName: node
+  linkType: hard
+
+"@floating-ui/react@npm:^0.27.6":
+  version: 0.27.15
+  resolution: "@floating-ui/react@npm:0.27.15"
+  dependencies:
+    "@floating-ui/react-dom": "npm:^2.1.5"
+    "@floating-ui/utils": "npm:^0.2.10"
+    tabbable: "npm:^6.0.0"
+  peerDependencies:
+    react: ">=17.0.0"
+    react-dom: ">=17.0.0"
+  checksum: 10c0/682893e4305d7ee12e9d8e5844496242a068fb619a84c92d80c272175c66a5b77cc88a7fff639b505efa8a0491bf63c81e48b4427bb07e1a6ddb8a0a6618d5b1
+  languageName: node
+  linkType: hard
+
+"@floating-ui/utils@npm:^0.2.10":
+  version: 0.2.10
+  resolution: "@floating-ui/utils@npm:0.2.10"
+  checksum: 10c0/e9bc2a1730ede1ee25843937e911ab6e846a733a4488623cd353f94721b05ec2c9ec6437613a2ac9379a94c2fd40c797a2ba6fa1df2716f5ce4aa6ddb1cf9ea4
+  languageName: node
+  linkType: hard
+
 "@gar/promisify@npm:^1.0.1, @gar/promisify@npm:^1.1.3":
   version: 1.1.3
   resolution: "@gar/promisify@npm:1.1.3"
@@ -1396,13 +1448,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@popperjs/core@npm:^2.11.8":
-  version: 2.11.8
-  resolution: "@popperjs/core@npm:2.11.8"
-  checksum: 10c0/4681e682abc006d25eb380d0cf3efc7557043f53b6aea7a5057d0d1e7df849a00e281cd8ea79c902a35a414d7919621fc2ba293ecec05f413598e0b23d5a1e63
-  languageName: node
-  linkType: hard
-
 "@simple-dom/interface@npm:^1.4.0":
   version: 1.4.0
   resolution: "@simple-dom/interface@npm:1.4.0"
@@ -1754,29 +1799,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prop-types@npm:*":
-  version: 15.7.14
-  resolution: "@types/prop-types@npm:15.7.14"
-  checksum: 10c0/1ec775160bfab90b67a782d735952158c7e702ca4502968aa82565bd8e452c2de8601c8dfe349733073c31179116cf7340710160d3836aa8a1ef76d1532893b1
-  languageName: node
-  linkType: hard
-
-"@types/react-dom@npm:^18.3.1":
-  version: 18.3.7
-  resolution: "@types/react-dom@npm:18.3.7"
+"@types/react-dom@npm:^19.1.1":
+  version: 19.1.7
+  resolution: "@types/react-dom@npm:19.1.7"
   peerDependencies:
-    "@types/react": ^18.0.0
-  checksum: 10c0/8bd309e2c3d1604a28a736a24f96cbadf6c05d5288cfef8883b74f4054c961b6b3a5e997fd5686e492be903c8f3380dba5ec017eff3906b1256529cd2d39603e
+    "@types/react": ^19.0.0
+  checksum: 10c0/8db5751c1567552fe4e1ece9f5823b682f2994ec8d30ed34ba0ef984e3c8ace1435f8be93d02f55c350147e78ac8c4dbcd8ed2c3b6a60f575bc5374f588c51c9
   languageName: node
   linkType: hard
 
-"@types/react@npm:^18.3.12":
-  version: 18.3.22
-  resolution: "@types/react@npm:18.3.22"
+"@types/react@npm:^19.1.0":
+  version: 19.1.10
+  resolution: "@types/react@npm:19.1.10"
   dependencies:
-    "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 10c0/d5d77d5329ed6cf6d2f77d778bfc128e2a4d1b0e30d8eebd5e295c207615842abaff57813cd39be5939a9c4aecacd3771f4e7a8d874d5a8002ff18809f237c19
+  checksum: 10c0/fb583deacd0a815e2775dc1b9f764532d8cacb748ddd2c2914805a46c257ce6c237b4078f44009692074db212ab61a390301c6470f07f5aa5bfdeb78a2acfda1
   languageName: node
   linkType: hard
 
@@ -6792,7 +6829,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loose-envify@npm:^1.1.0, loose-envify@npm:^1.4.0":
+"loose-envify@npm:^1.4.0":
   version: 1.4.0
   resolution: "loose-envify@npm:1.4.0"
   dependencies:
@@ -8221,15 +8258,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^18.3.1":
-  version: 18.3.1
-  resolution: "react-dom@npm:18.3.1"
+"react-dom@npm:^19.1.0":
+  version: 19.1.1
+  resolution: "react-dom@npm:19.1.1"
   dependencies:
-    loose-envify: "npm:^1.1.0"
-    scheduler: "npm:^0.23.2"
+    scheduler: "npm:^0.26.0"
   peerDependencies:
-    react: ^18.3.1
-  checksum: 10c0/a752496c1941f958f2e8ac56239172296fcddce1365ce45222d04a1947e0cc5547df3e8447f855a81d6d39f008d7c32eab43db3712077f09e3f67c4874973e85
+    react: ^19.1.1
+  checksum: 10c0/8c91198510521299c56e4e8d5e3a4508b2734fb5e52f29eeac33811de64e76fe586ad32c32182e2e84e070d98df67125da346c3360013357228172dbcd20bcdd
   languageName: node
   linkType: hard
 
@@ -8247,12 +8283,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^18.3.1":
-  version: 18.3.1
-  resolution: "react@npm:18.3.1"
-  dependencies:
-    loose-envify: "npm:^1.1.0"
-  checksum: 10c0/283e8c5efcf37802c9d1ce767f302dd569dd97a70d9bb8c7be79a789b9902451e0d16334b05d73299b20f048cbc3c7d288bbbde10b701fa194e2089c237dbea3
+"react@npm:^19.1.0":
+  version: 19.1.1
+  resolution: "react@npm:19.1.1"
+  checksum: 10c0/8c9769a2dfd02e603af6445058325e6c8a24b47b185d0e461f66a6454765ddcaecb3f0a90184836c68bb509f3c38248359edbc42f0d07c23eb500a5c30c87b4e
   languageName: node
   linkType: hard
 
@@ -8672,12 +8706,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"scheduler@npm:^0.23.2":
-  version: 0.23.2
-  resolution: "scheduler@npm:0.23.2"
-  dependencies:
-    loose-envify: "npm:^1.1.0"
-  checksum: 10c0/26383305e249651d4c58e6705d5f8425f153211aef95f15161c151f7b8de885f24751b377e4a0b3dd42cce09aad3f87a61dab7636859c0d89b7daf1a1e2a5c78
+"scheduler@npm:^0.26.0":
+  version: 0.26.0
+  resolution: "scheduler@npm:0.26.0"
+  checksum: 10c0/5b8d5bfddaae3513410eda54f2268e98a376a429931921a81b5c3a2873aab7ca4d775a8caac5498f8cbc7d0daeab947cf923dbd8e215d61671f9f4e392d34356
   languageName: node
   linkType: hard
 
@@ -9418,6 +9450,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tabbable@npm:^6.0.0":
+  version: 6.2.0
+  resolution: "tabbable@npm:6.2.0"
+  checksum: 10c0/ced8b38f05f2de62cd46836d77c2646c42b8c9713f5bd265daf0e78ff5ac73d3ba48a7ca45f348bafeef29b23da7187c72250742d37627883ef89cbd7fa76898
+  languageName: node
+  linkType: hard
+
 "tapable@npm:^2.1.1, tapable@npm:^2.2.0, tapable@npm:^2.2.1":
   version: 2.2.2
   resolution: "tapable@npm:2.2.2"
@@ -9506,26 +9545,38 @@ __metadata:
   resolution: "tgui-bench@workspace:packages/tgui-bench"
   dependencies:
     "@fastify/static": "npm:^8.0.2"
-    "@types/react": "npm:^18.3.12"
-    "@types/react-dom": "npm:^18.3.1"
+    "@types/react": "npm:^19.1.0"
+    "@types/react-dom": "npm:^19.1.1"
     common: "workspace:*"
     fastify: "npm:^5.1.0"
     lodash: "npm:^4.17.21"
     platform: "npm:^1.3.6"
-    react: "npm:^18.3.1"
-    react-dom: "npm:^18.3.1"
+    react: "npm:^19.1.0"
+    react-dom: "npm:^19.1.0"
     tgui: "workspace:*"
-    tgui-core: "npm:1.7.4"
+    tgui-core: "npm:2.0.6"
   languageName: unknown
   linkType: soft
 
-"tgui-core@npm:1.7.4":
-  version: 1.7.4
-  resolution: "tgui-core@npm:1.7.4"
+"tgui-core@npm:2.0.6":
+  version: 2.0.6
+  resolution: "tgui-core@npm:2.0.6"
   peerDependencies:
-    react: ^18.2.0
-    react-dom: ^18.2.0
-  checksum: 10c0/06b9d8702d6ae170383b28725bf6308cd320499367ea8ea1f9dd5039ab371cfe34419a7d3d1e0e2b86884326e8d4ab116e5601208d2f85d215b7c464fd32fdbf
+    react: ^19.1.0
+    react-dom: ^19.1.0
+  checksum: 10c0/7167532db1fd55342e6fba026fae039fec4c0bc6645ae1279e40f0c01d77899b6aca16ba6cebe3e141d04dfe39d31b0186dd3982f599096bb7e05f1d5f971be4
+  languageName: node
+  linkType: hard
+
+"tgui-core@npm:^2.0.6":
+  version: 2.1.1
+  resolution: "tgui-core@npm:2.1.1"
+  dependencies:
+    "@floating-ui/react": "npm:^0.27.6"
+  peerDependencies:
+    react: ^19.1.0
+    react-dom: ^19.1.0
+  checksum: 10c0/8dce75971f53c03c71e6a1eb7a6a213f77a7024546f1fbcf506c4b8345bfbe051e738a6f2c9cdee505baba17d2a54ccd5f59a1a71a95fcb0767e9619c18015fa
   languageName: node
   linkType: hard
 
@@ -9547,13 +9598,13 @@ __metadata:
   resolution: "tgui-panel@workspace:packages/tgui-panel"
   dependencies:
     "@types/node": "npm:^22.9.0"
-    "@types/react": "npm:^18.3.12"
+    "@types/react": "npm:^19.1.0"
     common: "workspace:*"
     dompurify: "npm:^2.5.7"
-    react: "npm:^18.3.1"
-    react-dom: "npm:^18.3.1"
+    react: "npm:^19.1.0"
+    react-dom: "npm:^19.1.0"
     tgui: "workspace:*"
-    tgui-core: "npm:1.7.4"
+    tgui-core: "npm:2.0.6"
     tgui-dev-server: "workspace:*"
     tgui-polyfill: "workspace:*"
   languageName: unknown
@@ -9574,14 +9625,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "tgui-say@workspace:packages/tgui-say"
   dependencies:
-    "@types/react": "npm:^18.3.12"
-    "@types/react-dom": "npm:^18.3.1"
+    "@types/react": "npm:^19.1.0"
+    "@types/react-dom": "npm:^19.1.1"
     common: "workspace:*"
     dompurify: "npm:^2.5.7"
-    react: "npm:^18.3.1"
-    react-dom: "npm:^18.3.1"
+    react: "npm:^19.1.0"
+    react-dom: "npm:^19.1.0"
     tgui: "workspace:*"
-    tgui-core: "npm:1.7.4"
+    tgui-core: "npm:^2.0.6"
     tgui-dev-server: "workspace:*"
     tgui-polyfill: "workspace:*"
   languageName: unknown
@@ -9628,18 +9679,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "tgui@workspace:packages/tgui"
   dependencies:
-    "@popperjs/core": "npm:^2.11.8"
     "@types/marked": "npm:4.3.2"
-    "@types/react": "npm:^18.3.12"
+    "@types/react": "npm:^19.1.0"
     common: "workspace:*"
     csstype: "npm:^3.1.3"
     dateformat: "npm:^5.0.3"
     dompurify: "npm:^2.5.7"
     js-yaml: "npm:^4.1.0"
     marked: "npm:^4.3.0"
-    react: "npm:^18.3.1"
-    react-dom: "npm:^18.3.1"
-    tgui-core: "npm:1.7.4"
+    react: "npm:^19.1.0"
+    react-dom: "npm:^19.1.0"
+    tgui-core: "npm:2.0.6"
     tgui-dev-server: "workspace:*"
     tgui-polyfill: "workspace:*"
   languageName: unknown

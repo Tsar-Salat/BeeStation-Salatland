@@ -50,7 +50,7 @@ export const DisplayName = (props) => {
             port.name}
         </Flex.Item>
         <Flex.Item>
-          <Box fontSize={0.75} opacity={0.25} textAlign={isOutput ? 'right' : 'left'}>
+          <Box fontSize={0.75} opacity={0.5} textAlign={isOutput ? 'right' : 'left'}>
             {displayType || 'unknown'}
           </Box>
         </Flex.Item>

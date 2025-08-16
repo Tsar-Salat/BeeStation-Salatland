@@ -213,7 +213,7 @@ const Department = (props: { department: string } & PropsWithChildren) => {
 
         return (
           <Box>
-            <Stack vertical fill>
+            <Stack fill vertical g={0}>
               {jobsForDepartment.map(([name, job]) => (
                 <JobRow className={classes([className, name === department.head && 'head'])} key={name} job={job} name={name} />
               ))}
@@ -225,15 +225,6 @@ const Department = (props: { department: string } & PropsWithChildren) => {
       }}
     />
   );
-};
-
-// *Please* find a better way to do this, this is RIDICULOUS.
-// All I want is for a gap to pretend to be an empty space.
-// But in order for everything to align, I also need to add the 0.2em padding.
-// But also, we can't be aligned with names that break into multiple lines!
-const Gap = (props: { amount: number }) => {
-  // 0.2em comes from the padding-bottom in the department listing
-  return <Box height={`calc(${props.amount}px + 0.2em)`} />;
 };
 
 const JoblessRoleDropdown = (props) => {
@@ -284,45 +275,30 @@ export const JobsPage = () => {
 
       <Stack vertical fill className="section-background" p={1}>
         <Stack.Item>
-          <Stack fill className="PreferencesMenu__Jobs">
-            <Stack.Item mr={1}>
-              <Department department="Assistant">
-                <Gap amount={6} />
-              </Department>
-
-              <Department department="Engineering">
-                <Gap amount={6} />
-              </Department>
-
-              <Department department="Medical" />
-            </Stack.Item>
-
-            <Stack.Item mr={1}>
-              <Department department="Captain">
-                <Gap amount={6} />
-              </Department>
-
-              <Department department="Civilian">
-                <Gap amount={6} />
-              </Department>
-
-              <Department department="Service">
-                <Gap amount={6} />
-              </Department>
-
-              <Department department="Cargo" />
+          <Stack fill g={1} className="PreferencesMenu__Jobs">
+            <Stack.Item>
+              <Stack vertical>
+                <Department department="Assistant" />
+                <Department department="Engineering" />
+                <Department department="Medical" />
+              </Stack>
             </Stack.Item>
 
             <Stack.Item>
-              <Department department="Science">
-                <Gap amount={6} />
-              </Department>
+              <Stack vertical>
+                <Department department="Captain" />
+                <Department department="Civilian" />
+                <Department department="Service" />
+                <Department department="Cargo" />
+              </Stack>
+            </Stack.Item>
 
-              <Department department="Security">
-                <Gap amount={6} />
-              </Department>
-
-              <Department department="Silicon" />
+            <Stack.Item>
+              <Stack vertical>
+                <Department department="Science" />
+                <Department department="Security" />
+                <Department department="Silicon" />
+              </Stack>
             </Stack.Item>
           </Stack>
         </Stack.Item>

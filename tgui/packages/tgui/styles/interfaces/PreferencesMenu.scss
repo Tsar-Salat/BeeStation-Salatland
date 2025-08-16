@@ -3,6 +3,25 @@
 @use '../components/Button.scss';
 @use '../colors.scss';
 
+$departments: (
+  'Assistant': var(--color-grey),
+  'Captain': fg(var(--color-blue)),
+  'Cargo': var(--color-brown),
+  'Supply': var(--color-brown),
+  'Civilian': var(--color-grey),
+  'Command': var(--color-yellow),
+  'Security': var(--color-red),
+  'Engineering': hsl(from var(--color-orange) h s calc(l + 7.5)),
+  'Medical': var(--color-teal),
+  'Science': fg(var(--color-purple)),
+  'Service': var(--color-green),
+  'Silicon': var(--color-pink),
+);
+
+.ChoicedSelection {
+  background-color: var(--color-base);
+}
+
 .PreferencesMenu {
   &__Main {
     .Preferences__standard-palette {
@@ -22,22 +41,18 @@
 
   &__Antags {
     &__antagSelection {
-      $antagonist_bottom_padding: 10px;
-
-      margin-bottom: -$antagonist_bottom_padding;
+      gap: var(--space-l);
 
       @mixin animate-hover {
         .antagonist-icon-parent .antagonist-icon {
           &:hover {
             transform: scale(1.3);
-            transition: transform 1s ease-out;
+            transition: transform var(--transition-time-fast) ease-out;
           }
         }
       }
 
       &__antagonist {
-        padding-bottom: $antagonist_bottom_padding;
-        padding-right: 20px;
 
         &__per_character {
           &--off {
@@ -96,9 +111,10 @@
         }
 
         .antagonist-icon-parent {
+          cursor: var(--cursor-pointer);
           border-style: solid;
-          border-radius: 50%;
-          border-width: 4px;
+          border-radius: var(--border-radius-circular);
+          border-width: var(--border-thickness-large);
           box-sizing: content-box;
           overflow: hidden;
           position: relative;
@@ -107,11 +123,10 @@
           width: 96px;
 
           .antagonist-icon {
-            border-radius: 50%;
-            -ms-interpolation-mode: nearest-neighbor;
             image-rendering: pixelated;
+            border-radius: var(--border-radius-circular);
             overflow: hidden;
-            transition: transform 0.1s ease-in;
+            transition: transform var(--transition-time-fast) ease-in;
           }
         }
 
@@ -119,7 +134,7 @@
           @include animate-hover;
 
           .antagonist-icon-parent {
-            border-color: colors.$red;
+            border-color: var(--color-red);
 
             .antagonist-icon {
               opacity: 0.5;
@@ -132,7 +147,7 @@
 
           &--banned {
             .antagonist-icon-parent {
-              border-color: colors.$grey;
+              border-color: var(--color-grey);
               color: color.adjust(colors.$red, $lightness: 20%);
               .antagonist-icon {
                 opacity: 0.5;
@@ -145,12 +160,12 @@
           @include animate-hover;
 
           .antagonist-icon-parent {
-            border-color: colors.$green;
+            border-color: var(--color-green);
           }
 
           &--banned {
             .antagonist-icon-parent {
-              border-color: colors.$grey;
+              border-color: var(--color-grey);
               color: color.adjust(colors.$green, $lightness: 40%);
               .antagonist-icon {
                 opacity: 0.5;
@@ -161,7 +176,7 @@
 
         &--grey {
           .antagonist-icon-parent {
-            border-color: colors.$grey;
+            border-color: var(--color-grey);
             color: inherit;
             .antagonist-icon {
               opacity: 0.5;
@@ -222,9 +237,7 @@
           }
 
           background: colors.fg($color-value);
-          border-bottom: 2px solid rgba(0, 0, 0, 0.3);
-          border-left: 2px solid rgba(0, 0, 0, 0.3);
-          border-right: 2px solid rgba(0, 0, 0, 0.3);
+          border: var(--border-thickness-small) outset colors.fg($color-value);
           color: black;
 
           > * {
@@ -232,12 +245,9 @@
             padding-bottom: 0.2em;
           }
 
-          &:first-child {
-            border-top: 2px solid rgba(0, 0, 0, 0.3);
-          }
-
           .options {
-            background: rgba(0, 0, 0, 0.2);
+            margin-right: var(--space-xxs);
+            background: hsla(0, 0%, 0%, 0.2);
             height: 100%;
           }
         }
@@ -303,38 +313,40 @@
 
   &__Quirks {
     &__QuirkList {
-      background-color: colors.$light-grey;
+      scrollbar-color: var(--color-grey) transparent;
+      background-color: var(--color-light-grey);
       height: calc(90vh - 170px);
       min-height: 100%;
       overflow-y: scroll;
 
       &__quirk {
-        background-color: colors.$white;
-        border-bottom: 1px solid black;
-        color: #111;
-        transition: background-color 0.1s ease-in;
+        cursor: var(--cursor-pointer);
+        background-color: var(--color-white);
+        border-bottom: var(--border-thickness-tiny) solid var(--color-black);
+        color: hsl(0, 0%, 6.7%);
+        transition: background-color var(--transition-time-fast) ease-in;
 
         $quality_map: (
-          'positive': colors.$green,
-          'neutral': colors.$white,
-          'negative': colors.$red,
+          'positive': var(--color-green),
+          'neutral': var(--color-white),
+          'negative': var(--color-red),
         );
 
         @each $quality, $color-value in $quality_map {
           &--#{$quality} {
             background-color: $color-value;
-            transition: background-color 0.1s ease-in;
+            transition: background-color var(--transition-time-fast) ease-in;
           }
         }
 
         &:hover {
-          background-color: colors.$grey;
-          transition: background-color 0.1s ease-out;
+          background-color: var(--color-grey);
+          transition: background-color var(--transition-time-fast) ease-out;
 
           @each $quality, $color-value in $quality_map {
             .PreferencesMenu__Quirks__QuirkList__quirk--#{$quality} {
-              background-color: color.scale($color-value, $lightness: -25%);
-              transition: background-color 0.1s ease-out;
+              background-color: hsl(from $color-value h s calc(l - 10));
+              transition: background-color var(--transition-time-fast) ease-out;
             }
           }
         }

@@ -1,78 +1,69 @@
-@use '../colors.scss';
 @use '../base.scss';
 
 .Techweb__NodeProgress {
-  margin-bottom: 1rem;
-}
-
-.Techweb__NodeProgress > *:not(:last-child) {
-  margin-right: 0.4rem;
+  margin-bottom: var(--space-xl);
 }
 
 .Techweb__DesignIcon {
-  margin-left: 0.001rem;
-  margin-right: 0.001rem;
+  margin: 0 var(--space-s);
 }
 
 .Techweb__OverviewNodes {
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 6px;
-  padding-top: 4px;
+  padding-top: var(--space-m);
   font-size: 11px;
 }
 
 .Techweb__HeaderContent {
-  background-color: black;
-  padding: 6px;
-  border: 1px solid hsl(212.4, 36.6%, 39.6%);
+  padding: var(--space-m);
+  background-color: var(--color-black);
+  border: var(--border-thickness-tiny) solid var(--color-primary);
 }
 
 .Techweb__HeaderContent > * > :not(:last-child) {
-  margin-bottom: 5px;
+  margin-bottom: var(--space-m);
 }
 
 .Techweb__HeaderSectionTabs {
-  margin-top: 2px;
-  background-color: black;
-  border: 1px solid hsl(212.4, 36.6%, 39.6%);
-  padding-left: 5px;
-  padding-right: 5px;
+  margin-top: var(--space-l);
+  background-color: var(--color-black);
+  border: var(--border-thickness-tiny) solid var(--color-primary);
+  padding-left: var(--space-m);
+  padding-right: var(--space-m);
   height: 30px;
 }
 
 .Techweb__HeaderTabTitle {
-  border-right: 1px solid hsl(212.4, 36.6%, 39.6%);
-  padding-right: 0.5em;
-  margin-right: 0.5em;
+  border-right: var(--border-thickness-tiny) solid var(--color-primary);
+  padding-right: var(--space-m);
+  margin-right: var(--space-m);
   font-weight: bold;
 }
 
 .Techweb__HeaderSectionTabs input {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: hsla(0, 0%, 100%, 0.05);
 }
 
 .Techweb__PointSummary {
   list-style: none;
-  margin: 0.4em 0 0 1em;
+  margin: var(--space-m) 0 0 var(--space-l);
   padding: 0;
 }
 
 .Techweb__SecProtocol {
-  color: colors.$bad;
-  margin-left: 0.2em;
+  color: var(--color-bad);
+  margin-left: var(--space-s);
 }
 
 .Techweb__SecProtocol.engaged {
-  color: colors.$good;
+  color: var(--color-good);
 }
 
 .Techweb__DesignModal > :not(:last-child) {
-  margin-bottom: 0.5em;
+  margin-bottom: var(--space-m);
 }
 
 .Techweb__LockedModal > :not(:last-child) {
-  margin-bottom: 0.5em;
+  margin-bottom: var(--space-m);
 }
 
 .Techweb__NodeProgress {
@@ -80,15 +71,15 @@
 }
 
 .Techweb__NodeContainer {
-  background-color: black;
-  border: 1px solid hsl(212.4, 36.6%, 39.6%);
+  background-color: var(--color-black);
+  border: var(--border-thickness-tiny) solid var(--color-primary);
 }
 
 .Techweb__TierDisplay {
   position: absolute;
-  right: base.em(3px);
-  top: base.em(3px);
-  padding: 0.3em;
-  border-radius: 5px;
-  background-color: adjust-color(colors.$grey, $alpha: -0.5);
+  right: var(--space-s);
+  top: var(--space-s);
+  padding: var(--space-xs);
+  border-radius: var(--border-radius-small);
+  background-color: var(--color-grey);
 }
