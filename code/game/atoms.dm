@@ -1245,6 +1245,7 @@
   * Not recommended to use, listen for the COMSIG_ATOM_DIR_CHANGE signal instead (sent by this proc)
   */
 /atom/proc/setDir(newdir)
+	SHOULD_CALL_PARENT(TRUE)
 	SEND_SIGNAL(src, COMSIG_ATOM_DIR_CHANGE, dir, newdir)
 	. = dir != newdir
 	dir = newdir
@@ -1732,11 +1733,11 @@
 	return
 
 ///Connect this atom to a shuttle
-/atom/proc/connect_to_shuttle(obj/docking_port/mobile/port, obj/docking_port/stationary/dock, idnum, override=FALSE)
+/atom/proc/connect_to_shuttle(obj/docking_port/mobile/port, obj/docking_port/stationary/dock, idnum, override = FALSE)
 	return
 
 /// Generic logging helper
-/atom/proc/log_message(message, message_type, color=null, log_globally=TRUE)
+/atom/proc/log_message(message, message_type, color, log_globally = TRUE)
 	if(!log_globally)
 		return
 

@@ -32,6 +32,7 @@
 #include "dcs_get_id_from_elements.dm"
 #include "drink_icons.dm"
 #include "dynamic_ruleset_sanity.dm"
+#include "emissive_worn_overlays.dm"
 #include "emoting.dm"
 #include "enumerables.dm"
 
@@ -51,6 +52,7 @@
 #include "keybinding_init.dm"
 #include "language_transfer.dm"
 #include "limbsanity.dm"
+#include "mecha_damage.dm"
 #include "merge_type.dm"
 #include "metabolizing.dm"
 #include "mindbound_actions.dm"
@@ -85,6 +87,7 @@
 #include "spell_names.dm"
 #include "spell_shapeshift.dm"
 #include "stat_mc.dm"
+#include "strippable.dm"
 #include "subsystem_init.dm"
 #include "subsystem_metric_sanity.dm"
 #include "surgeries.dm"

@@ -31,7 +31,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_CRITICAL_CONDITION "critical-condition"
 // Grants them the ability to move even when without any limbs.
 #define TRAIT_MOBILE "mobile"
-// Only perimts the ability to whisper
+// Only permits the ability to whisper
 #define TRAIT_WHISPER_ONLY "whisper_only"
 
 //mob traits
@@ -230,6 +230,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Trait that prevents you from being moved when pulled.
 #define TRAIT_NO_MOVE_PULL "no_move_pull"
 #define TRAIT_SILENT_FOOTSTEPS "silent_footsteps" //makes your footsteps completely silent
+/// This mob can strip other mobs.
+#define TRAIT_CAN_STRIP "can_strip"
+#define TRAIT_KNOW_ROBO_WIRES "know_robo_wires"
 
 /// This mob has no soul
 #define TRAIT_NO_SOUL "no_soul"
@@ -361,6 +364,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_PROSKATER			"pro_skater"
 #define TRAIT_PLUSHIELOVER		"plushie lover"
 #define TRAIT_COMPUTER_WHIZ		"computer_whiz"
+#define	TRAIT_ACCENT			"Accent"
 
 ///Trait for dryable items
 #define TRAIT_DRYABLE "trait_dryable"
@@ -439,9 +443,13 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_NEGATES_GRAVITY "negates_gravity"
 #define TRAIT_NIGHT_VISION "night_vision"
 
+/// Oozelings with this trait will not lose limbs from low blood/nutrition.
+#define TRAIT_OOZELING_NO_CANNIBALIZE "oozeling_no_cannibalize"
+
+/// For the detective aurafarming ability
+#define TRAIT_NOIR "noir"
+
 /// Prevents items from being speed potion-ed, but allows their speed to be altered in other ways
 #define TRAIT_NO_SPEED_POTION "no_speed_potion"
-//for the detective aurafarming ability
-#define TRAIT_NOIR "noir" //people who are in the noir state,
 
 // END TRAIT DEFINES

@@ -520,14 +520,15 @@
 		"atool.png" = 'html/img/atool.png',
 		"apistol.png" = 'html/img/apistol.png',
 		"scitool.png" = 'html/img/scitool.png',
-		"alienorgan.png"= 'html/img/alienorgan.png',
-		"abaton.png"= 'html/img/abaton.png',
-		"spiderguard.png"= 'html/img/spiderguard.png',
-		"spiderbroodmother.png"= 'html/img/spiderbroodmother.png',
-		"spidernurse.png"= 'html/img/spidernurse.png',
-		"spiderhunter.png"= 'html/img/spiderhunter.png',
-		"spiderviper.png"= 'html/img/spiderviper.png',
-		"spidertarantula.png"= 'html/img/spidertarantula.png',
+		"alienorgan.png" = 'html/img/alienorgan.png',
+		"abaton.png" = 'html/img/abaton.png',
+		"spiderguard.png" = 'html/img/spiderguard.png',
+		"spiderbroodmother.png" = 'html/img/spiderbroodmother.png',
+		"spidernurse.png" = 'html/img/spidernurse.png',
+		"spiderhunter.png" = 'html/img/spiderhunter.png',
+		"spiderviper.png" = 'html/img/spiderviper.png',
+		"spidertarantula.png" = 'html/img/spidertarantula.png',
+		"vampire.png" = 'html/img/vampire.png',
 	)
 
 /datum/asset/simple/orbit
@@ -548,6 +549,13 @@
 
 	// Special bee edit to handle Bluespace Crystals
 	insert_icon("polycrystal", uni_icon('icons/obj/stacks/minerals.dmi', "refined_bluespace_crystal_3"))
+
+/datum/asset/spritesheet_batched/mecha_equipment
+	name = "mecha_equipment"
+
+/datum/asset/spritesheet_batched/mecha_equipment/create_spritesheets()
+	insert_all_icons("", 'icons/mob/mecha_equipment.dmi')
+	insert_all_icons("", 'icons/obj/stacks/minerals.dmi')
 
 /datum/asset/simple/pAI
 	assets = list(

@@ -19,12 +19,16 @@
 	low_threshold = 45
 	high_threshold = 120
 
-	organ_traits = list(TRAIT_ADVANCEDTOOLUSER)
+	organ_traits = list(
+		TRAIT_ADVANCEDTOOLUSER,
+		//TRAIT_LITERATE,
+		TRAIT_CAN_STRIP
+	)
 
 	var/suicided = FALSE
 	var/mob/living/brain/brainmob = null
 	var/brain_death = FALSE //if the brainmob was intentionally killed by attacking the brain after removal, or by severe braindamage
-	/// If it's a fake brain with no brainmob assigned. Feedback messages will be faked as if it does have a brainmob. See changelings & dullahans.
+	/// If it's a fake brain with no brainmob assigned. Feedback messages will be faked as if it does have a brainmob. See changelings
 	var/decoy_override = FALSE
 	/// Two variables necessary for calculating whether we get a brain trauma or not
 	var/damage_delta = 0
@@ -169,7 +173,7 @@
 			return
 
 		user.visible_message("[user] pours the contents of [O] onto [src], causing it to reform its original shape and turn a slightly brighter shade of pink.", span_notice("You pour the contents of [O] onto [src], causing it to reform its original shape and turn a slightly brighter shade of pink."))
-		set_organ_damage(damage - (0.05 * maxHealth))	//heals a small amount, and by using "setorgandamage", we clear the failing variable if that was up
+		set_organ_damage(damage - (0.05 * maxHealth))	//heals a small amount, and by using "set_organ_damage", we clear the failing variable if that was up
 		O.reagents.clear_reagents()
 		return
 
@@ -281,6 +285,15 @@
 	desc = "We barely understand the brains of terrestial animals. Who knows what we may find in the brain of such an advanced species?"
 	icon_state = "brain-x"
 	organ_traits = null
+
+/obj/item/organ/brain/primitive //No like books and stompy metal men
+	name = "Primative Brain"
+	desc = "This juicy piece of meat has a clearly underdeveloped frontal lobe."
+	organ_traits = list(
+		TRAIT_ADVANCEDTOOLUSER,
+		TRAIT_CAN_STRIP,
+		TRAIT_PRIMITIVE, // No literacy
+	)
 
 /obj/item/organ/brain/diona
 	name = "diona nymph"
