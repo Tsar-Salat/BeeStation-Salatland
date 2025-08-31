@@ -153,7 +153,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/anomaly/energy_ball)
 		return
 	var/mob/living/carbon/jedi = user
 	to_chat(jedi, span_userdanger("That was a shockingly dumb idea."))
-	var/obj/item/organ/brain/rip_u = locate(/obj/item/organ/brain) in jedi.internal_organs
+	var/obj/item/organ/brain/rip_u = locate(/obj/item/organ/brain) in jedi.organs
 	jedi.ghostize(jedi)
 	if(rip_u)
 		qdel(rip_u)
@@ -164,7 +164,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/anomaly/energy_ball)
 /obj/anomaly/energy_ball/proc/dust_mobs(atom/A)
 	if(isliving(A))
 		var/mob/living/L = A
-		if(L.incorporeal_move || L.status_flags & GODMODE)
+		if(L.incorporeal_move || HAS_TRAIT(L, TRAIT_GODMODE))
 			return
 	if(!iscarbon(A))
 		return

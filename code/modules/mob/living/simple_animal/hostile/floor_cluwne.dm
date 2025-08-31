@@ -472,7 +472,7 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 		sac_target.legcuffed.forceMove(sac_target.drop_location())
 		sac_target.legcuffed.dropped(sac_target)
 		sac_target.legcuffed = null
-		sac_target.update_inv_legcuffed()
+		sac_target.update_worn_legcuffs()
 
 	addtimer(CALLBACK(sac_target, TYPE_PROC_REF(/mob/living/carbon, do_jitter_animation), 100), SACRIFICE_SLEEP_DURATION * (1/3))
 	addtimer(CALLBACK(sac_target, TYPE_PROC_REF(/mob/living/carbon, do_jitter_animation), 100), SACRIFICE_SLEEP_DURATION * (2/3))
@@ -609,7 +609,7 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
  */
 /mob/living/simple_animal/hostile/floor_cluwne/proc/after_return_live_target(mob/living/carbon/human/sac_target)
 	if(sac_target.stat == DEAD)
-		sac_target.revive(TRUE, TRUE)
+		sac_target.revive(HEAL_ALL)
 		sac_target.grab_ghost()
 	to_chat(sac_target, span_hypnophrase("The fight is over, but at great cost. You have been returned to the station in one piece."))
 	to_chat(sac_target, span_big("[span_hypnophrase("You don't remember anything leading up to the experience - All you can think about are those horrific hands...")]"))

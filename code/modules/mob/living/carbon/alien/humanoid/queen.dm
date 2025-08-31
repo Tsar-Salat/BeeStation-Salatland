@@ -66,11 +66,11 @@
 	return ..()
 
 /mob/living/carbon/alien/humanoid/royal/queen/create_internal_organs()
-	internal_organs += new /obj/item/organ/alien/plasmavessel/large/queen
-	internal_organs += new /obj/item/organ/alien/resinspinner
-	internal_organs += new /obj/item/organ/alien/acid
-	internal_organs += new /obj/item/organ/alien/neurotoxin
-	internal_organs += new /obj/item/organ/alien/eggsac
+	organs += new /obj/item/organ/alien/plasmavessel/large/queen
+	organs += new /obj/item/organ/alien/resinspinner
+	organs += new /obj/item/organ/alien/acid
+	organs += new /obj/item/organ/alien/neurotoxin
+	organs += new /obj/item/organ/alien/eggsac
 	return ..()
 
 /mob/living/carbon/alien/humanoid/royal/queen/proc/set_countdown()
@@ -90,11 +90,13 @@
 	SSshuttle.clearInfestation(src)
 	..()
 
-/mob/living/carbon/alien/humanoid/royal/queen/revive(full_heal = 0, admin_revive = 0)
-	if(..())
-		RegisterSignal(src, COMSIG_MOVABLE_Z_CHANGED, PROC_REF(set_countdown))
-		set_countdown()
-		SSshuttle.registerInfestation(src)
+/mob/living/carbon/alien/humanoid/royal/queen/revive(full_heal_flags = NONE, excess_healing = 0, force_grab_ghost = FALSE)
+	. = ..()
+	if(!.)
+		return
+	RegisterSignal(src, COMSIG_MOVABLE_Z_CHANGED, PROC_REF(set_countdown))
+	set_countdown()
+	SSshuttle.registerInfestation(src)
 
 /mob/living/carbon/alien/humanoid/royal/queen/Destroy()
 	UnregisterSignal(src, COMSIG_MOVABLE_Z_CHANGED)

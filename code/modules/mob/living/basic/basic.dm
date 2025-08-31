@@ -127,7 +127,7 @@
 	. = ..()
 	///Automatic stamina re-gain
 	if(staminaloss > 0)
-		adjustStaminaLoss(-stamina_recovery * delta_time, updating_health = FALSE, forced = TRUE)
+		adjustStaminaLoss(amount = -stamina_recovery * delta_time, updating_stamina = FALSE, forced = TRUE)
 
 /mob/living/basic/say_mod(input, list/message_mods = list())
 	if(length(speak_emote))
@@ -153,9 +153,9 @@
 	if(!(basic_mob_flags & REMAIN_DENSE_WHILE_DEAD))
 		set_density(FALSE)
 
-/mob/living/basic/revive(full_heal = FALSE, admin_revive = FALSE)
+/mob/living/basic/revive(full_heal_flags = NONE, excess_healing = 0, force_grab_ghost = FALSE)
 	. = ..()
-	if (!.)
+	if(!.)
 		return
 	look_alive()
 

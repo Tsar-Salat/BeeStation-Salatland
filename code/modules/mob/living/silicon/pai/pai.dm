@@ -175,6 +175,9 @@
 		ADD_TRAIT(src, TRAIT_IMMOBILIZED, PAI_FOLDED)
 		ADD_TRAIT(src, TRAIT_HANDS_BLOCKED, PAI_FOLDED)
 
+	RegisterSignals(src, list(COMSIG_LIVING_ADJUST_BRUTE_DAMAGE, COMSIG_LIVING_ADJUST_BURN_DAMAGE), PROC_REF(on_shell_damaged))
+	RegisterSignal(src, COMSIG_LIVING_ADJUST_STAMINA_DAMAGE, PROC_REF(on_shell_weakened))
+
 	return INITIALIZE_HINT_LATELOAD
 
 
@@ -331,7 +334,7 @@
 	silent = max(silent - (0.5 * delta_time), 0)
 
 /mob/living/silicon/pai/updatehealth()
-	if(status_flags & GODMODE)
+	if(HAS_TRAIT(src, TRAIT_GODMODE))
 		return
 	set_health(maxHealth - getBruteLoss() - getFireLoss())
 	update_stat()

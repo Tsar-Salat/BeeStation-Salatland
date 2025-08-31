@@ -213,7 +213,7 @@
 	health = clamp(health, 0, maxHealth)
 
 /mob/living/simple_animal/update_stat()
-	if(status_flags & GODMODE)
+	if(HAS_TRAIT(src, TRAIT_GODMODE))
 		return
 	if(stat != DEAD)
 		if(health <= 0)
@@ -453,7 +453,7 @@
 		return FALSE
 	if(ismob(the_target))
 		var/mob/M = the_target
-		if(M.status_flags & GODMODE)
+		if(HAS_TRAIT(M, TRAIT_GODMODE))
 			return FALSE
 	if (isliving(the_target))
 		var/mob/living/L = the_target
@@ -475,7 +475,7 @@
 	return
 
 
-/mob/living/simple_animal/revive(full_heal = 0, admin_revive = 0)
+/mob/living/simple_animal/revive(full_heal_flags = NONE, excess_healing = 0, force_grab_ghost = FALSE)
 	. = ..()
 	if(!.)
 		return
@@ -590,7 +590,7 @@
 	else
 		mode()
 
-/mob/living/simple_animal/swap_hand(hand_index)
+/mob/living/simple_animal/perform_hand_swap(hand_index)
 	. = ..()
 	if(!.)
 		return
@@ -612,20 +612,17 @@
 
 /mob/living/simple_animal/put_in_hands(obj/item/I, del_on_fail = FALSE, merge_stacks = TRUE)
 	. = ..(I, del_on_fail, merge_stacks)
-	update_inv_hands()
+	update_held_items()
 
-/mob/living/simple_animal/update_inv_hands()
-	if(client && hud_used && hud_used.hud_version != HUD_STYLE_NOHUD)
-		var/obj/item/l_hand = get_item_for_held_index(1)
-		var/obj/item/r_hand = get_item_for_held_index(2)
-		if(r_hand)
-			r_hand.plane = ABOVE_HUD_PLANE
-			r_hand.screen_loc = ui_hand_position(get_held_index_of_item(r_hand))
-			client.screen |= r_hand
-		if(l_hand)
-			l_hand.plane = ABOVE_HUD_PLANE
-			l_hand.screen_loc = ui_hand_position(get_held_index_of_item(l_hand))
-			client.screen |= l_hand
+/mob/living/simple_animal/update_held_items()
+	. = ..()
+	if(!client || !hud_used || hud_used.hud_version == HUD_STYLE_NOHUD)
+		return
+	for(var/obj/item/I in held_items)
+		var/index = get_held_index_of_item(I)
+		I.plane = ABOVE_HUD_PLANE
+		I.screen_loc = ui_hand_position(index)
+		client.screen |= I
 
 //ANIMAL RIDING
 
@@ -661,13 +658,6 @@
 /mob/living/simple_animal/proc/consider_wakeup()
 	if (pulledby || shouldwakeup)
 		toggle_ai(AI_ON)
-
-/mob/living/simple_animal/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
-	. = ..()
-	if(!ckey && !stat)//Not unconscious
-		if(AIStatus == AI_IDLE)
-			toggle_ai(AI_ON)
-
 
 /mob/living/simple_animal/onTransitZ(old_z, new_z)
 	..()

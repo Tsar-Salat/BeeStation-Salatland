@@ -101,7 +101,6 @@
 	return ..()
 
 /datum/antagonist/changeling/on_gain()
-	generate_name()
 	create_emporium()
 	create_innate_actions()
 	create_initial_profile()
@@ -121,6 +120,7 @@
 	handle_clown_mutation(living_mob, "You have evolved beyond your clownish nature, allowing you to wield weapons without harming yourself.")
 	RegisterSignal(living_mob, COMSIG_MOB_LOGIN, PROC_REF(on_login))
 	RegisterSignal(living_mob, COMSIG_LIVING_LIFE, PROC_REF(on_life))
+	RegisterSignal(living_mob, COMSIG_LIVING_POST_FULLY_HEAL, PROC_REF(on_fullhealed))
 	living_mob.hud_used?.lingchemdisplay.invisibility = 0
 	living_mob.hud_used?.lingchemdisplay.maptext = FORMAT_CHEM_CHARGES_TEXT(chem_charges)
 
@@ -136,24 +136,10 @@
 		our_ling_brain.organ_flags &= ~ORGAN_VITAL
 		our_ling_brain.decoy_override = TRUE
 
-/datum/antagonist/changeling/proc/generate_name()
-	var/static/list/left_changling_names = GLOB.greek_letters.Copy()
-
-	var/honorific
-	if(owner.current.gender == FEMALE)
-		honorific = "Ms."
-	else
-		honorific = "Mr."
-	if(length(left_changling_names))
-		changelingID = pick_n_take(left_changling_names)
-		changelingID = "[honorific] [changelingID]"
-	else
-		changelingID = "[honorific] [pick(GLOB.greek_letters)] No.[rand(1,9)]"
-
 /datum/antagonist/changeling/remove_innate_effects(mob/living/mob_override)
 	var/mob/living/living_mob = mob_override || owner.current
 	handle_clown_mutation(living_mob, removing = FALSE)
-	UnregisterSignal(living_mob, list(COMSIG_MOB_LOGIN, COMSIG_LIVING_LIFE, COMSIG_MOB_MIDDLECLICKON, COMSIG_MOB_ALTCLICKON))
+	UnregisterSignal(living_mob, list(COMSIG_MOB_LOGIN, COMSIG_LIVING_LIFE, COMSIG_LIVING_POST_FULLY_HEAL, COMSIG_MOB_MIDDLECLICKON, COMSIG_MOB_ALTCLICKON))
 	living_mob.hud_used?.lingchemdisplay.invisibility = INVISIBILITY_ABSTRACT
 
 /datum/antagonist/changeling/on_removal()
@@ -223,6 +209,15 @@
 	// If we're not dead - we go up to the full chem cap.
 	else
 		adjust_chemicals((chem_recharge_rate - chem_recharge_slowdown) * delta_time)
+
+/**
+ * Signal proc for [COMSIG_LIVING_POST_FULLY_HEAL], getting admin-healed restores our chemicals.
+ */
+/datum/antagonist/changeling/proc/on_fullhealed(datum/source, heal_flags)
+	SIGNAL_HANDLER
+
+	if(heal_flags & HEAL_ADMIN)
+		adjust_chemicals(INFINITY)
 
 /**
  * Signal proc for [COMSIG_MOB_MIDDLECLICKON] and [COMSIG_MOB_ALTCLICKON].
@@ -429,7 +424,7 @@
 	new_profile.protected = protect
 
 	new_profile.age = target.age
-	//new_profile.physique = target.physique
+	new_profile.physique = target.physique
 
 	// Clothes, of course
 	new_profile.underwear = target.underwear
@@ -438,8 +433,8 @@
 	new_profile.socks = target.socks
 
 	// Hair and facial hair gradients, alongside their colours.
-	//new_profile.grad_style = LAZYLISTDUPLICATE(target.grad_style)
-	//new_profile.grad_color = LAZYLISTDUPLICATE(target.grad_color)
+	new_profile.grad_style = LAZYLISTDUPLICATE(target.grad_style)
+	new_profile.grad_color = LAZYLISTDUPLICATE(target.grad_color)
 
 	// Make an icon snapshot of what they currently look like
 	var/datum/icon_snapshot/entry = new()
@@ -689,9 +684,9 @@
 	user.undershirt = chosen_profile.undershirt
 	user.socks = chosen_profile.socks
 	user.age = chosen_profile.age
-	//user.physique = chosen_profile.physique
-	//user.grad_style = LAZYLISTDUPLICATE(chosen_profile.grad_style)
-	//user.grad_color = LAZYLISTDUPLICATE(chosen_profile.grad_color)
+	user.physique = chosen_profile.physique
+	user.grad_style = LAZYLISTDUPLICATE(chosen_profile.grad_style)
+	user.grad_color = LAZYLISTDUPLICATE(chosen_profile.grad_color)
 
 	chosen_dna.transfer_identity(user, TRUE)
 

@@ -10,10 +10,11 @@
 	var/originalcolor
 
 /datum/status_effect/rainbow_protection/on_apply()
-	owner.status_flags |= GODMODE
-	ADD_TRAIT(owner, TRAIT_PACIFISM, /datum/status_effect/rainbow_protection)
-	owner.visible_message(span_warning("[owner] shines with a brilliant rainbow light."),
-		span_notice("You feel protected by an unknown force!"))
+	owner.add_traits(list(TRAIT_GODMODE, TRAIT_PACIFISM), "[type]")
+	owner.visible_message(
+		span_warning("[owner] shines with a brilliant rainbow light."),
+		span_notice("You feel protected by an unknown force!"),
+	)
 	originalcolor = owner.color
 	return ..()
 
@@ -22,11 +23,12 @@
 	return ..()
 
 /datum/status_effect/rainbow_protection/on_remove()
-	owner.status_flags &= ~GODMODE
+	owner.remove_traits(list(TRAIT_GODMODE, TRAIT_PACIFISM), "[type]")
+	owner.visible_message(
+		span_notice("[owner] stops glowing, the rainbow light fading away."),
+		span_warning("You no longer feel protected..."),
+	)
 	owner.color = originalcolor
-	REMOVE_TRAIT(owner, TRAIT_PACIFISM, /datum/status_effect/rainbow_protection)
-	owner.visible_message(span_notice("[owner] stops glowing, the rainbow light fading away."),
-		span_warning("You no longer feel protected..."))
 
 /atom/movable/screen/alert/status_effect/slimeskin
 	name = "Adamantine Slimeskin"
@@ -105,7 +107,7 @@
 	RegisterSignal(owner, COMSIG_LIVING_RESIST, PROC_REF(breakCube))
 	cube = new /obj/structure/ice_stasis(get_turf(owner))
 	owner.forceMove(cube)
-	owner.status_flags |= GODMODE
+	ADD_TRAIT(owner, TRAIT_GODMODE, "[type]")
 	return ..()
 
 /datum/status_effect/frozenstasis/tick()
@@ -120,7 +122,7 @@
 /datum/status_effect/frozenstasis/on_remove()
 	if(cube)
 		qdel(cube)
-	owner.status_flags &= ~GODMODE
+	REMOVE_TRAIT(owner, TRAIT_GODMODE, "[type]")
 	UnregisterSignal(owner, COMSIG_LIVING_RESIST)
 
 /datum/status_effect/slime_clone
@@ -800,7 +802,7 @@
 		originalDNA = new H.dna.type
 		originalname = H.real_name
 		H.dna.copy_dna(originalDNA)
-		randomize_human(H, TRUE)
+		randomize_human(H)
 	return ..()
 
 /datum/status_effect/stabilized/green/tick() //Only occasionally give examiners a warning.
@@ -925,9 +927,12 @@
 
 /datum/status_effect/stabilized/black/tick()
 	if(owner.pulling && isliving(owner.pulling) && owner.grab_state == GRAB_KILL)
+
 		var/mob/living/M = owner.pulling
 		if(M.stat == DEAD)
+			to_chat(owner, span_warning("[M] is dead, you cannot drain anymore life from them!"))
 			return
+
 		if(!messagedelivered)
 			to_chat(owner,span_notice("You feel your hands melt around [M]'s neck and start to drain [M.p_them()] of life."))
 			to_chat(owner.pulling, span_userdanger("[owner]'s hands melt around your neck, and you can feel your life starting to drain away!"))
@@ -944,7 +949,7 @@
 			healing_types += CLONE
 
 		if(LAZYLEN(healing_types) != 0)
-			owner.apply_damage_type(-heal_amount, damagetype=pick(healing_types), forced = TRUE)
+			owner.heal_damage_type(heal_amount, damagetype=pick(healing_types))
 		owner.adjust_nutrition(3)
 		M.adjustCloneLoss(heal_amount * 1.2) //This way, two people can't just convert each other's damage away.
 	else
@@ -958,7 +963,7 @@
 
 /datum/status_effect/stabilized/lightpink/on_apply()
 	owner.add_movespeed_modifier(/datum/movespeed_modifier/status_effect/lightpink)
-	ADD_TRAIT(owner, TRAIT_PACIFISM, LIGHTPINK_TRAIT)
+	ADD_TRAIT(owner, TRAIT_PACIFISM, STABILIZED_LIGHT_PINK_EXTRACT_TRAIT)
 	return ..()
 
 /datum/status_effect/stabilized/lightpink/tick()
@@ -970,7 +975,7 @@
 
 /datum/status_effect/stabilized/lightpink/on_remove()
 	owner.remove_movespeed_modifier(/datum/movespeed_modifier/status_effect/lightpink)
-	REMOVE_TRAIT(owner, TRAIT_PACIFISM, LIGHTPINK_TRAIT)
+	REMOVE_TRAIT(owner, TRAIT_PACIFISM, STABILIZED_LIGHT_PINK_EXTRACT_TRAIT)
 
 /datum/status_effect/stabilized/adamantine
 	id = "stabilizedadamantine"

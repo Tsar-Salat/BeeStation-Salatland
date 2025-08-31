@@ -13,6 +13,9 @@
 
 #define isimage(thing) (istype(thing, /image))
 
+/// Returns TRUE if the input is text and ends with ".dmi"
+#define isdmifile(thing) (istext(thing) && findtext(thing, ".dmi", -4))
+
 GLOBAL_VAR_INIT(magic_appearance_detecting_image, new /image) // appearances are awful to detect safely, but this seems to be the best way ~ninjanomnom
 #define isappearance(thing) (!isimage(thing) && !ispath(thing) && istype(GLOB.magic_appearance_detecting_image, thing))
 
@@ -82,6 +85,8 @@ GLOBAL_LIST_INIT(turfs_without_ground, typecacheof(list(
 #define iscarbon(A) (istype(A, /mob/living/carbon))
 
 #define ishuman(A) (istype(A, /mob/living/carbon/human))
+
+#define isdummy(A) (istype(A, /mob/living/carbon/human/dummy))
 
 #define ishumantesting(A) (istype(A, /mob/living/carbon/human/consistent) || istype(A, /mob/living/carbon/human/dummy))
 
@@ -303,8 +308,6 @@ GLOBAL_LIST_INIT(book_types, typecacheof(list(
 
 #define iscash(A) (istype(A, /obj/item/coin) || istype(A, /obj/item/stack/spacecash) || istype(A, /obj/item/holochip))
 
-/// Helper for checking of someone's shapeshifted currently.
-#define is_shifted(mob) mob.has_status_effect(/datum/status_effect/shapechange_mob/from_spell)
 // Jobs
 #define is_job(job_type)  (istype(job_type, /datum/job))
 #define is_assistant_job(job_type) (istype(job_type, /datum/job/assistant))

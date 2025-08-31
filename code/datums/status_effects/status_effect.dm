@@ -30,6 +30,10 @@
 	/// Regardless of what this value is set to, duration will not display if a linked alert is not set
 	var/show_duration = TRUE
 	var/last_shown_duration = 0
+	/// Do we self-terminate when a fullheal is called?
+	var/remove_on_fullheal = FALSE
+	/// If remove_on_fullheal is TRUE, what flag do we need to be removed?
+	var/heal_flag_necessary = HEAL_STATUS
 
 /datum/status_effect/New(list/arguments)
 	on_creation(arglist(arguments))
@@ -42,6 +46,7 @@
 		return
 	if(owner)
 		LAZYADD(owner.status_effects, src)
+		RegisterSignal(owner, COMSIG_LIVING_POST_FULLY_HEAL, PROC_REF(remove_effect_on_heal))
 
 	if(duration != -1)
 		duration = world.time + duration
@@ -65,18 +70,26 @@
 		owner.clear_alert(id)
 		LAZYREMOVE(owner.status_effects, src)
 		on_remove()
+		UnregisterSignal(owner, COMSIG_LIVING_POST_FULLY_HEAL)
 		owner = null
 	return ..()
 
 /datum/status_effect/process()
-	if(!owner)
+	SHOULD_NOT_OVERRIDE(TRUE)
+
+	if(QDELETED(owner))
 		qdel(src)
 		return
+
 	var/needs_update = last_shown_duration != CEILING((duration - world.time) / 10, 1)
 	if(tick_interval < world.time)
 		tick()
 		tick_interval = world.time + initial(tick_interval)
+		if(QDELING(src))
+			// tick deleted us, no need to continue
+			return
 		needs_update = TRUE
+
 	if (needs_update)
 		update_icon()
 	if(duration != -1 && duration < world.time)
@@ -128,6 +141,16 @@
 
 /datum/status_effect/proc/nextmove_adjust()
 	return 0
+
+/// Signal proc for [COMSIG_LIVING_POST_FULLY_HEAL] to remove us on fullheal
+/datum/status_effect/proc/remove_effect_on_heal(datum/source, heal_flags)
+	SIGNAL_HANDLER
+
+	if(!remove_on_fullheal)
+		return
+
+	if(!heal_flag_necessary || (heal_flags & heal_flag_necessary))
+		qdel(src)
 
 /datum/status_effect/proc/update_icon()
 	if (!linked_alert || !show_duration || duration <= 0)
@@ -184,7 +207,22 @@
 				qdel(S)
 				. = TRUE
 
-/mob/living/proc/has_status_effect(effect) //returns the effect if the mob calling the proc owns the given status effect
+/**
+ * Checks if this mob has a status effect that shares the passed effect's ID
+ *
+ * checked_effect - TYPEPATH of a status effect to check for. Checks for its ID, not its typepath
+ *
+ * Returns an instance of a status effect, or NULL if none were found.
+ */
+/mob/proc/has_status_effect(datum/status_effect/checked_effect)
+	// Yes I'm being cringe and putting this on the mob level even though status effects only apply to the living level
+	// There's quite a few places (namely examine and, bleh, cult code) where it's easier to not need to cast to living before checking
+	// for an effect such as blindness
+	return null
+
+/mob/living/has_status_effect(effect) //returns the effect if the mob calling the proc owns the given status effect
+	RETURN_TYPE(/datum/status_effect)
+
 	. = FALSE
 	if(status_effects)
 		var/datum/status_effect/S1 = effect

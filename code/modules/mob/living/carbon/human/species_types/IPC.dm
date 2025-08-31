@@ -2,17 +2,7 @@
 	name = "\improper Integrated Positronic Chassis"
 	plural_form = "IPCs"
 	id = SPECIES_IPC
-	bodyflag = FLAG_IPC
 	sexes = FALSE
-	species_traits = list(
-		NOEYESPRITES,
-		NOZOMBIE,
-		MUTCOLORS,
-		REVIVESBYHEALING,
-		NOHUSK,
-		NOMOUTH,
-		MUTCOLORS
-	)
 	inherent_traits = list(
 		TRAIT_BLOOD_COOLANT,
 		TRAIT_RESISTCOLD,
@@ -24,10 +14,15 @@
 		TRAIT_POWERHUNGRY,
 		TRAIT_XENO_IMMUNE,
 		TRAIT_TOXIMMUNE,
+		TRAIT_NO_ZOMBIFY,
 		TRAIT_NO_DNA_COPY,
-		TRAIT_NO_TRANSFORMATION_STING,
+		TRAIT_MUTANT_COLORS,
+		TRAIT_NOHUSK,
+		TRAIT_NOMOUTH,
+		TRAIT_REVIVESBYHEALING,
+		TRAIT_NO_DEBRAIN_OVERLAY
 	)
-	inherent_biotypes = list(MOB_ROBOTIC, MOB_HUMANOID)
+	inherent_biotypes = MOB_ROBOTIC|MOB_HUMANOID
 	mutantbrain = /obj/item/organ/brain/positron
 	mutanteyes = /obj/item/organ/eyes/robotic
 	mutanttongue = /obj/item/organ/tongue/robot
@@ -38,33 +33,33 @@
 	mutantlungs = null
 	mutantappendix = null
 	mutant_organs = list(/obj/item/organ/cyberimp/arm/power_cord)
-	mutant_bodyparts = list("mcolor" = "#7D7D7D", "ipc_screen" = "Static", "ipc_antenna" = "None", "ipc_chassis" = "Morpheus Cyberkinetics (Custom)")
+	mutant_bodyparts = list(
+		"mcolor" = "#7D7D7D",
+		"ipc_screen" = "Static",
+		"ipc_antenna" = "None",
+		"ipc_chassis" = "Morpheus Cyberkinetics (Custom)"
+	)
 	meat = /obj/item/stack/sheet/plasteel{amount = 5}
 	skinned_type = /obj/item/stack/sheet/iron{amount = 10}
 
-	burnmod = 2
 	heatmod = 1.5
-	brutemod = 1
 	clonemod = 0
-	staminamod = 0.8
 	siemens_coeff = 1.5
 	reagent_tag = PROCESS_SYNTHETIC
 	species_gibs = GIB_TYPE_ROBOTIC
-	attack_sound = 'sound/items/trayhit1.ogg'
 	allow_numbers_in_name = TRUE
-	deathsound = "sound/voice/borg_deathsound.ogg"
+	death_sound = "sound/voice/borg_deathsound.ogg"
 	changesource_flags = MIRROR_BADMIN | WABBAJACK
 	species_language_holder = /datum/language_holder/synthetic
 	special_step_sounds = list('sound/effects/servostep.ogg')
-	species_bitflags = NOT_TRANSMORPHIC
 
 	bodypart_overrides = list(
 		BODY_ZONE_HEAD = /obj/item/bodypart/head/ipc,
 		BODY_ZONE_CHEST = /obj/item/bodypart/chest/ipc,
-		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/ipc,
-		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/ipc,
-		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/ipc,
-		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/ipc
+		BODY_ZONE_L_ARM = /obj/item/bodypart/arm/left/ipc,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/arm/right/ipc,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/leg/left/ipc,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/ipc
 	)
 
 	exotic_blood = /datum/reagent/oil
@@ -83,16 +78,8 @@
 		if(findname(.))
 			. = .(gender, TRUE, lastname, ++attempts)
 
-/datum/species/ipc/on_species_gain(mob/living/carbon/C)
+/datum/species/ipc/on_species_gain(mob/living/carbon/C, datum/species/old_species, pref_load, regenerate_icons)
 	. = ..()
-	var/obj/item/organ/appendix/A = C.get_organ_slot("appendix") //See below.
-	if(A)
-		A.Remove(C)
-		QDEL_NULL(A)
-	var/obj/item/organ/lungs/L = C.get_organ_slot("lungs") //Hacky and bad. Will be rewritten entirely in KapuCarbons anyway.
-	if(L)
-		L.Remove(C)
-		QDEL_NULL(L)
 	if(ishuman(C) && !change_screen)
 		change_screen = new
 		change_screen.Grant(C)
@@ -100,6 +87,7 @@
 	if(ishuman(C))
 		var/mob/living/carbon/human/H = C
 		H.physiology.bleed_mod *= 0.1
+	RegisterSignal(C, COMSIG_LIVING_REVIVE, PROC_REF(mechanical_revival))
 
 /datum/species/ipc/on_species_loss(mob/living/carbon/C)
 	. = ..()
@@ -109,6 +97,7 @@
 	if(ishuman(C))
 		var/mob/living/carbon/human/H = C
 		H.physiology.bleed_mod *= 10
+	UnregisterSignal(C, COMSIG_LIVING_REVIVE)
 
 /datum/species/ipc/proc/handle_speech(datum/source, list/speech_args)
 	speech_args[SPEECH_SPANS] |= SPAN_ROBOT //beep
@@ -132,7 +121,7 @@
 	button_icon_state = "drone_vision"
 
 /datum/action/innate/change_screen/on_activate()
-	var/screen_choice = tgui_input_list(usr, "Which screen do you want to use?", "Screen Change", GLOB.ipc_screens_list)
+	var/screen_choice = tgui_input_list(usr, "Which screen do you want to use?", "Screen Change", SSaccessories.ipc_screens_list)
 	var/color_choice = tgui_color_picker(usr, "Which color do you want your screen to be?", "Color Change")
 	if(!screen_choice)
 		return
@@ -238,7 +227,8 @@
 	H.visible_message(span_notice("[H] unplugs from the [target]."), span_notice("You unplug from the [target]."))
 	return
 
-/datum/species/ipc/spec_revival(mob/living/carbon/human/H)
+/datum/species/ipc/proc/mechanical_revival(mob/living/carbon/human/H)
+
 	H.notify_ghost_cloning("You have been repaired!")
 	H.grab_ghost()
 	H.dna.features["ipc_screen"] = "BSOD"
@@ -268,13 +258,14 @@
 /datum/species/ipc/replace_body(mob/living/carbon/C, datum/species/new_species)
 	..()
 
-	var/datum/sprite_accessory/ipc_chassis/chassis_of_choice = GLOB.ipc_chassis_list[C.dna.features["ipc_chassis"]]
+	var/datum/sprite_accessory/ipc_chassis/chassis_of_choice = SSaccessories.ipc_chassis_list[C.dna.features["ipc_chassis"]]
 
 	for(var/obj/item/bodypart/BP as() in C.bodyparts) //Override bodypart data as necessary
-		BP.uses_mutcolor = chassis_of_choice.color_src ? TRUE : FALSE
-		if(BP.uses_mutcolor)
-			BP.should_draw_greyscale = TRUE
+		BP.should_draw_greyscale = chassis_of_choice.color_src ? TRUE : FALSE
+		if(BP.should_draw_greyscale)
 			BP.species_color = C.dna?.features["mcolor"]
+		else
+			BP.species_color = null
 
 		BP.limb_id = chassis_of_choice.limbs_id
 		BP.name = "\improper[chassis_of_choice.name] [parse_zone(BP.body_zone)]"

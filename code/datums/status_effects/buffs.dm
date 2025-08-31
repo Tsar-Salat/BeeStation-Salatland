@@ -125,7 +125,7 @@
 	return ..()
 
 /datum/status_effect/wish_granters_gift/on_remove()
-	owner.revive(full_heal = TRUE, admin_revive = TRUE)
+	owner.revive(ADMIN_HEAL_ALL)
 	owner.visible_message(span_warning("[owner] appears to wake from the dead, having healed all wounds!"), span_notice("You have regenerated."))
 
 /atom/movable/screen/alert/status_effect/wish_granters_gift
@@ -256,7 +256,7 @@
 		var/new_staminaloss = owner.getStaminaLoss()
 		if(new_staminaloss < last_staminaloss)
 			var/heal_amount = (new_staminaloss - last_staminaloss) * 10
-			owner.adjustStaminaLoss(heal_amount, updating_health = FALSE)
+			owner.adjustStaminaLoss(heal_amount, updating_stamina = FALSE)
 			new_staminaloss = owner.getStaminaLoss()
 			needs_health_update = TRUE
 		last_staminaloss = new_staminaloss
@@ -326,13 +326,19 @@
 	duration = 32 SECONDS
 	var/ticks_passed = 0
 
+/datum/status_effect/fleshmend/on_apply()
+	. = ..()
+
+	RegisterSignal(owner, COMSIG_LIVING_IGNITED, PROC_REF(on_ignited))
+	RegisterSignal(owner, COMSIG_LIVING_EXTINGUISHED, PROC_REF(on_extinguished))
+
+/datum/status_effect/fleshmend/on_remove()
+	UnregisterSignal(owner, list(COMSIG_LIVING_IGNITED, COMSIG_LIVING_EXTINGUISHED))
+
 /datum/status_effect/fleshmend/tick()
 	ticks_passed ++
 	if(owner.on_fire)
-		linked_alert.icon_state = "fleshmend_fire"
 		return
-	else
-		linked_alert.icon_state = "fleshmend"
 	if(ticks_passed < 2)
 		return
 	else if(ticks_passed == 2)
@@ -345,6 +351,16 @@
 	owner.adjustOxyLoss(-5, FALSE, TRUE)
 	//Heals 0.5 cloneloss per second for a total of 15
 	owner.adjustCloneLoss(-0.5, TRUE, TRUE)
+
+/datum/status_effect/fleshmend/proc/on_ignited(datum/source)
+	SIGNAL_HANDLER
+
+	linked_alert?.icon_state = "fleshmend_fire"
+
+/datum/status_effect/fleshmend/proc/on_extinguished(datum/source)
+	SIGNAL_HANDLER
+
+	linked_alert?.icon_state = "fleshmend"
 
 /atom/movable/screen/alert/status_effect/fleshmend
 	name = "Fleshmend"
@@ -386,13 +402,13 @@
 	if(!..())
 		return FALSE
 	RegisterSignal(owner, COMSIG_MOVABLE_MOVED, PROC_REF(slight_increase))
-	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(large_increase))
+	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMAGE, PROC_REF(large_increase))
 	RegisterSignal(owner, COMSIG_MOB_ITEM_ATTACK, PROC_REF(large_increase))
 	RegisterSignal(owner, COMSIG_ATOM_BUMPED, PROC_REF(slight_increase))
 	return TRUE
 
 /datum/status_effect/changeling/camouflage/on_remove()
-	UnregisterSignal(owner, list(COMSIG_MOVABLE_MOVED, COMSIG_MOB_APPLY_DAMGE, COMSIG_ATOM_BUMPED))
+	UnregisterSignal(owner, list(COMSIG_MOVABLE_MOVED, COMSIG_MOB_APPLY_DAMAGE, COMSIG_ATOM_BUMPED))
 	owner.alpha = 255
 
 /datum/status_effect/changeling/camouflage/proc/slight_increase()

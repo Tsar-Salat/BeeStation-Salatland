@@ -899,11 +899,13 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/silicon/ai)
 	else
 		clear_fullscreen("remote_view", 0)
 
-/mob/living/silicon/ai/revive(full_heal = 0, admin_revive = 0)
+/mob/living/silicon/ai/revive(full_heal_flags = NONE, excess_healing = 0, force_grab_ghost = FALSE)
 	. = ..()
-	if(.) //successfully ressuscitated from death
-		set_core_display_icon(display_icon_override)
-		set_eyeobj_visible(TRUE)
+	if(!.) //successfully ressuscitated from death
+		return
+
+	set_core_display_icon(display_icon_override)
+	set_eyeobj_visible(TRUE)
 
 /mob/living/silicon/ai/proc/tilt(turf/target, damage, chance_to_crit, paralyze_time, damage_type = BRUTE, rotation = 90)
 	if(!target.is_blocked_turf(TRUE, src, list(src)))
@@ -923,10 +925,10 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/silicon/ai)
 					switch(crit_case) // only carbons can have the fun crits
 						if(1) // shatter their legs and bleed 'em
 							carbon_target.bleed(150)
-							var/obj/item/bodypart/l_leg/l = carbon_target.get_bodypart(BODY_ZONE_L_LEG)
+							var/obj/item/bodypart/leg/left/l = carbon_target.get_bodypart(BODY_ZONE_L_LEG)
 							if(l)
 								l.receive_damage(brute=200, updating_health=TRUE)
-							var/obj/item/bodypart/r_leg/r = carbon_target.get_bodypart(BODY_ZONE_R_LEG)
+							var/obj/item/bodypart/leg/right/r = carbon_target.get_bodypart(BODY_ZONE_R_LEG)
 							if(r)
 								r.receive_damage(brute=200, updating_health=TRUE)
 							if(l || r)
