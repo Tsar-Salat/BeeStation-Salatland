@@ -30,11 +30,6 @@
 				"reveal": "always",
 				"focus": false,
 				"panel": "new"
-			},
-			"options": {
-				"env": {
-					"WINEPREFIX": "/home/boneyards/Games/byond"
-				}
 			}
 		},
 		{
