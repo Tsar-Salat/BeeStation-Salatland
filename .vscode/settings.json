@@ -21,6 +21,8 @@
 		"#define UNIT_TESTS",
 		"#define CBT"
 	],
+	"dreammaker.byondPath": ["${workspaceFolder}/tools/byond-wine"],
+	"dreammaker.autoOpenReference": false,
 	"[javascript]": {
 		"editor.rulers": [80],
 		"editor.defaultFormatter": "esbenp.prettier-vscode",

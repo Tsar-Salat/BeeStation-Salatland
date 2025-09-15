@@ -1,0 +1,4 @@
+#!/bin/bash
+# Generic BYOND DreamSeeker executable wrapper
+# This is called by the VS Code BYOND extension
+exec "$(dirname "$0")/../../build/dreamseeker-wrapper.sh" "$@"

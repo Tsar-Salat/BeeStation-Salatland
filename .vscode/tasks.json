@@ -21,6 +21,23 @@
 			"label": "Build All"
 		},
 		{
+			"type": "shell",
+			"command": "${workspaceFolder}/tools/build/build-and-launch.sh",
+			"group": "build",
+			"label": "Build and Launch (Linux/Wine)",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "new"
+			},
+			"options": {
+				"env": {
+					"WINEPREFIX": "/home/boneyards/Games/byond"
+				}
+			}
+		},
+		{
 			"type": "dreammaker",
 			"dme": "beestation.dme",
 			"problemMatcher": ["$dreammaker"],
