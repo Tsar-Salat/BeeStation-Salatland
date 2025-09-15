@@ -4,7 +4,7 @@
 		{
 			"type": "byond",
 			"request": "launch",
-			"name": "Launch DreamSeeker (Linux/Wine)",
+			"name": "Launch DreamSeeker",
 			"preLaunchTask": "Build All",
 			"dmb": "${workspaceFolder}/beestation.dmb"
 		}

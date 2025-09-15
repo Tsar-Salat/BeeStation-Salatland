@@ -137,6 +137,16 @@ Test the wrappers individually:
 ./tools/build/dreamseeker-wrapper.sh your_game.dmb
 ```
 
+### VS Code Debugger Issues
+
+If you see "Couldn't find a debug adapter descriptor for debug type 'byond'":
+
+1. **Use Tasks Instead**: Press `Ctrl+Shift+P` → "Tasks: Run Task" → "Build and Launch (Linux/Wine)"
+2. **Use Terminal**: Run `./tools/build/build-and-launch.sh` directly
+3. **F5 Alternative**: Use `Ctrl+Shift+B` to build, then run DreamSeeker manually
+
+The VS Code BYOND extension's debugger may have compatibility issues with Wine. The build and launch functionality works perfectly through tasks.
+
 ### Force Close Wine Processes
 
 If you need to force close BYOND processes on Linux:
