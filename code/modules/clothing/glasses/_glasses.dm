@@ -44,12 +44,8 @@
 
 /obj/item/clothing/glasses/worn_overlays(mutable_appearance/standing, isinhands = FALSE, icon_file, item_layer, atom/origin)
 	. = ..()
-	// If we have an emissive state, add it to the worn icon too
-	if (!isinhands && emissive_state)
-		// Use a positive layer value for emissive appearances instead of the negative mob overlay layer
-		var/emissive_layer = abs(item_layer)
-		. += emissive_appearance(icon_file, emissive_state, emissive_layer, 100, filters = origin.filters)
-		ADD_LUM_SOURCE(origin, LUM_SOURCE_GLASSES)
+	// Emissive overlays are now handled directly at the mob level in update_worn_glasses()
+	// to avoid nested overlay issues with different planes
 
 /obj/item/clothing/glasses/visor_toggling()
 	. = ..()
