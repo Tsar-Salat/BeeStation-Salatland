@@ -22,6 +22,9 @@
 
 /obj/item/clothing/glasses/Initialize(mapload)
 	. = ..()
+	// Glasses with emissive states should not block emissives themselves
+	if(emissive_state)
+		blocks_emissive = FALSE
 	update_appearance(UPDATE_OVERLAYS)
 
 /obj/item/clothing/glasses/suicide_act(mob/living/carbon/user)

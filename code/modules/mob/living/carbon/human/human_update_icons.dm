@@ -861,9 +861,6 @@ generate/load female uniform sprites matching all previously decided variables
 		standing.overlays.Add(worn_overlays)
 		// Add emissive blockers for overlays
 		for (var/mutable_appearance/worn_overlay in worn_overlays)
-			// Don't add emissive blockers to emissive overlays themselves
-			if(worn_overlay.plane == EMISSIVE_PLANE)
-				continue
 			// Add on emissive blocker overlays
 			// Reset the layer back to below, in case we added emissives to the overlays.
 			standing.overlays.Add(emissive_blocker(worn_overlay.icon, worn_overlay.icon_state, worn_overlay.layer - 0.0001, worn_overlay.alpha))
