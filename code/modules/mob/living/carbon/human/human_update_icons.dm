@@ -254,7 +254,8 @@ There are several things that need to be remembered:
 		
 		// Handle emissive overlays separately - extract them from nested overlays and add directly
 		if(glasses.emissive_state && !(head && (head.flags_inv & HIDEEYES)) && !(wear_mask && (wear_mask.flags_inv & HIDEEYES)))
-			var/emissive_layer = abs(CALCULATE_MOB_OVERLAY_LAYER(GLASSES_LAYER))
+			// Try using a standard layer value instead of calculated mob layer
+			var/emissive_layer = GLASSES_LAYER
 			var/mutable_appearance/glasses_emissive = emissive_appearance(icon_file, glasses.emissive_state, emissive_layer, 100, filters = src.filters)
 			add_overlay(glasses_emissive)
 			ADD_LUM_SOURCE(src, LUM_SOURCE_GLASSES)
