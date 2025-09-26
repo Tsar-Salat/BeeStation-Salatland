@@ -636,7 +636,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	var/obj/item/bodypart/head/noggin = source.get_bodypart(BODY_ZONE_HEAD)
 
 	if(mutant_bodyparts["ipc_screen"])
-		if(!source.dna.features["ipc_screen"] || source.dna.features["ipc_screen"] == "None" || (source.wear_mask && (source.wear_mask.flags_inv & HIDEEYES)) || !noggin)
+		if(!source.dna.features["ipc_screen"] || source.dna.features["ipc_screen"] == "None" || (source.head && (source.head.flags_inv & HIDEEYES)) || (source.wear_mask && (source.wear_mask.flags_inv & HIDEEYES)) || !noggin)
 			bodyparts_to_add -= "ipc_screen"
 
 	if(mutant_bodyparts["ipc_antenna"])
@@ -741,8 +741,8 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			if (accessory.emissive_state)
 				// Handle IPC screen emissives separately - add directly to mob instead of nesting
 				if(bodypart == "ipc_screen")
-					// Only add the emissive if not blocked by masks or missing head
-					if(!(source.wear_mask && (source.wear_mask.flags_inv & HIDEEYES)) && noggin)
+					// Only add the emissive if not blocked by masks/helmets or missing head
+					if(!(source.head && (source.head.flags_inv & HIDEEYES)) && !(source.wear_mask && (source.wear_mask.flags_inv & HIDEEYES)) && noggin)
 						var/emissive_layer = CALCULATE_MOB_OVERLAY_LAYER(layer)
 						var/mutable_appearance/ipc_screen_emissive = emissive_appearance(accessory.icon, accessory.emissive_state, emissive_layer, accessory.emissive_alpha, filters = source.filters)
 						source.add_overlay(ipc_screen_emissive)
