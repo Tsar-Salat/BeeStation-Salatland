@@ -627,6 +627,8 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	source.remove_overlay(BODY_FRONT_LAYER)
 
 	REMOVE_LUM_SOURCE(source, LUM_SOURCE_MUTANT_BODYPART)
+	// Remove any existing IPC screen emissive overlays
+	REMOVE_LUM_SOURCE(source, LUM_SOURCE_IPC_SCREEN)
 
 	if(!mutant_bodyparts)
 		return
@@ -634,7 +636,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	var/obj/item/bodypart/head/noggin = source.get_bodypart(BODY_ZONE_HEAD)
 
 	if(mutant_bodyparts["ipc_screen"])
-		if(!source.dna.features["ipc_screen"] || source.dna.features["ipc_screen"] == "None" || (source.wear_mask && (source.wear_mask.flags_inv & HIDEEYES)) || !noggin)
+		if(!source.dna.features["ipc_screen"] || source.dna.features["ipc_screen"] == "None" || (source.head && (source.head.flags_inv & HIDEEYES)) || (source.wear_mask && (source.wear_mask.flags_inv & HIDEEYES)) || !noggin)
 			bodyparts_to_add -= "ipc_screen"
 
 	if(mutant_bodyparts["ipc_antenna"])
@@ -737,6 +739,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 
 			// Add on emissives, if they have one
 			if (accessory.emissive_state)
+				// For all mutant bodyparts, use the existing nested approach
 				accessory_overlay.overlays.Add(emissive_appearance(accessory.icon, accessory.emissive_state, layer = layer, alpha = accessory.emissive_alpha, filters = source.filters))
 				ADD_LUM_SOURCE(source, LUM_SOURCE_MUTANT_BODYPART)
 
@@ -769,6 +772,21 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	source.apply_overlay(BODY_BEHIND_LAYER)
 	source.apply_overlay(BODY_ADJ_LAYER)
 	source.apply_overlay(BODY_FRONT_LAYER)
+
+	// Handle IPC screen emissives separately - add directly to mob instead of nesting
+	if(mutant_bodyparts["ipc_screen"] && noggin)
+		if(!source.dna.features["ipc_screen"] || source.dna.features["ipc_screen"] == "None")
+			// No screen selected, skip emissive
+		else if((source.head && (source.head.flags_inv & HIDEEYES)) || (source.wear_mask && (source.wear_mask.flags_inv & HIDEEYES)))
+			// Blocked by equipment, skip emissive
+		else
+			// Add the emissive overlay directly to the mob
+			var/datum/sprite_accessory/ipc_screen/screen_accessory = SSaccessories.ipc_screens_list[source.dna.features["ipc_screen"]]
+			if(screen_accessory?.emissive_state)
+				var/emissive_layer = BODY_ADJ_LAYER  // Use the main layer for IPC screen
+				var/mutable_appearance/ipc_screen_emissive = emissive_appearance(screen_accessory.icon, screen_accessory.emissive_state, emissive_layer, screen_accessory.emissive_alpha, filters = source.filters)
+				source.add_overlay(ipc_screen_emissive)
+				ADD_LUM_SOURCE(source, LUM_SOURCE_IPC_SCREEN)
 
 	update_body_markings(source)
 

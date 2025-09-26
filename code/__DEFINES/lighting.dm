@@ -152,6 +152,8 @@ GLOBAL_DATUM_INIT(starfloor_overlay, /image, create_starfloor_overlay())
 /// Overlay based luminosity, cleared when overlays are cleared.
 /// This is for managed overlays only. You should not be using this.
 #define LUM_SOURCE_MANAGED_OVERLAY (1 << 0)
+/// Luminosity source for IPC screens
+#define LUM_SOURCE_IPC_SCREEN (1 << 5)
 
 /// Add a luminosity source to a target
 #define ADD_LUM_SOURCE(target, em_source) \
