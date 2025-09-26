@@ -627,6 +627,8 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	source.remove_overlay(BODY_FRONT_LAYER)
 
 	REMOVE_LUM_SOURCE(source, LUM_SOURCE_MUTANT_BODYPART)
+	// Remove any existing IPC screen emissive overlays
+	REMOVE_LUM_SOURCE(source, LUM_SOURCE_IPC_SCREEN)
 
 	if(!mutant_bodyparts)
 		return
@@ -737,8 +739,18 @@ GLOBAL_LIST_EMPTY(features_by_species)
 
 			// Add on emissives, if they have one
 			if (accessory.emissive_state)
-				accessory_overlay.overlays.Add(emissive_appearance(accessory.icon, accessory.emissive_state, layer = layer, alpha = accessory.emissive_alpha, filters = source.filters))
-				ADD_LUM_SOURCE(source, LUM_SOURCE_MUTANT_BODYPART)
+				// Handle IPC screen emissives separately - add directly to mob instead of nesting
+				if(bodypart == "ipc_screen")
+					// Only add the emissive if not blocked by masks or missing head
+					if(!(source.wear_mask && (source.wear_mask.flags_inv & HIDEEYES)) && noggin)
+						var/emissive_layer = CALCULATE_MOB_OVERLAY_LAYER(layer)
+						var/mutable_appearance/ipc_screen_emissive = emissive_appearance(accessory.icon, accessory.emissive_state, emissive_layer, accessory.emissive_alpha, filters = source.filters)
+						source.add_overlay(ipc_screen_emissive)
+						ADD_LUM_SOURCE(source, LUM_SOURCE_IPC_SCREEN)
+				else
+					// For other mutant bodyparts, keep the existing nested approach
+					accessory_overlay.overlays.Add(emissive_appearance(accessory.icon, accessory.emissive_state, layer = layer, alpha = accessory.emissive_alpha, filters = source.filters))
+					ADD_LUM_SOURCE(source, LUM_SOURCE_MUTANT_BODYPART)
 
 			if(accessory.gender_specific)
 				accessory_overlay.icon_state = "[g]_[bodypart]_[accessory.icon_state]_[layertext]"
