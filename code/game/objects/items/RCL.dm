@@ -25,13 +25,10 @@
 
 /obj/item/rcl/Initialize(mapload)
 	. = ..()
+	AddElement(/datum/element/update_icon_updates_onmob)
+	AddComponent(/datum/component/two_handed)
 	RegisterSignal(src, COMSIG_TWOHANDED_WIELD, PROC_REF(on_wield))
 	RegisterSignal(src, COMSIG_TWOHANDED_UNWIELD, PROC_REF(on_unwield))
-
-/obj/item/rcl/ComponentInitialize()
-	. = ..()
-	AddComponent(/datum/component/two_handed)
-	AddElement(/datum/element/update_icon_updates_onmob)
 
 /// triggered on wield of two handed item
 /obj/item/rcl/proc/on_wield(obj/item/source, mob/user)
@@ -327,7 +324,6 @@
 			showWiringGui(user)
 
 /obj/item/rcl/ghetto
-	actions_types = list()
 	max_amount = 30
 	name = "makeshift rapid cable layer"
 	ghetto = TRUE

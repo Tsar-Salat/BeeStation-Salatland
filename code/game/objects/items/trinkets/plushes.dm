@@ -510,7 +510,7 @@
 	. = ..()
 	if(!greyscale_colors)
 		// Generate a random valid lizard color for our plushie friend
-		var/generated_lizard_color = "#" + random_color()
+		var/generated_lizard_color = ready_random_color()
 		var/temp_hsv = RGBtoHSV(generated_lizard_color)
 
 		// If our color is too dark, use the classic green lizard plush color
@@ -624,7 +624,7 @@
 	desc = "An ancient plushie that has grown enlightened to the true nature of reality."
 	icon_state = "awakeplush"
 
-/obj/item/toy/plush/awakenedplushie/ComponentInitialize()
+/obj/item/toy/plush/awakenedplushie/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/edit_complainer)
 

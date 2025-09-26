@@ -742,7 +742,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 
 
 
-/obj/item/staff/bostaff/ComponentInitialize()
+/obj/item/staff/bostaff/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/two_handed, force_unwielded=10, force_wielded=14, block_power_unwielded=75, block_power_wielded=75, icon_wielded="bostaff1")
 
@@ -897,10 +897,9 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	var/table_smacks_left = 3
 
 /obj/item/slapper/attack(mob/living/M, mob/living/carbon/human/user)
-	if(ishuman(M))
-		var/mob/living/carbon/human/L = M
-		if(L && L.dna && L.dna.species)
-			L.dna.species.stop_wagging_tail(M)
+	if(iscarbon(M))
+		var/mob/living/carbon/potential_tailed = M
+		potential_tailed.unwag_tail()
 	user.do_attack_animation(M)
 
 	var/slap_volume = 50
@@ -1102,7 +1101,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	slot_flags = ITEM_SLOT_BACK
 	hitsound = 'sound/weapons/bladeslice.ogg'
 
-/obj/item/vibro_weapon/ComponentInitialize()
+/obj/item/vibro_weapon/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/butchering, 20, 105)
 	AddComponent(/datum/component/two_handed, force_multiplier=2, block_power_wielded=40, icon_wielded="hfrequency1")

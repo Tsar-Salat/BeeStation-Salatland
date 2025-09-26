@@ -38,9 +38,6 @@
 	if(pizza)
 		pizza = new pizza
 	update_icon()
-
-/obj/item/pizzabox/ComponentInitialize()
-	. = ..()
 	AddElement(/datum/element/empprotection, EMP_PROTECT_WIRES)
 
 /obj/item/pizzabox/Destroy()
@@ -99,7 +96,7 @@
 			add_overlay(tag_overlay)
 
 /obj/item/pizzabox/worn_overlays(mutable_appearance/standing, isinhands = FALSE, icon_file, item_layer, atom/origin)
-	. = list()
+	. = ..()
 	var/current_offset = 2
 	if(isinhands)
 		for(var/V in boxes) //add EXTRA BOX per box

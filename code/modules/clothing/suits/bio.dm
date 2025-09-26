@@ -6,7 +6,7 @@
 	worn_icon = 'icons/mob/clothing/head/bio.dmi'
 	icon_state = "bio"
 	item_state = "bio_hood"
-	clothing_flags = BLOCK_GAS_SMOKE_EFFECT | SNUG_FIT
+	clothing_flags = BLOCK_GAS_SMOKE_EFFECT | SNUG_FIT | STACKABLE_HELMET_EXEMPT | HEADINTERNALS
 	armor_type = /datum/armor/head_bio_hood
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|HIDEHAIR|HIDEFACIALHAIR|HIDEFACE|HIDESNOUT
 	resistance_flags = ACID_PROOF
@@ -46,7 +46,7 @@
 	acid = 100
 	bleed = 5
 
-/obj/item/clothing/suit/bio_suit/ComponentInitialize()
+/obj/item/clothing/suit/bio_suit/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/anti_artifact, INFINITY, FALSE, 75)
 
