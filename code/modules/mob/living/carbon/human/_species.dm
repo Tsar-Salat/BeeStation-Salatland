@@ -739,18 +739,9 @@ GLOBAL_LIST_EMPTY(features_by_species)
 
 			// Add on emissives, if they have one
 			if (accessory.emissive_state)
-				// Handle IPC screen emissives separately - add directly to mob instead of nesting
-				if(bodypart == "ipc_screen")
-					// Only add the emissive if not blocked by masks/helmets or missing head
-					if(!(source.head && (source.head.flags_inv & HIDEEYES)) && !(source.wear_mask && (source.wear_mask.flags_inv & HIDEEYES)) && noggin)
-						var/emissive_layer = CALCULATE_MOB_OVERLAY_LAYER(layer)
-						var/mutable_appearance/ipc_screen_emissive = emissive_appearance(accessory.icon, accessory.emissive_state, emissive_layer, accessory.emissive_alpha, filters = source.filters)
-						source.add_overlay(ipc_screen_emissive)
-						ADD_LUM_SOURCE(source, LUM_SOURCE_IPC_SCREEN)
-				else
-					// For other mutant bodyparts, keep the existing nested approach
-					accessory_overlay.overlays.Add(emissive_appearance(accessory.icon, accessory.emissive_state, layer = layer, alpha = accessory.emissive_alpha, filters = source.filters))
-					ADD_LUM_SOURCE(source, LUM_SOURCE_MUTANT_BODYPART)
+				// For all mutant bodyparts, use the existing nested approach
+				accessory_overlay.overlays.Add(emissive_appearance(accessory.icon, accessory.emissive_state, layer = layer, alpha = accessory.emissive_alpha, filters = source.filters))
+				ADD_LUM_SOURCE(source, LUM_SOURCE_MUTANT_BODYPART)
 
 			if(accessory.gender_specific)
 				accessory_overlay.icon_state = "[g]_[bodypart]_[accessory.icon_state]_[layertext]"
@@ -781,6 +772,21 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	source.apply_overlay(BODY_BEHIND_LAYER)
 	source.apply_overlay(BODY_ADJ_LAYER)
 	source.apply_overlay(BODY_FRONT_LAYER)
+
+	// Handle IPC screen emissives separately - add directly to mob instead of nesting
+	if(mutant_bodyparts["ipc_screen"] && noggin)
+		if(!source.dna.features["ipc_screen"] || source.dna.features["ipc_screen"] == "None")
+			// No screen selected, skip emissive
+		else if((source.head && (source.head.flags_inv & HIDEEYES)) || (source.wear_mask && (source.wear_mask.flags_inv & HIDEEYES)))
+			// Blocked by equipment, skip emissive
+		else
+			// Add the emissive overlay directly to the mob
+			var/datum/sprite_accessory/ipc_screen/screen_accessory = SSaccessories.ipc_screens_list[source.dna.features["ipc_screen"]]
+			if(screen_accessory?.emissive_state)
+				var/emissive_layer = BODY_ADJ_LAYER  // Use the main layer for IPC screen
+				var/mutable_appearance/ipc_screen_emissive = emissive_appearance(screen_accessory.icon, screen_accessory.emissive_state, emissive_layer, screen_accessory.emissive_alpha, filters = source.filters)
+				source.add_overlay(ipc_screen_emissive)
+				ADD_LUM_SOURCE(source, LUM_SOURCE_IPC_SCREEN)
 
 	update_body_markings(source)
 
