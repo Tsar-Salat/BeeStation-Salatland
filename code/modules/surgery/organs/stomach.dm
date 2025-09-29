@@ -65,7 +65,7 @@
 			H.Dizzy(5)
 		if(H.disgust >= DISGUST_LEVEL_DISGUSTED)
 			if(DT_PROB(13, delta_time))
-				H.blur_eyes(3) //We need to add more shit down here
+				H.set_eye_blur_if_lower(6 SECONDS) //We need to add more shit down here
 
 		H.adjust_disgust(-0.25 * disgust_metabolism * delta_time)
 	switch(H.disgust)

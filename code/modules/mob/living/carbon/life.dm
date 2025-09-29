@@ -392,7 +392,6 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 												"What if we use a language that was written on a napkin and created over 1 weekend for all of our servers?"))
 
 //this updates all special effects: stun, sleeping, knockdown, druggy, stuttering, etc..
-//this updates all special effects: stun, sleeping, knockdown, druggy, stuttering, etc..
 /mob/living/carbon/handle_status_effects(delta_time, times_fired)
 	..()
 
@@ -431,13 +430,6 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 						C.pixel_y -= pixel_y_diff
 			src = oldsrc
 		dizziness = max(dizziness - (restingpwr * delta_time), 0)
-
-	if(drowsyness)
-		drowsyness = max(drowsyness - (restingpwr * delta_time), 0)
-		blur_eyes(1 * delta_time)
-		if(DT_PROB(2.5, delta_time))
-			AdjustSleeping(100)
-			Unconscious(100)
 
 	//Jitteriness
 	if(jitteriness)
@@ -511,10 +503,10 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 
 		if(drunkenness >= 61)
 			if(DT_PROB(30, delta_time))
-				blur_eyes(5)
+				adjust_eye_blur(10 SECONDS)
 
 		if(drunkenness >= 71)
-			blur_eyes(2.5 * delta_time)
+			adjust_eye_blur(5 SECONDS * delta_time)
 
 		if(drunkenness >= 81)
 			adjustToxLoss(0.5 * delta_time)

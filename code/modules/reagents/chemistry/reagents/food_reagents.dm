@@ -314,7 +314,7 @@
 		//actually handle the pepperspray effects
 		if(!victim.is_eyes_covered() || !victim.is_mouth_covered())
 			victim.emote("cry")
-			victim.blur_eyes(5) // 10 seconds
+			victim.set_eye_blur_if_lower(10 SECONDS)
 			victim.adjust_blindness(3) // 6 seconds
 			victim.Knockdown(3 SECONDS)
 			if(prob(5))
@@ -620,36 +620,18 @@
 	chemical_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_GOAL_BOTANIST_HARVEST
 	taste_description = "bitterness"
 
-/datum/reagent/consumable/tearjuice/expose_mob(mob/living/exposed_mob, method = TOUCH, reac_volume)
+/datum/reagent/consumable/tearjuice/expose_mob(mob/living/exposed_mob, method = INGEST, reac_volume)
 	. = ..()
-	if(!istype(exposed_mob))
+	if(!ishuman(exposed_mob))
 		return
 
-	var/unprotected = FALSE
-	switch(method)
-		if(INGEST)
-			unprotected = TRUE
-		if(INJECT)
-			unprotected = FALSE
-		else	//Touch or vapor
-			if(!exposed_mob.is_mouth_covered() && !exposed_mob.is_eyes_covered())
-				unprotected = TRUE
-	if(unprotected)
-		if(!exposed_mob.get_organ_slot(ORGAN_SLOT_EYES))	//can't blind somebody with no eyes
-			to_chat(exposed_mob, span_notice("Your eye sockets feel wet."))
-		else
-			if(!exposed_mob.eye_blurry)
-				to_chat(exposed_mob, span_warning("Tears well up in your eyes!"))
-			exposed_mob.adjust_blindness(2)
-			exposed_mob.blur_eyes(5)
-
-/datum/reagent/consumable/tearjuice/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
-	. = ..()
-	if(affected_mob.eye_blurry)	//Don't worsen vision if it was otherwise fine
-		affected_mob.blur_eyes(4 * REM * delta_time)
-		if(DT_PROB(5, delta_time))
-			to_chat(affected_mob, span_warning("Your eyes sting!"))
-			affected_mob.adjust_blindness(2)
+	var/mob/living/carbon/victim = exposed_mob
+	if(method == TOUCH || method == VAPOR)
+		var/tear_proof = victim.is_eyes_covered()
+		if (!tear_proof)
+			to_chat(exposed_mob, span_warning("Your eyes sting!"))
+			victim.emote("cry")
+			victim.adjust_eye_blur(6 SECONDS)
 
 /datum/reagent/consumable/nutriment/stabilized
 	name = "Stabilized Nutriment"
@@ -717,7 +699,7 @@
 		affected_mob.adjustOrganLoss(ORGAN_SLOT_BRAIN, 2 * REM, 150)
 		affected_mob.adjustToxLoss(3 * REM, updating_health = FALSE)
 		affected_mob.adjustStaminaLoss(10 * REM, updating_health = FALSE)
-		affected_mob.blur_eyes(5)
+		affected_mob.set_eye_blur_if_lower(10 SECONDS)
 		return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/tinlux

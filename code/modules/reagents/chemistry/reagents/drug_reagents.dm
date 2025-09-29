@@ -56,11 +56,7 @@
 		to_chat(affected_mob, span_notice(pick("You feel relaxed.", "You feel calmed.", "You feel alert.", "You feel rugged.")))
 
 	SEND_SIGNAL(affected_mob, COMSIG_ADD_MOOD_EVENT, "smoked", /datum/mood_event/smoked, name)
-	affected_mob.AdjustStun(-50  * REM * delta_time)
-	affected_mob.AdjustKnockdown(-50 * REM * delta_time)
-	affected_mob.AdjustUnconscious(-50 * REM * delta_time)
-	affected_mob.AdjustParalyzed(-50 * REM * delta_time)
-	affected_mob.AdjustImmobilized(-50 * REM * delta_time)
+	affected_mob.AdjustAllImmobility(-50 * REM * delta_time)
 	return UPDATE_MOB_HEALTH
 
 /datum/reagent/drug/nicotine/overdose_process(mob/living/carbon/affected_mob, delta_time, times_fired)
@@ -209,13 +205,9 @@
 	if(DT_PROB(2.5, delta_time))
 		affected_mob.emote(pick("twitch", "shiver"))
 
-	affected_mob.AdjustStun(-40 * REM * delta_time)
-	affected_mob.AdjustKnockdown(-40 * REM * delta_time)
-	affected_mob.AdjustUnconscious(-40 * REM * delta_time)
-	affected_mob.AdjustParalyzed(-40 * REM * delta_time)
-	affected_mob.AdjustImmobilized(-40 * REM * delta_time)
+	affected_mob.AdjustAllImmobility(-40 * REM * delta_time)
 	affected_mob.adjustStaminaLoss(-40 * REM * delta_time, updating_health = FALSE)
-	affected_mob.drowsyness = max(affected_mob.drowsyness - (60 * REM * delta_time), 0)
+	affected_mob.adjust_drowsiness(-(120 SECONDS * REM * delta_time))
 	affected_mob.Jitter(2 * REM * delta_time)
 	affected_mob.adjustOrganLoss(ORGAN_SLOT_BRAIN, 1)
 
@@ -506,7 +498,7 @@
 		if(10)
 			to_chat(affected_mob, span_warning("You start to feel tired..."))
 		if(11 to 25)
-			affected_mob.drowsyness += 1 * REM * delta_time
+			affected_mob.adjust_drowsiness(2 SECONDS * REM * delta_time)
 		if(26 to INFINITY)
 			affected_mob.Sleeping(60 * REM * delta_time)
 

@@ -15,12 +15,10 @@
 
 	active_msg = "You prepare to blind a target..."
 
-	/// The amount of blind to apply
-	var/eye_blind_amount = 10
 	/// The amount of blurriness to apply
-	var/eye_blurry_amount = 20
-	/// The duration of the blind mutation placed on the person
-	var/blind_mutation_duration = 30 SECONDS
+	var/eye_blind_duration = 20 SECONDS
+	/// The amount of blurriness to apply
+	var/eye_blur_duration = 40 SECONDS
 
 /datum/action/spell/pointed/blind/is_valid_spell(mob/user, atom/target)
 	. = ..()
@@ -37,11 +35,11 @@
 /datum/action/spell/pointed/blind/on_cast(mob/user, mob/living/carbon/human/target)
 	. = ..()
 	if(target.can_block_magic(antimagic_flags))
-		to_chat(target, ("<span class='notice'>Your eye itches, but it passes momentarily.</span>"))
-		to_chat(owner, ("<span class='warning'>The spell had no effect!</span>"))
+		to_chat(target, span_notice("Your eye itches, but it passes momentarily."))
+		to_chat(owner, span_warning("The spell had no effect!"))
 		return FALSE
 
-	to_chat(target, ("<span class='warning'>Your eyes cry out in pain!</span>"))
-	target.set_blindness(eye_blind_amount)
-	target.blur_eyes(eye_blurry_amount)
+	to_chat(target, span_warning("Your eyes cry out in pain!"))
+	target.adjust_temp_blindness(eye_blind_duration)
+	target.set_eye_blur_if_lower(eye_blur_duration)
 	return TRUE

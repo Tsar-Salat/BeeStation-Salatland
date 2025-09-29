@@ -18,7 +18,8 @@
 						<b>Transmission 8:</b> Purges alcohol in the bloodstream."
 
 /datum/symptom/mind_restoration/Start(datum/disease/advance/A)
-	if(!..())
+	. = ..()
+	if(!.)
 		return
 	if(A.resistance >= 6) //heal brain damage
 		trauma_heal_mild = TRUE
@@ -28,14 +29,15 @@
 		purge_alcohol = TRUE
 
 /datum/symptom/mind_restoration/Activate(var/datum/disease/advance/A)
-	if(!..())
+	. = ..()
+	if(!.)
 		return
 	var/mob/living/M = A.affected_mob
 
 
 	if(A.stage >= 3)
 		M.dizziness = max(0, M.dizziness - 2)
-		M.drowsyness = max(0, M.drowsyness - 2)
+		M.adjust_drowsiness(-4 SECONDS)
 		M.slurring = max(0, M.slurring - 2)
 		M.confused = max(0, M.confused - 2)
 		if(purge_alcohol)
@@ -45,11 +47,12 @@
 				H.drunkenness = max(H.drunkenness - 5, 0)
 
 	if(A.stage >= 4)
-		M.drowsyness = max(0, M.drowsyness - 2)
+		M.adjust_drowsiness(-4 SECONDS)
 		if(M.reagents.has_reagent(/datum/reagent/toxin/mindbreaker))
 			M.reagents.remove_reagent(/datum/reagent/toxin/mindbreaker, 5)
 		if(M.reagents.has_reagent(/datum/reagent/toxin/histamine))
 			M.reagents.remove_reagent(/datum/reagent/toxin/histamine, 5)
+
 		M.adjust_hallucinations(-20 SECONDS)
 
 	if(A.stage >= 5)
@@ -78,36 +81,36 @@
 	symptom_delay_max = 1
 
 /datum/symptom/sensory_restoration/Activate(datum/disease/advance/A)
-	if(!..())
+	. = ..()
+	if(!.)
 		return
-	var/mob/living/M = A.affected_mob
-	var/obj/item/organ/eyes/eyes = M.get_organ_slot(ORGAN_SLOT_EYES)
-	if (!eyes)
-		return
+	var/mob/living/carbon/ill_mob = A.affected_mob
 	switch(A.stage)
 		if(4, 5)
-			M.restoreEars()
+			var/obj/item/organ/ears/ears = ill_mob.get_organ_slot(ORGAN_SLOT_EARS)
+			if(ears)
+				ears.adjustEarDamage(-4, -4)
 
-			if(HAS_TRAIT_FROM(M, TRAIT_BLIND, EYE_DAMAGE))
-				if(prob(20))
-					if(M.stat != DEAD)
-						to_chat(M, span_notice("Your vision slowly returns..."))
-					M.cure_blind(EYE_DAMAGE)
-					M.cure_nearsighted(EYE_DAMAGE)
-					M.blur_eyes(35)
-			else if(HAS_TRAIT_FROM(M, TRAIT_NEARSIGHT, EYE_DAMAGE))
-				if(M.stat != DEAD)
-					to_chat(M, span_notice("You can finally focus your eyes on distant objects."))
-				M.cure_nearsighted(EYE_DAMAGE)
-				M.blur_eyes(10)
-			else if(M.is_blind() || M.eye_blurry)
-				M.set_blindness(0)
-				M.set_blurriness(0)
-			else if(eyes.damage > 0)
-				eyes.apply_organ_damage(-1)
+			ill_mob.adjust_temp_blindness(-4 SECONDS)
+			ill_mob.adjust_eye_blur(-4 SECONDS)
+
+			var/obj/item/organ/internal/eyes/eyes = ill_mob.get_organ_slot(ORGAN_SLOT_EYES)
+			if(!eyes) // only dealing with eye stuff from here on out
+				return
+
+			eyes.apply_organ_damage(-2)
+			if(prob(20))
+				if(ill_mob.is_blind_from(EYE_DAMAGE))
+					to_chat(ill_mob, span_warning("Your vision slowly returns..."))
+					ill_mob.adjust_eye_blur(20 SECONDS)
+
+				else if(ill_mob.is_nearsighted_from(EYE_DAMAGE))
+					to_chat(ill_mob, span_warning("The blackness in your peripheral vision begins to fade."))
+					ill_mob.adjust_eye_blur(5 SECONDS)
+
 		else
-			if(prob(base_message_chance) && M.stat != DEAD)
-				to_chat(M, span_notice("[pick("Your eyes feel great.","You feel like your eyes can focus more clearly.", "You don't feel the need to blink.","Your ears feel great.","Your healing feels more acute.")]"))
+			if(prob(base_message_chance))
+				to_chat(ill_mob, span_notice("[pick("Your eyes feel great.","You feel like your eyes can focus more clearly.", "You don't feel the need to blink.","Your ears feel great.","Your hearing feels more acute.")]"))
 
 
 /datum/symptom/organ_restoration //heals damage to other internal organs that get damaged far less often

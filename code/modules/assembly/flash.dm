@@ -430,7 +430,7 @@
 				to_chat(M, span_notice("The light makes you feel oddly relaxed..."))
 				M.confused += min(M.confused + 10, 20)
 				M.dizziness += min(M.dizziness + 10, 20)
-				M.drowsyness += min(M.drowsyness + 10, 20)
+				M.adjust_drowsiness_up_to(20 SECONDS, 40 SECONDS)
 				M.apply_status_effect(/datum/status_effect/pacify, 100)
 
 
@@ -444,7 +444,7 @@
 		to_chat(M, span_notice("Such a pretty light..."))
 		M.confused += min(M.confused + 4, 20)
 		M.dizziness += min(M.dizziness + 4, 20)
-		M.drowsyness += min(M.drowsyness + 4, 20)
+		M.adjust_drowsiness_up_to(8 SECONDS, 40 SECONDS)
 		M.apply_status_effect(/datum/status_effect/pacify, 40)
 
 #undef FLASH_USE

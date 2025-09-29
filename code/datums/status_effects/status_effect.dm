@@ -145,6 +145,18 @@
 	if(!heal_flag_necessary || (heal_flags & heal_flag_necessary))
 		qdel(src)
 
+/// Remove [seconds] of duration from the status effect, qdeling / ending if we eclipse the current world time.
+/datum/status_effect/proc/remove_duration(seconds)
+	if(duration == -1) // Infinite duration
+		return FALSE
+
+	duration -= seconds
+	if(duration <= world.time)
+		qdel(src)
+		return TRUE
+
+	return FALSE
+
 /datum/status_effect/proc/update_icon()
 	if (!linked_alert || !show_duration || duration <= 0)
 		return
