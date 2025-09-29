@@ -12,8 +12,11 @@
 /// call a merge proc to combine 2 status effects
 #define STATUS_EFFECT_MERGE 4
 
-/// Use in status effect "duration" to make it last forever
-#define STATUS_EFFECT_PERMANENT -1
+//Processing flags - used to define the speed at which the status will work
+///This is fast - 0.2s between ticks (I believe!)
+#define STATUS_EFFECT_FAST_PROCESS 0
+///This is slower and better for more intensive status effects - 1s between ticks
+#define STATUS_EFFECT_NORMAL_PROCESS 1
 
 //Necropolis
 ///makes the edges of the target's screen obscured
@@ -50,6 +53,34 @@
 #define adjust_staggered_up_to(user, duration, up_to) user.amount_staggered() > up_to ? user.set_staggered(up_to) : user.adjust_staggered(duration)
 #define set_staggered_if_lower(user, duration) user.amount_staggered() < duration ? FALSE : user.set_staggered(duration)
 
+/// Causes the mob to become blind via the passed source
+#define become_blind(source) apply_status_effect(/datum/status_effect/grouped/blindness, source)
+/// Cures the mob's blindness from the passed source, removing blindness wholesale if no sources are left
+#define cure_blind(source) remove_status_effect(/datum/status_effect/grouped/blindness, source)
+
+/// Is the mob blind?
+#define is_blind(...) has_status_effect(/datum/status_effect/grouped/blindness)
+/// Is the mob blind from the passed source or sources?
+#define is_blind_from(sources) has_status_effect_from_source(/datum/status_effect/grouped/blindness, sources)
+
+/// Causes the mob to become nearsighted via the passed source
+#define become_nearsighted(source) apply_status_effect(/datum/status_effect/grouped/nearsighted, source)
+/// Cures the mob's nearsightedness from the passed source, removing nearsighted wholesale if no sources are left
+#define cure_nearsighted(source) remove_status_effect(/datum/status_effect/grouped/nearsighted, source)
+
+/// Is the mob nearsighted?
+#define is_nearsighted(...) has_status_effect(/datum/status_effect/grouped/nearsighted)
+/// Is the mob nearsigthed from the passed source or sources?
+#define is_nearsighted_from(sources) has_status_effect_from_source(/datum/status_effect/grouped/nearsighted, sources)
+/// Is the mob nearsighted CURRENTLY?
+/// This check fails if the mob is nearsighted but is wearing glasses,
+/// While is_nearsighted will always succeed even if they are wearing glasses.
+/mob/proc/is_nearsighted_currently()
+	var/datum/status_effect/grouped/nearsighted/nearsight = has_status_effect(/datum/status_effect/grouped/nearsighted)
+	if(isnull(nearsight))
+		return FALSE
+	return nearsight.should_be_nearsighted()
+
 // Status effect application helpers.
 // These are macros for easier use of adjust_timed_status_effect and set_timed_status_effect.
 //
@@ -85,7 +116,15 @@
 #define set_drowsiness(duration) set_timed_status_effect(duration, /datum/status_effect/drowsiness)
 #define set_drowsiness_if_lower(duration) set_timed_status_effect(duration, /datum/status_effect/drowsiness, TRUE)
 
+#define adjust_pacifism(duration) adjust_timed_status_effect(/datum/status_effect/pacify, duration)
+#define set_pacifism(duration) set_timed_status_effect(/datum/status_effect/pacify, duration)
+
 #define adjust_eye_blur(duration) adjust_timed_status_effect(duration, /datum/status_effect/eye_blur)
 #define adjust_eye_blur_up_to(duration, up_to) adjust_timed_status_effect(duration, /datum/status_effect/eye_blur, up_to)
 #define set_eye_blur(duration) set_timed_status_effect(duration, /datum/status_effect/eye_blur)
 #define set_eye_blur_if_lower(duration) set_timed_status_effect(duration, /datum/status_effect/eye_blur, TRUE)
+
+#define adjust_temp_blindness(duration) adjust_timed_status_effect(duration, /datum/status_effect/temporary_blindness)
+#define adjust_temp_blindness_up_to(duration, up_to) adjust_timed_status_effect(duration, /datum/status_effect/temporary_blindness, up_to)
+#define set_temp_blindness(duration) set_timed_status_effect(duration, /datum/status_effect/temporary_blindness)
+#define set_temp_blindness_if_lower(duration) set_timed_status_effect(duration, /datum/status_effect/temporary_blindness, TRUE)

@@ -80,12 +80,12 @@
 	symptom_delay_min = 1
 	symptom_delay_max = 1
 
-/datum/symptom/sensory_restoration/Activate(datum/disease/advance/A)
+/datum/symptom/sensory_restoration/Activate(datum/disease/advance/source_disease)
 	. = ..()
 	if(!.)
 		return
-	var/mob/living/carbon/ill_mob = A.affected_mob
-	switch(A.stage)
+	var/mob/living/carbon/ill_mob = source_disease.affected_mob
+	switch(source_disease.stage)
 		if(4, 5)
 			var/obj/item/organ/ears/ears = ill_mob.get_organ_slot(ORGAN_SLOT_EARS)
 			if(ears)
@@ -94,7 +94,7 @@
 			ill_mob.adjust_temp_blindness(-4 SECONDS)
 			ill_mob.adjust_eye_blur(-4 SECONDS)
 
-			var/obj/item/organ/internal/eyes/eyes = ill_mob.get_organ_slot(ORGAN_SLOT_EYES)
+			var/obj/item/organ/eyes/eyes = ill_mob.get_organ_slot(ORGAN_SLOT_EYES)
 			if(!eyes) // only dealing with eye stuff from here on out
 				return
 

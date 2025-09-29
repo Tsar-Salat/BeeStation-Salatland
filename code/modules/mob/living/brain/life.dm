@@ -34,6 +34,3 @@
 
 /mob/living/brain/handle_status_effects(delta_time, times_fired)
 	return
-
-/mob/living/brain/handle_traits(delta_time, times_fired)
-	return

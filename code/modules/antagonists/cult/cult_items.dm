@@ -391,7 +391,7 @@ Striking a noncultist, however, will tear their flesh."}
 	icon_state = "blindfold"
 	item_state = "blindfold"
 	flash_protect = FLASH_PROTECTION_FLASH
-	vision_correction = 1
+	clothing_traits = list(TRAIT_NEARSIGHTED_CORRECTED)
 
 /obj/item/clothing/glasses/hud/health/night/cultblind/equipped(mob/living/user, slot)
 	..()
@@ -400,7 +400,7 @@ Striking a noncultist, however, will tear their flesh."}
 		user.dropItemToGround(src, TRUE)
 		user.Dizzy(30)
 		user.Paralyze(100)
-		user.adjust_blindness(30)
+		user.adjust_temp_blindness(60 SECONDS)
 
 /obj/item/shuttle_curse
 	name = "cursed orb"

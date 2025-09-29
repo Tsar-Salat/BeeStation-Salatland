@@ -210,12 +210,6 @@
 	desc = "The air around you is hazardously thick. A fire suit would protect you."
 	icon_state = "highpressure"
 
-/atom/movable/screen/alert/blind
-	name = "Blind"
-	desc = "You can't see! This may be caused by a genetic defect, eye trauma, being unconscious, \
-or something covering your eyes."
-	icon_state = "blind"
-
 /atom/movable/screen/alert/high
 	name = "High"
 	desc = "Whoa man, you're tripping balls! Careful you don't get addicted... if you aren't already."

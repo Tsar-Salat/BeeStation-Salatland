@@ -29,14 +29,14 @@
 /datum/action/spell/pointed/abyssal_gaze/on_cast(mob/user, mob/living/carbon/target)
 	. = ..()
 	if(target.can_block_magic(antimagic_flags))
-		to_chat(owner, ("<span class='warning'>The spell had no effect!</span>"))
-		to_chat(target, ("<span class='warning'>You feel a freezing darkness closing in on you, but it rapidly dissipates.</span>"))
+		to_chat(owner, span_warning("The spell had no effect!"))
+		to_chat(target, span_warning("You feel a freezing darkness closing in on you, but it rapidly dissipates."))
 		return FALSE
 
-	to_chat(target, ("<span class='userdanger'>A freezing darkness surrounds you...</span>"))
+	to_chat(target, span_userdanger("A freezing darkness surrounds you..."))
 	target.playsound_local(get_turf(target), 'sound/hallucinations/i_see_you1.ogg', 50, 1)
 	owner.playsound_local(get_turf(owner), 'sound/effects/ghost2.ogg', 50, 1)
-	target.set_blindness(blind_duration)
+	target.adjust_temp_blindness(blind_duration)
 	if(ishuman(target))
 		var/mob/living/carbon/human/human_cast_on = target
 		human_cast_on.adjust_coretemperature(-amount_to_cool)

@@ -311,40 +311,6 @@
 		if(!C.has_status_effect(/datum/status_effect/syringe))
 			C.clear_alert("syringealert")
 
-
-
-/datum/status_effect/pacify/on_creation(mob/living/new_owner, set_duration)
-	if(isnum_safe(set_duration))
-		duration = set_duration
-	. = ..()
-
-/datum/status_effect/pacify/on_apply()
-	ADD_TRAIT(owner, TRAIT_PACIFISM, "status_effect")
-	return ..()
-
-/datum/status_effect/pacify/on_remove()
-	REMOVE_TRAIT(owner, TRAIT_PACIFISM, "status_effect")
-
-//OTHER DEBUFFS
-/datum/status_effect/pacify
-	id = "pacify"
-	status_type = STATUS_EFFECT_REPLACE
-	tick_interval = 1
-	duration = 100
-	alert_type = null
-
-/datum/status_effect/pacify/on_creation(mob/living/new_owner, set_duration)
-	if(isnum_safe(set_duration))
-		duration = set_duration
-	. = ..()
-
-/datum/status_effect/pacify/on_apply()
-	ADD_TRAIT(owner, TRAIT_PACIFISM, "status_effect")
-	return ..()
-
-/datum/status_effect/pacify/on_remove()
-	REMOVE_TRAIT(owner, TRAIT_PACIFISM, "status_effect")
-
 /datum/status_effect/his_wrath //does minor damage over time unless holding His Grace
 	id = "his_wrath"
 	duration = -1
@@ -550,7 +516,6 @@
 	status_type = STATUS_EFFECT_UNIQUE
 	duration = 300
 	tick_interval = 10
-	examine_text = span_warning("SUBJECTPRONOUN seems slow and unfocused.")
 	alert_type = /atom/movable/screen/alert/status_effect/trance
 	var/stun = TRUE
 	var/hypnosis_type = /datum/brain_trauma/hypnosis
@@ -588,6 +553,9 @@
 	if(!owner.has_quirk(/datum/quirk/monochromatic))
 		owner.remove_client_colour(/datum/client_colour/monochrome)
 	to_chat(owner, span_warning("You snap out of your trance!"))
+
+/datum/status_effect/trance/get_examine_text()
+	return span_warning("[owner.p_they(TRUE)] seem[owner.p_s()] slow and unfocused.")
 
 /datum/status_effect/trance/proc/hypnotize(datum/source, list/hearing_args, list/spans, list/message_mods = list())
 	SIGNAL_HANDLER
@@ -966,14 +934,13 @@
 	id = "ghoul"
 	status_type = STATUS_EFFECT_UNIQUE
 	duration = -1
-	examine_text = span_warning("SUBJECTPRONOUN has a blank, catatonic like stare.")
 	alert_type = /atom/movable/screen/alert/status_effect/ghoul
 
 /datum/status_effect/ghoul/get_examine_text()
 	var/mob/living/carbon/human/H = owner
 	var/obscured = H.check_obscured_slots()
 	if(!(obscured & ITEM_SLOT_EYES) && !H.glasses) //The examine text is only displayed if the ghoul's eyes are not obscured
-		return examine_text
+		return span_warning("[owner.p_they(TRUE)] has a blank, catatonic like stare.")
 
 /atom/movable/screen/alert/status_effect/ghoul
 	name = "Flesh Servant"
@@ -999,10 +966,12 @@
 
 /datum/status_effect/ipc/emp
 	id = "ipc_emp"
-	examine_text = span_warning("SUBJECTPRONOUN is buzzing and twitching!")
 	duration = 10 SECONDS
 	alert_type = /atom/movable/screen/alert/status_effect/emp
 	status_type = STATUS_EFFECT_REFRESH
+
+/datum/status_effect/strandling/get_examine_text()
+	return span_warning("[owner.p_they(TRUE)] is buzzing and twitching!")
 
 /atom/movable/screen/alert/status_effect/emp
 	name = "Electro-Magnetic Pulse"
@@ -1011,10 +980,12 @@
 
 /datum/status_effect/cyborg_malfunction
 	id = "cyborg_malfunction"
-	examine_text = span_warning("SUBJECTPRONOUN is flashing red error lights!")
 	duration = MALFUNCTION_DURATION
 	alert_type = /atom/movable/screen/alert/status_effect/generic_malfunction
 	status_type = STATUS_EFFECT_REFRESH
+
+/datum/status_effect/cyborg_malfunction/get_examine_text()
+	return span_warning("[owner.p_they(TRUE)] [owner.p_are()] flashing red error lights!")
 
 /atom/movable/screen/alert/status_effect/generic_malfunction
 	name = "Malfunctioning Electronics"
@@ -1143,14 +1114,12 @@
 	mob_overlay = mutable_appearance('icons/effects/heretic.dmi', "cloud_swirl", ABOVE_MOB_LAYER)
 	owner.overlays += mob_overlay
 	owner.update_icon()
-	ADD_TRAIT(owner, TRAIT_BLIND, "cloudstruck")
+	owner.become_blind(id)
 	return TRUE
 
 /datum/status_effect/cloudstruck/on_remove()
 	. = ..()
-	if(QDELETED(owner))
-		return
-	REMOVE_TRAIT(owner, TRAIT_BLIND, "cloudstruck")
+	owner.cure_blind(id)
 	if(owner)
 		owner.overlays -= mob_overlay
 		owner.update_icon()
@@ -1165,7 +1134,6 @@
 	status_type = STATUS_EFFECT_REFRESH
 	alert_type = /atom/movable/screen/alert/status_effect/ants
 	duration = 2 MINUTES //Keeping the normal timer makes sure people can't somehow dump 300+ ants on someone at once so they stay there for like 30 minutes. Max w/ 1 dump is 57.6 brute.
-	examine_text = "<span class='warning'>SUBJECTPRONOUN is covered in ants!</span>"
 	/// Will act as the main timer as well as changing how much damage the ants do.
 	var/ants_remaining = 0
 	/// Common phrases people covered in ants scream
@@ -1207,6 +1175,9 @@
 	SIGNAL_HANDLER
 	owner.remove_status_effect(/datum/status_effect/ants)
 	//return COMPONENT_CLEANED
+
+/datum/status_effect/ants/get_examine_text()
+	return span_warning("[owner.p_they(TRUE)] [owner.p_are()] covered in ants!")
 
 /datum/status_effect/ants/tick()
 	var/mob/living/carbon/human/victim = owner
