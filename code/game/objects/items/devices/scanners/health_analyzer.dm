@@ -350,11 +350,11 @@
 			else if (carbontarget.is_bandaged())
 				render_list += "<span class='alert ml-1'><b>Subject is bleeding (Bandaged)!</b></span>\n"
 			var/blood_percent = round((carbontarget.blood_volume / BLOOD_VOLUME_NORMAL) * 100)
-			var/blood_type = carbontarget.dna.blood_type
+			var/blood_type = carbontarget.dna.blood_type.name
 			if(blood_id != /datum/reagent/blood) // special blood substance
 				var/datum/reagent/R = GLOB.chemical_reagents_list[blood_id]
 				blood_type = R ? R.name : blood_id
-			var/blood_info = "[blood_type] (Compatible: [jointext(get_safe_blood(blood_type), ", ")])"
+			var/blood_info = "[blood_type] (Compatible: [jointext(get_blood_type(blood_type), ", ")])"
 			if(HAS_TRAIT(carbontarget, TRAIT_MASQUERADE))
 				render_list += "<span class='alert ml-1'>Blood level: 100 %, 560 cl,</span> [span_info("type: [blood_info]")]\n"
 			else if(carbontarget.blood_volume <= BLOOD_VOLUME_SAFE && carbontarget.blood_volume > BLOOD_VOLUME_OKAY)
@@ -442,7 +442,7 @@
 /**
  * Scans an atom, showing any (detectable) diseases they may have.
  */
-/proc/virusscan(mob/user, atom/target, var/maximum_stealth, var/maximum, var/list/extracted_ids)
+/proc/virusscan(mob/user, atom/target, maximum_stealth, maximum, list/extracted_ids)
 	. = TRUE
 	var/list/result = target?.extrapolator_act(user, target)
 	var/list/diseases = result[EXTRAPOLATOR_RESULT_DISEASES]

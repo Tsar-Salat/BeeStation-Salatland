@@ -61,14 +61,13 @@
 	bodypart_overrides = list(
 		BODY_ZONE_HEAD = /obj/item/bodypart/head/ipc,
 		BODY_ZONE_CHEST = /obj/item/bodypart/chest/ipc,
-		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/ipc,
-		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/ipc,
-		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/ipc,
-		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/ipc
+		BODY_ZONE_L_ARM = /obj/item/bodypart/arm/left/ipc,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/arm/right/ipc,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/leg/left/ipc,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/ipc
 	)
 
-	exotic_blood = /datum/reagent/oil
-	blood_color = "#000000"
+	exotic_bloodtype = "Coolant"
 	bleed_effect = /datum/status_effect/bleeding/robotic
 
 	var/saved_screen //for saving the screen when they die
