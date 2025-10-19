@@ -105,6 +105,11 @@
 /// From /mob/living/proc/stop_leaning()
 #define COMSIG_LIVING_STOPPED_LEANING "living_stopped_leaning"
 
+/// From mob/living/treat_message(): (list/message_args)
+#define COMSIG_LIVING_TREAT_MESSAGE "living_treat_message"
+	/// The index of message_args that corresponds to the actual message
+	#define TREAT_MESSAGE_ARG 1
+
 ///From mob/living/proc/wabbajack(): (randomize_type)
 #define COMSIG_LIVING_PRE_WABBAJACKED "living_mob_wabbajacked"
 	/// Return to stop the rest of the wabbajack from triggering.

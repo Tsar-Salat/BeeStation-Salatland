@@ -170,7 +170,7 @@
 		user.visible_message(span_danger("[user] accidentally hits [user.p_them()]self with [src], electrocuting themselves badly!"), \
 							span_userdanger("You accidentally hit yourself with [src], electrocuting yourself badly!"))
 		user.adjustStaminaLoss(stun_time*3)
-		user.stuttering = stutter_amt
+		user.set_stutter_if_lower(stutter_amt)
 		user.do_jitter_animation(20)
 		deductcharge(cell_hit_cost)
 		return TRUE
@@ -221,9 +221,8 @@
 		target.electrocute_act(1, src, flags = SHOCK_NOGLOVES|SHOCK_NOSTUN)
 		target.apply_damage(stun_time/4, BURN, affecting, armor_block) //20 damage
 	target.apply_damage(stun_time, STAMINA, affecting, armor_block)
-	target.apply_effect(EFFECT_STUTTER, stun_time)
+	target.adjust_stutter(stun_time)
 	SEND_SIGNAL(target, COMSIG_LIVING_MINOR_SHOCK)
-	target.stuttering = 20
 
 	// Shoving
 	var/list/modifiers = params2list(params)
