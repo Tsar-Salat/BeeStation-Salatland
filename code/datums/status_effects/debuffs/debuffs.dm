@@ -114,21 +114,6 @@
 	id = "sleeping"
 	alert_type = /atom/movable/screen/alert/status_effect/asleep
 	needs_update_stat = TRUE
-	var/mob/living/carbon/carbon_owner
-	var/mob/living/carbon/human/human_owner
-
-/datum/status_effect/incapacitating/sleeping/on_creation(mob/living/new_owner)
-	. = ..()
-	if(.)
-		if(iscarbon(owner)) //to avoid repeated istypes
-			carbon_owner = owner
-		if(ishuman(owner))
-			human_owner = owner
-
-/datum/status_effect/incapacitating/sleeping/Destroy()
-	carbon_owner = null
-	human_owner = null
-	return ..()
 
 /datum/status_effect/incapacitating/sleeping/on_apply()
 	. = ..()
@@ -143,6 +128,8 @@
 /datum/status_effect/incapacitating/sleeping/tick()
 	if(owner.maxHealth)
 		var/health_ratio = owner.health / owner.maxHealth
+
+
 		if(health_ratio > 0.8)
 			var/healing = -0.2
 			if((locate(/obj/structure/bed) in owner.loc))
@@ -154,13 +141,16 @@
 			owner.adjustFireLoss(healing)
 			owner.adjustToxLoss(healing * 0.5, TRUE, TRUE)
 			owner.adjustStaminaLoss(healing)
-	if(human_owner?.drunkenness)
-		human_owner.drunkenness *= 0.997 //reduce drunkenness by 0.3% per tick, 6% per 2 seconds
-	if(prob(20))
-		if(carbon_owner)
-			carbon_owner.handle_dreams()
-		if(prob(10) && owner.health > owner.crit_threshold)
-			owner.emote("snore")
+
+	// Drunkenness gets reduced by 0.3% per tick (6% per 2 seconds)
+	owner.set_drunk_effect(owner.get_drunk_amount() * 0.997)
+
+	if(iscarbon(owner))
+		var/mob/living/carbon/carbon_owner = owner
+		carbon_owner.handle_dreams()
+
+	if(prob(8) && owner.health > owner.crit_threshold)
+		owner.emote("snore")
 
 /atom/movable/screen/alert/status_effect/asleep
 	name = "Asleep"
@@ -562,7 +552,7 @@
 /datum/status_effect/trance/tick()
 	if(stun)
 		owner.Stun(60, TRUE)
-	owner.dizziness = 20
+	owner.set_dizzy(40 SECONDS)
 
 /datum/status_effect/trance/on_apply()
 	if(!iscarbon(owner))
@@ -583,7 +573,7 @@
 /datum/status_effect/trance/on_remove()
 	UnregisterSignal(owner, COMSIG_MOVABLE_HEAR)
 	REMOVE_TRAIT(owner, TRAIT_MUTE, "trance")
-	owner.dizziness = 0
+	owner.remove_status_effect(/datum/status_effect/dizziness)
 	if(!owner.has_quirk(/datum/quirk/monochromatic))
 		owner.remove_client_colour(/datum/client_colour/monochrome)
 	to_chat(owner, span_warning("You snap out of your trance!"))
@@ -941,7 +931,7 @@
 			human_owner.vomit()
 		if(20 to 30)
 			message = span_warning("You feel feel very well.")
-			human_owner.Dizzy(50)
+			human_owner.set_dizzy_if_lower(100 SECONDS)
 			human_owner.set_jitter_if_lower(100 SECONDS)
 		if(30 to 40)
 			message = span_warning("You feel a sharp sting in your side.")

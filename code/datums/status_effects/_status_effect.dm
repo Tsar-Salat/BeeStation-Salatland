@@ -14,7 +14,7 @@
 	/// -1 = will stop processing, if duration is also unlimited (-1).
 	var/tick_interval = 1 SECONDS
 	/// The mob affected by the status effect.
-	var/mob/living/owner
+	VAR_FINAL/mob/living/owner
 	/// How many of the effect can be on one mob, and/or what happens when you try to add a duplicate.
 	var/status_type = STATUS_EFFECT_UNIQUE
 	/// If TRUE, we call [proc/on_remove] when owner is deleted. Otherwise, we call [proc/be_replaced].

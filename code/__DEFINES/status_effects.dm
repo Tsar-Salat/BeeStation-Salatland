@@ -12,6 +12,9 @@
 /// call a merge proc to combine 2 status effects
 #define STATUS_EFFECT_MERGE 4
 
+/// Use in status effect "duration" to make it last forever
+#define STATUS_EFFECT_PERMANENT -1
+
 //Processing flags - used to define the speed at which the status will work
 ///This is fast - 0.2s between ticks (I believe!)
 #define STATUS_EFFECT_FAST_PROCESS 0
@@ -92,6 +95,11 @@
 #define adjust_slurring_up_to(duration, up_to) adjust_timed_status_effect(duration, /datum/status_effect/speech/slurring/generic, up_to)
 #define set_slurring(duration) set_timed_status_effect(duration, /datum/status_effect/speech/slurring/generic)
 #define set_slurring_if_lower(duration) set_timed_status_effect(duration, /datum/status_effect/speech/slurring/generic, TRUE)
+
+#define adjust_dizzy(duration) adjust_timed_status_effect(duration, /datum/status_effect/dizziness)
+#define adjust_dizzy_up_to(duration, up_to) adjust_timed_status_effect(duration, /datum/status_effect/dizziness, up_to)
+#define set_dizzy(duration) set_timed_status_effect(duration, /datum/status_effect/dizziness)
+#define set_dizzy_if_lower(duration) set_timed_status_effect(duration, /datum/status_effect/dizziness, TRUE)
 
 #define adjust_jitter(duration) adjust_timed_status_effect(duration, /datum/status_effect/jitter)
 #define adjust_jitter_up_to(duration, up_to) adjust_timed_status_effect(duration, /datum/status_effect/jitter, up_to)
