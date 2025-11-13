@@ -470,8 +470,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		var/obj/item/thing = C.get_item_by_slot(slot_id)
 		if(thing && (!thing.species_exception || !is_type_in_list(src,thing.species_exception)))
 			C.dropItemToGround(thing)
-	if(C.hud_used)
-		C.hud_used.update_locked_slots()
 
 	C.mob_biotypes = inherent_biotypes
 
@@ -479,6 +477,8 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		replace_body(C, src)
 
 	regenerate_organs(C, old_species, visual_only = C.visual_only_organs)
+	// Update locked slots AFTER all organ and body stuff is handled
+	C.hud_used?.update_locked_slots()
 
 	if(exotic_bloodtype && C.dna.blood_type != exotic_bloodtype)
 		C.dna.blood_type = get_blood_type(exotic_bloodtype)
