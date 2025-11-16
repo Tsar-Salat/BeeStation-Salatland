@@ -602,6 +602,26 @@
 		apply_status_effect(effect, duration)
 
 /**
+ * Gets how many deciseconds are remaining in
+ * the duration of the passed status effect on this mob.
+ *
+ * If the mob is unaffected by the passed effect, returns 0.
+ */
+/mob/living/proc/get_timed_status_effect_duration(effect)
+	if(!ispath(effect, /datum/status_effect))
+		CRASH("get_timed_status_effect_duration: called with an invalid effect type. (Got: [effect])")
+
+	var/datum/status_effect/existing = has_status_effect(effect)
+	if(!existing)
+		return 0
+	// Infinite duration status effects technically are not "timed status effects"
+	// by name or nature, but support is included just in case.
+	if(existing.duration == STATUS_EFFECT_PERMANENT)
+		return INFINITY
+
+	return existing.duration - world.time
+
+/**
  * Sets a timed status effect of some kind on a mob to a specific value.
  * If only_if_higher is TRUE, it will only set the value up to the passed duration,
  * so any pre-existing status effects of the same type won't be reduced down
@@ -638,25 +658,6 @@
 	else if(duration > 0)
 		apply_status_effect(effect, duration)
 
-/**
- * Gets how many deciseconds are remaining in
- * the duration of the passed status effect on this mob.
- *
- * If the mob is unaffected by the passed effect, returns 0.
- */
-/mob/living/proc/get_timed_status_effect_duration(effect)
-	if(!ispath(effect, /datum/status_effect))
-		CRASH("get_timed_status_effect_duration: called with an invalid effect type. (Got: [effect])")
-
-	var/datum/status_effect/existing = has_status_effect(effect)
-	if(!existing)
-		return 0
-	// Infinite duration status effects technically are not "timed status effects"
-	// by name or nature, but support is included just in case.
-	if(existing.duration == STATUS_EFFECT_PERMANENT)
-		return INFINITY
-
-	return existing.duration - world.time
 
 /**
  * Adjust the "drunk value" the mob is currently experiencing,
@@ -703,3 +704,7 @@
 /mob/living/proc/get_drunk_amount()
 	var/datum/status_effect/inebriated/inebriation = has_status_effect(/datum/status_effect/inebriated)
 	return inebriation?.drunk_value || 0
+
+/// Helper to check if we seem to be alive or not
+/mob/living/proc/appears_alive()
+	return stat != DEAD && !HAS_TRAIT(src, TRAIT_FAKEDEATH)

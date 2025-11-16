@@ -110,6 +110,11 @@
 	/// The index of message_args that corresponds to the actual message
 	#define TREAT_MESSAGE_ARG 1
 
+/// From /mob/living/get_examine_name(mob/user) : (mob/examined, visible_name, list/name_override)
+/// Allows mobs to override how they perceive others when examining
+#define COMSIG_LIVING_PERCEIVE_EXAMINE_NAME "living_perceive_examine_name"
+	#define COMPONENT_EXAMINE_NAME_OVERRIDEN (1<<0)
+
 ///From mob/living/proc/wabbajack(): (randomize_type)
 #define COMSIG_LIVING_PRE_WABBAJACKED "living_mob_wabbajacked"
 	/// Return to stop the rest of the wabbajack from triggering.
