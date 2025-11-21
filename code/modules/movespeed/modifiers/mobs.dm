@@ -148,3 +148,6 @@
 
 /datum/movespeed_modifier/cyborg_sentry
 	multiplicative_slowdown = 0.75 //holy cow cyborgs are fast
+
+/datum/movespeed_modifier/wings_open
+	multiplicative_slowdown = -0.35

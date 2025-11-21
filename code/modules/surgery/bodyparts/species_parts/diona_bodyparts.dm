@@ -8,6 +8,9 @@
 	dismemberable = 0
 	uses_mutcolor = TRUE
 	is_pseudopart = TRUE
+	burn_modifier = 1.25
+	brute_modifier = 0.8
+	stamina_modifier = 0.7
 
 /obj/item/bodypart/chest/diona
 	icon_static = 'icons/mob/species/diona/bodyparts.dmi'
@@ -17,6 +20,9 @@
 	is_dimorphic = FALSE
 	uses_mutcolor = TRUE
 	is_pseudopart = TRUE
+	burn_modifier = 1.25
+	brute_modifier = 0.8
+	stamina_modifier = 0.7
 
 /obj/item/bodypart/arm/left/diona
 	icon_static = 'icons/mob/species/diona/bodyparts.dmi'
@@ -25,6 +31,13 @@
 	limb_id = SPECIES_DIONA
 	uses_mutcolor = TRUE
 	is_pseudopart = TRUE
+	unarmed_attack_verb = "slash"
+	unarmed_attack_effect = ATTACK_EFFECT_CLAW
+	unarmed_attack_sound = 'sound/emotes/diona/hit.ogg'
+	unarmed_miss_sound = 'sound/weapons/slashmiss.ogg'
+	burn_modifier = 1.25
+	brute_modifier = 0.8
+	stamina_modifier = 0.7
 
 /obj/item/bodypart/arm/right/diona
 	icon_static = 'icons/mob/species/diona/bodyparts.dmi'
@@ -33,6 +46,13 @@
 	limb_id = SPECIES_DIONA
 	uses_mutcolor = TRUE
 	is_pseudopart = TRUE
+	unarmed_attack_verb = "slash"
+	unarmed_attack_effect = ATTACK_EFFECT_CLAW
+	unarmed_attack_sound = 'sound/emotes/diona/hit.ogg'
+	unarmed_miss_sound = 'sound/weapons/slashmiss.ogg'
+	burn_modifier = 1.25
+	brute_modifier = 0.8
+	stamina_modifier = 0.7
 
 /obj/item/bodypart/leg/left/diona
 	icon_static = 'icons/mob/species/diona/bodyparts.dmi'
@@ -41,6 +61,10 @@
 	limb_id = SPECIES_DIONA
 	uses_mutcolor = TRUE
 	is_pseudopart = TRUE
+	movespeed_contribution = 0.6 // Dionae are slow.
+	burn_modifier = 1.25
+	brute_modifier = 0.8
+	stamina_modifier = 0.7
 
 /obj/item/bodypart/leg/right/diona
 	icon_static = 'icons/mob/species/diona/bodyparts.dmi'
@@ -49,3 +73,7 @@
 	limb_id = SPECIES_DIONA
 	uses_mutcolor = TRUE
 	is_pseudopart = TRUE
+	movespeed_contribution = 0.6 // Dionae are slow.
+	burn_modifier = 1.25
+	brute_modifier = 0.8
+	stamina_modifier = 0.7

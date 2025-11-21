@@ -8,16 +8,12 @@
 	inherent_biotypes = MOB_ORGANIC | MOB_HUMANOID | MOB_BUG
 	mutant_bodyparts = list("apid_stripes" = "thick","apid_headstripes" = "thick", "apid_antenna" = "curled")
 	hair_color = "fixedmutcolor"
-	attack_verb = "slash"
-	attack_sound = 'sound/weapons/slash.ogg'
-	miss_sound = 'sound/weapons/slashmiss.ogg'
 	meat = /obj/item/food/meat/slab/human/mutant/apid
 	mutanteyes = /obj/item/organ/eyes/apid
 	mutantlungs = /obj/item/organ/lungs/apid
 	mutantwings = /obj/item/organ/wings/bee
 	mutanttongue = /obj/item/organ/tongue/bee
 	mutant_organs = list(/obj/item/organ/apid_stinger)
-	brutemod = 0.8
 	toxmod = 0.5
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | ERT_SPAWN | RACE_SWAP | SLIME_EXTRACT
 	species_language_holder = /datum/language_holder/apid

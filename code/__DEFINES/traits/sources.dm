@@ -135,6 +135,8 @@
 #define NINJA_KIDNAPPED_TRAIT "ninja_kidnapped"
 #define TABLE_TRAIT "table_trait"
 #define LICH_TRAIT "lich_trait"
+/// Trait given by adamantine extracts
+#define ADAMANTINE_EXTRACT_TRAIT "adamantine_extract"
 /// Trait given to an atom/movable when they orbit something.
 #define ORBITING_TRAIT "orbiting"
 /// Trait given by simple/basic mob death
@@ -160,3 +162,12 @@
 #define MODULE_TRAIT "module_trait"
 /// trait that prevents AI controllers from planning detached from ai_status to prevent weird state stuff.
 #define TRAIT_AI_PAUSED "TRAIT_AI_PAUSED"
+
+/// some trait sorces dirived from bodyparts BODYPART_TRAIT is generic.
+#define BODYPART_TRAIT "bodypart"
+#define HEAD_TRAIT "head"
+#define CHEST_TRAIT "chest"
+#define RIGHT_ARM_TRAIT "right_arm"
+#define LEFT_ARM_TRAIT "left_arm"
+#define RIGHT_LEG_TRAIT "right_leg"
+#define LEFT_LEG_TRAIT "left_leg"

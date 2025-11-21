@@ -32,7 +32,9 @@
 						"<span class='userdanger'>[M] [response_harm_continuous] you!</span>", null, COMBAT_MESSAGE_RANGE, M)
 		to_chat(M, "<span class='danger'>You [response_harm_simple] [src]!</span>")
 		playsound(loc, attacked_sound, 25, TRUE, -1)
-		attack_threshold_check(M.dna.species.punchdamage)
+
+		var/obj/item/bodypart/arm/active_arm = M.get_active_hand()
+		attack_threshold_check(active_arm.unarmed_damage, active_arm.attack_type)
 		log_combat(M, src, "attacked")
 		updatehealth()
 		return TRUE

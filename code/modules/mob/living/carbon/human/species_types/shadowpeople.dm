@@ -7,7 +7,7 @@
 	// Humans cursed to stay in the darkness, lest their life forces drain. They regain health in shadow and die in light.
 	name = "Shadow"
 	plural_form = "Shadowpeople"
-	id = SPECIES_SHADOWPERSON
+	id = SPECIES_SHADOW
 	sexes = 0
 	meat = /obj/item/food/meat/slab/human/mutant/shadow
 	species_traits = list(
@@ -105,7 +105,6 @@
 /datum/species/shadow/nightmare
 	name = "Nightmare"
 	id = "nightmare"
-	burnmod = 1.5
 	no_equip = list(ITEM_SLOT_OCLOTHING, ITEM_SLOT_GLOVES, ITEM_SLOT_FEET, ITEM_SLOT_ICLOTHING, ITEM_SLOT_SUITSTORE)
 	species_traits = list(
 		NO_UNDERWEAR,
@@ -117,7 +116,6 @@
 		TRAIT_NOBREATH,
 		TRAIT_RESISTHIGHPRESSURE,
 		TRAIT_RESISTLOWPRESSURE,
-		TRAIT_CHUNKYFINGERS,
 		TRAIT_RADIMMUNE,
 		TRAIT_VIRUSIMMUNE,
 		TRAIT_PIERCEIMMUNE,
@@ -131,6 +129,15 @@
 	mutantheart = /obj/item/organ/heart/nightmare
 	mutantbrain = /obj/item/organ/brain/nightmare
 	nojumpsuit = 1
+
+	bodypart_overrides = list(
+		BODY_ZONE_L_ARM = /obj/item/bodypart/arm/left/shadow/nightmare,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/arm/right/shadow/nightmare,
+		BODY_ZONE_HEAD = /obj/item/bodypart/head/shadow,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/leg/left/shadow,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/shadow,
+		BODY_ZONE_CHEST = /obj/item/bodypart/chest/shadow,
+	)
 
 	var/info_text = "You are a " + span_danger("Nightmare") + ". The ability " + span_warning("shadow walk") + " allows unlimited, unrestricted movement in the dark while activated. \
 					Your " + span_warning("light eater") + " will destroy any light producing objects you attack, as well as destroy any lights a living creature may be holding. You will automatically dodge gunfire and melee attacks when on a dark tile. If killed, you will eventually revive if left in darkness."

@@ -25,7 +25,7 @@
 	. = ..()
 	//these are intentionally inverted
 	var/i = user.get_held_index_of_item(src)
-	if(!(i % 2))
+	if(IS_RIGHT_INDEX(i))
 		icon_state = icon_left
 	else
 		icon_state = icon_right

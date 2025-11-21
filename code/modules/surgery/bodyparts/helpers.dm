@@ -27,11 +27,12 @@
 
 ///Get the bodypart for whatever hand we have active, Only relevant for carbons
 /mob/proc/get_active_hand()
+	RETURN_TYPE(/obj/item/bodypart)
 	return FALSE
 
 /mob/living/carbon/get_active_hand()
 	var/which_hand = BODY_ZONE_PRECISE_L_HAND
-	if(!(active_hand_index % 2))
+	if(IS_RIGHT_INDEX(active_hand_index))
 		which_hand = BODY_ZONE_PRECISE_R_HAND
 	return get_bodypart(check_zone(which_hand))
 
@@ -42,7 +43,7 @@
 
 /mob/living/carbon/has_left_hand(check_disabled = TRUE)
 	for(var/obj/item/bodypart/hand_instance in hand_bodyparts)
-		if(!(hand_instance.held_index % 2) || (check_disabled && hand_instance.bodypart_disabled))
+		if(IS_RIGHT_INDEX(hand_instance.held_index) || (check_disabled && hand_instance.bodypart_disabled))
 			continue
 		return TRUE
 	return FALSE
@@ -57,7 +58,7 @@
 
 /mob/living/carbon/has_right_hand(check_disabled = TRUE)
 	for(var/obj/item/bodypart/hand_instance in hand_bodyparts)
-		if(hand_instance.held_index % 2 || (check_disabled && hand_instance.bodypart_disabled))
+		if(IS_LEFT_INDEX(hand_instance.held_index) || (check_disabled && hand_instance.bodypart_disabled))
 			continue
 		return TRUE
 	return FALSE

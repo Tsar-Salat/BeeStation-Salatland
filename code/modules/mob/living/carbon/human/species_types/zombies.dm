@@ -78,8 +78,7 @@
 	name = "Infectious Zombie"
 	id = SPECIES_ZOMBIE_INFECTIOUS
 	examine_limb_id = SPECIES_ZOMBIE
-	armor = 20 // 120 damage to KO a zombie, which kills it
-	speedmod = 1.6
+	damage_modifier = 20 // 120 damage to KO a zombie, which kills it
 	mutanteyes = /obj/item/organ/eyes/night_vision/zombie
 	mutanthands = /obj/item/zombie_hand
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | ERT_SPAWN
@@ -145,7 +144,7 @@
 	if(infection)
 		qdel(infection)
 
-/datum/species/zombie/infectious/on_species_gain(mob/living/carbon/C, datum/species/old_species)
+/datum/species/zombie/infectious/on_species_gain(mob/living/carbon/human/C, datum/species/old_species)
 	. = ..()
 
 	// Deal with the source of this zombie corruption
@@ -160,8 +159,7 @@
 /datum/species/zombie/infectious/viral
 	name = "\improper Infected Zombie"
 	id = "memezombiesfast"
-	armor = 0
-	speedmod = 0
+	damage_modifier = 0
 	inherent_biotypes = MOB_ORGANIC | MOB_UNDEAD |  MOB_HUMANOID //mob organic, so still susceptible to the disease that created it
 	mutanteyes = /obj/item/organ/eyes/night_vision/zombie
 	mutanthands = /obj/item/zombie_hand/infectious

@@ -14,11 +14,10 @@
 	name = "cyborg left arm"
 	desc = "A skeletal limb wrapped in pseudomuscles, with a low-conductivity case."
 	limb_id = BODYPART_ID_ROBOTIC
-	attack_verb_continuous = list("slaps", "punches")
-	attack_verb_simple = list("slap", "punch")
+	attack_verb_simple = list("slapped", "punched")
 	item_state = "buildpipe"
-	icon_static = 'icons/mob/augmentation/augments.dmi'
 	icon = 'icons/mob/augmentation/augments.dmi'
+	icon_static = 'icons/mob/augmentation/augments.dmi'
 	flags_1 = CONDUCT_1
 	icon_state = "borg_l_arm"
 	is_dimorphic = FALSE
@@ -38,11 +37,12 @@
 	medium_burn_msg = ROBOTIC_MEDIUM_BURN_MSG
 	heavy_burn_msg = ROBOTIC_HEAVY_BURN_MSG
 
+	unarmed_attack_sound = 'sound/items/trayhit1.ogg'
+
 /obj/item/bodypart/arm/right/robot
 	name = "cyborg right arm"
 	desc = "A skeletal limb wrapped in pseudomuscles, with a low-conductivity case."
-	attack_verb_continuous = list("slaps", "punches")
-	attack_verb_simple = list("slap", "punch")
+	attack_verb_simple = list("slapped", "punched")
 	item_state = "buildpipe"
 	icon_static = 'icons/mob/augmentation/augments.dmi'
 	icon = 'icons/mob/augmentation/augments.dmi'
@@ -66,11 +66,12 @@
 	medium_burn_msg = ROBOTIC_MEDIUM_BURN_MSG
 	heavy_burn_msg = ROBOTIC_HEAVY_BURN_MSG
 
+	unarmed_attack_sound = 'sound/items/trayhit1.ogg'
+
 /obj/item/bodypart/leg/left/robot
 	name = "cyborg left leg"
 	desc = "A skeletal limb wrapped in pseudomuscles, with a low-conductivity case."
-	attack_verb_continuous = list("kicks", "stomps")
-	attack_verb_simple = list("kick", "stomp")
+	attack_verb_simple = list("kicked", "stomped")
 	item_state = "buildpipe"
 	icon_static = 'icons/mob/augmentation/augments.dmi'
 	icon = 'icons/mob/augmentation/augments.dmi'
@@ -97,8 +98,7 @@
 /obj/item/bodypart/leg/right/robot
 	name = "cyborg right leg"
 	desc = "A skeletal limb wrapped in pseudomuscles, with a low-conductivity case."
-	attack_verb_continuous = list("kicks", "stomps")
-	attack_verb_simple = list("kick", "stomp")
+	attack_verb_simple = list("kicked", "stomped")
 	item_state = "buildpipe"
 	icon_static = 'icons/mob/augmentation/augments.dmi'
 	icon = 'icons/mob/augmentation/augments.dmi'
@@ -235,8 +235,8 @@
 	desc = "A standard reinforced braincase, with spine-plugged neural socket and sensor gimbals."
 	item_state = "buildpipe"
 	icon_static = 'icons/mob/augmentation/augments.dmi'
+	icon = 'icons/mob/augmentation/augments.dmi'
 	limb_id = BODYPART_ID_ROBOTIC
-	icon = null
 	flags_1 = CONDUCT_1
 	icon_state = "borg_head"
 	is_dimorphic = FALSE
@@ -369,22 +369,22 @@
 
 
 /obj/item/bodypart/head/robot/android
-	change_exempt_flags = null
+	change_exempt_flags = NONE
 
 /obj/item/bodypart/chest/robot/android
-	change_exempt_flags = null
+	change_exempt_flags = NONE
 
 /obj/item/bodypart/arm/left/robot/android
-	change_exempt_flags = null
+	change_exempt_flags = NONE
 
 /obj/item/bodypart/arm/right/robot/android
-	change_exempt_flags = null
+	change_exempt_flags = NONE
 
 /obj/item/bodypart/leg/left/robot/android
-	change_exempt_flags = null
+	change_exempt_flags = NONE
 
 /obj/item/bodypart/leg/right/robot/android
-	change_exempt_flags = null
+	change_exempt_flags = NONE
 
 #undef ROBOTIC_LIGHT_BRUTE_MSG
 #undef ROBOTIC_MEDIUM_BRUTE_MSG

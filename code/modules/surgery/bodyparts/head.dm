@@ -15,6 +15,12 @@
 	stam_damage_coeff = 1
 	max_stamina_damage = 100
 	is_dimorphic = TRUE
+	unarmed_attack_verb = "bite"
+	unarmed_attack_effect = ATTACK_EFFECT_BITE
+	unarmed_attack_sound = 'sound/weapons/bite.ogg'
+	unarmed_miss_sound = 'sound/weapons/bite.ogg'
+	unarmed_damage = 3
+	bodypart_trait_source = HEAD_TRAIT
 
 	var/mob/living/brain/brainmob //The current occupant.
 	var/obj/item/organ/brain/brain //The brain organ

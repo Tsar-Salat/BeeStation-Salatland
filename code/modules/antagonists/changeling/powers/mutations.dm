@@ -46,7 +46,7 @@
 		return
 	..()
 	var/limb_regen = 0
-	if(user.active_hand_index % 2 == 0) //we regen the arm before changing it into the weapon
+	if(IS_RIGHT_INDEX(user.active_hand_index)) //we regen the arm before changing it into the weapon
 		limb_regen = user.regenerate_limb(BODY_ZONE_R_ARM, 1)
 	else
 		limb_regen = user.regenerate_limb(BODY_ZONE_L_ARM, 1)

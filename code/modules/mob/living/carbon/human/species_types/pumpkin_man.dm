@@ -14,16 +14,11 @@
 		TRAIT_NONECRODISEASE
 	)
 	inherent_factions = list(FACTION_PLANTS, FACTION_VINES)
-	burnmod = 1.25
 	heatmod = 1.5
 	meat = /obj/item/food/meat/slab/human/mutant/diona
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | RACE_SWAP | ERT_SPAWN | SLIME_EXTRACT
 	species_language_holder = /datum/language_holder/diona
 
-
-	attack_verb = "punch"
-	attack_sound = 'sound/weapons/punch1.ogg'
-	miss_sound = 'sound/weapons/punchmiss.ogg'
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | MIRROR_MAGIC | ERT_SPAWN
 
 	mutantbrain = /obj/item/organ/brain/pumpkin_brain
@@ -117,6 +112,7 @@
 
 	return to_add
 
+/*
 //Handler for face carving!
 /datum/species/pumpkin_man/proc/handle_carving(datum/_source, mob/living/_user, obj/item/_item)
 	//Check if the item is sharp - give owner a random face if applicable
@@ -137,11 +133,12 @@
 			M.update_body_parts_head_only()
 			to_chat(_user, span_notice("You carve a face into [_source]."))
 			//Adjust the tongue
-			var/obj/item/organ/tongue/diona/pumpkin/P = M.internal_organs_slot[ORGAN_SLOT_TONGUE]
+			var/obj/item/organ/tongue/diona/pumpkin/P = M.organs_slot[ORGAN_SLOT_TONGUE]
 			if(istype(P))
 				P?.carved = TRUE
 		else
 			to_chat(_user, span_warning("You fail to carve a face into [_source]!"))
+*/
 
 /obj/item/organ/brain/pumpkin_brain
 	name = "pumpkinperson brain"

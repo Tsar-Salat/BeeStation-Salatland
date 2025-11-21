@@ -25,26 +25,35 @@
 		return TRUE
 
 	if(!user.combat_mode)
-		if(stat == DEAD)
-			return
-		visible_message("<span class='notice'>[user] [response_help_continuous] [src].</span>", \
-						"<span class='notice'>[user] [response_help_continuous] you.</span>", null, null, list(user))
-		to_chat(user, "<span class='notice'>You [response_help_simple] [src].</span>")
-		playsound(loc, 'sound/weapons/thudswoosh.ogg', 50, TRUE, -1)
-	else
-		if(HAS_TRAIT(user, TRAIT_PACIFISM))
-			to_chat(user, "<span class='warning'>You don't want to hurt [src]!</span>")
-			return
-		user.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
-		visible_message("<span class='danger'>[user] [response_harm_continuous] [src]!</span>",\
-						"<span class='userdanger'>[user] [response_harm_continuous] you!</span>", null, COMBAT_MESSAGE_RANGE, list(user))
-		to_chat(user, "<span class='danger'>You [response_harm_simple] [src]!</span>")
-		playsound(loc, attacked_sound, 25, TRUE, -1)
-
-		attack_threshold_check(user.dna.species.punchdamage)
-		log_combat(user, src, "attacked", user)
-		updatehealth()
+		if (stat != DEAD)
+			visible_message(
+				span_notice("[user] [response_help_continuous] [src]."),
+				span_notice("[user] [response_help_continuous] you."),
+				vision_distance = COMBAT_MESSAGE_RANGE,
+				ignored_mobs = list(user)
+			)
+			to_chat(user, "<span class='notice'>You [response_help_simple] [src].</span>")
+			playsound(loc, 'sound/weapons/thudswoosh.ogg', 50, TRUE, -1)
 		return TRUE
+
+	if(HAS_TRAIT(user, TRAIT_PACIFISM))
+		to_chat(user, "<span class='warning'>You don't want to hurt [src]!</span>")
+		return
+	var/obj/item/bodypart/arm/active_arm = user.get_active_hand()
+	var/damage = active_arm.unarmed_damage
+	user.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
+	visible_message(
+		span_danger("[user] [response_harm_continuous] [src]!"),
+		span_userdanger("[user] [response_harm_continuous] you!"),
+		vision_distance = COMBAT_MESSAGE_RANGE,
+		ignored_mobs = list(user)
+	)
+	to_chat(user, "<span class='danger'>You [response_harm_simple] [src]!</span>")
+	playsound(loc, attacked_sound, 25, TRUE, -1)
+	attack_threshold_check(damage)
+	log_combat(user, src, "attacked", user)
+	updatehealth()
+	return TRUE
 
 /mob/living/basic/attack_hulk(mob/living/carbon/human/user)
 	. = ..()

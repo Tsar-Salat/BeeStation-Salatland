@@ -15,6 +15,9 @@
 	//initialize limbs first
 	create_bodyparts()
 
+	// Physiology needs to be created before species, as some species modify physiology
+	setup_physiology()
+
 	setup_human_dna()
 
 
@@ -25,7 +28,6 @@
 
 	//initialise organs
 	create_internal_organs() //most of it is done in set_species now, this is only for parent call
-	physiology = new()
 
 	. = ..()
 
@@ -45,6 +47,9 @@
 
 	GLOB.human_list += src
 
+/mob/living/carbon/human/proc/setup_physiology()
+	physiology = new()
+
 /mob/living/carbon/human/proc/setup_human_dna()
 	//initialize dna. for spawned humans; overwritten by other code
 	create_dna(src)
@@ -53,7 +58,8 @@
 
 /mob/living/carbon/human/Destroy()
 	QDEL_NULL(physiology)
-	QDEL_LIST(bioware)
+	if(biowares)
+		QDEL_LIST(biowares)
 	GLOB.suit_sensors_list -= src
 	GLOB.human_list -= src
 	return ..()

@@ -1270,10 +1270,7 @@ SCREENTIP_ATTACK_HAND(/obj/machinery/computer/arcade/amputation, "Use")
 		if(do_after(c_user, 50, target = src))
 			to_chat(c_user, span_userdanger("The guillotine drops on your arm, and the machine sucks it in!"))
 			playsound(loc, 'sound/weapons/slice.ogg', 25, 1, -1)
-			var/which_hand = BODY_ZONE_L_ARM
-			if(!(c_user.active_hand_index % 2))
-				which_hand = BODY_ZONE_R_ARM
-			var/obj/item/bodypart/chopchop = c_user.get_bodypart(which_hand)
+			var/obj/item/bodypart/chopchop = user.get_active_hand()
 			chopchop.dismember()
 			qdel(chopchop)
 			playsound(loc, 'sound/arcade/win.ogg', 50, 1, extrarange = -3, falloff_exponent = 10)

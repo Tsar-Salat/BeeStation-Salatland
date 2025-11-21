@@ -11,6 +11,8 @@
 	px_y = 0
 	stam_damage_coeff = 1
 	max_stamina_damage = 120
+	grind_results = null
+	bodypart_trait_source = CHEST_TRAIT
 	///The bodytype(s) allowed to attach to this chest.
 	var/acceptable_bodytype = BODYTYPE_HUMANOID
 
@@ -70,6 +72,22 @@
 	bodytype = BODYTYPE_LARVA_PLACEHOLDER | BODYTYPE_ORGANIC
 	acceptable_bodytype = BODYTYPE_LARVA_PLACEHOLDER
 
+/// Parent Type for arms, should not appear in game.
+/obj/item/bodypart/arm
+	name = "arm"
+	desc = "Hey buddy give me a HAND and report this to the github because you shouldn't be seeing this."
+	attack_verb_continuous = list("slaps", "punches")
+	attack_verb_simple = list("slap", "punch")
+	max_damage = 50
+	max_stamina_damage = 50
+	aux_layer = HANDS_PART_LAYER
+	body_damage_coeff = 0.75
+	can_be_disabled = TRUE
+	unarmed_attack_verb = "punch" /// The classic punch, wonderfully classic and completely random
+	unarmed_damage = 7
+	body_zone = BODY_ZONE_L_ARM
+
+
 /obj/item/bodypart/arm/left
 	name = "left arm"
 	desc = "Did you know that the word 'sinister' stems originally from the \
@@ -77,21 +95,13 @@
 		be possessed by the devil? This arm appears to be possessed by no \
 		one though."
 	icon_state = "default_human_l_arm"
-	attack_verb_continuous = list("slaps", "punches")
-	attack_verb_simple = list("slap", "punch")
-	max_damage = 40
-	max_stamina_damage = 50
 	body_zone = BODY_ZONE_L_ARM
 	body_part = ARM_LEFT
 	plaintext_zone = "left arm"
 	aux_zone = BODY_ZONE_PRECISE_L_HAND
-	aux_layer = HANDS_PART_LAYER
-	body_damage_coeff = 0.75
 	held_index = 1
 	px_x = -6
 	px_y = 0
-	can_be_disabled = TRUE
-
 
 /obj/item/bodypart/arm/left/set_owner(new_owner)
 	. = ..()
@@ -159,6 +169,7 @@
 	px_x = -5
 	px_y = -3
 	dmg_overlay_type = SPECIES_MONKEY
+	unarmed_damage = 3
 
 /obj/item/bodypart/arm/left/monkey/teratoma
 	icon_state = "teratoma_l_arm"
@@ -181,21 +192,14 @@
 	desc = "Over 87% of humans are right handed. That figure is much lower \
 		among humans missing their right arm."
 	icon_state = "default_human_r_arm"
-	attack_verb_continuous = list("slaps", "punches")
-	attack_verb_simple = list("slap", "punch")
-	max_damage = 40
-	max_stamina_damage = 50
 	body_zone = BODY_ZONE_R_ARM
 	body_part = ARM_RIGHT
 	plaintext_zone = "right arm"
 	aux_zone = BODY_ZONE_PRECISE_R_HAND
 	aux_layer = HANDS_PART_LAYER
-	body_damage_coeff = 0.75
 	held_index = 2
 	px_x = 6
 	px_y = 0
-	can_be_disabled = TRUE
-
 
 /obj/item/bodypart/arm/right/set_owner(new_owner)
 	. = ..()
@@ -263,6 +267,7 @@
 	px_x = 5
 	px_y = -3
 	dmg_overlay_type = SPECIES_MONKEY
+	unarmed_damage = 3
 
 /obj/item/bodypart/arm/right/monkey/teratoma
 	icon_state = "teratoma_r_arm"
@@ -281,23 +286,33 @@
 	max_damage = 100
 	should_draw_greyscale = FALSE
 
+/// Parent Type for arms, should not appear in game.
+/obj/item/bodypart/leg
+	name = "leg"
+	desc = "This item shouldn't exist. Talk about breaking a leg. Badum-Tss!"
+	attack_verb_continuous = list("kicks", "stomps")
+	attack_verb_simple = list("kick", "stomp")
+	max_damage = 50
+	body_damage_coeff = 0.75
+	max_stamina_damage = 50
+	can_be_disabled = TRUE
+	unarmed_attack_effect = ATTACK_EFFECT_KICK
+	body_zone = BODY_ZONE_L_LEG
+	unarmed_attack_verb = "kick" // The lovely kick, typically only accessable by attacking a grouded foe. 1.5 times better than the punch.
+	unarmed_damage = 7
+
 /obj/item/bodypart/leg/left
 	name = "left leg"
 	desc = "Some athletes prefer to tie their left shoelaces first for good \
 		luck. In this instance, it probably would not have helped."
 	icon_state = "default_human_l_leg"
-	attack_verb_continuous = list("kicks", "stomps")
-	attack_verb_simple = list("kick", "stomp")
-	max_damage = 40
 	body_zone = BODY_ZONE_L_LEG
 	body_part = LEG_LEFT
 	plaintext_zone = "left leg"
-	body_damage_coeff = 0.75
 	px_x = -2
 	px_y = 12
-	max_stamina_damage = 50
 	can_be_disabled = TRUE
-
+	bodypart_trait_source = LEFT_LEG_TRAIT
 
 /obj/item/bodypart/leg/left/set_owner(new_owner)
 	. = ..()
@@ -359,6 +374,7 @@
 	bodytype = BODYTYPE_MONKEY | BODYTYPE_ORGANIC
 	px_y = 4
 	dmg_overlay_type = SPECIES_MONKEY
+	unarmed_damage = 3
 
 /obj/item/bodypart/leg/left/monkey/teratoma
 	icon_state = "teratoma_l_leg"
@@ -384,18 +400,12 @@
 		The hokey pokey has certainly changed a lot since space colonisation."
 	// alternative spellings of 'pokey' are available
 	icon_state = "default_human_r_leg"
-	attack_verb_continuous = list("kicks", "stomps")
-	attack_verb_simple = list("kick", "stomp")
-	max_damage = 40
 	body_zone = BODY_ZONE_R_LEG
 	body_part = LEG_RIGHT
 	plaintext_zone = "right leg"
-	body_damage_coeff = 0.75
 	px_x = 2
 	px_y = 12
-	max_stamina_damage = 50
-	can_be_disabled = TRUE
-
+	bodypart_trait_source = RIGHT_LEG_TRAIT
 
 /obj/item/bodypart/leg/right/set_owner(new_owner)
 	. = ..()
@@ -457,6 +467,7 @@
 	bodytype = BODYTYPE_MONKEY | BODYTYPE_ORGANIC
 	px_y = 4
 	dmg_overlay_type = SPECIES_MONKEY
+	unarmed_damage = 3
 
 /obj/item/bodypart/leg/right/monkey/teratoma
 	icon_state = "teratoma_r_leg"

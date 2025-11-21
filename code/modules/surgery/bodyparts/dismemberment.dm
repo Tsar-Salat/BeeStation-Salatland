@@ -87,6 +87,7 @@
 		return
 	var/atom/Tsec = owner.drop_location()
 	var/mob/living/carbon/C = owner
+
 	SEND_SIGNAL(owner, COMSIG_CARBON_REMOVE_LIMB, src, dismembered)
 	SEND_SIGNAL(src, COMSIG_BODYPART_REMOVED, owner, dismembered)
 	update_limb(TRUE)
@@ -125,9 +126,10 @@
 				continue
 			O.transfer_to_limb(src, C)
 
+	for(var/trait in bodypart_traits)
+		REMOVE_TRAIT(C, trait, bodypart_trait_source)
 
 	synchronize_bodytypes(C)
-
 	update_icon_dropped()
 	C.update_health_hud() //update the healthdoll
 	C.update_body()
@@ -314,6 +316,9 @@
 	update_bodypart_damage_state()
 	if(can_be_disabled)
 		update_disabled()
+
+	for(var/trait in bodypart_traits)
+		ADD_TRAIT(owner, trait, bodypart_trait_source)
 
 	synchronize_bodytypes(new_limb_owner)
 	new_limb_owner.updatehealth()

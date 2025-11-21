@@ -50,6 +50,8 @@
 	var/list/embedded_objects = list()
 	/// are we a hand? if so, which one!
 	var/held_index = 0
+	/// A speed modifier we apply to the owner when attached, if any. Positive numbers make it move slower, negative numbers make it move faster.
+	var/movespeed_contribution = 0
 	/// For limbs that don't really exist, eg chainsaws
 	var/is_pseudopart = FALSE
 
@@ -71,10 +73,20 @@
 	var/stamina_dam = 0
 	var/stamina_heal_rate = 1	//Stamina heal multiplier
 
+	//Multiplicative damage modifiers
+	/// Brute damage gets multiplied by this on receive_damage()
+	var/brute_modifier = 1
+	/// Burn damage gets multiplied by this on receive_damage()
+	var/burn_modifier = 1
+	/// Stamina damage gets multiplied by this on receive_damage()
+	var/stamina_modifier = 1
+	/// Stun damage gets multiplied by this on receive_damage()
+	//var/stun_modifier = 1 (this should probably be here. TODO: implement this on limbs rather than species, jackass)
+
 	// Damage reduction variables for damage handled on the limb level. Handled after worn armor.
-	///Amount subtracted from brute damage inflicted on the limb.
+	/// Amount subtracted from brute damage inflicted on the limb.
 	var/brute_reduction = 0
-	///Amount subtracted from burn damage inflicted on the limb.
+	/// Amount subtracted from burn damage inflicted on the limb.
 	var/burn_reduction = 0
 
 	//Coloring and proper item icon update
@@ -110,6 +122,23 @@
 
 	/// So we know if we need to scream if this limb hits max damage
 	var/last_maxed
+
+	/// Type of an attack from this limb does. Arms will do punches, Legs for kicks, and head for bites. (TO ADD: tactical chestbumps)
+	var/attack_type = BRUTE
+	/// the verb used for an unarmed attack when using this limb, such as arm.unarmed_attack_verb = punch
+	var/unarmed_attack_verb = "bump"
+	/// what visual effect is used when this limb is used to strike someone.
+	var/unarmed_attack_effect = ATTACK_EFFECT_PUNCH
+	/// Sounds when this bodypart is used in an umarmed attack
+	var/sound/unarmed_attack_sound = 'sound/weapons/punch1.ogg'
+	var/sound/unarmed_miss_sound = 'sound/weapons/punchmiss.ogg'
+	///punch damage this bodypart can give.
+	var/unarmed_damage = 1
+
+	/// Traits that are given to the holder of the part. If you want an effect that changes this, don't add directly to this. Use the add_bodypart_trait() proc
+	var/list/bodypart_traits = list()
+	/// The name of the trait source that the organ gives. Should not be altered during the events of gameplay, and will cause problems if it is.
+	var/bodypart_trait_source = BODYPART_TRAIT
 
 /obj/item/bodypart/Initialize(mapload)
 	. = ..()
@@ -317,10 +346,10 @@
 	if(required_status && !(bodytype & required_status))
 		return FALSE
 
-	var/dmg_mlt = CONFIG_GET(number/damage_multiplier) * hit_percent
-	brute = round(max(brute * dmg_mlt, 0),DAMAGE_PRECISION)
-	burn = round(max(burn * dmg_mlt, 0),DAMAGE_PRECISION)
-	stamina = round(max(stamina * dmg_mlt, 0),DAMAGE_PRECISION)
+	var/dmg_multi = CONFIG_GET(number/damage_multiplier) * hit_percent
+	brute = round(max(brute * dmg_multi * brute_modifier, 0), DAMAGE_PRECISION)
+	burn = round(max(burn * dmg_multi * burn_modifier, 0), DAMAGE_PRECISION)
+	stamina = round(max(stamina * dmg_multi * stamina_modifier, 0), DAMAGE_PRECISION)
 	brute = max(0, brute - brute_reduction)
 	burn = max(0, burn - burn_reduction)
 	//No stamina scaling.. for now..
@@ -485,13 +514,16 @@
 ///Proc to change the value of the `owner` variable and react to the event of its change.
 /obj/item/bodypart/proc/set_owner(mob/living/carbon/new_owner)
 	SHOULD_CALL_PARENT(TRUE)
-
 	if(owner == new_owner)
 		return FALSE //`null` is a valid option, so we need to use a num var to make it clear no change was made.
 	var/mob/living/carbon/old_owner = owner
 	owner = new_owner
 	var/needs_update_disabled = FALSE //Only really relevant if there's an owner
 	if(old_owner)
+		if(movespeed_contribution)
+			old_owner.update_bodypart_movespeed_contribution()
+		if(length(bodypart_traits))
+			old_owner.remove_traits(bodypart_traits, bodypart_trait_source)
 		if(initial(can_be_disabled))
 			if(HAS_TRAIT(old_owner, TRAIT_NOLIMBDISABLE))
 				if(!owner || !HAS_TRAIT(owner, TRAIT_NOLIMBDISABLE))
@@ -513,7 +545,6 @@
 			update_disabled()
 
 	return old_owner
-
 
 ///Proc to change the value of the `can_be_disabled` variable and react to the event of its change.
 /obj/item/bodypart/proc/set_can_be_disabled(new_can_be_disabled)

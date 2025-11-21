@@ -45,6 +45,11 @@ GLOBAL_LIST_INIT(strippable_monkey_items, create_strippable_list(list(
 
 CREATION_TEST_IGNORE_SUBTYPES(/mob/living/carbon/monkey)
 
+/obj/item/organ/brain/primate
+	name = "Primate Brain"
+	desc = "This wad of meat is small, but has enlarged occipital lobes for spotting bananas."
+	organ_traits = list(TRAIT_GUN_NATURAL) // No literacy or advanced tool usage.
+
 /mob/living/carbon/monkey/Initialize(mapload, cubespawned=FALSE, mob/spawner)
 	add_verb(/mob/living/proc/mob_sleep)
 	add_verb(/mob/living/proc/toggle_resting)
@@ -188,9 +193,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/carbon/monkey)
 	if(!get_organ_slot(ORGAN_SLOT_LUNGS))
 		return 0
 	return 1
-
-/mob/living/carbon/monkey/can_use_guns(obj/item/G)
-	return TRUE
 
 /mob/living/carbon/monkey/angry
 	ai_controller = /datum/ai_controller/monkey/angry

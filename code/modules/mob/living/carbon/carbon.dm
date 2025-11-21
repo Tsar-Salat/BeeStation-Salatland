@@ -1009,6 +1009,9 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 
 	bodyparts += new_bodypart
 	new_bodypart.set_owner(src)
+	//temp
+	if(new_bodypart.movespeed_contribution)
+		update_bodypart_movespeed_contribution()
 
 	switch(new_bodypart.body_part)
 		if(LEG_LEFT, LEG_RIGHT)
@@ -1036,10 +1039,16 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 			if(!old_bodypart.bodypart_disabled)
 				set_usable_hands(usable_hands - 1)
 
+///Updates the bodypart speed modifier based on our bodyparts.
+/mob/living/carbon/proc/update_bodypart_movespeed_contribution()
+	var/final_modification = 0
+	for(var/obj/item/bodypart/bodypart as anything in bodyparts)
+		final_modification += bodypart.movespeed_contribution
+	add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/bodypart, update = TRUE, multiplicative_slowdown = final_modification)
+
 /mob/living/carbon/proc/create_internal_organs()
-	for(var/X in internal_organs)
-		var/obj/item/organ/I = X
-		I.Insert(src)
+	for(var/obj/item/organ/internal_organ in internal_organs)
+		internal_organ.Insert(src)
 
 /mob/living/carbon/vv_get_dropdown()
 	. = ..()
@@ -1325,9 +1334,9 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 	return ..()
 
 /mob/living/carbon/get_attack_type()
-	var/datum/species/species = dna?.species
-	if (species)
-		return species.attack_type
+	if(has_active_hand())
+		var/obj/item/bodypart/arm/active_arm = get_active_hand()
+		return active_arm.attack_type
 	return ..()
 
 /mob/living/carbon/proc/_signal_body_part_update(datum/source)
@@ -1353,3 +1362,9 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 /// Returns if the carbon is wearing shock proof gloves
 /mob/living/carbon/proc/wearing_shock_proof_gloves()
 	return gloves?.siemens_coefficient == 0
+
+/mob/living/carbon/proc/add_unarmed_damage_to_arms(amount)
+	for(var/obj/item/bodypart/arm in bodyparts)
+		if(arm.body_zone == BODY_ZONE_L_ARM || arm.body_zone == BODY_ZONE_R_ARM)
+			if(isnum(arm.unarmed_damage))
+				arm.unarmed_damage += amount
