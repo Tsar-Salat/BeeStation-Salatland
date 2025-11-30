@@ -9,8 +9,8 @@
 /datum/preference/choiced/ipc_screen/init_possible_values()
 	var/list/values = list()
 
-	for (var/screen_name in GLOB.ipc_screens_list)
-		var/datum/sprite_accessory/screen = GLOB.ipc_screens_list[screen_name]
+	for (var/screen_name in SSaccessories.ipc_screens_list)
+		var/datum/sprite_accessory/screen = SSaccessories.ipc_screens_list[screen_name]
 
 		var/datum/universal_icon/icon_with_screen = uni_icon('icons/mob/species/ipc/bodyparts.dmi', "mcgipc_head", dir = SOUTH)
 		if (screen_name != FEATURE_NONE)
@@ -64,8 +64,8 @@
 /datum/preference/choiced/ipc_antenna/init_possible_values()
 	var/list/values = list()
 
-	for (var/antenna_name in GLOB.ipc_antennas_list)
-		var/datum/sprite_accessory/antenna = GLOB.ipc_antennas_list[antenna_name]
+	for (var/antenna_name in SSaccessories.ipc_antennas_list)
+		var/datum/sprite_accessory/antenna = SSaccessories.ipc_antennas_list[antenna_name]
 
 		var/datum/universal_icon/icon_with_antennae = uni_icon('icons/mob/species/ipc/bodyparts.dmi', "mcgipc_head", dir = SOUTH)
 		if (antenna.icon_state != "none")
@@ -125,8 +125,8 @@
 		BODY_ZONE_L_LEG,
 		BODY_ZONE_R_LEG,
 	)
-	for (var/chassis_name in GLOB.ipc_chassis_list)
-		var/datum/sprite_accessory/chassis = GLOB.ipc_chassis_list[chassis_name]
+	for (var/chassis_name in SSaccessories.ipc_chassis_list)
+		var/datum/sprite_accessory/chassis = SSaccessories.ipc_chassis_list[chassis_name]
 		var/datum/universal_icon/icon_with_chassis = uni_icon('icons/effects/effects.dmi', "nothing")
 
 		for (var/body_part in body_parts)

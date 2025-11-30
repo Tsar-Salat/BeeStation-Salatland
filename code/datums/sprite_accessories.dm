@@ -16,49 +16,33 @@
 	from doing this unless you absolutely know what you are doing, and have defined a
 	conversion in savefile.dm
 */
-/proc/init_sprite_accessory_subtypes(prototype, list/L, list/male, list/female,roundstart = FALSE)//Roundstart argument builds a specific list for roundstart parts where some parts may be locked
-	if(!istype(L))
-		L = list()
-	if(!istype(male))
-		male = list()
-	if(!istype(female))
-		female = list()
-
-	for(var/path in typesof(prototype))
-		if(path == prototype)
-			continue
-		if(roundstart)
-			var/datum/sprite_accessory/P = path
-			if(initial(P.locked))
-				continue
-		var/datum/sprite_accessory/D = new path()
-
-		L[D.name] = D
-
-		switch(D.use_default_gender)
-			if(MALE)
-				male += D.name
-			if(FEMALE)
-				female += D.name
-			else
-				male += D.name
-				female += D.name
-	return L
-
 /datum/sprite_accessory
-	var/icon			//the icon file the accessory is located in
-	var/icon_state		//the icon_state of the accessory
+	/// The icon file the accessory is located in.
+	var/icon
+	/// The icon_state of the accessory.
+	var/icon_state
 	var/emissive_state	//state of the emissive overlay
 	var/emissive_alpha = 255	//Alpha of the emissive
-	var/name			//the preview name of the accessory
-	var/gender_specific //Something that can be worn by either gender, but looks different on each
-	var/use_static		//determines if the accessory will be skipped by color preferences
-	var/color_src = MUTCOLORS	//Currently only used by mutantparts so don't worry about hair and stuff. This is the source that this accessory will get its color from. Default is MUTCOLOR, but can also be HAIR, FACEHAIR, EYECOLOR and 0 if none.
+	/// The preview name of the accessory.
+	var/name
+	/// Something that can be worn by either gender, but looks different on each.
+	var/gender_specific
+	/// Determines if the accessory will be skipped by color preferences.
+	var/use_static
+	/**
+	 * Currently only used by mutantparts so don't worry about hair and stuff.
+	 * This is the source that this accessory will get its color from. Default is MUTCOLOR, but can also be HAIR, FACEHAIR, EYECOLOR and 0 if none.
+	 */
+	var/color_src = MUTCOLORS
 	var/hasinner		//Decides if this sprite has an "inner" part, such as the fleshy parts on ears.
-	var/locked = FALSE		//Is this part locked from roundstart selection? Used for parts that apply effects
+	/// Is this part locked from roundstart selection? Used for parts that apply effects.
+	var/locked = FALSE
+	/// Should we center the sprite?
+	var/center = FALSE
+	/// The width of the sprite in pixels. Used to center it if necessary.
 	var/dimension_x = 32
+	/// The height of the sprite in pixels. Used to center it if necessary.
 	var/dimension_y = 32
-	var/center = FALSE	//Should we center the sprite?
 	var/limbs_id // The limbs id supplied for full-body replacing features.
 	/// Is this sprite accessory okay to use for a default option
 	var/use_default = TRUE
@@ -66,6 +50,10 @@
 	/// depending on the randomly selected gender. Neuter can be used by either gender.
 	/// Required for determining non-female underwear for adding the alpha-mask
 	var/use_default_gender = NEUTER
+
+/datum/sprite_accessory/blank
+	name = SPRITE_ACCESSORY_NONE
+	icon_state = SPRITE_ACCESSORY_NONE
 
 //////////////////////
 // Hair Definitions //
@@ -1927,24 +1915,24 @@
 // MutantParts Definitions //
 /////////////////////////////
 
-/datum/sprite_accessory/body_markings
+/datum/sprite_accessory/lizard_markings
 	icon = 'icons/mob/mutant_bodyparts.dmi'
 
-/datum/sprite_accessory/body_markings/none
+/datum/sprite_accessory/lizard_markings/none
 	name = "None"
 	icon_state = "none"
 
-/datum/sprite_accessory/body_markings/dtiger
+/datum/sprite_accessory/lizard_markings/dtiger
 	name = "Dark Tiger Body"
 	icon_state = "dtiger"
 	gender_specific = 1
 
-/datum/sprite_accessory/body_markings/ltiger
+/datum/sprite_accessory/lizard_markings/ltiger
 	name = "Light Tiger Body"
 	icon_state = "ltiger"
 	gender_specific = 1
 
-/datum/sprite_accessory/body_markings/lbelly
+/datum/sprite_accessory/lizard_markings/lbelly
 	name = "Light Belly"
 	icon_state = "lbelly"
 	gender_specific = 1
@@ -1954,6 +1942,12 @@
 
 /datum/sprite_accessory/tails_animated
 	icon = 'icons/mob/mutant_bodyparts.dmi'
+
+/datum/sprite_accessory/tails/lizard
+
+/datum/sprite_accessory/tails/lizard/none
+	name = SPRITE_ACCESSORY_NONE
+	icon_state = "none"
 
 /datum/sprite_accessory/tails/lizard/smooth
 	name = "Smooth"

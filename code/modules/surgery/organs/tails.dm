@@ -28,13 +28,13 @@
 /obj/item/organ/tail/cat/on_insert(mob/living/carbon/human/tail_owner)
 	. = ..()
 	if(istype(tail_owner) && tail_owner.dna)
-		tail_owner.dna.species.mutant_bodyparts["tail_human"] = tail_type
+		tail_owner.dna.species.mutant_bodyparts["tail_cat"] = tail_type
 		tail_owner.update_body()
 
 /obj/item/organ/tail/cat/on_remove(mob/living/carbon/human/tail_owner)
 	. = ..()
 	if(istype(tail_owner) && tail_owner.dna)
-		tail_owner.dna.species.mutant_bodyparts -= "tail_human"
+		tail_owner.dna.species.mutant_bodyparts -= "tail_cat"
 		color = tail_owner.hair_color
 		tail_owner.update_body()
 
@@ -49,11 +49,11 @@
 		return FALSE
 	var/datum/species/species = H.dna.species
 	if(wagging)
-		species.mutant_bodyparts["waggingtail_human"] = species.mutant_bodyparts["tail_human"]
-		species.mutant_bodyparts -= "tail_human"
+		species.mutant_bodyparts["waggingtail_human"] = species.mutant_bodyparts["tail_cat"]
+		species.mutant_bodyparts -= "tail_cat"
 		. = TRUE
 	else
-		species.mutant_bodyparts["tail_human"] = species.mutant_bodyparts["waggingtail_human"]
+		species.mutant_bodyparts["tail_cat"] = species.mutant_bodyparts["waggingtail_human"]
 		species.mutant_bodyparts -= "waggingtail_human"
 	H.update_body()
 

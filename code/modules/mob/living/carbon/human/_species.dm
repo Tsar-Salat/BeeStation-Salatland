@@ -427,15 +427,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	var/list/species_organs = mutant_organs /*+ external_organs*/
 	for(var/organ_path in species_organs)
 		var/obj/item/organ/current_organ = organ_holder.get_organ_by_type(organ_path)
-		/*
-		if(ispath(organ_path, /obj/item/organ/external) && !should_external_organ_apply_to(organ_path, organ_holder))
-			if(!isnull(current_organ) && replace_current)
-				// if we have an organ here and we're replacing organs, remove it
-				current_organ.Remove(organ_holder)
-				QDEL_NULL(current_organ)
-			continue
-		*/
-
 		if(!current_organ || replace_current)
 			var/obj/item/organ/replacement = SSwardrobe.provide_type(organ_path)
 			// If there's an existing mutant organ, we're technically replacing it.
@@ -638,7 +629,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			facialhair_hidden = TRUE
 
 	if(H.facial_hair_style && (FACEHAIR in species_traits) && (!facialhair_hidden || dynamic_fhair_suffix))
-		S = GLOB.facial_hair_styles_list[H.facial_hair_style]
+		S = SSaccessories.facial_hairstyles_list[H.facial_hair_style]
 		if(S?.icon_state)
 
 			//List of all valid dynamic_fhair_suffixes
@@ -710,7 +701,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 				current_hair_color = worn_wig.hair_color
 				current_gradient_style = worn_wig.gradient_style
 				current_gradient_color = worn_wig.gradient_color
-			S = GLOB.hair_styles_list[current_hair_style]
+			S = SSaccessories.hairstyles_list[current_hair_style]
 			if(S?.icon_state)
 
 				//List of all valid dynamic_hair_suffixes
@@ -748,7 +739,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 					var/gradient_style = current_gradient_style
 					var/gradient_color = current_gradient_color
 					if(gradient_style)
-						var/datum/sprite_accessory/gradient = GLOB.hair_gradients_list[gradient_style]
+						var/datum/sprite_accessory/gradient = SSaccessories.hair_gradients_list[gradient_style]
 						var/icon/temp = icon(gradient.icon, gradient.icon_state)
 						var/icon/temp_hair = icon(hair_file, hair_state)
 						temp.Blend(temp_hair, ICON_ADD)
@@ -834,7 +825,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		var/obj/item/bodypart/arm/left/left_arm = H.get_bodypart(BODY_ZONE_L_ARM)
 		var/obj/item/bodypart/leg/right/right_leg = H.get_bodypart(BODY_ZONE_R_LEG)
 		var/obj/item/bodypart/leg/left/left_leg = H.get_bodypart(BODY_ZONE_L_LEG)
-		var/datum/sprite_accessory/markings = GLOB.moth_markings_list[H.dna.features["moth_markings"]]
+		var/datum/sprite_accessory/markings = SSaccessories.moth_markings_list[H.dna.features["moth_markings"]]
 		var/markings_icon_state = markings.icon_state
 		if(ismoth(H) && HAS_TRAIT(H, TRAIT_MOTH_BURNT))
 			markings_icon_state = "burnt_off"
@@ -868,7 +859,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	//Underwear, Undershirts & Socks
 	if(!(NO_UNDERWEAR in species_traits))
 		if(H.underwear && !(H.dna.species.bodytype & BODYTYPE_DIGITIGRADE))
-			var/datum/sprite_accessory/underwear/underwear = GLOB.underwear_list[H.underwear]
+			var/datum/sprite_accessory/underwear/underwear = SSaccessories.underwear_list[H.underwear]
 			var/mutable_appearance/underwear_overlay
 			if(underwear)
 				if(H.dna.species.sexes && H.dna.features["body_model"] == FEMALE && (underwear.use_default_gender == MALE))
@@ -880,7 +871,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 				standing += underwear_overlay
 
 		if(H.undershirt)
-			var/datum/sprite_accessory/undershirt/undershirt = GLOB.undershirt_list[H.undershirt]
+			var/datum/sprite_accessory/undershirt/undershirt = SSaccessories.undershirt_list[H.undershirt]
 			if(undershirt)
 				if(H.dna.species.sexes && H.dna.features["body_model"] == FEMALE)
 					standing += wear_female_version(undershirt.icon_state, undershirt.icon, CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
@@ -888,7 +879,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 					standing += mutable_appearance(undershirt.icon, undershirt.icon_state, CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
 
 		if(H.socks && H.num_legs >= 2 && !(H.dna.species.bodytype & BODYTYPE_DIGITIGRADE) && !(NOSOCKS in species_traits))
-			var/datum/sprite_accessory/socks/socks = GLOB.socks_list[H.socks]
+			var/datum/sprite_accessory/socks/socks = SSaccessories.socks_list[H.socks]
 			if(socks)
 				standing += mutable_appearance(socks.icon, socks.icon_state, CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
 
@@ -924,15 +915,15 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		else if (mutant_bodyparts["tail_lizard"])
 			bodyparts_to_add -= "waggingtail_lizard"
 
-	if(mutant_bodyparts["tail_human"])
+	if(mutant_bodyparts["tail_cat"])
 		if(H.wear_suit && (H.wear_suit.flags_inv & HIDEJUMPSUIT))
-			bodyparts_to_add -= "tail_human"
+			bodyparts_to_add -= "tail_cat"
 
 
 	if(mutant_bodyparts["waggingtail_human"])
 		if(H.wear_suit && (H.wear_suit.flags_inv & HIDEJUMPSUIT))
 			bodyparts_to_add -= "waggingtail_human"
-		else if (mutant_bodyparts["tail_human"])
+		else if (mutant_bodyparts["tail_cat"])
 			bodyparts_to_add -= "waggingtail_human"
 
 	if(mutant_bodyparts["spines"])
@@ -1070,81 +1061,79 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			var/datum/sprite_accessory/S
 			switch(bodypart)
 				if("tail_lizard")
-					S = GLOB.tails_list_lizard[H.dna.features["tail_lizard"]]
+					S = SSaccessories.tails_list_lizard[H.dna.features["tail_lizard"]]
 				if("waggingtail_lizard")
-					S = GLOB.animated_tails_list_lizard[H.dna.features["tail_lizard"]]
-				if("tail_human")
-					S = GLOB.tails_list_human[H.dna.features["tail_human"]]
+					S = SSaccessories.animated_tails_list_lizard[H.dna.features["tail_lizard"]]
+				if("tail_cat")
+					S = SSaccessories.tails_list_human[H.dna.features["tail_cat"]]
 				if("waggingtail_human")
-					S = GLOB.animated_tails_list_human[H.dna.features["tail_human"]]
+					S = SSaccessories.animated_tails_list_human[H.dna.features["tail_cat"]]
 				if("spines")
-					S = GLOB.spines_list[H.dna.features["spines"]]
+					S = SSaccessories.spines_list[H.dna.features["spines"]]
 				if("waggingspines")
-					S = GLOB.animated_spines_list[H.dna.features["spines"]]
+					S = SSaccessories.animated_spines_list[H.dna.features["spines"]]
 				if("snout")
-					S = GLOB.snouts_list[H.dna.features["snout"]]
+					S = SSaccessories.snouts_list[H.dna.features["snout"]]
 				if("frills")
-					S = GLOB.frills_list[H.dna.features["frills"]]
+					S = SSaccessories.frills_list[H.dna.features["frills"]]
 				if("horns")
-					S = GLOB.horns_list[H.dna.features["horns"]]
+					S = SSaccessories.horns_list[H.dna.features["horns"]]
 				if("ears")
-					S = GLOB.ears_list[H.dna.features["ears"]]
-				if("body_markings")
-					S = GLOB.body_markings_list[H.dna.features["body_markings"]]
+					S = SSaccessories.ears_list[H.dna.features["ears"]]
+				if("lizard_markings")
+					S = SSaccessories.lizard_markings_list[H.dna.features["lizard_markings"]]
 				if("wings")
-					S = GLOB.wings_list[H.dna.features["wings"]]
+					S = SSaccessories.wings_list[H.dna.features["wings"]]
 				if("wingsopen")
-					S = GLOB.wings_open_list[H.dna.features["wings"]]
+					S = SSaccessories.wings_open_list[H.dna.features["wings"]]
 				if("legs")
-					S = GLOB.legs_list[H.dna.features["legs"]]
+					S = SSaccessories.legs_list[H.dna.features["legs"]]
 				if("moth_wings")
 					if(HAS_TRAIT(H, TRAIT_MOTH_BURNT))
-						S = GLOB.moth_wings_list["Burnt Off"]
+						S = SSaccessories.moth_wings_list["Burnt Off"]
 					else
-						S = GLOB.moth_wings_list[H.dna.features["moth_wings"]]
+						S = SSaccessories.moth_wings_list[H.dna.features["moth_wings"]]
 				if("moth_antennae")
 					if(HAS_TRAIT(H, TRAIT_MOTH_BURNT))
-						S = GLOB.moth_antennae_list["Burnt Off"]
+						S = SSaccessories.moth_antennae_list["Burnt Off"]
 					else
-						S = GLOB.moth_antennae_list[H.dna.features["moth_antennae"]]
+						S = SSaccessories.moth_antennae_list[H.dna.features["moth_antennae"]]
 				if("moth_wingsopen")
-					S = GLOB.moth_wingsopen_list[H.dna.features["moth_wings"]]
+					S = SSaccessories.moth_wingsopen_list[H.dna.features["moth_wings"]]
 				if("moth_markings")
-					S = GLOB.moth_markings_list[H.dna.features["moth_markings"]]
-				if("caps")
-					S = GLOB.caps_list[H.dna.features["caps"]]
+					S = SSaccessories.moth_markings_list[H.dna.features["moth_markings"]]
 				if("ipc_screen")
-					S = GLOB.ipc_screens_list[H.dna.features["ipc_screen"]]
+					S = SSaccessories.ipc_screens_list[H.dna.features["ipc_screen"]]
 				if("ipc_antenna")
-					S = GLOB.ipc_antennas_list[H.dna.features["ipc_antenna"]]
+					S = SSaccessories.ipc_antennas_list[H.dna.features["ipc_antenna"]]
 				if("ipc_chassis")
-					S = GLOB.ipc_chassis_list[H.dna.features["ipc_chassis"]]
+					S = SSaccessories.ipc_chassis_list[H.dna.features["ipc_chassis"]]
 				if("insect_type")
-					S = GLOB.insect_type_list[H.dna.features["insect_type"]]
+					S = SSaccessories.insect_type_list[H.dna.features["insect_type"]]
 				if("apid_antenna")
-					S = GLOB.apid_antenna_list[H.dna.features["apid_antenna"]]
+					S = SSaccessories.apid_antenna_list[H.dna.features["apid_antenna"]]
 				if("apid_stripes")
-					S = GLOB.apid_stripes_list[H.dna.features["apid_stripes"]]
+					S = SSaccessories.apid_stripes_list[H.dna.features["apid_stripes"]]
 				if("apid_headstripes")
-					S = GLOB.apid_headstripes_list[H.dna.features["apid_headstripes"]]
+					S = SSaccessories.apid_headstripes_list[H.dna.features["apid_headstripes"]]
 				if("psyphoza_cap")
-					S = GLOB.psyphoza_cap_list[H.dna.features["psyphoza_cap"]]
+					S = SSaccessories.psyphoza_cap_list[H.dna.features["psyphoza_cap"]]
 				if("diona_leaves")
-					S = GLOB.diona_leaves_list[H.dna.features["diona_leaves"]]
+					S = SSaccessories.diona_leaves_list[H.dna.features["diona_leaves"]]
 				if("diona_thorns")
-					S = GLOB.diona_thorns_list[H.dna.features["diona_thorns"]]
+					S = SSaccessories.diona_thorns_list[H.dna.features["diona_thorns"]]
 				if("diona_flowers")
-					S = GLOB.diona_flowers_list[H.dna.features["diona_flowers"]]
+					S = SSaccessories.diona_flowers_list[H.dna.features["diona_flowers"]]
 				if("diona_moss")
-					S = GLOB.diona_moss_list[H.dna.features["diona_moss"]]
+					S = SSaccessories.diona_moss_list[H.dna.features["diona_moss"]]
 				if("diona_mushroom")
-					S = GLOB.diona_mushroom_list[H.dna.features["diona_mushroom"]]
+					S = SSaccessories.diona_mushroom_list[H.dna.features["diona_mushroom"]]
 				if("diona_antennae")
-					S = GLOB.diona_antennae_list[H.dna.features["diona_antennae"]]
+					S = SSaccessories.diona_antennae_list[H.dna.features["diona_antennae"]]
 				if("diona_eyes")
-					S = GLOB.diona_eyes_list[H.dna.features["diona_eyes"]]
+					S = SSaccessories.diona_eyes_list[H.dna.features["diona_eyes"]]
 				if("diona_pbody")
-					S = GLOB.diona_pbody_list[H.dna.features["diona_pbody"]]
+					S = SSaccessories.diona_pbody_list[H.dna.features["diona_pbody"]]
 
 
 			if(!S || S.icon_state == "none" || !S?.icon_state)
@@ -1158,7 +1147,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 				ADD_LUM_SOURCE(H, LUM_SOURCE_MUTANT_BODYPART)
 
 			//A little rename so we don't have to use tail_lizard or tail_human when naming the sprites.
-			if(bodypart == "tail_lizard" || bodypart == "tail_human")
+			if(bodypart == "tail_lizard" || bodypart == "tail_cat")
 				bodypart = "tail"
 			else if(bodypart == "waggingtail_lizard" || bodypart == "waggingtail_human")
 				bodypart = "waggingtail"
@@ -1223,6 +1212,9 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		if(BODY_FRONT_LAYER)
 			return "FRONT"
 
+///Proc that randomizes all the appearance elements (external organs, markings, hair etc.) of a species' associated mob. Function set by child procs
+/datum/species/proc/randomize_features(mob/living/carbon/human/human_mob)
+	return
 
 /datum/species/proc/spec_life(mob/living/carbon/human/H, delta_time, times_fired)
 	if(HAS_TRAIT(H, TRAIT_NOBREATH))

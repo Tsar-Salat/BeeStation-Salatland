@@ -38,14 +38,14 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/mirror)
 		switch(choice)
 			if("Hair")
 				//handle normal hair
-				var/new_style = tgui_input_list(user, "Select a hair style", "Grooming", GLOB.hair_styles_list, H.hair_style)
+				var/new_style = tgui_input_list(user, "Select a hair style", "Grooming", SSaccessories.hairstyles_list, H.hair_style)
 				if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
 					return	//no tele-grooming
 				if(new_style)
 					H.hair_style = new_style
 			if("Facial")
 				//handle facial hair
-				var/new_style = tgui_input_list(user, "Select a facial hair style", "Grooming", GLOB.facial_hair_styles_list, H.facial_hair_style)
+				var/new_style = tgui_input_list(user, "Select a facial hair style", "Grooming", SSaccessories.facial_hairstyles_list, H.facial_hair_style)
 				if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
 					return	//no tele-grooming
 				if(new_style)
@@ -225,7 +225,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/mirror)
 			if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
 				return
 			if(hairchoice == "Style") //So you just want to use a mirror then?
-				var/new_style = tgui_input_list(user, "Select a hair style", "Hair Style", GLOB.hair_styles_list, H.hair_style)
+				var/new_style = tgui_input_list(user, "Select a hair style", "Hair Style", SSaccessories.hairstyles_list, H.hair_style)
 				if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
 					return
 				if(new_style)

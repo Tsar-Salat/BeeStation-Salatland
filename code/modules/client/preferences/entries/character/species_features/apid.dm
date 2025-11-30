@@ -9,8 +9,8 @@
 /datum/preference/choiced/apid_stripes/init_possible_values()
 	var/list/values = list()
 
-	for (var/stripe_name in GLOB.apid_stripes_list)
-		var/datum/sprite_accessory/stripe = GLOB.apid_stripes_list[stripe_name]
+	for (var/stripe_name in SSaccessories.apid_stripes_list)
+		var/datum/sprite_accessory/stripe = SSaccessories.apid_stripes_list[stripe_name]
 
 		var/datum/universal_icon/icon_with_stripes = uni_icon('icons/mob/species/apid/bodyparts.dmi', "apid_chest_m", dir = SOUTH)
 		if (stripe.icon_state != "none")
@@ -40,8 +40,8 @@
 /datum/preference/choiced/apid_antenna/init_possible_values()
 	var/list/values = list()
 
-	for (var/antenna_name in GLOB.apid_antenna_list)
-		var/datum/sprite_accessory/antenna = GLOB.apid_antenna_list[antenna_name]
+	for (var/antenna_name in SSaccessories.apid_antenna_list)
+		var/datum/sprite_accessory/antenna = SSaccessories.apid_antenna_list[antenna_name]
 
 		var/datum/universal_icon/icon_with_antennae = uni_icon('icons/mob/species/apid/bodyparts.dmi', "apid_head_m", dir = SOUTH)
 		if (antenna.icon_state != "none")
@@ -69,8 +69,8 @@
 /datum/preference/choiced/apid_headstripes/init_possible_values()
 	var/list/values = list()
 
-	for (var/headstripe_name in GLOB.apid_headstripes_list)
-		var/datum/sprite_accessory/headstripe = GLOB.apid_headstripes_list[headstripe_name]
+	for (var/headstripe_name in SSaccessories.apid_headstripes_list)
+		var/datum/sprite_accessory/headstripe = SSaccessories.apid_headstripes_list[headstripe_name]
 
 		var/datum/universal_icon/icon_with_headstripes = uni_icon('icons/mob/species/apid/bodyparts.dmi', "apid_head_m", dir = SOUTH)
 		if (headstripe.icon_state != "none")

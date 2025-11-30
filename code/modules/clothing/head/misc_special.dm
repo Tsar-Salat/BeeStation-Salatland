@@ -73,7 +73,7 @@
 
 /obj/item/clothing/head/wig/update_icon()
 	cut_overlays()
-	var/datum/sprite_accessory/S = GLOB.hair_styles_list[hair_style]
+	var/datum/sprite_accessory/S = SSaccessories.hairstyles_list[hair_style]
 	if(!S)
 		icon_state = "pwig"
 	else
@@ -83,7 +83,7 @@
 		add_overlay(M)
 
 /obj/item/clothing/head/wig/attack_self(mob/user)
-	var/new_style = input(user, "Select a hair style", "Wig Styling")  as null|anything in (GLOB.hair_styles_list - "Bald")
+	var/new_style = input(user, "Select a hair style", "Wig Styling")  as null|anything in (SSaccessories.hairstyles_list - "Bald")
 	if(!user.canUseTopic(src, BE_CLOSE))
 		return
 	if(new_style && new_style != hair_style)
@@ -92,7 +92,7 @@
 	if(adjustablecolor)
 		hair_color = tgui_color_picker(usr,"","Choose Color",hair_color)
 		var/picked_gradient_style
-		picked_gradient_style = input(usr, "", "Choose Gradient")  as null|anything in GLOB.hair_gradients_list
+		picked_gradient_style = input(usr, "", "Choose Gradient")  as null|anything in SSaccessories.hair_gradients_list
 		if(picked_gradient_style)
 			gradient_style = picked_gradient_style
 			if(gradient_style != "None")
@@ -112,7 +112,7 @@
 /obj/item/clothing/head/wig/random/Initialize(mapload)
 	. = ..()
 
-	hair_style = pick(GLOB.hair_styles_list - "Bald") //Don't want invisible wig
+	hair_style = pick(SSaccessories.hairstyles_list - "Bald") //Don't want invisible wig
 	hair_color = "#[random_short_color()]"
 
 /obj/item/clothing/head/wig/natural
@@ -123,7 +123,7 @@
 	custom_price = 25
 
 /obj/item/clothing/head/wig/natural/Initialize(mapload)
-	hair_style = pick(GLOB.hair_styles_list - "Bald")
+	hair_style = pick(SSaccessories.hairstyles_list - "Bald")
 	. = ..()
 
 /obj/item/clothing/head/wig/natural/equipped(mob/user, slot)

@@ -12,8 +12,8 @@
 	var/datum/universal_icon/moth_head = uni_icon('icons/mob/species/moth/bodyparts.dmi', "moth_head", dir = SOUTH)
 	moth_head.blend_icon(uni_icon('icons/mob/species/human/human_face.dmi', "motheyes", dir = SOUTH), ICON_OVERLAY)
 
-	for (var/antennae_name in GLOB.moth_antennae_roundstart_list)
-		var/datum/sprite_accessory/antennae = GLOB.moth_antennae_roundstart_list[antennae_name]
+	for (var/antennae_name in SSaccessories.moth_antennae_list)
+		var/datum/sprite_accessory/antennae = SSaccessories.moth_antennae_list[antennae_name]
 
 		var/datum/universal_icon/icon_with_antennae = moth_head.copy()
 		icon_with_antennae.blend_icon(uni_icon(antennae.icon, "m_moth_antennae_[antennae.icon_state]_FRONT", dir = SOUTH), ICON_OVERLAY)
@@ -55,8 +55,8 @@
 
 	moth_body.blend_icon(uni_icon('icons/mob/species/human/human_face.dmi', "motheyes", dir = SOUTH), ICON_OVERLAY)
 
-	for (var/markings_name in GLOB.moth_markings_roundstart_list)
-		var/datum/sprite_accessory/markings = GLOB.moth_markings_roundstart_list[markings_name]
+	for (var/markings_name in SSaccessories.moth_markings_list)
+		var/datum/sprite_accessory/markings = SSaccessories.moth_markings_list[markings_name]
 		var/datum/universal_icon/icon_with_markings = moth_body.copy()
 
 		if (markings_name != FEATURE_NONE)
@@ -90,8 +90,8 @@
 
 /datum/preference/choiced/moth_wings/init_possible_values()
 	var/list/values = list()
-	for (var/wings_name in GLOB.moth_wings_roundstart_list)
-		var/datum/sprite_accessory/wings = GLOB.moth_wings_roundstart_list[wings_name]
+	for (var/wings_name in SSaccessories.moth_wings_list)
+		var/datum/sprite_accessory/wings = SSaccessories.moth_wings_list[wings_name]
 		var/datum/universal_icon/icon = uni_icon(wings.icon, "m_moth_wings_[wings.icon_state]_BEHIND")
 		values[wings.name] = icon
 	return values

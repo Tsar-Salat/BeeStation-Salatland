@@ -345,15 +345,15 @@
 /obj/item/organ/tail/clockwork/on_insert(mob/living/carbon/human/tail_owner)
 	. = ..()
 	if(istype(tail_owner) && tail_owner.dna)
-		if(!(tail_owner.dna.species.mutant_bodyparts["tail_human"]))
-			tail_owner.dna.features["tail_human"] = tail_type
-			tail_owner.dna.species.mutant_bodyparts["tail_human"] = tail_type
+		if(!(tail_owner.dna.species.mutant_bodyparts["tail_cat"]))
+			tail_owner.dna.features["tail_cat"] = tail_type
+			tail_owner.dna.species.mutant_bodyparts["tail_cat"] = tail_type
 		tail_owner.update_body()
 
 /obj/item/organ/tail/clockwork/on_remove(mob/living/carbon/human/tail_owner)
 	. = ..()
 	if(istype(tail_owner) && tail_owner.dna)
-		tail_owner.dna.species.mutant_bodyparts -= "tail_human"
+		tail_owner.dna.species.mutant_bodyparts -= "tail_cat"
 		tail_owner.update_body()
 
 /obj/item/bodypart/arm/left/robot/clockwork

@@ -5,8 +5,8 @@
 	bodyflag = FLAG_FELINID
 	examine_limb_id = SPECIES_HUMAN
 
-	mutant_bodyparts = list("tail_human" = "Cat", "ears" = "Cat", "wings" = "None", "body_size" = "Normal")
-	forced_features = list("tail_human" = "Cat", "ears" = "Cat")
+	mutant_bodyparts = list("tail_cat" = "Cat", "ears" = "Cat", "wings" = "None", "body_size" = "Normal")
+	forced_features = list("tail_cat" = "Cat", "ears" = "Cat")
 
 	mutantears = /obj/item/organ/ears/cat
 	mutant_organs = list(/obj/item/organ/tail/cat)
@@ -36,8 +36,8 @@
 	if(ishuman(C))
 		var/mob/living/carbon/human/H = C
 		if(!pref_load)			//Hah! They got forcefully purrbation'd. Force default felinid parts on them if they have no mutant parts in those areas!
-			if(H.dna.features["tail_human"] == "None")
-				H.dna.features["tail_human"] = "Cat"
+			if(H.dna.features["tail_cat"] == "None")
+				H.dna.features["tail_cat"] = "Cat"
 			if(H.dna.features["ears"] == "None")
 				H.dna.features["ears"] = "Cat"
 		if(H.dna.features["ears"] == "Cat")
@@ -45,7 +45,7 @@
 			ears.Insert(H, drop_if_replaced = FALSE, pref_load = pref_load)
 		else
 			mutantears = /obj/item/organ/ears
-		if(H.dna.features["tail_human"] == "Cat")
+		if(H.dna.features["tail_cat"] == "Cat")
 			var/obj/item/organ/tail/cat/tail = new
 			tail.Insert(H, drop_if_replaced = FALSE, pref_load = pref_load)
 		else

@@ -66,7 +66,7 @@ var/global/list/custom_name_types = list(
 		READ_FILE_EXVAR(S["feature_ipc_antenna"], features["ipc_antenna"])
 		READ_FILE_EXVAR(S["feature_ipc_chassis"], features["ipc_chassis"])
 		READ_FILE_EXVAR(S["feature_insect_type"], features["insect_type"])
-		READ_FILE_EXVAR(S["feature_human_tail"], features["tail_human"])
+		READ_FILE_EXVAR(S["feature_human_tail"], features["tail_cat"])
 		READ_FILE_EXVAR(S["feature_human_ears"], features["ears"])
 		READ_FILE_EXVAR(S["feature_apid_antenna"], features["apid_antenna"])
 		READ_FILE_EXVAR(S["feature_apid_stripes"], features["apid_stripes"])

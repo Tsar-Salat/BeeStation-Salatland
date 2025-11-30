@@ -58,8 +58,8 @@
 	// Change Appearance
 	user.gender = pick(MALE, FEMALE, PLURAL)
 	user.skin_tone = random_skin_tone()
-	user.hair_style = random_hair_style(user.gender)
-	user.facial_hair_style = pick(random_facial_hair_style(user.gender), "Shaved")
+	user.hair_style = random_hairstyle(user.gender)
+	user.facial_hair_style = pick(random_facial_hairstyle(user.gender), "Shaved")
 	user.hair_color = random_short_color()
 	user.facial_hair_color = user.hair_color
 	user.underwear = random_underwear(user.gender)
@@ -68,7 +68,15 @@
 	user.eye_color = random_eye_color()
 	if(prev_disfigured)
 		REMOVE_TRAIT(user, TRAIT_DISFIGURED, null)
-	user.dna.features = random_features()
+	var/static/list/all_species_protoypes
+	if(isnull(all_species_protoypes))
+		all_species_protoypes = list()
+		for(var/species_path in subtypesof(/datum/species))
+			all_species_protoypes += new species_path()
+
+	for(var/datum/species/random_species as anything in all_species_protoypes)
+		user.dna.features |= random_species.randomize_features()
+	user.dna.features["mcolor"] = "[random_color()]"
 
 	// Apply Appearance
 	user.SetSpecialVoice(user.name)

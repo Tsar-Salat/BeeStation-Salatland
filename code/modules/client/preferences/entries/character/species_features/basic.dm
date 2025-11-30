@@ -8,7 +8,7 @@
 		var/datum/sprite_accessory/accessory = accessories[name]
 		if (accessory == null)
 			continue
-			
+
 		var/datum/universal_icon/final_icon = head_icon.copy()
 
 		if (accessory.icon_state == null)
@@ -61,7 +61,7 @@
 	priority = PREFERENCE_PRIORITY_FACIAL_HAIR
 
 /datum/preference/choiced/facial_hairstyle/init_possible_values()
-	return generate_possible_values_for_sprite_accessories_on_head(GLOB.facial_hair_styles_list)
+	return generate_possible_values_for_sprite_accessories_on_head(SSaccessories.facial_hairstyles_list)
 
 /datum/preference/choiced/facial_hairstyle/apply_to_human(mob/living/carbon/human/target, value)
 	target.facial_hair_style = value
@@ -75,7 +75,7 @@
 
 /datum/preference/choiced/facial_hairstyle/create_informed_default_value(datum/preferences/preferences)
 	var/gender = preferences.read_character_preference(/datum/preference/choiced/gender)
-	var/datum/sprite_accessory/selected = pick_default_accessory(GLOB.facial_hair_styles_list, new /datum/sprite_accessory/facial_hair/shaved(), 30, required_gender = gender)
+	var/datum/sprite_accessory/selected = pick_default_accessory(SSaccessories.facial_hairstyles_list, new /datum/sprite_accessory/facial_hair/shaved(), 30, required_gender = gender)
 	return selected.name
 
 /datum/preference/color_legacy/facial_hair_color
@@ -142,7 +142,7 @@
 	priority = PREFERENCE_PRIORITY_HAIR_STYLE
 
 /datum/preference/choiced/hairstyle/init_possible_values()
-	return generate_possible_values_for_sprite_accessories_on_head(GLOB.hair_styles_list)
+	return generate_possible_values_for_sprite_accessories_on_head(SSaccessories.hairstyles_list)
 
 /datum/preference/choiced/hairstyle/apply_to_human(mob/living/carbon/human/target, value)
 	target.hair_style = value
@@ -158,7 +158,7 @@
 	// Pick something not insane that might be considered by an average person to match the gender.
 	// These are stricter than what is possible, since its a default not a restriction
 	var/gender = preferences.read_character_preference(/datum/preference/choiced/gender)
-	var/datum/sprite_accessory/picked = pick_default_accessory(GLOB.hair_styles_list, required_gender = gender)
+	var/datum/sprite_accessory/picked = pick_default_accessory(SSaccessories.hairstyles_list, required_gender = gender)
 	return picked.name
 
 /datum/preference/choiced/gradient_style
@@ -170,7 +170,7 @@
 	relevant_species_trait = HAIR
 
 /datum/preference/choiced/gradient_style/init_possible_values()
-	var/list/values = possible_values_for_sprite_accessory_list(GLOB.hair_gradients_list)
+	var/list/values = possible_values_for_sprite_accessory_list(SSaccessories.hair_gradients_list)
 
 	var/list/body_parts = list(
 		BODY_ZONE_HEAD,
@@ -191,12 +191,12 @@
 	jumpsuit_icon.blend_color("#b3b3b3", ICON_MULTIPLY)
 	body_icon.blend_icon(jumpsuit_icon, ICON_OVERLAY)
 
-	var/datum/sprite_accessory/hair_accessory = GLOB.hair_styles_list["Very Long Hair 2"]
+	var/datum/sprite_accessory/hair_accessory = SSaccessories.hairstyles_list["Very Long Hair 2"]
 	var/datum/universal_icon/hair_icon = uni_icon(hair_accessory.icon, hair_accessory.icon_state, dir = NORTH)
 	hair_icon.blend_color("#080501", ICON_MULTIPLY)
 
 	for (var/name in values)
-		var/datum/sprite_accessory/accessory = GLOB.hair_gradients_list[name]
+		var/datum/sprite_accessory/accessory = SSaccessories.hair_gradients_list[name]
 		if (accessory == null)
 			if(accessory.icon_state == null || accessory.icon_state == "none")
 				values[name] = uni_icon('icons/mob/landmarks.dmi', "x")
@@ -227,7 +227,7 @@
 	return data
 
 /datum/preference/choiced/gradient_style/create_default_value()
-	var/datum/sprite_accessory/accessory = pick_default_accessory(GLOB.hair_gradients_list)
+	var/datum/sprite_accessory/accessory = pick_default_accessory(SSaccessories.hair_gradients_list)
 	return accessory.name
 
 /datum/preference/color_legacy/gradient_color

@@ -16,10 +16,10 @@
 	mutant_bodyparts = list(
 		"tail_lizard" = "Smooth",
 		"snout" = "Round",
-		"horns" = "None",
-		"frills" = "None",
-		"spines" = "None",
-		"body_markings" = "None",
+		"horns" = SPRITE_ACCESSORY_NONE,
+		"frills" = SPRITE_ACCESSORY_NONE,
+		"spines" = SPRITE_ACCESSORY_NONE,
+		"lizard_markings" = SPRITE_ACCESSORY_NONE,
 		"legs" = "Normal Legs",
 		"body_size" = "Normal"
 	)
@@ -66,6 +66,11 @@
 	if(unique && attempts < 10)
 		if(findname(.))
 			. = .(gender, TRUE, null, ++attempts)
+
+/datum/species/lizard/randomize_features()
+	var/list/features = ..()
+	features["lizard_markings"] = pick(SSaccessories.lizard_markings_list)
+	return features
 
 //I wag in death
 /datum/species/lizard/spec_death(gibbed, mob/living/carbon/human/H)
