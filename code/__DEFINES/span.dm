@@ -226,3 +226,8 @@
 // Spans that use embedded tgui components:
 // Sorted alphabetically
 #define span_tooltip(tip, main_text) ("<span data-component=\"Tooltip\" data-content=\"" + tip + "\" class=\"tooltip\">" + main_text + "</span>")
+
+//More generic macros
+#define span_class(class, X) "<span class='[class]'>[X]</span>"
+#define span_style(style, X) "<span style=\"[style]\">[X]</span>"
+#define span_color(color, text) span_style("color: [color]", "[text]")

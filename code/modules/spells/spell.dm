@@ -82,6 +82,9 @@
 	//Whether the spell is bound to our minds or is a result of hacky coding
 	var/mindbound = TRUE
 
+	//Hidden from the codex
+	var/hidden_from_codex
+
 /datum/action/spell/Grant(mob/grant_to)
 	// If our spell is mind-bound, we only wanna grant it to our mind
 	if(istype(master, /datum/mind))

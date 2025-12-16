@@ -13,6 +13,9 @@
 	/// Set this to true to call pre_reaction_other_checks() on react and do some more interesting reaction logic
 	var/required_other = FALSE
 
+	/// Is it hidden from the codex?
+	var/hidden_from_codex
+
 	var/mob_react = TRUE //Determines if a chemical reaction can occur inside a mob
 
 	var/required_temp = 0

@@ -334,6 +334,11 @@
 				accessory_message += " with [icon2html(undershirt.attached_accessory, user)] \a [undershirt.attached_accessory]"
 
 		. += "[t_He] [t_is] wearing [w_uniform.examine_title(user)][accessory_message]."
+
+	//species codex link
+	if(user.can_use_codex() && SScodex.get_codex_entry(get_codex_value()))
+		. += span_notice("The codex has <b><a href='byond://?src=\ref[SScodex];show_examined_info=\ref[src];show_to=\ref[user]'>relevant information</a></b> available.")
+
 	//head
 	if(head && !(obscured & ITEM_SLOT_HEAD) && !HAS_TRAIT(head, TRAIT_EXAMINE_SKIP))
 		. += "[t_He] [t_is] wearing [head.examine_title(user)] on [t_his] head."

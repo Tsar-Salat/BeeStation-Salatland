@@ -121,6 +121,9 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	///List of factions the mob gain upon gaining this species.
 	var/list/inherent_factions
 
+	/// Is this species hidden from the codex?
+	var/hidden_from_codex = TRUE
+
 	var/attack_verb = "punch"	// punch-specific attack verb
 	var/sound/attack_sound = 'sound/weapons/punch1.ogg'
 	var/sound/miss_sound = 'sound/weapons/punchmiss.ogg'

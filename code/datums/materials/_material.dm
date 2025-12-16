@@ -7,7 +7,7 @@ Simple datum which is instanced once per type and is used for every object of sa
 
 /datum/material
 	var/name = "material"
-	var/desc = "its..stuff."
+	var/desc = "its... stuff."
 	///Base color of the material, is used for greyscale. Item isn't changed in color if this is null.
 	///Deprecated, use greyscale_color instead.
 	var/color
@@ -29,6 +29,8 @@ Simple datum which is instanced once per type and is used for every object of sa
 	var/integrity_modifier = 1
 	///This is the amount of value per 1 unit of the material
 	var/value_per_unit = 0
+	/// Is this hidden from the codex?
+	var/hidden_from_codex
 	/*
 	///Armor modifiers, multiplies an items normal armor vars by these amounts.
 	var/armor_modifiers = list("melee" = 1, "bullet" = 1, "laser" = 1, "energy" = 1, "bomb" = 1, "bio" = 1, "rad" = 1, "fire" = 1, "acid" = 1)

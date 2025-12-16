@@ -73,6 +73,9 @@ GLOBAL_LIST_INIT(name2reagent, build_name2reagent())
 	///is it currently metabolizing
 	var/metabolizing = FALSE
 
+	/// Is this hidden from the codex?
+	var/hidden_from_codex
+
 	///The default reagent container for the reagent, used for icon generation
 	var/obj/item/reagent_containers/default_container = /obj/item/reagent_containers/cup/bottle
 
