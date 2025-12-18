@@ -386,7 +386,8 @@ DEFINE_BITFIELD(smoothing_junction, list(
 		rotated.icon_state = "[base_icon_state]-[rotated_junction]"
 		rotated.override = TRUE
 		C.images += rotated
-		to_chat(world, "<span class='notice'>DEBUG: Rotated [src] ([base_icon_state]) from junction [smoothing_junction] to [rotated_junction] (angle: [rotation_angle])</span>")///Rotates a junction bitmask by the specified angle (90, 180, or 270 degrees clockwise)
+
+///Rotates a junction bitmask by the specified angle (90, 180, or 270 degrees clockwise)
 /proc/rotate_junction(junction, angle)
 	if(!angle || angle == 0)
 		return junction
