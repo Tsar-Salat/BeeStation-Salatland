@@ -60,10 +60,10 @@
 	message.plane = source.message.plane
 	message.appearance_flags = source.message.appearance_flags
 	message.alpha = source.message.alpha
-	message.pixel_y = source.message.pixel_y
+	message.pixel_z = source.message.pixel_z
 	message.maptext_width = source.message.maptext_width
 	message.maptext_height = source.message.maptext_height
-	message.maptext_x = source.message.maptext_x
+	message.pixel_w = source.message.pixel_w
 	message.color = source.message.color
 	message.maptext = source.message.maptext
 
@@ -254,11 +254,13 @@
 	group.message.plane = RUNECHAT_PLANE
 	group.message.appearance_flags = APPEARANCE_UI_IGNORE_ALPHA | KEEP_APART
 	group.message.alpha = 0
-	group.message.pixel_y = bound_height - MESSAGE_FADE_PIXEL_Y
+	//CLIENT SPIN START
+	group.message.pixel_z = bound_height - MESSAGE_FADE_PIXEL_Y // previously, it used "pixel_y", but it can't support client dir rotation
 	// Each message contains space for the original message, the buffer zone and the spacing message
 	group.message.maptext_width = CHAT_MESSAGE_WIDTH + CHAT_MESSAGE_MARGIN + CHAT_MESSAGE_WIDTH
 	group.message.maptext_height = CHAT_MESSAGE_HEIGHT
-	group.message.maptext_x = (CHAT_MESSAGE_WIDTH - bound_width) * -0.5 - CHAT_MESSAGE_MARGIN - CHAT_MESSAGE_WIDTH
+	group.message.pixel_w = (CHAT_MESSAGE_WIDTH - bound_width) * -0.5 - CHAT_MESSAGE_MARGIN - CHAT_MESSAGE_WIDTH // previously, it used "maptext_x", but it can't support client dir rotation
+	//CLIENT SPIN END
 	if(extra_classes.Find("italics"))
 		group.message.color = "#CCCCCC"
 	// The original message gets margin so that its rendering zone is exactly CHAT_MESSAGE_WIDTH pixels wide
@@ -275,7 +277,7 @@
 		if (!C)
 			continue
 		hearers_to_groups[C] = group
-	animate(group.message, alpha = 255, pixel_y = bound_height, time = CHAT_MESSAGE_SPAWN_TIME)
+	animate(group.message, alpha = 255, pixel_z = bound_height, time = CHAT_MESSAGE_SPAWN_TIME)
 
 	// If we are not in a group, then we will handle bumping the chat messages automatically
 	bump_chat_messages()
@@ -393,7 +395,7 @@
 /datum/chatmessage/proc/end_of_life(fadetime = CHAT_MESSAGE_EOL_FADE)
 	isFading = TRUE
 	for (var/datum/chatmessage_group/group as() in groups)
-		animate(group.message, alpha = 0, pixel_y = group.message.pixel_y + MESSAGE_FADE_PIXEL_Y, time = fadetime, flags = ANIMATION_PARALLEL)
+		animate(group.message, alpha = 0, pixel_z = group.message.pixel_z + MESSAGE_FADE_PIXEL_Y, time = fadetime, flags = ANIMATION_PARALLEL)
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(qdel), src), fadetime, TIMER_DELETE_ME, SSrunechat)
 
 /mob/proc/should_show_chat_message(atom/movable/speaker, datum/language/message_language, is_emote = FALSE, is_heard = FALSE)
@@ -638,7 +640,7 @@
 /datum/chatmessage/balloon_alert/end_of_life(fadetime = BALLOON_TEXT_FADE_TIME)
 	isFading = TRUE
 	for (var/datum/chatmessage_group/group as() in groups)
-		animate(group.message, alpha = 0, pixel_y = group.message.pixel_y + MESSAGE_FADE_PIXEL_Y, time = fadetime, flags = ANIMATION_PARALLEL)
+		animate(group.message, alpha = 0, pixel_z = group.message.pixel_z + MESSAGE_FADE_PIXEL_Y, time = fadetime, flags = ANIMATION_PARALLEL)
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(qdel), src), fadetime, TIMER_DELETE_ME, SSrunechat)
 
 /datum/chatmessage/balloon_alert/generate_image(text, atom/target, mob/owner, offset_x, offset_y)
@@ -671,10 +673,10 @@
 	group.message.appearance_flags = APPEARANCE_UI_IGNORE_ALPHA | KEEP_APART
 	group.message.maptext_width = BALLOON_TEXT_WIDTH
 	group.message.maptext_height = CHAT_MESSAGE_HEIGHT
-	group.message.maptext_x = (BALLOON_TEXT_WIDTH - bound_width) * -0.5
+	group.message.pixel_w = (BALLOON_TEXT_WIDTH - bound_width) * -0.5 // previously, it used "maptext_x", but it can't support client dir rotation
 	group.message.maptext = MAPTEXT("<span style='text-align: center; -dm-text-outline: 1px #0005; color: [tgt_color]'>[text]</span>")
 	group.message.pixel_x = offset_x
-	group.message.pixel_y = offset_y
+	group.message.pixel_z = offset_y
 
 	// View the message
 	owned_by.images += group.message
@@ -691,7 +693,7 @@
 		duration_mult += duration_length * BALLOON_TEXT_CHAR_LIFETIME_INCREASE_MULT
 
 	// Animate the message
-	animate(group.message, alpha = 255, pixel_y = (group.message.pixel_y + world.icon_size) * 1.1, time = BALLOON_TEXT_SPAWN_TIME)
+	animate(group.message, alpha = 255, pixel_z = (group.message.pixel_z + world.icon_size) * 1.1, time = BALLOON_TEXT_SPAWN_TIME)
 
 	LAZYADD(message_loc.balloon_alerts, src)
 

@@ -127,7 +127,7 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 		return TRUE
 
 	// LOOC commendation
-	
+
 
 	if(href_list["commandbar_typing"])
 		handle_commandbar_typing(href_list)
@@ -638,6 +638,10 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 		var/mob/living/M = mob
 		M.update_damage_hud()
 	attempt_auto_fit_viewport()
+
+/// a random code can let have multi-dir, but it's BAD. this filters to get a corrected dir.
+/client/proc/sanitize_client_direction()
+	return (dir & NORTH) || (dir & SOUTH) || (dir & WEST) || (dir & EAST)
 
 /client/proc/generate_clickcatcher()
 	if(!void)
