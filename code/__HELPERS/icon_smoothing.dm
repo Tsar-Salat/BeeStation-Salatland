@@ -366,6 +366,55 @@ DEFINE_BITFIELD(smoothing_junction, list(
 	smoothing_junction = new_junction
 	icon_state = "[base_icon_state]-[smoothing_junction]"
 
+///Updates this atom's appearance for a specific client based on their view rotation
+/atom/proc/update_client_smoothing(client/C, rotation_angle)
+	if(!C || !(smoothing_flags & SMOOTH_BITMASK) || !base_icon_state)
+		return
+
+	// Calculate the rotated junction
+	var/rotated_junction = rotate_junction(smoothing_junction, rotation_angle)
+
+	// Remove any existing override image for this atom
+	for(var/image/I in C.images)
+		if(I.loc == src)
+			C.images -= I
+			break
+
+	// Create a client image showing the rotated version if rotation is needed
+	if(rotated_junction != smoothing_junction)
+		var/image/rotated = image(icon, src)
+		rotated.icon_state = "[base_icon_state]-[rotated_junction]"
+		rotated.override = TRUE
+		C.images += rotated
+		to_chat(world, "<span class='notice'>DEBUG: Rotated [src] ([base_icon_state]) from junction [smoothing_junction] to [rotated_junction] (angle: [rotation_angle])</span>")///Rotates a junction bitmask by the specified angle (90, 180, or 270 degrees clockwise)
+/proc/rotate_junction(junction, angle)
+	if(!angle || angle == 0)
+		return junction
+
+	// Extract the individual direction bits
+	var/north = junction & NORTH
+	var/south = junction & SOUTH
+	var/east = junction & EAST
+	var/west = junction & WEST
+	var/ne = junction & NORTHEAST_JUNCTION
+	var/se = junction & SOUTHEAST_JUNCTION
+	var/sw = junction & SOUTHWEST_JUNCTION
+	var/nw = junction & NORTHWEST_JUNCTION
+
+	// Rotate based on angle
+	switch(angle)
+		if(90) // Rotate 90 degrees clockwise: N->E, E->S, S->W, W->N
+			return (north ? EAST : 0) | (east ? SOUTH : 0) | (south ? WEST : 0) | (west ? NORTH : 0) | \
+			       (ne ? SOUTHEAST_JUNCTION : 0) | (se ? SOUTHWEST_JUNCTION : 0) | (sw ? NORTHWEST_JUNCTION : 0) | (nw ? NORTHEAST_JUNCTION : 0)
+		if(180) // Rotate 180 degrees: N->S, E->W, S->N, W->E
+			return (north ? SOUTH : 0) | (south ? NORTH : 0) | (east ? WEST : 0) | (west ? EAST : 0) | \
+			       (ne ? SOUTHWEST_JUNCTION : 0) | (sw ? NORTHEAST_JUNCTION : 0) | (se ? NORTHWEST_JUNCTION : 0) | (nw ? SOUTHEAST_JUNCTION : 0)
+		if(270) // Rotate 270 degrees clockwise (or 90 counter-clockwise): N->W, W->S, S->E, E->N
+			return (north ? WEST : 0) | (west ? SOUTH : 0) | (south ? EAST : 0) | (east ? NORTH : 0) | \
+			       (ne ? NORTHWEST_JUNCTION : 0) | (nw ? SOUTHWEST_JUNCTION : 0) | (sw ? SOUTHEAST_JUNCTION : 0) | (se ? NORTHEAST_JUNCTION : 0)
+
+	return junction
+
 
 /turf/closed/set_smoothed_icon_state(new_junction)
 	// Avoid calling ..() here to avoid setting icon_state twice, which is expensive given how hot this proc is
