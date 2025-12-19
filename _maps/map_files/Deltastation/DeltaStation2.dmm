@@ -2956,19 +2956,6 @@
 /obj/effect/decal/cleanable/blood/splatter,
 /turf/open/floor/plating,
 /area/maintenance/disposal)
-"auN" = (
-/obj/structure/table/wood,
-/obj/item/toy/crayon/spraycan/mimecan{
-	charges = 5;
-	pixel_x = -10;
-	pixel_y = 14
-	},
-/obj/structure/sign/poster/contraband/random{
-	pixel_y = -32
-	},
-/obj/item/food/baguette,
-/turf/open/floor/iron/cafeteria,
-/area/crew_quarters/theatre)
 "auP" = (
 /obj/machinery/atmospherics/pipe/heat_exchanging/simple{
 	dir = 6
@@ -3547,6 +3534,17 @@
 	},
 /turf/open/floor/iron,
 /area/engine/engineering)
+"axX" = (
+/obj/structure/table/wood,
+/obj/item/toy/dummy{
+	pixel_x = 8;
+	pixel_y = 6
+	},
+/obj/item/toy/figure/mime{
+	pixel_x = -8
+	},
+/turf/open/floor/iron/cafeteria,
+/area/crew_quarters/theatre)
 "axZ" = (
 /obj/structure/janitorialcart,
 /obj/effect/decal/cleanable/dirt,
@@ -7028,17 +7026,6 @@
 	pixel_y = -22
 	},
 /obj/machinery/light,
-/turf/open/floor/iron/cafeteria,
-/area/crew_quarters/theatre)
-"aVk" = (
-/obj/structure/table/wood,
-/obj/item/toy/dummy{
-	pixel_x = 8;
-	pixel_y = 6
-	},
-/obj/item/toy/figure/mime{
-	pixel_x = -8
-	},
 /turf/open/floor/iron/cafeteria,
 /area/crew_quarters/theatre)
 "aVl" = (
@@ -34918,20 +34905,6 @@
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
 /turf/open/floor/iron/dark,
 /area/chapel/office)
-"fGE" = (
-/obj/structure/disposalpipe/segment{
-	dir = 9
-	},
-/obj/structure/sign/departments/minsky/security/security{
-	pixel_x = 32
-	},
-/obj/machinery/digital_clock/directional/south,
-/obj/effect/turf_decal/tile/red{
-	dir = 4
-	},
-/obj/machinery/vending/deputy,
-/turf/open/floor/iron,
-/area/hallway/primary/starboard)
 "fGP" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 9
@@ -42044,6 +42017,29 @@
 /obj/effect/turf_decal/stripes/closeup,
 /turf/open/floor/iron/dark,
 /area/hallway/primary/starboard)
+"hLV" = (
+/obj/structure/table/wood,
+/obj/structure/extinguisher_cabinet{
+	pixel_x = 26
+	},
+/obj/item/storage/crayons,
+/obj/item/storage/crayons{
+	pixel_x = -4;
+	pixel_y = 7
+	},
+/obj/item/flashlight/lamp/bananalamp{
+	pixel_y = 5;
+	pixel_x = 6
+	},
+/obj/item/radio/intercom{
+	pixel_y = 26
+	},
+/obj/effect/turf_decal/tile/red/opposingcorners,
+/obj/effect/turf_decal/tile/blue/opposingcorners{
+	dir = 1
+	},
+/turf/open/floor/iron,
+/area/crew_quarters/theatre)
 "hLY" = (
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer4,
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
@@ -43486,6 +43482,19 @@
 /obj/machinery/power/apc/auto_name/directional/south,
 /turf/open/floor/iron,
 /area/crew_quarters/kitchen)
+"iit" = (
+/obj/structure/disposalpipe/segment{
+	dir = 9
+	},
+/obj/structure/sign/departments/minsky/security/security{
+	pixel_x = 32
+	},
+/obj/machinery/digital_clock/directional/south,
+/obj/effect/turf_decal/tile/red{
+	dir = 4
+	},
+/turf/open/floor/iron,
+/area/hallway/primary/starboard)
 "iiu" = (
 /obj/machinery/atmospherics/components/trinary/filter/critical{
 	dir = 4;
@@ -64256,6 +64265,24 @@
 /obj/effect/turf_decal/tile/purple,
 /turf/open/floor/iron/white,
 /area/science/research)
+"oTb" = (
+/obj/structure/dresser,
+/obj/machinery/newscaster{
+	pixel_y = 32
+	},
+/obj/machinery/status_display/evac{
+	pixel_x = -32
+	},
+/obj/effect/turf_decal/tile/red/opposingcorners,
+/obj/effect/turf_decal/tile/blue/opposingcorners{
+	dir = 1
+	},
+/obj/item/toy/figure/clown{
+	pixel_x = -7;
+	pixel_y = 15
+	},
+/turf/open/floor/iron,
+/area/crew_quarters/theatre)
 "oTf" = (
 /obj/structure/window/reinforced/spawner/directional/east,
 /obj/machinery/light/small,
@@ -66440,6 +66467,16 @@
 /obj/structure/disposalpipe/segment,
 /turf/open/floor/iron,
 /area/engine/break_room)
+"pGr" = (
+/obj/structure/sign/warning/nosmoking{
+	pixel_y = -32
+	},
+/obj/structure/mirror{
+	pixel_x = 28
+	},
+/obj/effect/turf_decal/bot,
+/turf/open/floor/iron,
+/area/science/robotics/lab)
 "pGv" = (
 /obj/structure/table/wood,
 /obj/item/food/cheesiehonkers,
@@ -68793,24 +68830,6 @@
 	},
 /turf/open/floor/iron,
 /area/medical/medbay/lobby)
-"qub" = (
-/obj/structure/dresser,
-/obj/machinery/newscaster{
-	pixel_y = 32
-	},
-/obj/machinery/status_display/evac{
-	pixel_x = -32
-	},
-/obj/effect/turf_decal/tile/red/opposingcorners,
-/obj/effect/turf_decal/tile/blue/opposingcorners{
-	dir = 1
-	},
-/obj/item/toy/figure/clown{
-	pixel_x = -7;
-	pixel_y = 15
-	},
-/turf/open/floor/iron,
-/area/crew_quarters/theatre)
 "qug" = (
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
 /turf/open/floor/iron,
@@ -83592,6 +83611,19 @@
 /obj/effect/turf_decal/tile/neutral/half/contrasted,
 /turf/open/floor/iron,
 /area/maintenance/port/fore)
+"vai" = (
+/obj/structure/table/wood,
+/obj/item/toy/crayon/spraycan/mimecan{
+	charges = 5;
+	pixel_x = -10;
+	pixel_y = 14
+	},
+/obj/structure/sign/poster/contraband/random{
+	pixel_y = -32
+	},
+/obj/item/food/baguette,
+/turf/open/floor/iron/cafeteria,
+/area/crew_quarters/theatre)
 "vau" = (
 /turf/closed/wall,
 /area/maintenance/department/medical/morgue)
@@ -87576,29 +87608,6 @@
 	},
 /turf/open/floor/plating,
 /area/bridge/showroom/corporate)
-"wlA" = (
-/obj/structure/table/wood,
-/obj/structure/extinguisher_cabinet{
-	pixel_x = 26
-	},
-/obj/item/storage/crayons,
-/obj/item/storage/crayons{
-	pixel_x = -4;
-	pixel_y = 7
-	},
-/obj/item/flashlight/lamp/bananalamp{
-	pixel_y = 5;
-	pixel_x = 6
-	},
-/obj/item/radio/intercom{
-	pixel_y = 26
-	},
-/obj/effect/turf_decal/tile/red/opposingcorners,
-/obj/effect/turf_decal/tile/blue/opposingcorners{
-	dir = 1
-	},
-/turf/open/floor/iron,
-/area/crew_quarters/theatre)
 "wlE" = (
 /obj/effect/mapping_helpers/airlock/locked,
 /obj/machinery/door/airlock/highsecurity{
@@ -88512,17 +88521,6 @@
 	},
 /turf/open/floor/iron/grid/steel,
 /area/medical/virology)
-"wyq" = (
-/obj/structure/sign/warning/nosmoking{
-	pixel_y = -32
-	},
-/obj/structure/mirror{
-	pixel_x = 28
-	},
-/obj/effect/turf_decal/bot,
-/obj/machinery/aug_manipulator,
-/turf/open/floor/iron,
-/area/science/robotics/lab)
 "wyt" = (
 /obj/structure/table/reinforced,
 /obj/machinery/airalarm/directional/east,
@@ -127131,7 +127129,7 @@ alg
 alg
 aLC
 aMX
-qub
+oTb
 qAU
 mIO
 aTv
@@ -127392,7 +127390,7 @@ cWH
 uRf
 qsH
 aTw
-auN
+vai
 aMX
 rZH
 bar
@@ -127906,7 +127904,7 @@ doe
 uRf
 kED
 aTw
-aVk
+axX
 aMX
 ieu
 bar
@@ -128159,7 +128157,7 @@ alg
 alg
 alg
 aMX
-wlA
+hLV
 fDl
 aRS
 aTy
@@ -132621,7 +132619,7 @@ dyg
 kOG
 ifp
 wAe
-wyq
+pGr
 dyg
 dNO
 tpl
@@ -144130,7 +144128,7 @@ iGY
 ijk
 gMm
 eYT
-fGE
+iit
 bgZ
 bgZ
 bgZ

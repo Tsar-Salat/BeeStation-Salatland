@@ -14895,12 +14895,6 @@
 	},
 /turf/open/floor/iron/dark,
 /area/science/xenobiology)
-"daU" = (
-/obj/machinery/aug_manipulator,
-/obj/effect/turf_decal/bot,
-/obj/effect/turf_decal/tile/neutral/opposingcorners,
-/turf/open/floor/iron/dark,
-/area/science/robotics/lab)
 "dbd" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable/yellow{
@@ -19255,14 +19249,6 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
-/turf/open/floor/iron,
-/area/hallway/primary/aft)
-"eob" = (
-/obj/effect/turf_decal/tile/red/anticorner/contrasted{
-	dir = 4
-	},
-/obj/effect/turf_decal/tile/neutral/opposingcorners,
-/obj/machinery/vending/deputy,
 /turf/open/floor/iron,
 /area/hallway/primary/aft)
 "eos" = (
@@ -52228,6 +52214,11 @@
 	burnt = 1
 	},
 /area/maintenance/port/aft)
+"oYz" = (
+/obj/effect/turf_decal/bot,
+/obj/effect/turf_decal/tile/neutral/opposingcorners,
+/turf/open/floor/iron/dark,
+/area/science/robotics/lab)
 "oYK" = (
 /obj/structure/flora/rock/pile,
 /turf/open/floor/plating/asteroid,
@@ -52987,27 +52978,6 @@
 	luminosity = 2
 	},
 /area/ai_monitored/turret_protected/ai_upload)
-"pmx" = (
-/obj/structure/bonfire,
-/obj/item/reagent_containers/cup/glass/bottle/juice/orangejuice{
-	desc = "For the weary spacemen on their quest to rekindle the first plasma fire.";
-	name = "Carton of Estus"
-	},
-/obj/effect/decal/remains/human,
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/cobweb,
-/obj/item/melee/baseball_bat{
-	desc = "Don't tell anyone you put any points into dex, though.";
-	icon_state = "swordon";
-	inhand_icon_state = "swordon";
-	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi';
-	name = "moonlight greatsword";
-	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
-	},
-/turf/open/floor/plating{
-	burnt = 1
-	},
-/area/maintenance/starboard/fore)
 "pmU" = (
 /obj/structure/table,
 /obj/item/paper_bin{
@@ -54914,6 +54884,13 @@
 /obj/machinery/atmospherics/pipe/smart/simple/scrubbers/hidden/layer4,
 /turf/open/floor/plating,
 /area/maintenance/central)
+"pRg" = (
+/obj/effect/turf_decal/tile/red/anticorner/contrasted{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/neutral/opposingcorners,
+/turf/open/floor/iron,
+/area/hallway/primary/aft)
 "pRk" = (
 /obj/machinery/disposal/bin,
 /obj/effect/turf_decal/bot,
@@ -57336,6 +57313,27 @@
 /obj/effect/turf_decal/tile/neutral/half/contrasted,
 /turf/open/floor/iron/dark,
 /area/engine/atmos)
+"qFX" = (
+/obj/structure/bonfire,
+/obj/item/reagent_containers/cup/glass/bottle/juice/orangejuice{
+	desc = "For the weary spacemen on their quest to rekindle the first plasma fire.";
+	name = "Carton of Estus"
+	},
+/obj/effect/decal/remains/human,
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/decal/cleanable/cobweb,
+/obj/item/melee/baseball_bat{
+	desc = "Don't tell anyone you put any points into dex, though.";
+	icon_state = "swordon";
+	inhand_icon_state = "swordon";
+	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi';
+	name = "moonlight greatsword";
+	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
+	},
+/turf/open/floor/plating{
+	burnt = 1
+	},
+/area/maintenance/starboard/fore)
 "qGg" = (
 /obj/structure/cable{
 	icon_state = "1-2"
@@ -106044,7 +106042,7 @@ qdW
 rGz
 dIQ
 hTB
-eob
+pRg
 gNQ
 oDK
 fmO
@@ -116006,7 +116004,7 @@ siH
 wWq
 iny
 cDD
-pmx
+qFX
 cFm
 vzg
 rrH
@@ -118331,7 +118329,7 @@ aZS
 uJl
 qhG
 dZj
-daU
+oYz
 fHL
 vSX
 aZS

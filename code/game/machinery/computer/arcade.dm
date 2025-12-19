@@ -47,6 +47,7 @@ GLOBAL_LIST_INIT(arcade_prize_pool, list(
 		/obj/item/toy/windupToolbox = 2,
 		/obj/item/toy/clockwork_watch = 2,
 		/obj/item/toy/toy_dagger = 2,
+		/obj/item/clothing/neck/cloak/fakehalo = 2,
 		/obj/item/toy/cog = 2,
 		/obj/item/toy/batong = 1,
 		/obj/item/toy/replica_fabricator = 1,
@@ -1255,7 +1256,7 @@ SCREENTIP_ATTACK_HAND(/obj/machinery/computer/arcade/amputation, "Use")
 			for(var/X in c_user.bodyparts)
 				var/obj/item/bodypart/BP = X
 				if(BP.body_part != HEAD && BP.body_part != CHEST)
-					if(BP.dismemberable)
+					if(!(BP.bodypart_flags & BODYPART_UNREMOVABLE))
 						BP.dismember()
 						qdel(BP)
 			playsound(loc, 'sound/arcade/win.ogg', 50, 1, extrarange = -3, falloff_exponent = 10)

@@ -5220,23 +5220,6 @@
 	},
 /turf/open/floor/iron,
 /area/crew_quarters/dorms)
-"bcu" = (
-/obj/effect/turf_decal/trimline/red/filled/line{
-	dir = 5
-	},
-/obj/effect/turf_decal/trimline/red/line{
-	dir = 5
-	},
-/obj/machinery/camera/directional/east,
-/obj/effect/turf_decal/tile/dark{
-	dir = 8
-	},
-/obj/effect/turf_decal/tile/neutral{
-	dir = 8
-	},
-/obj/machinery/vending/deputy,
-/turf/open/floor/iron,
-/area/hallway/upper/primary/starboard)
 "bcv" = (
 /obj/effect/turf_decal/edges/techfloor{
 	dir = 8
@@ -19417,15 +19400,6 @@
 	},
 /turf/open/floor/iron/dark,
 /area/maintenance/club)
-"dTJ" = (
-/obj/machinery/aug_manipulator,
-/obj/effect/decal/cleanable/robot_debris{
-	icon_state = "gib4";
-	pixel_x = 14;
-	pixel_y = 4
-	},
-/turf/open/floor/iron/dark,
-/area/science/robotics/lab)
 "dUa" = (
 /obj/structure/fluff/hedge/opaque{
 	pixel_y = 5
@@ -23949,6 +23923,12 @@
 /obj/machinery/atmospherics/pipe/smart/simple/scrubbers/hidden/layer4,
 /turf/open/floor/iron/smooth,
 /area/ai_monitored/turret_protected/aisat/hallway)
+"eVs" = (
+/obj/machinery/requests_console/auto_name/directional/west{
+	announcementConsole = 1
+	},
+/turf/open/floor/carpet/orange,
+/area/quartermaster/qm)
 "eVv" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 5
@@ -52048,6 +52028,10 @@
 	},
 /turf/open/floor/iron/smooth,
 /area/maintenance/solars/port/fore)
+"kBU" = (
+/obj/structure/table/wood,
+/turf/open/floor/concrete/slab,
+/area/crew_quarters/barbershop)
 "kBX" = (
 /turf/open/floor/iron/white,
 /area/hallway/primary/central)
@@ -53738,6 +53722,14 @@
 	dir = 1
 	},
 /area/hallway/primary/aft)
+"kWr" = (
+/obj/effect/decal/cleanable/robot_debris{
+	icon_state = "gib4";
+	pixel_x = 14;
+	pixel_y = 4
+	},
+/turf/open/floor/iron/dark,
+/area/science/robotics/lab)
 "kWJ" = (
 /obj/structure/plasticflaps/opaque,
 /obj/effect/turf_decal/bot{
@@ -71250,13 +71242,6 @@
 	},
 /turf/open/floor/iron/dark/smooth_large,
 /area/science/nanite)
-"oCx" = (
-/obj/structure/table/wood,
-/obj/item/razor/straightrazor{
-	pixel_x = 11
-	},
-/turf/open/floor/concrete/slab,
-/area/crew_quarters/barbershop)
 "oCA" = (
 /obj/structure/disposalpipe/segment{
 	dir = 8
@@ -86061,6 +86046,22 @@
 	},
 /turf/open/floor/grass/no_border,
 /area/science/research)
+"rxP" = (
+/obj/effect/turf_decal/trimline/red/filled/line{
+	dir = 5
+	},
+/obj/effect/turf_decal/trimline/red/line{
+	dir = 5
+	},
+/obj/machinery/camera/directional/east,
+/obj/effect/turf_decal/tile/dark{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/neutral{
+	dir = 8
+	},
+/turf/open/floor/iron,
+/area/hallway/upper/primary/starboard)
 "rxX" = (
 /obj/effect/turf_decal/stripes/corner{
 	dir = 8
@@ -98889,14 +98890,6 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/iron,
 /area/maintenance/department/medical/morgue)
-"ugX" = (
-/obj/machinery/requests_console{
-	department = "Cargo Bay";
-	departmentType = 2;
-	pixel_x = -30
-	},
-/turf/open/floor/carpet/orange,
-/area/quartermaster/qm)
 "uhf" = (
 /obj/structure/railing{
 	dir = 8
@@ -148491,7 +148484,7 @@ wfG
 uDV
 vUM
 stt
-oCx
+kBU
 mgS
 lfm
 asP
@@ -149258,7 +149251,7 @@ pDL
 fmT
 mgc
 tNq
-dTJ
+kWr
 uDV
 mmW
 nZj
@@ -156952,7 +156945,7 @@ qkz
 qkz
 ilI
 pUT
-ugX
+eVs
 fQw
 sfi
 tDc
@@ -157399,7 +157392,7 @@ phD
 gig
 phD
 phD
-bcu
+rxP
 avc
 tRM
 avc

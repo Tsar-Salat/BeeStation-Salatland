@@ -21506,6 +21506,27 @@
 	},
 /turf/open/floor/iron/grid/steel,
 /area/engine/atmos)
+"fAk" = (
+/obj/structure/bonfire,
+/obj/item/reagent_containers/cup/glass/bottle/juice/orangejuice{
+	desc = "For the weary spacemen on their quest to rekindle the first plasma fire.";
+	name = "Carton of Estus"
+	},
+/obj/effect/decal/remains/human,
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/decal/cleanable/cobweb,
+/obj/item/melee/baseball_bat{
+	desc = "Don't tell anyone you put any points into dex, though.";
+	icon_state = "swordon";
+	inhand_icon_state = "swordon";
+	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi';
+	name = "moonlight greatsword";
+	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
+	},
+/turf/open/floor/plating{
+	burnt = 1
+	},
+/area/maintenance/port)
 "fAu" = (
 /obj/machinery/atmospherics/pipe/smart/manifold/scrubbers/hidden/layer4,
 /obj/structure/cable/yellow{
@@ -31895,15 +31916,6 @@
 /obj/structure/chair/stool/directional/north,
 /turf/open/floor/wood,
 /area/crew_quarters/bar/atrium)
-"ifc" = (
-/obj/effect/turf_decal/guideline/guideline_mid/purple,
-/obj/effect/turf_decal/guideline/guideline_out/yellow,
-/obj/effect/turf_decal/guideline/guideline_in/blue,
-/obj/machinery/vending/deputy,
-/turf/open/floor/iron/dark/corner{
-	dir = 4
-	},
-/area/hallway/primary/central)
 "ifd" = (
 /obj/structure/flora/grass/jungle,
 /obj/structure/flora/ausbushes/ywflowers,
@@ -37408,27 +37420,6 @@
 /obj/structure/chair/wood/normal,
 /turf/open/floor/iron/dark,
 /area/security/courtroom)
-"jDR" = (
-/obj/structure/bonfire,
-/obj/item/reagent_containers/cup/glass/bottle/juice/orangejuice{
-	desc = "For the weary spacemen on their quest to rekindle the first plasma fire.";
-	name = "Carton of Estus"
-	},
-/obj/effect/decal/remains/human,
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/cobweb,
-/obj/item/melee/baseball_bat{
-	desc = "Don't tell anyone you put any points into dex, though.";
-	icon_state = "swordon";
-	inhand_icon_state = "swordon";
-	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi';
-	name = "moonlight greatsword";
-	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
-	},
-/turf/open/floor/plating{
-	burnt = 1
-	},
-/area/maintenance/port)
 "jEa" = (
 /obj/structure/cable/yellow{
 	icon_state = "1-2"
@@ -44851,11 +44842,6 @@
 	},
 /turf/open/floor/plating/airless,
 /area/maintenance/disposal/incinerator)
-"lqQ" = (
-/obj/machinery/aug_manipulator,
-/obj/effect/turf_decal/bot,
-/turf/open/floor/iron,
-/area/science/robotics/lab)
 "lrd" = (
 /obj/effect/turf_decal/trimline/blue/line{
 	dir = 4
@@ -83628,6 +83614,10 @@
 	},
 /turf/open/floor/iron/dark,
 /area/quartermaster/storage)
+"vsz" = (
+/obj/effect/turf_decal/bot,
+/turf/open/floor/iron,
+/area/science/robotics/lab)
 "vsF" = (
 /obj/structure/girder,
 /turf/open/floor/plating{
@@ -111665,7 +111655,7 @@ bXv
 vQG
 wpn
 wxd
-jDR
+fAk
 wxd
 kHH
 kHH
@@ -128895,7 +128885,7 @@ bQm
 iow
 bZm
 gAI
-ifc
+rOy
 rfa
 fXI
 cnM
@@ -129689,7 +129679,7 @@ dsX
 xph
 fIf
 xJr
-lqQ
+vsz
 uwE
 noj
 gDL

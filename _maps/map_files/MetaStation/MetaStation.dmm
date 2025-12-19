@@ -2437,6 +2437,20 @@
 	luminosity = 2
 	},
 /area/security/nuke_storage)
+"ayC" = (
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer4,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer2,
+/obj/machinery/door/airlock{
+	name = "Theatre Backstage";
+	req_one_access_txt = "12;46"
+	},
+/obj/structure/disposalpipe/segment{
+	dir = 2
+	},
+/obj/effect/mapping_helpers/airlock/access/all/service/theatre,
+/obj/effect/mapping_helpers/airlock/unres,
+/turf/open/floor/wood,
+/area/crew_quarters/theatre)
 "ayF" = (
 /turf/closed/wall/r_wall,
 /area/security/detectives_office)
@@ -8417,6 +8431,16 @@
 /obj/structure/closet/firecloset,
 /turf/open/floor/plating,
 /area/maintenance/starboard)
+"bpe" = (
+/obj/machinery/door/airlock/maintenance{
+	name = "Hydroponics Maintenance"
+	},
+/obj/machinery/atmospherics/pipe/smart/simple/supply/hidden/layer2,
+/obj/machinery/atmospherics/pipe/smart/simple/scrubbers/hidden/layer4,
+/obj/structure/disposalpipe/segment,
+/obj/effect/mapping_helpers/airlock/access/all/service/hydroponics,
+/turf/open/floor/plating,
+/area/maintenance/starboard/secondary)
 "bpn" = (
 /obj/structure/window/reinforced/spawner/directional/west,
 /turf/open/floor/iron/dark,
@@ -25829,6 +25853,21 @@
 	},
 /turf/open/floor/iron,
 /area/maintenance/fore)
+"fGe" = (
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer4,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer2,
+/obj/structure/cable/yellow{
+	icon_state = "1-2"
+	},
+/obj/machinery/door/airlock{
+	name = "Bar Storage"
+	},
+/obj/structure/disposalpipe/segment{
+	dir = 1
+	},
+/obj/effect/mapping_helpers/airlock/access/all/service/bar,
+/turf/open/floor/wood,
+/area/crew_quarters/bar)
 "fGh" = (
 /obj/structure/table,
 /obj/machinery/cell_charger,
@@ -28303,20 +28342,6 @@
 /obj/effect/landmark/xeno_spawn,
 /turf/open/floor/plating,
 /area/maintenance/aft)
-"gyo" = (
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer2,
-/obj/machinery/door/airlock{
-	name = "Theatre Backstage";
-	req_one_access_txt = "12;46"
-	},
-/obj/structure/disposalpipe/segment{
-	dir = 2
-	},
-/obj/effect/mapping_helpers/airlock/access/all/service/theatre,
-/obj/effect/mapping_helpers/airlock/unres,
-/turf/open/floor/wood,
-/area/crew_quarters/theatre)
 "gyM" = (
 /obj/effect/turf_decal/tile/blue/half/contrasted{
 	dir = 8
@@ -30242,17 +30267,6 @@
 /obj/effect/spawner/lootdrop/techstorage/service,
 /turf/open/floor/iron/dark,
 /area/storage/tech)
-"hhw" = (
-/obj/effect/turf_decal/tile/bar/opposingcorners,
-/obj/machinery/door/firedoor,
-/obj/machinery/door/airlock{
-	name = "Bar Access"
-	},
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/mapping_helpers/airlock/access/any/service/bar,
-/obj/effect/mapping_helpers/airlock/access/any/service/kitchen,
-/turf/open/floor/iron,
-/area/crew_quarters/bar)
 "hif" = (
 /obj/effect/turf_decal/delivery,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/visible,
@@ -30286,16 +30300,6 @@
 /obj/machinery/smartfridge/organ,
 /turf/open/floor/iron/white,
 /area/medical/surgery)
-"hin" = (
-/obj/machinery/atmospherics/pipe/layer_manifold/supply/hidden,
-/obj/machinery/door/airlock/freezer,
-/obj/structure/cable/yellow{
-	icon_state = "1-2"
-	},
-/obj/structure/disposalpipe/segment,
-/obj/effect/mapping_helpers/airlock/access/all/service/kitchen,
-/turf/open/floor/iron/cafeteria,
-/area/crew_quarters/kitchen/coldroom)
 "hir" = (
 /obj/effect/turf_decal/trimline/blue/filled/warning{
 	dir = 4
@@ -31361,6 +31365,17 @@
 	},
 /turf/open/floor/iron/dark,
 /area/medical/medbay/aft)
+"hCo" = (
+/obj/effect/turf_decal/tile/bar/opposingcorners,
+/obj/machinery/door/firedoor,
+/obj/machinery/door/airlock{
+	name = "Bar Access"
+	},
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/mapping_helpers/airlock/access/any/service/bar,
+/obj/effect/mapping_helpers/airlock/access/any/service/kitchen,
+/turf/open/floor/iron,
+/area/crew_quarters/bar)
 "hCq" = (
 /obj/structure/closet/secure_closet/genpop,
 /obj/effect/turf_decal/tile/dark_red{
@@ -36468,6 +36483,14 @@
 	},
 /turf/open/floor/iron/white,
 /area/science/xenobiology)
+"jlt" = (
+/obj/machinery/door/airlock{
+	name = "Theatre Backstage";
+	req_one_access_txt = "12;46"
+	},
+/obj/effect/mapping_helpers/airlock/access/all/service/theatre,
+/turf/open/floor/wood,
+/area/maintenance/starboard)
 "jlu" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer2,
 /obj/machinery/door/airlock/hatch{
@@ -37577,6 +37600,16 @@
 	dir = 1
 	},
 /area/security/brig)
+"jDm" = (
+/obj/machinery/atmospherics/pipe/layer_manifold/supply/hidden,
+/obj/machinery/door/airlock/freezer,
+/obj/structure/cable/yellow{
+	icon_state = "1-2"
+	},
+/obj/structure/disposalpipe/segment,
+/obj/effect/mapping_helpers/airlock/access/all/service/kitchen,
+/turf/open/floor/iron/cafeteria,
+/area/crew_quarters/kitchen/coldroom)
 "jDq" = (
 /obj/effect/turf_decal/tile/blue,
 /turf/open/floor/iron/white,
@@ -50760,14 +50793,6 @@
 	},
 /turf/open/floor/iron/white,
 /area/crew_quarters/toilet/restrooms)
-"oeJ" = (
-/obj/machinery/door/airlock{
-	name = "Theatre Backstage";
-	req_one_access_txt = "12;46"
-	},
-/obj/effect/mapping_helpers/airlock/access/all/service/theatre,
-/turf/open/floor/wood,
-/area/maintenance/starboard)
 "oeP" = (
 /obj/structure/disposalpipe/segment,
 /obj/effect/decal/cleanable/dirt,
@@ -54510,19 +54535,6 @@
 /obj/structure/window/spawner/directional/south,
 /turf/open/floor/iron,
 /area/engine/atmos)
-"poT" = (
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer2,
-/obj/machinery/door/airlock{
-	name = "Bar Backroom"
-	},
-/obj/structure/cable/yellow{
-	icon_state = "1-2"
-	},
-/obj/structure/disposalpipe/segment,
-/obj/effect/mapping_helpers/airlock/access/all/service/bar,
-/turf/open/floor/wood,
-/area/crew_quarters/bar)
 "ppx" = (
 /obj/structure/cable/yellow{
 	icon_state = "1-2"
@@ -57032,6 +57044,19 @@
 /obj/effect/landmark/start/assistant,
 /turf/open/floor/carpet/grimy,
 /area/crew_quarters/locker)
+"qgk" = (
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer4,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer2,
+/obj/machinery/door/airlock{
+	name = "Bar Backroom"
+	},
+/obj/structure/cable/yellow{
+	icon_state = "1-2"
+	},
+/obj/structure/disposalpipe/segment,
+/obj/effect/mapping_helpers/airlock/access/all/service/bar,
+/turf/open/floor/wood,
+/area/crew_quarters/bar)
 "qgs" = (
 /obj/structure/cable/yellow{
 	icon_state = "1-2"
@@ -57702,16 +57727,6 @@
 /obj/item/vending_refill/coffee,
 /turf/open/floor/plating,
 /area/maintenance/disposal)
-"qrC" = (
-/obj/machinery/door/airlock/maintenance{
-	name = "Hydroponics Maintenance"
-	},
-/obj/machinery/atmospherics/pipe/smart/simple/supply/hidden/layer2,
-/obj/machinery/atmospherics/pipe/smart/simple/scrubbers/hidden/layer4,
-/obj/structure/disposalpipe/segment,
-/obj/effect/mapping_helpers/airlock/access/all/service/hydroponics,
-/turf/open/floor/plating,
-/area/maintenance/starboard/secondary)
 "qrR" = (
 /obj/structure/sign/warning/vacuum/external{
 	pixel_x = 32
@@ -58519,6 +58534,12 @@
 /obj/machinery/airalarm/directional/east,
 /turf/open/floor/iron/dark,
 /area/crew_quarters/dorms)
+"qGO" = (
+/obj/structure/window/reinforced/spawner/directional/east,
+/turf/open/floor/iron/white/corner{
+	dir = 1
+	},
+/area/science/robotics/lab)
 "qGT" = (
 /obj/machinery/atmospherics/pipe/smart/simple/general/visible,
 /turf/closed/wall/r_wall,
@@ -66529,21 +66550,6 @@
 	},
 /turf/open/floor/iron/white,
 /area/science/research)
-"tsJ" = (
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer2,
-/obj/structure/cable/yellow{
-	icon_state = "1-2"
-	},
-/obj/machinery/door/airlock{
-	name = "Bar Storage"
-	},
-/obj/structure/disposalpipe/segment{
-	dir = 1
-	},
-/obj/effect/mapping_helpers/airlock/access/all/service/bar,
-/turf/open/floor/wood,
-/area/crew_quarters/bar)
 "tsL" = (
 /obj/structure/cable/yellow{
 	icon_state = "1-2"
@@ -69894,13 +69900,6 @@
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
 /turf/open/floor/iron/dark,
 /area/ai_monitored/storage/eva)
-"uyf" = (
-/obj/structure/window/reinforced/spawner/directional/east,
-/obj/machinery/aug_manipulator,
-/turf/open/floor/iron/white/corner{
-	dir = 1
-	},
-/area/science/robotics/lab)
 "uyh" = (
 /obj/effect/turf_decal/stripes/line,
 /obj/effect/decal/cleanable/dirt,
@@ -110757,7 +110756,7 @@ cFg
 cFh
 cHR
 pfq
-uyf
+qGO
 cCq
 eXK
 cPb
@@ -115082,7 +115081,7 @@ dCZ
 crL
 tjH
 wnl
-poT
+qgk
 dOS
 pHw
 bmP
@@ -115353,7 +115352,7 @@ tzp
 tzp
 erG
 pdl
-qrC
+bpe
 tUY
 cgo
 diD
@@ -115856,7 +115855,7 @@ uUn
 bmP
 iXI
 yjr
-tsJ
+fGe
 laG
 iEu
 fqK
@@ -116363,7 +116362,7 @@ qdd
 fDB
 tXl
 jUR
-hhw
+hCo
 bmP
 bmP
 bmP
@@ -118681,7 +118680,7 @@ cZB
 nHp
 xFB
 lpT
-hin
+jDm
 nze
 bzK
 bIM
@@ -119446,7 +119445,7 @@ fvM
 qLt
 owt
 uQv
-gyo
+ayC
 ogr
 tzg
 nNn
@@ -120224,7 +120223,7 @@ dtH
 hge
 puP
 nCp
-oeJ
+jlt
 hWk
 yiX
 cZe

@@ -323,8 +323,8 @@
 	AddComponent(/datum/component/two_handed, force_unwielded=5, force_wielded=5, block_power_unwielded=100, block_power_wielded=100)
 
 /obj/item/nullrod/staff/worn_overlays(mutable_appearance/standing, isinhands = FALSE, icon_file, item_layer, atom/origin)
-	. = list()
-	if(ISWIELDED(src))
+	. = ..()
+	if(isinhands)
 		. += mutable_appearance('icons/effects/effects.dmi', shield_icon, MOB_SHIELD_LAYER)
 
 /obj/item/nullrod/staff/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", damage = 0, attack_type = MELEE_ATTACK)
@@ -397,10 +397,7 @@
 	icon_state = "katana"
 	inhand_icon_state = "katana"
 	worn_icon_state = "katana"
-	force = 15 //Blocking projectiles comes at a cost
-	block_flags = BLOCKING_ACTIVE | BLOCKING_NASTY | BLOCKING_PROJECTILE
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_BACK
-	block_power = 25
 
 /obj/item/nullrod/claymore/multiverse
 	name = "extradimensional blade"
@@ -423,7 +420,7 @@
 	worn_icon_state = "swordblue"
 	slot_flags = ITEM_SLOT_BELT
 	hitsound = 'sound/weapons/blade1.ogg'
-	block_flags = BLOCKING_ACTIVE | BLOCKING_NASTY | BLOCKING_PROJECTILE | BLOCKING_UNBLOCKABLE
+	block_flags = BLOCKING_ACTIVE | BLOCKING_NASTY | BLOCKING_UNBLOCKABLE
 
 /obj/item/nullrod/claymore/saber/red
 	name = "dark energy sword"

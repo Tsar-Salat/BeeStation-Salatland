@@ -48,12 +48,6 @@ bleedsuppress has been replaced for is_bandaged(). Note that is_bleeding() retur
 		qdel(src)
 		return
 
-	// Add splatter effects on every tick for heavy bleeding, less frequently for light
-	if(bleed_rate >= BLEED_DEEP_WOUND)
-		owner.add_splatter_floor(owner.loc)
-	else if(time_applied >= 1 SECONDS)
-		owner.add_splatter_floor(owner.loc, TRUE)
-
 	time_applied += seconds_between_ticks SECONDS
 
 	// For light bleeding, only process healing/bleeding every 1 second
@@ -115,7 +109,7 @@ bleedsuppress has been replaced for is_bandaged(). Note that is_bleeding() retur
 			linked_alert.desc = "Your wounds are bleeding heavily and are unlikely to heal themselves. Seek medical attention immediately![ishuman(owner) ? " Click to apply pressure to the wounds." : ""]"
 			linked_alert.icon_state = "bleed_heavy"
 
-	if (HAS_TRAIT(owner, TRAIT_NO_BLEEDING) || IS_IN_STASIS(owner))
+	if (HAS_TRAIT(owner, TRAIT_NO_BLEEDING) || HAS_TRAIT(owner, TRAIT_STASIS))
 		linked_alert.maptext = MAPTEXT("<s>[owner.get_bleed_rate_string()]</s>")
 	else
 		linked_alert.maptext = MAPTEXT(owner.get_bleed_rate_string())
@@ -168,10 +162,6 @@ bleedsuppress has been replaced for is_bandaged(). Note that is_bleeding() retur
 		blur_eyes(1)
 		var/datum/reagent/blood = get_blood_id() //Not every race has "BLOOD" rushing from the wound
 		to_chat(src, "[span_userdanger("[blood.name] starts rushing out of the open wound!")]")
-	if(bleed_level >= BLEED_CUT)
-		add_splatter_floor(src.loc)
-	else
-		add_splatter_floor(src.loc, 1)
 
 /mob/living/carbon/human/add_bleeding(bleed_level)
 	if(HAS_TRAIT(src, TRAIT_NOBLOOD))
@@ -349,16 +339,16 @@ bleedsuppress has been replaced for is_bandaged(). Note that is_bleeding() retur
 		adjustOxyLoss(health_difference)
 
 /mob/living/proc/bleed(amt)
-	add_splatter_floor(src.loc, 1)
+	add_splatter_floor(src.loc, TRUE)
 
 //Makes a blood drop, leaking amt units of blood from the mob
 /mob/living/carbon/bleed(amt)
-	if(blood_volume && !HAS_TRAIT(src, TRAIT_NO_BLOOD) && !HAS_TRAIT(src, TRAIT_NO_BLEEDING) && !IS_IN_STASIS(src))
+	if(blood_volume && !HAS_TRAIT(src, TRAIT_NO_BLOOD) && !HAS_TRAIT(src, TRAIT_NO_BLEEDING) && !HAS_TRAIT(src, TRAIT_STASIS))
 		// As you get less bloodloss, you bleed slower
 		// See the top of this file for desmos lines
 		var/decrease_multiplier = BLEED_RATE_MULTIPLIER
 		var/obj/item/organ/heart/heart = get_organ_slot(ORGAN_SLOT_HEART)
-		if (!heart || !heart.beating)
+		if (!heart || !heart.beating || src.stat == DEAD)
 			decrease_multiplier = BLEED_RATE_MULTIPLIER_NO_HEART
 		var/blood_loss_amount = blood_volume - blood_volume * NUM_E ** (-(amt * decrease_multiplier)/BLOOD_VOLUME_NORMAL)
 		blood_volume = max(blood_volume - blood_loss_amount, 0)
@@ -366,7 +356,7 @@ bleedsuppress has been replaced for is_bandaged(). Note that is_bleeding() retur
 			if(blood_loss_amount >= 2)
 				add_splatter_floor(src.loc)
 			else
-				add_splatter_floor(src.loc, 1)
+				add_splatter_floor(src.loc, TRUE)
 
 /mob/living/carbon/human/bleed(amt)
 	amt *= physiology.bleed_mod
@@ -476,7 +466,7 @@ bleedsuppress has been replaced for is_bandaged(). Note that is_bleeding() retur
 		return /datum/reagent/blood
 
 /mob/living/carbon/human/get_blood_id()
-	if(HAS_TRAIT(src, TRAIT_HUSK))
+	if(HAS_TRAIT(src, TRAIT_HUSK) || !dna)
 		return
 	if(dna.species.exotic_blood)
 		return dna.species.exotic_blood
@@ -494,6 +484,11 @@ bleedsuppress has been replaced for is_bandaged(). Note that is_bleeding() retur
 /proc/get_blood_dna_color(list/blood_dna)
 	var/blood_print = blood_dna[length(blood_dna)]
 	var/datum/blood_type/blood_type = blood_dna[blood_print]
+
+	// string?
+	if(istext(blood_type))
+		blood_type = get_blood_type(blood_type)
+
 	if(!blood_type)
 		return COLOR_BLOOD
 	if(!blood_type.blood_color)
@@ -502,7 +497,7 @@ bleedsuppress has been replaced for is_bandaged(). Note that is_bleeding() retur
 
 //to add a splatter of blood or other mob liquid.
 /mob/living/proc/add_splatter_floor(turf/T, small_drip)
-	if (HAS_TRAIT(src, TRAIT_NO_BLOOD) || HAS_TRAIT(src, TRAIT_NO_BLEEDING) || IS_IN_STASIS(src))
+	if (HAS_TRAIT(src, TRAIT_NO_BLOOD) || HAS_TRAIT(src, TRAIT_NO_BLEEDING) || HAS_TRAIT(src, TRAIT_STASIS))
 		return
 	if(get_blood_id() != /datum/reagent/blood)
 		return
