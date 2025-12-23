@@ -6,13 +6,14 @@
 	back to life, or to become strong enough that they don't have to."
 	ruling_body = "Clan Hegemony"
 	distance = "20 light-years"
+	/*
 	secondary_langs = list(
 		LANGUAGE_UNATHI_SINTA,
 		LANGUAGE_UNATHI_YEOSA,
-		LANGUAGE_SIGN,
 		LANGUAGE_HUMAN_EURO,
 		LANGUAGE_SPACER
 	)
+	*/
 
 /datum/cultural_info/location/ouere
 	name = HOME_SYSTEM_OUERE
@@ -23,13 +24,14 @@
 	flocked to the planet, with Markesheli communities growing quite rapidly in numbers compared to other parts of Moghes. "
 	ruling_body = "Clan Hegemony"
 	distance = "20 light-years"
+	/*
 	secondary_langs = list(
 		LANGUAGE_UNATHI_SINTA,
 		LANGUAGE_UNATHI_YEOSA,
-		LANGUAGE_SIGN,
 		LANGUAGE_HUMAN_EURO,
 		LANGUAGE_SPACER
 	)
+	*/
 
 /datum/cultural_info/location/offworld
 	name = HOME_SYSTEM_OFFWORLD
@@ -38,10 +40,10 @@
 	that be on the scorching heats of Tadmor, the technophile cityscape of Ceti Epsilon, or the bustling shipyards of Ceres."
 	ruling_body = "Varies"
 	distance = "Varies"
+	/*
 	secondary_langs = list(
 		LANGUAGE_UNATHI_SINTA,
 		LANGUAGE_UNATHI_YEOSA,
-		LANGUAGE_SIGN,
 		LANGUAGE_HUMAN_EURO,
 		LANGUAGE_HUMAN_CHINESE,
 		LANGUAGE_HUMAN_ARABIC,
@@ -50,3 +52,4 @@
 		LANGUAGE_HUMAN_RUSSIAN,
 		LANGUAGE_SPACER
 	)
+	*/

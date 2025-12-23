@@ -1,5 +1,5 @@
 /datum/codex_entry/supermatter
-	associated_paths = list(/obj/machinery/power/supermatter)
+	associated_paths = list(/obj/machinery/power/supermatter_crystal)
 	mechanics_text = "When energized by a laser (or something hitting it), it emits radiation and heat.  If the heat reaches above 7000 kelvin, it will send an alert and start taking damage. \
 	After integrity falls to zero percent, it will delaminate, causing a massive explosion, station-wide radiation spikes, and hallucinations. \
 	Supermatter reacts badly to oxygen in the atmosphere.  It'll also heat up really quick if it is in vacuum.<br>\
@@ -23,30 +23,3 @@
 
 	antag_text = "This can be emagged to unlock it.  It will cause the APC to have a blue error screen. \
 	Wires can be pulsed remotely with a signaler attached to it.  A powersink will also drain any APCs connected to the same wire the powersink is on."
-
-/datum/codex_entry/inflatable_item
-	associated_paths = list(/obj/item/inflatable)
-	mechanics_text = "Inflate by using it in your hand.  The inflatable barrier will inflate on your tile.  To deflate it, use the 'deflate' verb."
-
-/datum/codex_entry/inflatable_deployed
-	associated_paths = list(/obj/structure/inflatable)
-	mechanics_text = "To remove these safely, use the 'deflate' verb.  Hitting these with any objects will probably puncture and break it forever."
-
-/datum/codex_entry/inflatable_door
-	associated_paths = list(/obj/structure/inflatable/door)
-	mechanics_text = "Click the door to open or close it.  It only stops air while closed.<br>\
-	To remove these safely, use the 'deflate' verb.  Hitting these with any objects will probably puncture and break it forever."
-
-/datum/codex_entry/welding_pack
-	associated_paths = list(/obj/item/storage/backpack/weldpack)
-	mechanics_text = "This pack acts as a portable source of welding fuel. Use a welder on it to refill its tank - but make sure it's not lit! You can use this kit on a fuel tank or appropriate reagent dispenser to replenish its reserves."
-	lore_text = "The Shenzhen Chain of 2133 was an industrial accident of noteworthy infamy that occurred at Earth's L3 Lagrange Point. An apprentice welder, working for the Shenzhen Space Fabrication Group, failed to properly seal her fuel port, triggering a chain reaction that spread from laborer to laborer, instantly vaporizing a crew of fourteen. Don't let this happen to you!"
-	antag_text = "In theory, you could hold an open flame to this pack and produce some pretty catastrophic results. The trick is getting out of the blast radius."
-
-/datum/codex_entry/gripper
-	associated_paths = list(/obj/item/gripper)
-	mechanics_text = "Click an item to pick it up with your gripper. Use it as you would normally use anything in your hand. The Drop Item verb will allow you to release the item."
-
-/datum/codex_entry/diffuser_item
-	associated_paths = list(/obj/item/shield_diffuser)
-	mechanics_text = "This device disrupts shields on directly adjacent tiles (in a + shaped pattern), in a similar way the floor mounted variant does. It is, however, portable and run by an internal battery. Can be recharged with a regular recharger."

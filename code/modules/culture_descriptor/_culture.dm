@@ -10,7 +10,7 @@
 	var/list/secondary_langs
 	var/category
 	var/hidden
-	var/hidden_from_codex
+	var/hidden_from_codex = FALSE
 	var/list/qualifications
 
 /datum/cultural_info/New()

@@ -1,6 +1,10 @@
 /datum/species/fly
 	name = "Flyperson"
 	plural_form = "Flypeople"
+	description = "With no official documentation or knowledge of the origin of \
+		this species, they remain a mystery to most. Any and all rumours among \
+		Nanotrasen staff regarding flypeople are often quickly silenced by high \
+		ranking staff or officials."
 	id = SPECIES_FLY
 	bodyflag = FLAG_FLY
 	species_traits = list(
@@ -74,12 +78,6 @@
 	if(istype(weapon, /obj/item/melee/flyswatter))
 		return 29 //Flyswatters deal 30x damage to flypeople.
 	return 0
-
-/datum/species/fly/get_species_description()
-	return "With no official documentation or knowledge of the origin of \
-		this species, they remain a mystery to most. Any and all rumours among \
-		Nanotrasen staff regarding flypeople are often quickly silenced by high \
-		ranking staff or officials."
 
 /datum/species/fly/get_species_lore()
 	return list(

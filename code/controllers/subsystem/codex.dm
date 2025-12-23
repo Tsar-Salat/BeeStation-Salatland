@@ -1,6 +1,9 @@
 SUBSYSTEM_DEF(codex)
 	name = "Codex"
 	flags = SS_NO_FIRE
+	dependencies = list(
+		/datum/controller/subsystem/culture,
+	)
 	var/regex/linkRegex
 
 	var/list/entries_by_path =   list()
@@ -9,11 +12,17 @@ SUBSYSTEM_DEF(codex)
 	var/list/search_cache =      list()
 
 
-/datum/controller/subsystem/codex/UpdateStat(time)
-	return
+/datum/controller/subsystem/codex/stat_entry()
+	return ..()  // No additional stat info needed
 
 
 /datum/controller/subsystem/codex/Initialize(start_uptime)
+	// Ensure chemical reagents and reactions are built before creating codex entries
+	if(!GLOB.chemical_reagents_list)
+		build_chemical_reagent_list()
+	if(!GLOB.chemical_reactions_list)
+		build_chemical_reactions_list()
+
 	// Codex link syntax is such:
 	// <l>keyword</l> when keyword is mentioned verbatim,
 	// <span codexlink='keyword'>whatever</span> when shit gets tricky
@@ -81,6 +90,7 @@ SUBSYSTEM_DEF(codex)
 /datum/controller/subsystem/codex/proc/present_codex_entry(mob/presenting_to, datum/codex_entry/entry)
 	if(entry && istype(presenting_to) && presenting_to.client)
 		var/datum/browser/popup = new(presenting_to, "codex", "Codex", nheight=425)
+		popup.add_stylesheet("codex", 'html/browser/codex.css')
 		popup.set_content(parse_links(entry.get_text(presenting_to), presenting_to))
 		popup.open()
 

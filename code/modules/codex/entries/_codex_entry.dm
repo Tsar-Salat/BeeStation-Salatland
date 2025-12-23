@@ -6,9 +6,6 @@
 	var/mechanics_text
 	var/antag_text
 
-/datum/codex_entry/dd_SortValue()
-	return display_name
-
 /datum/codex_entry/proc/update_links()
 	return
 

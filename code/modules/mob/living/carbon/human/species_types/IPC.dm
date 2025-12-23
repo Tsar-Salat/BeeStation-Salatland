@@ -1,6 +1,8 @@
 /datum/species/ipc
 	name = "\improper Integrated Positronic Chassis"
 	plural_form = "IPCs"
+	description = "The newest in artificial life, IPCs are entirely robotic, synthetic life, made of motors, circuits, and wires \
+		- based on newly developed Postronic brain technology."
 	id = SPECIES_IPC
 	bodyflag = FLAG_IPC
 	sexes = FALSE
@@ -306,10 +308,6 @@
 		BP.limb_id = chassis_of_choice.limbs_id
 		BP.name = "\improper[chassis_of_choice.name] [parse_zone(BP.body_zone)]"
 		BP.update_limb()
-
-/datum/species/ipc/get_species_description()
-	return "The newest in artificial life, IPCs are entirely robotic, synthetic life, made of motors, circuits, and wires \
-	- based on newly developed Postronic brain technology."
 
 /datum/species/ipc/get_species_lore()
 	return null

@@ -3,7 +3,6 @@
 	desc = "Sapient species encountered in known space."
 
 /datum/codex_category/species/Initialize()
-	// BeeStation uses GLOB.species_list which is id -> type path, not name -> instance
 	for(var/species_id in GLOB.species_list)
 		var/species_type = GLOB.species_list[species_id]
 		var/datum/species/species = new species_type()
@@ -15,9 +14,7 @@
 		// Create entry using species name
 		var/datum/codex_entry/entry = new(_display_name = "[species.name] (species)")
 
-		// BeeStation species don't have codex_description, use generic description
-		// You can add lore text here or leave it blank for now
-		entry.lore_text = "A playable species in this sector of space."
+		entry.lore_text = species.codex_description
 
 		// Add mechanics info about the species
 		var/list/mechanics = list()

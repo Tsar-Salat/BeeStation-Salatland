@@ -1,6 +1,9 @@
 /datum/species/psyphoza
 	name = "\improper Psyphoza"
 	plural_form = "Psyphoza"
+	description = "Psyphoza are a species of extra-sensory lesser-sensory \
+		fungal-form humanoids, infamous for their invulnerability to \
+		occlusion-based magic tricks and sleight of hand."
 	id = SPECIES_PSYPHOZA
 	bodyflag = FLAG_PSYPHOZA
 	meat = /obj/item/food/meat/slab/human/mutant/psyphoza
@@ -67,11 +70,6 @@
 /datum/species/psyphoza/primary_species_action()
 	. = ..()
 	PH?.trigger()
-
-/datum/species/psyphoza/get_species_description()
-	return "Psyphoza are a species of extra-sensory lesser-sensory \
-	fungal-form humanoids, infamous for their invulnerability to \
-	occlusion-based magic tricks and sleight of hand."
 
 /datum/species/psyphoza/get_species_lore()
 	return list(

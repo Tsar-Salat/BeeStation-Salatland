@@ -44,7 +44,7 @@
 	the poverty line, often holding feelings of resentment against the other people of Luna."
 	capital = "Selene"
 	economic_power = 1.3
-	secondary_langs = list(LANGUAGE_HUMAN_SELENIAN)
+	//secondary_langs = list(LANGUAGE_HUMAN_SELENIAN)
 
 /datum/cultural_info/location/human/venus
 	name = HOME_SYSTEM_VENUS
@@ -87,7 +87,7 @@
 	with administrative services being concentrated around Pluto, primarily."
 	capital = "Kuiper Administrative Zone, Pluto"
 	economic_power = 0.8
-	secondary_langs = list(LANGUAGE_GUTTER)
+	//secondary_langs = list(LANGUAGE_GUTTER)
 
 /datum/cultural_info/location/human/kuiper_interdust
 	name = HOME_SYSTEM_KUIPERD
@@ -97,7 +97,7 @@
 	With policing actions being scarce and less stringent in this sector of the SEZ, crime has found much success in certain hotspots of the interdust regions of the Kuiper belt."
 	capital = "Kuiper Administrative Zone, Pluto"
 	economic_power = 0.7
-	secondary_langs = list(LANGUAGE_GUTTER)
+	//secondary_langs = list(LANGUAGE_GUTTER)
 
 /datum/cultural_info/location/human/cetiepsilon
 	name = HOME_SYSTEM_TAU_CETI
@@ -135,7 +135,7 @@
 	distance = "22.5 light years."
 	economic_power = 0.9
 	ruling_body = "Gilgamesh Colonial Confederation"
-	language = LANGUAGE_HUMAN_RUSSIAN
+	//language = LANGUAGE_HUMAN_RUSSIAN
 
 /datum/cultural_info/location/human/saffar
 	name = HOME_SYSTEM_SAFFAR

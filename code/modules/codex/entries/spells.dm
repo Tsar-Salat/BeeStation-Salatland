@@ -1,3 +1,6 @@
+//Needs completely new entries for tg/bee spells
+
+/*
 /datum/codex_entry/eternal_darkness
 	associated_paths = list(/spell/targeted/shatter)
 	antag_text = "Assaults the mind of the target with fear of the unknown, shattering their sanity and causing brain damage."
@@ -113,3 +116,4 @@
 /datum/codex_entry/heal_target/area/tower
 	associated_paths = list(/spell/targeted/heal_target/area/tower)
 	antag_text = "Allows you to heal everyone in an area for minor damage."
+*/

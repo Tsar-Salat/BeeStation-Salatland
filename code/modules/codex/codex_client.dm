@@ -25,7 +25,7 @@
 		return
 
 	codex_on_cooldown = TRUE
-	addtimer(new Callback(src, PROC_REF(reset_codex_cooldown)), 3 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(reset_codex_cooldown)), 3 SECONDS)
 
 	var/list/all_entries = SScodex.retrieve_entries_for_string(searching)
 	if(mob && mob.mind && !player_is_antag(mob.mind))
@@ -53,6 +53,7 @@
 				codex_data += "<tr><td>[entry.display_name]</td><td><a href='byond://?src=\ref[SScodex];show_examined_info=\ref[entry];show_to=\ref[mob]'>View</a></td></tr>"
 			codex_data += "</table>"
 			var/datum/browser/popup = new(mob, "codex-search", "Codex Search")
+			popup.add_stylesheet("codex", 'html/browser/codex.css')
 			popup.set_content(jointext(codex_data, null))
 			popup.open()
 		else
@@ -71,11 +72,12 @@
 		to_chat(src, span_warning("You cannot perform codex actions currently."))
 		return
 	codex_on_cooldown = TRUE
-	addtimer(new Callback(src, PROC_REF(reset_codex_cooldown)), 10 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(reset_codex_cooldown)), 10 SECONDS)
 
 	to_chat(mob, span_notice("The codex forwards you an index file."))
 
 	var/datum/browser/popup = new(mob, "codex-index", "Codex Index")
+	popup.add_stylesheet("codex", 'html/browser/codex.css')
 	var/list/codex_data = list("<h2>Codex Entries</h2>")
 	codex_data += "<table width = 100%>"
 
@@ -114,7 +116,7 @@
 		return
 
 	codex_on_cooldown = TRUE
-	addtimer(new Callback(src, PROC_REF(reset_codex_cooldown)), 3 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(reset_codex_cooldown)), 3 SECONDS)
 
 	var/datum/codex_entry/entry = SScodex.get_codex_entry("nexus")
 	SScodex.present_codex_entry(mob, entry)

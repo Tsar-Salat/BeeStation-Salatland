@@ -6,7 +6,8 @@
 	human level intelligence. They have only a very limited capacity to learn, and rely on programmed information to guide their \
 	actions and reactions. First generation positronics are a rare sight in the current year; most have ceased functioning due to \
 	failures in the original hardware designs."
-	language = LANGUAGE_EAL
+	language = /datum/language/machine
+	/*
 	secondary_langs = list(
 		LANGUAGE_HUMAN_EURO,
 		LANGUAGE_HUMAN_CHINESE,
@@ -17,6 +18,7 @@
 		LANGUAGE_SPACER,
 		LANGUAGE_SIGN
 	)
+	*/
 	economic_power = 0.1
 
 /datum/cultural_info/culture/ipc/sanitize_name(new_name)

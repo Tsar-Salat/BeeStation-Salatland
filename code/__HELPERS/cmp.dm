@@ -17,7 +17,7 @@
 	return sorttext(a.name, b.name)
 
 /proc/cmp_codex_entry_asc(datum/codex_entry/a, datum/codex_entry/b)
-	return sorttext(b.display_name, a.display_name)
+	return sorttext(a.display_name, b.display_name)
 
 /proc/cmp_keybinding_asc(datum/keybinding/a, datum/keybinding/b)
 	return cmp_numeric_asc(a.weight, b.weight)

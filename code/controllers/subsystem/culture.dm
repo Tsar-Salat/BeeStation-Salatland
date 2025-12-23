@@ -7,8 +7,8 @@ SUBSYSTEM_DEF(culture)
 	var/list/tagged_info = list()
 
 
-/datum/controller/subsystem/culture/UpdateStat(time)
-	return
+/datum/controller/subsystem/culture/stat_entry()
+	return ..()  // No additional stat info needed
 
 
 /datum/controller/subsystem/culture/proc/get_all_entries_tagged_with(token)

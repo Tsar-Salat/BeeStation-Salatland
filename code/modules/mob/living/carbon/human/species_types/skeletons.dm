@@ -2,6 +2,8 @@
 	// 2spooky
 	name = "\improper Spooky Scary Skeleton"
 	plural_form = "Skeletons"
+	description = "A rattling skeleton! They descend upon Space Station 13 \
+		Every year to spook the crew! \"I've got a BONE to pick with you!\""
 	id = SPECIES_SKELETON
 	sexes = 0
 	meat = /obj/item/food/meat/slab/human/mutant/skeleton
@@ -89,10 +91,6 @@
 		H.reagents.remove_reagent(chem.type, chem.metabolization_rate * delta_time)
 		return TRUE
 	return ..()
-
-/datum/species/skeleton/get_species_description()
-	return "A rattling skeleton! They descend upon Space Station 13 \
-		Every year to spook the crew! \"I've got a BONE to pick with you!\""
 
 /datum/species/skeleton/get_species_lore()
 	return list(

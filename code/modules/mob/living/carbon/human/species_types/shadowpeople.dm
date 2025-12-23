@@ -7,6 +7,10 @@
 	// Humans cursed to stay in the darkness, lest their life forces drain. They regain health in shadow and die in light.
 	name = "Shadow"
 	plural_form = "Shadowpeople"
+	description = "Victims of a long extinct space alien. Their flesh is a sickly \
+		see-through filament, their tangled insides in clear view. Their form \
+		is a mockery of life, leaving them mostly unable to work with others under \
+		normal circumstances."
 	id = SPECIES_SHADOWPERSON
 	sexes = 0
 	meat = /obj/item/food/meat/slab/human/mutant/shadow
@@ -52,12 +56,6 @@
 	if(SSevents.holidays && SSevents.holidays[HALLOWEEN])
 		return TRUE
 	return ..()
-
-/datum/species/shadow/get_species_description()
-	return "Victims of a long extinct space alien. Their flesh is a sickly \
-		see-through filament, their tangled insides in clear view. Their form \
-		is a mockery of life, leaving them mostly unable to work with others under \
-		normal circumstances."
 
 /datum/species/shadow/get_species_lore()
 	return list(

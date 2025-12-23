@@ -1,5 +1,7 @@
 /datum/species/human
 	name = "\improper Human"
+	description =  "Humans are the dominant species in the known galaxy. \
+		Their kind extend from old Earth to the edges of known space."
 	id = SPECIES_HUMAN
 	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS)
 	mutant_bodyparts = list("body_size" = "Normal")
@@ -50,10 +52,6 @@
 	human.hair_style = "Business Hair"
 	human.hair_color = "b96" // brown
 	human.update_hair()
-
-/datum/species/human/get_species_description()
-	return "Humans are the dominant species in the known galaxy. \
-		Their kind extend from old Earth to the edges of known space."
 
 /datum/species/human/get_species_lore()
 	return list(

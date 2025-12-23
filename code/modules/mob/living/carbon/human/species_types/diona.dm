@@ -1,6 +1,9 @@
 /datum/species/diona
 	name = "\improper Diona"
 	plural_form = "Dionae"
+	description = "Dionae are the equivalent to a shambling mound of bug-like sentient plants \
+		wearing a trenchoat and pretending to be a human. Commonly found basking in the \
+		supermatter chamber during lunch breaks."
 	id = SPECIES_DIONA
 	sexes = 0 //no sex for bug/plant people!
 	bodyflag = FLAG_DIONA
@@ -331,10 +334,6 @@
 
 
 ////////////////////////////////////// Preferences menu stuffs ////////////////////////////////////////////////////////////
-/datum/species/diona/get_species_description()
-	return "Dionae are the equivalent to a shambling mound of bug-like sentient plants \
-	wearing a trenchoat and pretending to be a human. Commonly found basking in the \
-	supermatter chamber during lunch breaks."
 
 /datum/species/diona/get_species_lore()
 	return list(

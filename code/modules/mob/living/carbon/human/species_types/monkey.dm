@@ -2,6 +2,11 @@
 ///USE monkeyize() INSTEAD
 /datum/species/monkey
 	name = "\improper Monkey"
+	description = "Monkeys are a type of primate that exist between humans and animals on the evolutionary chain. \
+		Every year, on Monkey Day, Nanotrasen shows their respect for the little guys by allowing them to roam the station freely."
+	codex_description = list(
+		"Monkeys and other similar creatures tend to be found on science stations and vessels as \
+		cheap and disposable test subjects. This, naturally, infuriates animal rights groups.")
 	id = SPECIES_MONKEY
 	skinned_type = /obj/item/stack/sheet/animalhide/
 	changesource_flags = MIRROR_BADMIN
@@ -17,18 +22,6 @@
 		BODY_ZONE_R_ARM = /obj/item/bodypart/arm/right/monkey,
 		BODY_ZONE_L_LEG = /obj/item/bodypart/leg/left/monkey,
 		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/monkey
-	)
-
-/datum/species/monkey/get_species_description()
-	return "Monkeys are a type of primate that exist between humans and animals on the evolutionary chain. \
-		Every year, on Monkey Day, Nanotrasen shows their respect for the little guys by allowing them to roam the station freely."
-
-/datum/species/monkey/get_species_lore()
-	return list(
-		"Monkeys are commonly used as test subjects on board Space Station 13. \
-		But what if... for one day... the Monkeys were allowed to be the scientists? \
-		What experiments would they come up with? Would they (stereotypically) be related to bananas somehow? \
-		There's only one way to find out.",
 	)
 
 /datum/species/monkey/create_pref_unique_perks()

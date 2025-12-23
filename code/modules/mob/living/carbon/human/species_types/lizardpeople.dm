@@ -2,6 +2,8 @@
 	// Reptilian humanoids with scaled skin and tails.
 	name = "\improper Lizardperson"
 	plural_form = "Lizardfolk"
+	description = "Lizardpeople, unlike many 'Animalid' species, are not derived from humans, and are simply bipedal reptile-like people. \
+	Lizards often find great pride in their species."
 	id = SPECIES_LIZARD
 	bodyflag = FLAG_LIZARD
 	species_traits = list(
@@ -102,10 +104,6 @@
 
 /datum/species/lizard/get_giggle_sound(mob/living/carbon/user)
 	return SPECIES_DEFAULT_GIGGLE_SOUND(user)
-
-/datum/species/lizard/get_species_description()
-	return "Lizardpeople, unlike many 'Animalid' species, are not derived from humans, and are simply bipedal reptile-like people. \
-	Lizards often find great pride in their species."
 
 /datum/species/lizard/get_species_lore()
 	return null

@@ -1,5 +1,6 @@
 /datum/species/abductor
 	name = "\improper Abductor"
+	description = "Silent, but deadly. It's not known where they really come from, but they seem to have shown up regardless."
 	id = SPECIES_ABDUCTOR
 	sexes = FALSE
 	species_traits = list(
@@ -39,9 +40,6 @@
 	. = ..()
 	var/datum/atom_hud/abductor_hud = GLOB.huds[DATA_HUD_ABDUCTOR]
 	abductor_hud.remove_hud_from(C)
-
-/datum/species/abductor/get_species_description()
-	return "Silent, but deadly. It's not known where they really come from, but they seem to have shown up regardless."
 
 /datum/species/abductor/get_species_lore()
 	return null

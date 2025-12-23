@@ -3,26 +3,29 @@
 	hidden = TRUE
 	hidden_from_codex = TRUE
 
-/datum/cultural_info/culture/hidden/alium
+//Heretics
+/datum/cultural_info/culture/hidden/mansus
 	name = CULTURE_ALIUM
-	language = LANGUAGE_ALIUM
+	//Unsure what I want to assign to heretics, since mansus isn't really a language between people.
+	//language = LANGUAGE_ALIUM
 	secondary_langs = null
 
-/datum/cultural_info/culture/hidden/shadow
-	name =             CULTURE_STARLIGHT
-	language =         LANGUAGE_CULT
-	additional_langs = list(LANGUAGE_CULT_GLOBAL)
+//Cult of Rat'var, the Time God
+/datum/cultural_info/culture/hidden/clockwork
+	name = CULTURE_STARLIGHT
+	language = /datum/language/ratvar
 
-/datum/cultural_info/culture/hidden/cultist
+//Cult of Rat'var, the Goddess of Domination
+/datum/cultural_info/culture/hidden/domination
 	name =   CULTURE_CULTIST
-	language = LANGUAGE_CULT
+	language = /datum/language/narsie
 
 /datum/cultural_info/culture/hidden/cultist/get_random_name()
 	return "[pick("Anguished", "Blasphemous", "Corrupt", "Cruel", "Depraved", "Despicable", "Disturbed", "Exacerbated", "Foul", "Hateful", "Inexorable", "Implacable", "Impure", "Malevolent", "Malignant", "Malicious", "Pained", "Profane", "Profligate", "Relentless", "Resentful", "Restless", "Spiteful", "Tormented", "Unclean", "Unforgiving", "Vengeful", "Vindictive", "Wicked", "Wronged")] [pick("Apparition", "Aptrgangr", "Dis", "Draugr", "Dybbuk", "Eidolon", "Fetch", "Fylgja", "Ghast", "Ghost", "Gjenganger", "Haint", "Phantom", "Phantasm", "Poltergeist", "Revenant", "Shade", "Shadow", "Soul", "Spectre", "Spirit", "Spook", "Visitant", "Wraith")]"
 
 /datum/cultural_info/culture/hidden/monkey
 	name = CULTURE_MONKEY
-	language = LANGUAGE_PRIMITIVE
+	language = /datum/language/monkey
 
 /datum/cultural_info/culture/hidden/monkey/get_random_name()
 	return "[lowertext(name)] ([rand(100,999)])"

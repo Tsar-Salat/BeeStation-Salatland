@@ -34,16 +34,8 @@
 	lore_text = "Good hide is hard to come by in certain regions of the galaxy. When they can't come across it, most TSCs will outfit their crews with toolbelts made of synthesized leather."
 	antag_text = "Only amateurs skip grabbing a tool-belt."
 
-/datum/codex_entry/toolbelt/crystal
-	associated_paths = list(/obj/item/storage/belt/utility/crystal)
-	lore_text = "While some Vigil units have tools integrated directly into their bodies, less specialized units simply use toolbelts."
-
-/datum/codex_entry/toolbox/crystal
-	associated_paths = list(/obj/item/storage/toolbox/crystal)
-	lore_text = "The most basic of Vigil units may sometimes use toolboxes like these, which are surprisingly similar in design to ones of human origin. On occasion, some units have been known to harbor a slight preference for these archaic designs over something more streamlined, for whatever reason."
-
 /datum/codex_entry/paint_sprayer
-	associated_paths = list(/obj/item/device/paint_sprayer)
+	associated_paths = list(/obj/item/airlock_painter)
 	mechanics_text = "<p>Used to paint floors, walls, windows, pipes, mech parts and airlocks.</p>\
 	<p>While holding the paint sprayer in the active hand, Ctrl+Click on a target will pick its color and Shift+Click will remove paint from it.</p>\
 	<p>Using the paint sprayer in hand will allow you to choose a decal for painting floors.</p>\
@@ -52,30 +44,30 @@
 	antag_text = "This thing would be perfect for vandalism. Could you write your name in the halls?"
 
 /datum/codex_entry/geiger_counter
-	associated_paths = list(/obj/item/device/geiger)
+	associated_paths = list(/obj/item/geiger_counter)
 	mechanics_text = "By using this item, you may toggle its scanning mode on and off. Examine it while it's on to check for ambient radiation."
 	lore_text = "For centuries, geiger counters have been saving the lives of unsuspecting laborers and technicians. You can never be too careful around radiation."
 
 /datum/codex_entry/light_replacer
-	associated_paths = list(/obj/item/device/lightreplacer)
+	associated_paths = list(/obj/item/lightreplacer)
 	mechanics_text = "<p>Examine or use this item to see how many lights are remaining and what color it's configured to print. You can feed it lightbulbs or sheets of glass to refill it.</p>\
 		<p>Use this item in hand to change it's light color.</p>"
 	lore_text = "Can you believe they used to have to screw lightbulbs in by hand?"
 	antag_text = "Using a cryptographic sequencer on this device will cause it to overload each light it replaces; when turned on, the new lights will explode!"
 
 /datum/codex_entry/multitool
-	associated_paths = list(/obj/item/device/multitool)
+	associated_paths = list(/obj/item/multitool)
 	mechanics_text = "Multitools are incredibly versatile and can be used on a wide variety of machines. The most common use for this is to trip a device's wires without having to cut them. Simply click on an object with exposed wiring to use it. There might be other uses, as well..."
 	lore_text = "The common, every day multitool is descended from certain electrical tools from Earth's early space age. Though none too cheap, they are incredibly handy, and can be found in any self-respecting technician's toolbox."
 	antag_text = "This handy little tool can get you through doors, turn off power, and anything else you might need."
 
 /datum/codex_entry/t_scanner
-	associated_paths = list(/obj/item/device/t_scanner)
+	associated_paths = list(/obj/item/t_scanner)
 	mechanics_text = "Use this to toggle its scanning capabilities on and off. While on, it will expose the layout of cabling and pipework in a 7x7 area around you."
 	lore_text = "The T-ray scanner is a modern spectroscopy solution and labor-saving device. Why work yourself to the bone removing floor panels when you can simply look through them with submillimeter radiation?"
 
 /datum/codex_entry/rcd
-	associated_paths = list(/obj/item/rcd)
+	associated_paths = list(/obj/item/construction/rcd)
 	mechanics_text = "On use, this device will toggle between various types of structures (or their removal). You can examine it to see its current mode. It must be loaded with compressed matter cartridges, which can be obtained from an autolathe. Click an adjacent tile to use the device."
 	lore_text = "Advents in material printing and synthesis technology have produced everyday miracles, such as the RCD, which in certain industries has single-handedly put entire construction crews out of a job."
 	antag_text = "RCDs can be incredibly dangerous in the wrong hands. Use them to swiftly block off corridors, or instantly breach the ship wherever you want."
@@ -86,19 +78,3 @@
 	lore_text = "No one remembers which company designed this particular toolbox. It's been mass-produced, retired, brought out of retirement, and counterfeited for decades."
 	antag_text = "Carrying one of these and being bald tends to instill a certain primal fear in most people."
 
-/datum/codex_entry/cooking_container
-	associated_paths = list(/obj/item/reagent_containers/cooking_container)
-	mechanics_text = "A storage item for food; ;ets you carry ingredients or food easily.\
-	<br><br>Switch to Grab intent to scoop up items by hitting them, or add them to the container directly. Hit a table with Grab intent active to unload the container's contents onto it. \
-	You can also alt-click the container in-hand to dump its contents onto whatever's beneath you.\
-	<br><br>Non-Grab intents can be used to put the container down onto surfaces without dumping it out, or Harm intent can be used to hit people with the container itself. \
-	If you're a cyborg, robot, or other non-human, Help intent replaces Grab intent for interactions that use it."
-
-/datum/codex_entry/drone_designator
-	associated_paths = list(/obj/item/device/drone_designator)
-	mechanics_text = "This device is used to retrieve items such as crates from away sites. You can use it on a drone pad to synchronize with its network. Use it while in an exterior area to mark an object for pickup."
-	lore_text = "Common throughout human space, short range transport drones are used for courier roles and to retrieve material shipments from remote areas. This designator can send telemetry data beyond orbit through the use of a compact subspace beacon."
-
-/datum/codex_entry/sample_kit
-	associated_paths = list(/obj/item/forensics/sample_kit, /obj/item/forensics/sample_kit/powder, /obj/item/swabber)
-	mechanics_text = "Used to collect fibers or fingerprints from any surface. Must be on a non-help intent to collect evidence."
