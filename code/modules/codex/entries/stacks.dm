@@ -1,5 +1,4 @@
 /datum/codex_entry/stacks
-	category = CODEX_CATEGORY_MATERIALS
 
 /datum/codex_entry/stacks/telecrystal
 	associated_paths = list(/obj/item/stack/sheet/telecrystal)

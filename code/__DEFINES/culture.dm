@@ -163,7 +163,6 @@
 #define CODEX_CATEGORY_MACHINERY "machinery"
 #define CODEX_CATEGORY_ENGINEERING "engineering"
 #define CODEX_CATEGORY_ROBOTICS "robotics"
-#define CODEX_CATEGORY_MATERIALS "materials"
 #define CODEX_CATEGORY_ATMOSPHERICS "atmospherics"
 #define CODEX_CATEGORY_STRUCTURES "structures"
 #define CODEX_CATEGORY_TOOLS "tools"
