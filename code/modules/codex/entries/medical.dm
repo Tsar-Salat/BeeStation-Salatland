@@ -40,5 +40,5 @@
 
 /datum/codex_entry/medical/defibrillator
 	associated_paths = list(/obj/item/defibrillator)
-	mechanics_text = "A defibrillator is used to restart a stopped heart on a patient recently deceased. Revival ability is determined by the amount of damage to their body, as well as their organ health and if their soul is still around(the player is still connected to the game).
+	mechanics_text = "A defibrillator is used to restart a stopped heart on a patient recently deceased. Revival ability is determined by the amount of damage to their body, as well as their organ health and if their soul is still around(the player is still connected to the game)."
 

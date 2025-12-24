@@ -1,17 +1,19 @@
 /* eslint-disable react/no-danger */
-import { useEffect, useRef, useState } from 'react';
 
-import { useBackend } from '../backend';
+import { useEffect, useRef, useState } from 'react';
 import {
   Box,
   Button,
   Divider,
   Icon,
+  ImageButton,
   Input,
   Section,
   Stack,
   Tabs,
-} from '../components';
+} from 'tgui-core/components';
+
+import { useBackend } from '../backend';
 import { Window } from '../layouts';
 
 const COLOR_LORE = '#abdb9b'; // Light green for lore text
@@ -29,7 +31,7 @@ type CategoryItem = {
   key: string;
 };
 
-type CodexData = {
+interface CodexData {
   entry_name: string;
   lore_text: string;
   mechanics_text: string;
@@ -41,7 +43,11 @@ type CodexData = {
   search_text: string;
   view_mode: 'nexus' | 'category' | 'entry' | 'search';
   mode: number;
-};
+  icon_class: string;
+  icon?: string;
+  icon_state?: string;
+  icon_dir?: number;
+}
 
 enum MODE {
   lore,
@@ -72,6 +78,7 @@ export const CodexInfo = (_props) => {
     search_text,
     view_mode,
     mode,
+    icon_class,
   } = data;
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -348,6 +355,35 @@ export const CodexInfo = (_props) => {
                     {/* Show entry content if viewing an entry */}
                     {showEntryContent && (
                       <>
+                        {/* Icon display if available */}
+                        {!!data.icon && !!data.icon_state ? (
+                          <Stack.Item>
+                            <ImageButton
+                              className="CodexEntryIcon"
+                              style={{
+                                width: '32px',
+                                height: '32px',
+                                marginBottom: '10px',
+                              }}
+                              dmIcon={data.icon}
+                              dmIconState={data.icon_state}
+                              disabled
+                            />
+                          </Stack.Item>
+                        ) : (
+                          !!icon_class && (
+                            <Stack.Item>
+                              <Box
+                                className={icon_class}
+                                style={{
+                                  width: '32px',
+                                  height: '32px',
+                                  marginBottom: '10px',
+                                }}
+                              />
+                            </Stack.Item>
+                          )
+                        )}
                         {/* Lore text */}
                         {!!lore_text && (
                           <Stack.Item>

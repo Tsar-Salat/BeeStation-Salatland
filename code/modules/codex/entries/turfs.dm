@@ -4,7 +4,7 @@
 /datum/codex_entry/turfs/plating
 	associated_paths = list(/turf/open/floor/plating)
 	mechanics_text = "Plating cannot be deconstructed by normal means.<br>\
-	You can build floor plating by using floor tiles on a lattice.<br>\"
+	You can build floor plating by using floor tiles on a lattice.<br>"
 
 /datum/codex_entry/turfs/floor_tile
 	associated_paths = list(/turf/open/floor)

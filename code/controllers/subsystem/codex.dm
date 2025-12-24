@@ -310,6 +310,22 @@ SUBSYSTEM_DEF(codex)
 
 	// Check if entry has content (but not for Info category selections)
 	if(entry && istype(entry, /datum/codex_entry) && !is_info_category_selection)
+		// Get icon data if entry has associated paths
+		if(entry.associated_paths && length(entry.associated_paths))
+			var/atom/first_path = entry.associated_paths[1]
+			var/icon = initial(first_path.icon)
+			var/icon_state = initial(first_path.icon_state)
+			var/icon_dir = initial(first_path.dir)
+			data["icon"] = icon
+			data["icon_state"] = icon_state
+			data["icon_dir"] = icon_dir
+			data["icon_class"] = "codex32x32 [sanitize_css_class_name(first_path)]"
+		else
+			data["icon"] = ""
+			data["icon_state"] = ""
+			data["icon_dir"] = ""
+			data["icon_class"] = ""
+
 		// For entries that just use the basic fields, use those directly
 		if(entry.lore_text)
 			data["lore_text"] = SScodex.parse_links(entry.lore_text, user)
@@ -326,6 +342,7 @@ SUBSYSTEM_DEF(codex)
 		else
 			data["antag_text"] = ""
 	else
+		data["icon_class"] = ""
 		data["lore_text"] = ""
 		data["mechanics_text"] = ""
 		data["antag_text"] = ""

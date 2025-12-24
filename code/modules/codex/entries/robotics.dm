@@ -20,6 +20,6 @@
 	functions like a MMI, allowing the new mind to inhabit silicon or mecha bodies."
 
 /datum/codex_entry/robotics/modsuit
-	associated_paths = list(/obj/item/modsuit)
+	associated_paths = list(/obj/item/mod/control)
 	mechanics_text = "A modular suit (MODsuit) is a type of outerwear that can be customized with various modules to augment its capabilities. \
 	Modules can provide additional armor, tools, or other functionalities to the modsuit. Said modules are researched and built through the techtree, found in maintenance, or spawn exclusively on certain premade MODsuits."
