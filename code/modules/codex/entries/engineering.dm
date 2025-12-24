@@ -1,4 +1,7 @@
-/datum/codex_entry/supermatter
+/datum/codex_entry/engineering
+	category = CODEX_CATEGORY_ENGINEERING
+
+/datum/codex_entry/engineering/supermatter
 	associated_paths = list(/obj/machinery/power/supermatter_crystal)
 	mechanics_text = "When energized by a laser (or something hitting it), it emits radiation and heat.  If the heat reaches above 7000 kelvin, it will send an alert and start taking damage. \
 	After integrity falls to zero percent, it will delaminate, causing a massive explosion, station-wide radiation spikes, and hallucinations. \
@@ -13,7 +16,7 @@
 	cause a period of lag as the explosion is processed by the server, as well as irradiating the entire station and causing hallucinations to happen.  \
 	Wearing radiation equipment will protect you from most of the delamination effects sans explosion."
 
-/datum/codex_entry/apc
+/datum/codex_entry/engineering/apc
 	associated_paths = list(/obj/machinery/power/apc)
 	mechanics_text = "An APC (Area Power Controller) regulates and supplies backup power for the area they are in. Their power channels are divided \
 	out into 'environmental' (Items that manipulate airflow and temperature), 'lighting' (the lights), and 'equipment' (Everything else that consumes power).  \

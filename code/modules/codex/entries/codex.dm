@@ -21,26 +21,3 @@
 	display_name = "Nexus"
 	associated_strings = list("nexus")
 	mechanics_text = "The place to start with <span codexlink='codex'>The Codex</span><br>"
-
-/datum/codex_entry/nexus/get_text(mob/presenting_to)
-	var/list/dat = list(get_header(presenting_to))
-	dat += "[mechanics_text]"
-	dat += "<h3>Categories</h3>"
-	var/list/categories = list()
-	for(var/type in subtypesof(/datum/codex_category))
-		var/datum/codex_category/C = type
-		var/key = "[initial(C.name)] (category)"
-		var/datum/codex_entry/entry = SScodex.get_codex_entry(key)
-		if(entry)
-			categories += "<li><span codexlink='[key]'>[initial(C.name)]</span> - [initial(C.desc)]"
-	dat += jointext(categories, " ")
-	return span_color(CODEX_COLOR_MECHANICS, jointext(dat, null))
-
-/client/proc/codex_topic(href, href_list)
-	if(href_list["codex_search"]) //nano throwing errors
-		search_codex()
-		return TRUE
-
-	if(href_list["codex_index"]) //nano throwing errors
-		list_codex_entries()
-		return TRUE

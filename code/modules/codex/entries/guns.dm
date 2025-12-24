@@ -97,7 +97,7 @@
 	Projecting these holograms over distance uses a little bit of charge.<br>"
 
 
-/datum/codex_entry/energy_weapons
+/datum/codex_entry/weapons/energy_weapons
 	display_name = "energy weapons"
 	mechanics_text = "This weapon is an energy weapon; they run on battery charge rather than traditional ammunition. You can recharge \
 		an energy weapon by placing it in a wall-mounted or table-mounted charger, such as those found in Security or around the \
@@ -105,7 +105,7 @@
 		hitscan, making them accurate and useful against distant targets. \
 		<br><br>"
 
-/datum/codex_entry/ballistic_weapons
+/datum/codex_entry/weapons/ballistic_weapons
 	display_name = "ballistic weapons"
 	mechanics_text = "This weapon is a ballistic weapon; it fires solid shots using a magazine or loaded rounds of ammunition. You can \
 		unload it by holding it and clicking it with an empty hand, and reload it by clicking it with a magazine, or in the case of \

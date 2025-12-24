@@ -155,3 +155,21 @@
 #define RELIGION_UNATHI_MARKESHELI "Cult of Markesh"
 #define RELIGION_UNATHI_ANCESTOR "Ancestor Worship"
 #define RELIGION_UNATHI_AGA_EAKHE "Aga-Eakhe"
+
+#define CODEX_CATEGORY_GENERIC "generic"
+#define CODEX_CATEGORY_WEAPONS "weapons"
+#define CODEX_CATEGORY_MEDICAL "Medical Machinery"
+#define CODEX_CATEGORY_ORGANS "organs"
+#define CODEX_CATEGORY_MACHINERY "machinery"
+#define CODEX_CATEGORY_ENGINEERING "engineering"
+#define CODEX_CATEGORY_ROBOTICS "robotics"
+#define CODEX_CATEGORY_MATERIALS "materials"
+#define CODEX_CATEGORY_ATMOSPHERICS "atmospherics"
+#define CODEX_CATEGORY_STRUCTURES "structures"
+#define CODEX_CATEGORY_TOOLS "tools"
+#define CODEX_CATEGORY_TURFS "turfs"
+
+// Codex modes
+#define CODEX_MODE_LORE 0
+#define CODEX_MODE_INFO 1
+

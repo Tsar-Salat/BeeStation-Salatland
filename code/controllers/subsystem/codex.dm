@@ -10,6 +10,7 @@ SUBSYSTEM_DEF(codex)
 	var/list/entries_by_string = list()
 	var/list/index_file =        list()
 	var/list/search_cache =      list()
+	var/list/codex_categories =  list() // Store category instances
 
 
 /datum/controller/subsystem/codex/stat_entry()
@@ -41,11 +42,19 @@ SUBSYSTEM_DEF(codex)
 				add_entry_by_string(centry.display_name, centry)
 			centry.update_links()
 
+	// Now register subtypes for entries, excluding paths that have their own specific entries
+	for(var/entry_path in entries_by_path)
+		var/datum/codex_entry/entry = entries_by_path[entry_path]
+		for(var/subtype in subtypesof(entry_path))
+			// Only register this subtype if it doesn't already have its own entry
+			if(!entries_by_path[subtype])
+				entries_by_path[subtype] = entry
+
 	// Create categorized entries.
 	for(var/ctype in subtypesof(/datum/codex_category))
 		var/datum/codex_category/cat = new ctype
+		codex_categories[ctype] = cat
 		cat.Initialize()
-		qdel(cat)
 
 	// Create the index file for later use.
 	for(var/thing in SScodex.entries_by_path)
@@ -89,10 +98,8 @@ SUBSYSTEM_DEF(codex)
 
 /datum/controller/subsystem/codex/proc/present_codex_entry(mob/presenting_to, datum/codex_entry/entry)
 	if(entry && istype(presenting_to) && presenting_to.client)
-		var/datum/browser/popup = new(presenting_to, "codex", "Codex", nheight=425)
-		popup.add_stylesheet("codex", 'html/browser/codex.css')
-		popup.set_content(parse_links(entry.get_text(presenting_to), presenting_to))
-		popup.open()
+		var/datum/codex_viewer/viewer = new(entry, presenting_to)
+		viewer.ui_interact(presenting_to)
 
 /datum/controller/subsystem/codex/proc/retrieve_entries_for_string(searching)
 
@@ -111,9 +118,9 @@ SUBSYSTEM_DEF(codex)
 			for(var/entry_title in entries_by_string)
 				var/datum/codex_entry/entry = entries_by_string[entry_title]
 				if(findtext(entry.display_name, searching) || \
-				 findtext(entry.lore_text, searching) || \
-				 findtext(entry.mechanics_text, searching) || \
-				 findtext(entry.antag_text, searching))
+					findtext(entry.lore_text, searching) || \
+					findtext(entry.mechanics_text, searching) || \
+					findtext(entry.antag_text, searching))
 					results |= entry
 		search_cache[searching] = sortTim(results, GLOBAL_PROC_REF(cmp_codex_entry_asc))
 	return search_cache[searching]
@@ -136,3 +143,258 @@ SUBSYSTEM_DEF(codex)
 		if(entry)
 			present_codex_entry(showing_mob, entry)
 			return TRUE
+
+/// A datum for viewing codex entries through TGUI
+/datum/codex_viewer
+	/// The codex entry being viewed
+	var/datum/codex_entry/entry
+	/// The mob viewing the codex
+	var/mob/viewer
+	/// Search text for filtering entries
+	var/search_text = ""
+	/// Current mode (CODEX_MODE_LORE or CODEX_MODE_INFO)
+	var/mode = CODEX_MODE_LORE
+	/// Raw selected entry/category key for Info mode categories
+	var/selected_entry = ""
+
+/datum/codex_viewer/New(datum/codex_entry/_entry, mob/_viewer)
+	entry = _entry
+	viewer = _viewer
+	selected_entry = _entry?.display_name || ""
+
+/datum/codex_viewer/Destroy()
+	entry = null
+	viewer = null
+	return ..()
+
+/datum/codex_viewer/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "CodexInfo", entry?.display_name || "Codex")
+		ui.open()
+
+/datum/codex_viewer/ui_data(mob/user)
+	var/list/data = list()
+
+	// In Info mode, check if selected_entry is a category name
+	var/is_info_category_selection = FALSE
+	if(mode == CODEX_MODE_INFO && selected_entry)
+		// Check entries_by_string
+		for(var/entry_key in SScodex.entries_by_string)
+			var/datum/codex_entry/e = SScodex.entries_by_string[entry_key]
+			if(e.category == lowertext(selected_entry))
+				is_info_category_selection = TRUE
+				break
+		// If not found, check entries_by_path
+		if(!is_info_category_selection)
+			for(var/path in SScodex.entries_by_path)
+				var/datum/codex_entry/e = SScodex.entries_by_path[path]
+				if(e.category == lowertext(selected_entry))
+					is_info_category_selection = TRUE
+					break
+
+	data["entry_name"] = is_info_category_selection ? selected_entry : (entry?.display_name || "Unknown")
+	data["search_text"] = search_text
+	data["mode"] = mode
+
+	// Send categories based on current mode
+	var/list/categories = list()
+	if(mode == CODEX_MODE_LORE)
+		// Lore mode: show datum/codex_category categories
+		for(var/type in subtypesof(/datum/codex_category))
+			var/datum/codex_category/C = type
+			var/key = "[initial(C.name)] (category)"
+			var/datum/codex_entry/cat_entry = SScodex.get_codex_entry(key)
+			if(cat_entry)
+				categories += list(list(
+					"name" = initial(C.name),
+					"desc" = initial(C.desc),
+					"key" = key
+				))
+	else if(mode == CODEX_MODE_INFO)
+		// Info mode: build categories from codex entries with category field
+		var/list/info_categories = list()
+		var/list/processed = list()
+		// Check entries_by_string
+		for(var/entry_key in SScodex.entries_by_string)
+			var/datum/codex_entry/e = SScodex.entries_by_string[entry_key]
+			if(e.category && e.category != CODEX_CATEGORY_GENERIC && !(e in processed))
+				info_categories[e.category] = TRUE
+				processed[e] = TRUE
+		// Also check entries_by_path
+		for(var/path in SScodex.entries_by_path)
+			var/datum/codex_entry/e = SScodex.entries_by_path[path]
+			if(e.category && e.category != CODEX_CATEGORY_GENERIC && !(e in processed))
+				info_categories[e.category] = TRUE
+				processed[e] = TRUE
+		for(var/cat_name in info_categories)
+			categories += list(list(
+				"name" = capitalize(cat_name),
+				"desc" = "[capitalize(cat_name)] information",
+				"key" = cat_name
+			))
+	data["categories"] = categories
+
+	// Determine view mode
+	var/is_nexus = istype(entry, /datum/codex_entry/nexus)
+	var/is_category = findtext(entry?.display_name, "(category)")
+
+	data["view_mode"] = "entry" // Default: showing an entry
+	if(search_text)
+		data["view_mode"] = "search"
+	else if(is_nexus)
+		data["view_mode"] = "nexus"
+	else if(is_category || is_info_category_selection)
+		data["view_mode"] = "category"
+
+	// If searching, send search results
+	if(search_text)
+		var/list/search_results = list()
+		var/searching = lowertext(search_text)
+		for(var/entry_id in SScodex.entries_by_string)
+			if(findtext(entry_id, searching))
+				var/datum/codex_entry/result_entry = SScodex.entries_by_string[entry_id]
+				var/already_have = FALSE
+				for(var/list/existing in search_results)
+					if(existing["key"] == result_entry.display_name)
+						already_have = TRUE
+						break
+				if(!already_have)
+					search_results += list(list(
+						"name" = result_entry.display_name,
+						"key" = result_entry.display_name
+					))
+		data["search_results"] = search_results
+	else
+		data["search_results"] = list()
+
+	// If viewing a category, send the list of items
+	if(is_category && mode == CODEX_MODE_LORE)
+		var/list/category_items = list()
+		for(var/type in subtypesof(/datum/codex_category))
+			var/datum/codex_category/C = SScodex.codex_categories[type]
+			if(C && ("[C.name] (category)" == entry.display_name))
+				for(var/item_name in C.items)
+					category_items += list(list(
+						"name" = item_name,
+						"key" = item_name
+					))
+				break
+		data["category_items"] = category_items
+	else if(is_info_category_selection && mode == CODEX_MODE_INFO)
+		// In Info mode, show items with matching category
+		var/list/category_items = list()
+		var/list/added = list()
+		var/category_name = lowertext(selected_entry)
+		// Check entries_by_string
+		for(var/entry_key in SScodex.entries_by_string)
+			var/datum/codex_entry/e = SScodex.entries_by_string[entry_key]
+			if(e.category == category_name && !(e in added))
+				category_items += list(list(
+					"name" = e.display_name,
+					"key" = e.display_name
+				))
+				added[e] = TRUE
+		// Also check entries_by_path
+		for(var/path in SScodex.entries_by_path)
+			var/datum/codex_entry/e = SScodex.entries_by_path[path]
+			if(e.category == category_name && !(e in added))
+				category_items += list(list(
+					"name" = e.display_name,
+					"key" = e.display_name
+				))
+				added[e] = TRUE
+		data["category_items"] = category_items
+	else
+		data["category_items"] = list()
+
+	// Check if entry has content (but not for Info category selections)
+	if(entry && istype(entry, /datum/codex_entry) && !is_info_category_selection)
+		// For entries that just use the basic fields, use those directly
+		if(entry.lore_text)
+			data["lore_text"] = SScodex.parse_links(entry.lore_text, user)
+		else
+			data["lore_text"] = ""
+
+		if(entry.mechanics_text)
+			data["mechanics_text"] = SScodex.parse_links(entry.mechanics_text, user)
+		else
+			data["mechanics_text"] = ""
+
+		if(entry.antag_text && user.mind && player_is_antag(user.mind))
+			data["antag_text"] = SScodex.parse_links(entry.antag_text, user)
+		else
+			data["antag_text"] = ""
+	else
+		data["lore_text"] = ""
+		data["mechanics_text"] = ""
+		data["antag_text"] = ""
+
+	data["is_antag"] = (user.mind && player_is_antag(user.mind)) ? 1 : 0
+
+	return data
+
+/datum/codex_viewer/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
+	. = ..()
+	if(.)
+		return
+
+	switch(action)
+		if("home")
+			var/datum/codex_entry/nexus = SScodex.get_codex_entry("nexus")
+			if(nexus)
+				entry = nexus
+				selected_entry = "nexus"
+				search_text = ""
+				. = TRUE
+		if("view_entry")
+			var/entry_key = params["key"]
+			if(entry_key)
+				var/datum/codex_entry/new_entry = SScodex.get_codex_entry(entry_key)
+				if(new_entry)
+					entry = new_entry
+					selected_entry = entry_key
+					search_text = ""
+					. = TRUE
+				else if(mode == CODEX_MODE_INFO)
+					// Check if this is an Info category name
+					// Check entries_by_string
+					for(var/check_key in SScodex.entries_by_string)
+						var/datum/codex_entry/e = SScodex.entries_by_string[check_key]
+						if(e.category == lowertext(entry_key))
+							// This is an Info category - clear entry so view_mode logic works
+							entry = null
+							selected_entry = entry_key
+							search_text = ""
+							. = TRUE
+							break
+					// If not found in entries_by_string, check entries_by_path
+					if(!.)
+						for(var/path in SScodex.entries_by_path)
+							var/datum/codex_entry/e = SScodex.entries_by_path[path]
+							if(e.category == lowertext(entry_key))
+								// This is an Info category - clear entry so view_mode logic works
+								entry = null
+								selected_entry = entry_key
+								search_text = ""
+								. = TRUE
+								break
+		if("search")
+			search_text = params["text"] || ""
+			. = TRUE
+		if("toggle_mode")
+			mode = !mode
+			search_text = ""
+			selected_entry = ""
+			var/datum/codex_entry/nexus = SScodex.get_codex_entry("nexus")
+			if(nexus)
+				entry = nexus
+			. = TRUE
+
+/datum/codex_viewer/ui_state(mob/user)
+	return GLOB.always_state
+
+/datum/codex_viewer/ui_status(mob/user, datum/ui_state/state)
+	if(!viewer || !viewer.can_use_codex())
+		return UI_CLOSE
+	return UI_INTERACTIVE
