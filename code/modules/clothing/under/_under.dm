@@ -25,6 +25,18 @@
 	bio = 10
 	bleed = 10
 
+/obj/item/clothing/under/Topic(href, href_list)
+	. = ..()
+
+	if(href_list["list_accessorize"])
+		var/list/visible = get_visible_accessories(shortened = FALSE)
+		if (length(visible))
+			var/list/display = list()
+			for (var/obj/item/clothing/accessory/A in visible)
+				if (!(A.hidden))
+					display += "[icon2html(A, usr)] \a [A]<a href='byond://?src=\ref[A];examine=1'>\[?\]</a>"
+			to_chat(usr, "Attached to \the [src] are [english_list(display)].")
+
 /obj/item/clothing/under/worn_overlays(mutable_appearance/standing, isinhands = FALSE, icon_file, item_layer, atom/origin)
 	. = list()
 	if(!isinhands)
@@ -311,6 +323,7 @@
 				. += "Its vital tracker and tracking beacon appear to be enabled."
 	for (var/accessory_slot in attached_accessories)
 		var/obj/item/clothing/accessory/accessory = attached_accessories[accessory_slot]
+		//Not necessary to nest 3 times with get_examine_line() here to examine the accessory lmao, just give its name
 		. += "\A [accessory] is attached to it's [LOWER_TEXT(accessory_slot)]."
 
 /obj/item/clothing/under/verb/toggle()

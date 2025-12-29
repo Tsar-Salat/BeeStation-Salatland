@@ -2,13 +2,13 @@
 	/// If non-null, overrides a/an/some in all cases
 	var/article
 	/// Text that appears preceding the name in examine()
-	var/examine_thats = "That's"
+	var/examine_intro = "That's"
 
 /mob/living/carbon/human
-	examine_thats = "This is"
+	examine_intro = "This is"
 
 /mob/living/silicon/robot
-	examine_thats = "This is"
+	examine_intro = "This is"
 
 /**
  * Called when a mob examines (shift click or verb) this atom
@@ -174,7 +174,7 @@
  */
 /atom/proc/examine_title(mob/user, thats = FALSE)
 	var/examine_icon = get_examine_icon(user)
-	return "[examine_icon ? "[examine_icon] " : ""][thats ? "[examine_thats] ":""]<em>[get_examine_name(user)]</em>"
+	return "[examine_icon ? "[examine_icon] " : ""][thats ? "[examine_intro] ":""]<em>[get_examine_name(user)]</em>"
 
 /**
  * Returns an extended list of examine strings for any contained ID cards.

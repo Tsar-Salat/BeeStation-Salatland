@@ -655,6 +655,39 @@ BLIND	 // can't see anything
 	if (!is_mining_level(T.z))
 		return . * high_pressure_multiplier
 
+
+/// Returns a string for the examine line, including visible accessories.
+/obj/item/clothing/under/get_examine_line(skip_examine_link = FALSE)
+	. = ..()
+	var/list/visible = get_visible_accessories(shortened = TRUE)
+	if(length(visible) && skip_examine_link == FALSE) //We use skip_examine_link to also hide unecessary accessory links (titles mostly)
+		var/list/display = list()
+		for (var/obj/item/clothing/accessory/A in visible)
+			if(!A.hidden && A.high_visibility)
+				display += "[icon2html(A, usr)] \a [A]"
+		if(length(display))
+			. += " with [english_list(display)] attached"
+		if(length(visible) > length(display))
+			. += ". <a href='byond://?src=\ref[src];list_accessorize=1'>\[See accessories\]</a>"
+
+//This has been refactored to support accessories on different clothing items. At the moment its hardcoded for clothing/under, but should support expansion for Suits and Hats.
+//To do so, we just need to move attached_accessories list to /obj/item/clothing
+/obj/item/clothing/under/proc/get_visible_accessories(shortened = TRUE)
+	var/list/result = list()
+	if (!isnull(attached_accessories))
+		for (var/accessory_slot in attached_accessories)
+			var/obj/item/clothing/accessory/accessory = attached_accessories[accessory_slot]
+			// Hidden accessories do not show
+			if (!accessory || accessory.hidden)
+				continue
+			// Accessories that are below a suit hiding them do not show
+			if (!accessory.above_suit && ishuman(loc))
+				var/mob/living/carbon/human/H = loc
+				if (H.wear_suit && (H.wear_suit.body_parts_covered & accessory.attachment_slot))
+					continue
+			result += accessory
+	return result
+
 #undef SENSORS_OFF
 #undef SENSORS_BINARY
 #undef SENSORS_VITALS

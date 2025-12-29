@@ -1649,15 +1649,28 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		usr.examinate(src)
 		return TRUE
 
+//So, a little word about our examine separation here. We need to be careful about whether the observer is examining the mob, or the item directly.
+//If they examine the mob, we obviously want to include the href link letting them look at said mob's worn items.
+//Conversely, if they are examining the item directly(like clicking on aforementioned href link), it will fuck our nice examine box up if it tries to put another href in the title(name) of the item.
+//SO!
+//Mob examines, skip_examine_link = FALSE. | Item examines, skip_examine_link = TRUE.
+//Obey this *carefully*.
+
+/*
+ * Our general proc for fusing together the examine_intro (Identifies *this*(what you are examining at)) and X(the subject)
+ * Use this for most to_chat() phrasing in examine(), unless you want to manipulate the phrasing specifically, in which, use get_examine_line() directly
+ */
 /obj/item/examine_title(mob/user, thats = FALSE)
 	// Items use get_examine_line() which includes blood stains, ID links, examine links, etc.
 	// When thats=TRUE, this is the main item being examined, so skip the self-referential examine link
 	// When thats=FALSE, this is an inventory item, so include the examine link
 	var/examine_line = get_examine_line(skip_examine_link = thats)
 	if(thats)
-		examine_line = "[examine_thats] [examine_line]"
+		examine_line = "[examine_intro] [examine_line]"
 	return examine_line
 
+//Builds the examine name string with examine link and/or ID link, if applicable.
+//skip_examine_link: If TRUE, will not add an examine link to the item
 /obj/item/proc/get_examine_line(skip_examine_link = FALSE)
 	var/whole_word = usr?.client?.prefs?.read_player_preference(/datum/preference/toggle/whole_word_examine_links)
 	var/examine_name = get_examine_name(usr)

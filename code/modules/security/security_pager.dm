@@ -2,6 +2,7 @@
 	name = "security pager"
 	desc = "A chest-mounted pager which is used to quickly keep in touch with a commanding body."
 	icon_state = "pager"
+	high_visibility = TRUE
 	above_suit = TRUE
 	var/obj/item/radio/radio
 	COOLDOWN_DECLARE(deathgasp_cooldown)

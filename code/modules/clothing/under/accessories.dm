@@ -14,6 +14,8 @@
 	var/accessory_slot = ACCESSORY_CHEST
 	/// Is this accessory hidden to examiners?
 	var/hidden = FALSE
+	/// Should this accessory appear to examiners without detailed view?
+	var/high_visibility = FALSE
 	/// Does it show above the armour slot item
 	var/above_suit = FALSE
 	/// TRUE if shown as a small icon in corner, FALSE if overlayed
@@ -89,6 +91,7 @@
 	desc = "For some classy, murderous fun."
 	icon_state = "waistcoat"
 	inhand_icon_state = "waistcoat"
+	high_visibility = TRUE
 	minimize_when_attached = FALSE
 	attachment_slot = null
 
@@ -97,6 +100,7 @@
 	desc = "The best part of a maid costume."
 	icon_state = "maidapron"
 	inhand_icon_state = "maidapron"
+	high_visibility = TRUE
 	minimize_when_attached = FALSE
 	attachment_slot = null
 
@@ -110,6 +114,7 @@
 	icon_state = "bronze"
 	custom_materials = list(/datum/material/iron=1000)
 	resistance_flags = FIRE_PROOF
+	high_visibility = TRUE
 	accessory_slot = ACCESSORY_MEDAL
 	accessory_layer = ACCESSORY_LAYER_MEDAL
 	var/medaltype = "medal" //Sprite used for medalbox
@@ -263,6 +268,7 @@
 	name = "red armband"
 	desc = "A fancy red armband!"
 	icon_state = "redband"
+	high_visibility = TRUE
 	attachment_slot = null
 	accessory_slot = ACCESSORY_ARMBAND
 	accessory_layer = ACCESSORY_LAYER_ARMBAND
@@ -410,6 +416,8 @@
 	inhand_icon_state = "holster"
 	worn_icon_state = "holster"
 	slot_flags = ITEM_SLOT_SUITSTORE|ITEM_SLOT_BELT
+	//Unsure about this one. Maybe not visible if wearing a jacket?
+	high_visibility = TRUE
 	var/holstertype = /datum/storage/pockets/holster
 
 /obj/item/clothing/accessory/holster/Initialize(mapload)
@@ -448,6 +456,7 @@
 	icon_state = "officerbadge"
 	worn_icon_state = "officerbadge"
 	w_class = WEIGHT_CLASS_TINY
+	high_visibility = TRUE
 	accessory_slot = ACCESSORY_MEDAL
 	accessory_layer = ACCESSORY_LAYER_MEDAL
 	above_suit = TRUE

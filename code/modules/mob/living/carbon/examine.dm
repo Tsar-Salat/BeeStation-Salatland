@@ -326,7 +326,8 @@
 
 	//uniform
 	if(w_uniform && !(obscured & ITEM_SLOT_ICLOTHING) && !HAS_TRAIT(w_uniform, TRAIT_EXAMINE_SKIP))
-		//accessory
+		/*
+		//accessory (this should really be genericized to all clothing, not just under-uniforms)
 		var/accessory_message = ""
 		if(istype(w_uniform, /obj/item/clothing/under))
 			var/obj/item/clothing/under/undershirt = w_uniform
@@ -342,8 +343,9 @@
 				accessories += "[icon2html(accessory, user)] \a [accessory]"
 			if (length(accessories))
 				accessory_message += " with [english_list(accessories)]"
+		*/
 
-		. += "[t_He] [t_is] wearing [w_uniform.examine_title(user)][accessory_message]."
+		. += "[t_He] [t_is] wearing [w_uniform.get_examine_line(skip_examine_link = FALSE)]."
 	//head
 	if(head && !(obscured & ITEM_SLOT_HEAD) && !HAS_TRAIT(head, TRAIT_EXAMINE_SKIP))
 		. += "[t_He] [t_is] wearing [head.examine_title(user)] on [t_his] head."
