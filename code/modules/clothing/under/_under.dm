@@ -35,7 +35,7 @@
 			for (var/obj/item/clothing/accessory/A in visible)
 				if (!(A.hidden))
 					display += "[icon2html(A, usr)] \a [A]<a href='byond://?src=\ref[A];examine=1'>\[?\]</a>"
-			to_chat(usr, "Attached to \the [src] are [english_list(display)].")
+			to_chat(usr, examine_block("Attached to \the [src] are [html_english_list(display)]."), trailing_newline = FALSE, type = MESSAGE_TYPE_INFO)
 
 /obj/item/clothing/under/worn_overlays(mutable_appearance/standing, isinhands = FALSE, icon_file, item_layer, atom/origin)
 	. = list()

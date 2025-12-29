@@ -218,6 +218,22 @@
 
 			return "[output][and_text][input[index]]"
 
+//Same as english_list, but for html input
+/proc/html_english_list(list/input, nothing_text = "nothing", and_text = " and ", comma_text = ", ", final_comma_text = "" )
+	var/total = length(input)
+	switch(total)
+		if (0)
+			return "[nothing_text]"
+		if (1)
+			return "[input[1]]"
+		if (2)
+			return "[input[1]][and_text][input[2]]"
+		else
+			var/output = ""
+			for(var/i in 1 to total - 1)
+				output += "[input[i]][comma_text]"
+			return "[output][and_text][input[total]]"
+
 /// Return either pick(list) or null if list is not of type /list or is empty
 /proc/safepick(list/L)
 	if(LAZYLEN(L))
