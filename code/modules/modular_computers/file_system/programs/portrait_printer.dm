@@ -67,14 +67,7 @@
 	matching_paintings = SSpersistent_paintings.painting_ui_data(filter = search_mode, search_text = search_string)
 
 /datum/computer_file/program/portrait_printer/proc/print_painting(selected_painting)
-	//printer check!
-	var/obj/item/computer_hardware/printer/printer
-	if(computer)
-		printer = computer.all_components[MC_PRINT]
-	if(!printer)
-		to_chat(usr, span_notice("Hardware error: A printer is required to print a canvas."))
-		return
-	if(printer.stored_paper < CANVAS_PAPER_COST)
+	if(computer.stored_paper < CANVAS_PAPER_COST)
 		to_chat(usr, span_notice("Printing error: Your printer needs at least [CANVAS_PAPER_COST] paper to print a canvas."))
 		return
 
@@ -103,7 +96,7 @@
 	///this is a copy of something that is already in the database- it should not be able to be saved.
 	printed_canvas.no_save = TRUE
 	printed_canvas.update_icon()
-	printer.stored_paper -= CANVAS_PAPER_COST
+	computer.stored_paper -= CANVAS_PAPER_COST
 	to_chat(usr, span_notice("You have printed [chosen_portrait.title] onto a new canvas."))
 	playsound(computer.physical, 'sound/items/poster_being_created.ogg', 100, TRUE)
 

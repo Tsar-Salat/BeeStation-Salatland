@@ -5,7 +5,7 @@ import { NtosWindow } from '../layouts';
 
 export const NtosBountyConsole = (props) => {
   const { act, data } = useBackend();
-  const { bountydata = [], has_printer } = data;
+  const { bountydata = [] } = data;
   return (
     <NtosWindow width={750} height={600}>
       <NtosWindow.Content scrollable>
@@ -16,8 +16,6 @@ export const NtosBountyConsole = (props) => {
               icon="print"
               content="Print Bounty List"
               onClick={() => act('Print')}
-              disabled={!has_printer}
-              tooltip={!has_printer && 'No printer found'}
             />
           }
         >

@@ -8,7 +8,6 @@
 	install_component(new /obj/item/computer_hardware/processor_unit/small)
 	install_component(new /obj/item/computer_hardware/battery/small)
 	install_component(new /obj/item/computer_hardware/hard_drive/small)
-	install_component(new /obj/item/computer_hardware/network_card)
 
 // Alternative version, an average one, for higher ranked positions mostly
 /obj/item/modular_computer/tablet/preset/advanced/Initialize(mapload)
@@ -16,7 +15,6 @@
 	install_component(new /obj/item/computer_hardware/processor_unit/small)
 	install_component(new /obj/item/computer_hardware/battery/standard)
 	install_component(new /obj/item/computer_hardware/hard_drive/small)
-	install_component(new /obj/item/computer_hardware/network_card)
 	install_component(new /obj/item/computer_hardware/card_slot)
 	install_component(new /obj/item/computer_hardware/printer/mini)
 
@@ -34,7 +32,6 @@
 	install_component(new /obj/item/computer_hardware/battery/standard)
 	install_component(hard_drive)
 	install_component(new /obj/item/computer_hardware/card_slot)
-	install_component(new /obj/item/computer_hardware/network_card)
 	install_component(new /obj/item/computer_hardware/radio_card)
 	hard_drive.store_file(new /datum/computer_file/program/signaller)
 
@@ -45,7 +42,6 @@
 	install_component(new /obj/item/computer_hardware/battery/standard)
 	install_component(hard_drive)
 	install_component(new /obj/item/computer_hardware/card_slot)
-	install_component(new /obj/item/computer_hardware/network_card)
 	install_component(new /obj/item/computer_hardware/printer/mini)
 	hard_drive.store_file(new /datum/computer_file/program/bounty)
 
@@ -73,7 +69,6 @@
 	install_component(new /obj/item/computer_hardware/processor_unit/small)
 	install_component(new /obj/item/computer_hardware/battery/standard)
 	install_component(hard_drive)
-	install_component(new /obj/item/computer_hardware/network_card)
 	install_component(new /obj/item/computer_hardware/card_slot)
 	install_component(new /obj/item/computer_hardware/printer/mini)
 
@@ -83,11 +78,9 @@
 	install_component(new /obj/item/computer_hardware/processor_unit/small)
 	install_component(new /obj/item/computer_hardware/battery/standard)
 	install_component(new /obj/item/computer_hardware/hard_drive/small/nukeops)
-	install_component(new /obj/item/computer_hardware/network_card)
 
 //Borg Built-in tablet
 /obj/item/modular_computer/tablet/integrated/Initialize(mapload)
 	. = ..()
 	install_component(new /obj/item/computer_hardware/processor_unit/small)
 	install_component(new /obj/item/computer_hardware/recharger/cyborg)
-	install_component(new /obj/item/computer_hardware/network_card/integrated)

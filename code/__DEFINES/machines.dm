@@ -62,8 +62,6 @@
 #define MC_CARD "CARD"
 #define MC_CARD2 "CARD2"
 #define MC_CART "CART"
-#define MC_NET "NET"
-#define MC_PRINT "PRINT"
 #define MC_CELL "CELL"
 #define MC_CHARGER "CHARGER"
 #define MC_AI "AI"
@@ -292,3 +290,13 @@ GLOBAL_LIST_INIT(approved_status_pictures, list(
 #define AIRALARM_BUILD_NO_WIRES 1
 /// Air alarm has all components but isn't completed
 #define AIRALARM_BUILD_COMPLETE 2
+
+// NTNet connection signals
+///When you're away from the station/mining base and not on a console, you can't access the internet
+#define NTNET_NO_SIGNAL 0
+///Low signal, so away from the station, but still connected
+#define NTNET_LOW_SIGNAL 1
+///On station, good signal
+#define NTNET_GOOD_SIGNAL 2
+///Using a Computer, ethernet-connected.
+#define NTNET_ETHERNET_SIGNAL 3

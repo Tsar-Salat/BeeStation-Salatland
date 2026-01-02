@@ -73,8 +73,6 @@
 			"name" = "Networking",
 			"icon" = "signal",
 			"products" = list(
-					/obj/item/computer_hardware/network_card = 6,
-					/obj/item/computer_hardware/network_card/advanced = 3,
 					/obj/item/computer_hardware/radio_card = 6,
 			),
 		),
@@ -87,8 +85,6 @@
 					/obj/item/computer_hardware/card_slot/secondary = 3,
 					/obj/item/computer_hardware/ai_slot = 3,
 					/obj/item/computer_hardware/sensorpackage = 6,
-					/obj/item/computer_hardware/printer/mini = 6,
-					/obj/item/computer_hardware/printer = 3,
 			),
 		),
 

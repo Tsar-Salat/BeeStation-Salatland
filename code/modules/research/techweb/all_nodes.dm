@@ -1203,8 +1203,6 @@
 		"cardslot",
 		"cpu_small",
 		"pcpu_small",
-		"netcard_basic",
-		"netcard_wired",
 		"portadrive_basic",
 		"ssd_micro",
 		"ssd_small"
@@ -1239,12 +1237,9 @@
 		"hdd_basic",
 		"hdd_advanced",
 		"hdd_cluster",
-		"netcard_advanced",
 		"cpu_normal",
 		"pcpu_normal",
 		"portadrive_advanced",
-		"miniprinter",
-		"printer",
 		"sensorpackage",
 		"comp_camera",
 		"signalpart"
@@ -1278,7 +1273,6 @@
 	export_price = 5000
 	design_ids = list(
 		"antivirus4",
-		"XNetCard"
 	)
 
 /datum/techweb_node/computer_board_gaming

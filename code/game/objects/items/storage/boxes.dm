@@ -1400,7 +1400,6 @@
 	new /obj/item/computer_hardware/processor_unit/small(src)
 	new /obj/item/computer_hardware/hard_drive/micro(src)
 	new /obj/item/computer_hardware/identifier(src)
-	new /obj/item/computer_hardware/network_card(src)
 	new /obj/item/computer_hardware/card_slot(src)
 	new /obj/item/screwdriver(src)
 	new /obj/item/paper/tablet_guide(src)

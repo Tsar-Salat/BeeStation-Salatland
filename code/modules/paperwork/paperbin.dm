@@ -117,6 +117,12 @@
 	else
 		return ..()
 
+/obj/item/paper_bin/proc/remove_paper(amount = 1)
+	var/obj/item/paper/top_paper = pop(paper_stack)
+	if(top_paper)
+		qdel(top_paper)
+	total_paper -= amount
+
 /obj/item/paper_bin/examine(mob/user)
 	. = ..()
 	if(total_paper)

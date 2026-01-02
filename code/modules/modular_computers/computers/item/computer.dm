@@ -100,6 +100,12 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 	var/obj/item/paicard/stored_pai_card
 	/// If the device is capable of storing a pAI
 	var/can_store_pai = FALSE
+
+	///The amount of paper currently stored in the PDA
+	var/stored_paper = 10
+	///The max amount of paper that can be held at once.
+	var/max_paper = 30
+
 	/// Level of Virus Defense to be added on initialize to the pre instaled hard drive this happens in tablet/PDA, Normal detomatix halves at 2, fails at 3
 	var/default_virus_defense = ANTIVIRUS_NONE
 	/// Multiplier for power usage
@@ -125,6 +131,7 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 	if(has_light)
 		add_item_action(/datum/action/item_action/toggle_computer_light)
 	update_appearance()
+	init_network_id(NETWORK_TABLETS)
 	add_messenger()
 
 /obj/item/modular_computer/proc/update_id_display()
@@ -232,6 +239,18 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 				human_wearer.sec_hud_set_ID()
 		return removed_id
 	return ..()
+
+/obj/item/modular_computer/proc/print_text(text_to_print, paper_title = "")
+	if(!stored_paper)
+		return FALSE
+
+	var/obj/item/paper/printed_paper = new /obj/item/paper(drop_location())
+	printed_paper.add_raw_text(text_to_print)
+	if(paper_title)
+		printed_paper.name = paper_title
+	printed_paper.update_appearance()
+	stored_paper--
+	return TRUE
 
 /obj/item/modular_computer/InsertID(obj/item/inserting_item)
 	var/obj/item/computer_hardware/card_slot/card_slot = all_components[MC_CARD]
@@ -527,13 +546,13 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 			data["PC_AntiVirus"] = "antivirus_4.gif"
 
 	switch(get_ntnet_status())
-		if(0)
+		if(NTNET_NO_SIGNAL)
 			data["PC_ntneticon"] = "sig_none.gif"
-		if(1)
+		if(NTNET_LOW_SIGNAL)
 			data["PC_ntneticon"] = "sig_low.gif"
-		if(2)
+		if(NTNET_GOOD_SIGNAL)
 			data["PC_ntneticon"] = "sig_high.gif"
-		if(3)
+		if(NTNET_ETHERNET_SIGNAL)
 			data["PC_ntneticon"] = "sig_lan.gif"
 		if(4)
 			data["PC_ntneticon"] = "no_relay.gif" // This exists to give a hacked UI indicator
@@ -615,11 +634,25 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 
 // Returns 0 for No Signal, 1 for Low Signal and 2 for Good Signal. 3 is for wired connection (always-on)
 /obj/item/modular_computer/proc/get_ntnet_status(specific_action = 0)
-	var/obj/item/computer_hardware/network_card/network_card = all_components[MC_NET]
-	if(network_card)
-		return network_card.get_signal(specific_action)
-	else
-		return 0
+	if(!SSnetworks.station_network || !SSnetworks.station_network.check_function(specific_action)) // NTNet is down and we are not connected via wired connection. No signal.
+		return NTNET_NO_SIGNAL
+
+
+	// computers are connected through ethernet
+	if(hardware_flag & PROGRAM_CONSOLE)
+		return NTNET_ETHERNET_SIGNAL
+
+	var/turf/current_turf = get_turf(src)
+	if(!current_turf || !istype(current_turf))
+		return NTNET_NO_SIGNAL
+	if(is_station_level(current_turf.z))
+		if(hardware_flag & PROGRAM_LAPTOP) //laptops can connect to ethernet but they have to be on station for that
+			return NTNET_ETHERNET_SIGNAL
+		return NTNET_GOOD_SIGNAL
+	else if(is_mining_level(current_turf.z))
+		return NTNET_LOW_SIGNAL
+
+	return NTNET_NO_SIGNAL
 
 /**
  * Passes a message to be logged by SSnetworks
@@ -630,14 +663,11 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
  * Arguments:
  * * text - message to log
  * * log_id - if we want IDs not to be printed on the log (Hardware ID and Identification string)
- * * card = network card, will extract identification string and hardware ID from it (if log_id = TRUE).
  */
-/obj/item/modular_computer/proc/add_log(text, log_id = FALSE, obj/item/computer_hardware/network_card/card)
+/obj/item/modular_computer/proc/add_log(text, log_id = FALSE)
 	if(!get_ntnet_status())
 		return FALSE
-	if(!card)
-		card = all_components[MC_NET]
-	return SSnetworks.add_log(text, card.GetComponent(/datum/component/ntnet_interface).network, card.hardware_id, log_id, card)
+	return SSnetworks.add_log(text, network_id, log_id, card)
 	// We also return network_card so SSnetworks can extract values from it itself
 
 /obj/item/modular_computer/proc/shutdown_computer(loud = 1)
@@ -698,33 +728,6 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 	set_light_on(!light_on)
 	addtimer(CALLBACK(src, PROC_REF(do_flicker), amounts - 1), rand(0.1 SECONDS, 0.3 SECONDS))
 
-/obj/item/modular_computer/screwdriver_act(mob/user, obj/item/tool)
-	if(!deconstructable)
-		return
-	if(!length(all_components))
-		balloon_alert(user, "no components installed!")
-		return
-	var/list/component_names = list()
-	for(var/h in all_components)
-		var/obj/item/computer_hardware/H = all_components[h]
-		component_names.Add(H.device_type)
-
-	var/choice = tgui_input_list(user, "Which component do you want to uninstall?", "Computer maintenance", component_names)
-	if(!choice)
-		return
-	if(!Adjacent(user))
-		return
-
-	var/obj/item/computer_hardware/H = find_hardware_by_type(choice)
-
-	if(!H)
-		return
-
-	tool.play_tool_sound(user, volume=20)
-	uninstall_component(H, user, TRUE)
-	ui_update()
-	return
-
 /obj/item/modular_computer/screwdriver_act_secondary(mob/living/user, obj/item/tool) // Removes all components at once
 	if(!length(all_components))
 		balloon_alert(user, "no components installed!")
@@ -758,24 +761,46 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 	if(istype(attacking_item, /obj/item/card/id) && InsertID(attacking_item))
 		return
 
-	// Scan a photo.
-	if(istype(attacking_item, /obj/item/photo))
-		var/obj/item/computer_hardware/hard_drive/hdd = all_components[MC_HDD]
-		var/obj/item/photo/pic = attacking_item
-		if(hdd)
-			for(var/datum/computer_file/program/messenger/messenger in hdd.stored_files)
-				saved_image = pic.picture
-				messenger.ProcessPhoto()
-				to_chat(user, span_notice("You scan \the [pic] into \the [src]'s messenger."))
-				ui_update()
+	// Check for cash next
+	var/obj/item/computer_hardware/card_slot/card_slot = all_components[MC_CARD]
+	if(card_slot && iscash(attacking_item))
+		var/obj/item/card/id/inserted_id = card_slot.GetID()
+		if(inserted_id)
+			inserted_id.attackby(attacking_item, user) // If we do, try and put that attacking object in
 			return
 
-	// Insert items into the components
-	for(var/h in all_components)
-		var/obj/item/computer_hardware/H = all_components[h]
-		if(H.try_insert(attacking_item, user))
-			ui_update()
+	// Check if any Applications need it
+	var/obj/item/computer_hardware/hard_drive/hdd = all_components[MC_HDD]
+	if(hdd)
+		for(var/datum/computer_file/item_holding_app as anything in hdd.stored_files)
+			if(item_holding_app.try_insert(attacking_item, user))
+				return
+
+	if(istype(attacking_item, /obj/item/paper))
+		if(stored_paper >= max_paper)
+			to_chat(user, span_warning("You try to add \the [attacking_item] into [src], but it can't hold any more!"))
 			return
+		if(!user.temporarilyRemoveItemFromInventory(attacking_item))
+			return FALSE
+		to_chat(user, span_notice("You insert \the [attacking_item] into [src]'s paper recycler."))
+		qdel(attacking_item)
+		stored_paper++
+		return
+	if(istype(attacking_item, /obj/item/paper_bin))
+		var/obj/item/paper_bin/bin = attacking_item
+		if(bin.total_paper <= 0)
+			to_chat(user, span_notice("\The [bin] is empty!"))
+			return
+		var/papers_added //just to keep track
+		while((bin.total_paper > 0) && (stored_paper < max_paper))
+			papers_added++
+			stored_paper++
+			bin.remove_paper()
+		if(!papers_added)
+			return
+		to_chat(user, span_notice("Added in [papers_added] new sheets. You now have [stored_paper] / [max_paper] printing paper stored."))
+		bin.update_appearance()
+		return
 
 	// Insert a pAI card
 	if(can_store_pai && !stored_pai_card && istype(attacking_item, /obj/item/paicard))
@@ -797,39 +822,63 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 			ui_update()
 			return
 
-	if(attacking_item.tool_behaviour == TOOL_WRENCH)
-		if(length(all_components))
-			balloon_alert(user, "remove the other components!")
-			return
-		attacking_item.play_tool_sound(src, user, 20, volume=20)
-		new /obj/item/stack/sheet/iron( get_turf(src.loc), steel_sheet_cost )
-		user.balloon_alert(user, "disassembled")
-		relay_qdel()
-		qdel(src)
+	return ..()
+
+/obj/item/modular_computer/screwdriver_act(mob/user, obj/item/tool)
+	. = ..()
+	if(!deconstructable)
+		return
+	if(!length(all_components))
+		balloon_alert(user, "no components installed!")
+		return
+	var/list/component_names = list()
+	for(var/h in all_components)
+		var/obj/item/computer_hardware/H = all_components[h]
+		component_names.Add(H.name)
+
+	var/choice = tgui_input_list(user, "Component to uninstall", "Computer maintenance", sort_list(component_names))
+	if(isnull(choice))
+		return
+	if(!Adjacent(user))
 		return
 
-	if(attacking_item.tool_behaviour == TOOL_WELDER)
-		if(atom_integrity == max_integrity)
-			to_chat(user, span_warning("\The [src] does not require repairs."))
-			return
+	var/obj/item/computer_hardware/H = find_hardware_by_name(choice)
+	if(!H)
+		return TOOL_ACT_TOOLTYPE_SUCCESS
 
-		if(!attacking_item.tool_start_check(user, amount=1))
-			return
+	tool.play_tool_sound(src, user, 20, volume=20)
+	uninstall_component(H, user)
+	return TOOL_ACT_TOOLTYPE_SUCCESS
 
-		to_chat(user, span_notice("You begin repairing damage to \the [src]..."))
-		if(attacking_item.use_tool(src, user, 20, volume=50, amount=1))
-			atom_integrity = max_integrity
-			to_chat(user, span_notice("You repair \the [src]."))
-			update_appearance()
-		return
+/obj/item/modular_computer/wrench_act(mob/living/user, obj/item/tool)
+	. = ..()
+	if(length(all_components))
+		balloon_alert(user, "remove the other components!")
+		return TOOL_ACT_TOOLTYPE_SUCCESS
+	tool.play_tool_sound(src, user, 20, volume=20)
+	new /obj/item/stack/sheet/iron(get_turf(loc), steel_sheet_cost)
+	user.balloon_alert(user, "disassembled")
+	relay_qdel()
+	qdel(src)
+	return TOOL_ACT_TOOLTYPE_SUCCESS
 
-	var/obj/item/computer_hardware/card_slot/card_slot = all_components[MC_CARD]
-	// Check to see if we have an ID inside, and a valid input for money
-	if(card_slot?.GetID() && iscash(attacking_item))
-		var/obj/item/card/id/id = card_slot.GetID()
-		id.attackby(attacking_item, user) // If we do, try and put that attacking object in
-		return
-	..()
+
+/obj/item/modular_computer/welder_act(mob/living/user, obj/item/tool)
+	. = ..()
+	if(atom_integrity == max_integrity)
+		to_chat(user, span_warning("\The [src] does not require repairs."))
+		return TOOL_ACT_TOOLTYPE_SUCCESS
+
+	if(!tool.tool_start_check(user, amount=1))
+		return TOOL_ACT_TOOLTYPE_SUCCESS
+
+	to_chat(user, span_notice("You begin repairing damage to \the [src]..."))
+	if(!tool.use_tool(src, user, 20, volume=50, amount=1))
+		return TOOL_ACT_TOOLTYPE_SUCCESS
+	atom_integrity = max_integrity
+	to_chat(user, span_notice("You repair \the [src]."))
+	update_appearance()
+	return TOOL_ACT_TOOLTYPE_SUCCESS
 
 /// Handle when the pAI moves to exit the PDA
 /obj/item/modular_computer/proc/stored_pai_moved()

@@ -59,8 +59,13 @@
 		else
 			. += "It has [multiple_slots ? "two slots" : "a slot"] installed for identification cards."
 
-	var/obj/item/computer_hardware/printer/printer_slot = get_modular_computer_part(MC_PRINT)
-	if(printer_slot)
-		. += "It has a printer installed."
-		if(user_is_adjacent)
-			. += "The printer's paper levels are at: [printer_slot.stored_paper]/[printer_slot.max_paper]"
+/obj/item/modular_computer/examine_more(mob/user)
+	. = ..()
+	var/obj/item/computer_hardware/hard_drive/hdd = all_components[MC_HDD]
+	if(hdd)
+		for(var/datum/computer_file/app_examine as anything in hdd.stored_files)
+			if(app_examine.on_examine(src, user))
+				. += app_examine.on_examine(src, user)
+
+	if(Adjacent(user))
+		. += span_notice("Paper level: [stored_paper] / [max_paper].")

@@ -32,7 +32,6 @@ export const NtosCardContent = (props) => {
     id_rank,
     id_owner,
     has_id,
-    have_printer,
     have_id_slot,
     id_name,
   } = data;
@@ -71,7 +70,7 @@ export const NtosCardContent = (props) => {
             <Button
               icon="print"
               content="Print"
-              disabled={!have_printer || !has_id}
+              disabled={!has_id}
               onClick={() => act('PRG_print')}
             />
             <Button

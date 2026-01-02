@@ -7,7 +7,7 @@ import { NtosWindow } from '../layouts';
 export const NtosCrewManifest = (props) => {
   const { act, data } = useBackend();
 
-  const { have_printer, manifest = {} } = data;
+  const { manifest = {} } = data;
 
   return (
     <NtosWindow width={400} height={480}>
@@ -18,7 +18,6 @@ export const NtosCrewManifest = (props) => {
             <Button
               icon="print"
               content="Print"
-              disabled={!have_printer}
               onClick={() => act('PRG_print')}
             />
           }

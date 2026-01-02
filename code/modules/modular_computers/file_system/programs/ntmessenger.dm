@@ -45,6 +45,14 @@
 	/// Whether or not we're in a mime PDA.
 	var/mime_mode = FALSE
 
+/datum/computer_file/program/messenger/try_insert(obj/item/attacking_item, mob/living/user)
+	if(!istype(attacking_item, /obj/item/photo))
+		return FALSE
+	var/obj/item/photo/pic = attacking_item
+	computer.saved_image = pic.picture
+	ProcessPhoto()
+	return TRUE
+
 /datum/computer_file/program/messenger/proc/ScrubMessengerList()
 	var/list/dictionary = list()
 

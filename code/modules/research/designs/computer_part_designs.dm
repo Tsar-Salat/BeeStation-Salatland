@@ -85,44 +85,6 @@
 	category = list("Computer Parts")
 	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
 
-// Network cards
-/datum/design/netcard/basic
-	name = "Network Card"
-	id = "netcard_basic"
-	build_type = IMPRINTER
-	materials = list(/datum/material/iron = 250, /datum/material/glass = 100, /datum/material/copper = 100)
-	build_path = /obj/item/computer_hardware/network_card
-	category = list("Computer Parts")
-	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
-
-/datum/design/netcard/advanced
-	name = "Advanced Network Card"
-	id = "netcard_advanced"
-	build_type = IMPRINTER
-	materials = list(/datum/material/iron = 500, /datum/material/glass = 200, /datum/material/copper = 200)
-	build_path = /obj/item/computer_hardware/network_card/advanced
-	category = list("Computer Parts")
-	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
-
-/datum/design/netcard/wired
-	name = "Wired Network Card"
-	id = "netcard_wired"
-	build_type = IMPRINTER
-	materials = list(/datum/material/iron = 2500, /datum/material/glass = 400, /datum/material/copper = 400)
-	build_path = /obj/item/computer_hardware/network_card/wired
-	category = list("Computer Parts")
-	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
-
-// No-Relay Network Card
-/datum/design/XNetCard
-	name = "Experimental Network Card"
-	id = "XNetCard"
-	build_type = IMPRINTER
-	materials = list(/datum/material/iron = 200, /datum/material/silver = 100, /datum/material/diamond = 50, /datum/material/bluespace = 25, /datum/material/copper = 100)
-	build_path = /obj/item/computer_hardware/network_card/advanced/norelay
-	category = list("Computer Parts")
-	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
-
 // Data disks
 /datum/design/portabledrive/basic
 	name = "Data Disk"
@@ -178,25 +140,6 @@
 	build_type = IMPRINTER
 	materials = list(/datum/material/iron = 600, /datum/material/copper = 100)
 	build_path = /obj/item/computer_hardware/ai_slot
-	category = list("Computer Parts")
-	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
-
-// Mini printer
-/datum/design/miniprinter
-	name = "Miniprinter"
-	id = "miniprinter"
-	build_type = IMPRINTER
-	materials = list(/datum/material/iron = 600, /datum/material/copper = 100)
-	build_path = /obj/item/computer_hardware/printer/mini
-	category = list("Computer Parts")
-	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
-
-/datum/design/printer
-	name = "Printer"
-	id = "printer"
-	build_type = IMPRINTER
-	materials = list(/datum/material/iron = 1200, /datum/material/copper = 300)
-	build_path = /obj/item/computer_hardware/printer
 	category = list("Computer Parts")
 	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
 

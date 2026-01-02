@@ -6,7 +6,6 @@
 	install_component(new /obj/item/computer_hardware/hard_drive/micro)
 	install_component(new /obj/item/computer_hardware/processor_unit/small)
 	install_component(new cell_type)
-	install_component(new /obj/item/computer_hardware/network_card)
 	install_component(new /obj/item/computer_hardware/card_slot)
 	install_component(new /obj/item/computer_hardware/identifier)
 	install_component(new /obj/item/computer_hardware/sensorpackage)
@@ -157,10 +156,6 @@
 	default_disk = /obj/item/computer_hardware/hard_drive/role/hop
 	icon_state = "pda-hop"
 
-/obj/item/modular_computer/tablet/pda/preset/heads/head_of_personnel/Initialize(mapload)
-	. = ..()
-	install_component(new /obj/item/computer_hardware/printer/mini)
-
 /obj/item/modular_computer/tablet/pda/preset/heads/head_of_security
 	name = "head of security PDA"
 	default_disk = /obj/item/computer_hardware/hard_drive/role/hos
@@ -202,6 +197,7 @@
 	name = "cargo technician PDA"
 	default_disk = /obj/item/computer_hardware/hard_drive/role/cargo_technician
 	icon_state = "pda-cargo"
+	stored_paper = 20
 
 /obj/item/modular_computer/tablet/pda/preset/cargo_technician/Initialize(mapload)
 	. = ..()
@@ -212,11 +208,8 @@
 	default_disk = /obj/item/computer_hardware/hard_drive/role/quartermaster
 	insert_type = /obj/item/pen/fountain
 	icon_state = "pda-qm"
+	stored_paper = 20
 	default_virus_defense = ANTIVIRUS_BASIC
-
-/obj/item/modular_computer/tablet/pda/preset/quartermaster/Initialize(mapload)
-	. = ..()
-	install_component(new /obj/item/computer_hardware/printer/mini)
 
 /obj/item/modular_computer/tablet/pda/preset/shaft_miner
 	name = "shaft miner PDA"
@@ -240,13 +233,6 @@
 	default_virus_defense = ANTIVIRUS_BEST
 	max_hardware_size = WEIGHT_CLASS_SMALL
 	cell_type = /obj/item/computer_hardware/battery/large
-
-/obj/item/modular_computer/tablet/pda/preset/syndicate/Initialize(mapload)
-	. = ..()
-	var/obj/item/computer_hardware/network_card/network_card = all_components[MC_NET]
-	if(istype(network_card))
-		forget_component(network_card)
-		install_component(new /obj/item/computer_hardware/network_card/advanced/norelay)
 
 /obj/item/modular_computer/tablet/pda/preset/chaplain
 	name = "chaplain PDA"
@@ -339,4 +325,3 @@
 	install_component(new /obj/item/computer_hardware/battery/tiny)
 	install_component(new /obj/item/computer_hardware/card_slot)
 	install_component(new /obj/item/computer_hardware/identifier)
-	install_component(new /obj/item/computer_hardware/network_card)

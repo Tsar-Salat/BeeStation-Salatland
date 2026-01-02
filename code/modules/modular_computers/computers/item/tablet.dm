@@ -200,8 +200,8 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/modular_computer/tablet/integrated)
 	icon_state_menu = "menu"
 	has_light = FALSE //tablet light button actually enables/disables the borg lamp
 	comp_light_luminosity = 0
-	///Ref to the silicon we're installed in. Set by the borg during our creation.
-	var/mob/living/silicon/borgo
+	///Ref to the silicon we're installed in. Set by the silicon itself during its creation.
+	var/mob/living/silicon/silicon_owner
 	///Ref to the Cyborg Self-Monitoring app. Important enough to borgs to deserve a ref.
 	var/datum/computer_file/program/borg_self_monitor/self_monitoring
 	///IC log that borgs can view in their personal management app
@@ -210,14 +210,14 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/modular_computer/tablet/integrated)
 /obj/item/modular_computer/tablet/integrated/Initialize(mapload)
 	. = ..()
 	vis_flags |= VIS_INHERIT_ID
-	borgo = loc
-	if(!istype(borgo))
-		borgo = null
+	silicon_owner = loc
+	if(!istype(silicon_owner))
+		silicon_owner = null
 		stack_trace("[type] initialized outside of a borg, deleting.")
 		return INITIALIZE_HINT_QDEL
 
 /obj/item/modular_computer/tablet/integrated/Destroy()
-	borgo = null
+	silicon_owner = null
 	for(var/port in all_components)
 		var/obj/item/computer_hardware/component = all_components[port]	//This hopefully stops borgs from just shitting out their parts when they die
 		qdel(component)
@@ -225,9 +225,26 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/modular_computer/tablet/integrated)
 	return ..()
 
 /obj/item/modular_computer/tablet/integrated/turn_on(mob/user, open_ui = FALSE)
-	if(borgo?.stat != DEAD)
+	if(silicon_owner?.stat != DEAD)
 		return ..()
 	return FALSE
+
+/obj/item/modular_computer/tablet/integrated/get_ntnet_status(specific_action = 0)
+	//No borg found
+	if(!silicon_owner)
+		return FALSE
+	// no AIs/pAIs
+	var/mob/living/silicon/robot/cyborg_check = silicon_owner
+	if(!istype(cyborg_check))
+		return ..()
+	//lockdown restricts borg networking
+	if(cyborg_check.lockcharge)
+		return FALSE
+	//borg cell dying restricts borg networking
+	if(!cyborg_check.cell || cyborg_check.cell.charge == 0)
+		return FALSE
+
+	return ..()
 
 /**
   * Returns a ref to the Cyborg Self-Monitoring app, creating the app if need be.
@@ -240,7 +257,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/modular_computer/tablet/integrated)
   * Cyborg Self-Monitoring is supposed to be undeletable, so these will create runtime messages.
   */
 /obj/item/modular_computer/tablet/integrated/proc/get_self_monitoring()
-	if(!borgo)
+	if(!silicon_owner)
 		return null
 	if(!self_monitoring)
 		var/obj/item/computer_hardware/hard_drive/hard_drive = all_components[MC_HDD]

@@ -107,7 +107,6 @@
 
 	var/obj/item/computer_hardware/card_slot/card_slot = computer.all_components[MC_CARD]
 	var/obj/item/computer_hardware/card_slot/card_slot2 = computer.all_components[MC_CARD2]
-	var/obj/item/computer_hardware/printer/printer = computer.all_components[MC_PRINT]
 	if(!card_slot || !card_slot2)
 		return
 
@@ -128,7 +127,7 @@
 			playsound(computer, 'sound/machines/terminal_off.ogg', 50, FALSE)
 			return TRUE
 		if("PRG_print")
-			if(!printer)
+			if(!computer)
 				return
 			if(!authenticated)
 				return
@@ -145,7 +144,7 @@
 				if(A in known_access_rights)
 					contents += "  [get_access_desc(A)]"
 
-			if(!printer.print_text(contents,"access report"))
+			if(!computer.print_text(contents, "access report"))
 				to_chat(usr, span_notice("Hardware error: Printer was unable to print the file. It may be out of paper."))
 				return
 			else
@@ -351,16 +350,12 @@
 	data["station_name"] = station_name()
 
 	var/obj/item/computer_hardware/card_slot/card_slot2
-	var/obj/item/computer_hardware/printer/printer
 
 	if(computer)
 		card_slot2 = computer.all_components[MC_CARD2]
-		printer = computer.all_components[MC_PRINT]
 		data["have_id_slot"] = !!(card_slot2)
-		data["have_printer"] = !!(printer)
 	else
 		data["have_id_slot"] = FALSE
-		data["have_printer"] = FALSE
 
 	data["authenticated"] = authenticated
 	if(!card_slot2)

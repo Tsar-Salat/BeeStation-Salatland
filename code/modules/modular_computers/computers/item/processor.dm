@@ -18,6 +18,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/modular_computer/processor)
 	if(machinery_computer && (machinery_computer.cpu == src))
 		machinery_computer.cpu = null
 	machinery_computer = null
+	return ..()
 
 /obj/item/modular_computer/processor/New(comp)
 	..()

@@ -1,7 +1,6 @@
 /obj/machinery/modular_computer/console/preset
 	// Can be changed to give devices specific hardware
 	var/_has_second_id_slot = FALSE
-	var/_has_printer = FALSE
 	var/_has_battery = FALSE
 	var/_has_ai = FALSE
 
@@ -14,8 +13,6 @@
 	cpu.install_component(new /obj/item/computer_hardware/card_slot)
 	if(_has_second_id_slot)
 		cpu.install_component(new /obj/item/computer_hardware/card_slot/secondary)
-	if(_has_printer)
-		cpu.install_component(new /obj/item/computer_hardware/printer)
 	if(_has_battery)
 		cpu.install_component(new /obj/item/computer_hardware/battery/huge)
 	if(_has_ai)
@@ -58,7 +55,6 @@
 	name = "command console"
 	desc = "A stationary computer. This one comes preloaded with command programs."
 	_has_second_id_slot = TRUE
-	_has_printer = TRUE
 
 /obj/machinery/modular_computer/console/preset/command/install_programs()
 	var/obj/item/computer_hardware/hard_drive/hard_drive = cpu.all_components[MC_HDD]
@@ -80,7 +76,6 @@
 	console_department = "Civilian"
 	name = "curator console"
 	desc = "A stationary computer. This one comes preloaded with art programs."
-	_has_printer = TRUE
 
 /obj/machinery/modular_computer/console/preset/curator/install_programs()
 	var/obj/item/computer_hardware/hard_drive/hard_drive = cpu.all_components[MC_HDD]

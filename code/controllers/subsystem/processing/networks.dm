@@ -217,7 +217,7 @@ SUBSYSTEM_DEF(networks)
  * * log_id = log will not include identification_sting,  hardware_id or network. (For cases where we want to do it manually)
  * * card = network card, will extract identification string and hardware ID from it. (Requires Log_Id TRUE)
  */
-/datum/controller/subsystem/networks/proc/add_log(log_string, network, hardware_id, log_id = TRUE, obj/item/computer_hardware/network_card/card)
+/datum/controller/subsystem/networks/proc/add_log(log_string, network, log_id = TRUE)
 	set waitfor = FALSE // so process keeps running
 	var/list/log_text = list()
 	log_text += "\[[station_time_timestamp()]\]"
@@ -238,18 +238,11 @@ SUBSYSTEM_DEF(networks)
 				log_text += "{[net.network_id]}"
 			else // bad network?
 				log_text += "{[network] *BAD*}"
-		if(hardware_id && !card)	// We only want this if we don't have the more complete version
-			var/datum/component/ntnet_interface/conn = interfaces_by_hardware_id[hardware_id]
-			if(conn)
-				log_text += " ([hardware_id])[conn.parent]"
-			else
-				log_text += " ([hardware_id])*BAD ID*"
-		else if(!card)
-			log_text += " *SYSTEM*"
+
+		log_text += "*SYSTEM* - "
 	log_text += " - "
 	log_text += log_string
-	if(card)
-		log_text += " [card.identification_string] (NID [card.hardware_id])"
+	log_text += " [card.identification_string] (NID [card.hardware_id])"
 	log_string = log_text.Join()
 
 	logs.Add(log_string)
