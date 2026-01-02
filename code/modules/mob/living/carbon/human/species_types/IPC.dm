@@ -29,9 +29,8 @@
 		TRAIT_TOXIMMUNE,
 		TRAIT_NOSOFTCRIT,
 		TRAIT_NO_DNA_COPY,
-		TRAIT_NO_TRANSFORMATION_STING
+		TRAIT_NOT_TRANSMORPHIC,
 	)
-
 	inherent_biotypes = MOB_ROBOTIC | MOB_HUMANOID
 	mutantbrain = /obj/item/organ/brain/positron
 	mutanteyes = /obj/item/organ/eyes/robotic
@@ -61,7 +60,6 @@
 	changesource_flags = MIRROR_BADMIN | WABBAJACK
 	species_language_holder = /datum/language_holder/synthetic
 	special_step_sounds = list('sound/effects/servostep.ogg')
-	species_bitflags = NOT_TRANSMORPHIC
 
 	bodypart_overrides = list(
 		BODY_ZONE_HEAD = /obj/item/bodypart/head/ipc,

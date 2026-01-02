@@ -21,7 +21,7 @@
 		// Show an example of the language if it has syllables for scrambling
 		if(L.syllables && length(L.syllables))
 			var/scrambled = L.scramble(example_line)
-			var/verb = L.get_spoken_verb(".")
+			var/verb /*= L.get_spoken_verb(".")*/
 			// Build the example manually
 			var/lang_example = "[verb], \"[capitalize(scrambled)]\""
 			lang_lore += "It sounds like this:"
