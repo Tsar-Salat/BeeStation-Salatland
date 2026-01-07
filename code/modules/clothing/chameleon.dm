@@ -283,7 +283,7 @@
 					if(comp)
 						comp.saved_identification = ID.registered_name
 						comp.saved_job = ID.assignment
-						comp.update_id_display()
+						comp.UpdateDisplay()
 
 			update_mob_hud(item_holder)
 		if(istype(master, /obj/item/modular_computer))
@@ -292,7 +292,7 @@
 			if(id)
 				comp.saved_identification = id.registered_name
 				comp.saved_job = id.assignment
-				comp.update_id_display()
+				comp.UpdateDisplay()
 			keepname = TRUE // do not change PDA name unnecesarily
 			update_mob_hud(item_holder)
 

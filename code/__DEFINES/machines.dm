@@ -55,21 +55,17 @@
 //Modular computer/NTNet defines
 
 //Modular computer part defines
-#define MC_CPU "CPU"
 #define MC_HDD "HDD"
 #define MC_HDD_JOB "HDD_JOB"
 #define MC_SDD "SDD"
 #define MC_CARD "CARD"
 #define MC_CARD2 "CARD2"
-#define MC_CART "CART"
 #define MC_NET "NET"
 #define MC_PRINT "PRINT"
 #define MC_CELL "CELL"
 #define MC_CHARGER "CHARGER"
 #define MC_AI "AI"
-#define MC_SENSORS "SENSORS"
 #define MC_SIGNALLER "SIGNALER"
-#define MC_IDENTIFY "IDENTIFY"
 #define MC_CAMERA "CAMERA"
 
 //Chance Defines

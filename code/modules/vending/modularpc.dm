@@ -19,18 +19,6 @@
 					/obj/item/modular_computer/tablet = 3,
 					/obj/item/storage/box/tablet4dummies = 6,
 					/obj/item/storage/box/tabletcolorizer = 3,
-					/obj/item/computer_hardware/identifier = 6,
-			),
-		),
-
-		list(
-			"name" = "Processors",
-			"icon" = "microchip",
-			"products" = list(
-					/obj/item/computer_hardware/processor_unit/small = 6,
-					/obj/item/computer_hardware/processor_unit = 6,
-					/obj/item/computer_hardware/processor_unit/photonic/small = 3,
-					/obj/item/computer_hardware/processor_unit/photonic = 3,
 			),
 		),
 
@@ -86,7 +74,6 @@
 					/obj/item/computer_hardware/card_slot = 6,
 					/obj/item/computer_hardware/card_slot/secondary = 3,
 					/obj/item/computer_hardware/ai_slot = 3,
-					/obj/item/computer_hardware/sensorpackage = 6,
 					/obj/item/computer_hardware/printer/mini = 6,
 					/obj/item/computer_hardware/printer = 3,
 			),

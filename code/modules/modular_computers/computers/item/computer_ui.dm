@@ -172,7 +172,7 @@
 			shutdown_computer()
 			return TRUE
 		if("PC_minimize")
-			if(!active_program || !all_components[MC_CPU])
+			if(!active_program)
 				return
 
 			idle_threads.Add(active_program)
@@ -273,7 +273,7 @@
 			saved_identification = cardholder.current_identification
 			saved_job = cardholder.current_job
 
-			update_id_display()
+			UpdateDisplay()
 
 			playsound(src, 'sound/machines/terminal_processing.ogg', 15, TRUE)
 			addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound), src, 'sound/machines/terminal_success.ogg', 15, TRUE), 1.3 SECONDS)
@@ -286,13 +286,15 @@
 		if("PC_Pai_Interact")
 			if(!can_store_pai || !istype(stored_pai_card))
 				return
-			if(params["option"] == "interact")
-				stored_pai_card.attack_self(usr)
-			else if(params["option"] == "eject")
-				usr.put_in_hands(stored_pai_card)
-				remove_pai()
-				to_chat(usr, span_notice("You remove the pAI from [src]."))
+			switch(params["option"])
+				if("interact")
+					stored_pai_card.attack_self(usr)
+				if("eject")
+					usr.put_in_hands(stored_pai_card)
+					remove_pai()
+					to_chat(usr, span_notice("You remove the pAI from [src]."))
 			return TRUE
+
 	if(active_program)
 		return active_program.ui_act(action, params, ui, state)
 

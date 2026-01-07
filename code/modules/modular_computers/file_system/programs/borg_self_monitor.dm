@@ -6,7 +6,6 @@
 	program_icon_state = "command"
 	requires_ntnet = FALSE
 	available_on_ntnet = FALSE
-	unsendable = TRUE
 	undeletable = TRUE
 	size = 5
 	tgui_id = "NtosCyborgSelfMonitor"

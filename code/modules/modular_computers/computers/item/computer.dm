@@ -13,6 +13,9 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 	light_power = 0.6
 	light_color = "#FFFFFF"
 	light_on = FALSE
+	integrity_failure = 0.5
+	max_integrity = 100
+	armor_type = /datum/armor/item_modular_computer
 
 	// Whether the computer is turned on.
 	var/enabled = 0
@@ -51,15 +54,12 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 	// must have it's own DMI file. Icon states must be called exactly the same in all files, but may look differently
 	// If you create a program which is limited to Laptops and Consoles you don't have to add it's icon_state overlay for Tablets too, for example.
 
-	icon = 'icons/obj/computer.dmi'
-	icon_state = "laptop"
 	var/icon_state_menu = "menu"							// Icon state overlay when the computer is turned on, but no program is loaded that would override the screen.
 	var/max_hardware_size = 0								// Maximal hardware w_class. Tablets/PDAs have 1, laptops 2, consoles 4.
 	var/steel_sheet_cost = 5								// Amount of steel sheets refunded when disassembling an empty frame of this computer.
 
-	integrity_failure = 0.5
-	max_integrity = 100
-	armor_type = /datum/armor/item_modular_computer
+	/// Amount of programs that can be ran at once
+	var/max_idle_programs = 2
 
 	/// List of "connection ports" in this computer and the components with which they are plugged
 	var/list/all_components = list()
@@ -121,16 +121,11 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 	set_light_color(comp_light_color)
 	set_light_range(comp_light_luminosity)
 	idle_threads = list()
-	update_id_display()
+	UpdateDisplay()
 	if(has_light)
 		add_item_action(/datum/action/item_action/toggle_computer_light)
 	update_appearance()
 	add_messenger()
-
-/obj/item/modular_computer/proc/update_id_display()
-	var/obj/item/computer_hardware/identifier/id = all_components[MC_IDENTIFY]
-	if(id)
-		id.UpdateDisplay()
 
 /obj/item/modular_computer/proc/on_id_insert()
 	ui_update()
@@ -144,7 +139,7 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 		return
 	saved_identification = cardholder.current_identification
 	saved_job = cardholder.current_job
-	update_id_display()
+	UpdateDisplay()
 	playsound(src, 'sound/machines/terminal_processing.ogg', 15, TRUE)
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound), src, 'sound/machines/terminal_success.ogg', 15, TRUE), 1.3 SECONDS)
 
@@ -301,28 +296,6 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 	to_chat(user, span_notice("You swipe \the [src]. A console window fills the screen, but it quickly closes itself after only a few lines are written to it."))
 	return FALSE
 
-/obj/item/modular_computer/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum) // Teleporting for hacked CPU's
-	var/obj/item/computer_hardware/processor_unit/cpu = all_components[MC_CPU]
-	if(!cpu)
-		return
-	var/turf/target = get_blink_destination(get_turf(src), dir, (cpu.max_idle_programs * 2))
-	var/turf/start = get_turf(src)
-	if(!target)
-		return
-	if(!cpu.hacked)
-		return
-	if(!enabled)
-		new /obj/effect/particle_effect/sparks(start)
-		playsound(start, "sparks", 50, 1)
-		return
-	// The better the CPU the farther it goes, and the more battery it needs
-	playsound(target, 'sound/effects/phasein.ogg', 25, 1)
-	playsound(start, "sparks", 50, 1)
-	playsound(target, "sparks", 50, 1)
-	do_dash(src, start, target, 0, TRUE)
-	use_power((250 * cpu.max_idle_programs))
-	return
-
 /obj/item/modular_computer/proc/get_blink_destination(turf/start, direction, range)
 	var/turf/t = start
 	var/open_tiles_crossed = 0
@@ -384,7 +357,7 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 	if(recharger)
 		recharger.enabled = 1
 
-	if(all_components[MC_CPU] && use_power()) // use_power() checks if the PC is powered
+	if(use_power()) // use_power() checks if the PC is powered
 		if(issynth)
 			to_chat(user, span_notice("You send an activation signal to \the [src], turning it on."))
 		else
@@ -589,8 +562,7 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 			return TRUE
 	else if(program in idle_threads)
 		return TRUE
-	var/obj/item/computer_hardware/processor_unit/PU = all_components[MC_CPU]
-	if(idle_threads.len > PU.max_idle_programs)
+	if(idle_threads.len > max_idle_programs)
 		to_chat(user, span_danger("\The [src] displays a \"Maximal CPU load reached. Unable to run another program.\" error."))
 		return FALSE
 
@@ -697,6 +669,9 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 		return
 	set_light_on(!light_on)
 	addtimer(CALLBACK(src, PROC_REF(do_flicker), amounts - 1), rand(0.1 SECONDS, 0.3 SECONDS))
+
+/obj/item/modular_computer/proc/UpdateDisplay()
+	name = "[saved_identification] ([saved_job])"
 
 /obj/item/modular_computer/screwdriver_act(mob/user, obj/item/tool)
 	if(!deconstructable)

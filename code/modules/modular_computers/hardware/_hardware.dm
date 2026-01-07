@@ -45,7 +45,7 @@
 	var/open_overlay = "comp_open"
 	/// If this can be hacked (This is a temporary flag for PArts that already have an overclocking effect to them)
 	var/can_hack = TRUE
-	/// If this is currently Hacked (Also reffered to as "Overclocking")
+	/// If this is currently Hacked (Also referred to as "Overclocking")
 	var/hacked = FALSE
 	/// A Serial Number used in hacking and other niffty things
 	var/serial_code

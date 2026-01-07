@@ -1201,8 +1201,6 @@
 		"bat_nano",
 		"bat_micro",
 		"cardslot",
-		"cpu_small",
-		"pcpu_small",
 		"netcard_basic",
 		"netcard_wired",
 		"portadrive_basic",
@@ -1240,12 +1238,9 @@
 		"hdd_advanced",
 		"hdd_cluster",
 		"netcard_advanced",
-		"cpu_normal",
-		"pcpu_normal",
 		"portadrive_advanced",
 		"miniprinter",
 		"printer",
-		"sensorpackage",
 		"comp_camera",
 		"signalpart"
 	)

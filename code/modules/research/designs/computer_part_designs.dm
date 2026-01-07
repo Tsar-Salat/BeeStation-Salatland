@@ -266,43 +266,6 @@
 	category = list("Computer Parts")
 	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
 
-// Processor unit
-/datum/design/cpu
-	name = "Processor Board"
-	id = "cpu_normal"
-	build_type = IMPRINTER
-	materials = list(/datum/material/glass = 200, /datum/material/copper = 1600)
-	build_path = /obj/item/computer_hardware/processor_unit
-	category = list("Computer Parts")
-	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
-
-/datum/design/cpu/small
-	name = "Microprocessor"
-	id = "cpu_small"
-	build_type = IMPRINTER
-	materials = list(/datum/material/glass = 100, /datum/material/copper = 800)
-	build_path = /obj/item/computer_hardware/processor_unit/small
-	category = list("Computer Parts")
-	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
-
-/datum/design/cpu/photonic
-	name = "Photonic Processor Board"
-	id = "pcpu_normal"
-	build_type = IMPRINTER
-	materials = list(/datum/material/glass = 6400, /datum/material/gold = 2000, /datum/material/copper = 800)
-	build_path = /obj/item/computer_hardware/processor_unit/photonic
-	category = list("Computer Parts")
-	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
-
-/datum/design/cpu/photonic/small
-	name = "Photonic Microprocessor"
-	id = "pcpu_small"
-	build_type = IMPRINTER
-	materials = list(/datum/material/glass = 3200, /datum/material/gold = 1000, /datum/material/copper = 400)
-	build_path = /obj/item/computer_hardware/processor_unit/photonic/small
-	category = list("Computer Parts")
-	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
-
 //Antivirus. Now actually a computer part
 /datum/design/antivirus1
 	name = "Basic Antivirus"
@@ -346,15 +309,6 @@
 	build_path = /obj/item/computer_hardware/hard_drive/role/antivirus/tier4
 	category = list("Computer Parts")
 	lathe_time_factor = 0.2
-	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
-
-/datum/design/sensorpackage
-	name = "Sensor Package"
-	id = "sensorpackage"
-	build_type = IMPRINTER
-	materials = list(/datum/material/iron = 200, /datum/material/glass = 100, /datum/material/gold = 50, /datum/material/silver = 50)
-	build_path = /obj/item/computer_hardware/sensorpackage
-	category = list("Computer Parts")
 	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
 
 /datum/design/signaler_part

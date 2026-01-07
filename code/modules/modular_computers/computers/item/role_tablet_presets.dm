@@ -4,12 +4,9 @@
 /obj/item/modular_computer/tablet/pda/preset/Initialize(mapload)
 	. = ..()
 	install_component(new /obj/item/computer_hardware/hard_drive/micro)
-	install_component(new /obj/item/computer_hardware/processor_unit/small)
 	install_component(new cell_type)
 	install_component(new /obj/item/computer_hardware/network_card)
 	install_component(new /obj/item/computer_hardware/card_slot)
-	install_component(new /obj/item/computer_hardware/identifier)
-	install_component(new /obj/item/computer_hardware/sensorpackage)
 
 	var/obj/item/computer_hardware/hard_drive/hdd = all_components[MC_HDD]
 	if(hdd)
@@ -335,8 +332,6 @@
 /obj/item/modular_computer/tablet/pda/prisoner/Initialize(mapload)
 	. = ..()
 	install_component(new /obj/item/computer_hardware/hard_drive/inmate)
-	install_component(new /obj/item/computer_hardware/processor_unit/small)
 	install_component(new /obj/item/computer_hardware/battery/tiny)
 	install_component(new /obj/item/computer_hardware/card_slot)
-	install_component(new /obj/item/computer_hardware/identifier)
 	install_component(new /obj/item/computer_hardware/network_card)

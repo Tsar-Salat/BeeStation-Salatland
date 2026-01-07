@@ -13,7 +13,6 @@
 	size = 4
 	tgui_id = "NtosGasAnalyzer"
 	program_icon = "thermometer-half"
-	hardware_requirement = MC_SENSORS
 	power_consumption = 50 WATT
 
 /// Whether we scan the current turf automatically (env) or scan tapped objects manually (click).

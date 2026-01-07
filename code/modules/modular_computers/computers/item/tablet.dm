@@ -5,6 +5,7 @@
 	icon_state_menu = "menu"
 	worn_icon_state = "pda"
 	max_hardware_size = WEIGHT_CLASS_SMALL
+	max_idle_programs = 2
 	w_class = WEIGHT_CLASS_SMALL
 	custom_price = PAYCHECK_MEDIUM * 2
 	max_bays = 3

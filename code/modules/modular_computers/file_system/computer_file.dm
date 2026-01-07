@@ -3,7 +3,6 @@
 	var/filetype = "XXX" 									// File full names are [filename].[filetype] so like NewFile.XXX in this case
 	var/size = 1											// File size in GQ. Integers only!
 	var/obj/item/computer_hardware/hard_drive/holder	// Holder that contains this file.
-	var/unsendable = 0										// Whether the file may be sent to someone via NTNet transfer or other means.
 	var/undeletable = 0										// Whether the file may be deleted. Setting to 1 prevents deletion/renaming/etc.
 	var/uid													// UID of this file
 	var/static/file_uid = 0
@@ -26,7 +25,6 @@
 // Returns independent copy of this file.
 /datum/computer_file/proc/clone(rename = 0)
 	var/datum/computer_file/temp = new type
-	temp.unsendable = unsendable
 	temp.undeletable = undeletable
 	temp.size = size
 	if(rename)

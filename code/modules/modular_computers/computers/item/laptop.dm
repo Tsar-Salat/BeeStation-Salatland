@@ -5,6 +5,7 @@
 	icon_state = "laptop-closed"
 	icon_state_menu = "menu"
 	max_hardware_size = WEIGHT_CLASS_NORMAL
+	max_idle_programs = 3
 	w_class = WEIGHT_CLASS_NORMAL
 	max_bays = 4
 	can_save_id = TRUE

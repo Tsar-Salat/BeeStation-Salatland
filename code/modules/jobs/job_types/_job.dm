@@ -666,7 +666,7 @@
 	if(istype(PDA))
 		PDA.saved_identification = card.registered_name
 		PDA.saved_job = card.assignment
-		PDA.update_id_display()
+		PDA.UpdateDisplay()
 
 /datum/outfit/job/get_chameleon_disguise_info()
 	var/list/types = ..()
