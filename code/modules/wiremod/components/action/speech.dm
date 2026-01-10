@@ -13,7 +13,7 @@
 	var/datum/port/input/message
 
 	/// The cooldown for this component of how often it can send speech messages.
-	var/speech_cooldown = 1 SECONDS
+	var/speech_cooldown = 1 SECONDS 
 
 /obj/item/circuit_component/speech/get_ui_notices()
 	. = ..()
@@ -31,7 +31,7 @@
 		var/atom/movable/shell = parent.shell
 		// Prevents appear as the individual component if there is a shell.
 		if(shell)
-			shell.say(html_encode(message.value), forced = "circuit speech | [key_name(parent.get_creator())]")
+			shell.say(message.value), forced = "circuit speech | [key_name(parent.get_creator())]"
 		else
 			say(message.value, forced = "circuit speech | [parent.get_creator()]")
 		TIMER_COOLDOWN_START(parent, COOLDOWN_CIRCUIT_SPEECH, speech_cooldown)

@@ -75,6 +75,8 @@
 	if(CHAT_FILTER_CHECK(message))
 		to_chat(usr, span_warning("Your message contains forbidden words."))
 		return
+	if(sanitize)
+		message = trim(copytext_char(sanitize(message), 1, MAX_MESSAGE_LEN))
 	message = treat_message_min(message)
 	log_talk(message, LOG_SAY, tag="blob")
 	var/spanned_message = say_quote(message)
