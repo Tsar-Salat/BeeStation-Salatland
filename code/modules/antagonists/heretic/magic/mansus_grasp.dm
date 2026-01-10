@@ -39,7 +39,7 @@
 	living_hit.apply_damage(10, BRUTE)
 	if(iscarbon(victim))
 		var/mob/living/carbon/carbon_hit = victim
-		carbon_hit.silent = 3 SECONDS
+		carbon_hit.adjust_silence(3 SECONDS)
 		carbon_hit.slurring = 7 SECONDS
 		carbon_hit.AdjustKnockdown(5 SECONDS)
 		carbon_hit.adjustStaminaLoss(80)
