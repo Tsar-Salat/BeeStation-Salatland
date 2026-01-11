@@ -105,6 +105,13 @@
 /// From /mob/living/proc/stop_leaning()
 #define COMSIG_LIVING_STOPPED_LEANING "living_stopped_leaning"
 
+/// From mob/living/try_speak(): (message, ignore_spam, forced)
+#define COMSIG_LIVING_TRY_SPEECH "living_vocal_speech"
+	/// Return to skip can_speak check, IE, forcing success. Overrides below.
+	#define COMPONENT_IGNORE_CAN_SPEAK (1<<0)
+	/// Return if the mob cannot speak.
+	#define COMPONENT_CANNOT_SPEAK (1<<1)
+
 /// From mob/living/treat_message(): (list/message_args)
 #define COMSIG_LIVING_TREAT_MESSAGE "living_treat_message"
 	/// The index of message_args that corresponds to the actual message

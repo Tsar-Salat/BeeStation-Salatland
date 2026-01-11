@@ -1,8 +1,18 @@
-/mob/living/silicon/ai/say(message, bubble_type,list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
-	if(parent && istype(parent) && parent.stat != DEAD) //If there is a defined "parent" AI, it is actually an AI, and it is alive, anything the AI tries to say is said by the parent instead.
-		parent.say(message, language)
-		return
-	..(message)
+/mob/living/silicon/ai/say(
+	message,
+	bubble_type,
+	list/spans = list(),
+	sanitize = TRUE,
+	datum/language/language,
+	ignore_spam = FALSE,
+	forced,
+	message_range = 7,
+	datum/saymode/saymode,
+	list/message_mods = list(),
+)
+	if(istype(parent) && parent.stat != DEAD) //If there is a defined "parent" AI, it is actually an AI, and it is alive, anything the AI tries to say is said by the parent instead.
+		return parent.say(arglist(args))
+	return ..()
 
 /mob/living/silicon/ai/compose_track_href(atom/movable/speaker, namepart)
 	var/mob/M = speaker.GetSource()
@@ -14,8 +24,14 @@
 	//Also includes the </a> for AI hrefs, for convenience.
 	return "[radio_freq ? " (" + speaker.GetJob() + ")" : ""]" + "[speaker.GetSource() ? "</a>" : ""]"
 
-/mob/living/silicon/ai/IsVocal()
-	return !CONFIG_GET(flag/silent_ai)
+/mob/living/silicon/ai/try_speak(message, ignore_spam = FALSE, forced = FALSE)
+	// AIs cannot speak if silent AI is on.
+	// Unless forced is set, as that's probably stating laws or something.
+	if(!forced && CONFIG_GET(flag/silent_ai))
+		to_chat(src, span_danger("The ability for AIs to speak is currently disabled via server config."))
+		return FALSE
+
+	return ..()
 
 /mob/living/silicon/ai/radio(message, list/message_mods = list(), list/spans, language)
 	if(incapacitated())
@@ -50,7 +66,9 @@
 		if(istype(D) && D.display_icon(src))
 			language_icon = "[D.get_icon()] "
 
-		message = span_robot(say_emphasis(lang_treat(src, language, message)))
+		var/raw_translation = translate_language(src, language, message)
+		var/atom/movable/source = GetSource() || src
+		message = span_robot(say_emphasis(source.say_quote(raw_translation, list(), list())))
 		message = span_srtradioholocall("<b>\[Holocall\] [language_icon][span_name(real_name)]</b> [message]")
 		to_chat(src, message)
 

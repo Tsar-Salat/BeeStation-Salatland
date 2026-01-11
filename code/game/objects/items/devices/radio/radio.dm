@@ -246,14 +246,30 @@
 		set_listening(FALSE, actual_setting = FALSE)
 
 /obj/item/radio/talk_into(atom/movable/talking_movable, message, channel, list/spans, datum/language/language, list/message_mods)
+	if(SEND_SIGNAL(talking_movable, COMSIG_MOVABLE_USING_RADIO, src) & COMPONENT_CANNOT_USE_RADIO)
+		return NONE
+	if(SEND_SIGNAL(src, COMSIG_RADIO_NEW_MESSAGE, talking_movable, message, channel) & COMPONENT_CANNOT_USE_RADIO)
+		return NONE
+
 	if(!spans)
 		spans = list(talking_movable.speech_span)
 	if(!language)
 		language = talking_movable.get_selected_language()
-	SEND_SIGNAL(src, COMSIG_RADIO_MESSAGE, talking_movable, message, channel, message_mods)
-	INVOKE_ASYNC(src, PROC_REF(talk_into_impl), talking_movable, message, channel, spans.Copy(), language, message_mods)
+	INVOKE_ASYNC(src, PROC_REF(talk_into_impl), talking_movable, message, channel, LAZYLISTDUPLICATE(spans), language, LAZYLISTDUPLICATE(message_mods))
 	return ITALICS | REDUCE_RANGE
 
+/**
+ * Handles talking into the radio
+ *
+ * Unlike most speech related procs, spans and message_mods are not guaranteed to be lists
+ *
+ * * talking_movable - the atom that is talking
+ * * message - the message to be spoken
+ * * channel - the channel to be spoken on
+ * * spans - the spans to be used, lazylist
+ * * language - the language to be spoken in. (Should) never be null
+ * * message_mods - the message mods to be used, lazylist
+ */
 /obj/item/radio/proc/talk_into_impl(atom/movable/talking_movable, message, channel, list/spans, datum/language/language, list/message_mods)
 	if(!on)
 		return // the device has to be on
@@ -261,7 +277,7 @@
 		return
 	if(wires.is_cut(WIRE_TX))  // Permacell and otherwise tampered-with radios
 		return
-	if(!talking_movable.IsVocal())
+	if(!talking_movable.try_speak(message))
 		return
 
 	if(!radio_silent)//Radios make small static noises now
@@ -273,6 +289,12 @@
 
 	if(use_command)
 		spans |= SPAN_COMMAND
+
+	var/radio_message = message
+	if(message_mods[WHISPER_MODE])
+		// Radios don't pick up whispers very well
+		radio_message = stars(radio_message)
+		spans |= SPAN_ITALICS
 
 	/*
 	Roughly speaking, radios attempt to make a subspace transmission (which
@@ -306,7 +328,7 @@
 	var/atom/movable/virtualspeaker/speaker = new(null, talking_movable, src)
 
 	// Construct the signal
-	var/datum/signal/subspace/vocal/signal = new(src, freq, speaker, language, message, spans, message_mods)
+	var/datum/signal/subspace/vocal/signal = new(src, freq, speaker, language, radio_message, spans, message_mods)
 
 	// Independent radios, on the CentCom frequency, reach all independent radios
 	if (independent && (freq == FREQ_CENTCOM || freq == FREQ_CTF_RED || freq == FREQ_CTF_BLUE))
@@ -338,12 +360,19 @@
 	signal.levels = list(T.get_virtual_z_level())
 	signal.broadcast()
 
-/obj/item/radio/Hear(message, atom/movable/speaker, message_language, raw_message, radio_freq, list/spans, list/message_mods = list())
+/obj/item/radio/Hear(atom/movable/speaker, message_language, raw_message, radio_freq, list/spans, list/message_mods = list(), message_range)
 	. = ..()
-	if(radio_freq || !broadcasting || get_dist(src, speaker) > canhear_range)
+	if(radio_freq || !broadcasting || get_dist(src, speaker) > canhear_range || message_mods[MODE_RELAY])
 		return
+	var/list/filtered_mods = list()
 
-	var/filtered_mods = list()
+	if (message_mods[MODE_SING])
+		filtered_mods[MODE_SING] = message_mods[MODE_SING]
+	if (message_mods[WHISPER_MODE])
+		filtered_mods[WHISPER_MODE] = message_mods[WHISPER_MODE]
+	if (message_mods[SAY_MOD_VERB])
+		filtered_mods[SAY_MOD_VERB] = message_mods[SAY_MOD_VERB]
+
 	if(message_mods[MODE_CUSTOM_SAY_EMOTE])
 		filtered_mods[MODE_CUSTOM_SAY_EMOTE] = message_mods[MODE_CUSTOM_SAY_EMOTE]
 		filtered_mods[MODE_CUSTOM_SAY_ERASE_INPUT] = message_mods[MODE_CUSTOM_SAY_ERASE_INPUT]
@@ -378,6 +407,9 @@
 			if(GLOB.radiochannels[ch_name] == text2num(input_frequency) || syndie)
 				return TRUE
 	return FALSE
+
+/obj/item/radio/proc/on_receive_message(list/data)
+	SEND_SIGNAL(src, COMSIG_RADIO_RECEIVE_MESSAGE, data)
 
 /obj/item/radio/ui_state(mob/user)
 	if(issilicon(user))

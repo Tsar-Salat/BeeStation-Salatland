@@ -157,11 +157,14 @@
 	return ..()
 
 
-/obj/item/taperecorder/Hear(message, atom/movable/speaker, message_langs, raw_message, radio_freq, spans, list/message_mods = list())
+/obj/item/taperecorder/Hear(atom/movable/speaker, message_language, raw_message, radio_freq, spans, list/message_mods = list(), message_range)
 	. = ..()
+	if(message_mods[MODE_RELAY])
+		return
+
 	if(mytape && recording)
 		mytape.timestamp += mytape.used_capacity
-		mytape.storedinfo += "\[[time2text(mytape.used_capacity,"mm:ss")]\] [message]"
+		mytape.storedinfo += "\[[time2text(mytape.used_capacity,"mm:ss")]\] [raw_message]"
 
 /obj/item/taperecorder/verb/record()
 	set name = "Start Recording"
@@ -261,7 +264,7 @@
 			balloon_alert(usr, "recording ended")
 			sleep(1 SECONDS)
 			break
-		say("[mytape.storedinfo[i]]")
+		say("[mytape.storedinfo[i]]", sanitize=FALSE)//We want to display this properly, don't double encode
 		if(mytape.storedinfo.len < i + 1)
 			playsleepseconds = 1
 			sleep(1 SECONDS)

@@ -573,12 +573,15 @@
 /datum/status_effect/trance/proc/hypnotize(datum/source, list/hearing_args, list/spans, list/message_mods = list())
 	SIGNAL_HANDLER
 
-	if(!owner.can_hear())
+	if(!owner.can_hear() || owner == hearing_args[HEARING_SPEAKER])
 		return
-	if(hearing_args[HEARING_SPEAKER] == owner)
-		return
+
+	var/mob/hearing_speaker = hearing_args[HEARING_SPEAKER]
 	var/mob/living/carbon/C = owner
 	C.cure_trauma_type(/datum/brain_trauma/hypnosis, TRAUMA_RESILIENCE_SURGERY) //clear previous hypnosis
+	// The brain trauma itself does its own set of logging, but this is the only place the source of the hypnosis phrase can be found.
+	C.log_message("has been hypnotised by the phrase '[hearing_args[HEARING_RAW_MESSAGE]]' spoken by [key_name(hearing_speaker)]", LOG_ATTACK)
+	hearing_speaker.log_message("has hypnotised [key_name(C)] with the phrase '[hearing_args[HEARING_RAW_MESSAGE]]'", LOG_ATTACK, log_globally = FALSE)
 	addtimer(CALLBACK(C, TYPE_PROC_REF(/mob/living/carbon, gain_trauma), hypnosis_type, TRAUMA_RESILIENCE_SURGERY, hearing_args[HEARING_RAW_MESSAGE]), 10)
 	addtimer(CALLBACK(C, TYPE_PROC_REF(/mob/living, Stun), 60, TRUE, TRUE), 15) //Take some time to think about it
 	qdel(src)
@@ -1084,9 +1087,7 @@
 	var/turf/open/turfie = get_turf(owner)
 	turfie.take_temperature(-40)
 	owner.adjust_bodytemperature(-20)
-	if(iscarbon(owner))
-		var/mob/living/carbon/carbon_owner = owner
-		carbon_owner.silent += 4
+	owner.adjust_silence(10 SECONDS)
 	return ..()
 
 /datum/status_effect/amok

@@ -154,6 +154,10 @@
   */
 /mob/proc/get_message_mods(message, list/mods)
 	for(var/I in 1 to MESSAGE_MODS_LENGTH)
+		// Prevents "...text" from being read as a radio message
+		if (length(message) > 1 && message[2] == message[1])
+			continue
+
 		var/key = message[1]
 		var/chop_to = 2 //By default we just take off the first char
 		if((key == "#" && !mods[WHISPER_MODE]))
@@ -192,5 +196,37 @@
 		if(!message)
 			return
 	return message
+
+/mob/try_speak(message, ignore_spam = FALSE, forced = null)
+	if(client && !(ignore_spam || forced))
+		if(client.prefs && (client.player_details.muted & MUTE_IC))
+			to_chat(src, span_danger("You cannot speak IC (muted)."))
+			return FALSE
+		if(client.handle_spam_prevention(message, MUTE_IC))
+			return FALSE
+
+	var/sigreturn = SEND_SIGNAL(src, COMSIG_LIVING_TRY_SPEECH, message, ignore_spam, forced)
+	if(sigreturn & COMPONENT_IGNORE_CAN_SPEAK)
+		return TRUE
+	if(sigreturn & COMPONENT_CANNOT_SPEAK)
+		return FALSE
+
+	if(!..()) // the can_speak check
+		if(HAS_MIND_TRAIT(src, TRAIT_MIMING))
+			to_chat(src, span_green("Your vow of silence prevents you from speaking!"))
+		else
+			to_chat(src, span_warning("You find yourself unable to speak!"))
+		return FALSE
+
+	return TRUE
+
+/mob/can_speak(allow_mimes = FALSE)
+	if(!allow_mimes && HAS_MIND_TRAIT(src, TRAIT_MIMING))
+		return FALSE
+
+	if(is_muzzled())
+		return FALSE
+
+	return ..()
 
 #undef MESSAGE_MODS_LENGTH
