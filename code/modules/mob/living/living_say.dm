@@ -74,7 +74,18 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 
 	return new_msg
 
-/mob/living/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null, message_range = 7, datum/saymode/saymode = null)
+/mob/living/say(
+	message,
+	bubble_type,
+	list/spans = list(),
+	sanitize = TRUE,
+	datum/language/language,
+	ignore_spam = FALSE,
+	forced,
+	message_range = 7,
+	datum/saymode/saymode,
+	list/message_mods = list(),
+)
 
 	var/ic_blocked = FALSE
 	if(client && !forced && CHAT_FILTER_CHECK(message))
@@ -91,7 +102,6 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		to_chat(src, span_warning("That message contained a word prohibited in IC chat! Consider reviewing the server rules.\n<span replaceRegex='show_filtered_ic_chat'>\"[message]\""))
 		return
 
-	var/list/message_mods = list()
 	if(language) // if a language is specified already, the language is added into the list
 		message_mods[LANGUAGE_EXTENSION] = istype(language) ? language.type : language
 	var/original_message = message
@@ -158,6 +168,11 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		message_mods[MODE_UNTREATED_MESSAGE] = message // let's store the original message before treating those
 	message = treat_message(message) // unfortunately we still need this
 
+	// Make sure the arglist is passed exactly - don't pass a copy of it. Say signal handlers will modify some of the parameters.
+	var/sigreturn = SEND_SIGNAL(src, COMSIG_MOB_SAY, args)
+	if(sigreturn & COMPONENT_UPPERCASE_SPEECH)
+		message = uppertext(message)
+
 	spans |= speech_span
 
 	if(language)
@@ -169,33 +184,32 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		message = "[randomnote] [message] [randomnote]"
 		spans |= SPAN_SINGING
 
-	// Make sure the arglist is passed exactly - don't pass a copy of it. Say signal handlers will modify some of the parameters.
-	var/sigreturn = SEND_SIGNAL(src, COMSIG_MOB_SAY, args)
-	if(sigreturn & COMPONENT_UPPERCASE_SPEECH)
-		message = uppertext(message)
+	if(message_mods[WHISPER_MODE]) // whisper away
+		spans |= SPAN_ITALICS
 
 	if(!message)
 		if(succumbed)
 			succumb()
 		return
 
+	//Get which verb is prefixed to the message before radio but after most modifications
+	message_mods[SAY_MOD_VERB] = say_mod(message, message_mods)
+
 	//This is before anything that sends say a radio message, and after all important message type modifications, so you can scumb in alien chat or something
 	if(saymode && !saymode.early && !saymode.handle_message(src, message, language))
 		return
-	var/radio_message = message
-	if(message_mods[WHISPER_MODE])
-		// radios don't pick up whispers very well
-		radio_message = stars(radio_message)
-		spans |= SPAN_ITALICS
 
-	var/radio_return = radio(radio_message, message_mods, spans, language)//roughly 27% of living/say()'s total cost
+	var/radio_return = radio(message, message_mods, spans, language)//roughly 27% of living/say()'s total cost
+	if(radio_return & NOPASS)
+		return TRUE
+
 	if(radio_return & ITALICS)
 		spans |= SPAN_ITALICS
 	if(radio_return & REDUCE_RANGE)
 		message_range = 1
-		message_mods[MODE_RADIO_MESSAGE] = MODE_RADIO_MESSAGE
-	if(radio_return & NOPASS)
-		return TRUE
+		if(!message_mods[WHISPER_MODE])
+			message_mods[WHISPER_MODE] = MODE_WHISPER
+			message_mods[SAY_MOD_VERB] = say_mod(message, message_mods)
 
 	//now that the radio message is sent, if the custom say message was just an emote we return
 	if (message_mods[MODE_CUSTOM_SAY_ERASE_INPUT] && message_mods[MODE_CUSTOM_SAY_EMOTE])
@@ -253,7 +267,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 
 	if(speaker != src)
 		if(!radio_freq) //These checks have to be separate, else people talking on the radio will make "You can't hear yourself!" appear when hearing people over the radio while deaf.
-			deaf_message = "[span_name("[speaker]")] [speaker.verb_say] something but you cannot hear [speaker.p_them()]."
+			deaf_message = "[span_name("[speaker]")] [speaker.get_default_say_verb()] something but you cannot hear [speaker.p_them()]."
 			deaf_type = MSG_VISUAL
 	else
 		deaf_message = span_notice("You can't hear yourself!")
@@ -276,7 +290,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	var/list/the_dead = list()
 
 	if(client) //client is so that ghosts don't have to listen to mice
-		for(var/mob/player_mob as() in GLOB.player_list)
+		for(var/mob/player_mob as anything in GLOB.player_list)
 			if(QDELETED(player_mob)) //Some times nulls and deleteds stay in this list. This is a workaround to prevent ic chat breaking for everyone when they do.
 				continue //Remove if underlying cause (likely byond issue) is fixed. See TG PR #49004.
 			if(player_mob.stat != DEAD) //not dead, not important
@@ -303,7 +317,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 			var/mob/M = listening_movable
 			if(M.should_show_chat_message(src, message_language, FALSE, is_heard = TRUE))
 				show_overhead_message_to_eavesdrop += M
-		listening_movable.Hear(speaker = src, message_language = message_language, raw_message = message_raw, radio_freq = null, spans, message_mods = message_mods, message_range = message_range)
+		listening_movable.Hear(speaker = src, message_language = message_language, raw_message = message_raw, radio_freq = null, spans = spans, message_mods = message_mods, message_range = message_range)
 	if(length(show_overhead_message_to))
 		create_chat_message(src, message_language, show_overhead_message_to, message_raw, spans)
 	if(length(show_overhead_message_to_eavesdrop))
@@ -335,38 +349,6 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 
 /mob/proc/binarycheck()
 	return FALSE
-
-/mob/living/try_speak(message, ignore_spam = FALSE, forced = null)
-	if(!..())
-		return FALSE
-
-	var/sigreturn = SEND_SIGNAL(src, COMSIG_LIVING_TRY_SPEECH, message, ignore_spam, forced)
-	if(sigreturn & COMPONENT_CAN_ALWAYS_SPEAK)
-		return TRUE
-
-	if(sigreturn & COMPONENT_CANNOT_SPEAK)
-		return FALSE
-
-	if(!can_speak())
-		if(HAS_TRAIT(src, TRAIT_MIMING))
-			to_chat(src, span_green("Your vow of silence prevents you from speaking!"))
-		else
-			to_chat(src, span_warning("You find yourself unable to speak!"))
-		return FALSE
-
-	return TRUE
-
-/mob/living/can_speak(allow_mimes = FALSE)
-	if(!allow_mimes && HAS_TRAIT(src, TRAIT_MIMING))
-		return FALSE
-
-	if(HAS_TRAIT(src, TRAIT_MUTE))
-		return FALSE
-
-	if(is_muzzled())
-		return FALSE
-
-	return TRUE
 
 /mob/living/proc/treat_message(message)
 	if(HAS_TRAIT(src, TRAIT_UNINTELLIGIBLE_SPEECH))

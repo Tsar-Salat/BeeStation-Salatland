@@ -29,7 +29,6 @@ GLOBAL_LIST_INIT(freqtospan, list(
  * * language - The language to speak in. Defaults to the atom's selected language
  * * ignore_spam - Should we ignore spam checks?
  * * forced - What was it forced by? null if voluntary. (NOT a boolean!)
- * * filterproof - Do we bypass the filter when checking the message?
  * * message_range - The range of the message. Defaults to 7
  * * saymode - Saymode passed to the speech
  * This is usually set automatically and is only relevant for living mobs.
@@ -58,7 +57,8 @@ GLOBAL_LIST_INIT(freqtospan, list(
 	spans |= speech_span
 	if(!language)
 		language = get_selected_language()
-	send_speech(message = message, range = message_range, source = source, bubble_type = bubble_type, spans = spans, message_language = language, message_mods = message_mods, forced = forced)
+	message_mods[SAY_MOD_VERB] = say_mod(message, message_mods)
+	send_speech(message_raw = message, message_range = message_range, source = source, bubble_type = bubble_type, spans = spans, message_language = language, message_mods = message_mods, forced = forced)
 
 /// Called when this movable hears a message from a source.
 /// Returns TRUE if the message was received and understood.
@@ -83,7 +83,7 @@ GLOBAL_LIST_INIT(freqtospan, list(
  * 	TRUE of FASE depending on if our movable can speak
  */
 /atom/movable/proc/try_speak(message, ignore_spam = FALSE, forced = null)
-	return TRUE
+	return can_speak()
 
 /**
  * Checks if our movable can currently speak, vocally, in general.
@@ -100,11 +100,12 @@ GLOBAL_LIST_INIT(freqtospan, list(
  * if TRUE, we will check if the movable can speak REGARDLESS of if they have an active mime vow.
  */
 /atom/movable/proc/can_speak(allow_mimes = FALSE)
-	return TRUE
+	SHOULD_BE_PURE(TRUE)
+	return !HAS_TRAIT(src, TRAIT_MUTE)
 
-/atom/movable/proc/send_speech(message, range = 7, obj/source = src, bubble_type, list/spans, datum/language/message_language, list/message_mods = list(), forced = FALSE)
+/atom/movable/proc/send_speech(message_raw, message_range = 7, obj/source = src, bubble_type, list/spans, datum/language/message_language, list/message_mods = list(), forced = FALSE)
 	var/list/show_overhead_message_to = list()
-	for(var/atom/movable/hearing_movable as anything in get_hearers_in_view(range, source, SEE_INVISIBLE_MAXIMUM))
+	for(var/atom/movable/hearing_movable as anything in get_hearers_in_view(message_range, source, SEE_INVISIBLE_MAXIMUM))
 		if(!hearing_movable)//theoretically this should use as anything because it shouldnt be able to get nulls but there are reports that it does.
 			stack_trace("somehow theres a null returned from get_hearers_in_view() in send_speech!")
 			continue
@@ -112,9 +113,9 @@ GLOBAL_LIST_INIT(freqtospan, list(
 			var/mob/M = hearing_movable
 			if(M.should_show_chat_message(source, message_language, FALSE, is_heard = TRUE))
 				show_overhead_message_to += M
-		hearing_movable.Hear(speaker = src, message_language = message_language, raw_message = message, radio_freq = null, spans = spans, message_mods = message_mods, message_range = range)
+		hearing_movable.Hear(speaker = src, message_language = message_language, raw_message = message_raw, radio_freq = null, spans = spans, message_mods = message_mods, message_range = message_range)
 	if(length(show_overhead_message_to))
-		create_chat_message(src, message_language, show_overhead_message_to, message, spans, message_mods)
+		create_chat_message(src, message_language, show_overhead_message_to, message_raw, spans, message_mods)
 
 /// this creates runechat, so that they can communicate better
 /atom/movable/proc/create_private_chat_message(message, datum/language/message_language=/datum/language/metalanguage, list/hearers, includes_ghosts=TRUE)
@@ -188,6 +189,12 @@ GLOBAL_LIST_INIT(freqtospan, list(
 /atom/movable/proc/compose_job(atom/movable/speaker, message_langs, raw_message, radio_freq)
 	return ""
 
+/**
+ * Works out and returns which prefix verb the passed message should use.
+ *
+ * input - The message for which we want the verb.
+ * message_mods - A list of message modifiers, i.e. whispering/singing.
+ */
 /atom/movable/proc/say_mod(input, list/message_mods = list())
 	var/ending = copytext_char(input, -1)
 	if(copytext_char(input, -2) == "!!")
@@ -197,18 +204,43 @@ GLOBAL_LIST_INIT(freqtospan, list(
 	else if(ending == "!")
 		return verb_exclaim
 	else
-		return verb_say
+		return get_default_say_verb()
 
-/atom/movable/proc/say_quote(input, list/spans=list(speech_span), list/message_mods = list())
+/**
+ * Gets the say verb we default to if no special verb is chosen.
+ * This is primarily a hook for inheritors,
+ * like human_say.dm's tongue-based verb_say changes.
+ */
+/atom/movable/proc/get_default_say_verb()
+	return verb_say
+
+/atom/movable/proc/get_default_ask_verb()
+	return verb_ask
+
+/atom/movable/proc/get_default_yell_verb()
+	return verb_yell
+
+/atom/movable/proc/get_default_exclaim_verb()
+	return verb_exclaim
+
+/**
+ * This proc is used to generate a message for chat
+ * Generates the `says, "<span class='red'>meme</span>"` part of the `Grey Tider says, "meme"`.
+ *
+ * input - The message to be said
+ * spans - A list of spans to attach to the message. Includes the atom's speech span by default
+ * message_mods - A list of message modifiers, i.e. whispering/singing
+ */
+/atom/movable/proc/say_quote(input, list/spans = list(speech_span), list/message_mods = list())
 	if(!input)
 		input = "..."
 
+	var/say_mod = message_mods[MODE_CUSTOM_SAY_EMOTE] || message_mods[SAY_MOD_VERB] || say_mod(input, message_mods)
+
+	SEND_SIGNAL(src, COMSIG_MOVABLE_SAY_QUOTE, args)
+
 	if(copytext_char(input, -2) == "!!")
 		spans |= SPAN_YELL
-
-	var/say_mod = message_mods[MODE_CUSTOM_SAY_EMOTE]
-	if(!say_mod)
-		say_mod = say_mod(input, message_mods)
 
 	var/spanned = attach_spans(input, spans)
 	return "[say_mod], \"[spanned]\""
@@ -292,10 +324,10 @@ CREATION_TEST_IGNORE_SUBTYPES(/atom/movable/virtualspeaker)
 	source = M
 	if(istype(M))
 		name = radio.anonymize ? "Unknown" : M.GetVoice()
-		verb_say = M.verb_say
-		verb_ask = M.verb_ask
-		verb_exclaim = M.verb_exclaim
-		verb_yell = M.verb_yell
+		verb_say = M.get_default_say_verb()
+		verb_ask = M.get_default_ask_verb()
+		verb_yell = M.get_default_yell_verb()
+		verb_exclaim = M.get_default_exclaim_verb()
 
 	// The mob's job identity
 	if(ishuman(M))

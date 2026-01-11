@@ -1,12 +1,24 @@
-/mob/dead/observer/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null, message_range = 7, datum/saymode/saymode = null)
-	message = trim(copytext_char(sanitize(message), 1, MAX_MESSAGE_LEN))
-	if (!message)
+/mob/dead/observer/say(
+	message,
+	bubble_type,
+	list/spans = list(),
+	sanitize = TRUE,
+	datum/language/language,
+	ignore_spam = FALSE,
+	forced,
+	message_range = 7,
+	datum/saymode/saymode,
+	list/message_mods = list(),
+)
+	message = trim(message) //trim now and sanitize after checking for special admin radio keys
+	if(!message)
 		return
 
 	if(OOC_FILTER_CHECK(message))
 		to_chat(src, span_warning("That message contained a word prohibited in OOC chat! Consider reviewing the server rules.") + "\n<span replaceRegex='show_filtered_ooc_chat'>\"[message]\"")
 		return
 
+	message = copytext_char(sanitize(message), 1, MAX_MESSAGE_LEN)
 	if(check_emote(message, forced))
 		return
 

@@ -159,6 +159,8 @@
 
 /obj/item/taperecorder/Hear(atom/movable/speaker, message_language, raw_message, radio_freq, spans, list/message_mods = list(), message_range)
 	. = ..()
+	if(message_mods[MODE_RELAY])
+		return
 
 	if(mytape && recording)
 		mytape.timestamp += mytape.used_capacity

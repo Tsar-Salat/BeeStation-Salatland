@@ -270,6 +270,23 @@
 	voice_change = TRUE
 	chosen_tongue = /obj/item/organ/tongue/robot
 
+/obj/item/clothing/mask/gas/old/modulator/equipped(mob/user, slot)
+	. = ..()
+	if ((slot & ITEM_SLOT_MASK))
+		RegisterSignal(user, COMSIG_MOB_SAY, PROC_REF(handle_speech))
+
+/obj/item/clothing/mask/gas/modulator/dropped(mob/user)
+	. = ..()
+	UnregisterSignal(user, COMSIG_MOB_SAY)
+
+/obj/item/clothing/mask/gas/modulator/proc/handle_speech(datum/source, list/speech_args)
+	SIGNAL_HANDLER
+
+	if (!voice_change)
+		return
+
+	speech_args[SPEECH_SPANS] |= SPAN_ROBOT
+
 /obj/item/clothing/mask/gas/old/modulator/get_name(mob/user, default_name)
 	return voice_change ? "Unknown" : default_name
 

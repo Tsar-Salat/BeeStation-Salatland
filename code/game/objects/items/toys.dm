@@ -613,6 +613,9 @@
 	if(loc == user)
 		attack_self(user)
 
+/obj/item/toy/mecha/can_speak(allow_mimes)
+	return !quiet && ..()
+
 /obj/item/toy/mecha/ripley
 	name = "toy Ripley MK-I"
 	icon_state = "ripleytoy"
@@ -1701,13 +1704,9 @@
 	to_chat(user, "You name the dummy as \"[doll_name]\"")
 	name = "[initial(name)] - [doll_name]"
 
-/obj/item/toy/dummy/talk_into(atom/movable/A, message, channel, list/spans, datum/language/language, list/message_mods)
-	var/mob/M = A
-	if (istype(M))
-		M.log_talk(message, LOG_SAY, tag="dummy toy")
-
-	say(message, language, sanitize = FALSE)
-	return NOPASS
+/obj/item/toy/dummy/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/toy_talk)
 
 /obj/item/toy/dummy/GetVoice()
 	return doll_name
