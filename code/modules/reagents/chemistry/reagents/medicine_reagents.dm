@@ -109,7 +109,10 @@
 
 /datum/reagent/medicine/inacusiate/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()
-	affected_mob.restoreEars()
+	var/obj/item/organ/ears/ears = affected_mob.get_organ_slot(ORGAN_SLOT_EARS)
+	if(!ears)
+		return ..()
+	ears.adjustEarDamage(-4 * REM * delta_time, -4 * REM * delta_time)
 
 /datum/reagent/medicine/cryoxadone
 	name = "Cryoxadone"

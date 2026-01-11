@@ -188,8 +188,8 @@
 	if(!scouting)
 		return
 	// We don't care about radio chatter.
-	if(hear_args[HEARING_RADIO_FREQ])
-		return
+	//if(hear_args[HEARING_RADIO_FREQ])
+	//	return
 	var/message = hear_args[HEARING_RAW_MESSAGE]
 	var/atom/movable/speaker = hear_args[HEARING_SPEAKER]
 	var/spans = hear_args[HEARING_SPANS]

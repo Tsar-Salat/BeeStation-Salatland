@@ -13,7 +13,7 @@
 	var/datum/port/input/message
 
 	/// The cooldown for this component of how often it can send speech messages.
-	var/speech_cooldown = 1 SECONDS 
+	var/speech_cooldown = 1 SECONDS
 
 /obj/item/circuit_component/speech/get_ui_notices()
 	. = ..()
