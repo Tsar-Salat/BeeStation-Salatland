@@ -45,6 +45,8 @@
 	var/mass_craftable = FALSE
 	/// Should admins be notified about this getting created by a non-antagonist?
 	var/dangerous_craft = FALSE
+	/// Is this hidden from the codex?
+	var/hidden_from_codex
 
 	///crafting_flags var to hold bool values
 	var/crafting_flags = CRAFT_CHECK_DENSITY

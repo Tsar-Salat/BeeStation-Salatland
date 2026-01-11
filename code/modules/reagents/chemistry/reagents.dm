@@ -71,6 +71,9 @@ GLOBAL_LIST_INIT(name2reagent, build_name2reagent())
 	///Assoc list with key type of addiction this reagent feeds, and value amount of addiction points added per unit of reagent metabolzied (which means * REAGENTS_METABOLISM every life())
 	var/list/addiction_types = null
 
+	/// Is this hidden from the codex?
+	var/hidden_from_codex
+
 	///The default reagent container for the reagent, used for icon generation
 	var/obj/item/reagent_containers/default_container = /obj/item/reagent_containers/cup/bottle
 

@@ -327,6 +327,11 @@
 	//uniform
 	if(w_uniform && !(obscured & ITEM_SLOT_ICLOTHING) && !HAS_TRAIT(w_uniform, TRAIT_EXAMINE_SKIP))
 		. += "[t_He] [t_is] wearing [w_uniform.examine_worn_title(src, user)]."
+
+	//species codex link
+	if(user.can_use_codex() && SScodex.get_codex_entry(get_codex_value()))
+		. += span_notice("The codex has <b><a href='byond://?src=\ref[SScodex];show_examined_info=\ref[src];show_to=\ref[user]'>relevant information</a></b> available.")
+
 	//head
 	if(head && !(obscured & ITEM_SLOT_HEAD) && !HAS_TRAIT(head, TRAIT_EXAMINE_SKIP))
 		. += "[t_He] [t_is] wearing [head.examine_worn_title(src, user)] on [t_his] head."

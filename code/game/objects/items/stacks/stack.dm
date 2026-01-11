@@ -687,5 +687,18 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/stack)
 	if(istype(M) && M.dirty < 100)
 		M.dirty += amount
 
+/obj/item/stack/get_codex_value()
+	// Get the first/primary material from mats_per_unit if it exists
+	if(LAZYLEN(mats_per_unit))
+		for(var/datum/material/mat as anything in mats_per_unit)
+			if(!mat.hidden_from_codex)
+				return "[lowertext(mat.name)] (material)"
+	// Fall back to material_type if set
+	if(material_type)
+		var/datum/material/mat = material_type
+		if(!initial(mat.hidden_from_codex))
+			return "[lowertext(initial(mat.name))] (material)"
+	return ..()
+
 #undef STACK_CHECK_CARDINALS
 #undef STACK_CHECK_ADJACENT

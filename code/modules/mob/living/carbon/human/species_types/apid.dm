@@ -1,6 +1,7 @@
 /datum/species/apid
 	// Beepeople, god damn it. It's hip, and alive! - Fuck ubunutu edition
 	name = "\improper Apid"
+	description = "Beepeople, god damn it. It's hip, and alive! Buzz buzz!"
 	id = SPECIES_APID
 	bodyflag = FLAG_APID
 	species_traits = list(LIPS,NOEYESPRITES,MUTCOLORS)
@@ -89,9 +90,6 @@
 /datum/species/apid/on_species_loss(mob/living/carbon/human/C, datum/species/new_species, pref_load)
 	C.mind?.forget_crafting_recipe(/datum/crafting_recipe/honeycomb)
 	return ..()
-
-/datum/species/apid/get_species_description()
-	return "Beepeople, god damn it. It's hip, and alive! Buzz buzz!"
 
 /datum/species/apid/get_species_lore()
 	return null

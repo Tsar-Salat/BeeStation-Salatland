@@ -1,6 +1,9 @@
 //Subtype of human
 /datum/species/human/felinid
 	name = "\improper Felinid"
+	description = "Felinids are one of the many types of bespoke genetic \
+		modifications to come of humanity's mastery of genetic science, and are \
+		also one of the most common. Meow?"
 	id = SPECIES_FELINID
 	bodyflag = FLAG_FELINID
 	examine_limb_id = SPECIES_HUMAN
@@ -117,11 +120,6 @@
 	if (cat_ears)
 		cat_ears.color = human.hair_color
 		human.update_body()
-
-/datum/species/human/felinid/get_species_description()
-	return "Felinids are one of the many types of bespoke genetic \
-		modifications to come of humanity's mastery of genetic science, and are \
-		also one of the most common. Meow?"
 
 /datum/species/human/felinid/get_species_lore()
 	return list(

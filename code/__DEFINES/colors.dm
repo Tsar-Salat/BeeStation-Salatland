@@ -286,3 +286,8 @@ GLOBAL_LIST_INIT(color_list_rainbow, list(
 #define COLOR_GNOME_WHITE "#e8e8e8"
 #define COLOR_GNOME_GREY "#a9a9a9"
 #define COLOR_GNOME_BLACK "#303030"
+
+// Codex category colours.
+#define CODEX_COLOR_LORE "#abdb9b"
+#define CODEX_COLOR_MECHANICS "#9ebcd8"
+#define CODEX_COLOR_ANTAG "#e5a2a2"

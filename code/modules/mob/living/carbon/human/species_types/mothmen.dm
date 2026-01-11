@@ -8,6 +8,7 @@
 /datum/species/moth
 	name = "\improper Mothman"
 	plural_form = "Mothmen"
+	description = "Mothpeople are an intelligent species, known for their affinity to all things moth - lights, cloth, wings, and friendship."
 	id = SPECIES_MOTH
 	bodyflag = FLAG_MOTH
 	species_traits = list(
@@ -210,9 +211,6 @@
 #undef COCOON_HARM_AMOUNT
 #undef COCOON_HEAL_AMOUNT
 #undef COCOON_NUTRITION_AMOUNT
-
-/datum/species/moth/get_species_description()
-	return "Mothpeople are an intelligent species, known for their affinity to all things moth - lights, cloth, wings, and friendship."
 
 /datum/species/moth/get_species_lore()
 	return null

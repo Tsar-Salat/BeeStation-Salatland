@@ -1,6 +1,7 @@
 /datum/species/pumpkin_man
 	name = "\improper Pumpkinperson"
 	plural_form = "Pumpkinpeople"
+	description = "A rare species of Pumpkinpeople, gourdy and orange, appearing every halloween."
 	id = SPECIES_PUMPKINPERSON
 	sexes = 0
 	meat = /obj/item/food/pieslice/pumpkin
@@ -95,9 +96,6 @@
 				H.show_message(span_userdanger("The radiation beam singes you!"))
 		if(/obj/projectile/energy/florayield)
 			H.set_nutrition(min(H.nutrition+30, NUTRITION_LEVEL_FULL))
-
-/datum/species/pumpkin_man/get_species_description()
-	return "A rare species of Pumpkinpeople, gourdy and orange, appearing every halloween."
 
 /datum/species/pumpkin_man/get_species_lore()
 	return null

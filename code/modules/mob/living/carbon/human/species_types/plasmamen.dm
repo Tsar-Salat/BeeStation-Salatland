@@ -1,6 +1,9 @@
 /datum/species/plasmaman
 	name = "\improper Plasmaman"
 	plural_form = "Plasmamen"
+	description = "Found on the Icemoon of Freyja, plasmamen consist of colonial \
+		fungal organisms which together form a sentient being. In human space, \
+		they're usually attached to skeletons to afford a human touch."
 	id = SPECIES_PLASMAMAN
 	bodyflag = FLAG_PLASMAMAN
 	sexes = 0
@@ -189,11 +192,6 @@
 
 /datum/species/plasmaman/get_giggle_sound(mob/living/carbon/user)
 	return SPECIES_DEFAULT_GIGGLE_SOUND(user)
-
-/datum/species/plasmaman/get_species_description()
-	return "Found on the Icemoon of Freyja, plasmamen consist of colonial \
-		fungal organisms which together form a sentient being. In human space, \
-		they're usually attached to skeletons to afford a human touch."
 
 /datum/species/plasmaman/get_species_lore()
 	return list(

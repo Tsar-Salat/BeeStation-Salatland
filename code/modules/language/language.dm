@@ -17,6 +17,9 @@
 	var/list/scramble_cache = list()
 	var/default_priority = 0          // the language that an atom knows with the highest "default_priority" is selected by default. if -1, it will not be chosen as dafault by auto-update.
 
+	/// Is this hidden from the codex?
+	var/hidden_from_codex
+
 	// if you are seeing someone speak popcorn language, then something is wrong.
 	var/icon = 'icons/misc/language.dmi'
 	var/icon_state = "popcorn"

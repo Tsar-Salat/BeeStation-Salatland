@@ -2,7 +2,6 @@
 #define SPECIES_ABDUCTOR "abductor"
 #define SPECIES_ANDROID "android"
 #define SPECIES_APID "apid"
-#define SPECIES_DEBUG "debug"
 #define SPECIES_ETHEREAL "ethereal"
 #define SPECIES_FELINID "felinid"
 #define SPECIES_FLY "fly"
@@ -78,7 +77,6 @@
 #define FLAG_FELINID		(1<<7)
 #define FLAG_OOZELING		(1<<8)
 #define FLAG_FLY			(1<<9)
-#define FLAG_DEBUG_SPECIES	(1<<10)
 #define FLAG_MONKEY			(1<<11)
 #define FLAG_PSYPHOZA		(1<<12)
 #define FLAG_DIONA			(1<<13)

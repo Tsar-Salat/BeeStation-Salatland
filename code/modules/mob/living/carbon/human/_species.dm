@@ -14,6 +14,12 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	/// The formatting of the name of the species in plural context. Defaults to "[name]\s" if unset.
 	/// Ex "[Plasmamen] are weak", "[Mothmen] are strong", "[Lizardpeople] don't like", "[Golems] hate"
 	var/plural_form
+	/// Information text shown to players when they select this species in character setup.
+	var/description
+	/// General information about the species, for codex
+	var/codex_description
+	/// Is this species hidden from the codex?
+	var/hidden_from_codex = FALSE
 	//Species flags currently used for species restriction on items
 	var/bodyflag = FLAG_HUMAN
 	var/bodytype = BODYTYPE_HUMANOID
@@ -188,6 +194,10 @@ GLOBAL_LIST_EMPTY(features_by_species)
 ///////////
 
 /datum/species/New()
+
+	if(!codex_description)
+		codex_description = description
+
 	if(!plural_form)
 		plural_form = "[name]\s"
 	return ..()
@@ -2662,7 +2672,12 @@ GLOBAL_LIST_EMPTY(features_by_species)
 /datum/species/proc/get_species_description()
 	SHOULD_CALL_PARENT(FALSE)
 
-	stack_trace("Species [name] ([type]) did not have a description set, and is a selectable roundstart race! Override get_species_description.")
+	if(description)
+		return description
+
+	if(check_roundstart_eligible())
+		stack_trace("Species [name] ([type]) did not have a description set, and is a selectable roundstart race! Set the description var or override get_species_description.")
+
 	return "No species description set, file a bug report!"
 
 /**
@@ -2676,7 +2691,12 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	SHOULD_CALL_PARENT(FALSE)
 	RETURN_TYPE(/list)
 
-	stack_trace("Species [name] ([type]) did not have lore set, and is a selectable roundstart race! Override get_species_lore.")
+	if(codex_description)
+		return codex_description
+
+	if(check_roundstart_eligible())
+		stack_trace("Species [name] ([type]) did not have lore set, and is a selectable roundstart race! Override get_species_lore.")
+
 	return list("No species lore set, file a bug report!")
 
 /**

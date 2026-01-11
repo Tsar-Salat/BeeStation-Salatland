@@ -814,6 +814,7 @@
 
 /datum/species/golem/cloth
 	name = "Cloth Golem"
+	description = "A wrapped up Mummy! They descend upon Space Station Thirteen every year to spook the crew! \"Return the slab!\""
 	id = SPECIES_GOLEM_CLOTH
 	sexes = FALSE
 	info_text = "As a " + span_danger("Cloth Golem") + ", you are able to reform yourself after death, provided your remains aren't burned or destroyed. You are, of course, very flammable. \
@@ -886,9 +887,6 @@
 	H.visible_message(span_danger("[H] falls apart into a pile of bandages!"))
 	new /obj/structure/cloth_pile(get_turf(H), H)
 	..()
-
-/datum/species/golem/cloth/get_species_description()
-	return "A wrapped up Mummy! They descend upon Space Station Thirteen every year to spook the crew! \"Return the slab!\""
 
 /datum/species/golem/cloth/get_species_lore()
 	return list(

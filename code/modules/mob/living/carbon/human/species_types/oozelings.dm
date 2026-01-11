@@ -1,5 +1,6 @@
 /datum/species/oozeling
 	name = "\improper Oozeling"
+	description = "Literally made of jelly, Oozelings are squishy friends aboard Space Station 13."
 	id = SPECIES_OOZELING
 	bodyflag = FLAG_OOZELING
 	species_traits = list(
@@ -233,9 +234,6 @@
 
 /datum/species/oozeling/get_giggle_sound(mob/living/carbon/user)
 	return SPECIES_DEFAULT_GIGGLE_SOUND(user)
-
-/datum/species/oozeling/get_species_description()
-	return "Literally made of jelly, Oozelings are squishy friends aboard Space Station 13."
 
 /datum/species/oozeling/get_species_lore()
 	return null

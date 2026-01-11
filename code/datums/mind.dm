@@ -252,6 +252,15 @@
 		else if(A.type == datum_type)
 			return A
 
+/**
+ * Checks if a mind is an antagonist
+ *
+ * @param player The mind datum to check
+ * @return TRUE if the mind has any antagonist datums or special_role, FALSE otherwise
+ */
+/proc/player_is_antag(datum/mind/player)
+	return player?.special_role || LAZYLEN(player?.antag_datums)
+
 /datum/mind/proc/equip_traitor(employer = "The Syndicate", silent = FALSE, datum/antagonist/uplink_owner, telecrystals = TELECRYSTALS_DEFAULT)
 	if(!current)
 		return

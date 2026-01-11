@@ -1,5 +1,6 @@
 /datum/species/ethereal
 	name = "\improper Ethereal"
+	description = "Ethereals are a unique species with glowing blood and a radiant body. They thrive on electricity, and are naturally agender."
 	id = SPECIES_ETHEREAL
 	attack_verb = "burn"
 	attack_sound = 'sound/weapons/etherealhit.ogg'
@@ -220,10 +221,6 @@
 		'sound/voice/ethereal/ethereal_scream_2.ogg',
 		'sound/voice/ethereal/ethereal_scream_3.ogg',
 	)
-
-/datum/species/ethereal/get_species_description()
-	return "Ethereals are a unique species with liquid electricity for blood and a glowing body. They thrive on electricity, and are naturally agender."
-
 /datum/species/ethereal/get_species_lore()
 	return null
 

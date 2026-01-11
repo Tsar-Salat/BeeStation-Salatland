@@ -52,6 +52,8 @@
 /// -14C - Temperature used for kitchen cold room, medical freezer, etc.
 #define COLD_ROOM_TEMP 259.15
 
+#define KELVIN_TO_CELSIUS(X) ((X) - T0C)
+
 /**
  *I feel the need to document what happens here. Basically this is used
  *catch rounding errors, and make gas go away in small portions.
