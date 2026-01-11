@@ -427,3 +427,11 @@
 	integer = FALSE
 	default = 1
 	min_val = 0.05
+
+/datum/config_entry/number/monkeycap
+	default = 64
+	min_val = 0
+
+/datum/config_entry/number/ratcap
+	default = 64
+	min_val = 0

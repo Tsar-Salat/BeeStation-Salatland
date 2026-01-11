@@ -27,6 +27,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/clothing/head/mob_holder)
 	if(worn_slot_flags)
 		slot_flags = worn_slot_flags
 	item_flags &= ~(ABSTRACT)
+	w_class = M.held_w_class
 	deposit(M)
 
 /obj/item/clothing/head/mob_holder/Destroy()

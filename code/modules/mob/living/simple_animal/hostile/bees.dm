@@ -49,6 +49,8 @@
 	gold_core_spawnable = HOSTILE_SPAWN
 	search_objects = 1 //have to find those plant trays!
 	ventcrawler = VENTCRAWLER_ALWAYS
+	can_be_held = TRUE
+	held_w_class = WEIGHT_CLASS_TINY
 
 	//Spaceborn beings don't get hurt by space
 	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)

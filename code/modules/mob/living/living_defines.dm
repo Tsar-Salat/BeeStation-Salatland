@@ -118,8 +118,12 @@
 
 	var/last_words	//used for database logging
 
-	var/can_be_held = FALSE	//whether this can be picked up and held.
-	var/worn_slot_flags = NONE //if it can be held, can it be equipped to any slots? (think pAI's on head)
+	///whether this can be picked up and held.
+	var/can_be_held = FALSE
+	/// The w_class of the holder when held.
+	var/held_w_class = WEIGHT_CLASS_NORMAL
+	///if it can be held, can it be equipped to any slots? (think pAI's on head)
+	var/worn_slot_flags = NONE
 
 	var/ventcrawl_layer = PIPING_LAYER_DEFAULT
 	var/losebreath = 0
