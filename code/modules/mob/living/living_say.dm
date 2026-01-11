@@ -287,7 +287,6 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		is_speaker_whispering = TRUE
 
 	var/list/listening = get_hearers_in_view(message_range + whisper_range, source, SEE_INVISIBLE_MAXIMUM)
-	var/list/the_dead = list()
 
 	if(client) //client is so that ghosts don't have to listen to mice
 		for(var/mob/player_mob as anything in GLOB.player_list)
