@@ -7,37 +7,43 @@ SUBSYSTEM_DEF(minor_mapping)
 	flags = SS_NO_FIRE
 
 /datum/controller/subsystem/minor_mapping/Initialize()
-#ifndef UNIT_TESTS
+#ifdef UNIT_TESTS // This whole subsystem just introduces a lot of odd confounding variables into unit test situations, so let's just not bother with doing an initialize here.
+	return SS_INIT_NO_NEED
+	#else
 	trigger_migration(CONFIG_GET(number/mice_roundstart))
-#endif
-	place_satchels()
+	place_satchels(satchel_amount = 8)
 	return SS_INIT_SUCCESS
+	#endif // the mice are easily the bigger problem, but let's just avoid anything that could cause some bullshit.
 
-/datum/controller/subsystem/minor_mapping/proc/trigger_migration(num_mice=10)
+/// Spawns some critters on exposed wires
+/datum/controller/subsystem/minor_mapping/proc/trigger_migration(to_spawn=10)
 	var/list/exposed_wires = find_exposed_wires()
-
-	var/mob/living/simple_animal/mouse/M
-	var/turf/proposed_turf
-
-	while((num_mice > 0) && exposed_wires.len)
+	var/turf/open/proposed_turf
+	while((to_spawn > 0) && exposed_wires.len)
 		proposed_turf = pick_n_take(exposed_wires)
-		if(!M)
-			M = new(proposed_turf)
-		else
-			M.forceMove(proposed_turf)
-		if(M.environment_air_is_safe())
-			num_mice -= 1
-			M = null
+		if (!valid_mouse_turf(proposed_turf))
+			continue
 
-/datum/controller/subsystem/minor_mapping/proc/place_satchels(amount=10)
+		to_spawn--
+		new /mob/living/basic/mouse(proposed_turf)
+
+/// Returns true if a mouse won't die if spawned on this turf
+/datum/controller/subsystem/minor_mapping/proc/valid_mouse_turf(turf/open/proposed_turf)
+	if(!istype(proposed_turf))
+		return FALSE
+	var/datum/gas_mixture/turf/turf_gasmix = proposed_turf.air
+	var/turf_temperature = proposed_turf.temperature
+	return turf_gasmix.has_gas(/datum/gas/oxygen, 5) && turf_temperature < NPC_DEFAULT_MAX_TEMP && turf_temperature > NPC_DEFAULT_MIN_TEMP
+
+/datum/controller/subsystem/minor_mapping/proc/place_satchels(satchel_amount)
 	var/list/turfs = find_satchel_suitable_turfs()
 
-	while(turfs.len && amount > 0)
-		var/turf/T = pick_n_take(turfs)
-		var/obj/item/storage/backpack/satchel/flat/F = new(T)
+	while(turfs.len && satchel_amount > 0)
+		var/turf/turf = pick_n_take(turfs)
+		var/obj/item/storage/backpack/satchel/flat/flat_satchel = new(turf)
 
-		SEND_SIGNAL(F, COMSIG_OBJ_HIDE, T.underfloor_accessibility)
-		amount--
+		SEND_SIGNAL(flat_satchel, COMSIG_OBJ_HIDE, turf.underfloor_accessibility)
+		satchel_amount--
 
 /proc/find_exposed_wires()
 	var/list/exposed_wires = list()

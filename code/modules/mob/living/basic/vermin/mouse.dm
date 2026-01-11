@@ -55,7 +55,7 @@
 		dormant_disease.spread_flags = DISEASE_SPREAD_NON_CONTAGIOUS
 		mouse_diseases += dormant_disease
 	//AddElement(/datum/element/swabable, CELL_LINE_TABLE_MOUSE, CELL_VIRUS_TABLE_GENERIC_MOB, 1, 10)
-	AddComponent(/datum/component/squeak, list('sound/effects/mousesqueek.ogg' = 1), 100, extrarange = SHORT_RANGE_SOUND_EXTRARANGE) //as quiet as a mouse or whatever
+	AddComponent(/datum/component/squeak, list('sound/creatures/mousesqueek.ogg' = 1), 100, extrarange = SHORT_RANGE_SOUND_EXTRARANGE) //as quiet as a mouse or whatever
 
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = .proc/on_entered,
@@ -69,7 +69,7 @@
 /mob/living/basic/mouse/examine(mob/user)
 	. = ..()
 
-	var/sameside = user.faction_check_atom(src, exact_match = TRUE)
+	var/sameside = user.faction_check_mob(src, exact_match = TRUE)
 	if(user != src && ismouse(user))
 		if(sameside)
 			. += span_notice("You both serve the same king.")
