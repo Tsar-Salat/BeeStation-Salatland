@@ -10,11 +10,10 @@
 	faction = list(FACTION_DIONA)
 	gender = NEUTER
 	gold_core_spawnable = FRIENDLY_SPAWN
-	ventcrawler = VENTCRAWLER_ALWAYS
 	pass_flags = PASSTABLE | PASSMOB
 	density = FALSE
 	mob_size = MOB_SIZE_SMALL
-	mob_biotypes = MOB_ORGANIC | MOB_BEAST
+	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	can_be_held = TRUE
 	worn_slot_flags = ITEM_SLOT_HEAD
 	head_icon = 'icons/mob/pets_held.dmi'
@@ -61,6 +60,7 @@
 	real_name = name
 	regenerate_icons()
 	ADD_TRAIT(src, TRAIT_MUTE, "nymph")
+	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = PROC_REF(on_entered),
 	)
@@ -104,11 +104,11 @@
 		switch_ability.Remove(src)
 	return ..(gibbed,death_msg)
 
-/mob/living/simple_animal/hostile/retaliate/nymph/adjustBruteLoss(amount, updating_health, forced)
+/mob/living/simple_animal/hostile/retaliate/nymph/adjustBruteLoss(amount, updating_health, forced, required_bodytype)
 	brute_damage = brute_damage + amount * damage_coeff[BRUTE] * CONFIG_GET(number/damage_multiplier)
 	. = ..()
 
-/mob/living/simple_animal/hostile/retaliate/nymph/adjustFireLoss(amount, updating_health, forced)
+/mob/living/simple_animal/hostile/retaliate/nymph/adjustFireLoss(amount, updating_health, forced, required_bodytype)
 	fire_damage = fire_damage + amount * damage_coeff[BURN] * CONFIG_GET(number/damage_multiplier)
 	. = ..()
 
@@ -232,7 +232,7 @@
 		adult.real_name = old_name
 		adult.dna.features = features
 	else
-		adult.fully_replace_character_name(name, adult.dna.species.random_name(gender))
+		adult.fully_replace_character_name(name, generate_random_name_species_based(gender = gender, species_type = /datum/species/diona))
 		adult.dna.features["mcolor"] = sanitize_hexcolor(RANDOM_COLOUR)
 	if(mind)
 		mind.transfer_to(adult)
