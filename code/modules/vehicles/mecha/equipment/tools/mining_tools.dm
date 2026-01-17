@@ -127,7 +127,7 @@
 			butchering.Butcher(chassis, target)
 		else
 			investigate_log("has been gibbed by [src] (attached to [chassis]).", INVESTIGATE_DEATHS)
-			target.gib()
+			target.gib(DROP_ALL_REMAINS)
 	else
 		//drill makes a hole
 		var/obj/item/bodypart/target_part = target.get_bodypart(ran_zone(BODY_ZONE_CHEST))

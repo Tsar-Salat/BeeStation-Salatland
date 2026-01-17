@@ -66,7 +66,7 @@
 	if(forced)
 		occupier.forceMove(drop_location())
 		occupier.death()
-		occupier.gib()
+		occupier.gib(DROP_ALL_REMAINS)
 		for(var/obj/item/pinpointer/nuke/P in GLOB.pinpointer_list)
 			P.switch_mode_to(TRACK_NUKE_DISK) //Pinpointers go back to tracking the nuke disk
 			P.alert = FALSE

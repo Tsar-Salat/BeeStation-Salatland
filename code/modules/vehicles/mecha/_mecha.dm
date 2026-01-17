@@ -1037,7 +1037,8 @@
 	else if(isAI(M))
 		var/mob/living/silicon/ai/AI = M
 		if(forced)//This should only happen if there are multiple AIs in a round, and at least one is Malf.
-			AI.gib()  //If one Malf decides to steal a mech from another AI (even other Malfs!), they are destroyed, as they have nowhere to go when replaced.
+			AI.investigate_log("has been gibbed by being forced out of their mech by another AI.", INVESTIGATE_DEATHS)
+			AI.gib(DROP_ALL_REMAINS)  //If one Malf decides to steal a mech from another AI (even other Malfs!), they are destroyed, as they have nowhere to go when replaced.
 			AI = null
 			mecha_flags &= ~SILICON_PILOT
 			return

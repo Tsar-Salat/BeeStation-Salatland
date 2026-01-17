@@ -873,7 +873,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 		if(istype(target, /mob/living/))
 			var/mob/living/bug = target
 			bug.investigate_log("has been splatted by a flyswatter.", INVESTIGATE_DEATHS)
-			bug.death(1)
+			bug.gib(DROP_ALL_REMAINS)
 		else
 			qdel(target)
 

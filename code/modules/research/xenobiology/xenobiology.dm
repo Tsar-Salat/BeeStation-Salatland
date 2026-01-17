@@ -492,7 +492,7 @@
 				to_chat(user, span_userdanger("You explode!"))
 				explosion(get_turf(user), 1 ,3, 6)
 				user.investigate_log("has been gibbed by an oil slime extract explosion.", INVESTIGATE_DEATHS)
-				user.gib()
+				user.gib(DROP_ALL_REMAINS)
 				return 60 SECONDS
 			to_chat(user, span_notice("You stop feeding [src], and the feeling passes."))
 

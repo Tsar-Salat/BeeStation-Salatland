@@ -617,7 +617,7 @@ GLOBAL_VAR_INIT(nuke_off_station, 0)
 			if(M.stat != DEAD && !istype(M.loc, /obj/structure/closet/secure_closet/freezer))
 				to_chat(M, span_userdanger("You are shredded to atoms!"))
 				M.investigate_log("has been gibbed by a nuclear blast.", INVESTIGATE_DEATHS)
-				M.gib()
+				M.gib(DROP_ALL_REMAINS)
 
 /*
 This is here to make the tiles around the station mininuke change when it's armed.

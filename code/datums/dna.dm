@@ -918,7 +918,7 @@
 		switch(rand(0,5))
 			if(0)
 				investigate_log("has been gibbed by DNA instability.", INVESTIGATE_DEATHS)
-				gib()
+				gib(DROP_ALL_REMAINS)
 			if(1)
 				investigate_log("has been dusted by DNA instability.", INVESTIGATE_DEATHS)
 				dust()
@@ -933,7 +933,7 @@
 					BP.dismember()
 				else
 					investigate_log("has been gibbed by DNA instability.", INVESTIGATE_DEATHS)
-					gib()
+					gib(DROP_ALL_REMAINS)
 			if(4)
 				visible_message(span_warning("[src]'s skin melts off!"), span_boldwarning("Your skin melts off!"))
 				spawn_gibs()

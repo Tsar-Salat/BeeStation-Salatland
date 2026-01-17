@@ -35,7 +35,8 @@ All ShuttleMove procs go here
 				M.stop_pulling()
 				M.visible_message(span_warning("[shuttle] slams into [M]!"))
 				SSblackbox.record_feedback("tally", "shuttle_gib", 1, M.type)
-				M.gib()
+				M.investigate_log("has been gibbed by [shuttle].", INVESTIGATE_DEATHS)
+				M.gib(DROP_ALL_REMAINS)
 
 		else //non-living mobs shouldn't be affected by shuttles, which is why this is an else
 			if(istype(thing, /obj/anomaly))

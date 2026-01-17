@@ -48,7 +48,7 @@
 		explosion(src,heavy,medium,weak,weak, flame_range = weak)
 		if(imp_in)
 			imp_in.investigate_log("has been gibbed by an explosive implant.", INVESTIGATE_DEATHS)
-			imp_in.gib(TRUE)
+			imp_in.gib(DROP_ORGANS|DROP_BODYPARTS)
 		qdel(src)
 		return TRUE
 	timed_explosion()
@@ -82,7 +82,7 @@
 	explosion(src,heavy,medium,weak,weak, flame_range = weak)
 	if(imp_in)
 		imp_in.investigate_log("has been gibbed by an explosive implant.", INVESTIGATE_DEATHS)
-		imp_in.gib(TRUE)
+		imp_in.gib(DROP_ORGANS|DROP_BODYPARTS)
 	qdel(src)
 
 /obj/item/implant/explosive/macro

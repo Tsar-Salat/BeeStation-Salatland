@@ -128,8 +128,7 @@ In all, this is a lot like the monkey code. /N
 
 	switch(severity)
 		if(EXPLODE_DEVASTATE)
-			gib()
-			return
+			gib(DROP_ALL_REMAINS)
 
 		if(EXPLODE_HEAVY)
 			take_overall_damage(60, 60)

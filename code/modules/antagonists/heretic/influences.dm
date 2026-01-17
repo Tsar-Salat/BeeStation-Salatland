@@ -183,7 +183,7 @@ GLOBAL_DATUM_INIT(reality_smash_track, /datum/reality_smash_tracker, new)
 		head.dismember()
 		qdel(head)
 	else
-		human_user.gib()
+		human_user.gib(DROP_ALL_REMAINS)
 	human_user.investigate_log("has died from using telekinesis on a heretic influence.", INVESTIGATE_DEATHS)
 
 	var/datum/effect_system/reagents_explosion/explosion = new()

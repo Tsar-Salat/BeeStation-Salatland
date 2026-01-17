@@ -468,7 +468,7 @@
 			playsound(src, 'sound/magic/demon_attack1.ogg', 75, TRUE)
 			narsie_act()
 			basic_pet.investigate_log("has been gibbed by [src].", INVESTIGATE_DEATHS)
-			basic_pet.gib()
+			basic_pet.gib(DROP_ALL_REMAINS)
 
 /mob/living/basic/pet/dog/corgi/narsie/update_corgi_fluff()
 	..()

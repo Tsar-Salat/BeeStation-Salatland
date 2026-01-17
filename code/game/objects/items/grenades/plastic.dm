@@ -171,7 +171,7 @@
 	user.visible_message(span_suicide("[user] activates [src] and holds it above [user.p_their()] head! It looks like [user.p_theyre()] going out with a bang!"))
 	shout_syndicate_crap(user)
 	explosion(user,0,2,0) //Cheap explosion imitation because putting prime() here causes runtimes
-	user.gib(1, 1)
+	user.gib(DROP_BODYPARTS)
 	qdel(src)
 
 /obj/item/grenade/plastic/update_icon()
@@ -209,7 +209,7 @@
 	log_game("[key_name(user)] suicided with [name] at [AREACOORD(user)]")
 	sleep(10)
 	prime()
-	user.gib(1, 1)
+	user.gib()
 
 /obj/item/grenade/plastic/c4/attackby(obj/item/I, mob/user, params)
 	if(I.tool_behaviour == TOOL_SCREWDRIVER)

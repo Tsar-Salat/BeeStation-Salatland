@@ -189,7 +189,7 @@
 	set_zeroth_law("Only [user.real_name] and people [user.p_they()] designate[user.p_s()] as being such are Syndicate Agents.")
 	laws.associate(src)
 	update_icons()
-	//Get syndicate access.
+	//Get syndicate access. 
 	create_access_card(get_all_syndicate_access())
 
 /mob/living/silicon/robot/proc/after_emag_shell(mob/user)
@@ -201,14 +201,14 @@
 		adjustBruteLoss(30)
 	else
 		investigate_log("has been gibbed a blob.", INVESTIGATE_DEATHS)
-		gib()
+		gib(DROP_ALL_REMAINS)
 	return TRUE
 
 /mob/living/silicon/robot/ex_act(severity, target)
 	switch(severity)
 		if(EXPLODE_DEVASTATE)
-			gib()
-			return
+			investigate_log("has been gibbed by an explosion.", INVESTIGATE_DEATHS)
+			gib(DROP_ALL_REMAINS)
 		if(EXPLODE_HEAVY)
 			if (stat != DEAD)
 				adjustBruteLoss(60)

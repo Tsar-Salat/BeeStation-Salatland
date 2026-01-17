@@ -118,7 +118,7 @@
 	meat.harvest(butcher)
 	meat.log_message("has been butchered by [key_name(butcher)]", LOG_ATTACK)
 	meat.investigate_log("was gibbed via butchering", INVESTIGATE_DEATHS)
-	meat.gib(FALSE, FALSE, TRUE)
+	meat.gib(DROP_BRAIN|DROP_ORGANS)
 
 /datum/component/butchering/proc/ButcherEffects(mob/living/meat) //extra effects called on butchering, override this via subtypes
 	return

@@ -334,7 +334,7 @@ GLOBAL_LIST_INIT(arcade_prize_pool, list(
 		playsound(loc, 'sound/arcade/lose.ogg', 50, 1, extrarange = -3, falloff_exponent = 10)
 		if(obj_flags & EMAGGED)
 			usr.investigate_log("has been gibbed by an emagged Orion Trail game.", INVESTIGATE_DEATHS)
-			usr.gib()
+			usr.gib(DROP_ALL_REMAINS)
 		SSblackbox.record_feedback("nested tally", "arcade_results", 1, list("loss", "hp", (obj_flags & EMAGGED ? "emagged":"normal")))
 
 	blocked = FALSE

@@ -30,6 +30,6 @@
 	log_game("[key_name(user)] detonated a bag of holding at [loc_name(loccheck)].")
 
 	user.investigate_log("has been gibbed by a bag of holding recursive insertion.", INVESTIGATE_DEATHS)
-	user.gib(TRUE, TRUE, TRUE)
+	user.gib()
 	new/obj/boh_tear(loccheck)
 	qdel(resolve_parent)

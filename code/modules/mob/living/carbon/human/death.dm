@@ -18,11 +18,11 @@
 		if(GIB_TYPE_ROBOTIC)
 			new /obj/effect/temp_visual/dust_animation(loc, "dust-r")
 
-/mob/living/carbon/human/spawn_gibs(with_bodyparts)
+/mob/living/carbon/human/spawn_gibs(drop_bitflags=NONE)
 	if(!dna)
 		new /obj/effect/gibspawner/human(get_turf(src), src, get_static_viruses())
 		return
-	if(with_bodyparts)
+	if(drop_bitflags & DROP_BODYPARTS)
 		switch(dna.species.species_gibs)
 			if(GIB_TYPE_HUMAN)
 				new /obj/effect/gibspawner/human(get_turf(src), src, get_static_viruses())

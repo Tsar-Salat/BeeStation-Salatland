@@ -831,7 +831,7 @@ GLOBAL_DATUM(blackbox, /obj/machinery/smartfridge/black_box)
 		if(holder_animal.stat == DEAD)
 			dump_contents()
 			holder_animal.investigate_log("has been gibbed by [src].", INVESTIGATE_DEATHS)
-			holder_animal.gib()
+			holder_animal.gib(DROP_ALL_REMAINS)
 			return
 
 /obj/structure/closet/stasis/Initialize(mapload)

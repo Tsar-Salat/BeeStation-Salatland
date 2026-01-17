@@ -211,7 +211,7 @@
 /datum/action/diona/split/proc/split(gibbed, mob/living/carbon/human/H)
 	// Gib the corpse with nothing left of use. After all the nymphs are ALL dead.
 	if(gibbed)
-		H.gib(TRUE, TRUE, TRUE)
+		H.gib()
 		return
 
 	var/list/mob/living/simple_animal/hostile/retaliate/nymph/alive_nymphs = list()
@@ -250,7 +250,7 @@
 	nymph.features = H.dna.features
 	H.mind?.transfer_to(nymph) //Move the player's mind datum to the player nymph
 	H.mind?.grab_ghost() // Throw the fucking ghost back into the nymph.
-	H.gib(TRUE, TRUE, TRUE)  //Gib the old corpse with nothing left of use
+	H.gib()  //Gib the old corpse with nothing left of use
 
 /datum/action/diona/partition
 	name = "Partition"

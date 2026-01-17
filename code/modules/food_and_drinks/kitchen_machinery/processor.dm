@@ -38,7 +38,7 @@
 
 	if (ismob(what))
 		var/mob/themob = what
-		themob.gib(TRUE,TRUE,TRUE)
+		themob.gib()
 	else
 		qdel(what)
 

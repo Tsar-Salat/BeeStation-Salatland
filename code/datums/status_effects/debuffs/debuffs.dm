@@ -683,7 +683,7 @@
 
 /datum/status_effect/dna_melt/on_remove()
 	if(!owner.has_dna())
-		owner.gib() //fuck you in particular
+		owner.gib(DROP_ALL_REMAINS) //fuck you in particular
 		return
 	var/mob/living/carbon/C = owner
 	C.something_horrible(kill_either_way)

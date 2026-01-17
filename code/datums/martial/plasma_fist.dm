@@ -83,7 +83,7 @@
 	to_chat(A, span_danger("You hit [D] with THE PLASMA FIST TECHNIQUE!"))
 	log_combat(A, D, "gibbed (Plasma Fist)", name)
 	var/turf/Dturf = get_turf(D)
-	D.gib()
+	D.gib(DROP_ALL_REMAINS)
 	if(nobomb)
 		return
 	if(!hasclient)

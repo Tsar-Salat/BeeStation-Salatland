@@ -237,4 +237,4 @@
 
 		if(M.loc == input)
 			M.forceMove(src)
-			M.gib()
+			M.gib(DROP_ALL_REMAINS)

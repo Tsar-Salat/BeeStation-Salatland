@@ -400,7 +400,7 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 			begin_trauma(H)
 		else if(prob(75))
 			H.unequip_everything() //runtime prevention
-			H.gib(FALSE)
+			H.gib()
 		else
 			H.unequip_everything() //runtime prevention
 			H.cluwneify()

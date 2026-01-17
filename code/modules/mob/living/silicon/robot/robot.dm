@@ -572,7 +572,7 @@
 	else
 		explosion(src.loc,-1,0,2)
 	investigate_log("has self-destructed.", INVESTIGATE_DEATHS)
-	gib()
+	gib(DROP_ALL_REMAINS)
 
 /mob/living/silicon/robot/proc/UnlinkSelf()
 	if(src.connected_ai)

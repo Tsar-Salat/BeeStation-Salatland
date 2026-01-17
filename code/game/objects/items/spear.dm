@@ -92,7 +92,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/spear/explosive)
 	user.say("[war_cry]", forced="spear warcry")
 	explosive.forceMove(user)
 	explosive.prime()
-	user.gib()
+	user.gib(DROP_ALL_REMAINS)
 	qdel(src)
 	return BRUTELOSS
 

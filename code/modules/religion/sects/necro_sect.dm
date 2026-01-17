@@ -271,7 +271,7 @@
 	GLOB.religious_sect?.adjust_favor(favor_gained, user)
 	new /obj/effect/temp_visual/cult/blood/out(altar_turf)
 	to_chat(user, span_notice("[GLOB.deity] absorbs [chosen_sacrifice], leaving blood and gore in its place. [GLOB.deity] rewards you with [favor_gained] favor."))
-	chosen_sacrifice.gib(TRUE, FALSE, TRUE)
+	chosen_sacrifice.gib()
 	playsound(get_turf(religious_tool), 'sound/effects/bamf.ogg', 50, TRUE)
 	chosen_sacrifice = null
 	return ..()

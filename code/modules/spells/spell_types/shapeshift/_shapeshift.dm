@@ -132,7 +132,7 @@
 	priority_announce("We detected a pipe blockage around [get_area(get_turf(cast_on))], please dispatch someone to investigate.", "Central Command")
 	// Gib our caster, and make sure to leave nothing behind
 	// (If we leave something behind, it'll drop on the turf of the pipe, which is kinda wrong.)
-	cast_on.gib(TRUE, TRUE, TRUE)
+	cast_on.gib()
 
 /// Callback for the radial that allows the user to choose their species.
 /datum/action/spell/shapeshift/proc/check_menu(mob/living/caster)

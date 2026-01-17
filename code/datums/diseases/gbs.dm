@@ -30,5 +30,5 @@
 			to_chat(affected_mob, span_userdanger("Your body feels as if it's trying to rip itself apart!"))
 			if(DT_PROB(30, delta_time))
 				affected_mob.investigate_log("has been gibbed by GBS.", INVESTIGATE_DEATHS)
-				affected_mob.gib()
+				affected_mob.gib(DROP_ALL_REMAINS)
 				return FALSE

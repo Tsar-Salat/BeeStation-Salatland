@@ -376,7 +376,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/rune/malformed)
 		else
 			playsound(sacrificial, 'sound/magic/disintegrate.ogg', 100, 1)
 			sacrificial.investigate_log("has been sacrificially gibbed by the cult.", INVESTIGATE_DEATHS)
-			sacrificial.gib()
+			sacrificial.gib(DROP_ALL_REMAINS)
 	return TRUE
 
 
@@ -1016,8 +1016,8 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/rune/wall)
 	. = ..()
 	generate_psychic_mask()
 
-/mob/living/carbon/human/cult_ghost/spill_organs(no_brain, no_organs, no_bodyparts) //cult ghosts never drop a brain
-	no_brain = TRUE
+/mob/living/carbon/human/cult_ghost/spill_organs(drop_bitflags=NONE)
+	drop_bitflags &= ~DROP_BRAIN //cult ghosts never drop a brain
 	. = ..()
 
 /mob/living/carbon/human/cult_ghost/get_organs_for_zone(zone, include_children)
