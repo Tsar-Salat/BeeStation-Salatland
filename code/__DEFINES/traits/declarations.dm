@@ -394,6 +394,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_GRABWEAKNESS		"grab_weakness"
 #define TRAIT_BRAIN_TUMOR		"brain_tumor"
 #define TRAIT_PROSKATER			"pro_skater"
+#define TRAIT_SMOKER "smoker"
 #define TRAIT_PLUSHIELOVER		"plushie lover"
 #define TRAIT_COMPUTER_WHIZ		"computer_whiz"
 #define	TRAIT_ACCENT			"Accent"
