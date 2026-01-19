@@ -23,6 +23,8 @@
 	var/turns_since_move = 0
 	var/stop_automated_movement = 0 //Use this to temporarely stop random movement or to if you write special movement code for animals.
 	var/wander = TRUE	// Does the mob wander around when idle?
+	/// Makes Goto() return FALSE and not start a move loop
+	var/prevent_goto_movement = FALSE
 	var/stop_automated_movement_when_pulled = 1 //When set to 1 this stops the animal from moving when someone is pulling it.
 
 	///When someone interacts with the simple animal.
@@ -579,7 +581,7 @@
 	else
 		mode()
 
-/mob/living/simple_animal/swap_hand(hand_index)
+/mob/living/simple_animal/perform_hand_swap(hand_index)
 	. = ..()
 	if(!.)
 		return
@@ -604,17 +606,14 @@
 	update_held_items()
 
 /mob/living/simple_animal/update_held_items()
-	if(client && hud_used && hud_used.hud_version != HUD_STYLE_NOHUD)
-		var/obj/item/l_hand = get_item_for_held_index(1)
-		var/obj/item/r_hand = get_item_for_held_index(2)
-		if(r_hand)
-			r_hand.plane = ABOVE_HUD_PLANE
-			r_hand.screen_loc = ui_hand_position(get_held_index_of_item(r_hand))
-			client.screen |= r_hand
-		if(l_hand)
-			l_hand.plane = ABOVE_HUD_PLANE
-			l_hand.screen_loc = ui_hand_position(get_held_index_of_item(l_hand))
-			client.screen |= l_hand
+	. = ..()
+	if(!client || !hud_used || hud_used.hud_version == HUD_STYLE_NOHUD)
+		return
+	for(var/obj/item/I in held_items)
+		var/index = get_held_index_of_item(I)
+		I.plane = ABOVE_HUD_PLANE
+		I.screen_loc = ui_hand_position(index)
+		client.screen |= I
 
 //ANIMAL RIDING
 
@@ -651,13 +650,6 @@
 	if (pulledby || shouldwakeup)
 		toggle_ai(AI_ON)
 
-/mob/living/simple_animal/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
-	. = ..()
-	if(!ckey && !stat)//Not unconscious
-		if(AIStatus == AI_IDLE)
-			toggle_ai(AI_ON)
-
-
 /mob/living/simple_animal/onTransitZ(old_z, new_z)
 	..()
 	if (AIStatus == AI_Z_OFF)
@@ -668,6 +660,12 @@
 	. = ..()
 	if(.)
 		sentience_act(user)
+
+/mob/living/simple_animal/proc/Goto(target, delay, minimum_distance)
+	if(prevent_goto_movement)
+		return FALSE
+	SSmove_manager.move_to(src, target, minimum_distance, delay)
+	return TRUE
 
 //Makes this mob hunt the prey, be it living or an object. Will kill living creatures, and delete objects.
 /mob/living/simple_animal/proc/hunt(hunted)
@@ -680,9 +678,8 @@
 		return
 	if(!COOLDOWN_FINISHED(src, emote_cooldown)) // Has the cooldown on this ended?
 		return
-	if(!Adjacent(hunted))
+	if(!Adjacent(hunted) && Goto(hunted, 3, 0))
 		stop_automated_movement = TRUE
-		walk_to(src,hunted,0,3)
 		if(Adjacent(hunted))
 			hunt(hunted) // In case it gets next to the target immediately, skip the scan timer and kill it.
 		return

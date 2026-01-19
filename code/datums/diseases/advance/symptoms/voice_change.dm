@@ -28,6 +28,7 @@ Bonus
 	base_message_chance = 100
 	symptom_delay_min = 60
 	symptom_delay_max = 120
+	required_organ = ORGAN_SLOT_TONGUE
 	prefixes = list("Vocal ")
 	var/scramble_language = FALSE
 	var/datum/language/current_language
@@ -66,7 +67,7 @@ Bonus
 		else
 			if(ishuman(M))
 				var/mob/living/carbon/human/H = M
-				H.SetSpecialVoice(H.dna.species.random_name(H.gender))
+				H.SetSpecialVoice(H.generate_random_mob_name())
 				if(scramble_language && !current_language)	// Last part prevents rerolling language with small amounts of cure.
 					current_language = pick(subtypesof(/datum/language) - /datum/language/common)
 					H.add_blocked_language(subtypesof(/datum/language) - current_language, LANGUAGE_VOICECHANGE)

@@ -4,7 +4,6 @@
 	gender = FEMALE //All xenos are girls!!
 	dna = null
 	faction = list(FACTION_ALIEN)
-	ventcrawler = VENTCRAWLER_ALWAYS
 	sight = SEE_MOBS
 	see_in_dark = 4
 	verb_say = "hisses"
@@ -29,16 +28,18 @@
 	create_bodyparts() //initialize bodyparts
 	create_internal_organs()
 
+	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
+
 	return ..()
 
 /mob/living/carbon/alien/create_internal_organs()
-	internal_organs += new /obj/item/organ/brain/alien
-	internal_organs += new /obj/item/organ/alien/hivenode
-	internal_organs += new /obj/item/organ/tongue/alien
-	internal_organs += new /obj/item/organ/eyes/night_vision/alien
-	internal_organs += new /obj/item/organ/liver/alien
-	internal_organs += new /obj/item/organ/ears
-	return ..()
+	organs += new /obj/item/organ/brain/alien
+	organs += new /obj/item/organ/alien/hivenode
+	organs += new /obj/item/organ/tongue/alien
+	organs += new /obj/item/organ/eyes/night_vision/alien
+	organs += new /obj/item/organ/liver/alien
+	organs += new /obj/item/organ/ears
+	..()
 
 /mob/living/carbon/alien/assess_threat(judgment_criteria, lasercolor = "", datum/callback/weaponcheck=null) // beepsky won't hunt aliums
 	return -10

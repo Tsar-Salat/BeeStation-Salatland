@@ -55,7 +55,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 	if(!istype(H))
 		return
 	var/feetCover = (H.wear_suit && (H.wear_suit.body_parts_covered & FEET)) || (H.w_uniform && (H.w_uniform.body_parts_covered & FEET))
-	if(!HAS_TRAIT(H, TRAIT_ALWAYS_STUBS) && (H.shoes || feetCover || H.body_position == LYING_DOWN || HAS_TRAIT(H, TRAIT_PIERCEIMMUNE) || H.m_intent == MOVE_INTENT_WALK || H.dna?.species.bodytype & BODYTYPE_DIGITIGRADE))
+	if(!HAS_TRAIT(H, TRAIT_ALWAYS_STUBS) && (H.shoes || feetCover || H.body_position == LYING_DOWN || HAS_TRAIT(H, TRAIT_PIERCEIMMUNE) || H.m_intent == MOVE_INTENT_WALK || H.bodyshape & BODYSHAPE_DIGITIGRADE))
 		return
 	if(HAS_TRAIT(H, TRAIT_ALWAYS_STUBS) || ((world.time >= last_bump + 100) && prob(5)))
 		to_chat(H, span_warning("You stub your toe on the [name]!"))
@@ -132,10 +132,13 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 	if(locate(/obj/structure/table) in get_turf(mover))
 		return TRUE
 
-/obj/structure/table/CanAStarPass(obj/item/card/id/ID, to_dir, atom/movable/passing_atom)
-	. = !density
-	if(istype(passing_atom))
-		. = . || (passing_atom.pass_flags & PASSTABLE)
+
+/obj/structure/table/CanAStarPass(to_dir, datum/can_pass_info/pass_info)
+	if(!density)
+		return TRUE
+	if(pass_info.pass_flags & PASSTABLE)
+		return TRUE
+	return FALSE
 
 /obj/structure/table/proc/tableplace(mob/living/user, mob/living/pushed_mob)
 	pushed_mob.forceMove(loc)

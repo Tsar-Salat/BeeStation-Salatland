@@ -58,8 +58,6 @@
 
 #define ISADVANCEDTOOLUSER(mob) (HAS_TRAIT(mob, TRAIT_ADVANCEDTOOLUSER) && !HAS_TRAIT(mob, TRAIT_DISCOORDINATED_TOOL_USER))
 
-#define IS_IN_STASIS(mob) (mob.has_status_effect(/datum/status_effect/grouped/stasis))
-
 
 //Staggered slowdown, an effect caused by tackling
 #define STAGGERED_SLOWDOWN_LENGTH 3 SECONDS
@@ -121,6 +119,11 @@
 #define adjust_confusion_up_to(duration, up_to) adjust_timed_status_effect(duration, /datum/status_effect/confusion, up_to)
 #define set_confusion(duration) set_timed_status_effect(duration, /datum/status_effect/confusion)
 #define set_confusion_if_lower(duration) set_timed_status_effect(duration, /datum/status_effect/confusion, TRUE)
+
+#define adjust_silence(duration) adjust_timed_status_effect(duration, /datum/status_effect/silenced)
+#define adjust_silence_up_to(duration, up_to) adjust_timed_status_effect(duration, /datum/status_effect/silenced, up_to)
+#define set_silence(duration) set_timed_status_effect(duration, /datum/status_effect/silenced)
+#define set_silence_if_lower(duration) set_timed_status_effect(duration, /datum/status_effect/silenced, TRUE)
 
 #define adjust_hallucinations(duration) adjust_timed_status_effect(duration, /datum/status_effect/hallucination)
 #define adjust_hallucinations_up_to(duration, up_to) adjust_timed_status_effect(duration, /datum/status_effect/hallucination, up_to)
