@@ -212,7 +212,7 @@
 	if(istype(taser, /obj/item/mecha_parts/mecha_equipment))
 		var/obj/item/mecha_parts/mecha_equipment/taser_equipment = taser
 		if(!taser_equipment.chassis \
-			|| !taser_equipment.activated \
+			|| !taser_equipment.active \
 			|| taser_equipment.get_integrity() <= 1 \
 			|| taser_equipment.chassis.is_currently_ejecting \
 			|| taser_equipment.chassis.equipment_disabled \
@@ -308,7 +308,7 @@
 
 	// If you are covered in oil, then this provides the spark needed to ignite it
 	if(owner.fire_stacks < 0)
-		owner.IgniteMob()
+		owner.ignite_mob()
 
 	// clumsy people might hit their head while being tased
 	if(HAS_TRAIT(owner, TRAIT_CLUMSY) && owner.body_position == LYING_DOWN && DT_PROB(20, seconds_between_ticks))
