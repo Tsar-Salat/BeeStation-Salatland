@@ -36,7 +36,9 @@ export const SearchBar = (props: Props, content) => {
 
   return (
     <Stack fill style={style}>
-      <Stack.Item>{!noIcon && <Icon name="search" />}</Stack.Item>
+      <Stack.Item align="center">
+        {!noIcon && <Icon name="search" />}
+      </Stack.Item>
       <Stack.Item grow>
         <Input
           autoFocus={autoFocus}
