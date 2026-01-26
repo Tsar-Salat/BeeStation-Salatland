@@ -176,7 +176,7 @@ const Program = (props) => {
   return (
     <Section>
       <Stack align="baseline">
-        <Stack.Item grow={1} blod>
+        <Stack.Item grow bold>
           <Icon name={program.icon} mr={1} />
           {program.filedesc}
         </Stack.Item>

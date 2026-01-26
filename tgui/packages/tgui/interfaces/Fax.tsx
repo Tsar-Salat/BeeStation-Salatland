@@ -91,7 +91,7 @@ export const Fax = (props) => {
               ).map((special: FaxSpecial) => (
                 <Button
                   key={special.fax_id}
-                  title={special.fax_name}
+                  tooltip={special.fax_name}
                   disabled={!data.has_paper}
                   color={special.color}
                   onClick={() =>
@@ -107,7 +107,7 @@ export const Fax = (props) => {
               {faxes.map((fax: FaxInfo) => (
                 <Button
                   key={fax.fax_id}
-                  title={fax.fax_name}
+                  tooltip={fax.fax_name}
                   disabled={!data.has_paper}
                   color={fax.syndicate_network ? 'red' : 'blue'}
                   onClick={() =>

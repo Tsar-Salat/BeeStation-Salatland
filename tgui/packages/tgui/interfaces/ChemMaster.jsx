@@ -172,7 +172,7 @@ const ChemMasterContent = (props) => {
               fluid
               value={saved_name}
               placeholder="Name"
-              onInput={(e, value) => {
+              onChange={(e, value) => {
                 act('setSavedName', { name: value });
               }}
             />
@@ -258,7 +258,7 @@ const ChemicalBufferEntry = (props) => {
         />
         <Button
           icon="ellipsis-h"
-          title="Custom amount"
+          tooltip="Custom amount"
           onClick={() =>
             act('transfer', {
               id: chemical.id,
@@ -269,7 +269,7 @@ const ChemicalBufferEntry = (props) => {
         />
         <Button
           icon="question"
-          title="Analyze"
+          tooltip="Analyze"
           onClick={() =>
             act('analyze', {
               id: chemical.id,

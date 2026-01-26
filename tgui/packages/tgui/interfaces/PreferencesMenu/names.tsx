@@ -206,7 +206,7 @@ export const NameInput = (props: {
             <Input
               autoSelect
               onEnter={updateName}
-              onChange={updateName}
+              onBlur={updateName}
               fluid
               onEscape={() => {
                 setLastNameBeforeEdit(null);

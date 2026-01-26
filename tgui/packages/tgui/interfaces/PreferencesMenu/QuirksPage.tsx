@@ -66,8 +66,6 @@ function QuirkDisplay(props: QuirkDisplayProps) {
   const child = (
     <Box
       className={className}
-      role="button"
-      tabIndex="1"
       onClick={(event) => {
         event.stopPropagation();
         if (selected) {

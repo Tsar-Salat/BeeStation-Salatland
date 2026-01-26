@@ -89,7 +89,7 @@ const MessageModal = (props) => {
             height="20vh"
             backgroundColor="black"
             textColor="white"
-            onInput={(_, value) => {
+            onChange={(_, value) => {
               setInput(value.substring(0, maxMessageLength));
             }}
             value={input}

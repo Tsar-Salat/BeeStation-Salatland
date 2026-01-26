@@ -1,7 +1,8 @@
 import { isEscape, KEY } from 'common/keys';
+import { KeyboardEvent, useState } from 'react';
 
 import { decodeHtmlEntities } from '../../common/string';
-import { useBackend, useLocalState } from '../backend';
+import { useBackend } from '../backend';
 import { Box, Section, Stack, TextArea } from '../components';
 import { Window } from '../layouts';
 import { InputButtons } from './common/InputButtons';
@@ -32,11 +33,11 @@ export const TextInputModal = (_) => {
     max_length,
     message = '',
     multiline,
-    placeholder,
+    placeholder = '',
     timeout,
     title,
   } = data;
-  const [input, setInput] = useLocalState<string>('input', placeholder || '');
+  const [input, setInput] = useState(placeholder);
   const onType = (value: string) => {
     if (value === input) {
       return;
@@ -107,13 +108,14 @@ const InputArea = (props) => {
       height={multiline || input.length >= 30 ? '100%' : '1.8rem'}
       maxLength={max_length}
       onEscape={() => act('cancel')}
-      onEnter={(event) => {
+      onEnter={(event: KeyboardEvent<HTMLTextAreaElement>) => {
         if (visualMultiline && event.shiftKey) {
           return;
         }
         event.preventDefault();
         act('submit', { entry: input });
       }}
+      onChange={(_, value) => onType(value)}
       onInput={(_, value) => onType(value)}
       placeholder="Type something..."
       value={input}

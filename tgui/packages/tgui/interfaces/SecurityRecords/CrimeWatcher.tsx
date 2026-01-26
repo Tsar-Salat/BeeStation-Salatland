@@ -291,7 +291,6 @@ const CrimeAuthor = (props) => {
         <TextArea
           height={4}
           maxLength={1025}
-          multiline
           onChange={(_, value) => setCrimeDetails(value)}
           fluid
           placeholder="Type some details..."

@@ -3,6 +3,7 @@ import { capitalizeAll } from 'common/string';
 
 import { useBackend, useSharedState } from '../backend';
 import {
+  BlockQuote,
   Box,
   Button,
   Icon,
@@ -297,7 +298,7 @@ const DirectiveDisplay = (_) => {
                 Serve your master.
               </LabeledList.Item>
               <LabeledList.Item label="Supplemental">
-                <Box wrap>{directives}</Box>
+                <BlockQuote>{directives}</BlockQuote>
               </LabeledList.Item>
             </LabeledList>
           )}
@@ -465,7 +466,7 @@ const SoftwareButtons = (props) => {
       return (
         <>
           <Button
-            disabled={door_jack}
+            disabled={!!door_jack}
             icon="plug"
             onClick={() => act('door_jack', { jack: 'cable' })}
           >

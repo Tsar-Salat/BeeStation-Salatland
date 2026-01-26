@@ -142,7 +142,7 @@ export const LaunchpadControl = (props) => {
         <Input
           value={pad_name}
           width="170px"
-          onChange={(e, value) =>
+          onBlur={(value) =>
             act('rename', {
               name: value,
             })

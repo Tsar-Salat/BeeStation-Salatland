@@ -1,4 +1,4 @@
-import { Icon, Input, Stack } from '.';
+import { Icon, Input, Stack } from '../../components';
 
 type RequiredProps = {
   /** The state variable. */
@@ -10,6 +10,8 @@ type RequiredProps = {
 type OptionalProps = Partial<{
   /** Whether the input should be focused on mount. */
   autoFocus: boolean;
+  /** Whether to debounce the input. For huge lists. */
+  expensive: boolean;
   /** Whether to show the search icon. */
   noIcon: boolean;
   /** The placeholder text. */
@@ -27,6 +29,7 @@ type Props = RequiredProps & OptionalProps;
 export const SearchBar = (props: Props, content) => {
   const {
     autoFocus,
+    expensive,
     noIcon = false,
     onSearch,
     placeholder = 'Search...',
@@ -42,6 +45,7 @@ export const SearchBar = (props: Props, content) => {
       <Stack.Item grow>
         <Input
           autoFocus={autoFocus}
+          expensive={expensive}
           fluid
           onInput={(e, value) => onSearch(value)}
           placeholder={placeholder}

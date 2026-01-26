@@ -266,7 +266,7 @@ export class IntegratedCircuit extends Component {
                   fluid
                   placeholder="Circuit Name"
                   value={display_name}
-                  onChange={(e, value) =>
+                  onBlur={(value) =>
                     act('set_display_name', { display_name: value })
                   }
                 />

@@ -9,7 +9,6 @@ import {
   Component,
   createRef,
   RefObject,
-  UIEvent,
   UIEventHandler,
 } from 'react';
 
@@ -293,7 +292,7 @@ export class PrimaryView extends Component {
     this.scrollableRef = createRef();
     this.lastDistanceFromBottom = 0;
 
-    this.onScrollHandler = (ev: UIEvent) => {
+    this.onScrollHandler = (ev) => {
       const scrollable = ev.currentTarget as HTMLDivElement;
       if (scrollable) {
         this.lastDistanceFromBottom =
@@ -394,9 +393,9 @@ export class PrimaryView extends Component {
                   textColor={useColor}
                   fontFamily={useFont}
                   bold={useBold}
-                  height={'100%'}
+                  height="100%"
                   backgroundColor={paper_color}
-                  onInput={(e, text) => {
+                  onChange={(e, text) => {
                     setTextAreaText(text);
 
                     if (this.scrollableRef.current) {
@@ -962,12 +961,12 @@ export class PreviewView extends Component<PreviewViewProps> {
         fitted
         scrollable
         ref={scrollableRef}
-        onScroll={handleOnScroll}
+        onScroll={handleOnScroll as any}
       >
         <Box
           fillPositionedParent
           position="relative"
-          bottom={'100%'}
+          bottom="100%"
           minHeight="100%"
           backgroundColor={paper_color}
           className="Paper__Page"

@@ -118,12 +118,14 @@ export const StackCrafting = (_props) => {
 
   return (
     <Window width={400} height={height} theme="generic">
+      <Window.Content>
         <Section
           fill
           scrollable
           title={'Amount: ' + amount}
           buttons={
             <SearchBar
+              expensive
               style={{ width: '15em' }}
               query={searchText}
               onSearch={(value) => setSearchText(value)}

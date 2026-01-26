@@ -38,7 +38,7 @@ export const Vendatray = (props) => {
           </Flex.Item>
         </Flex>
         {registered ? (
-          <Section italics>Pays to the account of {owner_name}.</Section>
+          <Section italic>Pays to the account of {owner_name}.</Section>
         ) : (
           <>
             <Section>Tray is unregistered.</Section>

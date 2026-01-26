@@ -61,7 +61,7 @@ const GasSearchBar = (props: {
         {activeInput ? (
           <Input
             fluid
-            onChange={(e, value) => {
+            onBlur={(value) => {
               setActiveInput(false);
               onChange(value);
             }}
