@@ -26,8 +26,9 @@
 	. = ..()
 	if(pockets)
 		create_storage(storage_type = /datum/storage/pockets/exo)
+
 /obj/item/clothing/suit/worn_overlays(mutable_appearance/standing, isinhands = FALSE, icon_file, item_layer, atom/origin)
-	. = list()
+	. = ..()
 	if(!isinhands)
 		if(damaged_clothes)
 			. += mutable_appearance('icons/effects/item_damage.dmi', "damageduniform", item_layer)
@@ -38,16 +39,20 @@
 		var/mob/living/carbon/human/M = loc
 		if(ishuman(M) && M.w_uniform)
 			var/obj/item/clothing/under/U = M.w_uniform
-			if(istype(U) && U.attached_accessory)
-				var/obj/item/clothing/accessory/A = U.attached_accessory
-				if(A.above_suit)
-					. += U.accessory_overlay
+			if(istype(U))
+				if (U.accessory_overlay_over)
+					U.accessory_overlay_over.layer = item_layer + 0.0001
+					. += U.accessory_overlay_over
 
 /obj/item/clothing/suit/update_clothes_damaged_state(damaged_state = CLOTHING_DAMAGED)
 	..()
 	if(ismob(loc))
 		var/mob/M = loc
 		M.update_worn_oversuit()
+
+/obj/item/clothing/suit/generate_digitigrade_icons(icon/base_icon, greyscale_colors)
+	var/icon/legs = icon(SSgreyscale.GetColoredIconByType(/datum/greyscale_config/digitigrade, greyscale_colors), "oversuit_worn")
+	return replace_icon_legs(base_icon, legs)
 
 /obj/item/clothing/suit/proc/on_mob_move()
 	SIGNAL_HANDLER

@@ -2,6 +2,7 @@
 
 /mob/living/silicon/pai
 	name = "pAI"
+	desc = "A generic pAI mobile hard-light holographics emitter. It seems to be deactivated."
 	icon = 'icons/mob/pai.dmi'
 	icon_state = "repairbot"
 	mouse_opacity = MOUSE_OPACITY_ICON
@@ -9,8 +10,7 @@
 	hud_type = /datum/hud/pai
 	pass_flags = PASSTABLE | PASSMOB
 	mob_size = MOB_SIZE_TINY
-	desc = "A generic pAI mobile hard-light holographics emitter. It seems to be deactivated."
-	weather_immunities = list("ash")
+	mobility_flags = MOBILITY_FLAGS_REST_CAPABLE_DEFAULT
 	health = 500
 	maxHealth = 500
 	layer = BELOW_MOB_LAYER
@@ -201,6 +201,9 @@
 	if(!holoform)
 		ADD_TRAIT(src, TRAIT_IMMOBILIZED, PAI_FOLDED)
 		ADD_TRAIT(src, TRAIT_HANDS_BLOCKED, PAI_FOLDED)
+
+	RegisterSignals(src, list(COMSIG_LIVING_ADJUST_BRUTE_DAMAGE, COMSIG_LIVING_ADJUST_BURN_DAMAGE), PROC_REF(on_shell_damaged))
+	RegisterSignal(src, COMSIG_LIVING_ADJUST_STAMINA_DAMAGE, PROC_REF(on_shell_weakened))
 
 	return INITIALIZE_HINT_LATELOAD
 

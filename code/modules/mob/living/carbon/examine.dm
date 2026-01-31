@@ -138,9 +138,9 @@
 			. += "[t_He] look[p_s()] extremely disgusted."
 
 	var/apparent_blood_volume = blood_volume
-	if(ishuman(src))
-		var/mob/living/carbon/human/human_us = src // gross istypesrc but easier than refactoring even further for now
-		if(human_us.dna.species.use_skintones && human_us.skin_tone == "albino")
+	if(HAS_TRAIT(src, TRAIT_USES_SKINTONES) && ishuman(src))
+		var/mob/living/carbon/human/husrc = src // gross istypesrc but easier than refactoring even further for now
+		if(husrc.skin_tone == "albino")
 			apparent_blood_volume -= (BLOOD_VOLUME_NORMAL * 0.25) // knocks you down a few pegs
 	switch(apparent_blood_volume)
 		if(BLOOD_VOLUME_OKAY to BLOOD_VOLUME_SAFE)
@@ -310,6 +310,8 @@
 			. += "[t_He] [t_has] [glasses.examine_title(user)] covering [t_his] eyes."
 		else if(HAS_TRAIT(src, CULT_EYES))
 			. += span_boldwarning("[t_His] eyes are glowing with an unnatural red aura!")
+		else if(HAS_TRAIT(src, TRAIT_BLOODSHOT_EYES))
+			. += span_boldwarning("[t_His] eyes are bloodshot!")
 	//ears
 	if(ears && !(obscured & ITEM_SLOT_EARS) && !HAS_TRAIT(ears, TRAIT_EXAMINE_SKIP))
 		. += "[t_He] [t_has] [ears.examine_title(user)] on [t_his] ears."
@@ -342,6 +344,8 @@
 			. += "[t_He] [t_has] [glasses.examine_worn_title(src, user)] covering [t_his] eyes."
 		else if(HAS_TRAIT(src, CULT_EYES))
 			. += span_boldwarning("[t_His] eyes are glowing with an unnatural red aura!")
+		else if(HAS_TRAIT(src, TRAIT_BLOODSHOT_EYES))
+			. += span_boldwarning("[t_His] eyes are bloodshot!")
 	//ears
 	if(ears && !(obscured & ITEM_SLOT_EARS) && !HAS_TRAIT(ears, TRAIT_EXAMINE_SKIP))
 		. += "[t_He] [t_has] [ears.examine_worn_title(src, user)] on [t_his] ears."
@@ -424,8 +428,8 @@
 	. = list()
 
 	var/list/cybers = list()
-	for(var/obj/item/organ/cyberimp/cyberimp in internal_organs)
-		if(cyberimp.status == ORGAN_ROBOTIC && !cyberimp.syndicate_implant)
+	for(var/obj/item/organ/cyberimp/cyberimp in organs)
+		if(IS_ROBOTIC_ORGAN(cyberimp) && !(cyberimp.organ_flags & ORGAN_HIDDEN))
 			cybers += cyberimp.examine_title(user)
 	if(length(cybers))
 		. += "<span class='notice ml-1'>Detected cybernetic modifications:</span>"

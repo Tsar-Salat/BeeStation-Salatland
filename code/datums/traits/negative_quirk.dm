@@ -96,7 +96,7 @@
 	)
 	where = H.equip_in_one_of_slots(P, slots, FALSE)
 
-/datum/quirk/brainproblems/post_spawn()
+/datum/quirk/brainproblems/post_add()
 	if(where)
 		to_chat(quirk_target, span_boldnotice("There is a bottle of mannitol [where]. You're going to need it."))
 	else
@@ -117,7 +117,6 @@
 	desc = "You sometimes just hate life."
 	icon = "frown"
 	quirk_value = -1
-	mob_trait = TRAIT_DEPRESSION
 	gain_text = span_danger("You start feeling depressed.")
 	lose_text = span_notice("You no longer feel depressed.") //if only it were that easy!
 	medical_record_text = "Patient has a severe mood disorder causing them to experience sudden moments of sadness."
@@ -235,7 +234,7 @@
 	)
 	where = H.equip_in_one_of_slots(heirloom, slots, FALSE) || "at your feet"
 
-/datum/quirk/family_heirloom/post_spawn()
+/datum/quirk/family_heirloom/post_add()
 	if(where == "in your backpack")
 		var/mob/living/carbon/human/H = quirk_target
 		H.back.atom_storage.show_contents(H)
@@ -402,7 +401,6 @@
 	desc = "You have a mental disorder that prevents you from being able to recognize faces at all."
 	icon = "user-secret"
 	quirk_value = -1
-	mob_trait = TRAIT_PROSOPAGNOSIA
 	medical_record_text = "Patient suffers from prosopagnosia and cannot recognize faces."
 
 /datum/quirk/prosthetic_limb
@@ -432,7 +430,7 @@
 	H.del_and_replace_bodypart(prosthetic)
 	medical_record_text = "Patient uses a low-budget prosthetic on the [prosthetic.name]."
 
-/datum/quirk/prosthetic_limb/post_spawn()
+/datum/quirk/prosthetic_limb/post_add()
 	to_chat(quirk_target, span_boldannounce("Your [slot_string] has been replaced with a surplus prosthetic. It is fragile and will easily come apart under duress. Additionally, \
 	you need to use a welding tool and cables to repair it, instead of bruise packs and ointment."))
 
@@ -475,7 +473,7 @@
 
 	carbon_quirk_holder.gain_trauma(added_trauma)
 
-/datum/quirk/insanity/post_spawn()
+/datum/quirk/insanity/post_add()
 	if(!quirk_holder || quirk_holder.special_role)
 		return
 	// I don't /think/ we'll need this, but for newbies who think "roleplay as insane" = "license to kill",
@@ -501,11 +499,11 @@
 			nearby_people++
 	var/mob/living/carbon/human/H = quirk_target
 	if(DT_PROB(2 + nearby_people, delta_time))
-		H.adjust_stutter(0.5 SECONDS)
+		H.set_silence_if_lower(6 SECONDS)
 		SEND_SIGNAL(quirk_target, COMSIG_ADD_MOOD_EVENT, "anxiety", /datum/mood_event/anxiety)
-	else if(DT_PROB(min(3, nearby_people), delta_time) && !H.silent)
+	else if(DT_PROB(min(3, nearby_people), delta_time) && !H.has_status_effect(/datum/status_effect/silenced))
 		to_chat(H, span_danger("You retreat into yourself. You <i>really</i> don't feel up to talking."))
-		H.silent = max(10, H.silent)
+		H.set_silence_if_lower(10 SECONDS)
 		SEND_SIGNAL(quirk_target, COMSIG_ADD_MOOD_EVENT, "anxiety_mute", /datum/mood_event/anxiety_mute)
 	else if(DT_PROB(0.5, delta_time) && dumb_thing)
 		to_chat(H, span_userdanger("You think of a dumb thing you said a long time ago and scream internally."))
@@ -566,7 +564,7 @@
 		where_accessory = H.equip_in_one_of_slots(accessory_instance, slots, FALSE) || "at your feet"
 	announce_drugs()
 
-/datum/quirk/junkie/post_spawn()
+/datum/quirk/junkie/post_add()
 	if(where_drug == "in your backpack" || where_accessory == "in your backpack")
 		var/mob/living/carbon/human/H = quirk_target
 		H.back.atom_storage.show_contents(H)
@@ -654,7 +652,7 @@
 	var/mob/living/carbon/human/H = quirk_target
 	where_drink = H.equip_in_one_of_slots(drink_instance, slots, FALSE) || "at your feet"
 
-/datum/quirk/alcoholic/post_spawn()
+/datum/quirk/alcoholic/post_add()
 	to_chat(quirk_target, span_boldnotice("There is a small bottle of [drink_instance] [where_drink]. You only have a single bottle, might have to find some more..."))
 
 /datum/quirk/alcoholic/on_process()

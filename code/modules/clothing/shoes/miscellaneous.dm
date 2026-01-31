@@ -4,6 +4,7 @@
 	desc = "High speed, low drag combat boots."
 	icon_state = "jackboots"
 	inhand_icon_state = "jackboots"
+	supports_variations_flags = CLOTHING_DIGITIGRADE_MASK
 	lefthand_file = 'icons/mob/inhands/equipment/security_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/security_righthand.dmi'
 	armor_type = /datum/armor/shoes_combat
@@ -159,6 +160,7 @@
 	desc = "Nanotrasen-issue Security combat boots for combat scenarios or combat situations. All combat, all the time."
 	icon_state = "sec_jackboots"
 	inhand_icon_state = "sec_jackboots"
+	supports_variations_flags = CLOTHING_DIGITIGRADE_MASK
 	lefthand_file = 'icons/mob/inhands/equipment/security_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/security_righthand.dmi'
 	strip_delay = 30
@@ -199,6 +201,7 @@
 	desc = "Boots lined with 'synthetic' animal fur."
 	icon_state = "winterboots"
 	inhand_icon_state = "winterboots"
+	supports_variations_flags = CLOTHING_DIGITIGRADE_MASK
 	armor_type = /datum/armor/shoes_winterboots
 	cold_protection = FEET|LEGS
 	min_cold_protection_temperature = SHOES_MIN_TEMP_PROTECT
@@ -231,6 +234,7 @@
 	desc = "Nanotrasen-issue Engineering lace-up work boots for the especially blue-collar."
 	icon_state = "workboots"
 	inhand_icon_state = "jackboots"
+	supports_variations_flags = CLOTHING_DIGITIGRADE_MASK
 	lefthand_file = 'icons/mob/inhands/equipment/security_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/security_righthand.dmi'
 	armor_type = /datum/armor/shoes_workboots
@@ -336,11 +340,13 @@
 
 	var/atom/target = get_edge_target_turf(user, user.dir) //gets the user's direction
 
-	if (user.throw_at(target, jumpdistance, jumpspeed, spin = FALSE, diagonals_first = TRUE))
+	ADD_TRAIT(user, TRAIT_MOVE_FLOATING, LEAPING_TRAIT)  //Throwing itself doesn't protect mobs against lava (because gulag).
+	if (user.throw_at(target, jumpdistance, jumpspeed, spin = FALSE, diagonals_first = TRUE, callback = TRAIT_CALLBACK_REMOVE(user, TRAIT_MOVE_FLOATING, LEAPING_TRAIT)))
 		playsound(src, 'sound/effects/stealthoff.ogg', 50, 1, 1)
 		user.visible_message(span_warning("[usr] dashes forward into the air!"))
 		recharging_time = world.time + recharging_rate
 	else
+		REMOVE_TRAIT(user, TRAIT_MOVE_FLOATING, LEAPING_TRAIT)
 		to_chat(user, span_warning("Something prevents you from dashing forward!"))
 
 /obj/item/clothing/shoes/singery

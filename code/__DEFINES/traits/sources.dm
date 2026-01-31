@@ -40,6 +40,8 @@
 #define RESTING_TRAIT "resting"
 //trait associated to a stat value or range of
 #define STAT_TRAIT "stat"
+/// obtained from mapping helper
+#define MAPPING_HELPER_TRAIT "mapping-helper"
 /// Trait associated to wearing a suit
 #define SUIT_TRAIT "suit"
 /// Trait associated to lying down (having a [lying_angle] of a different value than zero).
@@ -51,7 +53,8 @@
 #define STATION_TRAIT "station-trait"
 #define TRAIT_RUSTY "rust_trait"
 #define ACTION_TRAIT "action_trait"
-#define TURF_TRAIT "turf"
+#define TRAIT_LEANING "leaning"
+#define TRAIT_REGEN_COMA "regencoma"
 
 // unique trait sources, still defines
 #define CLONING_POD_TRAIT "cloning-pod"
@@ -102,7 +105,6 @@
 #define HOLOPARASITE_SCOUT_TRAIT	"holopara_scout_trait"
 #define HOLOPARASITE_STAT_TRAIT		"holopara_stat_trait"
 #define PARRY_TRAIT	"parry_trait"
-#define LIGHTPINK_TRAIT "lightpinktrait"
 #define BATTLE_ROYALE_TRAIT "battleroyale_trait"
 #define MADE_UNCLONEABLE "made-uncloneable"
 #define TRAIT_JAWS_OF_LIFE "jaws-of-life"
@@ -116,8 +118,12 @@
 #define HANDCUFFED_TRAIT "handcuffed"
 /// Trait granted by [/obj/item/warpwhistle]
 #define WARPWHISTLE_TRAIT "warpwhistle"
-/// Trait sorce for "was recently shocked by something"
+/// Trait source for "was recently shocked by something"
 #define WAS_SHOCKED "was_shocked"
+/// Trait source for turfs
+#define TURF_TRAIT "turf"
+/// Trait granted by lipstick
+#define LIPSTICK_TRAIT "lipstick_trait"
 /// Trait applied by by [/datum/component/soulstoned]
 #define SOULSTONE_TRAIT "soulstone"
 /// Trait applied to slimes by low temperature
@@ -130,7 +136,8 @@
 #define BRAIN_UNAIDED "brain-unaided"
 /// Trait applied by MODsuits.
 #define MOD_TRAIT "mod"
-#define TRAIT_PRESERVE_UI_WITHOUT_CLIENT "preserve_ui_without_client" //this mob should never close ui even if it doesn't have a client
+/// This mob should never close UI even if it doesn't have a client
+#define TRAIT_PRESERVE_UI_WITHOUT_CLIENT "preserve_ui_without_client"
 #define EXPERIMENTAL_SURGERY_TRAIT "experimental_surgery"
 #define NINJA_KIDNAPPED_TRAIT "ninja_kidnapped"
 #define TABLE_TRAIT "table_trait"
@@ -141,6 +148,15 @@
 #define BASIC_MOB_DEATH_TRAIT "basic_mob_death"
 /// Trait applied to a mob when it gets a required "operational datum" (components/elements). Sends out the source as the type of the element.
 #define TRAIT_SUBTREE_REQUIRED_OPERATIONAL_DATUM "element-required"
+/// Don't draw external organs/species features like wings, horns, frills and stuff
+#define TRAIT_HIDE_EXTERNAL_ORGANS "hide_external_organs"
+///When people are floating from zero-grav or something, we can move around freely!
+#define TRAIT_FREE_FLOAT_MOVEMENT "free_float_movement"
+
+/// Trait given by stabilized light pink extracts
+#define STABILIZED_LIGHT_PINK_EXTRACT_TRAIT "stabilized_light_pink"
+/// Trait given by adamantine extracts
+#define ADAMANTINE_EXTRACT_TRAIT "adamantine_extract"
 
 /// This trait comes from when a mob is currently typing.
 #define CURRENTLY_TYPING_TRAIT "currently_typing"
@@ -151,12 +167,44 @@
 #define LIFECANDLE_TRAIT "lifecandle"
 #define LEAPER_BUBBLE_TRAIT "leaper-bubble"
 #define NEGATIVE_GRAVITY_TRAIT "negative-gravity"
+
+/// A trait gained from a mob's leap action, like the leaper
+#define LEAPING_TRAIT "leaping"
 /// Sources for TRAIT_IGNORING_GRAVITY
 #define IGNORING_GRAVITY_NEGATION "ignoring_gravity_negation"
 #define FROM_SHADOW_SECT "shadow_sect"
 
+/**
+* Trait granted by [/mob/living/carbon/Initialize] and
+* granted/removed by [/obj/item/organ/internal/tongue]
+* Used for ensuring that carbons without tongues cannot taste anything
+* so it is added in Initialize, and then removed when a tongue is inserted
+* and readded when a tongue is removed.
+*/
+#define NO_TONGUE_TRAIT "no_tongue_trait"
+
+// specific sources for TRAIT_SPEAKS_CLEARLY
+
+///trait source that tongues should use
+#define SPEAKING_FROM_TONGUE "tongue"
+///trait source that sign language should use
+#define SPEAKING_FROM_HANDS "hands"
+
 /// Trait granted by [/mob/living/silicon/robot]
 /// Traits applied to a silicon mob by their module.
 #define MODULE_TRAIT "module_trait"
+/// Trait from an organ being inside a bodypart
+#define ORGAN_INSIDE_BODY_TRAIT "organ_inside_body"
 /// trait that prevents AI controllers from planning detached from ai_status to prevent weird state stuff.
 #define TRAIT_AI_PAUSED "TRAIT_AI_PAUSED"
+/// Source for chameleon ietms
+#define FROM_CHAMELEON "from_chameleon"
+
+/// some trait sorces dirived from bodyparts BODYPART_TRAIT is generic.
+#define BODYPART_TRAIT "bodypart"
+#define HEAD_TRAIT "head"
+#define CHEST_TRAIT "chest"
+#define RIGHT_ARM_TRAIT "right_arm"
+#define LEFT_ARM_TRAIT "left_arm"
+#define RIGHT_LEG_TRAIT "right_leg"
+#define LEFT_LEG_TRAIT "left_leg"

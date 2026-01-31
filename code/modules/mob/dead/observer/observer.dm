@@ -6,7 +6,7 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_SPIRIT)
 /mob/dead/observer
 	name = "ghost"
 	desc = "It's a g-g-g-g-ghooooost!" //jinkies!
-	icon = 'icons/mob/mob.dmi'
+	icon = 'icons/mob/observer.dmi'
 	icon_state = "ghost"
 	plane = GHOST_PLANE
 	stat = DEAD
@@ -49,19 +49,19 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_SPIRIT)
 	var/virus_scan = FALSE //Are virus extrapolator scans currently enabled?
 	var/genetics_scan = FALSE //Are genetic scans currently enabled?
 	var/nanite_scan = FALSE //Are nanite scans currently enabled?
-	var/list/datahuds = list(DATA_HUD_SECURITY_ADVANCED, DATA_HUD_MEDICAL_ADVANCED, DATA_HUD_DIAGNOSTIC_ADVANCED) //list of data HUDs shown to ghosts.
+	var/list/datahuds = list(DATA_HUD_SECURITY_ADVANCED, DATA_HUD_MEDICAL_ADVANCED, DATA_HUD_DIAGNOSTIC_ADVANCED, DATA_HUD_HACKED_APC) //list of data HUDs shown to ghosts.
 	var/ghost_orbit = GHOST_ORBIT_CIRCLE
 
 	//These variables store hair data if the ghost originates from a species with head and/or facial hair.
-	var/hair_style
+	var/hairstyle
 	var/hair_color
 	var/mutable_appearance/hair_overlay
-	var/facial_hair_style
+	var/facial_hairstyle
 	var/facial_hair_color
 	var/mutable_appearance/facial_hair_overlay
 
-	var/updatedir = 1						//Do we have to update our dir as the ghost moves around?
-	var/lastsetting = null	//Stores the last setting that ghost_others was set to, for a little more efficiency when we update ghost images. Null means no update is necessary
+	var/updatedir = 1 //Do we have to update our dir as the ghost moves around?
+	var/lastsetting = null //Stores the last setting that ghost_others was set to, for a little more efficiency when we update ghost images. Null means no update is necessary
 
 	//We store copies of the ghost display preferences locally so they can be referred to even if no client is connected.
 	//If there's a bug with changing your ghost settings, it's probably related to this.
@@ -98,19 +98,13 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_SPIRIT)
 	var/turf/T
 	var/mob/body = loc
 	if(ismob(body))
-		T = get_turf(body)				//Where is the body located?
+		T = get_turf(body) //Where is the body located?
 
 		gender = body.gender
 		if(body.mind && body.mind.name)
-			if(body.mind.ghostname)
-				name = body.mind.ghostname
-			else
-				name = body.mind.name
+			name = body.mind.ghostname || body.mind.name
 		else
-			if(body.real_name)
-				name = body.real_name
-			else
-				name = random_unique_name(gender)
+			name = body.real_name || generate_random_mob_name(gender)
 
 		mind = body.mind	//we don't transfer the mind but we keep a reference to it.
 
@@ -118,18 +112,13 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_SPIRIT)
 
 		if(ishuman(body))
 			var/mob/living/carbon/human/body_human = body
-			if(!body_human.real_name)
-				name = body_human.dna.species.random_name(body.gender, TRUE)
-
-			if(HAIR in body_human.dna.species.species_traits)
-				hair_style = body_human.hair_style
+			var/datum/species/human_species = body_human.dna.species
+			if(human_species.check_head_flags(HEAD_HAIR))
+				hairstyle = body_human.hairstyle
 				hair_color = brighten_color(body_human.hair_color)
-			if(FACEHAIR in body_human.dna.species.species_traits)
-				facial_hair_style = body_human.facial_hair_style
+			if(human_species.check_head_flags(HEAD_FACIAL_HAIR))
+				facial_hairstyle = body_human.facial_hairstyle
 				facial_hair_color = brighten_color(body_human.facial_hair_color)
-
-	name ||= random_unique_name(gender)//To prevent nameless ghosts
-	real_name = name
 
 	update_icon()
 
@@ -141,6 +130,10 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_SPIRIT)
 			T = SSmapping.get_station_center()
 
 	abstract_move(T)
+
+	//To prevent nameless ghosts
+	name ||= generate_random_mob_name(FALSE)
+	real_name = name
 
 	if(!fun_verbs)
 		remove_verb(/mob/dead/observer/verb/boo)
@@ -237,25 +230,24 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_SPIRIT)
 	if((ghost_accs == GHOST_ACCS_DIR || ghost_accs == GHOST_ACCS_FULL) && (icon_state in GLOB.ghost_forms_with_directions_list)) //if this icon has dirs AND the client wants to show them, we make sure we update the dir on movement
 		updatedir = 1
 	else
-		updatedir = 0	//stop updating the dir in case we want to show accessories with dirs on a ghost sprite without dirs
-		setDir(2 		)//reset the dir to its default so the sprites all properly align up
+		updatedir = 0 //stop updating the dir in case we want to show accessories with dirs on a ghost sprite without dirs
+		setDir(2) //reset the dir to its default so the sprites all properly align up
 
 	if(ghost_accs == GHOST_ACCS_FULL && (icon_state in GLOB.ghost_forms_with_accessories_list)) //check if this form supports accessories and if the client wants to show them
-		var/datum/sprite_accessory/S
-		if(facial_hair_style)
-			S = GLOB.facial_hair_styles_list[facial_hair_style]
-			if(S?.icon_state)
+		if(facial_hairstyle)
+			var/datum/sprite_accessory/S = SSaccessories.facial_hairstyles_list[facial_hairstyle]
+			if(S)
 				facial_hair_overlay = mutable_appearance(S.icon, "[S.icon_state]", CALCULATE_MOB_OVERLAY_LAYER(HAIR_LAYER))
 				if(facial_hair_color)
-					facial_hair_overlay.color = "#" + facial_hair_color
+					facial_hair_overlay.color = facial_hair_color
 				facial_hair_overlay.alpha = 200
 				add_overlay(facial_hair_overlay)
-		if(hair_style)
-			S = GLOB.hair_styles_list[hair_style]
-			if(S?.icon_state)
+		if(hairstyle)
+			var/datum/sprite_accessory/hair/S = SSaccessories.hairstyles_list[hairstyle]
+			if(S)
 				hair_overlay = mutable_appearance(S.icon, "[S.icon_state]", CALCULATE_MOB_OVERLAY_LAYER(HAIR_LAYER))
 				if(hair_color)
-					hair_overlay.color = "#" + hair_color
+					hair_overlay.color = hair_color
 				hair_overlay.alpha = 200
 				add_overlay(hair_overlay)
 
@@ -263,9 +255,11 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_SPIRIT)
  * Increase the brightness of a color by calculating the average distance between the R, G and B values,
  * and maximum brightness, then adding 30% of that average to R, G and B.
  *
- * I'll make this proc global and move it to its own file in a future update. |- Ricotez
+ * I'll make this proc global and move it to its own file in a future update. |- Ricotez - UPDATE: They never did :(
  */
 /mob/proc/brighten_color(input_color)
+	if(input_color[1] == "#")
+		input_color = copytext(input_color, 2) // Removing the # at the beginning.
 	var/r_val
 	var/b_val
 	var/g_val
@@ -293,7 +287,7 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_SPIRIT)
 	if(b_val > 255)
 		b_val = 255
 
-	return copytext(rgb(r_val, g_val, b_val), 2)
+	return "#" + copytext(rgb(r_val, g_val, b_val), 2)
 
 /*
 Transfer_mind is there to check if mob is being deleted/not going to have a body.
@@ -861,17 +855,14 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	client.prefs.apply_character_randomization_prefs()
 
 	var/species_type = client.prefs.read_character_preference(/datum/preference/choiced/species)
-	var/datum/species/species = new species_type
+	var/datum/species/species = GLOB.species_prototypes[species_type]
+	if(species.check_head_flags(HEAD_HAIR))
+		hairstyle = client.prefs.read_character_preference(/datum/preference/choiced/hairstyle)
+		hair_color = brighten_color(client.prefs.read_character_preference(/datum/preference/color/hair_color))
 
-	if(HAIR in species.species_traits)
-		hair_style = client.prefs.read_character_preference(/datum/preference/choiced/hairstyle)
-		hair_color = brighten_color(client.prefs.read_character_preference(/datum/preference/color_legacy/hair_color))
-
-	if(FACEHAIR in species.species_traits)
-		facial_hair_style = client.prefs.read_character_preference(/datum/preference/choiced/facial_hairstyle)
-		facial_hair_color = brighten_color(client.prefs.read_character_preference(/datum/preference/color_legacy/facial_hair_color))
-
-	qdel(species)
+	if(species.check_head_flags(HEAD_FACIAL_HAIR))
+		facial_hairstyle = client.prefs.read_character_preference(/datum/preference/choiced/facial_hairstyle)
+		facial_hair_color = brighten_color(client.prefs.read_character_preference(/datum/preference/color/facial_hair_color))
 
 	update_icon()
 
@@ -1025,3 +1016,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 			client.images += t_ray_images
 		else
 			client.images -= stored_t_ray_images
+
+/mob/dead/observer/can_examine_in_detail(atom/examinify, silent)
+	return TRUE

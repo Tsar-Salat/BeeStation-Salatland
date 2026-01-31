@@ -5,7 +5,7 @@
 // /mob/living signals
 ///from base of mob/living/resist() (/mob/living)
 #define COMSIG_LIVING_RESIST "living_resist"
-///from base of mob/living/IgniteMob() (/mob/living)
+///from base of mob/living/ignite_mob() (/mob/living)
 #define COMSIG_LIVING_IGNITED "living_ignite"
 ///from base of mob/living/extinguish_mob() (/mob/living)
 #define COMSIG_LIVING_EXTINGUISHED "living_extinguished"
@@ -23,6 +23,35 @@
 #define COMSIG_LIVING_START_PULL "living_start_pull"			///called on /living when someone starts pulling (atom/movable/pulled, state, force)
 /// from base of mob/living/Life() (seconds, times_fired)
 #define COMSIG_LIVING_LIFE "living_life"
+
+// adjust_x_loss messages sent from /mob/living/proc/adjust[x]Loss
+/// Returned from all the following messages if you actually aren't going to apply any change
+#define COMPONENT_IGNORE_CHANGE (1<<0)
+// Each of these messages sends the damagetype even though it is inferred by the signal so you can pass all of them to the same proc if required
+/// Send when bruteloss is modified (type, amount, forced)
+#define COMSIG_LIVING_ADJUST_BRUTE_DAMAGE "living_adjust_brute_damage"
+/// Send when fireloss is modified (type, amount, forced)
+#define COMSIG_LIVING_ADJUST_BURN_DAMAGE "living_adjust_burn_damage"
+/// Send when oxyloss is modified (type, amount, forced)
+#define COMSIG_LIVING_ADJUST_OXY_DAMAGE "living_adjust_oxy_damage"
+/// Send when toxloss is modified (type, amount, forced)
+#define COMSIG_LIVING_ADJUST_TOX_DAMAGE "living_adjust_tox_damage"
+/// Send when cloneloss is modified (type, amount, forced)
+#define COMSIG_LIVING_ADJUST_CLONE_DAMAGE "living_adjust_clone_damage"
+/// Send when staminaloss is modified (type, amount, forced)
+#define COMSIG_LIVING_ADJUST_STAMINA_DAMAGE "living_adjust_stamina_damage"
+
+/// List of signals sent when you receive any damage except stamina
+#define COMSIG_LIVING_ADJUST_STANDARD_DAMAGE_TYPES list(\
+	COMSIG_LIVING_ADJUST_BRUTE_DAMAGE,\
+	COMSIG_LIVING_ADJUST_BURN_DAMAGE,\
+	COMSIG_LIVING_ADJUST_CLONE_DAMAGE,\
+	COMSIG_LIVING_ADJUST_OXY_DAMAGE,\
+	COMSIG_LIVING_ADJUST_TOX_DAMAGE,\
+)
+/// List of signals sent when you receive any kind of damage at all
+#define COMSIG_LIVING_ADJUST_ALL_DAMAGE_TYPES (COMSIG_LIVING_ADJUST_STANDARD_DAMAGE_TYPES + COMSIG_LIVING_ADJUST_STAMINA_DAMAGE)
+
 /// from base of mob/living/updatehealth()
 #define COMSIG_LIVING_HEALTH_UPDATE "living_health_update"
 ///from base of mob/living/death(): (gibbed, was_dead_before)
@@ -64,7 +93,7 @@
 #define COMSIG_LIVING_STATUS_UNCONSCIOUS "living_unconscious"
 ///from base of mob/living/Sleeping() (amount, ignore_canstun)
 #define COMSIG_LIVING_STATUS_SLEEP "living_sleeping"
-	#define COMPONENT_NO_STUN (1<<0)		//For all of them
+	#define COMPONENT_NO_STUN (1<<0) //For all of them
 ///from end of fully_heal(): (heal_flags)
 #define COMSIG_LIVING_POST_FULLY_HEAL "living_post_fully_heal"
 
@@ -104,6 +133,13 @@
 	#define NO_Z_IMPACT_DAMAGE (1<<0)
 /// From /mob/living/proc/stop_leaning()
 #define COMSIG_LIVING_STOPPED_LEANING "living_stopped_leaning"
+
+/// From mob/living/try_speak(): (message, ignore_spam, forced)
+#define COMSIG_LIVING_TRY_SPEECH "living_vocal_speech"
+	/// Return if the mob can speak the message, regardless of any other signal returns or checks.
+	#define COMPONENT_CAN_ALWAYS_SPEAK (1<<0)
+	/// Return if the mob cannot speak.
+	#define COMPONENT_CANNOT_SPEAK (1<<1)
 
 /// From mob/living/treat_message(): (list/message_args)
 #define COMSIG_LIVING_TREAT_MESSAGE "living_treat_message"

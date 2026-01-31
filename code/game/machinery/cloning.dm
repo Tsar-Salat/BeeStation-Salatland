@@ -234,7 +234,7 @@ SCREENTIP_ATTACK_HAND(/obj/machinery/clonepod, "Examine")
 			if(ismob(M))
 				H = M
 
-	H.silent = 20 //Prevents an extreme edge case where clones could speak if they said something at exactly the right moment.
+	H.adjust_silence(40 SECONDS) //Prevents an extreme edge case where clones could speak if they said something at exactly the right moment.
 	occupant = H
 
 	if(!clonename)	//to prevent null names
@@ -615,7 +615,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/clonepod)
 				BP.forceMove(src)
 				unattached_flesh += BP
 
-	for(var/o in H.internal_organs)
+	for(var/o in H.organs)
 		var/obj/item/organ/organ = o
 		if(!istype(organ) || (organ.organ_flags & ORGAN_VITAL))
 			continue

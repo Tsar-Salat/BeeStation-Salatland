@@ -60,10 +60,12 @@
 #define BRUTELOSS (1<<0)
 #define FIRELOSS (1<<1)
 #define TOXLOSS (1<<2)
-#define OXYLOSS (1<<3)
-#define SHAME (1<<4)
-#define MANUAL_SUICIDE (1<<5) //suicide_act will do the actual killing.
-#define MANUAL_SUICIDE_NONLETHAL (1<<6) //when the suicide is conditionally lethal
+#define CLONELOSS (1<<3)
+#define OXYLOSS (1<<4)
+#define STAMINALOSS (1<<5)
+#define SHAME (1<<6)
+#define MANUAL_SUICIDE (1<<7) //suicide_act will do the actual killing.
+#define MANUAL_SUICIDE_NONLETHAL (1<<8) //when the suicide is conditionally lethal
 
 #define EFFECT_STUN "stun"
 #define EFFECT_KNOCKDOWN "knockdown"
@@ -268,6 +270,11 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 #define BODY_ZONE_L_LEG "l_leg"
 #define BODY_ZONE_R_LEG "r_leg"
 
+GLOBAL_LIST_INIT(all_body_zones, list(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY_ZONE_R_ARM, BODY_ZONE_L_ARM, BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
+GLOBAL_LIST_INIT(limb_zones, list(BODY_ZONE_R_ARM, BODY_ZONE_L_ARM, BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
+GLOBAL_LIST_INIT(arm_zones, list(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM))
+GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
+
 #define BODY_ZONE_PRECISE_EYES		"eyes"
 #define BODY_ZONE_PRECISE_MOUTH		"mouth"
 #define BODY_ZONE_PRECISE_GROIN		"groin"
@@ -315,3 +322,5 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 #define ENERGY_SHIELD_INVISIBLE (1 << 2)
 /// Energy shield will take max damage when EMP'd
 #define ENERGY_SHIELD_EMP_VULNERABLE (1 << 3)
+/// Energy shield starts at 0 health
+#define ENERGY_SHIELD_DEPLETE_EQUIP (1 << 4)

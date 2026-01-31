@@ -468,7 +468,7 @@
 		return TRUE
 	if(!(flags & IGNORE_GRAB) && pulledby && pulledby.grab_state >= GRAB_AGGRESSIVE)
 		return TRUE
-	if(!(flags & IGNORE_STASIS) && IS_IN_STASIS(src))
+	if(!(flags & IGNORE_STASIS) && HAS_TRAIT(src, TRAIT_STASIS))
 		return TRUE
 	return FALSE
 
@@ -522,6 +522,14 @@
 
 /mob/proc/get_contents()
 
+/**
+ * Returns the access list for this mob
+ */
+/mob/living/proc/get_access()
+	var/obj/item/card/id/id = get_idcard()
+	if(isnull(id))
+		return list()
+	return id.GetAccess()
 
 /mob/living/proc/toggle_resting()
 	set name = "Rest"
@@ -532,8 +540,11 @@
 
 ///Proc to hook behavior to the change of value in the resting variable.
 /mob/living/proc/set_resting(new_resting, silent = TRUE, instant = FALSE)
+	if(!(mobility_flags & MOBILITY_REST))
+		return
 	if(new_resting == resting)
 		return
+
 	. = resting
 	resting = new_resting
 	if(new_resting)
@@ -579,7 +590,7 @@
 
 
 /mob/living/proc/rest_checks_callback()
-	if(resting || lying_angle == 0 || HAS_TRAIT(src, TRAIT_FLOORED))
+	if(resting || body_position == STANDING_UP || HAS_TRAIT(src, TRAIT_FLOORED))
 		return FALSE
 	return TRUE
 
@@ -593,9 +604,7 @@
 /mob/living/proc/on_lying_down(new_lying_angle)
 	if(layer == initial(layer)) //to avoid things like hiding larvas.
 		layer = LYING_MOB_LAYER //so mob lying always appear behind standing mobs
-	ADD_TRAIT(src, TRAIT_UI_BLOCKED, LYING_DOWN_TRAIT)
-	ADD_TRAIT(src, TRAIT_PULL_BLOCKED, LYING_DOWN_TRAIT)
-	ADD_TRAIT(src, TRAIT_UNDENSE, LYING_DOWN_TRAIT)
+	add_traits(list(TRAIT_UI_BLOCKED, TRAIT_PULL_BLOCKED, TRAIT_UNDENSE), LYING_DOWN_TRAIT)
 	if(HAS_TRAIT(src, TRAIT_FLOORED) && !(dir & (NORTH|SOUTH)))
 		setDir(pick(NORTH, SOUTH)) // We are and look helpless.
 
@@ -605,9 +614,7 @@
 	if(layer == LYING_MOB_LAYER)
 		layer = initial(layer)
 	density = initial(density) // We were prone before, so we become dense and things can bump into us again.
-	REMOVE_TRAIT(src, TRAIT_UI_BLOCKED, LYING_DOWN_TRAIT)
-	REMOVE_TRAIT(src, TRAIT_PULL_BLOCKED, LYING_DOWN_TRAIT)
-	REMOVE_TRAIT(src, TRAIT_UNDENSE, LYING_DOWN_TRAIT)
+	remove_traits(list(TRAIT_UI_BLOCKED, TRAIT_PULL_BLOCKED, TRAIT_UNDENSE), LYING_DOWN_TRAIT)
 
 /mob/living/proc/update_density()
 	if(HAS_TRAIT(src, TRAIT_UNDENSE))
@@ -818,17 +825,17 @@
 	SHOULD_CALL_PARENT(TRUE)
 
 	if(heal_flags & HEAL_TOX)
-		setToxLoss(0, FALSE, TRUE)
+		setToxLoss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_OXY)
-		setOxyLoss(0, FALSE, TRUE)
+		setOxyLoss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_CLONE)
 		setCloneLoss(0, FALSE, TRUE)
 	if(heal_flags & HEAL_BRUTE)
-		setBruteLoss(0, FALSE, TRUE)
+		setBruteLoss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_BURN)
-		setFireLoss(0, FALSE, TRUE)
+		setFireLoss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_STAM)
-		setStaminaLoss(0, FALSE, TRUE)
+		setStaminaLoss(0, updating_stamina = FALSE, forced = TRUE)
 
 	// I don't really care to keep this under a flag
 	set_nutrition(NUTRITION_LEVEL_FED + 50)
@@ -838,8 +845,7 @@
 	set_disgust(0)
 	cure_husk()
 	qdel(GetComponent(/datum/component/irradiated))
-	ExtinguishMob()
-	fire_stacks = 0
+	extinguish_mob()
 
 	if(heal_flags & HEAL_TEMP)
 		bodytemperature = get_body_temp_normal(apply_change = FALSE)
@@ -1076,7 +1082,7 @@
 	buckled.user_unbuckle_mob(src,src)
 
 /mob/living/proc/resist_fire()
-	return
+	return FALSE
 
 /mob/living/proc/resist_restraints()
 	return
@@ -1095,7 +1101,6 @@
 		if(-INFINITY to NEGATIVE_GRAVITY)
 			if(!istype(gravity_alert, /atom/movable/screen/alert/negative))
 				throw_alert(ALERT_GRAVITY, /atom/movable/screen/alert/negative)
-				ADD_TRAIT(src, TRAIT_MOVE_UPSIDE_DOWN, NEGATIVE_GRAVITY_TRAIT)
 				var/matrix/flipped_matrix = transform
 				flipped_matrix.b = -flipped_matrix.b
 				flipped_matrix.e = -flipped_matrix.e
@@ -1120,19 +1125,18 @@
 	if(istype(gravity_alert, /atom/movable/screen/alert/weightless))
 		REMOVE_TRAIT(src, TRAIT_MOVE_FLOATING, NO_GRAVITY_TRAIT)
 	if(istype(gravity_alert, /atom/movable/screen/alert/negative))
-		REMOVE_TRAIT(src, TRAIT_MOVE_UPSIDE_DOWN, NEGATIVE_GRAVITY_TRAIT)
 		var/matrix/flipped_matrix = transform
 		flipped_matrix.b = -flipped_matrix.b
 		flipped_matrix.e = -flipped_matrix.e
 		animate(src, transform = flipped_matrix, pixel_y = pixel_y-4, time = 0.5 SECONDS, easing = EASE_OUT, flags = ANIMATION_PARALLEL)
 		base_pixel_y -= 4
 
-/mob/living/singularity_pull(S, current_size)
-	..()
+/mob/living/singularity_pull(obj/anomaly/singularity/singularity, current_size)
+	. = ..()
 	if(current_size >= STAGE_SIX) //your puny magboots/wings/whatever will not save you against supermatter singularity
-		throw_at(S, 14, 3, src, TRUE)
-	else if(!src.mob_negates_gravity())
-		step_towards(src,S)
+		throw_at(singularity, 14, 3, src, TRUE)
+	else if(!mob_negates_gravity())
+		step_towards(src, singularity)
 
 /mob/living/proc/do_stun_animation()
 	var/matrix/rotation_matrix = matrix()
@@ -1215,8 +1219,11 @@
 	return TRUE
 
 /mob/living/proc/can_use_guns(obj/item/G)//actually used for more than guns!
+	if(G.trigger_guard == TRIGGER_GUARD_NONE)
+		to_chat(src, span_warning("You are unable to fire this!"))
+		return FALSE
 	if(G.trigger_guard != TRIGGER_GUARD_ALLOW_ALL && !ISADVANCEDTOOLUSER(src))
-		to_chat(src, "<span class='warning'>You don't have the dexterity to do this!</span>")
+		to_chat(src, span_warning("You try to fire [G], but can't use the trigger!"))
 		return FALSE
 	return TRUE
 
@@ -1266,7 +1273,7 @@
 		Robot.notify_ai(NEW_BORG)
 	else
 		for(var/obj/item/item in src)
-			if(!dropItemToGround(item))
+			if(!dropItemToGround(item) && !(item.item_flags & ABSTRACT))
 				qdel(item)
 				continue
 			item_contents += item
@@ -1374,8 +1381,7 @@
 
 			// Randomize everything but the species, which was already handled above.
 			new_human.randomize_human_appearance(~RANDOMIZE_SPECIES)
-			new_human.update_hair()
-			new_human.update_body() // is_creating = TRUE
+			new_human.update_body(is_creating = TRUE)
 			new_human.dna.update_dna_identity()
 			new_mob = new_human
 
@@ -1430,65 +1436,152 @@
 	if(.)
 		return
 
-/mob/living/proc/fakefireextinguish()
-	return
-
-/mob/living/proc/fakefire()
-	return
-
 /mob/living/proc/unfry_mob() //Callback proc to tone down spam from multiple sizzling frying oil dipping.
 	REMOVE_TRAIT(src, TRAIT_OIL_FRIED, "cooking_oil_react")
 
 //Mobs on Fire
-/mob/living/proc/IgniteMob()
-	if(fire_stacks > 0 && !on_fire)
-		on_fire = 1
-		src.visible_message(span_warning("[src] catches fire!"), \
-						span_userdanger("You're set on fire!"))
-		new/obj/effect/dummy/lighting_obj/moblight/fire(src)
-		throw_alert("fire", /atom/movable/screen/alert/fire)
-		update_fire()
-		SEND_SIGNAL(src, COMSIG_LIVING_IGNITED,src)
-		return TRUE
-	return FALSE
 
-/mob/living/proc/ExtinguishMob()
-	if(on_fire)
-		on_fire = 0
-		fire_stacks = 0
-		for(var/obj/effect/dummy/lighting_obj/moblight/fire/F in src)
-			qdel(F)
-		clear_alert("fire")
-		SEND_SIGNAL(src, COMSIG_CLEAR_MOOD_EVENT, "on_fire")
-		SEND_SIGNAL(src, COMSIG_LIVING_EXTINGUISHED, src)
-		update_fire()
+/// Global list that containes cached fire overlays for mobs
+GLOBAL_LIST_EMPTY(fire_appearances)
 
-/mob/living/proc/adjust_fire_stacks(add_fire_stacks) //Adjusting the amount of fire_stacks we have on person
-	fire_stacks = clamp(fire_stacks + add_fire_stacks, -20, 20)
-	if(on_fire && fire_stacks <= 0)
-		ExtinguishMob()
+/mob/living/proc/ignite_mob(silent)
+	if(fire_stacks <= 0)
+		return FALSE
+
+	var/datum/status_effect/fire_handler/fire_stacks/fire_status = has_status_effect(/datum/status_effect/fire_handler/fire_stacks)
+	if(!fire_status || fire_status.on_fire)
+		return FALSE
+
+	return fire_status.ignite(silent)
+
+/mob/living/proc/extinguish_mob()
+	if(HAS_TRAIT(src, TRAIT_NO_EXTINGUISH)) //The everlasting flames will not be extinguished
+		return
+	var/datum/status_effect/fire_handler/fire_stacks/fire_status = has_status_effect(/datum/status_effect/fire_handler/fire_stacks)
+	if(!fire_status || !fire_status.on_fire)
+		return
+	remove_status_effect(/datum/status_effect/fire_handler/fire_stacks)
+
+/**
+ * Adjust the amount of fire stacks on a mob
+ *
+ * This modifies the fire stacks on a mob.
+ *
+ * Vars:
+ * * stacks: int The amount to modify the fire stacks
+ * * fire_type: type Type of fire status effect that we apply, should be subtype of /datum/status_effect/fire_handler/fire_stacks
+ */
+
+/mob/living/proc/adjust_fire_stacks(stacks, fire_type = /datum/status_effect/fire_handler/fire_stacks)
+	if(stacks < 0)
+		if(HAS_TRAIT(src, TRAIT_NO_EXTINGUISH)) //You can't reduce fire stacks of the everlasting flames
+			return
+		stacks = max(-fire_stacks, stacks)
+	apply_status_effect(fire_type, stacks)
+
+/mob/living/proc/adjust_wet_stacks(stacks, wet_type = /datum/status_effect/fire_handler/wet_stacks)
+	if(HAS_TRAIT(src, TRAIT_NO_EXTINGUISH)) //The everlasting flames will not be extinguished
+		return
+	if(stacks < 0)
+		stacks = max(fire_stacks, stacks)
+	apply_status_effect(wet_type, stacks)
+
+/**
+ * Set the fire stacks on a mob
+ *
+ * This sets the fire stacks on a mob, stacks are clamped between -20 and 20.
+ * If the fire stacks are reduced to 0 then we will extinguish the mob.
+ *
+ * Vars:
+ * * stacks: int The amount to set fire_stacks to
+ * * fire_type: type Type of fire status effect that we apply, should be subtype of /datum/status_effect/fire_handler/fire_stacks
+ * * remove_wet_stacks: bool If we remove all wet stacks upon doing this
+ */
+
+/mob/living/proc/set_fire_stacks(stacks, fire_type = /datum/status_effect/fire_handler/fire_stacks, remove_wet_stacks = TRUE)
+	if(stacks < 0) //Shouldn't happen, ever
+		CRASH("set_fire_stacks received negative [stacks] fire stacks")
+
+	if(remove_wet_stacks)
+		remove_status_effect(/datum/status_effect/fire_handler/wet_stacks)
+
+	if(stacks == 0)
+		remove_status_effect(fire_type)
+		return
+
+	apply_status_effect(fire_type, stacks, TRUE)
+
+/mob/living/proc/set_wet_stacks(stacks, wet_type = /datum/status_effect/fire_handler/wet_stacks, remove_fire_stacks = TRUE)
+	if(stacks < 0)
+		CRASH("set_wet_stacks received negative [stacks] wet stacks")
+
+	if(remove_fire_stacks)
+		remove_status_effect(/datum/status_effect/fire_handler/fire_stacks)
+
+	if(stacks == 0)
+		remove_status_effect(wet_type)
+		return
+
+	apply_status_effect(wet_type, stacks, TRUE)
 
 //Share fire evenly between the two mobs
 //Called in MobBump() and Crossed()
-/mob/living/proc/spreadFire(mob/living/L)
-	if(!istype(L))
+/mob/living/proc/spreadFire(mob/living/spread_to)
+	if(!istype(spread_to))
 		return
 
-	if(on_fire)
-		if(L.on_fire) // If they were also on fire
-			var/firesplit = (fire_stacks + L.fire_stacks)/2
-			fire_stacks = firesplit
-			L.fire_stacks = firesplit
-		else // If they were not
-			fire_stacks /= 2
-			L.fire_stacks += fire_stacks
-			if(L.IgniteMob()) // Ignite them
-				log_game("[key_name(src)] bumped into [key_name(L)] and set them on fire")
+	// can't spread fire to mobs that don't catch on fire
+	if(HAS_TRAIT(spread_to, TRAIT_NOFIRE_SPREAD) || HAS_TRAIT(src, TRAIT_NOFIRE_SPREAD))
+		return
 
-	else if(L.on_fire) // If they were on fire and we were not
-		L.fire_stacks /= 2
-		fire_stacks += L.fire_stacks
-		IgniteMob() // Ignite us
+	var/datum/status_effect/fire_handler/fire_stacks/fire_status = has_status_effect(/datum/status_effect/fire_handler/fire_stacks)
+	var/datum/status_effect/fire_handler/fire_stacks/their_fire_status = spread_to.has_status_effect(/datum/status_effect/fire_handler/fire_stacks)
+	if(fire_status && fire_status.on_fire)
+		if(their_fire_status && their_fire_status.on_fire)
+			var/firesplit = (fire_stacks + spread_to.fire_stacks) / 2
+			var/fire_type = (spread_to.fire_stacks > fire_stacks) ? their_fire_status.type : fire_status.type
+			set_fire_stacks(firesplit, fire_type)
+			spread_to.set_fire_stacks(firesplit, fire_type)
+			return
+
+		adjust_fire_stacks(-fire_stacks / 2, fire_status.type)
+		spread_to.adjust_fire_stacks(fire_stacks, fire_status.type)
+		if(spread_to.ignite_mob())
+			log_message("bumped into [key_name(spread_to)] and set them on fire.", LOG_ATTACK)
+		return
+
+	if(!their_fire_status || !their_fire_status.on_fire)
+		return
+
+	spread_to.adjust_fire_stacks(-spread_to.fire_stacks / 2, their_fire_status.type)
+	adjust_fire_stacks(spread_to.fire_stacks, their_fire_status.type)
+	ignite_mob()
+
+/**
+ * Gets the fire overlay to use for this mob
+ *
+ * Args:
+ * * stacks: Current amount of fire_stacks
+ * * on_fire: If we're lit on fire
+ *
+ * Return a mutable appearance, the overlay that will be applied.
+ */
+
+/mob/living/proc/get_fire_overlay(stacks, on_fire)
+	RETURN_TYPE(/mutable_appearance)
+	return null
+
+/**
+ * Handles effects happening when mob is on normal fire
+ *
+ * Vars:
+ * * delta_time
+ * * times_fired
+ * * fire_handler: Current fire status effect that called the proc
+ */
+
+/mob/living/proc/on_fire_stack(delta_time, times_fired, datum/status_effect/fire_handler/fire_stacks/fire_handler)
+	return
 
 //Mobs on Fire end
 

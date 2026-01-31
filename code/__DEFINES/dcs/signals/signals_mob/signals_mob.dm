@@ -12,6 +12,10 @@
 ///from base of mob/AltClickOn(): (atom/A)
 #define COMSIG_MOB_ALTCLICKON "mob_altclickon"
 	#define COMSIG_MOB_CANCEL_CLICKON (1<<0)
+///from base of datum/emote/living/deathgasp/run_emote(): (params, type_override, intentional)
+#define COMSIG_MOB_DEATHGASP "mob_deathgasp"
+	/// Don't play the default sound
+	#define COMSIG_MOB_CANCEL_DEATHGASP_SOUND (1 << 0)
 ///from base of mob/alt_click_on_secodary(): (atom/A)
 #define COMSIG_MOB_ALTCLICKON_SECONDARY "mob_altclickon_secondary"
 
@@ -61,7 +65,17 @@
 #define COMSIG_MOB_ATTACK_HAND_TURF "mob_attack_hand_turf"		//! from base of turf/attack_hand
 #define COMSIG_MOB_HAND_ATTACKED "mob_hand_attacked"			//! from base of
 #define COMSIG_MOB_DROPPED_ITEM "mob_dropped_item"				//! from base of /item/dropped(): (/mob/user, /obj/item, loc)
-#define COMSIG_MOB_APPLY_DAMAGE	"mob_apply_damage"				//! from base of /mob/living/proc/apply_damage(): (damage, damagetype, def_zone)
+
+/// from /mob/living/proc/apply_damage(): (list/damage_mods, damage, damagetype, def_zone, sharpness, attack_direction, attacking_item)
+/// allows you to add multiplicative damage modifiers to the damage mods argument to adjust incoming damage
+/// not sent if the apply damage call was forced
+#define COMSIG_MOB_APPLY_DAMAGE_MODIFIERS "mob_apply_damage_modifiers"
+/// from base of /mob/living/proc/apply_damage(): (damage, damagetype, def_zone, blocked, wound_bonus, bare_wound_bonus, sharpness, attack_direction, attacking_item)
+#define COMSIG_MOB_APPLY_DAMAGE "mob_apply_damage"
+/// from /mob/living/proc/apply_damage(): (damage, damagetype, def_zone, blocked, sharpness, attack_direction, attacking_item)
+/// works like above but after the damage is actually inflicted
+#define COMSIG_MOB_AFTER_APPLY_DAMAGE "mob_after_apply_damage"
+
 #define COMSIG_MOB_THROW "mob_throw"							//! from base of /mob/throw_item(): (atom/target)
 #define COMSIG_MOB_UPDATE_SIGHT "mob_update_sight"				//! from base of /mob/update_sight(): ()
 ///from base of /mob/verb/examinate(): (atom/target, list/examine_strings)
@@ -78,22 +92,29 @@
 	#define COMPONENT_UPPERCASE_SPEECH (1<<0)
 	// used to access COMSIG_MOB_SAY argslist
 	#define SPEECH_MESSAGE 1
-	// #define SPEECH_BUBBLE_TYPE 2
+	#define SPEECH_BUBBLE_TYPE 2
 	#define SPEECH_SPANS 3
-	/* #define SPEECH_SANITIZE 4
+	#define SPEECH_SANITIZE 4
 	#define SPEECH_LANGUAGE 5
 	#define SPEECH_IGNORE_SPAM 6
-	#define SPEECH_FORCED 7 */
-	#define SPEECH_RANGE 8
+	#define SPEECH_FORCED 7
+	#define SPEECH_FILTERPROOF 8
+	#define SPEECH_RANGE 9
+	#define SPEECH_SAYMODE 10
 
 ///from /datum/component/speechmod/handle_speech(): ()
 #define COMSIG_TRY_MODIFY_SPEECH "try_modify_speech"
 	///Return value if we prevent speech from being modified
 	#define PREVENT_MODIFY_SPEECH 1
 
-#define COMSIG_MOB_EMOTE "mob_emote" // from /mob/living/emote(): ()
-#define COMSIG_MOB_SWAP_HANDS "mob_swap_hands"        //from base of mob/swap_hand()
-	#define COMPONENT_BLOCK_SWAP 1
+///from /mob/living/emote(): ()
+#define COMSIG_MOB_EMOTE "mob_emote"
+///from base of mob/swap_hand(): (obj/item/currently_held_item)
+#define COMSIG_MOB_SWAPPING_HANDS "mob_swapping_hands"
+	#define COMPONENT_BLOCK_SWAP (1<<0)
+/// from base of mob/swap_hand(): ()
+/// Performed after the hands are swapped.
+#define COMSIG_MOB_SWAP_HANDS "mob_swap_hands"
 #define COMSIG_MOB_DEADSAY "mob_deadsay" // from /mob/say_dead(): (mob/speaker, message)
 	#define MOB_DEADSAY_SIGNAL_INTERCEPT 1
 #define COMSIG_MOB_POINTED "mob_pointed" //from base of /mob/verb/pointed: (atom/A)
@@ -120,6 +141,12 @@
 /// Called before a mob fires a gun (mob/source, obj/item/gun, atom/target, aimed)
 #define COMSIG_MOB_BEFORE_FIRE_GUN "before_fire_gun"
 	#define GUN_HIT_SELF (1 << 0)
+
+/// From /obj/item/proc/pickup(): (/obj/item/picked_up_item)
+#define COMSIG_LIVING_PICKED_UP_ITEM "living_picked_up_item"
+
+/// from mob/proc/dropItemToGround()
+#define COMSIG_MOB_DROPPING_ITEM "mob_dropping_item"
 
 /// Sent from /mob/living/basic/proc/look_dead() : ()
 #define COMSIG_BASICMOB_LOOK_DEAD "basicmob_look_dead"

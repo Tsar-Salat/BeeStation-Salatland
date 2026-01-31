@@ -10,22 +10,24 @@
 	add_verb(/mob/living/proc/mob_sleep)
 	add_verb(/mob/living/proc/toggle_resting)
 
-	icon_state = ""		//Remove the inherent human icon that is visible on the map editor. We're rendering ourselves limb by limb, having it still be there results in a bug where the basic human icon appears below as south in all directions and generally looks nasty.
+	icon_state = "" //Remove the inherent human icon that is visible on the map editor. We're rendering ourselves limb by limb, having it still be there results in a bug where the basic human icon appears below as south in all directions and generally looks nasty.
 
-	//initialize limbs first
-	create_bodyparts()
+	//setup_mood()
+	// This needs to be called very very early in human init (before organs / species are created at the minimum)
+	setup_organless_effects()
+	// Physiology needs to be created before species, as some species modify physiology
+	setup_physiology()
 
+	create_dna()
+	dna.species.create_fresh_body(src)
 	setup_human_dna()
 
+	create_carbon_reagents()
+	set_species(dna.species.type, icon_update = FALSE) //carbon/Initialize will call update_body()
+	//set species enables and disables the flag. Just to be sure, we re-enable it now until it's removed by the parent call.
+	living_flags |= STOP_OVERLAY_UPDATE_BODY_PARTS
 
 	prepare_huds() //Prevents a nasty runtime on human init
-
-	if(dna.species)
-		set_species(dna.species.type) //This generates new limbs based on the species, beware.
-
-	//initialise organs
-	create_internal_organs() //most of it is done in set_species now, this is only for parent call
-	physiology = new()
 
 	. = ..()
 
@@ -45,16 +47,26 @@
 
 	GLOB.human_list += src
 
+/mob/living/carbon/human/proc/setup_physiology()
+	physiology = new()
+
+/// This proc is for holding effects applied when a mob is missing certain organs
+/// It is called very, very early in human init because all humans innately spawn with no organs and gain them during init
+/// Gaining said organs removes these effects
+/mob/living/carbon/human/proc/setup_organless_effects()
+	// All start without eyes, and get them via set species
+	//become_blind(NO_EYES)
+	// Mobs cannot taste anything without a tongue; the tongue organ removes this on Insert
+	ADD_TRAIT(src, TRAIT_AGEUSIA, NO_TONGUE_TRAIT)
+
 /mob/living/carbon/human/proc/setup_human_dna()
-	//initialize dna. for spawned humans; overwritten by other code
-	create_dna(src)
-	randomize_human(src)
-	dna.initialize_dna()
+	randomize_human_normie(src, randomize_mutations = TRUE, update_body = FALSE)
 
 /mob/living/carbon/human/Destroy()
 	QDEL_NULL(physiology)
 	GLOB.suit_sensors_list -= src
 	GLOB.human_list -= src
+
 	return ..()
 
 /mob/living/carbon/human/prepare_data_huds()
@@ -170,12 +182,6 @@
 			return
 		SEND_SIGNAL(src, COMSIG_CARBON_EMBED_RIP, I, L)
 		return
-
-	if(href_list["item"]) //canUseTopic check for this is handled by mob/Topic()
-		var/slot = text2num(href_list["item"])
-		if(check_obscured_slots(TRUE) & slot)
-			to_chat(usr, span_warning("You can't reach that! Something is covering it."))
-			return
 
 ///////HUDs///////
 	if(href_list["hud"])
@@ -476,23 +482,22 @@
 
 //Used for new human mobs created by cloning/goleming/podding
 /mob/living/carbon/human/proc/set_cloned_appearance()
-	if(dna.features["body_model"] == MALE)
-		facial_hair_style = "Full Beard"
+	if(gender == MALE) //Gender instead of physique, because don't want to force facial hair on non-males
+		set_facial_hairstyle("Full Beard", update = FALSE)
 	else
-		facial_hair_style = "Shaved"
-	hair_style = pick("Bedhead", "Bedhead 2", "Bedhead 3")
+		set_facial_hairstyle("Shaved", update = FALSE)
+	set_hairstyle(pick("Bedhead", "Bedhead 2", "Bedhead 3"), update = FALSE)
 	underwear = "Nude"
 	socks = "Nude"
-	update_body()
-	update_hair()
+	update_body(is_creating = TRUE)
 
-/mob/living/carbon/human/singularity_pull(S, current_size)
-	..()
+/mob/living/carbon/human/singularity_pull(obj/anomaly/singularity/singularity, current_size)
+	. = ..()
 	if(current_size >= STAGE_THREE)
 		for(var/obj/item/hand in held_items)
-			if(prob(current_size * 5) && hand.w_class >= ((11-current_size)/2)  && dropItemToGround(hand))
+			if(prob(current_size * 5) && hand.w_class >= ((11-current_size)/2) && dropItemToGround(hand))
 				step_towards(hand, src)
-				to_chat(src, span_warning("\The [S] pulls \the [hand] from your grip!"))
+				to_chat(src, span_warning("\The [singularity] pulls \the [hand] from your grip!"))
 
 #define CPR_PANIC_SPEED (0.8 SECONDS)
 
@@ -577,8 +582,7 @@
   * Returns false if we couldn't wash our hands due to them being obscured, otherwise true
   */
 /mob/living/carbon/human/proc/wash_hands(clean_types)
-	var/list/obscured = check_obscured_slots()
-	if(ITEM_SLOT_GLOVES in obscured)
+	if(check_covered_slots() & ITEM_SLOT_GLOVES)
 		return FALSE
 
 	if(gloves)
@@ -591,30 +595,17 @@
 	return TRUE
 
 /**
-  * Cleans the lips of any lipstick. Returns TRUE if the lips had any lipstick and was thus cleaned
-  */
-/mob/living/carbon/human/proc/clean_lips()
-	if(isnull(lip_style) && lip_color == initial(lip_color))
-		return FALSE
-	lip_style = null
-	lip_color = initial(lip_color)
-	update_body()
-	return TRUE
-
-/**
   * Called on the COMSIG_COMPONENT_CLEAN_FACE_ACT signal
   */
 /mob/living/carbon/human/proc/clean_face(datum/source, clean_types)
+	SIGNAL_HANDLER
 	if(!is_mouth_covered() && clean_lips())
 		. = TRUE
 
-	if(glasses && is_eyes_covered(FALSE, TRUE, TRUE) && glasses.wash(clean_types))
-		update_worn_glasses()
+	if(glasses && !is_eyes_covered(ITEM_SLOT_MASK|ITEM_SLOT_HEAD) && glasses.wash(clean_types))
 		. = TRUE
 
-	var/list/obscured = check_obscured_slots()
-	if(wear_mask && !(ITEM_SLOT_MASK in obscured) && wear_mask.wash(clean_types))
-		update_worn_mask()
+	if(wear_mask && !(check_covered_slots() & ITEM_SLOT_MASK) && wear_mask.wash(clean_types))
 		. = TRUE
 
 /**
@@ -622,28 +613,11 @@
   */
 /mob/living/carbon/human/wash(clean_types)
 	. = ..()
-
-	// Wash equipped stuff that cannot be covered
-	if(wear_suit?.wash(clean_types))
-		update_worn_oversuit()
-		. = TRUE
-
-	if(belt?.wash(clean_types))
-		update_worn_belt()
-		. = TRUE
-
-	// Check and wash stuff that can be covered
-	var/list/obscured = check_obscured_slots()
-
-	if(w_uniform && !(ITEM_SLOT_ICLOTHING in obscured) && w_uniform.wash(clean_types))
-		update_worn_undersuit()
-		. = TRUE
-
 	if(!is_mouth_covered() && clean_lips())
 		. = TRUE
 
 	// Wash hands if exposed
-	if(!gloves && (clean_types & CLEAN_TYPE_BLOOD) && blood_in_hands > 0 && !(ITEM_SLOT_GLOVES in obscured))
+	if(!gloves && (clean_types & CLEAN_TYPE_BLOOD) && blood_in_hands > 0 && !(check_covered_slots() & ITEM_SLOT_GLOVES))
 		blood_in_hands = 0
 		update_worn_gloves()
 		. = TRUE
@@ -651,18 +625,27 @@
 //Turns a mob black, flashes a skeleton overlay
 //Just like a cartoon!
 /mob/living/carbon/human/proc/electrocution_animation(anim_duration)
-	//Handle mutant parts if possible
+	var/mutable_appearance/zap_appearance
+
+	// If we have a species, we need to handle mutant parts and stuff
 	if(dna?.species)
 		add_atom_colour("#000000", TEMPORARY_COLOUR_PRIORITY)
-		var/static/mutable_appearance/electrocution_skeleton_anim
-		if(!electrocution_skeleton_anim)
-			electrocution_skeleton_anim = mutable_appearance(icon, "electrocuted_base")
-			electrocution_skeleton_anim.appearance_flags |= RESET_COLOR|KEEP_APART
-		add_overlay(electrocution_skeleton_anim)
-		addtimer(CALLBACK(src, PROC_REF(end_electrocution_animation), electrocution_skeleton_anim), anim_duration)
+		var/static/mutable_appearance/shock_animation_dna
+		if(!shock_animation_dna)
+			shock_animation_dna = mutable_appearance(icon, "electrocuted_base")
+			shock_animation_dna.appearance_flags |= RESET_COLOR|KEEP_APART
+		zap_appearance = shock_animation_dna
 
-	else //or just do a generic animation
-		flick_overlay_view(image(icon,src,"electrocuted_generic",ABOVE_MOB_LAYER), src, anim_duration)
+	// Otherwise do a generic animation
+	else
+		var/static/mutable_appearance/shock_animation_generic
+		if(!shock_animation_generic)
+			shock_animation_generic = mutable_appearance(icon, "electrocuted_generic")
+			shock_animation_generic.appearance_flags |= RESET_COLOR|KEEP_APART
+		zap_appearance = shock_animation_generic
+
+	add_overlay(zap_appearance)
+	addtimer(CALLBACK(src, PROC_REF(end_electrocution_animation), zap_appearance), anim_duration)
 
 /mob/living/carbon/human/proc/end_electrocution_animation(mutable_appearance/MA)
 	remove_atom_colour(TEMPORARY_COLOUR_PRIORITY, "#000000")
@@ -698,11 +681,6 @@
 		crew_record.name = newname
 	if(locked_record)
 		locked_record.name = newname
-
-/mob/living/carbon/human/get_total_tint()
-	. = ..()
-	if(glasses)
-		. += glasses.tint
 
 /mob/living/carbon/human/update_health_hud()
 	if(!client || !hud_used)
@@ -884,7 +862,7 @@
 		if(isnull(dna.species))
 			to_chat(usr, "The species of [src] is null, aborting.")
 		var/old_name = real_name
-		fully_replace_character_name(real_name, dna.species.random_name(gender))
+		fully_replace_character_name(real_name, generate_random_mob_name())
 		log_admin("[key_name(usr)] has randomly generated a new name for [key_name(src)], replacing their old name of [old_name].")
 		message_admins(span_notice("[key_name_admin(usr)] has randomly generated a new name for [key_name(src)], replacing their old name of [old_name]."))
 
@@ -1105,9 +1083,10 @@
 
 CREATION_TEST_IGNORE_SUBTYPES(/mob/living/carbon/human/species)
 
-/mob/living/carbon/human/species/Initialize(mapload, specific_race)
-	. = ..()
-	set_species(race || specific_race)
+/mob/living/carbon/human/species/create_dna()
+	dna = new /datum/dna(src)
+	if (!isnull(race))
+		dna.species = new race
 
 /mob/living/carbon/human/species/abductor
 	race = /datum/species/abductor
@@ -1256,9 +1235,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/carbon/human/species)
 
 /mob/living/carbon/human/species/zombie/infectious
 	race = /datum/species/zombie/infectious
-
-/mob/living/carbon/human/species/zombie/krokodil_addict
-	race = /datum/species/human/krokodil_addict
 
 /mob/living/carbon/human/species/pumpkin_man
 	race = /datum/species/pumpkin_man

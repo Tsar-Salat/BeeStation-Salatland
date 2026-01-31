@@ -41,15 +41,7 @@
 	var/list/user_vars_remembered //Auto built by the above + dropped() + equipped()
 
 	/// Trait modification, lazylist of traits to add/take away, on equipment/drop in the correct slot
-
-	/// Trait modification, lazylist of traits to add/take away, on equipment/drop in the correct slot
 	var/list/clothing_traits
-	//These allow head/mask items to dynamically alter the user's hair
-	// and facial hair, checking hair_extensions.dmi and facialhair_extensions.dmi
-	// for a state matching hair_state+dynamic_hair_suffix
-	// THESE OVERRIDE THE HIDEHAIR FLAGS
-	var/dynamic_hair_suffix = ""//head > mask for head hair
-	var/dynamic_fhair_suffix = ""//mask > head for facial hair
 
 	var/high_pressure_multiplier = 1
 	var/static/list/high_pressure_multiplier_types = list(MELEE, BULLET, LASER, ENERGY, BOMB)
@@ -112,7 +104,14 @@
 		bite_consumption = bite_consumption,\
 		microwaved_type = microwaved_type,\
 		junkiness = junkiness,\
+		pre_eat = CALLBACK(src, PROC_REF(pre_eat)),\
 		after_eat = CALLBACK(src, PROC_REF(after_eat)))
+
+/obj/item/food/clothing/proc/pre_eat(mob/eater)
+	var/obj/item/organ/tongue/tongue = eater?.get_organ_slot(ORGAN_SLOT_TONGUE)
+	if(tongue?.liked_foodtypes & CLOTH)
+		return TRUE
+	return FALSE
 
 /obj/item/food/clothing/proc/after_eat(mob/eater)
 	var/resolved_item = clothing.resolve()
@@ -197,7 +196,7 @@
 /obj/item/clothing/proc/take_damage_zone(def_zone, damage_amount, damage_type, armour_penetration)
 	if(!def_zone || !limb_integrity || (initial(body_parts_covered) in GLOB.bitflags)) // the second check sees if we only cover one bodypart anyway and don't need to bother with this
 		return
-	var/list/covered_limbs = body_parts_covered2organ_names(body_parts_covered) // what do we actually cover?
+	var/list/covered_limbs = cover_flags2body_zones(body_parts_covered) // what do we actually cover?
 	if(!(def_zone in covered_limbs))
 		return
 
@@ -219,7 +218,7 @@
   * * damage_type: Only really relevant for the verb for describing the breaking, and maybe obj_destruction()
   */
 /obj/item/clothing/proc/disable_zone(def_zone, damage_type)
-	var/list/covered_limbs = body_parts_covered2organ_names(body_parts_covered)
+	var/list/covered_limbs = cover_flags2body_zones(body_parts_covered)
 	if(!(def_zone in covered_limbs))
 		return
 
@@ -260,8 +259,10 @@
 		return
 	UnregisterSignal(user, COMSIG_MOVABLE_MOVED)
 	for(var/trait in clothing_traits)
-		REMOVE_TRAIT(user, trait, "[CLOTHING_TRAIT] [REF(src)]")
-
+		REMOVE_CLOTHING_TRAIT(user, trait)
+	if(iscarbon(user) && tint)
+		var/mob/living/carbon/carbon_user = user
+		carbon_user.update_tint()
 	if(LAZYLEN(user_vars_remembered))
 		for(var/variable in user_vars_remembered)
 			if(variable in user.vars)
@@ -277,12 +278,61 @@
 		if(iscarbon(user) && LAZYLEN(zones_disabled))
 			RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(bristle))
 		for(var/trait in clothing_traits)
-			ADD_TRAIT(user, trait, "[CLOTHING_TRAIT] [REF(src)]")
-		if (LAZYLEN(user_vars_to_edit))
+			ADD_CLOTHING_TRAIT(user, trait)
+		if(iscarbon(user) && tint)
+			var/mob/living/carbon/carbon_user = user
+			carbon_user.update_tint()
+		if(LAZYLEN(user_vars_to_edit))
 			for(var/variable in user_vars_to_edit)
 				if(variable in user.vars)
 					LAZYSET(user_vars_remembered, variable, user.vars[variable])
 					user.vv_edit_var(variable, user_vars_to_edit[variable])
+
+/**
+ * Inserts a trait (or multiple traits) into the clothing traits list
+ *
+ * If worn, then we will also give the wearer the trait as if equipped
+ *
+ * This is so you can add clothing traits without worrying about needing to equip or unequip them to gain effects
+ */
+/obj/item/clothing/proc/attach_clothing_traits(trait_or_traits)
+	if(!islist(trait_or_traits))
+		trait_or_traits = list(trait_or_traits)
+
+	LAZYOR(clothing_traits, trait_or_traits)
+	var/mob/wearer = loc
+	if(istype(wearer) && (wearer.get_slot_by_item(src) & slot_flags))
+		for(var/new_trait in trait_or_traits)
+			ADD_CLOTHING_TRAIT(wearer, new_trait)
+
+/**
+ * Removes a trait (or multiple traits) from the clothing traits list
+ *
+ * If worn, then we will also remove the trait from the wearer as if unequipped
+ *
+ * This is so you can add clothing traits without worrying about needing to equip or unequip them to gain effects
+ */
+/obj/item/clothing/proc/detach_clothing_traits(trait_or_traits)
+	if(!islist(trait_or_traits))
+		trait_or_traits = list(trait_or_traits)
+
+	LAZYREMOVE(clothing_traits, trait_or_traits)
+	var/mob/wearer = loc
+	if(istype(wearer))
+		for(var/new_trait in trait_or_traits)
+			REMOVE_CLOTHING_TRAIT(wearer, new_trait)
+			
+/obj/item/clothing/examine_base(mob/user, is_external_examination)
+	. = ..()
+
+	// If it is not an external examination, the tag will be added by
+	// examine().
+	if (!is_external_examination)
+		return
+
+	// External examinations show the armour inspection
+	if(get_armor_for_examination(user).has_any_armor() || (flags_cover & (HEADCOVERSMOUTH)) || (clothing_flags & STOPSPRESSUREDAMAGE) || (visor_flags & STOPSPRESSUREDAMAGE))
+		. += span_notice("It has a <a href='byond://?src=[REF(src)];list_armor=1'>tag</a> listing its protection classes.")
 
 // If the item is a piece of clothing and is being worn, make sure it updates on the player
 /obj/item/clothing/update_greyscale()
@@ -329,14 +379,14 @@
 		how_cool_are_your_threads += "</span>"
 		. += how_cool_are_your_threads.Join()
 
-	if(get_armor().has_any_armor() || (flags_cover & (HEADCOVERSMOUTH)) || (clothing_flags & STOPSPRESSUREDAMAGE) || (visor_flags & STOPSPRESSUREDAMAGE))
+	if(get_armor_for_examination(user).has_any_armor() || (flags_cover & (HEADCOVERSMOUTH)) || (clothing_flags & STOPSPRESSUREDAMAGE) || (visor_flags & STOPSPRESSUREDAMAGE))
 		. += span_notice("It has a <a href='byond://?src=[REF(src)];list_armor=1'>tag</a> listing its protection classes.")
 
 /obj/item/clothing/examine_tags(mob/user)
 	. = ..()
 	if (clothing_flags & THICKMATERIAL)
 		.["thick"] = "Extremely thick, protecting from piercing injections and sprays."
-	else if (get_armor().get_rating(MELEE) >= 20 || get_armor().get_rating(BULLET) >= 20)
+	else if (get_armor_for_examination().get_rating(MELEE) >= 20 || get_armor_for_examination().get_rating(BULLET) >= 20)
 		.["rigid"] = "Protects from some injections and sprays."
 	if (clothing_flags & CASTING_CLOTHES)
 		.["magical"] = "Allows magical beings to cast spells when wearing [src]."
@@ -376,13 +426,13 @@
 			if (istype(thing, /obj/item/clothing))
 				compare_to = thing
 				break
-		to_chat(usr, examine_block("[generate_armor_readout(compare_to)]"))
+		to_chat(usr, examine_block("[generate_armor_readout(usr, compare_to, ismob(loc) && loc != usr)]"))
 
-/obj/item/clothing/proc/generate_armor_readout(obj/item/clothing/compare_to)
+/obj/item/clothing/proc/generate_armor_readout(mob/examiner, obj/item/clothing/compare_to, external_examination = FALSE)
 	var/list/readout = list("<span class='notice'><u><b>PROTECTION CLASSES</u></b>")
 
-	var/datum/armor/armor = get_armor()
-	var/datum/armor/compare_armor = compare_to ? compare_to.get_armor() : null
+	var/datum/armor/armor = get_armor_for_examination(examiner)
+	var/datum/armor/compare_armor = compare_to ? compare_to.get_armor_for_examination(examiner) : null
 
 	var/added_damage_header = FALSE
 	for(var/damage_key in ARMOR_LIST_DAMAGE)
@@ -405,6 +455,12 @@
 			readout += "\n<b>DURABILITY (I-X)</b>"
 			added_durability_header = TRUE
 		readout += "\n[armor_to_protection_name(durability_key)] [armor_to_protection_class(rating, compare_rating)]"
+
+	// During external examinations, you can only see armour values and not the tags (since we are less able to
+	// find them if we have a disguised item like changeling armour)
+	if (external_examination)
+		readout += "</span>"
+		return readout.Join()
 
 	if(flags_cover & HEADCOVERSMOUTH)
 		var/list/things_blocked = list()
@@ -444,6 +500,13 @@
 
 	return readout.Join()
 
+/obj/item/clothing/proc/get_armor_for_examination(mob/examiner)
+	RETURN_TYPE(/datum/armor)
+	if (ismob(loc) && loc != examiner && HAS_TRAIT(src, TRAIT_VALUE_MIMIC_PATH))
+		var/atom/mimic_path = GET_TRAIT_VALUE(src, TRAIT_VALUE_MIMIC_PATH)
+		return get_armor_by_type(mimic_path:armor_type)
+	return get_armor()
+
 /**
  * Rounds armor_value down to the nearest 10, divides it by 10 and then converts it to Roman numerals.
  *
@@ -469,7 +532,7 @@
 
 	if(isliving(loc)) //It's not important enough to warrant a message if it's not on someone
 		var/mob/living/M = loc
-		if(src in M.get_equipped_items(FALSE))
+		if(src in M.get_equipped_items())
 			to_chat(M, span_warning("Your [name] start[p_s()] to fall apart!"))
 		else
 			to_chat(M, span_warning("[src] start[p_s()] to fall apart!"))
@@ -575,48 +638,48 @@ BLIND	 // can't see anything
 		if(H.w_uniform == src)
 			H.update_suit_sensors()
 
-/obj/item/clothing/proc/weldingvisortoggle(mob/user) //proc to toggle welding visors on helmets, masks, goggles, etc.
+/// Proc that adjusts the clothing item, used by things like breathing masks, welding helmets, welding goggles etc.
+/obj/item/clothing/proc/adjust_visor(mob/living/user)
 	if(!can_use(user))
 		return FALSE
 
 	visor_toggling()
 
-	to_chat(user, span_notice("You adjust \the [src] [up ? "up" : "down"]."))
+	to_chat(user, span_notice("You adjust [src] [up ? "up" : "down"]."))
 
-	if(iscarbon(user))
-		var/mob/living/carbon/C = user
-		C.head_update(src, forced = TRUE)
 	update_action_buttons()
+
+	if(user.is_holding(src))
+		user.update_held_items()
+		return TRUE
+	if(up)
+		user.update_obscured_slots(visor_flags_inv)
+	user.update_clothing(slot_flags)
+	if(!iscarbon(user))
+		return TRUE
+	var/mob/living/carbon/carbon_user = user
+	if(visor_vars_to_toggle & VISOR_TINT)
+		carbon_user.update_tint()
+	if((visor_flags & (MASKINTERNALS|HEADINTERNALS)) && carbon_user.invalid_internals())
+		carbon_user.cutoff_internals()
 	return TRUE
 
 /obj/item/clothing/proc/visor_toggling() //handles all the actual toggling of flags
 	up = !up
+	//SEND_SIGNAL(src, COMSIG_CLOTHING_VISOR_TOGGLE, up)
 	clothing_flags ^= visor_flags
 	flags_inv ^= visor_flags_inv
-	flags_cover ^= initial(flags_cover)
-	icon_state = "[initial(icon_state)][up ? "up" : ""]"
+	flags_cover ^= visor_flags_cover
 	if(visor_vars_to_toggle & VISOR_FLASHPROTECT)
 		flash_protect ^= initial(flash_protect)
 	if(visor_vars_to_toggle & VISOR_TINT)
 		tint ^= initial(tint)
-
-/obj/item/clothing/head/helmet/space/plasmaman/visor_toggling() //handles all the actual toggling of flags
-	up = !up
-	clothing_flags ^= visor_flags
-	flags_inv ^= visor_flags_inv
-	icon_state = "[initial(icon_state)]"
-	if(visor_vars_to_toggle & VISOR_FLASHPROTECT)
-		flash_protect ^= initial(flash_protect)
-	if(visor_vars_to_toggle & VISOR_TINT)
-		tint ^= initial(tint)
+	update_appearance() //most of the time the sprite changes
 
 /obj/item/clothing/proc/can_use(mob/user)
-	if(user && ismob(user))
-		if(!user.incapacitated())
-			return 1
-	return 0
+	return istype(user) && !user.incapacitated()
 
-/obj/item/clothing/proc/_spawn_shreds()
+/obj/item/clothing/proc/spawn_shreds()
 	new /obj/effect/decal/cleanable/shreds(get_turf(src), name)
 
 /obj/item/clothing/atom_destruction(damage_flag)
@@ -624,7 +687,7 @@ BLIND	 // can't see anything
 		return ..()
 	if(damage_flag == BOMB)
 		//so the shred survives potential turf change from the explosion.
-		addtimer(CALLBACK(src, PROC_REF(_spawn_shreds)), 1)
+		addtimer(CALLBACK(src, PROC_REF(spawn_shreds)), 1)
 		deconstruct(FALSE)
 	if(damage_flag == CONSUME) //This allows for moths to fully consume clothing, rather than damaging it like other sources like brute
 		var/turf/current_position = get_turf(src)
@@ -639,7 +702,7 @@ BLIND	 // can't see anything
 		update_clothes_damaged_state(CLOTHING_SHREDDED)
 		if(isliving(loc))
 			var/mob/living/M = loc
-			if(src in M.get_equipped_items(FALSE)) //make sure they were wearing it and not attacking the item in their hands
+			if(src in M.get_equipped_items()) //make sure they were wearing it and not attacking the item in their hands
 				M.visible_message(span_danger("[M]'s [src.name] fall[p_s()] off, [p_theyre()] completely shredded!"), span_warning("<b>Your [src.name] fall[p_s()] off, [p_theyre()] completely shredded!</b>"), vision_distance = COMBAT_MESSAGE_RANGE)
 				M.dropItemToGround(src)
 			else

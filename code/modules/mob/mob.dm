@@ -103,6 +103,7 @@
   * This is simply "mob_"+ a global incrementing counter that goes up for every mob
   */
 /mob/GenerateTag()
+	. = ..()
 	tag = "mob_[next_mob_id++]"
 
 /**
@@ -388,9 +389,9 @@
   * unset redraw_mob to prevent the mob icons from being redrawn at the end.
   */
 /mob/proc/equip_to_slot_if_possible(obj/item/W, slot, qdel_on_fail = FALSE, disable_warning = FALSE, redraw_mob = TRUE, bypass_equip_delay_self = FALSE, initial = FALSE)
-	if(!istype(W))
+	if(!istype(W) || QDELETED(W)) //This qdeleted is to prevent stupid behavior with things that qdel during init, like say stacks
 		return FALSE
-	if(!W.mob_can_equip(src, null, slot, disable_warning, bypass_equip_delay_self))
+	if(!W.mob_can_equip(src, slot, disable_warning, bypass_equip_delay_self))
 		if(qdel_on_fail)
 			qdel(W)
 		else if(!disable_warning)
@@ -407,7 +408,7 @@
   *
   *In most cases you will want to use equip_to_slot_if_possible()
   */
-/mob/proc/equip_to_slot(obj/item/W, slot)
+/mob/proc/equip_to_slot(obj/item/equipping, slot, initial = FALSE)
 	return
 
 /**
@@ -536,6 +537,38 @@
 
 	INVOKE_ASYNC(src, PROC_REF(run_examinate), examinify)
 
+/mob/proc/external_examinate(atom/examinify)
+	INVOKE_ASYNC(src, PROC_REF(run_external_examinate), examinify)
+
+/// Examine the atom provided when it is worn by someone else
+/mob/proc/run_external_examinate(atom/examinify)
+	if(QDELETED(examinify))
+		return
+
+	if(isturf(examinify) && !(sight & SEE_TURFS) && !(examinify in view(client ? client.view : world.view, src)))
+		// shift-click catcher may issue examinate() calls for out-of-sight turfs
+		return
+
+	if(is_blind() && !blind_examine_check(examinify)) //blind people see things differently (through touch)
+		return
+
+	face_atom(examinify)
+
+	// Show nearby mobs that we're examining something
+	if(isliving(src) && examinify.loc != src && examinify.loc && !is_holding(examinify))
+		for(var/mob/M in viewers(4, src))
+			if(M == src || !M.client || M.is_blind())
+				continue
+			if(M.client.prefs && !M.client.prefs.read_player_preference(/datum/preference/toggle/examine_messages))
+				continue
+			to_chat(M, span_subtle("<b>\The [src]</b> looks at \the [examinify]."))
+
+	var/list/result = examinify.examine_base(src, TRUE)
+	var/atom_title = examinify.examine_title(src, thats = TRUE)
+	var/rendered = (atom_title ? "[span_slightly_larger(separator_hr("[atom_title]."))]" : "") + jointext(result, "<br>")
+
+	to_chat(src, examine_block(span_infoplain(rendered)))
+
 /mob/proc/run_examinate(atom/examinify)
 	if(QDELETED(examinify))
 		return
@@ -550,7 +583,7 @@
 	face_atom(examinify)
 
 	// Show nearby mobs that we're examining something
-	if(isliving(src) && examinify.loc != src && !is_holding(examinify))
+	if(isliving(src) && examinify.loc != src && examinify.loc && !is_holding(examinify))
 		for(var/mob/M in viewers(4, src))
 			if(M == src || !M.client || M.is_blind())
 				continue
@@ -585,8 +618,13 @@
 
 //This is a proc for worn item examines. See /obj/item/proc/get_examine_line
 /mob/proc/can_examine_in_detail(atom/examinify, silent = FALSE)
+	var/turf/inspecting_location = get_turf(examinify)
+	if (!inspecting_location)
+		if (!silent)
+			to_chat(src, span_warning("You can't see that!"))
+		return FALSE
 	// Allow examine from up to 4 tiles away
-	if(!isobserver(src) && !(src in viewers(4, get_turf(examinify))))
+	if(!(src in viewers(4, inspecting_location)))
 		if(!silent)
 			to_chat(src, span_warning("You are too far away!"))
 		return FALSE
@@ -595,7 +633,7 @@
 		if(!silent)
 			to_chat(src, span_warning("You can't make out any of the details!"))
 		return FALSE
-	if(!has_light_nearby() && !has_nightvision())
+	if(inspecting_location.get_lumcount() < LIGHTING_TILE_IS_DARK && !has_nightvision())
 		if(!silent)
 			to_chat(src, span_warning("You can't make those out!"))
 		return FALSE
@@ -980,11 +1018,23 @@
 	if(.)
 		client.last_turn = world.time + MOB_FACE_DIRECTION_DELAY
 
-/mob/proc/swap_hand()
+/mob/proc/swap_hand(held_index)
+	SHOULD_NOT_OVERRIDE(TRUE) // Override perform_hand_swap instead
+
 	var/obj/item/held_item = get_active_held_item()
-	if(SEND_SIGNAL(src, COMSIG_MOB_SWAP_HANDS, held_item) & COMPONENT_BLOCK_SWAP)
+	if(SEND_SIGNAL(src, COMSIG_MOB_SWAPPING_HANDS, held_item) & COMPONENT_BLOCK_SWAP)
 		to_chat(src, span_warning("Your other hand is too busy holding [held_item]."))
 		return FALSE
+
+	var/result = perform_hand_swap(held_index)
+	if (result)
+		SEND_SIGNAL(src, COMSIG_MOB_SWAP_HANDS)
+
+	return result
+
+/// Performs the actual ritual of swapping hands, such as setting the held index variables
+/mob/proc/perform_hand_swap(held_index)
+	PROTECTED_PROC(TRUE)
 	return TRUE
 
 /mob/proc/activate_hand(selhand)
@@ -1413,6 +1463,7 @@ GLOBAL_LIST_INIT(mouse_cooldowns, list(
 	VV_DROPDOWN_OPTION(VV_HK_GODMODE, "Toggle Godmode")
 	VV_DROPDOWN_OPTION(VV_HK_DROP_ALL, "Drop Everything")
 	VV_DROPDOWN_OPTION(VV_HK_REGEN_ICONS, "Regenerate Icons")
+	VV_DROPDOWN_OPTION(VV_HK_REGEN_ICONS_FULL, "Regenerate Icons & Clear Stuck Overlays")
 	VV_DROPDOWN_OPTION(VV_HK_PLAYER_PANEL, "Show player panel")
 	VV_DROPDOWN_OPTION(VV_HK_BUILDMODE, "Toggle Buildmode")
 	VV_DROPDOWN_OPTION(VV_HK_DIRECT_CONTROL, "Assume Direct Control")
@@ -1422,6 +1473,12 @@ GLOBAL_LIST_INIT(mouse_cooldowns, list(
 /mob/vv_do_topic(list/href_list)
 	. = ..()
 	if(href_list[VV_HK_REGEN_ICONS] && check_rights(R_ADMIN))
+		regenerate_icons()
+
+	if(href_list[VV_HK_REGEN_ICONS_FULL])
+		if(!check_rights(NONE))
+			return
+		cut_overlays()
 		regenerate_icons()
 
 	if(href_list[VV_HK_PLAYER_PANEL] && check_rights(R_ADMIN))
@@ -1486,19 +1543,24 @@ GLOBAL_LIST_INIT(mouse_cooldowns, list(
 /mob/proc/set_nutrition(change) //Seriously fuck you oldcoders.
 	nutrition = max(0, change)
 
+///Apply a proper movespeed modifier based on items we have equipped
 /mob/proc/update_equipment_speed_mods()
-	var/speedies = equipped_speed_mods()
+	var/speedies = 0
+	for(var/obj/item/thing in get_equipped_speed_mod_items())
+		if(thing?.item_flags & NO_WORN_SLOWDOWN)
+			continue
+		speedies += thing.slowdown
 	if(!speedies)
 		remove_movespeed_modifier(/datum/movespeed_modifier/equipment_speedmod)
 	else
 		add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/equipment_speedmod, multiplicative_slowdown = speedies)
 
-/// Gets the combined speed modification of all worn items
-/// Except base mob type doesnt really wear items
-/mob/proc/equipped_speed_mods()
-	for(var/obj/item/I in held_items)
-		if(I.item_flags & SLOWS_WHILE_IN_HAND)
-			. += I.slowdown
+///Get all items in our possession that should affect our movespeed
+/mob/proc/get_equipped_speed_mod_items()
+	. = list()
+	for(var/obj/item/thing in held_items)
+		if(thing.item_flags & SLOWS_WHILE_IN_HAND)
+			. += thing
 
 // Returns TRUE if the hearer should hear radio noises
 /mob/proc/hears_radio()

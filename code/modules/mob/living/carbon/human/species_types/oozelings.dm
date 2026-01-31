@@ -1,21 +1,15 @@
 /datum/species/oozeling
 	name = "\improper Oozeling"
 	id = SPECIES_OOZELING
-	bodyflag = FLAG_OOZELING
-	species_traits = list(
-		MUTCOLORS,
-		EYECOLOR,
-		HAIR,
-		FACEHAIR,
-		NOAUGMENTS
-	)
 	inherent_traits = list(
 		TRAIT_TOXINLOVER,
 		TRAIT_NOHAIRLOSS,
 		TRAIT_NOFIRE,
 		TRAIT_EASYDISMEMBER,
+		TRAIT_MUTANT_COLORS,
+		TRAIT_NO_AUGMENTS
 	)
-	hair_color = "mutcolor"
+	hair_color_mode = USE_MUTANT_COLOR
 	hair_alpha = 150
 	mutantlungs = /obj/item/organ/lungs/slime
 	mutanttongue = /obj/item/organ/tongue/slime
@@ -39,23 +33,12 @@
 		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/oozeling
 	)
 
-/datum/species/oozeling/random_name(gender, unique, lastname, attempts)
-	. = "[pick(GLOB.oozeling_first_names)]"
-	if(lastname)
-		. += " [lastname]"
-	else
-		. += " [pick(GLOB.oozeling_last_names)]"
-
-	if(unique && attempts < 10)
-		if(findname(.))
-			. = .(gender, TRUE, lastname, ++attempts)
-
 /datum/species/oozeling/on_species_loss(mob/living/carbon/C)
 	if(regenerate_limbs)
 		regenerate_limbs.Remove(C)
 	..()
 
-/datum/species/oozeling/on_species_gain(mob/living/carbon/C, datum/species/old_species)
+/datum/species/oozeling/on_species_gain(mob/living/carbon/C, datum/species/old_species, pref_load, regenerate_icons)
 	..()
 	if(ishuman(C))
 		regenerate_limbs = new
@@ -212,7 +195,7 @@
 			target.visible_message(span_notice("[user] extingushes [target] with a hug!"), span_boldnotice("[user] extingushes you with a hug!"), span_italics("You hear a fire sizzle out."))
 			target.fire_stacks = max(target.fire_stacks - 5, 0)
 			if(target.fire_stacks <= 0)
-				target.ExtinguishMob()
+				target.extinguish_mob()
 		else
 			target.visible_message(span_notice("[target] wriggles out of [user]'s close hug!"), span_notice("You wriggle out of [user]'s close hug."))
 

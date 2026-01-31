@@ -99,7 +99,7 @@
 	icon_aggro = "legion"
 	icon_dead = "legion"
 	icon_gib = "syndicate_gib"
-	mob_biotypes = MOB_ORGANIC | MOB_HUMANOID
+	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	mouse_opacity = MOUSE_OPACITY_ICON
 	obj_damage = 60
 	melee_damage = 15
@@ -251,7 +251,7 @@
 	aggro_vision_range = 9
 	speed = 3
 	faction = list(FACTION_MINING)
-	weather_immunities = list("lava","ash")
+	weather_immunities = list(TRAIT_LAVA_IMMUNE, TRAIT_ASHSTORM_IMMUNE)
 	obj_damage = 30
 	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
 	see_in_dark = NIGHTVISION_FOV_RANGE

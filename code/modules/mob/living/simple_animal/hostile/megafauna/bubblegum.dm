@@ -398,7 +398,7 @@ Difficulty: Hard
 	if(useoriginal)
 		charge(chargeat, delay, chargepast)
 
-/mob/living/simple_animal/hostile/megafauna/bubblegum/adjustBruteLoss(amount, updating_health = TRUE, forced = FALSE)
+/mob/living/simple_animal/hostile/megafauna/bubblegum/adjustBruteLoss(amount, updating_health = TRUE, forced = FALSE, required_bodytype)
 	. = ..()
 	if(. > 0 && prob(25))
 		var/obj/effect/decal/cleanable/blood/gibs/bubblegum/B = new /obj/effect/decal/cleanable/blood/gibs/bubblegum(loc)
@@ -553,7 +553,7 @@ Difficulty: Hard
 /mob/living/simple_animal/hostile/megafauna/bubblegum/hallucination/Life(delta_time = SSMOBS_DT, times_fired)
 	return
 
-/mob/living/simple_animal/hostile/megafauna/bubblegum/hallucination/adjustBruteLoss(amount, updating_health = TRUE, forced = FALSE)
+/mob/living/simple_animal/hostile/megafauna/bubblegum/hallucination/adjustBruteLoss(amount, updating_health = TRUE, forced = FALSE, required_bodytype)
 	return
 
 /mob/living/simple_animal/hostile/megafauna/bubblegum/hallucination/OpenFire()
@@ -587,7 +587,7 @@ Difficulty: Hard
 	color = "#C80000"
 	density = FALSE
 	faction = list(FACTION_MINING, FACTION_BOSS)
-	weather_immunities = list("lava","ash")
+	weather_immunities = list(TRAIT_LAVA_IMMUNE, TRAIT_ASHSTORM_IMMUNE)
 
 /mob/living/simple_animal/hostile/asteroid/hivelordbrood/slaughter/CanAllowThrough(atom/movable/mover, turf/target)
 	. = ..()

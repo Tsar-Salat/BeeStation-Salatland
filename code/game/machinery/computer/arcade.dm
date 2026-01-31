@@ -518,7 +518,7 @@ GLOBAL_LIST_INIT(arcade_prize_pool, list(
 				if(obj_flags & EMAGGED)
 					var/mob/living/M = user
 					M.adjust_fire_stacks(5)
-					M.IgniteMob() //flew into a star, so you're on fire
+					M.ignite_mob() //flew into a star, so you're on fire
 					to_chat(user, span_userdanger("You feel an immense wave of heat emanate from the arcade machine. Your skin bursts into flames."))
 
 		if(obj_flags & EMAGGED)
@@ -1256,7 +1256,7 @@ SCREENTIP_ATTACK_HAND(/obj/machinery/computer/arcade/amputation, "Use")
 			for(var/X in c_user.bodyparts)
 				var/obj/item/bodypart/BP = X
 				if(BP.body_part != HEAD && BP.body_part != CHEST)
-					if(BP.dismemberable)
+					if(!(BP.bodypart_flags & BODYPART_UNREMOVABLE))
 						BP.dismember()
 						qdel(BP)
 			playsound(loc, 'sound/arcade/win.ogg', 50, 1, extrarange = -3, falloff_exponent = 10)

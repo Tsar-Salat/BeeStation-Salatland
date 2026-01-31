@@ -9,225 +9,65 @@
 /proc/random_eye_color()
 	switch(pick(20;"brown",20;"hazel",20;"grey",15;"blue",15;"green",1;"amber",1;"albino"))
 		if("brown")
-			return "630"
+			return "#663300"
 		if("hazel")
-			return "542"
+			return "#554422"
 		if("grey")
-			return pick("666","777","888","999","aaa","bbb","ccc")
+			return pick("#666666","#777777","#888888","#999999","#aaaaaa","#bbbbbb","#cccccc")
 		if("blue")
-			return "36c"
+			return "#3366cc"
 		if("green")
-			return "060"
+			return "#006600"
 		if("amber")
-			return "fc0"
+			return "#ffcc00"
 		if("albino")
-			return pick("c","d","e","f") + pick("0","1","2","3","4","5","6","7","8","9") + pick("0","1","2","3","4","5","6","7","8","9")
+			return "#" + pick("cc","dd","ee","ff") + pick("00","11","22","33","44","55","66","77","88","99") + pick("00","11","22","33","44","55","66","77","88","99")
 		else
-			return "000"
-
-/proc/random_underwear(gender)
-	if(!GLOB.underwear_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/underwear, GLOB.underwear_list, GLOB.underwear_m, GLOB.underwear_f)
-	var/datum/sprite_accessory/picked = pick_default_accessory(GLOB.underwear_list, required_gender = gender)
-	return picked.name
-
-/proc/random_undershirt(gender)
-	if(!GLOB.undershirt_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/undershirt, GLOB.undershirt_list, GLOB.undershirt_m, GLOB.undershirt_f)
-	var/datum/sprite_accessory/picked = pick_default_accessory(GLOB.undershirt_list, required_gender = gender)
-	return picked.name
-
-/proc/random_socks(gender)
-	if(!GLOB.socks_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/socks, GLOB.socks_list)
-	var/datum/sprite_accessory/picked = pick_default_accessory(GLOB.socks_list, required_gender = gender)
-	return picked.name
-
-/proc/random_features(gender)
-	if(!GLOB.tails_list_human.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/tails/human, GLOB.tails_list_human)
-	if(!GLOB.tails_roundstart_list_human.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/tails/human, GLOB.tails_roundstart_list_human)
-	if(!GLOB.tails_list_lizard.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/tails/lizard, GLOB.tails_list_lizard)
-	if(!GLOB.snouts_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/snouts, GLOB.snouts_list)
-	if(!GLOB.horns_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/horns, GLOB.horns_list)
-	if(!GLOB.ears_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/ears, GLOB.horns_list)
-	if(!GLOB.frills_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/frills, GLOB.frills_list)
-	if(!GLOB.spines_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/spines, GLOB.spines_list)
-	if(!GLOB.legs_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/legs, GLOB.legs_list)
-	if(!GLOB.body_markings_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/body_markings, GLOB.body_markings_list)
-	if(!GLOB.wings_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/wings, GLOB.wings_list)
-	if(!GLOB.moth_wings_roundstart_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/moth_wings, GLOB.moth_wings_roundstart_list)
-	if(!GLOB.moth_antennae_roundstart_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/moth_antennae, GLOB.moth_antennae_roundstart_list)
-	if(!GLOB.moth_markings_roundstart_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/moth_markings, GLOB.moth_markings_roundstart_list)
-	if(!GLOB.ipc_screens_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/ipc_screens, GLOB.ipc_screens_list)
-	if(!GLOB.ipc_antennas_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/ipc_antennas, GLOB.ipc_antennas_list)
-	if(!GLOB.ipc_chassis_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/ipc_chassis, GLOB.ipc_chassis_list)
-	if(!GLOB.insect_type_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/insect_type, GLOB.insect_type_list)
-	if(!GLOB.apid_antenna_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/apid_antenna, GLOB.apid_antenna_list)
-	if(!GLOB.apid_stripes_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/apid_stripes, GLOB.apid_stripes_list)
-	if(!GLOB.apid_headstripes_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/apid_headstripes, GLOB.apid_headstripes_list)
-	if(!GLOB.psyphoza_cap_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/psyphoza_cap, GLOB.psyphoza_cap_list)
-	if(!GLOB.diona_leaves_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/diona_leaves, GLOB.diona_leaves_list)
-	if(!GLOB.diona_thorns_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/diona_thorns, GLOB.diona_thorns_list)
-	if(!GLOB.diona_flowers_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/diona_flowers, GLOB.diona_flowers_list)
-	if(!GLOB.diona_moss_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/diona_moss, GLOB.diona_moss_list)
-	if(!GLOB.diona_mushroom_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/diona_mushroom, GLOB.diona_mushroom_list)
-	if(!GLOB.diona_antennae_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/diona_antennae, GLOB.diona_antennae_list)
-	if(!GLOB.diona_eyes_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/diona_eyes, GLOB.diona_eyes_list)
-	if(!GLOB.diona_pbody_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/diona_pbody, GLOB.diona_pbody_list)
+			return "#000000"
 
 
-	//For now we will always return none for tail_human and ears.
-	return(
-		list(
-		"body_size" = "Normal",
-		"mcolor" = pick("FFFFFF","7F7F7F", "7FFF7F", "7F7FFF", "FF7F7F", "7FFFFF", "FF7FFF", "FFFF7F"),
-		"ethcolor" = GLOB.color_list_ethereal[pick(GLOB.color_list_ethereal)],
-		"tail_lizard" = pick(GLOB.tails_list_lizard),
-		"tail_human" = "None",
-		"wings" = "None",
-		"snout" = pick(GLOB.snouts_list),
-		"horns" = pick(GLOB.horns_list),
-		"ears" = "None",
-		"frills" = pick(GLOB.frills_list),
-		"spines" = pick(GLOB.spines_list),
-		"body_markings" = pick(GLOB.body_markings_list),
-		"legs" = "Normal Legs",
-		"caps" = pick(GLOB.caps_list),
-		"moth_wings" = pick(GLOB.moth_wings_roundstart_list),
-		"moth_antennae" = pick(GLOB.moth_antennae_roundstart_list),
-		"moth_markings" = pick(GLOB.moth_markings_roundstart_list),
-		"ipc_screen" = pick(GLOB.ipc_screens_list),
-		"ipc_antenna" = pick(GLOB.ipc_antennas_list),
-		"ipc_chassis" = pick(GLOB.ipc_chassis_list),
-		"insect_type" = pick(GLOB.insect_type_list),
-		"apid_antenna" = pick(GLOB.apid_antenna_list),
-		"apid_stripes" = pick(GLOB.apid_stripes_list),
-		"apid_headstripes" = pick(GLOB.apid_headstripes_list),
-		"body_model" = gender == MALE ? MALE : gender == FEMALE ? FEMALE : pick(MALE, FEMALE),
-		"psyphoza_cap" = pick(GLOB.psyphoza_cap_list),
-		"diona_leaves" = pick(GLOB.diona_leaves_list),
-		"diona_thorns" = pick(GLOB.diona_thorns_list),
-		"diona_flowers" = pick(GLOB.diona_flowers_list),
-		"diona_moss" = pick(GLOB.diona_moss_list),
-		"diona_mushroom" = pick(GLOB.diona_mushroom_list),
-		"diona_antennae" = pick(GLOB.diona_antennae_list),
-		"diona_eyes" = pick(GLOB.diona_eyes_list),
-		"diona_pbody" = pick(GLOB.diona_pbody_list)
-		)
+/proc/random_hair_color()
+	var/static/list/natural_hair_colors = list(
+		"#111111", "#362925", "#3B3831", "#41250C", "#412922",
+		"#544C49", "#583322", "#593029", "#703b30", "#714721",
+		"#744729", "#74482a", "#7b746e", "#855832", "#863019",
+		"#8c4734", "#9F550E", "#A29A96", "#A4381C", "#B17B41",
+		"#C0BAB7", "#EFE5E4", "#F7F3F1", "#FFF2D6", "#a15537",
+		"#a17e61", "#b38b67", "#ba673c", "#c89f73", "#d9b380",
+		"#dbc9b8", "#e1621d", "#e17d17", "#e1af93", "#f1cc8f",
+		"#fbe7a1",
 	)
 
-/proc/random_hair_style(gender)
-	var/datum/sprite_accessory/picked = pick_default_accessory(GLOB.hair_styles_list, required_gender = gender)
-	return picked.name
+	return pick(natural_hair_colors)
 
-/proc/random_facial_hair_style(gender)
-	var/datum/sprite_accessory/picked = pick_default_accessory(GLOB.facial_hair_styles_list, required_gender = gender)
-	return picked.name
+/proc/random_underwear(gender)
+	if(length(SSaccessories.underwear_list) == 0)
+		CRASH("No underwear to choose from!")
 
-/proc/random_unique_name(gender, attempts_to_find_unique_name=10)
-	for(var/i in 1 to attempts_to_find_unique_name)
-		if(gender==FEMALE)
-			. = capitalize(pick(GLOB.first_names_female)) + " " + capitalize(pick(GLOB.last_names))
-		else if(gender==MALE)
-			. = capitalize(pick(GLOB.first_names_male)) + " " + capitalize(pick(GLOB.last_names))
-		else
-			. = capitalize(pick(GLOB.first_names)) + " " + capitalize(pick(GLOB.last_names))
+	var/datum/sprite_accessory/picked = pick_default_accessory(SSaccessories.underwear_list, null, 0, gender)
+	return picked?.name || "Nude"
 
-		if(!findname(.))
-			break
+/proc/random_undershirt(gender)
+	if(length(SSaccessories.undershirt_list) == 0)
+		CRASH("No undershirts to choose from!")
 
-/proc/random_lizard_name(gender, attempts)
-	if(gender == MALE)
-		. = "[pick(GLOB.lizard_names_male)]-[pick(GLOB.lizard_names_male)]"
-	else
-		. = "[pick(GLOB.lizard_names_female)]-[pick(GLOB.lizard_names_female)]"
+	var/datum/sprite_accessory/picked = pick_default_accessory(SSaccessories.undershirt_list, null, 0, gender)
+	return picked?.name || "Nude"
 
-	if(attempts < 10)
-		if(findname(.))
-			. = .(gender, ++attempts)
+/proc/random_socks(gender)
+	if(length(SSaccessories.socks_list) == 0)
+		CRASH("No socks to choose from!")
 
-//this proc tries to generate an AI name that mimics the way players name AIs and borgs
-/proc/random_ai_name(style, attempts = 1)
-	var/numbers = list("1","2","3","4","5","6","7","8","9","0")
-	var/version_words = list("v", "V", "Version ", "mk", "MK", "Mark ")
-	for(var/i in 1 to attempts)
+	var/datum/sprite_accessory/picked = pick_default_accessory(SSaccessories.socks_list, null, 0, gender)
+	return picked?.name || "Nude"
 
-		if(!style)
-			style = rand(1,2)
+/proc/random_hairstyle(gender)
+	var/datum/sprite_accessory/picked = pick_default_accessory(SSaccessories.hairstyles_list, null, 0, gender)
+	return picked?.name || "Bald"
 
-		switch(style)
-			if(1) //2-3 random sectors
-				var/sectors = 2 + prob(20) //small chance for 3 sectors
-				for(var/s in 1 to sectors)
-					var/sector
-					var/sector_characters
-					var/breakup_character = "-"
-					var/sectorlength = rand(1,3)
-					switch(rand(1,100))
-						if(1 to 25)//25% chance for both numbers and letters
-							sector_characters = numbers + GLOB.alphabet + GLOB.alphabet //add alphabet twice so that numbers are lower weight
-						if(25 to 75) //50% chance for only letters
-							sector_characters = GLOB.alphabet
-						else //25% chance for only numbers, along with shorter sector length and a different breakup character
-							sector_characters = numbers
-							breakup_character = "."
-							sectorlength = rand(1,3)
-
-					sector = random_string(sectorlength, sector_characters)
-					if(prob(80)) //it's probably going to be uppercase
-						sector = uppertext(sector)
-
-					if(s > 1)
-						. += breakup_character
-					. += sector
-
-			if(2) //random vaguely AI related word with a chance to be followed by a version number or a "mark", such as mk1.2, or v3.6
-				. += pick(GLOB.ai_names)
-				if(prob(max(30 - (LAZYLEN(.)), 10))) //chance to for every character to be capitalized followed by a period. the chance is lower the longer the name is.
-					. = uppertext(replacetextEx(.,regex(@"([a-z](?=[a-z]))","g"),"$1."))
-				else if (prob(50)) //slightly higher chance to just be full uppertext
-					. = uppertext(.)
-				else
-					. = capitalize(.)
-
-				if(prob(33))
-
-					var/version_string = " " + pick(version_words) + num2text(prob(50) ? rand(1, 100) / 10 : rand(1,10))
-
-					. += version_string
-
-/proc/random_skin_tone()
-	return pick(GLOB.skin_tones)
+/proc/random_facial_hairstyle(gender)
+	var/datum/sprite_accessory/picked = pick_default_accessory(SSaccessories.facial_hairstyles_list, null, 0, gender)
+	return picked?.name || "Shaved"
 
 GLOBAL_LIST_INIT(skin_tones, sort_list(list(
 	"albino",
@@ -258,9 +98,6 @@ GLOBAL_LIST_INIT(skin_tone_names, list(
 	"latino" = "Light beige",
 	"mediterranean" = "Olive",
 ))
-
-/// An assoc list of species IDs to type paths
-GLOBAL_LIST_EMPTY(species_list)
 
 /proc/age2agedescription(age)
 	switch(age)
@@ -338,7 +175,7 @@ GLOBAL_LIST_EMPTY(species_list)
 
 	delay *= user.cached_multiplicative_actions_slowdown
 
-	if (HAS_TRAIT(user, INSTANT_DO_AFTER))
+	if (HAS_TRAIT(user, TRAIT_INSTANT_DO_AFTER))
 		delay = -1
 
 	var/datum/progressbar/progbar
@@ -626,6 +463,8 @@ GLOBAL_LIST_EMPTY(species_list)
 			return "left foot"
 		if(BODY_ZONE_PRECISE_R_FOOT)
 			return "right foot"
+		if(BODY_ZONE_PRECISE_GROIN)
+			return "groin"
 		else
 			return zone
 
@@ -712,11 +551,6 @@ GLOBAL_LIST_EMPTY(species_list)
 
 	if(isliving(occupant))
 		mob_occupant = occupant
-
-	else if(isbodypart(occupant))
-		var/obj/item/bodypart/head/head = occupant
-
-		mob_occupant = head.brainmob
 
 	else if(isorgan(occupant))
 		var/obj/item/organ/brain/brain = occupant

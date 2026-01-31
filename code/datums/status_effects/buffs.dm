@@ -256,7 +256,7 @@
 		var/new_staminaloss = owner.getStaminaLoss()
 		if(new_staminaloss < last_staminaloss)
 			var/heal_amount = (new_staminaloss - last_staminaloss) * 10
-			owner.adjustStaminaLoss(heal_amount, updating_health = FALSE)
+			owner.adjustStaminaLoss(heal_amount, updating_stamina = FALSE)
 			new_staminaloss = owner.getStaminaLoss()
 			needs_health_update = TRUE
 		last_staminaloss = new_staminaloss
@@ -634,13 +634,6 @@
 	name = "Photosynthesis"
 	desc = "Your wounds seem to be healing from the light."
 	icon_state = "blooming"
-
-/datum/status_effect/planthealing/on_apply()
-	ADD_TRAIT(owner, TRAIT_PLANTHEALING, "Light Source")
-	return ..()
-
-/datum/status_effect/planthealing/on_remove()
-	REMOVE_TRAIT(owner, TRAIT_PLANTHEALING, "Light Source")
 
 /datum/status_effect/planthealing/tick()
 	owner.heal_overall_damage(1,1, 0, BODYTYPE_ORGANIC) //one unit of brute and burn healing should be good with the amount of times this is ran. Much slower than spec_life

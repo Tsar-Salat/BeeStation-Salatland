@@ -110,7 +110,7 @@
 			bloodcost_multiplier = 0.5 // Decrease cost if we're sleeping in a coffin.
 
 			// Extinguish and remove embedded objects
-			carbon_owner.ExtinguishMob()
+			carbon_owner.extinguish_mob()
 			carbon_owner.remove_all_embedded_objects()
 
 			if(try_regenerate_limbs(bloodcost_multiplier))
@@ -162,7 +162,7 @@
 	carbon_user.regenerate_organs()
 
 	// Heal organs
-	for(var/obj/item/organ/organ as anything in carbon_user.internal_organs)
+	for(var/obj/item/organ/organ as anything in carbon_user.organs)
 		organ.set_organ_damage(0)
 
 	// Heart

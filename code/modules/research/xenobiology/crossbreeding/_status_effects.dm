@@ -254,12 +254,12 @@
 	duration = 100
 
 /datum/status_effect/firecookie/on_apply()
-	ADD_TRAIT(owner, TRAIT_RESISTCOLD,"firecookie")
+	ADD_TRAIT(owner, TRAIT_RESISTCOLD, TRAIT_STATUS_EFFECT(id))
 	owner.adjust_bodytemperature(110)
 	return ..()
 
 /datum/status_effect/firecookie/on_remove()
-	REMOVE_TRAIT(owner, TRAIT_RESISTCOLD,"firecookie")
+	REMOVE_TRAIT(owner, TRAIT_RESISTCOLD, TRAIT_STATUS_EFFECT(id))
 
 /datum/status_effect/watercookie
 	id = "watercookie"
@@ -268,7 +268,7 @@
 	duration = 100
 
 /datum/status_effect/watercookie/on_apply()
-	ADD_TRAIT(owner, TRAIT_NOSLIPWATER,"watercookie")
+	ADD_TRAIT(owner, TRAIT_NOSLIPWATER, TRAIT_STATUS_EFFECT(id))
 	return ..()
 
 /datum/status_effect/watercookie/tick(seconds_between_ticks)
@@ -276,7 +276,7 @@
 		T.MakeSlippery(TURF_WET_WATER, min_wet_time = 10, wet_time_to_add = 5)
 
 /datum/status_effect/watercookie/on_remove()
-	REMOVE_TRAIT(owner, TRAIT_NOSLIPWATER,"watercookie")
+	REMOVE_TRAIT(owner, TRAIT_NOSLIPWATER, TRAIT_STATUS_EFFECT(id))
 
 /datum/status_effect/metalcookie
 	id = "metalcookie"
@@ -819,7 +819,7 @@
 		originalDNA = new H.dna.type
 		originalname = H.real_name
 		H.dna.copy_dna(originalDNA)
-		randomize_human(H, TRUE)
+		randomize_human(H)
 	return ..()
 
 // Only occasionally give examiners a warning.
@@ -1004,7 +1004,7 @@
 		healing_types += CLONE
 
 	if(length(healing_types))
-		owner.apply_damage_type(-heal_amount, damagetype = pick(healing_types))
+		owner.heal_damage_type(heal_amount, damagetype = pick(healing_types))
 
 	owner.adjust_nutrition(3)
 	drained.adjustCloneLoss(heal_amount * DRAIN_DAMAGE_MULTIPLIER)
@@ -1018,7 +1018,7 @@
 
 /datum/status_effect/stabilized/lightpink/on_apply()
 	owner.add_movespeed_modifier(/datum/movespeed_modifier/status_effect/lightpink)
-	ADD_TRAIT(owner, TRAIT_PACIFISM, LIGHTPINK_TRAIT)
+	ADD_TRAIT(owner, TRAIT_PACIFISM, STABILIZED_LIGHT_PINK_EXTRACT_TRAIT)
 	return ..()
 
 /datum/status_effect/stabilized/lightpink/tick(seconds_between_ticks)
@@ -1030,7 +1030,7 @@
 
 /datum/status_effect/stabilized/lightpink/on_remove()
 	owner.remove_movespeed_modifier(/datum/movespeed_modifier/status_effect/lightpink)
-	REMOVE_TRAIT(owner, TRAIT_PACIFISM, LIGHTPINK_TRAIT)
+	REMOVE_TRAIT(owner, TRAIT_PACIFISM, STABILIZED_LIGHT_PINK_EXTRACT_TRAIT)
 
 /datum/status_effect/stabilized/adamantine
 	id = "stabilizedadamantine"

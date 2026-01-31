@@ -139,9 +139,13 @@
 		var/atom/movable/AM = i
 		var/obj/item/bodypart/head/as_head = AM
 		var/obj/item/mmi/as_mmi = AM
-		var/brain_holder = istype(AM, /obj/item/organ/brain) || (istype(as_head) && as_head.brain) || (istype(as_mmi) && as_mmi.brain) || isbrain(AM)
+		var/brain_holder = istype(AM, /obj/item/organ/brain) || (istype(as_head) && locate(/obj/item/organ/brain) in as_head) || (istype(as_mmi) && as_mmi.brain) || isbrain(AM)
 		if(brain_holder)
 			emergency_stop(AM)
+		if(isitem(AM))
+			var/obj/item/as_item = AM
+			if(as_item.item_flags & ABSTRACT) //also catches organs and bodyparts *stares*
+				continue
 		else if(isliving(AM))
 			if(obj_flags & EMAGGED)
 				crush_living(AM)
@@ -212,7 +216,7 @@
 
 	// Remove and recycle the equipped items
 	if(eat_victim_items)
-		for(var/obj/item/I in L.get_equipped_items(TRUE))
+		for(var/obj/item/I in L.get_equipped_items(INCLUDE_POCKETS))
 			if(L.dropItemToGround(I))
 				eat(I, sound=FALSE)
 

@@ -38,7 +38,7 @@
 	if(!ishuman(host_mob))
 		return
 
-	ADD_TRAIT(host_mob, TRAIT_NANITE_SENSORS, TRACKED_SENSORS_TRAIT)
+	ADD_TRAIT(host_mob, TRAIT_NANITE_SENSORS, TRAIT_TRACKED_SENSORS)
 	if(!HAS_TRAIT(host_mob, TRAIT_SUIT_SENSORS))
 		GLOB.suit_sensors_list += host_mob
 	host_mob.hud_set_nanite_indicator()
@@ -50,7 +50,7 @@
 	if(!ishuman(host_mob))
 		return
 
-	REMOVE_TRAIT(host_mob, TRAIT_NANITE_SENSORS, TRACKED_SENSORS_TRAIT)
+	REMOVE_TRAIT(host_mob, TRAIT_NANITE_SENSORS, TRAIT_TRACKED_SENSORS)
 	if(!HAS_TRAIT(host_mob, TRAIT_SUIT_SENSORS))
 		GLOB.suit_sensors_list -= host_mob
 	host_mob.hud_set_nanite_indicator()
@@ -256,7 +256,7 @@
 	for(var/mob/living/target in ohearers(5, host_mob))
 		if(prob(15 * max(get_dist(host_mob, target) - 1, 0)))
 			continue
-		if(!(target.mob_biotypes & MOB_ORGANIC) && !(target.mob_biotypes & MOB_UNDEAD) && !HAS_TRAIT(host_mob, TRAIT_NANITECOMPATIBLE))
+		if(!(target.mob_biotypes & (MOB_ORGANIC|MOB_UNDEAD)) && !HAS_TRAIT(host_mob, TRAIT_NANITECOMPATIBLE))
 			continue
 		target_hosts += target
 	if(!target_hosts.len)
@@ -285,7 +285,7 @@
 /datum/nanite_program/nanite_sting/on_trigger(comm_message)
 	var/list/mob/living/target_hosts = list()
 	for(var/mob/living/L in oview(1, host_mob))
-		if(!(L.mob_biotypes & MOB_ORGANIC) && !(L.mob_biotypes & MOB_UNDEAD) && !HAS_TRAIT(host_mob, TRAIT_NANITECOMPATIBLE))
+		if(!(L.mob_biotypes & (MOB_ORGANIC|MOB_UNDEAD)) && !HAS_TRAIT(host_mob, TRAIT_NANITECOMPATIBLE))
 			continue
 		if(!L.Adjacent(host_mob))
 			continue

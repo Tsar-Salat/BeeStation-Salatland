@@ -26,6 +26,8 @@
 #define COMSIG_ATOM_FIX "atom_fix"
 /// from base of [/atom/proc/atom_destruction]: (damage_flag)
 #define COMSIG_ATOM_DESTRUCTION "atom_destruction"
+/// from base of [/atom/proc/extinguish]
+#define COMSIG_ATOM_EXTINGUISH "atom_extinguish"
 ///from base of [/atom/proc/update_integrity]: (old_value, new_value)
 #define COMSIG_ATOM_INTEGRITY_CHANGED "atom_integrity_changed"
 ///from base of [/atom/proc/take_damage]: (damage_amount, damage_type, damage_flag, sound_effect, attack_dir, aurmor_penetration)
@@ -57,3 +59,6 @@
 #define COMSIG_ATOM_ATTACK_MECH "atom_attack_mech"
 ///from relay_attackers element: (atom/attacker)
 #define COMSIG_ATOM_WAS_ATTACKED "atom_was_attacked"
+
+/// from cosmetic items to restyle certain mobs, objects or organs: (atom/source, mob/living/trimmer, atom/movable/original_target, body_zone, restyle_type, style_speed)
+#define COMSIG_ATOM_RESTYLE "atom_restyle"
