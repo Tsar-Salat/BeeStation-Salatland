@@ -2,20 +2,18 @@
 /obj/machinery/power/port_gen
 	name = "portable generator"
 	desc = "A portable generator for emergency backup power."
-	icon = 'icons/obj/power.dmi'
-	icon_state = "portgen0_0"
+	icon = 'icons/obj/machines/power/portgen.dmi'
+	icon_state = "portgen0"
+	base_icon_state = "portgen0"
 	density = TRUE
 	anchored = FALSE
 	use_power = NO_POWER_USE
-
-
 
 	var/active = FALSE
 	var/power_gen = 5 KILOWATT
 	var/power_output = 1
 	var/consumption = 0
-	var/base_icon = "portgen0"
-	var/datum/looping_sound/generator/soundloop
+	var/datum/looping_sound/portable_generator/soundloop
 
 	interaction_flags_atom = INTERACT_ATOM_ATTACK_HAND | INTERACT_ATOM_UI_INTERACT | INTERACT_ATOM_REQUIRES_ANCHORED
 
@@ -47,16 +45,24 @@
 /obj/machinery/power/port_gen/proc/TogglePower()
 	if(active)
 		active = FALSE
-		update_icon()
+		update_appearance()
 		soundloop.stop()
 	else if(HasFuel())
 		active = TRUE
 		START_PROCESSING(SSmachines, src)
-		update_icon()
+		update_appearance()
+		update_sound_volume()
 		soundloop.start()
 
-/obj/machinery/power/port_gen/update_icon()
-	icon_state = "[base_icon]_[active]"
+/obj/machinery/power/port_gen/update_icon_state()
+	icon_state = "[base_icon_state][active ? "on" : ""]"
+	return ..()
+
+/obj/machinery/power/port_gen/proc/update_sound_volume()
+	if(!soundloop)
+		return
+	// Scale volume based on power output: 10 + (15 * power_output)
+	soundloop.volume = 10 + (15 * power_output)
 
 /obj/machinery/power/port_gen/process()
 	if(active)
@@ -91,9 +97,6 @@
 	. = ..()
 	if(anchored)
 		connect_to_network()
-
-/obj/machinery/power/port_gen/pacman/Initialize(mapload)
-	. = ..()
 
 	var/obj/S = sheet_path
 	sheet_name = initial(S.name)
@@ -216,6 +219,7 @@
 
 /obj/machinery/power/port_gen/pacman/on_emag(mob/user)
 	..()
+	balloon_alert(user, "maximum power output unlocked")
 	emp_act(EMP_HEAVY)
 
 /obj/machinery/power/port_gen/pacman/attack_silicon(mob/user)
@@ -223,10 +227,6 @@
 
 /obj/machinery/power/port_gen/pacman/attack_paw(mob/user)
 	interact(user)
-
-
-/obj/machinery/power/port_gen/pacman/ui_state(mob/user)
-	return GLOB.default_state
 
 /obj/machinery/power/port_gen/pacman/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
@@ -252,8 +252,9 @@
 	data["current_heat"] = current_heat
 	. =  data
 
-/obj/machinery/power/port_gen/pacman/ui_act(action, params)
-	if(..())
+/obj/machinery/power/port_gen/pacman/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
+	. = ..()
+	if(.)
 		return
 	switch(action)
 		if("toggle_power")
@@ -268,29 +269,67 @@
 		if("lower_power")
 			if (power_output > 1)
 				power_output--
+				update_sound_volume()
+				update_appearance()
 				. = TRUE
 
 		if("higher_power")
 			if (power_output < 4 || (obj_flags & EMAGGED))
 				power_output++
+				update_sound_volume()
+				update_appearance()
 				. = TRUE
 
 /obj/machinery/power/port_gen/pacman/super
 	name = "\improper S.U.P.E.R.P.A.C.M.A.N.-type portable generator"
-	icon_state = "portgen1_0"
-	base_icon = "portgen1"
+	desc = "A power generator that utilizes uranium sheets as fuel. Can run for much longer than the standard PACMAN type generators. Rated for 80 kW max safe output."
+	icon_state = "portgen1"
+	base_icon_state = "portgen1"
 	circuit = /obj/item/circuitboard/machine/pacman/super
 	sheet_path = /obj/item/stack/sheet/mineral/uranium
 	power_gen = 15 KILOWATT
 	time_per_sheet = 85
+	/// Radiation output multiplier
+	var/rad_power = 4
+	/// Power output level considered safe (radiation glow appears above this)
+	var/max_safe_output = 3
+	/// Maximum power output level for alpha scaling
+	var/max_power_output = 4
+
+/obj/machinery/power/port_gen/pacman/super/UseFuel()
+	// Produces a tiny amount of radiation when in use
+	if(prob(rad_power * power_output))
+		radiation_pulse(src, 2 * rad_power)
+	..()
+
+/obj/machinery/power/port_gen/pacman/super/update_overlays()
+	. = ..()
+	if(!active)
+		set_light(0)
+		return
+	// Radiation glow at high power output
+	if(power_output >= max_safe_output)
+		var/glow_alpha = round(255 * power_output / max_power_output)
+		var/mutable_appearance/rad_overlay = mutable_appearance(icon, "[base_icon_state]rad", layer)
+		rad_overlay.blend_mode = BLEND_ADD
+		rad_overlay.alpha = glow_alpha
+		. += rad_overlay
+		. += emissive_appearance(icon, "[base_icon_state]rad", layer, glow_alpha)
+		ADD_LUM_SOURCE(src, LUM_SOURCE_MANAGED_OVERLAY)
+		set_light(rad_power + power_output - max_safe_output, 0.7, "#3b97ca")
+	else
+		set_light(0)
 
 /obj/machinery/power/port_gen/pacman/super/overheat()
+	// A nice burst of radiation
+	var/rads = rad_power * 25 + (sheets + sheet_left) * 1.5
+	radiation_pulse(src, max(40, rads))
 	explosion(src.loc, 3, 3, 3, -1)
 
 /obj/machinery/power/port_gen/pacman/mrs
 	name = "\improper M.R.S.P.A.C.M.A.N.-type portable generator"
-	base_icon = "portgen2"
-	icon_state = "portgen2_0"
+	icon_state = "portgen2"
+	base_icon_state = "portgen2"
 	circuit = /obj/item/circuitboard/machine/pacman/mrs
 	sheet_path = /obj/item/stack/sheet/mineral/diamond
 	power_gen = 40 KILOWATT
