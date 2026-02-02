@@ -61,8 +61,10 @@
 /obj/machinery/power/port_gen/proc/update_sound_volume()
 	if(!soundloop)
 		return
-	// Scale volume based on power output: 10 + (15 * power_output)
-	soundloop.volume = 10 + (15 * power_output)
+	// Scale volume based on power output
+	var/new_volume = 10 + (15 * power_output)
+	if(soundloop.volume != new_volume)
+		soundloop.volume = new_volume
 
 /obj/machinery/power/port_gen/process()
 	if(active)
@@ -175,23 +177,23 @@
 	var/ambient_temp = environment ? environment.return_temperature() - T0C : 20 // Convert to Celsius
 	var/pressure_ratio = environment ? min(environment.return_pressure() / ONE_ATMOSPHERE, 1) : 1
 
-	// Calculate target temperature range based on power output
+	// target temperature range based on power output
 	var/lower_limit = 56 + (power_output * temperature_gain)
 	var/upper_limit = 76 + (power_output * temperature_gain)
 
-	// Apply environmental effects
+	// environmental effects
 	var/ambient_deviation = ambient_temp - 20
 	lower_limit += ambient_deviation * pressure_ratio
 	upper_limit += ambient_deviation * pressure_ratio
 
-	// Calculate equilibrium and temperature drift
+	// equilibrium and temperature drift
 	var/target_temp = (lower_limit + upper_limit) / 2
 	var/temp_diff = target_temp - operating_temperature
 	var/bias = clamp(round(temp_diff / 40), -20, 20)
 
-	// Apply temperature change with random variation
+	//temperature change random variation
 	operating_temperature += bias + rand(-7, 7)
-	operating_temperature = max(operating_temperature, 0) // Can't go below absolute zero
+	operating_temperature = max(operating_temperature, 0) // Can't go below absolute zero (obviously)
 
 	// Heat transfer to environment
 	if(environment && operating_temperature > ambient_temp)
@@ -206,11 +208,11 @@
 		// Add smoke effects when overheating
 		var/new_smoke = 0
 		if(overheating > max_overheat * 0.8)
-			new_smoke = 3 // Heavy smoke when critically overheating
+			new_smoke = 3
 		else if(overheating > max_overheat * 0.5)
-			new_smoke = 2 // Medium smoke when moderately overheating
+			new_smoke = 2
 		else if(overheating > 0)
-			new_smoke = 1 // Light steam when starting to overheat
+			new_smoke = 1
 		set_smoke_state(new_smoke)
 
 		if(overheating > max_overheat)
@@ -244,22 +246,6 @@
 /obj/machinery/power/port_gen/pacman/proc/overheat()
 	explosion(src.loc, 2, 5, 2, -1)
 
-/// Updates the smoke state, setting particles if relevant
-/obj/machinery/power/port_gen/pacman/proc/set_smoke_state(new_state)
-	if(new_state == smoke_state)
-		return
-	smoke_state = new_state
-
-	QDEL_NULL(particles)
-	switch(smoke_state)
-		if(3) // Heavy smoke - critically overheating
-			particles = new /particles/smoke()
-		if(2) // Medium smoke - moderately overheating
-			particles = new /particles/smoke/steam()
-		if(1) // Light steam - starting to overheat
-			particles = new /particles/smoke/steam/mild
-
-/// Updates the smoke state, setting particles if relevant
 /obj/machinery/power/port_gen/pacman/proc/set_smoke_state(new_state)
 	if(new_state == smoke_state)
 		return
