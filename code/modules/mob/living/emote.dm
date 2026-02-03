@@ -150,7 +150,7 @@
 			addtimer(CALLBACK(H,TYPE_PROC_REF(/mob/living/carbon/human, Togglewings)), wing_time)
 		// play moth flutter noise if moth wing
 		if(istype(wings, /obj/item/organ/wings/moth))
-			playsound(H, 'sound/emotes/moth/moth_flutter.ogg', 50, TRUE)
+			playsound(H, 'sound/mobs/humanoids/moth/moth_flutter.ogg', 50, TRUE)
 
 /datum/emote/living/flap/aflap
 	key = "aflap"

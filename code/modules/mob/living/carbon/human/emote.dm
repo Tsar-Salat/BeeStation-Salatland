@@ -105,7 +105,7 @@
 	message = "lets out a tiny squeak"
 	emote_type = EMOTE_AUDIBLE
 	vary = TRUE
-	sound = 'sound/emotes/moth/mothsqueak.ogg'
+	sound = 'sound/mobs/humanoids/moth/moth_squeak.ogg'
 
 /datum/emote/living/carbon/human/moth/chitter
 	key = "chitter"
@@ -113,7 +113,7 @@
 	message = "chitters"
 	emote_type = EMOTE_AUDIBLE
 	vary = TRUE
-	sound = 'sound/emotes/moth/mothchitter.ogg'
+	sound = 'sound/mobs/humanoids/moth/moth_chitter.ogg'
 
 /datum/emote/living/carbon/human/scream
 	key = "scream"

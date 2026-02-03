@@ -161,8 +161,12 @@
 		return FALSE
 	return ..()
 
-/datum/species/plasmaman/get_scream_sound(mob/living/carbon/user)
-	return pick('sound/voice/plasmaman/plasmeme_scream_1.ogg', 'sound/voice/plasmaman/plasmeme_scream_2.ogg', 'sound/voice/plasmaman/plasmeme_scream_3.ogg')
+/datum/species/plasmaman/get_scream_sound(mob/living/carbon/human)
+	return pick(
+		'sound/mobs/humanoids/plasmaman/plasmeme_scream_1.ogg',
+		'sound/mobs/humanoids/plasmaman/plasmeme_scream_2.ogg',
+		'sound/mobs/humanoids/plasmaman/plasmeme_scream_3.ogg',
+	)
 
 /datum/species/plasmaman/get_cough_sound(mob/living/carbon/user)
 	return SPECIES_DEFAULT_COUGH_SOUND(user)

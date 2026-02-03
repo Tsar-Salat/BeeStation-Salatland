@@ -56,7 +56,10 @@
 	return ..()
 
 /datum/species/psyphoza/get_scream_sound(mob/living/carbon/user)
-	return pick('sound/voice/psyphoza/psyphoza_scream_1.ogg', 'sound/voice/psyphoza/psyphoza_scream_2.ogg')
+	return pick(
+		'sound/mobs/humanoids/psyphoza/psyphoza_scream_1.ogg',
+		'sound/mobs/humanoids/psyphoza/psyphoza_scream_2.ogg',
+	)
 
 /datum/species/psyphoza/primary_species_action()
 	. = ..()

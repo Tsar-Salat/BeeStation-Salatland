@@ -34,7 +34,7 @@
 	skinned_type = /obj/item/stack/sheet/animalhide/lizard
 	exotic_bloodtype = "L"
 	inert_mutation = /datum/mutation/firebreath
-	deathsound = 'sound/voice/lizard/deathsound.ogg'
+	deathsound = 'sound/mobs/humanoids/lizard/deathsound.ogg'
 	species_language_holder = /datum/language_holder/lizard
 	digitigrade_customization = DIGITIGRADE_OPTIONAL
 	blush_color = COLOR_BLUSH_TEAL
@@ -68,10 +68,10 @@
 
 /datum/species/lizard/get_scream_sound(mob/living/carbon/user)
 	return pick(
-		'sound/voice/lizard/lizard_scream_1.ogg',
-		'sound/voice/lizard/lizard_scream_2.ogg',
-		'sound/voice/lizard/lizard_scream_3.ogg',
-		'sound/voice/lizard/lizard_scream_4.ogg',
+		'sound/mobs/humanoids/lizard/lizard_scream_1.ogg',
+		'sound/mobs/humanoids/lizard/lizard_scream_2.ogg',
+		'sound/mobs/humanoids/lizard/lizard_scream_3.ogg',
+		'sound/mobs/humanoids/lizard/lizard_scream_4.ogg',
 		)
 
 /datum/species/lizard/get_cough_sound(mob/living/carbon/user)

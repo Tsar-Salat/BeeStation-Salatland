@@ -35,5 +35,5 @@
 	smoke.set_up(range, T)
 	smoke.start()
 	user.visible_message(span_warning("With a guttural screech, [user]'s skin bursts into gas!"))
-	playsound(user, 'sound/voice/lizard/lizard_scream_1.ogg', 30, 1)
+	playsound(user, 'sound/mobs/humanoids/lizard/lizard_scream_1.ogg', 30, 1)
 	return TRUE

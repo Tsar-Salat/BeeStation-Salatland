@@ -34,7 +34,7 @@
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | ERT_SPAWN | RACE_SWAP | SLIME_EXTRACT
 	species_language_holder = /datum/language_holder/moth
 	inert_mutation = /datum/mutation/strongwings
-	deathsound = 'sound/voice/moth/moth_deathgasp.ogg'
+	deathsound = 'sound/mobs/humanoids/moth/moth_death.ogg'
 
 	bodypart_overrides = list(
 		BODY_ZONE_HEAD = /obj/item/bodypart/head/moth,
@@ -59,10 +59,10 @@
 	return 0
 
 /datum/species/moth/get_laugh_sound(mob/living/carbon/user)
-	return 'sound/emotes/moth/mothlaugh.ogg'
+	return 'sound/mobs/humanoids/moth/moth_laugh.ogg'
 
 /datum/species/moth/get_scream_sound(mob/living/carbon/user)
-	return 'sound/voice/moth/scream_moth.ogg'
+	return 'sound/mobs/humanoids/moth/scream_moth.ogg'
 
 /datum/species/moth/on_species_gain(mob/living/carbon/human/H)
 	..()

@@ -12,6 +12,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 	RegisterSignal(src, COMSIG_MOB_LOGOUT, PROC_REF(med_hud_set_status))
 	RegisterSignal(src, COMSIG_MOB_LOGIN, PROC_REF(med_hud_set_status))
 	RegisterSignal(src, SIGNAL_UPDATETRAIT(TRAIT_OVERRIDE_SKIN_COLOUR), PROC_REF(_signal_body_part_update))
+	breathing_loop = new(src)
 
 /mob/living/carbon/Destroy()
 	//This must be done first, so the mob ghosts correctly before DNA etc is nulled
@@ -23,6 +24,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 	QDEL_LIST(implants)
 	remove_from_all_data_huds()
 	QDEL_NULL(dna)
+	QDEL_NULL(breathing_loop)
 	GLOB.carbon_list -= src
 
 /mob/living/carbon/swap_hand(held_index)

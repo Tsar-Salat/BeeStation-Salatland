@@ -53,4 +53,4 @@
 	living_pawn.manual_emote("[pick("barks", "growls", "stares")] menacingly at [target]!")
 	if(!DT_PROB(40, delta_time))
 		return
-	playsound(living_pawn, pick('sound/creatures/dog/growl1.ogg', 'sound/creatures/dog/growl2.ogg'), 50, TRUE, -1)
+	playsound(living_pawn, pick('sound/mobs/non-humanoids/dog/growl1.ogg', 'sound/mobs/non-humanoids/dog/growl2.ogg'), 50, TRUE, -1)

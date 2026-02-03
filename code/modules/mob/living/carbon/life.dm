@@ -76,6 +76,8 @@
 //Second link in a breath chain, calls check_breath()
 /mob/living/carbon/proc/breathe(delta_time, times_fired)
 	var/obj/item/organ/lungs = get_organ_slot(ORGAN_SLOT_LUNGS)
+	var/is_on_internals = FALSE
+
 	if(reagents.has_reagent(/datum/reagent/toxin/lexorin, needs_metabolizing = TRUE))
 		return
 
@@ -117,16 +119,28 @@
 
 				breath = loc.remove_air(breath_moles)
 		else //Breathe from loc as obj again
+			is_on_internals = TRUE
+
 			if(isobj(loc))
 				var/obj/loc_as_obj = loc
 				loc_as_obj.handle_internal_lifeform(src,0)
 
 	if(breath)
 		breath.volume = BREATH_VOLUME
-	check_breath(breath)
+
+	if(check_breath(breath) && is_on_internals)
+		try_breathing_sound(breath)
 
 	if(breath)
 		loc.assume_air(breath)
+
+//Tries to play the carbon a breathing sound when using internals, also invokes check_breath
+/mob/living/carbon/proc/try_breathing_sound(breath)
+	var/should_be_on =  client?.prefs?.read_preference(/datum/preference/toggle/sound_breathing)
+	if(should_be_on && !breathing_loop.timer_id && client?.mob.can_hear())
+		breathing_loop.start()
+	else if((!should_be_on && breathing_loop.timer_id) || !client?.mob.can_hear())
+		breathing_loop.stop()
 
 /mob/living/carbon/proc/has_smoke_protection()
 	if(HAS_TRAIT(src, TRAIT_NOBREATH))
@@ -139,9 +153,9 @@
 	if(HAS_TRAIT(src, TRAIT_GODMODE))
 		failed_last_breath = FALSE
 		clear_alert(ALERT_NOT_ENOUGH_OXYGEN)
-		return
+		return FALSE
 	if(HAS_TRAIT(src, TRAIT_NOBREATH))
-		return
+		return FALSE
 
 	var/obj/item/organ/lungs = get_organ_slot(ORGAN_SLOT_LUNGS)
 	if(!lungs)
@@ -150,23 +164,24 @@
 	//CRIT
 	if(!breath || (breath.total_moles() == 0) || !lungs)
 		if(reagents.has_reagent(/datum/reagent/medicine/epinephrine, needs_metabolizing = TRUE) && lungs)
-			return
+			return FALSE
 		adjustOxyLoss(1)
 
-		failed_last_breath = 1
+		failed_last_breath = TRUE
 		throw_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
-		return 0
+		return FALSE
 
 	var/safe_oxy_min = 16
 	var/safe_co2_max = 10
-	var/safe_tox_max = 0.05
+	var/safe_plas_max = 0.05
 	var/SA_para_min = 1
 	var/SA_sleep_min = 5
 	var/oxygen_used = 0
 	var/moles = breath.total_moles()
 	var/breath_pressure = (moles*R_IDEAL_GAS_EQUATION*breath.return_temperature())/BREATH_VOLUME
+
 	var/O2_partialpressure = ((GET_MOLES(/datum/gas/oxygen, breath)/moles)*breath_pressure) + (((GET_MOLES(/datum/gas/pluoxium, breath)*8)/moles)*breath_pressure)
-	var/Toxins_partialpressure = (GET_MOLES(/datum/gas/plasma, breath)/moles)*breath_pressure
+	var/Plasma_partialpressure = (GET_MOLES(/datum/gas/plasma, breath)/moles)*breath_pressure
 	var/CO2_partialpressure = (GET_MOLES(/datum/gas/carbon_dioxide, breath)/moles)*breath_pressure
 
 
@@ -177,15 +192,15 @@
 		if(O2_partialpressure > 0)
 			var/ratio = 1 - O2_partialpressure/safe_oxy_min
 			adjustOxyLoss(min(5*ratio, 3))
-			failed_last_breath = 1
+			failed_last_breath = TRUE
 			oxygen_used = GET_MOLES(/datum/gas/oxygen, breath)*ratio
 		else
 			adjustOxyLoss(3)
-			failed_last_breath = 1
+			failed_last_breath = TRUE
 		throw_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
 
 	else //Enough oxygen
-		failed_last_breath = 0
+		failed_last_breath = FALSE
 		if(health >= crit_threshold)
 			adjustOxyLoss(-5)
 		oxygen_used = GET_MOLES(/datum/gas/oxygen, breath)
@@ -210,8 +225,8 @@
 		co2overloadtime = 0
 
 	//TOXINS/PLASMA
-	if(Toxins_partialpressure > safe_tox_max)
-		var/ratio = (GET_MOLES(/datum/gas/plasma, breath)/safe_tox_max) * 10
+	if(Plasma_partialpressure > safe_plas_max)
+		var/ratio = (GET_MOLES(/datum/gas/plasma, breath)/safe_plas_max) * 10
 		adjustToxLoss(clamp(ratio, MIN_TOXIC_GAS_DAMAGE, MAX_TOXIC_GAS_DAMAGE))
 		throw_alert("too_much_tox", /atom/movable/screen/alert/too_much_plas)
 	else

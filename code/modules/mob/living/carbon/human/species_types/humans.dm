@@ -12,20 +12,20 @@
 	return TRUE	//Pure humans are always allowed in all roles.
 
 /datum/species/human/get_laugh_sound(mob/living/carbon/user)
-	return user.gender == FEMALE ? 'sound/voice/human/womanlaugh.ogg' : pick('sound/voice/human/manlaugh1.ogg', 'sound/voice/human/manlaugh2.ogg')
+	return user.gender == FEMALE ? 'sound/mobs/humanoids/human/womanlaugh.ogg' : pick('sound/mobs/humanoids/human/manlaugh1.ogg', 'sound/mobs/humanoids/human/manlaugh2.ogg')
 
 /datum/species/human/get_scream_sound(mob/living/carbon/user)
 	return user.gender == FEMALE ? pick(
-		'sound/voice/human/femalescream_1.ogg',
-		'sound/voice/human/femalescream_2.ogg',
-		'sound/voice/human/femalescream_3.ogg',
-		'sound/voice/human/femalescream_4.ogg',
+		'sound/mobs/humanoids/human/femalescream_1.ogg',
+		'sound/mobs/humanoids/human/femalescream_2.ogg',
+		'sound/mobs/humanoids/human/femalescream_3.ogg',
+		'sound/mobs/humanoids/human/femalescream_4.ogg',
 		) : pick(
-		'sound/voice/human/malescream_1.ogg',
-		'sound/voice/human/malescream_2.ogg',
-		'sound/voice/human/malescream_3.ogg',
-		'sound/voice/human/malescream_4.ogg',
-		'sound/voice/human/malescream_5.ogg',
+		'sound/mobs/humanoids/human/malescream_1.ogg',
+		'sound/mobs/humanoids/human/malescream_2.ogg',
+		'sound/mobs/humanoids/human/malescream_3.ogg',
+		'sound/mobs/humanoids/human/malescream_4.ogg',
+		'sound/mobs/humanoids/human/malescream_5.ogg',
 		)
 
 /datum/species/human/get_cough_sound(mob/living/carbon/user)

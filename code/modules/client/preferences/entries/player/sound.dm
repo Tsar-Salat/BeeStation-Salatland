@@ -71,6 +71,11 @@
 	db_key = "sound_adminalert"
 	preference_type = PREFERENCE_PLAYER
 
+/datum/preference/toggle/sound_breathing
+	category = PREFERENCE_CATEGORY_GAME_PREFERENCES
+	db_key = "sound_breathing"
+	preference_type = PREFERENCE_PLAYER
+
 /datum/preference/toggle/sound_announcements
 	category = PREFERENCE_CATEGORY_GAME_PREFERENCES
 	db_key = "sound_announcements"

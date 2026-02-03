@@ -262,7 +262,7 @@
 	var/mob/living/carbon/human/H = owner
 	start_cooldown()
 	H.nutrition = NUTRITION_LEVEL_STARVING
-	playsound(H, 'sound/creatures/venus_trap_death.ogg', 25, 1)
+	playsound(H, 'sound/mobs/non-humanoids/venus_trap/venus_trap_death.ogg', 25, 1)
 	new /mob/living/simple_animal/hostile/retaliate/nymph(H.loc)
 
 /datum/action/diona/partition/is_available()

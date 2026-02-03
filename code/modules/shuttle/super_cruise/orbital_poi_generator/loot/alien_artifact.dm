@@ -127,7 +127,7 @@
 	if(!T || T.get_lumcount())
 		return
 	if(prob(5))
-		playsound(T, pick('sound/voice/human/womanlaugh.ogg', 'sound/voice/human/manlaugh1.ogg'), 40)
+		playsound(T, pick('sound/mobs/humanoids/human/womanlaugh.ogg', 'sound/mobs/humanoids/human/manlaugh1.ogg'), 40)
 
 //===================
 // Spasm inducing

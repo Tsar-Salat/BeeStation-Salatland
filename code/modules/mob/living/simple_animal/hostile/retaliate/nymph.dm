@@ -126,7 +126,7 @@
 			if(user.assimilating)
 				return
 			user.assimilating = TRUE
-			playsound(user, 'sound/creatures/venus_trap_death.ogg', 25, 1)
+			playsound(user, 'sound/mobs/non-humanoids/venus_trap/venus_trap_death.ogg', 25, 1)
 			balloon_alert(user, "[user] starts assimilating [src]")
 			toggle_ai(AI_OFF)
 			if(do_after(user, 30 SECONDS, src))
@@ -186,7 +186,7 @@
 		if(!do_after(arrived_diona, 5 SECONDS, source, progress = TRUE))
 			toggle_ai(AI_IDLE)
 			return
-		playsound(arrived_diona, 'sound/creatures/venus_trap_hit.ogg', 25, 1)
+		playsound(arrived_diona, 'sound/mobs/non-humanoids/venus_trap/venus_trap_hit.ogg', 25, 1)
 		var/obj/item/bodypart/healed_limb = pick(limbs_to_heal)
 		arrived_diona.regenerate_limb(healed_limb)
 		for(var/obj/item/bodypart/body_part in arrived_diona.bodyparts)
@@ -270,7 +270,7 @@
 		to_chat(user, span_danger("You cannot evolve while in a vent."))
 		return
 	if(nymph.amount_grown >= nymph.max_grown)
-		playsound(nymph, 'sound/creatures/venus_trap_death.ogg', 25, 1)
+		playsound(nymph, 'sound/mobs/non-humanoids/venus_trap/venus_trap_death.ogg', 25, 1)
 		nymph.evolve()
 	else
 		to_chat(user, span_danger("You are not ready to grow up by yourself."))

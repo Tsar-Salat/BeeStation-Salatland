@@ -310,6 +310,6 @@
 	attack_verb_simple = list("flutter", "flap")
 	w_class = WEIGHT_CLASS_TINY
 	force = 0
-	hitsound = 'sound/voice/moth/scream_moth.ogg'
+	hitsound = 'sound/mobs/humanoids/moth/scream_moth.ogg'
 	custom_price = 237
 	custom_premium_price = 237
