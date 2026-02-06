@@ -51,7 +51,7 @@ GLOBAL_LIST_EMPTY_TYPED(holoparasites, /mob/living/simple_animal/hostile/holopar
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	/**
 	 * The name of the holoparasite, formatted with the [accent_color] in a <font> tag.
-	 * Automatically set by [set_name()].
+	 * Automatically set by [set_new_name()].
 	 */
 	var/color_name
 	/// Notes left by the summoner of the holoparasite.

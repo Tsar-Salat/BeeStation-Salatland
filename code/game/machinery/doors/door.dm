@@ -364,10 +364,6 @@
 			L.emote("scream")
 			if(!L.IsParalyzed())
 				L.Paralyze(60)
-		else if(ismonkey(L)) //For monkeys
-			L.adjustBruteLoss(DOOR_CRUSH_DAMAGE)
-			if(!L.IsParalyzed())
-				L.Paralyze(60)
 		else //for simple_animals & borgs
 			L.adjustBruteLoss(DOOR_CRUSH_DAMAGE)
 		var/turf/location = get_turf(src)
@@ -377,6 +373,7 @@
 	for(var/obj/vehicle/sealed/mecha/M in get_turf(src))
 		M.take_damage(DOOR_CRUSH_DAMAGE)
 		log_combat(src, M, "crushed", src)
+
 /obj/machinery/door/proc/autoclose()
 	if(!QDELETED(src) && !density && !operating && !locked && !welded && autoclose)
 		close()

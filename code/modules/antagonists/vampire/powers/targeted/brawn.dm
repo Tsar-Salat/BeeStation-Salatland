@@ -137,7 +137,7 @@
 
 		carbon_owner.do_attack_animation(living_target, ATTACK_EFFECT_SMASH)
 
-		var/obj/item/bodypart/affecting = living_target.get_bodypart(ran_zone(living_target.get_combat_bodyzone()))
+		var/obj/item/bodypart/affecting = living_target.get_bodypart(living_target.get_random_valid_zone(living_target.get_combat_bodyzone()))
 		living_target.apply_damage(hit_strength, BRUTE, affecting)
 
 		// Knockback

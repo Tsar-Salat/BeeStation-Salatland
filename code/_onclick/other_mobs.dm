@@ -193,38 +193,6 @@
 /atom/proc/handle_basic_attack(user, modifiers)
 	return attack_animal(user, modifiers)
 
-/*
-	Monkeys
-*/
-/mob/living/carbon/monkey/UnarmedAttack(atom/A, proximity)
-	if(HAS_TRAIT(src, TRAIT_HANDS_BLOCKED))
-		if(!combat_mode || is_muzzled())
-			return
-		if(!iscarbon(A))
-			return
-		var/mob/living/carbon/victim = A
-		var/obj/item/bodypart/affecting = null
-		if(ishuman(victim))
-			var/mob/living/carbon/human/human_victim = victim
-			affecting = human_victim.get_bodypart(pick(BODY_ZONE_CHEST, BODY_ZONE_PRECISE_L_HAND, BODY_ZONE_PRECISE_R_HAND, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG))
-		var/armor = victim.run_armor_check(affecting, MELEE)
-		if(prob(25))
-			victim.visible_message(span_danger("[src]'s bite misses [victim]!"),
-				span_danger("You avoid [src]'s bite!"), span_hear("You hear jaws snapping shut!"), COMBAT_MESSAGE_RANGE, src)
-			to_chat(src, span_danger("Your bite misses [victim]!"))
-			return
-		victim.apply_damage(rand(1, 3), BRUTE, affecting, armor)
-		victim.visible_message(span_danger("[name] bites [victim]!"),
-			span_userdanger("[name] bites you!"), span_hear("You hear a chomp!"), COMBAT_MESSAGE_RANGE, name)
-		to_chat(name, span_danger("You bite [victim]!"))
-		if(armor >= 2)
-			return
-		for(var/d in diseases)
-			var/datum/disease/bite_infection = d
-			victim.ForceContractDisease(bite_infection)
-		return
-	A.attack_paw(src)
-
 ///Attacked by monkey. It doesn't need its own *_secondary proc as it just uses attack_hand_secondary instead.
 /atom/proc/attack_paw(mob/user, list/modifiers)
 	if(SEND_SIGNAL(src, COMSIG_ATOM_ATTACK_PAW, user, modifiers) & COMPONENT_CANCEL_ATTACK_CHAIN)

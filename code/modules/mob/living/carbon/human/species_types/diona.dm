@@ -8,7 +8,6 @@
 		EYECOLOR,
 		AGENDER,
 		NOHUSK,
-		NO_UNDERWEAR,
 		NOSOCKS,
 		NOEYESPRITES,
 	)
@@ -20,6 +19,7 @@
 		TRAIT_NOBREATH,
 		TRAIT_NO_DNA_COPY,
 		TRAIT_NOT_TRANSMORPHIC,
+		TRAIT_NO_UNDERWEAR,
 	)
 	inherent_biotypes = MOB_HUMANOID | MOB_ORGANIC |  MOB_BUG
 	mutant_bodyparts = list("diona_leaves", "diona_thorns", "diona_flowers", "diona_moss", "diona_mushroom", "diona_antennae", "diona_eyes", "diona_pbody")
@@ -33,7 +33,6 @@
 	staminamod = 0.7
 	meat = /obj/item/food/meat/slab/human/mutant/diona
 	exotic_blood = /datum/reagent/consumable/chlorophyll
-	species_gibs = null //Someone please make this like, xeno gibs or something in the future. I cant be bothered to fuck around with gib code right now.
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | ERT_SPAWN | RACE_SWAP
 	species_language_holder = /datum/language_holder/diona
 	bodytemp_normal = (BODYTEMP_NORMAL - 22) // Body temperature for dionae is much lower then humans as they are plants, supposed to be 15 celsius

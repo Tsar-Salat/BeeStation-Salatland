@@ -351,10 +351,19 @@
 //Mob spam prevention
 /datum/config_entry/number/max_cube_monkeys
 	config_entry_value = 100
+	default = 100
+	min_val = 0
+
 /datum/config_entry/number/max_chickens
 	config_entry_value = 100
+	default = 100
+	min_val = 0
+
 /datum/config_entry/number/max_slimes
 	config_entry_value = 100
+	default = 100
+	min_val = 0
+
 /datum/config_entry/number/max_slimeperson_bodies
 	config_entry_value = 10
 

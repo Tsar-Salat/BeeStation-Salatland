@@ -1196,7 +1196,7 @@
 				"UI" = scanner_occupant.dna.unique_identity,
 				"UF"=scanner_occupant.dna.unique_features,
 				"UE" = scanner_occupant.dna.unique_enzymes,
-				"blood_type" = scanner_occupant.dna.blood_type.name
+				"blood_type" = scanner_occupant.dna.blood_type
 			)
 
 			return
@@ -1635,7 +1635,12 @@
 			scanner_occupant.real_name = buffer_slot["name"]
 			scanner_occupant.name = buffer_slot["name"]
 			scanner_occupant.dna.unique_enzymes = buffer_slot["UE"]
-			scanner_occupant.dna.blood_type = buffer_slot["blood_type"]
+			// Handle both datum (new) and string (old buffer data) blood types
+			var/blood_type_data = buffer_slot["blood_type"]
+			if(istext(blood_type_data))
+				scanner_occupant.dna.blood_type = get_blood_type(blood_type_data)
+			else
+				scanner_occupant.dna.blood_type = blood_type_data
 			. = TRUE
 
 	if(.)

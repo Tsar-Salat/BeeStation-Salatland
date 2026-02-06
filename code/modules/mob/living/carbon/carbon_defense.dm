@@ -196,7 +196,7 @@
 	return FALSE
 
 
-/mob/living/carbon/attack_paw(mob/living/carbon/human/M, modifiers)
+/mob/living/carbon/attack_paw(mob/living/carbon/human/M, list/modifiers)
 
 	if(try_inject(M, injection_flags = INJECT_TRY_SHOW_ERROR_MESSAGE))
 		for(var/thing in diseases)
@@ -216,6 +216,8 @@
 	if(..() && can_inject(M, get_combat_bodyzone(), INJECT_CHECK_PENETRATE_THICK | INJECT_TRY_SHOW_ERROR_MESSAGE)) //successful monkey bite.
 		for(var/thing in M.diseases)
 			var/datum/disease/D = thing
+			if(D.spread_flags & (DISEASE_SPREAD_SPECIAL | DISEASE_SPREAD_NON_CONTAGIOUS))
+				continue
 			ForceContractDisease(D)
 		return 1
 
@@ -241,7 +243,7 @@
 		return dam_zone
 	var/obj/item/bodypart/affecting
 	if(dam_zone && attacker.client)
-		affecting = get_bodypart(ran_zone(dam_zone))
+		affecting = get_bodypart(get_random_valid_zone(dam_zone))
 	else
 		var/list/things_to_ruin = shuffle(bodyparts.Copy())
 		for(var/B in things_to_ruin)
@@ -577,9 +579,7 @@
 	var/dam_zone = dismembering_strike(user, affected_zone)
 	if(!dam_zone) //Dismemberment successful
 		return TRUE
-	var/obj/item/bodypart/affecting = get_bodypart(affected_zone)
-	if(!affecting)
-		affecting = get_bodypart(BODY_ZONE_CHEST)
+	var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(affected_zone))
 	var/armor = run_armor_check(affecting, MELEE, armour_penetration = user.armour_penetration)
 	apply_damage(user.melee_damage, user.melee_damage_type, affecting, armor)
 	// Apply bleeding
@@ -596,9 +596,8 @@
 	var/dam_zone = dismembering_strike(M, affected_zone)
 	if(!dam_zone) //Dismemberment successful
 		return TRUE
-	var/obj/item/bodypart/affecting = get_bodypart(affected_zone)
-	if(!affecting)
-		affecting = get_bodypart(BODY_ZONE_CHEST)
+
+	var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(affected_zone))
 	var/armor = run_armor_check(affecting, MELEE, armour_penetration = M.armour_penetration)
 	apply_damage(M.melee_damage, M.melee_damage_type, affecting, armor)
 	// Apply bleeding
@@ -606,17 +605,6 @@
 		var/armour_block = run_armor_check(dam_zone, BLEED, armour_penetration = M.armour_penetration, silent = TRUE)
 		var/hit_amount = (100 - armour_block) / 100
 		add_bleeding(M.melee_damage * 0.1 * hit_amount)
-
-/mob/living/carbon/proc/grab(mob/living/carbon/human/user, mob/living/carbon/human/target, datum/martial_art/attacker_style)
-	if(target.check_block())
-		target.visible_message(span_warning("[target] blocks [user]'s grab!"), \
-						span_userdanger("You block [user]'s grab!"), span_hear("You hear a swoosh!"), COMBAT_MESSAGE_RANGE, user)
-		to_chat(user, span_warning("Your grab at [target] was blocked!"))
-		return FALSE
-	if(attacker_style?.grab_act(user,target) == MARTIAL_ATTACK_SUCCESS)
-		return TRUE
-	target.grabbedby(user)
-	return TRUE
 
 /mob/living/carbon/proc/check_block()
 	if(mind)

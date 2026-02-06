@@ -526,7 +526,7 @@
 
 ///Decides if the liver is failing or not.
 /mob/living/carbon/proc/handle_liver(delta_time, times_fired)
-	if(!dna)
+	if(isnull(has_dna()))
 		return
 	var/obj/item/organ/liver/liver = get_organ_slot(ORGAN_SLOT_LIVER)
 	if(!liver)

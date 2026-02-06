@@ -380,9 +380,12 @@
 
 /atom/proc/CtrlClick(mob/user)
 	SEND_SIGNAL(src, COMSIG_CLICK_CTRL, user)
+	SEND_SIGNAL(user, COMSIG_MOB_CTRL_CLICKED, src)
 	var/mob/living/ML = user
 	if(istype(ML))
 		ML.pulled(src)
+	if(!can_interact(user))
+		return FALSE
 
 /mob/living/CtrlClick(mob/user)
 	if(!isliving(user) || !user.CanReach(src) || user.incapacitated())
@@ -398,26 +401,18 @@
 
 	return ..()
 
-/mob/living/carbon/CtrlClick(mob/user)
-
+/mob/living/carbon/human/CtrlClick(mob/user)
 	if(!iscarbon(user) || !user.CanReach(src) || user.incapacitated())
 		return ..()
 
 	if(world.time < user.next_move)
 		return FALSE
 
-	if(ishuman(src) && ishuman(user))
+	if (ishuman(user))
 		var/mob/living/carbon/human_user = user
 		if(human_user.dna.species.grab(human_user, src, human_user.mind.martial_art))
 			human_user.changeNext_move(CLICK_CD_MELEE)
 			return TRUE
-
-	else
-		var/mob/living/carbon/carbon_user = user
-		if(carbon_user.grab(carbon_user, src, carbon_user.mind.martial_art))
-			carbon_user.changeNext_move(CLICK_CD_MELEE)
-			return TRUE
-
 	return ..()
 
 /mob/proc/CtrlMiddleClickOn(atom/A)
@@ -429,9 +424,9 @@
 	return
 
 /**
-  * Alt click
-  * Unused except for AI
-  */
+ * Alt click
+ * Unused except for AI
+ */
 /mob/proc/AltClickOn(atom/A)
 	. = SEND_SIGNAL(src, COMSIG_MOB_ALTCLICKON, A)
 	if(. & COMSIG_MOB_CANCEL_CLICKON)
