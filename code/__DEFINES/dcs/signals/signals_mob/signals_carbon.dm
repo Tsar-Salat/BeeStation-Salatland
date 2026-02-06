@@ -23,6 +23,12 @@
 #define COMSIG_CARBON_EMBED_REMOVAL "item_embed_remove_safe"
 ///Called when someone attempts to cuff a carbon
 #define COMSIG_CARBON_CUFF_ATTEMPTED "carbon_attempt_cuff"
+///Called when a carbon attempts to breath, before the breath has actually occurred
+#define COMSIG_CARBON_ATTEMPT_BREATHE "carbon_attempt_breathe"
+	// Prevents the breath
+	#define COMSIG_CARBON_BLOCK_BREATH (1 << 0)
+///Called when a carbon breathes, before the breath has actually occurred
+#define COMSIG_CARBON_PRE_BREATHE "carbon_pre_breathe"
 
 //! from base of mob/living/carbon/set_species(): (new_race)
 #define COMSIG_CARBON_SPECIESCHANGE "mob_carbon_specieschange"
@@ -47,6 +53,9 @@
 #define COMSIG_BODYPART_UPDATING_HEALTH_HUD "bodypart_updating_health_hud"
 	/// Return to override that bodypart's health hud with your own icon
 	#define COMPONENT_OVERRIDE_BODYPART_HEALTH_HUD (1<<0)
+///from /obj/item/bodypart/proc/receive_damage, sent from the limb owner (limb, brute, burn)
+#define COMSIG_CARBON_LIMB_DAMAGED "carbon_limb_damaged"
+	#define COMPONENT_PREVENT_LIMB_DAMAGE (1 << 0)
 
 /// Called from /obj/item/bodypart/check_for_injuries (mob/living/carbon/examiner, list/check_list)
 #define COMSIG_BODYPART_CHECKED_FOR_INJURY "bodypart_injury_checked"

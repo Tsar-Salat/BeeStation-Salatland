@@ -203,6 +203,10 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 
 	if(organ_flags & ORGAN_FAILING)
 		return
+
+	if(!damage) // No sense healing if you're not even hurt bro
+		return
+
 	///Damage decrements by a percent of its maxhealth
 	var/healing_amount = healing_factor
 	///Damage decrements again by a percent of its maxhealth, up to a total of 4 extra times depending on the owner's health

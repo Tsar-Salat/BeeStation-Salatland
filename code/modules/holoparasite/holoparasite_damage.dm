@@ -49,7 +49,7 @@
 /**
  * Negates oxygen damage for the holoparasite - it's a bluespace crystallization, it does not breathe.
  */
-/mob/living/simple_animal/hostile/holoparasite/adjustOxyLoss(amount, updating_health, forced)
+/mob/living/simple_animal/hostile/holoparasite/adjustOxyLoss(amount, updating_health = TRUE, forced = FALSE, required_biotype = ALL, required_respiration_type = ALL)
 	return FALSE
 
 /**
@@ -61,7 +61,7 @@
 /**
  * Negates stamina damage for the holoparasite - it's a bluespace crystallization, it has no stamina.
  */
-/mob/living/simple_animal/hostile/holoparasite/adjustStaminaLoss(amount, updating_health, forced)
+/mob/living/simple_animal/hostile/holoparasite/adjustStaminaLoss(amount, updating_stamina = TRUE, forced = FALSE, required_biotype = ALL)
 	return FALSE
 
 /**

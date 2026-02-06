@@ -73,12 +73,9 @@
 		restoring = FALSE
 		return
 	ai_slot.locked =TRUE
-	A.adjustOxyLoss(-1, 0)
-	A.adjustFireLoss(-1, 0)
-	A.adjustToxLoss(-1, 0)
+	A.adjustOxyLoss(-1, 0, FALSE)
+	A.adjustFireLoss(-1, 0, FALSE)
 	A.adjustBruteLoss(-1, 0)
-
-	A.updatehealth()
 	if(A.health >= 0 && A.stat == DEAD)
 		A.revive()
 		cardhold.update_appearance()

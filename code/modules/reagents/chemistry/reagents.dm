@@ -50,10 +50,6 @@ GLOBAL_LIST_INIT(name2reagent, build_name2reagent())
 	var/chemical_flags = CHEMICAL_NOT_DEFINED
 	///how fast the reagent is metabolized by the mob
 	var/metabolization_rate = REAGENTS_METABOLISM
-	/// A list of traits to apply while the reagent is being metabolized.
-	var/list/metabolized_traits
-	/// A list of traits to apply while the reagent is in a mob.
-	var/list/added_traits
 	/// Will be added as the reagent is processed
 	var/metabolite
 	/// above this overdoses happen
@@ -70,6 +66,22 @@ GLOBAL_LIST_INIT(name2reagent, build_name2reagent())
 	var/metabolizing = FALSE
 	///Assoc list with key type of addiction this reagent feeds, and value amount of addiction points added per unit of reagent metabolzied (which means * REAGENTS_METABOLISM every life())
 	var/list/addiction_types = null
+	/// The affected organ_flags, if the reagent damages/heals organ damage of an affected mob.
+	/// See "Organ defines for carbon mobs" in /code/_DEFINES/surgery.dm
+	var/affected_organ_flags = ORGAN_ORGANIC
+	/// The affected bodytype, if the reagent damages/heals bodyparts (Brute/Fire) of an affected mob.
+	/// See "Bodytype defines" in /code/_DEFINES/mobs.dm
+	var/affected_bodytype = BODYTYPE_ORGANIC
+	/// The affected biotype, if the reagent damages/heals toxin damage of an affected mob.
+	/// See "Mob bio-types flags" in /code/_DEFINES/mobs.dm
+	var/affected_biotype = MOB_ORGANIC
+	/// The affected respiration type, if the reagent damages/heals oxygen damage of an affected mob.
+	/// See "Mob bio-types flags" in /code/_DEFINES/mobs.dm
+	var/affected_respiration_type = ALL
+	/// A list of traits to apply while the reagent is being metabolized.
+	var/list/metabolized_traits
+	/// A list of traits to apply while the reagent is in a mob.
+	var/list/added_traits
 
 	///The default reagent container for the reagent, used for icon generation
 	var/obj/item/reagent_containers/default_container = /obj/item/reagent_containers/cup/bottle
@@ -174,3 +186,4 @@ GLOBAL_LIST_INIT(name2reagent, build_name2reagent())
 /datum/reagent/proc/overdose_start(mob/living/carbon/affected_mob)
 	to_chat(affected_mob, span_userdanger("You feel like you took too much of [name]!"))
 	SEND_SIGNAL(affected_mob, COMSIG_ADD_MOOD_EVENT, "[type]_overdose", /datum/mood_event/overdose, name)
+	return

@@ -26,6 +26,10 @@
 	basic_mob_flags = DEL_ON_DEATH
 	faction = list(FACTION_HOSTILE, FACTION_MAINT_CREATURES)
 
+	unsuitable_atmos_damage = 0
+	minimum_survivable_temperature = 270
+	maximum_survivable_temperature = INFINITY
+
 	ai_controller = /datum/ai_controller/basic_controller/cockroach
 
 	///Are we squashable
@@ -38,7 +42,6 @@
 	. = ..()
 	AddElement(/datum/element/death_drops, list(/obj/effect/decal/cleanable/insectguts))
 	// AddElement(/datum/element/swabable, CELL_LINE_TABLE_COCKROACH, CELL_VIRUS_TABLE_GENERIC_MOB, 1, 7) //Bee edit: No swabable elements
-	AddElement(/datum/element/basic_body_temp_sensitive, 270, INFINITY)
 	if(is_squashable)
 		AddComponent(/datum/component/squashable, squash_chance = 50, squash_damage = 1)
 	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)

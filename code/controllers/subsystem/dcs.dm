@@ -16,7 +16,7 @@ PROCESSING_SUBSYSTEM_DEF(dcs)
 		CRASH("Attempted to instantiate [eletype] as a /datum/element")
 
 	if(initial(eletype.element_flags) & ELEMENT_BESPOKE)
-		element_id = GetIdFromArguments(arguments)
+		element_id = length(arguments) == 1 ? "[arguments[1]]" : GetIdFromArguments(arguments)
 
 	. = elements_by_type[element_id]
 	if(.)
@@ -31,10 +31,9 @@ PROCESSING_SUBSYSTEM_DEF(dcs)
 	**/
 /datum/controller/subsystem/processing/dcs/proc/GetIdFromArguments(list/arguments)
 	var/datum/element/eletype = arguments[1]
-	var/list/fullid = list("[eletype]")
-	var/list/named_arguments = list()
-
-	for(var/i in initial(eletype.id_arg_index) to length(arguments))
+	var/list/fullid = list(eletype)
+	var/list/named_arguments
+	for(var/i in initial(eletype.id_arg_index) to (initial(eletype.argument_hash_end_idx) || length(arguments)))
 		var/key = arguments[i]
 
 		if(istext(key))
@@ -44,16 +43,19 @@ PROCESSING_SUBSYSTEM_DEF(dcs)
 			else
 				if (!istext(value) && !isnum(value))
 					value = REF(value)
-				named_arguments[key] = value
 
+				if (!named_arguments)
+					named_arguments = list()
+
+				named_arguments[key] = value
 			continue
 
 		if (isnum(key))
-			fullid += "[key]"
+			fullid += key
 		else
 			fullid += REF(key)
 
-	if(length(named_arguments))
+	if(named_arguments)
 		named_arguments = sortTim(named_arguments, /proc/cmp_text_asc)
 		fullid += named_arguments
 

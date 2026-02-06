@@ -85,6 +85,11 @@
 /// The mob is a spooky phantasm or an evil ghast of such nature.
 #define MOB_SPIRIT (1 << 9)
 
+//Lung respiration type flags
+#define RESPIRATION_OXYGEN (1 << 0)
+#define RESPIRATION_N2 (1 << 1)
+#define RESPIRATION_PLASMA (1 << 2)
+
 //Organ defines for carbon mobs
 #define ORGAN_ORGANIC 1
 #define ORGAN_ROBOTIC 2
@@ -696,3 +701,8 @@ GLOBAL_LIST_INIT(available_random_trauma_list, list(
 /// Distance which you can see someone's ID card
 /// Short enough that you can inspect over tables (bartender checking age)
 #define ID_EXAMINE_DISTANCE 3
+
+/// Default minimum body temperature mobs can exist in before taking damage
+#define NPC_DEFAULT_MIN_TEMP 250
+/// Default maximum body temperature mobs can exist in before taking damage
+#define NPC_DEFAULT_MAX_TEMP 350

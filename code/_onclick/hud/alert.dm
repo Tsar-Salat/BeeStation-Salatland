@@ -20,7 +20,7 @@
 	if(alerts[category])
 		thealert = alerts[category]
 		if(thealert.override_alerts)
-			return 0
+			return thealert
 		if(new_master && new_master != thealert.master)
 			WARNING("[src] threw alert [category] with new_master [new_master] while already having that alert with master [thealert.master]")
 
@@ -30,11 +30,14 @@
 			clear_alert(category)
 			return .()
 		else if(!severity || severity == thealert.severity)
-			if(thealert.timeout)
-				clear_alert(category)
-				return .()
-			else //no need to update
-				return 0
+			if(!thealert.timeout)
+				// No need to update existing alert
+				return thealert
+			// Reset timeout of existing alert
+			var/timeout = initial(thealert.timeout)
+			addtimer(CALLBACK(src, PROC_REF(alert_timeout), thealert, category), timeout)
+			thealert.timeout = world.time + timeout - world.tick_lag
+			return thealert
 	else
 		thealert = new type()
 		thealert.override_alerts = override
@@ -157,13 +160,18 @@
 
 /atom/movable/screen/alert/not_enough_plas
 	name = "Choking (No Plasma)"
-	desc = "You're not getting enough plasma. Find some good air before you pass out!"
+	desc = "You're not getting enough plasma. Find some good air before you pass out! The box in your backpack has a spare plasma tank."
 	icon_state = ALERT_NOT_ENOUGH_PLASMA
 
 /atom/movable/screen/alert/too_much_plas
 	name = "Choking (Plasma)"
-	desc = "There's highly flammable, toxic plasma in the air and you're breathing it in. Find some fresh air. The box in your backpack has an oxygen tank and gas mask in it."
+	desc = "There's highly flammable, toxic plasma in the air and you're breathing it in. Find some fresh air. The box in your backpack has an oxygen tank and breath mask in it."
 	icon_state = ALERT_TOO_MUCH_PLASMA
+
+/atom/movable/screen/alert/too_much_n2o
+	name = "Choking (N2O)"
+	desc = "There's sleeping gas in the air and you're breathing it in. Find some fresh air. The box in your backpack has an oxygen tank and breath mask in it."
+	icon_state = ALERT_TOO_MUCH_N2O
 
 //End gas alerts
 

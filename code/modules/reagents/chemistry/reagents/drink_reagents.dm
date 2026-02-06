@@ -29,7 +29,7 @@
 /datum/reagent/consumable/orangejuice/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()
 	if(affected_mob.getOxyLoss() && DT_PROB(16, delta_time))
-		affected_mob.adjustOxyLoss(-1, updating_health = FALSE)
+		affected_mob.adjustOxyLoss(-1, updating_health = FALSE, required_biotype = affected_biotype, required_respiration_type = affected_respiration_type)
 		return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/tomatojuice
@@ -864,16 +864,17 @@
 
 /datum/reagent/consumable/doctor_delight/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()
-	// Drains the nutrition of the affected_mob.reagents. Not medical staff though, since it's the Doctor's Delight!
+	var/need_mob_update
+	need_mob_update = affected_mob.adjustBruteLoss(-0.5 * REM * delta_time, updating_health = FALSE, required_bodytype = affected_bodytype)
+	need_mob_update += affected_mob.adjustFireLoss(-0.5 * REM * delta_time, updating_health = FALSE, required_bodytype = affected_bodytype)
+	need_mob_update += affected_mob.adjustToxLoss(-0.5 * REM * delta_time, updating_health = FALSE, required_biotype = affected_biotype)
+	need_mob_update += affected_mob.adjustOxyLoss(-0.5 * REM * delta_time, updating_health = FALSE, required_biotype = affected_biotype, required_respiration_type = affected_respiration_type)
 	if(affected_mob.nutrition && (affected_mob.nutrition - 2 > 0))
-		if(!HAS_MIND_TRAIT(affected_mob, TRAIT_MEDICAL_METABOLISM))
+		if(!(HAS_MIND_TRAIT(affected_mob, TRAIT_MEDICAL_METABOLISM)))
+			// Drains the nutrition of the holder. Not medical doctors though, since it's the Doctor's Delight!
 			affected_mob.adjust_nutrition(-2 * REM * delta_time)
-
-	affected_mob.adjustBruteLoss(-0.5 * REM * delta_time, updating_health = FALSE)
-	affected_mob.adjustFireLoss(-0.5 * REM * delta_time, updating_health = FALSE)
-	affected_mob.adjustToxLoss(-0.5 * REM * delta_time, updating_health = FALSE)
-	affected_mob.adjustOxyLoss(-0.5 * REM * delta_time, updating_health = FALSE)
-	return UPDATE_MOB_HEALTH
+	if(need_mob_update)
+		return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/chocolatepudding
 	name = "Chocolate Pudding"

@@ -68,7 +68,10 @@
 	var/limb_destroyer = FALSE //1 Sets AI behavior that allows mobs to target and dismember limbs with their basic attack.
 
 	var/mob_size = MOB_SIZE_HUMAN
+	/// List of biotypes the mob belongs to. Used by diseases and reagents mainly.
 	var/mob_biotypes = MOB_ORGANIC
+	/// The type of respiration the mob is capable of doing. Used by adjustOxyLoss.
+	var/mob_respiration_type = RESPIRATION_OXYGEN
 	var/metabolism_efficiency = 1 //more or less efficiency to metabolize helpful/harmful reagents and regulate body temperature..
 	var/has_limbs = 0 //does the mob have distinct limbs?(arms,legs, chest,head)
 

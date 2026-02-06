@@ -90,12 +90,12 @@
 	var/unsuitable_atmos_damage = 1
 
 	///Minimal body temperature without receiving damage
-	var/minimum_survivable_temperature = 250
+	var/minimum_survivable_temperature = NPC_DEFAULT_MIN_TEMP
 	///Maximal body temperature without receiving damage
-	var/maximum_survivable_temperature = 350
-	///This damage is taken when the body temp is too cold. Set both this and unsuitable_heat_damage to 0 to avoid adding the basic_body_temp_sensitive element.
+	var/maximum_survivable_temperature = NPC_DEFAULT_MAX_TEMP
+	///This damage is taken when the body temp is too cold. Set both this and unsuitable_heat_damage to 0 to avoid adding the body_temp_sensitive element.
 	var/unsuitable_cold_damage = 1
-	///This damage is taken when the body temp is too hot. Set both this and unsuitable_cold_damage to 0 to avoid adding the basic_body_temp_sensitive element.
+	///This damage is taken when the body temp is too hot. Set both this and unsuitable_cold_damage to 0 to avoid adding the body_temp_sensitive element.
 	var/unsuitable_heat_damage = 1
 
 /mob/living/basic/Initialize(mapload)
@@ -115,19 +115,28 @@
 	if(speak_emote)
 		speak_emote = string_list(speak_emote)
 
-	if(unsuitable_atmos_damage != 0)
-		//String assoc list returns a cached list, so this is like a static list to pass into the element below.
-		habitable_atmos = string_assoc_list(habitable_atmos)
-		AddElement(/datum/element/atmos_requirements, habitable_atmos, unsuitable_atmos_damage)
+	apply_atmos_requirements(mapload)
+	apply_temperature_requirements(mapload)
 
-	if(unsuitable_cold_damage != 0 && unsuitable_heat_damage != 0)
-		AddElement(/datum/element/basic_body_temp_sensitive, minimum_survivable_temperature, maximum_survivable_temperature, unsuitable_cold_damage, unsuitable_heat_damage)
+/// Ensures this mob can take atmospheric damage if it's supposed to
+/mob/living/basic/proc/apply_atmos_requirements(mapload)
+	if(unsuitable_atmos_damage == 0 || isnull(habitable_atmos))
+		return
+	//String assoc list returns a cached list, so this is like a static list to pass into the element below.
+	habitable_atmos = string_assoc_list(habitable_atmos)
+	AddElement(/datum/element/atmos_requirements, habitable_atmos, unsuitable_atmos_damage, mapload)
+
+/// Ensures this mob can take temperature damage if it's supposed to
+/mob/living/basic/proc/apply_temperature_requirements(mapload)
+	if((unsuitable_cold_damage == 0 && unsuitable_heat_damage == 0) || (minimum_survivable_temperature <= 0 && maximum_survivable_temperature >= INFINITY))
+		return
+	AddElement(/datum/element/body_temp_sensitive, minimum_survivable_temperature, maximum_survivable_temperature, unsuitable_cold_damage, unsuitable_heat_damage, mapload)
 
 /mob/living/basic/Life(delta_time = SSMOBS_DT, times_fired)
 	. = ..()
 	///Automatic stamina re-gain
 	if(staminaloss > 0)
-		adjustStaminaLoss(-stamina_recovery * delta_time, updating_health = FALSE, forced = TRUE)
+		adjustStaminaLoss(-stamina_recovery * delta_time, updating_stamina = FALSE, forced = TRUE)
 
 /mob/living/basic/say_mod(input, list/message_mods = list())
 	if(length(speak_emote))
@@ -217,8 +226,8 @@
 /mob/living/basic/compare_sentience_type(compare_type)
 	return sentience_type == compare_type
 
-/mob/living/basic/on_fire_stack(seconds_per_tick, datum/status_effect/fire_handler/fire_stacks/fire_handler)
-	adjust_bodytemperature((maximum_survivable_temperature + (fire_handler.stacks * 12)) * 0.5 * seconds_per_tick)
+/mob/living/basic/on_fire_stack(delta_time, datum/status_effect/fire_handler/fire_stacks/fire_handler)
+	adjust_bodytemperature((maximum_survivable_temperature + (fire_handler.stacks * 12)) * 0.5 * delta_time)
 
 /mob/living/basic/get_fire_overlay(stacks, on_fire)
 	var/fire_icon = "generic_fire"

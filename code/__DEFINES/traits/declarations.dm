@@ -207,6 +207,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_NAIVE "naive" //All dead people will appear as sleeping.
 #define TRAIT_PRIMITIVE "primitive"
 #define TRAIT_SPACEWALK "spacewalk"
+/// Mobs with this trait still breathe gas in and out but aren't harmed by lacking any particular gas mix. (You can still be hurt by TOO MUCH of a specific gas).
+#define TRAIT_NO_BREATHLESS_DAMAGE "spacebreathing"
 #define TRAIT_DROPS_ITEMS_ON_DEATH "drops_items_on_death" //used for battle royale
 #define TRAIT_DRINKSBLOOD "drinks_blood"
 #define TRAIT_SOMMELIER			"sommelier"  // shows different booze power flavor texts

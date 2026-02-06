@@ -11,13 +11,20 @@
 /// Amount of air to take a from a tile
 #define BREATH_PERCENTAGE (BREATH_VOLUME/CELL_VOLUME)
 
+/// Return this from a while_present proc to call its on_loss version, if one exists
+/// Useful for doing "we're done" effects without duped code
+#define BREATH_LOST 1
+
+//The proportion of oxygen needed for metabolism compared to pluoxium. (Pluoxium is this many times efficient as oxygen)
+#define PLUOXIUM_PROPORTION 8
+
 //Defines for N2O and Healium euphoria moodlets
 #define EUPHORIA_INACTIVE 0
 #define EUPHORIA_ACTIVE 1
 #define EUPHORIA_LAST_FLAG 2
 
-#define MIN_TOXIC_GAS_DAMAGE 0.5
-#define MAX_TOXIC_GAS_DAMAGE 2.5
+#define MIN_TOXIC_GAS_DAMAGE 1
+#define MAX_TOXIC_GAS_DAMAGE 10
 
 // Pressure limits.
 /// This determins at what pressure the ultra-high pressure red icon is displayed. (This one is set as a constant)

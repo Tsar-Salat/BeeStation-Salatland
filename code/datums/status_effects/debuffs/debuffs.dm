@@ -154,7 +154,7 @@
 			need_mob_update += owner.adjustBruteLoss(healing, updating_health = FALSE)
 			need_mob_update += owner.adjustFireLoss(healing, updating_health = FALSE)
 			need_mob_update += owner.adjustToxLoss(healing * 0.5, updating_health = FALSE, forced = TRUE)
-			need_mob_update += owner.adjustStaminaLoss(healing, updating_health = FALSE)
+			need_mob_update += owner.adjustStaminaLoss(healing, updating_stamina = FALSE)
 			if(need_mob_update)
 				owner.updatehealth()
 

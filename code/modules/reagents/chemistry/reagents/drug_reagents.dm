@@ -66,9 +66,11 @@
 
 /datum/reagent/drug/nicotine/overdose_process(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()
-	affected_mob.adjustToxLoss(0.1 * REM * delta_time, updating_health = FALSE)
-	affected_mob.adjustOxyLoss(1.1 * REM * delta_time, updating_health = FALSE)
-	return UPDATE_MOB_HEALTH
+	var/need_mob_update
+	need_mob_update = affected_mob.adjustToxLoss(0.1 * REM * delta_time, updating_health = FALSE, required_biotype = affected_biotype)
+	need_mob_update += affected_mob.adjustOxyLoss(1.1 * REM * delta_time, updating_health = FALSE, required_biotype = affected_biotype, required_respiration_type = affected_respiration_type)
+	if(need_mob_update)
+		return UPDATE_MOB_HEALTH
 
 /datum/reagent/drug/crank
 	name = "Crank"
@@ -96,14 +98,14 @@
 	affected_mob.AdjustImmobilized(-20 * REM * delta_time)
 	affected_mob.AdjustParalyzed(-20 * REM * delta_time)
 	affected_mob.adjustToxLoss(0.75 * REM * delta_time, updating_health = FALSE)
-	affected_mob.adjustStaminaLoss(-18 * REM * delta_time, updating_health = FALSE)
+	affected_mob.adjustStaminaLoss(-18 * REM * delta_time, updating_stamina = FALSE)
 	return UPDATE_MOB_HEALTH
 
 /datum/reagent/drug/crank/overdose_process(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()
 	affected_mob.adjustOrganLoss(ORGAN_SLOT_BRAIN, 2 * REM * delta_time)
 	affected_mob.adjustToxLoss(2 * REM * delta_time, updating_health = FALSE)
-	affected_mob.adjustBruteLoss(2 * REM * delta_time, updating_health = FALSE, required_status = BODYTYPE_ORGANIC)
+	affected_mob.adjustBruteLoss(2 * REM * delta_time, updating_health = FALSE, required_bodytype = BODYTYPE_ORGANIC)
 	return UPDATE_MOB_HEALTH
 
 /datum/reagent/drug/krokodil
@@ -168,7 +170,7 @@
 	affected_mob.AdjustUnconscious(-40 * REM * delta_time)
 	affected_mob.AdjustParalyzed(-40 * REM * delta_time)
 	affected_mob.AdjustImmobilized(-40 * REM * delta_time)
-	affected_mob.adjustStaminaLoss(-40 * REM * delta_time, updating_health = FALSE)
+	affected_mob.adjustStaminaLoss(-40 * REM * delta_time, updating_stamina = FALSE)
 	affected_mob.drowsyness = max(affected_mob.drowsyness - (60 * REM * delta_time), 0)
 	affected_mob.set_jitter_if_lower(4 SECONDS * REM * delta_time)
 	affected_mob.adjustOrganLoss(ORGAN_SLOT_BRAIN, 1)
@@ -226,7 +228,7 @@
 		for(var/i = 1 to 2)
 			step(affected_mob, pick(GLOB.cardinals))
 
-	affected_mob.adjustStaminaLoss(-5 * REM * delta_time, updating_health = FALSE)
+	affected_mob.adjustStaminaLoss(-5 * REM * delta_time, updating_stamina = FALSE)
 	affected_mob.adjustOrganLoss(ORGAN_SLOT_BRAIN, 4 * REM * delta_time)
 	affected_mob.adjust_hallucinations(10 SECONDS * REM * delta_time)
 	return UPDATE_MOB_HEALTH
@@ -263,7 +265,7 @@
 		affected_mob.losebreath++
 		affected_mob.adjustOxyLoss(1, updating_health = FALSE)
 
-	affected_mob.adjustStaminaLoss(-18 * REM * delta_time, updating_health = FALSE)
+	affected_mob.adjustStaminaLoss(-18 * REM * delta_time, updating_stamina = FALSE)
 	affected_mob.adjustToxLoss(0.5 * REM * delta_time, updating_health = FALSE)
 	return UPDATE_MOB_HEALTH
 

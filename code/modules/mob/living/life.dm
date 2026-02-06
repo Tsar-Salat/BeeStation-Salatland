@@ -35,10 +35,6 @@
 		if (QDELETED(src)) // diseases can qdel the mob via transformations
 			return
 
-		if(stat != DEAD)
-			//Random events (vomiting etc)
-			handle_random_events(delta_time, times_fired)
-
 		//Handle temperature/pressure differences between body and environment
 		var/datum/gas_mixture/environment = loc.return_air()
 		if(environment)
@@ -57,8 +53,7 @@
 		return 1
 
 /mob/living/proc/handle_breathing(delta_time, times_fired)
-	// SEND_SIGNAL(src, COMSIG_LIVING_HANDLE_BREATHING, delta_time, times_fired)
-	SEND_SIGNAL(src, COMSIG_LIVING_HANDLE_BREATHING, SSMOBS_DT, times_fired)
+	SEND_SIGNAL(src, COMSIG_LIVING_HANDLE_BREATHING, delta_time, times_fired)
 	return
 
 /mob/living/proc/handle_mutations(delta_time, times_fired)
@@ -69,9 +64,6 @@
 
 //mob/living/proc/handle_wounds(delta_time, times_fired)
 //	return
-
-/mob/living/proc/handle_random_events(delta_time, times_fired)
-	return
 
 // Base mob environment handler for body temperature
 /mob/living/proc/handle_environment(datum/gas_mixture/environment, delta_time, times_fired)

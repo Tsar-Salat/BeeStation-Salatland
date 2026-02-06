@@ -533,22 +533,24 @@
 	if(ears && !HAS_TRAIT(src, TRAIT_DEAF))
 		. = TRUE
 
-/mob/living/carbon/adjustOxyLoss(amount, updating_health = TRUE, forced = FALSE)
-	. = ..()
-	if(isnull(.))
-		return
-	if(. <= 50)
-		if(getOxyLoss() > 50)
-			ADD_TRAIT(src, TRAIT_KNOCKEDOUT, OXYLOSS_TRAIT)
-	else if(getOxyLoss() <= 50)
-		REMOVE_TRAIT(src, TRAIT_KNOCKEDOUT, OXYLOSS_TRAIT)
+/mob/living/carbon/adjustOxyLoss(amount, updating_health = TRUE, forced, required_biotype, required_respiration_type)
+	if(!forced && HAS_TRAIT(src, TRAIT_NOBREATH))
+		amount = min(amount, 0) //Prevents oxy damage but not healing
 
-
-/mob/living/carbon/setOxyLoss(amount, updating_health = TRUE, forced = FALSE)
 	. = ..()
-	if(isnull(.))
+	check_passout()
+
+/mob/living/carbon/setOxyLoss(amount, updating_health = TRUE, forced, required_biotype, required_respiration_type)
+	. = ..()
+	check_passout()
+
+/**
+* Check to see if we should be passed out from oyxloss
+*/
+/mob/living/carbon/proc/check_passout(oxyloss)
+	if(!isnum(oxyloss))
 		return
-	if(. <= 50)
+	if(oxyloss <= 50)
 		if(getOxyLoss() > 50)
 			ADD_TRAIT(src, TRAIT_KNOCKEDOUT, OXYLOSS_TRAIT)
 	else if(getOxyLoss() <= 50)

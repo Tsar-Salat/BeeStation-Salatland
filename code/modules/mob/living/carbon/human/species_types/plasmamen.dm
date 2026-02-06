@@ -16,6 +16,7 @@
 		TRAIT_NOT_TRANSMORPHIC,
 	)
 	inherent_biotypes = MOB_INORGANIC | MOB_HUMANOID
+	inherent_respiration_type = RESPIRATION_PLASMA
 	mutantlungs = /obj/item/organ/lungs/plasmaman
 	mutanttongue = /obj/item/organ/tongue/bone/plasmaman
 	mutantliver = /obj/item/organ/liver/plasmaman

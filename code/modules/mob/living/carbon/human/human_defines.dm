@@ -61,7 +61,6 @@
 		/mob/living/simple_animal/parrot,
 		/mob/living/carbon/monkey,
 	))
-	var/lastpuke = 0
 
 	/// The core temperature of the human compaired to the skin temp of the body
 	var/coretemperature = BODYTEMP_NORMAL

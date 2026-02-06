@@ -78,8 +78,10 @@
 	var/obj/item/organ/lungs = get_organ_slot(ORGAN_SLOT_LUNGS)
 	var/is_on_internals = FALSE
 
-	if(reagents.has_reagent(/datum/reagent/toxin/lexorin, needs_metabolizing = TRUE))
+	if(SEND_SIGNAL(src, COMSIG_CARBON_ATTEMPT_BREATHE, delta_time, times_fired) & COMSIG_CARBON_BLOCK_BREATH)
 		return
+
+	SEND_SIGNAL(src, COMSIG_CARBON_PRE_BREATHE, delta_time, times_fired)
 
 	var/datum/gas_mixture/environment
 	if(loc)
@@ -147,127 +149,261 @@
 		return TRUE
 	return FALSE
 
-
-//Third link in a breath chain, calls handle_breath_temperature()
+/**
+ * This proc tests if the lungs can breathe, if the mob can breathe a given gas mixture, and throws/clears gas alerts.
+ * If there are moles of gas in the given gas mixture, side-effects may be applied/removed on the mob.
+ * This proc expects a lungs organ in order to breathe successfully, but does not defer any work to it.
+ *
+ * Returns TRUE if the breath was successful, or FALSE if otherwise.
+ *
+ * Arguments:
+ * * breath: A gas mixture to test, or null.
+ */
 /mob/living/carbon/proc/check_breath(datum/gas_mixture/breath)
+	. = TRUE
+
 	if(HAS_TRAIT(src, TRAIT_GODMODE))
 		failed_last_breath = FALSE
 		clear_alert(ALERT_NOT_ENOUGH_OXYGEN)
-		return FALSE
+		return
+
 	if(HAS_TRAIT(src, TRAIT_NOBREATH))
-		return FALSE
+		return
+
+	// Breath may be null, so use a fallback "empty breath" for convenience.
+	if(!breath)
+		/// Fallback "empty breath" for convenience.
+		var/static/datum/gas_mixture/immutable/empty_breath = new(BREATH_VOLUME)
+		breath = empty_breath
+
+	// Ensure gas volumes are present.
+	breath.assert_gases(
+		/datum/gas/bz,
+		/datum/gas/carbon_dioxide,
+		//datum/gas/freon,
+		/datum/gas/plasma,
+		/datum/gas/pluoxium,
+		//datum/gas/miasma,
+		/datum/gas/nitrous_oxide,
+		/datum/gas/nitrium,
+		/datum/gas/oxygen
+	)
+
+	/// The list of gases in the breath.
+	var/list/breath_gases = breath.gases
+	/// Indicates if there are moles of gas in the breath.
+	var/has_moles = breath.total_moles() != 0
 
 	var/obj/item/organ/lungs = get_organ_slot(ORGAN_SLOT_LUNGS)
+	// Indicates if lungs can breathe without gas.
 	if(!lungs)
+		// Lungs are missing! Can't breathe.
+		// Simulates breathing zero moles of gas.
+		has_moles = FALSE
+		// Extra damage, let God sort ’em out!
 		adjustOxyLoss(2)
 
-	//CRIT
-	if(!breath || (breath.total_moles() == 0) || !lungs)
-		if(reagents.has_reagent(/datum/reagent/medicine/epinephrine, needs_metabolizing = TRUE) && lungs)
-			return FALSE
-		adjustOxyLoss(1)
-
-		failed_last_breath = TRUE
-		throw_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
-		return FALSE
-
-	var/safe_oxy_min = 16
+	/// Minimum O2 before suffocation.
+	var/safe_oxygen_min = 16
+	/// Maximum CO2 before side-effects.
 	var/safe_co2_max = 10
+	/// Maximum Plasma before side-effects.
 	var/safe_plas_max = 0.05
-	var/SA_para_min = 1
-	var/SA_sleep_min = 5
-	var/oxygen_used = 0
-	var/moles = breath.total_moles()
-	var/breath_pressure = (moles*R_IDEAL_GAS_EQUATION*breath.return_temperature())/BREATH_VOLUME
+	/// Maximum Pluoxum before side-effects.
+	var/gas_stimulation_min = 0.002 // For Pluoxium
+	// Vars for N2O induced euphoria, stun, and sleep.
+	var/n2o_euphoria = EUPHORIA_LAST_FLAG
+	var/n2o_para_min = 1
+	var/n2o_sleep_min = 5
 
-	var/O2_partialpressure = ((GET_MOLES(/datum/gas/oxygen, breath)/moles)*breath_pressure) + (((GET_MOLES(/datum/gas/pluoxium, breath)*8)/moles)*breath_pressure)
-	var/Plasma_partialpressure = (GET_MOLES(/datum/gas/plasma, breath)/moles)*breath_pressure
-	var/CO2_partialpressure = (GET_MOLES(/datum/gas/carbon_dioxide, breath)/moles)*breath_pressure
+	// Partial pressures in our breath
+	// Main gases.
+	var/pluoxium_pp = 0
+	var/o2_pp = 0
+	var/plasma_pp = 0
+	var/co2_pp = 0
+	// Trace gases ordered alphabetically.
+	var/bz_pp = 0
+	var/n2o_pp = 0
+	var/nitrium_pp = 0
 
+	var/can_breathe_vacuum = HAS_TRAIT(src, TRAIT_NO_BREATHLESS_DAMAGE)
 
-	//OXYGEN
-	if(O2_partialpressure < safe_oxy_min) //Not enough oxygen
-		if(prob(20))
-			emote("gasp")
-		if(O2_partialpressure > 0)
-			var/ratio = 1 - O2_partialpressure/safe_oxy_min
-			adjustOxyLoss(min(5*ratio, 3))
-			failed_last_breath = TRUE
-			oxygen_used = GET_MOLES(/datum/gas/oxygen, breath)*ratio
-		else
-			adjustOxyLoss(3)
-			failed_last_breath = TRUE
-		throw_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
+	// Check for moles of gas and handle partial pressures / special conditions.
+	if(has_moles)
+		// Breath has more than 0 moles of gas.
+		// Partial pressures of "main gases".
+		pluoxium_pp = breath.get_breath_partial_pressure(breath_gases[/datum/gas/pluoxium][MOLES])
+		o2_pp = breath.get_breath_partial_pressure(breath_gases[/datum/gas/oxygen][MOLES] + (PLUOXIUM_PROPORTION * pluoxium_pp))
+		plasma_pp = breath.get_breath_partial_pressure(breath_gases[/datum/gas/plasma][MOLES])
+		co2_pp = breath.get_breath_partial_pressure(breath_gases[/datum/gas/carbon_dioxide][MOLES])
+		// Partial pressures of "trace" gases.
+		bz_pp = breath.get_breath_partial_pressure(breath_gases[/datum/gas/bz][MOLES])
+		n2o_pp = breath.get_breath_partial_pressure(breath_gases[/datum/gas/nitrous_oxide][MOLES])
+		nitrium_pp = breath.get_breath_partial_pressure(breath_gases[/datum/gas/nitrium][MOLES])
 
-	else //Enough oxygen
+	// Breath has 0 moles of gas.
+	else if(can_breathe_vacuum)
+		// The mob can breathe anyways. What are you? Some bottom-feeding, scum-sucking algae eater?
 		failed_last_breath = FALSE
+		// Vacuum-adapted lungs regenerate oxyloss even when breathing nothing.
 		if(health >= crit_threshold)
 			adjustOxyLoss(-5)
-		oxygen_used = GET_MOLES(/datum/gas/oxygen, breath)
-		clear_alert("not_enough_oxy")
+	else
+		// Can't breathe! Lungs are missing, and/or breath is empty.
+		. = FALSE
+		failed_last_breath = TRUE
 
-	ADD_MOLES(/datum/gas/carbon_dioxide, breath, oxygen_used)
-	REMOVE_MOLES(/datum/gas/oxygen, breath, oxygen_used)
+	//-- PLUOXIUM --//
+	// Behaves like Oxygen with 8X efficacy, but metabolizes into a reagent.
+	if(pluoxium_pp)
+		// Inhale Pluoxium. Exhale nothing.
+		breath_gases[/datum/gas/pluoxium][MOLES] = 0
+		// Metabolize to reagent.
+		if(pluoxium_pp > gas_stimulation_min)
+			var/existing = reagents.get_reagent_amount(/datum/reagent/pluoxium)
+			reagents.add_reagent(/datum/reagent/pluoxium, max(0, 1 - existing))
 
-	//CARBON DIOXIDE
-	if(CO2_partialpressure > safe_co2_max)
-		if(!co2overloadtime)
-			co2overloadtime = world.time
-		else if(world.time - co2overloadtime > 120)
-			Unconscious(60)
-			adjustOxyLoss(3)
-			if(world.time - co2overloadtime > 300)
-				adjustOxyLoss(8)
+	//-- OXYGEN --//
+	// Carbons need only Oxygen to breathe properly.
+	var/oxygen_used = 0
+	// Minimum Oxygen effects. "Too little oxygen!"
+	if(!can_breathe_vacuum && (o2_pp < safe_oxygen_min))
+		// Breathe insufficient amount of O2.
+		oxygen_used = handle_suffocation(o2_pp, safe_oxygen_min, breath_gases[/datum/gas/oxygen][MOLES])
+		throw_alert(ALERT_NOT_ENOUGH_OXYGEN, /atom/movable/screen/alert/not_enough_oxy)
+	else
+		// Enough oxygen to breathe.
+		failed_last_breath = FALSE
+		clear_alert(ALERT_NOT_ENOUGH_OXYGEN)
+		if(o2_pp)
+			// Inhale O2.
+			oxygen_used = breath_gases[/datum/gas/oxygen][MOLES]
+			// Heal mob if not in crit.
+			if(health >= crit_threshold)
+				adjustOxyLoss(-5)
+	// Exhale equivalent amount of CO2.
+	if(o2_pp)
+		breath_gases[/datum/gas/oxygen][MOLES] -= oxygen_used
+		breath_gases[/datum/gas/carbon_dioxide][MOLES] += oxygen_used
+
+	//-- CARBON DIOXIDE --//
+	// Maximum CO2 effects. "Too much CO2!"
+	if(co2_pp > safe_co2_max)
+		// CO2 side-effects.
+		// Give the mob a chance to notice.
 		if(prob(20))
 			emote("cough")
-
+		// If it's the first breath with too much CO2 in it, lets start a counter, then have them pass out after 12s or so.
+		if(!co2overloadtime)
+			co2overloadtime = world.time
+		else if((world.time - co2overloadtime) > 12 SECONDS)
+			throw_alert(ALERT_TOO_MUCH_CO2, /atom/movable/screen/alert/too_much_co2)
+			Unconscious(6 SECONDS)
+			// Lets hurt em a little, let them know we mean business.
+			adjustOxyLoss(3)
+			// They've been in here 30s now, start to kill them for their own good!
+			if((world.time - co2overloadtime) > 30 SECONDS)
+				adjustOxyLoss(8)
 	else
+		// Reset side-effects.
 		co2overloadtime = 0
+		clear_alert(ALERT_TOO_MUCH_CO2)
 
-	//TOXINS/PLASMA
-	if(Plasma_partialpressure > safe_plas_max)
-		var/ratio = (GET_MOLES(/datum/gas/plasma, breath)/safe_plas_max) * 10
+	//-- PLASMA --//
+	// Maximum Plasma effects. "Too much Plasma!"
+	if(plasma_pp > safe_plas_max)
+		// Plasma side-effects.
+		var/ratio = (breath_gases[/datum/gas/plasma][MOLES] / safe_plas_max) * 10
 		adjustToxLoss(clamp(ratio, MIN_TOXIC_GAS_DAMAGE, MAX_TOXIC_GAS_DAMAGE))
-		throw_alert("too_much_tox", /atom/movable/screen/alert/too_much_plas)
+		throw_alert(ALERT_TOO_MUCH_PLASMA, /atom/movable/screen/alert/too_much_plas)
 	else
-		clear_alert("too_much_tox")
+		// Reset side-effects.
+		clear_alert(ALERT_TOO_MUCH_PLASMA)
 
-	//NITROUS OXIDE
-	if(GET_MOLES(/datum/gas/nitrous_oxide, breath))
-		var/SA_partialpressure = (GET_MOLES(/datum/gas/nitrous_oxide, breath)/breath.total_moles())*breath_pressure
-		if(SA_partialpressure > SA_para_min)
-			Unconscious(60)
-			if(SA_partialpressure > SA_sleep_min)
-				Sleeping(max(AmountSleeping() + 40, 200))
-		else if(SA_partialpressure > 0.01)
-			if(prob(20))
-				emote(pick("giggle","laugh"))
-			SEND_SIGNAL(src, COMSIG_ADD_MOOD_EVENT, "chemical_euphoria", /datum/mood_event/chemical_euphoria)
-	else
-		SEND_SIGNAL(src, COMSIG_CLEAR_MOOD_EVENT, "chemical_euphoria")
+	//-- TRACES --//
+	// If there's some other funk in the air lets deal with it here.
 
-	//BZ (Facepunch port of their Agent B)
-	if(GET_MOLES(/datum/gas/bz, breath))
-		var/bz_partialpressure = (GET_MOLES(/datum/gas/bz, breath)/breath.total_moles())*breath_pressure
-		if(bz_partialpressure > 1)
-			adjust_hallucinations(20)
-		else if(bz_partialpressure > 0.01)
+	//-- BZ --//
+	// (Facepunch port of their Agent B)
+	if(bz_pp)
+		if(bz_pp > 1)
+			adjust_hallucinations(20 SECONDS)
+		else if(bz_pp > 0.01)
 			adjust_hallucinations(10 SECONDS)
 
-	//NITRIUM
-	if(GET_MOLES(/datum/gas/nitrium, breath))
-		var/nitrium_partialpressure = (GET_MOLES(/datum/gas/nitrium, breath)/breath.total_moles())*breath_pressure
-		if(nitrium_partialpressure > 0.5)
-			adjustFireLoss(nitrium_partialpressure * 0.15)
-		if(nitrium_partialpressure > 5)
-			adjustToxLoss(nitrium_partialpressure * 0.05)
+	//-- NITROUS OXIDE --//
+	if(n2o_pp > n2o_para_min)
+		// More N2O, more severe side-effects. Causes stun/sleep.
+		n2o_euphoria = EUPHORIA_ACTIVE
+		throw_alert(ALERT_TOO_MUCH_N2O, /atom/movable/screen/alert/too_much_n2o)
+		// give them one second of grace to wake up and run away a bit!
+		if(!HAS_TRAIT(src, TRAIT_SLEEPIMMUNE))
+			Unconscious(6 SECONDS)
+		// Enough to make the mob sleep.
+		if(n2o_pp > n2o_sleep_min)
+			Sleeping(max(AmountSleeping() + 40, 200))
+	else if(n2o_pp > 0.01)
+		// No alert for small amounts, but the mob randomly feels euphoric.
+		if(prob(20))
+			n2o_euphoria = EUPHORIA_ACTIVE
+			emote(pick("giggle","laugh"))
+		else
+			n2o_euphoria = EUPHORIA_INACTIVE
+	else
+	// Reset side-effects, for zero or extremely small amounts of N2O.
+		n2o_euphoria = EUPHORIA_INACTIVE
+		clear_alert(ALERT_TOO_MUCH_N2O)
 
-	//BREATH TEMPERATURE
-	handle_breath_temperature(breath)
+	//-- NITRIUM --//
+	if(nitrium_pp)
+		if(nitrium_pp > 0.5)
+			adjustFireLoss(nitrium_pp * 0.15)
+		if(nitrium_pp > 5)
+			adjustToxLoss(nitrium_pp * 0.05)
+
+	// Handle chemical euphoria mood event, caused by N2O.
+	if (n2o_euphoria == EUPHORIA_ACTIVE)
+		SEND_SIGNAL(src, COMSIG_ADD_MOOD_EVENT,"chemical_euphoria", /datum/mood_event/chemical_euphoria)
+	else if (n2o_euphoria == EUPHORIA_INACTIVE)
+		SEND_SIGNAL(src, COMSIG_CLEAR_MOOD_EVENT, "chemical_euphoria")
+	// Activate mood on first flag, remove on second, do nothing on third.
+
+	if(has_moles)
+		handle_breath_temperature(breath)
 
 	breath.garbage_collect()
 
-	return TRUE
+/// Applies suffocation side-effects to a given Human, scaling based on ratio of required pressure VS "true" pressure.
+/// If pressure is greater than 0, the return value will represent the amount of gas successfully breathed.
+/mob/living/carbon/proc/handle_suffocation(breath_pp = 0, safe_oxygen_min = 0, true_pp = 0)
+	. = 0
+	// Can't suffocate without minimum breath pressure.
+	if(!safe_oxygen_min)
+		return
+	// Mob is suffocating.
+	failed_last_breath = TRUE
+	// Give them a chance to notice something is wrong.
+	if(prob(20))
+		emote("gasp")
+	// Mob is at critical health, check if they can be damaged further.
+	if(health < crit_threshold)
+		// Mob is immune to damage at critical health.
+		if(HAS_TRAIT(src, TRAIT_NOCRITDAMAGE))
+			return
+		// Reagents like Epinephrine stop suffocation at critical health.
+		if(reagents.has_reagent(/datum/reagent/medicine/epinephrine, needs_metabolizing = TRUE))
+			return
+	// Low pressure.
+	if(breath_pp)
+		var/ratio = safe_oxygen_min / breath_pp
+		adjustOxyLoss(min(5 * ratio, 3))
+		return true_pp * ratio / 6
+	// Zero pressure.
+	if(health >= crit_threshold)
+		adjustOxyLoss(3)
+	else
+		adjustOxyLoss(1)
 
 //Fourth and final link in a breath chain
 /mob/living/carbon/proc/handle_breath_temperature(datum/gas_mixture/breath)
@@ -280,9 +416,9 @@
 		// Unexpectely lost breathing apparatus and ability to breathe from the internal air tank.
 		cutoff_internals()
 		return
-	if(external)
+	if (external)
 		. = external.remove_air_volume(volume_needed)
-	else if(internal)
+	else if (internal)
 		. = internal.remove_air_volume(volume_needed)
 	else
 		// Return without taking a breath if there is no air tank.
@@ -341,13 +477,13 @@
 			organ.on_life(delta_time, times_fired)
 
 /mob/living/carbon/handle_diseases(delta_time, times_fired)
-	for(var/thing in diseases)
-		var/datum/disease/D = thing
-		if(DT_PROB(D.infectivity, delta_time))
-			D.spread()
-
-		if(stat != DEAD || D.process_dead)
-			D.stage_act(delta_time, times_fired)
+	for(var/datum/disease/disease as anything in diseases)
+		if(QDELETED(disease))
+			continue
+		if(DT_PROB(disease.infectivity, delta_time))
+			disease.spread()
+		if(stat != DEAD || disease.process_dead)
+			disease.stage_act(delta_time, times_fired)
 
 /mob/living/carbon/handle_mutations(delta_time, times_fired)
 	if(!length(dna?.temporary_mutations))

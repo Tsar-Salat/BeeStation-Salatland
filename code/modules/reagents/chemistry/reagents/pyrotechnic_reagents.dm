@@ -287,17 +287,17 @@
 	overdose_threshold = 30
 
 /datum/reagent/teslium/energized_jelly/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
-	. = ..()
-	if(isoozeling(affected_mob))
-		shock_timer = 0 //immune to shocks
-		affected_mob.AdjustAllImmobility(-40 * REM * delta_time)
-		affected_mob.adjustStaminaLoss(-2 * REM * delta_time, updating_health = FALSE)
+	if(!isoozeling(affected_mob)) //everyone but jellypeople get shocked as normal.
+		return ..()
+	shock_timer = 0 //immune to shocks
+	affected_mob.AdjustAllImmobility(-40 * REM * delta_time)
+	affected_mob.adjustStaminaLoss(-2 * REM * delta_time, updating_stamina = FALSE)
 
-		if(isluminescent(affected_mob))
-			var/mob/living/carbon/human/affected_human = affected_mob
-			var/datum/species/oozeling/luminescent/luminescent_species = affected_human.dna.species
-			luminescent_species.extract_cooldown = max(luminescent_species.extract_cooldown - 20 * REM * delta_time, 0)
-		return UPDATE_MOB_HEALTH
+	if(isluminescent(affected_mob))
+		var/mob/living/carbon/human/affected_human = affected_mob
+		var/datum/species/oozeling/luminescent/luminescent_species = affected_human.dna.species
+		luminescent_species.extract_cooldown = max(luminescent_species.extract_cooldown - 20 * REM * delta_time, 0)
+	return UPDATE_MOB_HEALTH
 
 /datum/reagent/teslium/energized_jelly/overdose_process(mob/living/carbon/affected_mob)
 	. = ..()

@@ -31,7 +31,7 @@
 		affected_mob.remove_movespeed_modifier(/datum/movespeed_modifier/reagent/nitrium)
 	// Whether they go back to huffing too soon, or they have just started huffing, this calculation will handle stamina restoration and exhaustion both.
 	else
-		affected_mob.adjustStaminaLoss((clamp((-30 + current_cycle), -2, 5)) * REM * delta_time, updating_health = FALSE)
+		affected_mob.adjustStaminaLoss((clamp((-30 + current_cycle), -2, 5)) * REM * delta_time, updating_stamina = FALSE)
 		if(!warned && current_cycle >= 31)
 			to_chat(affected_mob, span_danger("Your body aches!"))
 			warned = TRUE
@@ -64,9 +64,29 @@
 
 /datum/reagent/nitrosyl_plasmide/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()
-	affected_mob.adjustStaminaLoss((clamp((-10 + current_cycle), -8, 3)) * REM * delta_time, updating_health = FALSE)
+	affected_mob.adjustStaminaLoss((clamp((-10 + current_cycle), -8, 3)) * REM * delta_time, updating_stamina = FALSE)
 	if(!warned && current_cycle >= 13)
 		to_chat(affected_mob, span_danger("Your body feels like it's on fire!")) // Nitrosyl is now draining more than Nitrium is giving
 		warned = TRUE
 
 	return UPDATE_MOB_HEALTH
+
+/datum/reagent/pluoxium
+	name = "Pluoxium"
+	description = "A gas that is eight times more efficient than O2 at lung diffusion with organ healing properties on sleeping patients."
+	metabolization_rate = REAGENTS_METABOLISM * 0.5
+	color = COLOR_GRAY
+	taste_description = "irradiated air"
+	chemical_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
+
+/datum/reagent/pluoxium/on_mob_life(mob/living/carbon/breather, delta_time, times_fired)
+	. = ..()
+	if(!HAS_TRAIT(breather, TRAIT_KNOCKEDOUT))
+		return
+
+	for(var/obj/item/organ/organ_being_healed as anything in breather.internal_organs)
+		if(!organ_being_healed.damage)
+			continue
+
+		if(organ_being_healed.apply_organ_damage(-0.5 * REM * delta_time))
+			. = UPDATE_MOB_HEALTH

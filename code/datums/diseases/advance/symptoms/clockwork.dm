@@ -106,12 +106,10 @@
 				if(ORGAN_SLOT_LUNGS)
 					var/obj/item/organ/lungs/clockwork/organ = new()
 					if(robustbits)
-						organ.gas_max = list(
-							/datum/gas/plasma = 15,
-							/datum/gas/carbon_dioxide = 15,
-						)
-						organ.SA_para_min = 15
-						organ.SA_sleep_min = 15
+						organ.safe_plasma_max = 15
+						organ.safe_co2_max = 15
+						organ.n2o_para_min = 15
+						organ.n2o_sleep_min = 15
 						organ.BZ_trip_balls_min = 15
 						organ.gas_stimulation_min = 15
 					organ.Insert(H, TRUE, FALSE)
