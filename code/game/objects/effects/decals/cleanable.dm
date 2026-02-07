@@ -66,7 +66,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/decal/cleanable)
 				qdel(src)
 				return
 	if(W.is_hot()) //todo: make heating a reagent holder proc
-		if(istype(W, /obj/item/clothing/mask/cigarette))
+		if(istype(W, /obj/item/cigarette))
 			return
 		else
 			var/hotness = W.is_hot()
