@@ -68635,7 +68635,7 @@
 /area/engine/atmos)
 "oZQ" = (
 /obj/structure/table/reinforced,
-/obj/item/clothing/mask/cigarette/cigar{
+/obj/item/cigarette/cigar{
 	pixel_x = 6
 	},
 /obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
@@ -68650,7 +68650,7 @@
 	pixel_x = -1;
 	pixel_y = 14
 	},
-/obj/item/clothing/mask/cigarette/cigar{
+/obj/item/cigarette/cigar{
 	pixel_x = -8
 	},
 /obj/machinery/light/small/directional/south,
@@ -82486,7 +82486,7 @@
 	pixel_y = 49;
 	pixel_x = 2
 	},
-/obj/item/clothing/mask/cigarette{
+/obj/item/cigarette{
 	pixel_y = 47;
 	pixel_x = -6
 	},

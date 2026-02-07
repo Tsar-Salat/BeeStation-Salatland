@@ -8157,13 +8157,13 @@
 /area/teleporter)
 "cnW" = (
 /obj/structure/table/wood,
-/obj/item/clothing/mask/cigarette/cigar/cohiba{
+/obj/item/cigarette/cigar/cohiba{
 	pixel_x = 6
 	},
-/obj/item/clothing/mask/cigarette/cigar/havana{
+/obj/item/cigarette/cigar/havana{
 	pixel_x = 2
 	},
-/obj/item/clothing/mask/cigarette/cigar{
+/obj/item/cigarette/cigar{
 	pixel_x = 4.5
 	},
 /obj/item/phone{
@@ -11455,13 +11455,13 @@
 /area/science/research)
 "did" = (
 /obj/structure/table/wood,
-/obj/item/clothing/mask/cigarette/cigar/cohiba{
+/obj/item/cigarette/cigar/cohiba{
 	pixel_x = 3
 	},
-/obj/item/clothing/mask/cigarette/cigar/havana{
+/obj/item/cigarette/cigar/havana{
 	pixel_x = -3
 	},
-/obj/item/clothing/mask/cigarette/cigar,
+/obj/item/cigarette/cigar,
 /obj/machinery/button/door{
 	id = "heads_meeting";
 	name = "Security Shutters";
@@ -42397,7 +42397,7 @@
 	pixel_y = 4
 	},
 /obj/item/folder/yellow,
-/obj/item/clothing/mask/cigarette/cigar/cohiba,
+/obj/item/cigarette/cigar/cohiba,
 /obj/item/lighter,
 /obj/effect/turf_decal/bot,
 /obj/item/phone{
@@ -61832,7 +61832,7 @@
 /area/medical/apothecary)
 "qRm" = (
 /obj/structure/table/reinforced,
-/obj/item/clothing/mask/cigarette/cigar,
+/obj/item/cigarette/cigar,
 /obj/effect/turf_decal/tile/red/anticorner/contrasted{
 	dir = 1
 	},
@@ -71422,7 +71422,7 @@
 /area/crew_quarters/heads/captain)
 "tvr" = (
 /obj/structure/table/wood,
-/obj/item/clothing/mask/cigarette/cigar,
+/obj/item/cigarette/cigar,
 /obj/structure/cable/yellow{
 	icon_state = "4-8"
 	},
@@ -75923,7 +75923,7 @@
 /area/crew_quarters/bar/atrium)
 "uJh" = (
 /obj/structure/table/wood,
-/obj/item/clothing/mask/cigarette/pipe,
+/obj/item/cigarette/pipe,
 /turf/open/floor/carpet,
 /area/crew_quarters/bar/atrium)
 "uJr" = (
@@ -77748,11 +77748,11 @@
 	dir = 1;
 	pixel_y = -29
 	},
-/obj/item/clothing/mask/cigarette/cigar/cohiba{
+/obj/item/cigarette/cigar/cohiba{
 	pixel_x = 3
 	},
-/obj/item/clothing/mask/cigarette/cigar,
-/obj/item/clothing/mask/cigarette/cigar/havana{
+/obj/item/cigarette/cigar,
+/obj/item/cigarette/cigar/havana{
 	pixel_x = -3
 	},
 /obj/machinery/light/small,
@@ -82490,7 +82490,7 @@
 	pixel_x = -4;
 	pixel_y = 2
 	},
-/obj/item/clothing/mask/cigarette/cigar,
+/obj/item/cigarette/cigar,
 /obj/item/reagent_containers/cup/glass/flask/gold,
 /turf/open/floor/carpet/royalblue,
 /area/crew_quarters/heads/captain/private)
@@ -86031,14 +86031,14 @@
 /area/ai_monitored/security/armory)
 "xgk" = (
 /obj/structure/table/wood,
-/obj/item/clothing/mask/cigarette/cigar/havana{
+/obj/item/cigarette/cigar/havana{
 	pixel_x = -3
 	},
 /obj/item/storage/fancy/cigarettes/cigpack_robustgold{
 	pixel_x = 8;
 	pixel_y = 8
 	},
-/obj/item/clothing/mask/cigarette/cigar,
+/obj/item/cigarette/cigar,
 /obj/item/lighter,
 /obj/item/book/manual/wiki/detective{
 	pixel_x = 7;
