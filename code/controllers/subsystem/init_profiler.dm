@@ -4,8 +4,7 @@
 ///Hopefully this makes sorting out what causes problems when easier
 SUBSYSTEM_DEF(init_profiler)
 	name = "Init Profiler"
-	init_order = INIT_ORDER_INIT_PROFILER
-	init_stage = INITSTAGE_MAX
+	init_stage = INITSTAGE_LAST
 	flags = SS_NO_FIRE
 
 /datum/controller/subsystem/init_profiler/Initialize()
@@ -24,3 +23,5 @@ SUBSYSTEM_DEF(init_profiler)
 		fdel(prof_file)
 	WRITE_FILE(prof_file, current_profile_data)
 	world.Profile(PROFILE_CLEAR) //Now that we're written this data out, dump it. We don't want it getting mixed up with our current round data
+
+#undef INIT_PROFILE_NAME

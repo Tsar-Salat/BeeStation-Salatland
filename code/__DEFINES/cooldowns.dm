@@ -38,12 +38,17 @@
 #define COOLDOWN_CIRCUIT_PATHFIND_DIF "circuit_pathfind_different"
 #define COOLDOWN_CIRCUIT_TARGET_INTERCEPT "circuit_target_intercept"
 
+//Item cooldowns
+#define COOLDOWN_SIGNALLER_SEND "cooldown_signaller_send"
+
 //Mecha cooldowns
 #define COOLDOWN_MECHA_MESSAGE "mecha_message"
 #define COOLDOWN_MECHA_EQUIPMENT "mecha_equipment"
 #define COOLDOWN_MECHA_ARMOR "mecha_armor"
 #define COOLDOWN_MECHA_MELEE_ATTACK "mecha_melee"
 #define COOLDOWN_MECHA_SMOKE "mecha_smoke"
+
+#define COOLDOWN_EMOTE_WINDOW "emote_window"
 
 //TIMER COOLDOWN MACROS
 
@@ -89,3 +94,23 @@
 #define COOLDOWN_TIMELEFT(cd_source, cd_index) (max(0, cd_source.cd_index - world.time))
 
 #define COOLDOWN_TIMELEFT_TEXT(cd_source, cd_index) DisplayTimeText(COOLDOWN_TIMELEFT(cd_source, cd_index))
+
+/*
+ * Same as the above cooldown system, but uses REALTIMEOFDAY
+ * Primarily only used for times that need to be tracked with the client, such as sound or animations
+*/
+
+#define CLIENT_COOLDOWN_DECLARE(cd_index) var/##cd_index = 0
+
+#define CLIENT_STATIC_COOLDOWN_DECLARE(cd_index) var/static/##cd_index = 0
+
+#define CLIENT_COOLDOWN_START(cd_source, cd_index, cd_time) (cd_source.cd_index = REALTIMEOFDAY + (cd_time))
+
+//Returns true if the cooldown has run its course, false otherwise
+#define CLIENT_COOLDOWN_FINISHED(cd_source, cd_index) (cd_source.cd_index <= REALTIMEOFDAY)
+
+#define CLIENT_COOLDOWN_RESET(cd_source, cd_index) cd_source.cd_index = 0
+
+#define CLIENT_COOLDOWN_STARTED(cd_source, cd_index) (cd_source.cd_index != 0)
+
+#define CLIENT_COOLDOWN_TIMELEFT(cd_source, cd_index) (max(0, cd_source.cd_index - REALTIMEOFDAY))

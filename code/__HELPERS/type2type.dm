@@ -120,6 +120,9 @@
 		else
 			return null
 
+///Returns a single dir rotated by x degrees clockwise, adhering to the cardinal directions.
+#define turn_cardinal(dir, rotation) ( angle2dir_cardinal ( dir2angle(dir) + rotation ) )
+
 /// Returns the angle in english
 /proc/angle2text(degree)
 	return dir2text(angle2dir(degree))
@@ -190,6 +193,57 @@
 			return LEG_LEFT|FOOT_LEFT
 		if(BODY_ZONE_R_LEG)
 			return LEG_RIGHT|FOOT_RIGHT
+
+//Turns a Body_parts_covered bitfield into a list of organ/limb names.
+//(I challenge you to find a use for this) -I found a use for it!! | So did I!.
+/proc/cover_flags2body_zones(bpc)
+	var/list/covered_parts = list()
+
+	if(!bpc)
+		return 0
+
+	if(bpc == FULL_BODY)
+		covered_parts |= list(BODY_ZONE_L_ARM,BODY_ZONE_R_ARM,BODY_ZONE_HEAD,BODY_ZONE_CHEST,BODY_ZONE_L_LEG,BODY_ZONE_R_LEG)
+
+	else
+		if(bpc & HEAD)
+			covered_parts |= list(BODY_ZONE_HEAD)
+		if(bpc & CHEST)
+			covered_parts |= list(BODY_ZONE_CHEST)
+		if(bpc & GROIN)
+			covered_parts |= list(BODY_ZONE_CHEST)
+
+		if(bpc & ARMS)
+			covered_parts |= list(BODY_ZONE_L_ARM,BODY_ZONE_R_ARM)
+		else
+			if(bpc & ARM_LEFT)
+				covered_parts |= list(BODY_ZONE_L_ARM)
+			if(bpc & ARM_RIGHT)
+				covered_parts |= list(BODY_ZONE_R_ARM)
+
+		if(bpc & HANDS)
+			covered_parts |= list(BODY_ZONE_L_ARM,BODY_ZONE_R_ARM)
+		else
+			if(bpc & HAND_LEFT)
+				covered_parts |= list(BODY_ZONE_L_ARM)
+			if(bpc & HAND_RIGHT)
+				covered_parts |= list(BODY_ZONE_R_ARM)
+
+		if(bpc & LEGS)
+			covered_parts |= list(BODY_ZONE_L_LEG,BODY_ZONE_R_LEG)
+		else
+			if(bpc & LEG_LEFT)
+				covered_parts |= list(BODY_ZONE_L_LEG)
+			if(bpc & LEG_RIGHT)
+				covered_parts |= list(BODY_ZONE_R_LEG)
+
+		if(bpc & FEET)
+			covered_parts |= list(BODY_ZONE_L_LEG,BODY_ZONE_R_LEG)
+		else
+			if(bpc & FOOT_LEFT)
+				covered_parts |= list(BODY_ZONE_L_LEG)
+			if(bpc & FOOT_RIGHT)
+				covered_parts |= list(BODY_ZONE_R_LEG)
 
 /// Converts an RGB color to an HSL color
 /proc/rgb2hsl(red, green, blue)
@@ -463,7 +517,7 @@ It's only a proc because it's used in more than one place
 
 Takes a string and a datum. The string is well, obviously the string being checked. The datum is used as a source for var names, to check validity. Otherwise every single word could technically be a variable!
 */
-/proc/string2listofvars(var/t_string, var/datum/var_source)
+/proc/string2listofvars(t_string, datum/var_source)
 	if(!t_string || !var_source)
 		return list()
 
@@ -545,7 +599,7 @@ Takes a string and a datum. The string is well, obviously the string being check
 		if(/turf)
 			return "turf"
 		else //regex everything else (works for /proc too)
-			return lowertext(replacetext("[the_type]", "[type2parent(the_type)]/", ""))
+			return LOWER_TEXT(replacetext("[the_type]", "[type2parent(the_type)]/", ""))
 
 /// Return html to load a url.
 /// for use inside of browse() calls to html assets that might be loaded on a cdn.

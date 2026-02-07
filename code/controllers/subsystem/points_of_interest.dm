@@ -125,6 +125,11 @@ SUBSYSTEM_DEF(points_of_interest)
 
 	return pois
 
+/*
+if(istype(M, /mob/dead/new_player/pre_auth)) // don't show preauth players in orbit panel
+	continue
+*/
+
 /**
  * Returns a list of non-mob POIs with names as keys and atoms as values.
  *

@@ -27,12 +27,11 @@
 	response_disarm_simple = "shoo"
 	response_harm_continuous = "steps on"
 	response_harm_simple = "step on"
-	faction = list("hostile")
-	ventcrawler = VENTCRAWLER_ALWAYS
+	faction = list(FACTION_HOSTILE)
 	density = FALSE
 	pass_flags = PASSTABLE | PASSMOB
 	mob_size = MOB_SIZE_SMALL
-	mob_biotypes = list(MOB_ORGANIC, MOB_BEAST, MOB_REPTILE)
+	mob_biotypes = MOB_ORGANIC | MOB_BEAST |  MOB_REPTILE
 	gold_core_spawnable = FRIENDLY_SPAWN
 	obj_damage = 0
 	environment_smash = ENVIRONMENT_SMASH_NONE
@@ -48,6 +47,7 @@
 /mob/living/simple_animal/hostile/retaliate/poison/snake/Initialize(mapload)
 	AddComponent(/datum/component/udder, /obj/item/udder/venom, reagent_produced_typepath = /datum/reagent/toxin/venom)
 	. = ..()
+	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
 
 
 /mob/living/simple_animal/hostile/retaliate/poison/snake/ListTargets(atom/the_target)
@@ -69,7 +69,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/poison/snake/AttackingTarget()
 	if(istype(target, /mob/living/simple_animal/mouse))
-		visible_message("<span class='notice'>[name] consumes [target] in a single gulp!</span>", "<span class='notice'>You consume [target] in a single gulp!</span>")
+		visible_message(span_notice("[name] consumes [target] in a single gulp!"), span_notice("You consume [target] in a single gulp!"))
 		QDEL_NULL(target)
 		adjustBruteLoss(-2)
 	else

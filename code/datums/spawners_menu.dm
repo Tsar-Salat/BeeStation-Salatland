@@ -25,6 +25,10 @@
 					this["short_desc"] = MS.short_desc
 					this["flavor_text"] = MS.flavour_text
 					this["important_info"] = MS.important_info
+				else if(istype(spawner_obj, /datum/candidate_poll))
+					var/datum/candidate_poll/poll = spawner_obj
+					this["desc"] = "Sign up to be a [poll.config.role_name_text]."
+					this["short_desc"] = "Sign up to be a [poll.config.role_name_text]."
 				else
 					var/atom/movable/O = spawner_obj
 					if(isslime(O))
@@ -53,6 +57,10 @@
 		return
 	var/obj/effect/mob_spawn/mob_spawner = pick(spawnerlist)
 	if(!istype(mob_spawner) || !SSpoints_of_interest.get_poi_atom_by_ref(mob_spawner))
+		if (istype(mob_spawner, /datum/candidate_poll) && action == "spawn")
+			var/datum/candidate_poll/poll = mob_spawner
+			poll.sign_up(usr, FALSE, skip_confirmation = TRUE)
+			return TRUE
 		return
 
 	switch(action)

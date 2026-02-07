@@ -7,6 +7,11 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 #define STAGE_ATTACK 4
 #define MANIFEST_DELAY 9
 
+/// How long we put the target so sleep for (during sacrifice).
+#define SACRIFICE_SLEEP_DURATION 12 SECONDS
+/// How long sacrifices must stay in the shadow realm to survive.
+#define SACRIFICE_REALM_DURATION 2.5 MINUTES
+
 /mob/living/simple_animal/hostile/floor_cluwne
 	name = "???"
 	desc = "...."
@@ -108,7 +113,7 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 	var/turf/T = get_turf(current_victim)
 	A = get_area(T)
 	if(prob(5))//checks roughly every 20 ticks
-		if(current_victim.stat == DEAD || current_victim.dna.check_mutation(CLUWNEMUT) || is_type_in_typecache(A, invalid_area_typecache) || !is_station_level(current_victim.z))
+		if(current_victim.stat == DEAD || current_victim.dna.check_mutation(/datum/mutation/cluwne) || is_type_in_typecache(A, invalid_area_typecache) || !is_station_level(current_victim.z))
 			if(!Found_You())
 				Acquire_Victim()
 
@@ -162,7 +167,7 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 		if(current_victim.loc == hiding_spot)
 			hiding_spot.bust_open()
 			current_victim.Paralyze(40)
-			to_chat(current_victim, "<span class='warning'>...edih t'nac uoY</span>")
+			to_chat(current_victim, span_warning("...edih t'nac uoY"))
 			return TRUE
 	return FALSE
 
@@ -177,11 +182,11 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 		if(specific)
 			H = specific
 			A = get_area(H.loc)
-			if(H.stat != DEAD && H.has_dna() && !H.dna.check_mutation(CLUWNEMUT) && !is_type_in_typecache(A, invalid_area_typecache) && is_station_level(H.z))
+			if(H.stat != DEAD && H.has_dna() && !H.dna.check_mutation(/datum/mutation/cluwne) && !is_type_in_typecache(A, invalid_area_typecache) && is_station_level(H.z))
 				return target = current_victim
 
 		A = get_area(H.loc)
-		if(H && ishuman(H) && H.stat != DEAD && H != current_victim && H.has_dna() && !H.dna.check_mutation(CLUWNEMUT) && !is_type_in_typecache(A, invalid_area_typecache) && is_station_level(H.z))
+		if(H && ishuman(H) && H.stat != DEAD && H != current_victim && H.has_dna() && !H.dna.check_mutation(/datum/mutation/cluwne) && !is_type_in_typecache(A, invalid_area_typecache) && is_station_level(H.z))
 			current_victim = H
 			interest = 0
 			stage = STAGE_HAUNT
@@ -235,14 +240,14 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 				var/obj/item/I = locate() in orange(8, H)
 				if(I && !I.anchored)
 					I.throw_at(H, 4, 3)
-					to_chat(H, "<span class='warning'>What threw that?</span>")
+					to_chat(H, span_warning("What threw that?"))
 
 		if(STAGE_SPOOK)
 
 			if(prob(4))
 				var/turf/T = get_turf(H)
 				T.handle_slip(H, 20)
-				to_chat(H, "<span class='warning'>The floor shifts underneath you!</span>")
+				to_chat(H, span_warning("The floor shifts underneath you!"))
 
 			if(prob(5))
 				H.playsound_local(src,'sound/voice/cluwnelaugh2.ogg', 2)
@@ -258,7 +263,7 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 				var/obj/item/I = locate() in orange(8, H)
 				if(I && !I.anchored)
 					I.throw_at(H, 4, 3)
-					to_chat(H, "<span class='warning'>What threw that?</span>")
+					to_chat(H, span_warning("What threw that?"))
 
 			if(prob(2))
 				to_chat(H, "<i>yalp ot tnaw I</i>")
@@ -271,7 +276,7 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 			if(prob(5))
 				var/turf/T = get_turf(H)
 				T.handle_slip(H, 20)
-				to_chat(H, "<span class='warning'>The floor shifts underneath you!</span>")
+				to_chat(H, span_warning("The floor shifts underneath you!"))
 
 			if(prob(3))
 				playsound(src,pick('sound/spookoween/scary_horn.ogg', 'sound/spookoween/scary_horn2.ogg', 'sound/spookoween/scary_horn3.ogg'), 30, 1)
@@ -289,16 +294,16 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 				for(var/obj/item/I in orange(8, H))
 					if(!I.anchored)
 						I.throw_at(H, 4, 3)
-				to_chat(H, "<span class='warning'>What the hell?!</span>")
+				to_chat(H, span_warning("What the hell?!"))
 
 			if(prob(2))
-				to_chat(H, "<span class='warning'>Something feels very wrong...</span>")
+				to_chat(H, span_warning("Something feels very wrong..."))
 				H.playsound_local(src,'sound/hallucinations/behind_you1.ogg', 25)
 				H.flash_act()
 
 			if(prob(2))
 				to_chat(H, "<i>!?REHTOMKNOH eht esiarp uoy oD</i>")
-				to_chat(H, "<span class='warning'>Something grabs your foot!</span>")
+				to_chat(H, span_warning("Something grabs your foot!"))
 				H.playsound_local(src,'sound/hallucinations/i_see_you1.ogg', 25)
 				H.Stun(20)
 
@@ -309,7 +314,7 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 					playsound(src, 'sound/effects/meteorimpact.ogg', 30, 1)
 
 			if(prob(1))
-				to_chat(H, "<span class='userdanger'>WHAT THE FUCK IS THAT?!</span>")
+				to_chat(H, span_userdanger("WHAT THE FUCK IS THAT?!"))
 				to_chat(H, "<i>.KNOH !nuf hcum os si uoy htiw gniyalP .KNOH KNOH KNOH</i>")
 				H.playsound_local(src,'sound/hallucinations/im_here1.ogg', 25)
 				H.reagents.add_reagent("mindbreaker", 3)
@@ -327,14 +332,14 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 				return
 			if(!eating)
 				Found_You()
-				for(var/I in getline(src,H))
+				for(var/I in get_line(src,H))
 					var/turf/T = I
 					if(T.density)
 						forceMove(H.loc)
 					for(var/obj/structure/O in T)
 						if(O.density || istype(O, /obj/machinery/door/airlock))
 							forceMove(H.loc)
-				to_chat(H, "<span class='userdanger'>You feel the floor closing in on your feet!</span>")
+				to_chat(H, span_userdanger("You feel the floor closing in on your feet!"))
 				H.Paralyze(300)
 				INVOKE_ASYNC(H, TYPE_PROC_REF(/mob, emote), "scream")
 				H.adjustBruteLoss(10)
@@ -349,7 +354,7 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 
 
 /mob/living/simple_animal/hostile/floor_cluwne/proc/Grab(mob/living/carbon/human/H)
-	to_chat(H, "<span class='userdanger'>You feel a cold, gloved hand clamp down on your ankle!</span>")
+	to_chat(H, span_userdanger("You feel a cold, gloved hand clamp down on your ankle!"))
 	for(var/I in 1 to get_dist(src, H))
 		if(do_after(src, 5, target = H))
 			step_towards(H, src)
@@ -361,15 +366,15 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 				playsound(src, pick('sound/voice/cluwnelaugh1.ogg', 'sound/voice/cluwnelaugh2.ogg', 'sound/voice/cluwnelaugh3.ogg'), 50, 1)
 
 	if(get_dist(src,H) <= 1)
-		visible_message("<span class='danger'>[src] begins dragging [H] under the floor!</span>")
+		visible_message(span_danger("[src] begins dragging [H] under the floor!"))
 		if(do_after(src, 50, target = H) && eating)
 			H.become_blind()
 			H.invisibility = INVISIBILITY_SPIRIT
 			H.set_density(FALSE)
 			H.set_anchored(TRUE)
 			addtimer(CALLBACK(src, TYPE_PROC_REF(/mob/living/simple_animal/hostile/floor_cluwne, Kill), H), 100, TIMER_OVERRIDE|TIMER_UNIQUE)
-			visible_message("<span class='danger'>[src] pulls [H] under!</span>")
-			to_chat(H, "<span class='userdanger'>[src] drags you underneath the floor!</span>")
+			visible_message(span_danger("[src] pulls [H] under!"))
+			to_chat(H, span_userdanger("[src] drags you underneath the floor!"))
 		else
 			eating = FALSE
 	else
@@ -403,7 +408,7 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 			H.adjustOrganLoss(ORGAN_SLOT_BRAIN, 100)
 			H.cure_blind(null)
 			H.invisibility = initial(H.invisibility)
-			H.density = initial(H.density)
+			H.set_density(initial(H.density))
 			H.set_anchored(initial(H.anchored))
 			H.blur_eyes(10)
 			animate(H.client,color = old_color, time = 20)
@@ -420,7 +425,7 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 	stage = STAGE_HAUNT
 	Acquire_Victim()
 
-/mob/living/simple_animal/hostile/floor_cluwne/proc/force_target(var/mob/living/H)
+/mob/living/simple_animal/hostile/floor_cluwne/proc/force_target(mob/living/H)
 	if(!istype(H) || !H.client)		return  // if theyre not human or they're afk
 	current_victim = H
 	target = H
@@ -467,7 +472,7 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 		sac_target.legcuffed.forceMove(sac_target.drop_location())
 		sac_target.legcuffed.dropped(sac_target)
 		sac_target.legcuffed = null
-		sac_target.update_inv_legcuffed()
+		sac_target.update_worn_legcuffs()
 
 	addtimer(CALLBACK(sac_target, TYPE_PROC_REF(/mob/living/carbon, do_jitter_animation), 100), SACRIFICE_SLEEP_DURATION * (1/3))
 	addtimer(CALLBACK(sac_target, TYPE_PROC_REF(/mob/living/carbon, do_jitter_animation), 100), SACRIFICE_SLEEP_DURATION * (2/3))
@@ -476,13 +481,13 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 	sac_target.grab_ghost()
 	// If our target is dead, try to revive them
 	// and if we fail to revive them, don't proceede the chain
-	if(!sac_target.heal_and_revive(50, "<span class='danger'>[sac_target]'s heart begins to beat with an unholy force as they return from death!</span>"))
+	if(!sac_target.heal_and_revive(50, span_danger("[sac_target]'s heart begins to beat with an unholy force as they return from death!")))
 		return
 
 	if(sac_target.AdjustUnconscious(SACRIFICE_SLEEP_DURATION))
-		to_chat(sac_target, "<span class='hypnophrase'>Your mind feels torn apart as you fall into a shallow slumber...</span>")
+		to_chat(sac_target, span_hypnophrase("Your mind feels torn apart as you fall into a shallow slumber..."))
 	else
-		to_chat(sac_target, "<span class='hypnophrase'>Your mind begins to tear apart as you watch dark tendrils envelop you.</span>")
+		to_chat(sac_target, span_hypnophrase("Your mind begins to tear apart as you watch dark tendrils envelop you."))
 
 	sac_target.AdjustParalyzed(SACRIFICE_SLEEP_DURATION * 1.2)
 	sac_target.AdjustImmobilized(SACRIFICE_SLEEP_DURATION * 1.2)
@@ -502,19 +507,19 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 		return
 
 	// Send 'em to the destination. If the teleport fails, do nothing.
-	if(!destination || !do_teleport(sac_target, destination, asoundin = 'sound/magic/repulse.ogg', asoundout = 'sound/magic/blind.ogg', no_effects = TRUE, channel = TELEPORT_CHANNEL_MAGIC, forced = TRUE, no_wake = TRUE))
+	if(!destination || !do_teleport(sac_target, destination, asoundin = 'sound/magic/repulse.ogg', asoundout = 'sound/magic/blind.ogg', no_effects = TRUE, channel = TELEPORT_CHANNEL_MAGIC, bypass_area_restriction = TRUE, no_wake = TRUE))
 		return
 
 	// If our target died during the (short) wait timer,
 	// and we fail to revive them (using a lower number than before), do nothing.
-	if(!sac_target.heal_and_revive(75, "<span class='danger'>[sac_target]'s heart begins to beat with an unholy force as they return from death!</span>"))
+	if(!sac_target.heal_and_revive(75, span_danger("[sac_target]'s heart begins to beat with an unholy force as they return from death!")))
 		return
 
 	sac_target.cure_blind(null)
 	sac_target.invisibility = initial(sac_target.invisibility)
-	sac_target.density = initial(sac_target.density)
+	sac_target.set_density(initial(sac_target.density))
 	sac_target.set_anchored(initial(sac_target.anchored))
-	to_chat(sac_target, "<span class='big'><span class='hypnophrase'>Unnatural forces begin to claw at your very being from beyond the veil.</span></span>")
+	to_chat(sac_target, span_big("[span_hypnophrase("Unnatural forces begin to claw at your very being from beyond the veil.")]"))
 
 	sac_target.apply_status_effect(/datum/status_effect/unholy_determination, SACRIFICE_REALM_DURATION)
 	addtimer(CALLBACK(src, PROC_REF(after_target_wakes), sac_target), SACRIFICE_SLEEP_DURATION * 0.5) // Begin the minigame
@@ -533,13 +538,13 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 
 	sac_target.flash_act()
 	sac_target.blur_eyes(15)
-	sac_target.Jitter(10)
-	sac_target.Dizzy(10)
-	sac_target.hallucination += 12
+	sac_target.set_jitter_if_lower(20 SECONDS)
+	sac_target.set_dizzy_if_lower(20 SECONDS)
+	sac_target.adjust_hallucinations(24 SECONDS)
 	sac_target.emote("scream")
 
-	to_chat(sac_target, "<span class='reallybig'><span class='hypnophrase'>The grasping hands reveal themselves to you!</span></span>")
-	to_chat(sac_target, "<span class='hypnophrase'>You feel invigorated! Fight to survive!</span>")
+	to_chat(sac_target, span_reallybig("[span_hypnophrase("The grasping hands reveal themselves to you!")]"))
+	to_chat(sac_target, span_hypnophrase("You feel invigorated! Fight to survive!"))
 	// When it runs out, let them know they're almost home free
 	addtimer(CALLBACK(src, PROC_REF(after_helgrasp_ends), sac_target), helgrasp_time)
 	// Win condition
@@ -555,7 +560,7 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 	if(QDELETED(sac_target) || sac_target.stat == DEAD)
 		return
 
-	to_chat(sac_target, "<span class='hypnophrase'>The worst is behind you... Not much longer! Hold fast, or expire!</span>")
+	to_chat(sac_target, span_hypnophrase("The worst is behind you... Not much longer! Hold fast, or expire!"))
 
 /mob/living/simple_animal/hostile/floor_cluwne/proc/return_target(mob/living/carbon/human/sac_target)
 	if(QDELETED(sac_target))
@@ -567,16 +572,15 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 	LAZYREMOVE(return_timers, REF(sac_target))
 
 	UnregisterSignal(sac_target, COMSIG_MOVABLE_Z_CHANGED)
-	UnregisterSignal(sac_target, COMSIG_MOB_DEATH)
+	UnregisterSignal(sac_target, COMSIG_LIVING_DEATH)
 	sac_target.remove_status_effect(/datum/status_effect/necropolis_curse)
 	sac_target.remove_status_effect(/datum/status_effect/unholy_determination)
 	sac_target.reagents?.del_reagent(/datum/reagent/helgrasp/heretic)
 	SEND_SIGNAL(sac_target, COMSIG_CLEAR_MOOD_EVENT, "shadow_realm")
 
 	// Wherever we end up, we sure as hell won't be able to explain
-	sac_target.slurring += 20
-	sac_target.cultslurring += 20
-	sac_target.stuttering += 20
+	sac_target.adjust_timed_status_effect(40 SECONDS, /datum/status_effect/speech/slurring/heretic)
+	sac_target.adjust_stutter(40 SECONDS)
 
 	// They're already back on the station for some reason, don't bother teleporting
 	if(is_station_level(sac_target.z))
@@ -589,7 +593,7 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 		safe_turf = get_turf(backup_loc)
 		stack_trace("[type] - return_target was unable to find a safe turf for [sac_target] to return to. Defaulting to observer start turf.")
 
-	if(!do_teleport(sac_target, safe_turf, asoundout = 'sound/magic/blind.ogg', no_effects = TRUE, channel = TELEPORT_CHANNEL_FREE, forced = TRUE, no_wake = TRUE))
+	if(!do_teleport(sac_target, safe_turf, asoundout = 'sound/magic/blind.ogg', no_effects = TRUE, channel = TELEPORT_CHANNEL_FREE, bypass_area_restriction = TRUE, no_wake = TRUE))
 		safe_turf = get_turf(backup_loc)
 		sac_target.forceMove(safe_turf)
 		stack_trace("[type] - return_target was unable to teleport [sac_target] to the observer start turf. Forcemoving.")
@@ -604,16 +608,16 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
  */
 /mob/living/simple_animal/hostile/floor_cluwne/proc/after_return_live_target(mob/living/carbon/human/sac_target)
 	if(sac_target.stat == DEAD)
-		sac_target.revive(TRUE, TRUE)
+		sac_target.revive(HEAL_ALL)
 		sac_target.grab_ghost()
-	to_chat(sac_target, "<span class='hypnophrase'>The fight is over, but at great cost. You have been returned to the station in one piece.</span>")
-	to_chat(sac_target, "<span class='big'><span class='hypnophrase'>You don't remember anything leading up to the experience - All you can think about are those horrific hands...</span></span>")
+	to_chat(sac_target, span_hypnophrase("The fight is over, but at great cost. You have been returned to the station in one piece."))
+	to_chat(sac_target, span_big("[span_hypnophrase("You don't remember anything leading up to the experience - All you can think about are those horrific hands...")]"))
 
 	// Oh god where are we?
 	sac_target.flash_act()
-	sac_target.Jitter(60)
+	sac_target.set_jitter_if_lower(120 SECONDS)
 	sac_target.blur_eyes(50)
-	sac_target.Dizzy(30)
+	sac_target.set_dizzy_if_lower(60 SECONDS)
 	sac_target.AdjustKnockdown(80)
 	sac_target.adjustStaminaLoss(120)
 
@@ -633,3 +637,6 @@ GLOBAL_VAR_INIT(floor_cluwnes, 0)
 #undef STAGE_TORMENT
 #undef STAGE_ATTACK
 #undef MANIFEST_DELAY
+
+#undef SACRIFICE_SLEEP_DURATION
+#undef SACRIFICE_REALM_DURATION

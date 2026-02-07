@@ -4,13 +4,13 @@
 	icon = 'icons/obj/clothing/head/costume.dmi'
 	worn_icon = 'icons/mob/clothing/head/costume.dmi'
 	icon_state = "hardhat0_cakehat"
-	item_state = "hardhat0_cakehat"
+	inhand_icon_state = "hardhat0_cakehat"
 	hat_type = "cakehat"
 	lefthand_file = 'icons/mob/inhands/clothing_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/clothing_righthand.dmi'
 	hitsound = 'sound/weapons/tap.ogg'
 	flags_inv = HIDEEARS|HIDEHAIR
-	armor = list(MELEE = 0,  BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 0, ACID = 0, STAMINA = 0)
+	armor_type = /datum/armor/none
 	light_range = 2 //luminosity when on
 	flags_cover = HEADCOVERSEYES
 	heat = 1000 //use round numbers, guh
@@ -55,7 +55,7 @@
 	name = "energy cake"
 	desc = "You put the energy sword on your cake. Brilliant."
 	icon_state = "hardhat0_energycake"
-	item_state = "hardhat0_energycake"
+	inhand_icon_state = "hardhat0_energycake"
 	hat_type = "energycake"
 	hitsound = 'sound/weapons/tap.ogg'
 	hitsound_on = 'sound/weapons/blade1.ogg'
@@ -66,10 +66,10 @@
 
 /obj/item/clothing/head/utility/hardhat/cakehat/energycake/turn_on(mob/living/user)
 	playsound(user, 'sound/weapons/saberon.ogg', 5, TRUE)
-	to_chat(user, "<span class='warning'>You turn on \the [src].</span>")
+	to_chat(user, span_warning("You turn on \the [src]."))
 	return ..()
 
 /obj/item/clothing/head/utility/hardhat/cakehat/energycake/turn_off(mob/living/user)
 	playsound(user, 'sound/weapons/saberoff.ogg', 5, TRUE)
-	to_chat(user, "<span class='warning'>You turn off \the [src].</span>")
+	to_chat(user, span_warning("You turn off \the [src]."))
 	return ..()

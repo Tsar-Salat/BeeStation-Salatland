@@ -105,7 +105,7 @@ GLOBAL_DATUM_INIT(orbit_menu, /datum/orbit_menu, new)
 		//If we have an ID, use that
 		var/obj/item/card/id/identification_card = mob_poi.get_idcard()
 		if (identification_card)
-			serialized["role_icon"] = "hud[ckey(identification_card.GetJobIcon())]"
+			serialized["role_icon"] = "hud[ckey(identification_card.get_item_job_icon())]"
 		else if(SSjob.name_occupations[mind.assigned_role])
 			//If we have no ID, use the mind job
 			var/datum/job/located_job = SSjob.GetJob(mind.assigned_role)

@@ -4,7 +4,7 @@
 	icon_state = "faithless"
 	icon_living = "faithless"
 	icon_dead = "faithless_dead"
-	mob_biotypes = list(MOB_ORGANIC, MOB_HUMANOID)
+	mob_biotypes = MOB_ORGANIC | MOB_HUMANOID
 	gender = MALE
 	speak_chance = 0
 	turns_per_move = 5
@@ -19,7 +19,6 @@
 	speed = 0
 	maxHealth = 80
 	health = 80
-	spacewalk = TRUE
 	stat_attack = HARD_CRIT
 	robust_searching = 1
 
@@ -33,11 +32,15 @@
 	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	minbodytemp = 0
 
-	faction = list("faithless")
+	faction = list(FACTION_FAITHLESS)
 	gold_core_spawnable = HOSTILE_SPAWN
 
 	footstep_type = FOOTSTEP_MOB_SHOE
 	hardattacks = TRUE
+
+/mob/living/simple_animal/hostile/faithless/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_SPACEWALK, INNATE_TRAIT)
 
 /mob/living/simple_animal/hostile/faithless/faithful
 	name = "Faithsworn"

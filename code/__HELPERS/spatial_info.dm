@@ -1,8 +1,3 @@
-/turf
-	///what /mob/oranges_ear instance is already assigned to us as there should only ever be one.
-	///used for guaranteeing there is only one oranges_ear per turf when assigned, speeds up view() iteration
-	var/mob/oranges_ear/assigned_oranges_ear
-
 /** # Oranges Ear
  *
  * turns out view() spends a significant portion of its processing time generating lists of contents of viewable turfs which includes EVERYTHING on it visible
@@ -257,7 +252,7 @@
 	return atoms
 
 ///Returns the distance between two atoms
-/proc/get_dist_euclidian(atom/first_location as turf|mob|obj, atom/second_location as turf|mob|obj)
+/proc/get_dist_euclidean(atom/first_location, atom/second_location)
 	var/dx = first_location.x - second_location.x
 	var/dy = first_location.y - second_location.y
 

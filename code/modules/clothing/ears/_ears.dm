@@ -11,14 +11,15 @@
 	name = "earmuffs"
 	desc = "Protects your hearing from loud noises, and quiet ones as well."
 	icon_state = "earmuffs"
-	item_state = "earmuffs"
+	inhand_icon_state = "earmuffs"
+	clothing_traits = list(TRAIT_DEAF)
 	strip_delay = 15
 	equip_delay_other = 25
 	resistance_flags = FLAMMABLE
 	custom_price = 40
 	bang_protect = 2
 
-/obj/item/clothing/ears/earmuffs/ComponentInitialize()
+/obj/item/clothing/ears/earmuffs/Initialize(mapload)
 	. = ..()
 	AddElement(/datum/element/earhealing)
 
@@ -28,7 +29,7 @@
 	icon = 'icons/obj/clothing/accessories.dmi'
 	worn_icon = 'icons/mob/clothing/head/costume.dmi'
 	icon_state = "headphones"
-	item_state = "headphones"
+	inhand_icon_state = "headphones"
 	slot_flags = ITEM_SLOT_EARS | ITEM_SLOT_HEAD | ITEM_SLOT_NECK //Fluff item, put it wherever you want!
 	actions_types = list(/datum/action/item_action/toggle_headphones)
 	var/headphones_on = FALSE
@@ -43,7 +44,7 @@
 
 /obj/item/clothing/ears/headphones/update_icon_state()
 	icon_state = "[initial(icon_state)]_[headphones_on? "on" : "off"]"
-	item_state = "[initial(item_state)]_[headphones_on? "on" : "off"]"
+	inhand_icon_state = "[initial(inhand_icon_state)]_[headphones_on? "on" : "off"]"
 	. = ..()
 
 /obj/item/clothing/ears/headphones/proc/toggle(owner, force_state)
@@ -56,20 +57,17 @@
 	update_appearance()
 	var/mob/living/carbon/human/H = owner
 	if(istype(H))
-		H.update_inv_ears()
-		H.update_inv_neck()
-		H.update_inv_head()
-	to_chat(owner, "<span class='notice'>You turn the music [headphones_on? "on. Untz Untz Untz!" : "off."]</span>")
+		H.update_worn_ears()
+		H.update_worn_neck()
+		H.update_worn_head()
+	to_chat(owner, span_notice("You turn the music [headphones_on? "on. Untz Untz Untz!" : "off."]"))
 	balloon_alert(owner, "Music is now [headphones_on? "on" : "off"]")
 
 /obj/item/clothing/ears/headphones/attack_self(mob/user)
-	if(!user.IsAdvancedToolUser())
-		to_chat(user, "<span class='warning'>You don't have the dexterity to do this!</span>")
+	if(!ISADVANCEDTOOLUSER(user))
+		to_chat(user, span_warning("You don't have the dexterity to do this!"))
 		return TRUE
 	interact(user)
-
-/obj/item/clothing/ears/headphones/interact(mob/user)
-	ui_interact(user)
 
 /obj/item/clothing/ears/headphones/ui_interact(mob/living/user)
 	if(!isliving(user) || user.stat != CONSCIOUS || (HAS_TRAIT(user, TRAIT_HANDS_BLOCKED) && !ispAI(user)))
@@ -96,5 +94,5 @@
 
 /obj/item/clothing/ears/headphones/examine(mob/user)
 	. = ..()
-	. += "<span class='notice'>They are currently [headphones_on? "on" : "off"].</span>"
-	. += "<span class='notice'>Alt-click to quickly turn the music [headphones_on? "off" : "on"].</span>"
+	. += span_notice("They are currently [headphones_on? "on" : "off"].")
+	. += span_notice("Alt-click to quickly turn the music [headphones_on? "off" : "on"].")

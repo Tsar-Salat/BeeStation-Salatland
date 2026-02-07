@@ -5,7 +5,7 @@
 		humankind. The jewelry he kept for himself."
 	icon = 'icons/obj/candle.dmi'
 	icon_state = "candle1"
-	item_state = "candle1"
+	inhand_icon_state = "candle1"
 	w_class = WEIGHT_CLASS_TINY
 	light_color = LIGHT_COLOR_FIRE
 	heat = 1000
@@ -82,7 +82,7 @@
 
 /obj/item/candle/attack_self(mob/user)
 	if(put_out_candle())
-		user.visible_message("<span class='notice'>[user] snuffs [src].</span>")
+		user.visible_message(span_notice("[user] snuffs [src]."))
 
 /obj/item/candle/infinite
 	infinite = TRUE

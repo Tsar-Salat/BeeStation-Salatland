@@ -56,14 +56,24 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define HTML_USE_INITAL_ICON_1 (1<<13)
 /// Prevents direct access for anything in the contents of this atom.
 #define NO_DIRECT_ACCESS_FROM_CONTENTS_1 (1<<14)
+/// Prevents aggregation of the item in the stack panel
+#define STAT_UNIQUE_1 (1<<15)
+// Whether or not this atom is storing contents for a disassociated storage object
+#define HAS_DISASSOCIATED_STORAGE_1 (1<<15)
+/// Is this object currently processing in the atmos object list?
+#define ATMOS_IS_PROCESSING_1 (1<<16)
+/// Can players recolor this in-game via vendors (and maybe more if support is added)?
+#define IS_PLAYER_COLORABLE_1 (1<<16)
+/// Is this atom immune to being dusted by the supermatter?
+#define SUPERMATTER_IGNORES_1 (1<<17)
 
 //turf-only flags. These use flags_1 too.
 // These exist to cover /turf and /area at the same time
-#define NOJAUNT_1					(1<<15)
-#define UNUSED_RESERVATION_TURF_1	(1<<16)
-#define CAN_BE_DIRTY_1				(1<<17) 	//! If a turf can be made dirty at roundstart. This is also used in areas.
-#define NO_LAVA_GEN_1				(1<<18) 	//! Blocks lava rivers being generated on the turf
-#define NO_RUINS_1					(1<<19) //! Blocks ruins spawning on the turf
+#define NOJAUNT_1					(1<<17)
+#define UNUSED_RESERVATION_TURF_1	(1<<18)
+#define CAN_BE_DIRTY_1				(1<<19) 	//! If a turf can be made dirty at roundstart. This is also used in areas.
+#define NO_LAVA_GEN_1				(1<<20) 	//! Blocks lava rivers being generated on the turf
+#define NO_RUINS_1					(1<<21) //! Blocks ruins spawning on the turf
 
 // Update flags for [/atom/proc/update_appearance]
 /// Update the atom's name
@@ -109,7 +119,10 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define XENOBIOLOGY_COMPATIBLE		(1<<9)
 /// Are hidden stashes allowed to spawn here?
 #define HIDDEN_STASH_LOCATION		(1<<10)
-
+/// Indicates that this area uses an APC from another location (Skips the unit tests for APCs)
+#define REMOTE_APC					(1<<11)
+/// This area is prevented from having gravity (ie. space, nearstation, or outside solars)
+#define NO_GRAVITY 					(1<<12)
 /*
 	These defines are used specifically with the atom/pass_flags bitmask
 	the atom/checkpass() proc uses them (tables will call movable atom checkpass(PASSTABLE) for example)
@@ -139,6 +152,10 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define FLOATING		(1<<3)
 #define PHASING			(1<<4)			//! When moving, will Bump()/Cross() everything, but won't be stopped.
 #define THROWN			(1<<5) //! while an atom is being thrown
+#define UPSIDE_DOWN 	(1<<6) /// The mob is walking on the ceiling. Or is generally just, upside down.
+
+/// Combination flag for movetypes which, for all intents and purposes, mean the mob is not touching the ground
+#define MOVETYPES_NOT_TOUCHING_GROUND (FLYING|FLOATING|UPSIDE_DOWN)
 
 //! ## Fire and Acid stuff, for resistance_flags
 #define LAVA_PROOF		(1<<0)
@@ -151,36 +168,49 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define FREEZE_PROOF	(1<<7) //! can't be frozen
 
 //tesla_zap
-#define TESLA_MACHINE_EXPLOSIVE		(1<<0)
-#define TESLA_ALLOW_DUPLICATES		(1<<1)
-#define TESLA_OBJ_DAMAGE			(1<<2)
-#define TESLA_MOB_DAMAGE			(1<<3)
-#define TESLA_MOB_STUN				(1<<4)
+#define ZAP_MACHINE_EXPLOSIVE (1<<0)
+#define ZAP_ALLOW_DUPLICATES (1<<1)
+#define ZAP_OBJ_DAMAGE (1<<2)
+#define ZAP_MOB_DAMAGE (1<<3)
+#define ZAP_MOB_STUN (1<<4)
+#define ZAP_GENERATES_POWER (1<<5)
+/// Zaps with this flag will generate less power through tesla coils
+#define ZAP_LOW_POWER_GEN (1<<6)
 
-#define TESLA_DEFAULT_FLAGS ALL
-#define TESLA_ENERGY_PRIMARY_BALL_FLAGS (TESLA_MACHINE_EXPLOSIVE | TESLA_OBJ_DAMAGE | TESLA_MOB_DAMAGE | TESLA_MOB_STUN)
-#define TESLA_ENERGY_MINI_BALL_FLAGS (TESLA_OBJ_DAMAGE | TESLA_MOB_DAMAGE | TESLA_MOB_STUN)
-#define TESLA_FUSION_FLAGS (TESLA_OBJ_DAMAGE | TESLA_MOB_DAMAGE | TESLA_MOB_STUN)
+#define ZAP_DEFAULT_FLAGS ZAP_MOB_STUN | ZAP_MOB_DAMAGE | ZAP_OBJ_DAMAGE
+#define ZAP_SUPERMATTER_FLAGS ZAP_GENERATES_POWER
+
+#define ZAP_TESLA_LARGE_FLAGS ZAP_MACHINE_EXPLOSIVE | ZAP_OBJ_DAMAGE | ZAP_MOB_DAMAGE | ZAP_MOB_STUN | ZAP_GENERATES_POWER
+#define ZAP_TESLA_SMALL_FLAGS ZAP_OBJ_DAMAGE | ZAP_MOB_DAMAGE | ZAP_MOB_STUN | ZAP_GENERATES_POWER
 
 //EMP protection
 #define EMP_PROTECT_SELF (1<<0)
 #define EMP_PROTECT_CONTENTS (1<<1)
 #define EMP_PROTECT_WIRES (1<<2)
 
-//! ## Mob mobility var flags
-#define MOBILITY_MOVE			(1<<0)		//! can move
-#define MOBILITY_STAND			(1<<1)		//! can, and is, standing up
-#define MOBILITY_PICKUP			(1<<2)		//! can pickup items
-#define MOBILITY_USE			(1<<3)		//! can hold and use items
-#define MOBILITY_UI				(1<<4)		//! can use interfaces like machinery
-#define MOBILITY_STORAGE		(1<<5)		//! can use storage item
-#define MOBILITY_PULL			(1<<6)		//! can pull things
+//Mob mobility var flags
+/// can move
+#define MOBILITY_MOVE (1<<0)
+/// can, and is, standing up
+#define MOBILITY_STAND (1<<1)
+/// can pickup items
+#define MOBILITY_PICKUP (1<<2)
+/// can hold and use items
+#define MOBILITY_USE (1<<3)
+/// can use interfaces like machinery
+#define MOBILITY_UI (1<<4)
+/// can use storage item
+#define MOBILITY_STORAGE (1<<5)
+/// can pull things
+#define MOBILITY_PULL (1<<6)
+/// can rest
+#define MOBILITY_REST (1<<7)
+/// can lie down
+#define MOBILITY_LIEDOWN (1<<8)
 
 #define MOBILITY_FLAGS_DEFAULT (MOBILITY_MOVE | MOBILITY_STAND | MOBILITY_PICKUP | MOBILITY_USE | MOBILITY_UI | MOBILITY_STORAGE | MOBILITY_PULL)
-
-// radiation
-#define RAD_PROTECT_CONTENTS (1<<0)
-#define RAD_NO_CONTAMINATE (1<<1)
+#define MOBILITY_FLAGS_CARBON_DEFAULT (MOBILITY_MOVE | MOBILITY_STAND | MOBILITY_PICKUP | MOBILITY_USE | MOBILITY_UI | MOBILITY_STORAGE | MOBILITY_PULL | MOBILITY_REST | MOBILITY_LIEDOWN)
+#define MOBILITY_FLAGS_REST_CAPABLE_DEFAULT (MOBILITY_MOVE | MOBILITY_STAND | MOBILITY_PICKUP | MOBILITY_USE | MOBILITY_UI | MOBILITY_STORAGE | MOBILITY_PULL | MOBILITY_REST | MOBILITY_LIEDOWN)
 
 //alternate appearance flags
 #define AA_TARGET_SEE_APPEARANCE (1<<0)
@@ -199,7 +229,12 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 	if(HAS_TRAIT_FROM_ONLY(x, TRAIT_KEEP_TOGETHER, KEEP_TOGETHER_ORIGINAL))\
 		REMOVE_TRAIT(x, TRAIT_KEEP_TOGETHER, KEEP_TOGETHER_ORIGINAL);\
 	else if(!HAS_TRAIT(x, TRAIT_KEEP_TOGETHER))\
-	 	x.appearance_flags &= ~KEEP_TOGETHER
+		x.appearance_flags &= ~KEEP_TOGETHER
+
+//religious_tool flags
+#define RELIGION_TOOL_INVOKE (1<<0)
+#define RELIGION_TOOL_SACRIFICE (1<<1)
+#define RELIGION_TOOL_SECTSELECT (1<<2)
 
 //dir macros
 ///Returns true if the dir is diagonal, false otherwise
@@ -215,7 +250,12 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 ///Turns the dir by 180 degrees
 #define DIRFLIP(d)       turn(d, 180)
 
-//religious_tool flags
-#define RELIGION_TOOL_INVOKE (1<<0)
-#define RELIGION_TOOL_SACRIFICE (1<<1)
-#define RELIGION_TOOL_SECTSELECT (1<<2)
+// timed_action_flags parameter for `/proc/do_after`
+/// Can do the action even if mob moves location
+#define IGNORE_USER_LOC_CHANGE (1<<0)
+/// Can do the action even if the target moves location
+#define IGNORE_TARGET_LOC_CHANGE (1<<1)
+/// Can do the action even if the item is no longer being held
+#define IGNORE_HELD_ITEM (1<<2)
+/// Can do the action even if the mob is incapacitated (ex. handcuffed)
+#define IGNORE_INCAPACITATED (1<<3)

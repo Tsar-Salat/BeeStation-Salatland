@@ -32,9 +32,11 @@
 #define AIRLOCK_ASSEMBLY_NEEDS_ELECTRONICS 1
 #define AIRLOCK_ASSEMBLY_NEEDS_SCREWDRIVER 2
 
-//blast door (de)construction states
+///The blast door is missing wires, first step of construction.
 #define BLASTDOOR_NEEDS_WIRES 0
+///The blast door needs electronics, second step of construction.
 #define BLASTDOOR_NEEDS_ELECTRONICS 1
+///The blast door is fully constructed.
 #define BLASTDOOR_FINISHED 2
 
 // default_unfasten_wrench() return defines
@@ -77,53 +79,23 @@
 /// maximum amount of cable in a coil
 #define MAXCOIL 30
 
-// tablecrafting defines
-#define CAT_NONE ""
-#define CAT_WEAPONRY "Weaponry"
-#define CAT_WEAPON "Weapons"
-#define CAT_AMMO "Ammunition"
-#define CAT_ROBOT "Robots"
-#define CAT_MISC "Misc"
-#define CAT_PRIMAL "Tribal"
-#define CAT_CLOTHING "Clothing"
-#define CAT_EYEWEAR "Eyewear"
-#define CAT_FOOD "Foods"
-#define CAT_BREAD "Breads"
-#define CAT_BURGER "Burgers"
-#define CAT_CAKE "Cakes"
-#define CAT_EGG "Egg-Based Food"
-#define CAT_MEAT "Meats"
-#define CAT_MISCFOOD "Misc. Food"
-#define CAT_MEXICAN "Mexican Food"
-#define CAT_PASTRY "Pastries"
-#define CAT_PIE "Pies"
-#define CAT_PIZZA "Pizzas"
-#define CAT_SALAD "Salads"
-#define CAT_SANDWICH "Sandwiches"
-#define CAT_SEAFOOD "Seafood"
-#define CAT_SOUP "Soups"
-#define CAT_SPAGHETTI "Spaghettis"
-#define CAT_ICE "Frozen"
-#define CAT_DRINK "Drinks"
-#define CAT_STRUCTURE "Structures"
+// rcd buildtype defines
+// these aren't even used as bitflags so who even knows why they are treated like them
+#define RCD_FLOORWALL (1<<0)
+#define RCD_AIRLOCK (1<<1)
+#define RCD_DECONSTRUCT (1<<2)
+#define RCD_WINDOWGRILLE (1<<3)
+#define RCD_MACHINE (1<<4)
+#define RCD_COMPUTER (1<<5)
+#define RCD_FURNISHING (1<<6)
+#define RCD_LADDER (1<<7)
 
+#define RCD_UPGRADE_FRAMES (1<<0)
+#define RCD_UPGRADE_SIMPLE_CIRCUITS	(1<<1)
+#define RCD_UPGRADE_SILO_LINK (1<<2)
+#define RCD_UPGRADE_FURNISHING (1<<3)
 
-//rcd modes
-#define RCD_FLOORWALL 0
-#define RCD_AIRLOCK 1
-#define RCD_DECONSTRUCT 2
-#define RCD_WINDOWGRILLE 3
-#define RCD_MACHINE 4
-#define RCD_COMPUTER 5
-#define RCD_FURNISHING 6
-#define RCD_LADDER 7
-
-#define RCD_UPGRADE_FRAMES 0
-#define RCD_UPGRADE_SIMPLE_CIRCUITS	1
-#define RCD_UPGRADE_SILO_LINK 2
-#define RCD_UPGRADE_FURNISHING 3
-
-#define RPD_UPGRADE_UNWRENCH 0
+#define RPD_UPGRADE_UNWRENCH (1<<0)
 
 #define RCD_WINDOW_FULLTILE "full tile"
 #define RCD_WINDOW_DIRECTIONAL "directional"
@@ -138,3 +110,19 @@
 
 /// How much less resources the RCD uses when reconstructing
 #define RCD_MEMORY_COST_BUFF 8
+
+// Frame (de/con)struction states
+/// Frame is empty, no wires no board
+#define FRAME_STATE_EMPTY 0
+/// Frame has been wired
+#define FRAME_STATE_WIRED 1
+/// Frame has a board installed, it is safe to assume if in this state then circuit is non-null (but you never know)
+#define FRAME_STATE_BOARD_INSTALLED 2
+/// Frame now has a board installed, it is safe to assume beyond this state, circuit is non-null (but you never know)
+#define FRAME_COMPUTER_STATE_BOARD_INSTALLED 1
+/// Board has been secured
+#define FRAME_COMPUTER_STATE_BOARD_SECURED 2
+/// Frame has been wired
+#define FRAME_COMPUTER_STATE_WIRED 3
+/// Frame has had glass applied to it
+#define FRAME_COMPUTER_STATE_GLASSED 4

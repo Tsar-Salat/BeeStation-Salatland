@@ -11,7 +11,7 @@
 /obj/effect/turf_decal/stripes{
 	dir = 9
 	},
-/obj/item/reagent_containers/food/drinks/beer/almost_empty{
+/obj/item/reagent_containers/cup/glass/bottle/beer/almost_empty{
 	pixel_x = 13;
 	pixel_y = -7
 	},
@@ -37,7 +37,7 @@
 /turf/open/floor/plating,
 /area/template_noop)
 "w" = (
-/obj/effect/spawner/randomvend/snack,
+/obj/effect/spawner/random/vending/snackvend,
 /obj/effect/turf_decal/stripes{
 	dir = 5
 	},

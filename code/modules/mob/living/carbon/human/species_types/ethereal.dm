@@ -1,4 +1,3 @@
-
 /datum/species/ethereal
 	name = "\improper Ethereal"
 	id = SPECIES_ETHEREAL
@@ -8,50 +7,57 @@
 	meat = /obj/item/food/meat/slab/human/mutant/ethereal
 	mutantstomach = /obj/item/organ/stomach/battery/ethereal
 	mutanttongue = /obj/item/organ/tongue/ethereal
-	exotic_blood = /datum/reagent/consumable/liquidelectricity //Liquid Electricity. fuck you think of something better gamer
+	mutantheart = /obj/item/organ/heart/ethereal
+	exotic_bloodtype = "E"
 	siemens_coeff = 0.5 //They thrive on energy
 	brutemod = 1.25 //They're weak to punches
 	attack_type = BURN //burn bish
-	damage_overlay_type = "" //We are too cool for regular damage overlays
-	species_traits = list(DYNCOLORS, AGENDER, HAIR)
+	species_traits = list(
+		DYNCOLORS,
+		AGENDER,
+		HAIR
+	)
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | MIRROR_MAGIC | RACE_SWAP | ERT_SPAWN | SLIME_EXTRACT
 	species_language_holder = /datum/language_holder/ethereal
 	inherent_traits = list(TRAIT_POWERHUNGRY)
 	sexes = FALSE //no fetish content allowed
-	hair_color = "fixedmutcolor"
-	hair_alpha = 140
-	swimming_component = /datum/component/swimming/ethereal
-
-	species_chest = /obj/item/bodypart/chest/ethereal
-	species_head = /obj/item/bodypart/head/ethereal
-	species_l_arm = /obj/item/bodypart/l_arm/ethereal
-	species_r_arm = /obj/item/bodypart/r_arm/ethereal
-	species_l_leg = /obj/item/bodypart/l_leg/ethereal
-	species_r_leg = /obj/item/bodypart/r_leg/ethereal
 
 	// Body temperature for ethereals is much higher then humans as they like hotter environments
 	bodytemp_normal = (BODYTEMP_NORMAL + 50)
 	bodytemp_heat_damage_limit = FIRE_MINIMUM_TEMPERATURE_TO_SPREAD // about 150C
 	// Cold temperatures hurt faster as it is harder to move with out the heat energy
 	bodytemp_cold_damage_limit = (T20C - 10) // about 10c
+	hair_color = "fixedmutcolor"
+	hair_alpha = 140
+	swimming_component = /datum/component/swimming/ethereal
+	inert_mutation = /datum/mutation/overload
+
+	bodypart_overrides = list(
+		BODY_ZONE_L_ARM = /obj/item/bodypart/arm/left/ethereal,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/arm/right/ethereal,
+		BODY_ZONE_HEAD = /obj/item/bodypart/head/ethereal,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/leg/left/ethereal,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/ethereal,
+		BODY_ZONE_CHEST = /obj/item/bodypart/chest/ethereal,
+	)
 
 	var/current_color
-	//var/default_color
+	var/default_color
+	var/EMPeffect = FALSE
+	var/emageffect = FALSE
 	var/r1
 	var/g1
 	var/b1
 	var/static/r2 = 237
 	var/static/g2 = 164
 	var/static/b2 = 149
-	var/EMPeffect = FALSE
-	var/emageffect = FALSE
 	//this is shit but how do i fix it? no clue.
 	var/drain_time = 0 //used to keep ethereals from spam draining power sources
-	inert_mutation = OVERLOAD
 	var/obj/effect/dummy/lighting_obj/ethereal_light
 
 /datum/species/ethereal/Destroy(force)
-	QDEL_NULL(ethereal_light)
+	if(ethereal_light)
+		QDEL_NULL(ethereal_light)
 	return ..()
 
 /datum/species/ethereal/on_species_gain(mob/living/carbon/new_ethereal, datum/species/old_species, pref_load)
@@ -69,11 +75,10 @@
 	ethereal_light = ethereal.mob_light(light_type = /obj/effect/dummy/lighting_obj/moblight/species)
 	spec_updatehealth(ethereal)
 
-	//The following code is literally only to make admin-spawned ethereals not be black.
-	new_ethereal.dna.features["mcolor"] = new_ethereal.dna.features["ethcolor"] //Ethcolor and Mut color are both dogshit and will be replaced
-	for(var/obj/item/bodypart/limb as anything in new_ethereal.bodyparts)
-		if(limb.limb_id == SPECIES_ETHEREAL)
-			limb.update_limb(is_creating = TRUE)
+	new_ethereal.set_safe_hunger_level()
+
+	var/obj/item/organ/heart/ethereal/ethereal_heart = new_ethereal.get_organ_slot(ORGAN_SLOT_HEART)
+	ethereal_heart.ethereal_color = default_color
 
 /datum/species/ethereal/on_species_loss(mob/living/carbon/human/C, datum/species/new_species, pref_load)
 	UnregisterSignal(C, COMSIG_ATOM_SHOULD_EMAG)
@@ -82,19 +87,15 @@
 	QDEL_NULL(ethereal_light)
 	return ..()
 
-/datum/species/ethereal/random_name(gender, unique, lastname, attempts)
-	. = "[pick(GLOB.ethereal_names)] [random_capital_letter()]"
-	if(prob(65))
-		. += "[random_capital_letter()]"
-
-	if(unique && attempts < 10)
-		if(findname(.))
-			. = .(gender, TRUE, lastname, ++attempts)
-
 /datum/species/ethereal/spec_updatehealth(mob/living/carbon/human/ethereal)
 	. = ..()
 	if(!ethereal_light)
 		return
+	var/dna_color = "#[ethereal.dna.features["ethcolor"]]"
+	if(default_color != dna_color)
+		r1 = GETREDPART(dna_color)
+		g1 = GETGREENPART(dna_color)
+		b1 = GETBLUEPART(dna_color)
 	if(ethereal.stat != DEAD && !EMPeffect)
 		var/healthpercent = max(ethereal.health, 0) / 100
 		if(!emageffect)
@@ -112,7 +113,7 @@
 	SIGNAL_HANDLER
 	EMPeffect = TRUE
 	spec_updatehealth(H)
-	to_chat(H, "<span class='notice'>You feel the light of your body leave you.</span>")
+	to_chat(H, span_notice("You feel the light of your body leave you."))
 	switch(severity)
 		if(EMP_LIGHT)
 			addtimer(CALLBACK(src, PROC_REF(stop_emp), H), 10 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE) //We're out for 10 seconds
@@ -128,7 +129,7 @@
 
 	if(hacker)
 		if(hacker.charges <= 0)
-			to_chat(user, "<span class='warning'>[hacker] is out of charges and needs some time to restore them!</span>")
+			to_chat(user, span_warning("[hacker] is out of charges and needs some time to restore them!"))
 			user.balloon_alert(user, "out of charges!")
 			return
 		else
@@ -136,15 +137,15 @@
 
 	emageffect = TRUE
 	if(user)
-		to_chat(user, "<span class='notice'>You tap [H] on the back with your card.</span>")
-	H.visible_message("<span class='danger'>[H] starts flickering in an array of colors!</span>")
+		to_chat(user, span_notice("You tap [H] on the back with your card."))
+	H.visible_message(span_danger("[H] starts flickering in an array of colors!"))
 	handle_emag(H)
 	addtimer(CALLBACK(src, PROC_REF(stop_emag), H), 30 SECONDS) //Disco mode for 30 seconds! This doesn't affect the ethereal at all besides either annoying some players, or making someone look badass.
 
 /datum/species/ethereal/proc/stop_emp(mob/living/carbon/human/H)
 	EMPeffect = FALSE
 	spec_updatehealth(H)
-	to_chat(H, "<span class='notice'>You feel more energized as your shine comes back.</span>")
+	to_chat(H, span_notice("You feel more energized as your shine comes back."))
 
 /datum/species/ethereal/proc/handle_emag(mob/living/carbon/human/H)
 	if(!emageffect)
@@ -156,7 +157,7 @@
 /datum/species/ethereal/proc/stop_emag(mob/living/carbon/human/H)
 	emageffect = FALSE
 	spec_updatehealth(H)
-	H.visible_message("<span class='danger'>[H] stops flickering and goes back to their normal state!</span>")
+	H.visible_message(span_danger("[H] stops flickering and goes back to their normal state!"))
 
 /datum/species/ethereal/handle_charge(mob/living/carbon/human/H)
 	brutemod = 1.25
@@ -194,12 +195,22 @@
 /datum/species/ethereal/get_sniff_sound(mob/living/carbon/user)
 	return SPECIES_DEFAULT_SNIFF_SOUND(user)
 
+/datum/species/ethereal/get_giggle_sound(mob/living/carbon/user)
+	return SPECIES_DEFAULT_GIGGLE_SOUND(user)
+
 /datum/species/ethereal/get_features()
 	var/list/features = ..()
 
 	features += "feature_ethcolor"
 
 	return features
+
+/datum/species/ethereal/get_scream_sound(mob/living/carbon/human/ethereal)
+	return pick(
+		'sound/voice/ethereal/ethereal_scream_1.ogg',
+		'sound/voice/ethereal/ethereal_scream_2.ogg',
+		'sound/voice/ethereal/ethereal_scream_3.ogg',
+	)
 
 /datum/species/ethereal/get_species_description()
 	return "Ethereals are a unique species with liquid electricity for blood and a glowing body. They thrive on electricity, and are naturally agender."

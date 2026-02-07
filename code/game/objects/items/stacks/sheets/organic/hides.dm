@@ -4,7 +4,7 @@
 	name = "hide"
 	desc = "Something went wrong."
 	icon_state = "sheet-hide"
-	item_state = "sheet-hide"
+	inhand_icon_state = "sheet-hide"
 	icon = 'icons/obj/stacks/organic.dmi'
 	novariants = TRUE
 	merge_type = /obj/item/stack/sheet/animalhide
@@ -25,6 +25,7 @@
 	desc = "The by-product of human farming."
 	singular_name = "human skin piece"
 	novariants = FALSE
+	trade_flags = TRADE_CONTRABAND
 	merge_type = /obj/item/stack/sheet/animalhide/human
 
 /obj/item/stack/sheet/animalhide/human/get_recipes()
@@ -37,7 +38,8 @@
 	desc = "The by-product of corgi farming."
 	singular_name = "corgi hide piece"
 	icon_state = "sheet-corgi"
-	item_state = "sheet-corgi"
+	inhand_icon_state = "sheet-corgi"
+	trade_flags = TRADE_CONTRABAND
 	merge_type = /obj/item/stack/sheet/animalhide/corgi
 
 /obj/item/stack/sheet/animalhide/corgi/get_recipes()
@@ -50,7 +52,7 @@
 	desc = "A thin layer of mothroach hide."
 	singular_name = "mothroach hide piece"
 	icon_state = "sheet-mothroach"
-	item_state = "sheet-mothroach"
+	inhand_icon_state = "sheet-mothroach"
 	merge_type = /obj/item/stack/sheet/animalhide/mothroach
 
 /* Gondola hide */
@@ -60,7 +62,7 @@
 	desc = "The extremely valuable product of gondola hunting."
 	singular_name = "gondola hide piece"
 	icon_state = "sheet-gondola"
-	item_state = "sheet-gondola"
+	inhand_icon_state = "sheet-gondola"
 	merge_type = /obj/item/stack/sheet/animalhide/gondola
 
 /obj/item/stack/sheet/animalhide/gondola/get_recipes()
@@ -73,7 +75,8 @@
 	desc = "The by-product of cat farming."
 	singular_name = "cat hide piece"
 	icon_state = "sheet-cat"
-	item_state = "sheet-cat"
+	inhand_icon_state = "sheet-cat"
+	trade_flags = TRADE_CONTRABAND
 	merge_type = /obj/item/stack/sheet/animalhide/cat
 
 /* Monkey hide */
@@ -96,7 +99,7 @@
 	desc = "Sssssss..."
 	singular_name = "lizard hide"
 	icon_state = "sheet-lizard"
-	item_state = "sheet-lizard"
+	inhand_icon_state = "sheet-lizard"
 	merge_type = /obj/item/stack/sheet/animalhide/lizard
 
 /* Xeno hide */
@@ -106,7 +109,7 @@
 	desc = "The skin of a terrible creature."
 	singular_name = "alien hide piece"
 	icon_state = "sheet-xeno"
-	item_state = "sheet-xeno"
+	inhand_icon_state = "sheet-xeno"
 
 /obj/item/stack/sheet/animalhide/xeno/get_recipes()
 	return GLOB.xeno_recipes
@@ -145,9 +148,9 @@
 /obj/item/stack/sheet/animalhide/attackby(obj/item/W, mob/user, params)
 	if(W.is_sharp())
 		playsound(loc, 'sound/weapons/slice.ogg', 50, 1, -1)
-		user.visible_message("[user] starts cutting hair off \the [src].", "<span class='notice'>You start cutting the hair off \the [src]...</span>", "<span class='italics'>You hear the sound of a knife rubbing against flesh.</span>")
+		user.visible_message("[user] starts cutting hair off \the [src].", span_notice("You start cutting the hair off \the [src]..."), span_italics("You hear the sound of a knife rubbing against flesh."))
 		if(do_after(user, 50, target = src))
-			to_chat(user, "<span class='notice'>You cut the hair from this [src.singular_name].</span>")
+			to_chat(user, span_notice("You cut the hair from this [src.singular_name]."))
 			new /obj/item/stack/sheet/leather/hairlesshide(user.drop_location(), 1)
 			use(1)
 	else

@@ -52,6 +52,8 @@
 
 
 
+CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/plumbing/synthesizer)
+
 /obj/machinery/plumbing/synthesizer/Initialize(mapload, bolt)
 	. = ..()
 	AddComponent(/datum/component/plumbing/simple_supply, bolt)
@@ -66,7 +68,7 @@
 
 /obj/machinery/plumbing/synthesizer/examine(mob/user)
 	. = ..()
-	. += "<span class='notice'>A display says it is currently producing [initial(reagent_id.name)].</span>"
+	. += span_notice("A display says it is currently producing [initial(reagent_id.name)].")
 
 /obj/machinery/plumbing/synthesizer/ui_state(mob/user)
 	return GLOB.default_state
@@ -80,7 +82,10 @@
 /obj/machinery/plumbing/synthesizer/ui_data(mob/user)
 	var/list/data = list()
 
-	var/is_hallucinating = user.hallucinating()
+	var/is_hallucinating = FALSE
+	if(isliving(user))
+		var/mob/living/living_user = user
+		is_hallucinating = !!living_user.has_status_effect(/datum/status_effect/hallucination)
 	var/list/chemicals = list()
 
 	for(var/A in dispensable_reagents)

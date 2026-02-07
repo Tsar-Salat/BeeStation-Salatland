@@ -1,6 +1,8 @@
 /turf
-	var/fullbright_type = FULLBRIGHT_NONE
+	light_height = LIGHTING_HEIGHT_FLOOR
 	luminosity = 1
+
+	var/fullbright_type = FULLBRIGHT_NONE
 
 	var/tmp/lighting_corners_initialised = FALSE
 
@@ -41,7 +43,7 @@
 	new/atom/movable/lighting_object(src)
 
 // Used to get a scaled lumcount.
-/turf/proc/get_lumcount(var/minlum = 0, var/maxlum = 1)
+/turf/proc/get_lumcount(minlum = 0, maxlum = 1)
 	if (!lighting_object)
 		return 1
 
@@ -114,10 +116,8 @@
 	if(. != directional_opacity && (. == ALL_CARDINALS || directional_opacity == ALL_CARDINALS))
 		reconsider_lights() //The lighting system only cares whether the tile is fully concealed from all directions or not.
 
-/turf/proc/change_area(var/area/old_area, var/area/new_area)
-	old_area.turfs_to_uncontain += src
-	new_area.contents += src
-	new_area.contained_turfs += src
+///Transfer the lighting of one area to another
+/turf/proc/transfer_area_lighting(area/old_area, area/new_area)
 	if(SSlighting.initialized)
 		if (new_area.dynamic_lighting != old_area.dynamic_lighting)
 			if (new_area.dynamic_lighting)

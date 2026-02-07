@@ -10,6 +10,8 @@
 	..()
 
 /datum/wires/dna_scanner/interactable(mob/user)
+	if(!..())
+		return FALSE
 	var/obj/machinery/dna_scannernew/S = holder
 	if(S.panel_open)
 		return TRUE
@@ -30,9 +32,6 @@
 		if(WIRE_BOLTS)
 			S.locked = !S.locked
 			S.update_icon()
-		if(WIRE_LIMIT)
-			if(iscarbon(user))
-				S.irradiate(user)
 		if(WIRE_OPEN)
 			if(!S.locked)
 				if(S.state_open)
@@ -50,9 +49,6 @@
 		if(WIRE_IDSCAN)
 			if(!mend)
 				S.ignore_id = TRUE
-		if(WIRE_LIMIT)
-			if(iscarbon(usr))
-				S.irradiate(usr)
 		if(WIRE_OPEN)
 			if(!mend)
 				S.open_machine()

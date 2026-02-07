@@ -3,7 +3,7 @@
 	desc = "A rubber stamp for stamping important documents."
 	icon = 'icons/obj/bureaucracy.dmi'
 	icon_state = "stamp-ok"
-	item_state = "stamp"
+	inhand_icon_state = "stamp"
 	throwforce = 0
 	w_class = WEIGHT_CLASS_TINY
 	throw_speed = 3
@@ -15,7 +15,7 @@
 	dye_color = DYE_GREEN
 
 /obj/item/stamp/suicide_act(mob/living/user)
-	user.visible_message("<span class='suicide'>[user] stamps 'VOID' on [user.p_their()] forehead, then promptly falls over, dead.</span>")
+	user.visible_message(span_suicide("[user] stamps 'VOID' on [user.p_their()] forehead, then promptly falls over, dead."))
 	playsound(src, 'sound/items/handling/standard_stamp.ogg', 50, vary = TRUE)
 	return OXYLOSS
 

@@ -15,6 +15,8 @@
 	pixel_x = -32
 	pixel_y = -32
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF | FREEZE_PROOF
+	flags_1 = SUPERMATTER_IGNORES_1
+
 	var/list/ghosts = list()
 	var/old_loc
 
@@ -78,7 +80,7 @@
 	if(!isliving(user))
 		return
 	var/mob/living/jedi = user
-	to_chat(jedi, "<span class='userdanger'>You don't feel like you are real anymore.</span>")
+	to_chat(jedi, span_userdanger("You don't feel like you are real anymore."))
 	jedi.dust_animation()
 	jedi.spawn_dust()
 	addtimer(CALLBACK(src, PROC_REF(consume), jedi), 0.5 SECONDS)

@@ -6,11 +6,11 @@
 	icon_living = "skeleton"
 	icon_dead = "skeleton"
 	gender = NEUTER
-	mob_biotypes = list(MOB_UNDEAD, MOB_HUMANOID)
+	mob_biotypes = MOB_UNDEAD | MOB_HUMANOID
 	turns_per_move = 5
 	speak_emote = list("rattles")
 	emote_see = list("rattles")
-	a_intent = INTENT_HARM
+	combat_mode = TRUE
 	maxHealth = 40
 	health = 40
 	speed = 1
@@ -26,7 +26,7 @@
 	robust_searching = 1
 	stat_attack = HARD_CRIT
 	gold_core_spawnable = HOSTILE_SPAWN
-	faction = list("skeleton")
+	faction = list(FACTION_SKELETON)
 	see_in_dark = NIGHTVISION_FOV_RANGE
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	deathmessage = "collapses into a pile of bones!"
@@ -47,7 +47,7 @@
 	icon_dead = "eskimo_dead"
 	maxHealth = 55
 	health = 55
-	weather_immunities = list("snow")
+	weather_immunities = list(TRAIT_SNOWSTORM_IMMUNE)
 	gold_core_spawnable = NO_SPAWN
 	melee_damage = 20
 	deathmessage = "collapses into a pile of bones, its gear falling to the floor!"
@@ -65,7 +65,7 @@
 	icon_dead = "templar_dead"
 	maxHealth = 150
 	health = 150
-	weather_immunities = list("snow")
+	weather_immunities = list(TRAIT_SNOWSTORM_IMMUNE)
 	speed = 2
 	gold_core_spawnable = NO_SPAWN
 	speak_chance = 1
@@ -85,7 +85,7 @@
 	speed = 5
 	maxHealth = 75
 	health = 75
-	weather_immunities = list("snow")
+	weather_immunities = list(TRAIT_SNOWSTORM_IMMUNE)
 	color = rgb(114,228,250)
 	loot = list(/obj/effect/decal/remains/human{color = rgb(114,228,250)})
 

@@ -1,14 +1,3 @@
-#define HOLOPAD_MAX_DIAL_TIME 200
-
-#define HOLORECORD_DELAY	"delay"
-#define HOLORECORD_SAY		"say"
-#define HOLORECORD_SOUND	"sound"
-#define HOLORECORD_LANGUAGE	"lang"
-#define HOLORECORD_PRESET	"preset"
-#define HOLORECORD_RENAME "rename"
-
-#define HOLORECORD_MAX_LENGTH 200
-
 /mob/camera/ai_eye/remote/holo/setLoc()
 	. = ..()
 	var/obj/machinery/holopad/H = origin
@@ -40,10 +29,10 @@
 
 	var/call_start_time
 
-//creates a holocall made by `caller` from `calling_pad` to `callees`
-/datum/holocall/New(mob/living/caller, obj/machinery/holopad/calling_pad, list/callees)
+//creates a holocall made by `holocall_user` from `calling_pad` to `callees`
+/datum/holocall/New(mob/living/holocall_user, obj/machinery/holopad/calling_pad, list/callees)
 	call_start_time = world.time
-	user = caller
+	user = holocall_user
 	calling_pad.outgoing_call = src
 	calling_holopad = calling_pad
 	dialed_holopads = list()
@@ -192,7 +181,7 @@
 
 /datum/action/innate/end_holocall
 	name = "End Holocall"
-	icon_icon = 'icons/mob/actions/actions_silicon.dmi'
+	button_icon = 'icons/hud/actions/actions_silicon.dmi'
 	button_icon_state = "camera_off"
 	var/datum/holocall/hcall
 
@@ -200,7 +189,7 @@
 	..()
 	hcall = HC
 
-/datum/action/innate/end_holocall/Activate()
+/datum/action/innate/end_holocall/on_activate()
 	hcall.Disconnect(hcall.calling_holopad)
 
 
@@ -337,7 +326,7 @@
 	DELAY 20"}
 
 /datum/preset_holoimage/engineer
-	outfit_type = /datum/outfit/job/engineer/gloved/rig
+	outfit_type = /datum/outfit/job/engineer/mod
 
 /datum/preset_holoimage/researcher
 	outfit_type = /datum/outfit/job/scientist
@@ -352,7 +341,7 @@
 	nonhuman_mobtype = /mob/living/simple_animal/hostile/gorilla
 
 /datum/preset_holoimage/corgi
-	nonhuman_mobtype = /mob/living/simple_animal/pet/dog/corgi
+	nonhuman_mobtype = /mob/living/basic/pet/dog/corgi
 
 /datum/preset_holoimage/clown
 	outfit_type = /datum/outfit/job/clown

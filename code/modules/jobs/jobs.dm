@@ -1,12 +1,3 @@
-GLOBAL_LIST_INIT(command_positions, list(
-	JOB_NAME_CAPTAIN,
-	JOB_NAME_HEADOFPERSONNEL,
-	JOB_NAME_HEADOFSECURITY,
-	JOB_NAME_CHIEFENGINEER,
-	JOB_NAME_RESEARCHDIRECTOR,
-	JOB_NAME_CHIEFMEDICALOFFICER
-))
-
 GLOBAL_LIST_INIT(command_lightup_areas, typecacheof(list(
 	/area/bridge,
 	/area/gateway,
@@ -14,219 +5,58 @@ GLOBAL_LIST_INIT(command_lightup_areas, typecacheof(list(
 	/area/teleporter
 )))
 
+GLOBAL_LIST_INIT(engineering_lightup_areas, zebra_typecacheof(list(
+	/area/construction = TRUE,
+	/area/engine = TRUE,
+	/area/security/checkpoint/engineering = TRUE,
+	/area/solar = TRUE,
+	/area/tcommsat = TRUE,
+	/area/vacant_room = TRUE,
+	/area/engine/atmos = FALSE,
+	/area/engine/gravity_generator = FALSE,
+)))
 
-GLOBAL_LIST_INIT(engineering_positions, list(
-	JOB_NAME_CHIEFENGINEER,
-	JOB_NAME_STATIONENGINEER,
-	JOB_NAME_ATMOSPHERICTECHNICIAN
-))
+GLOBAL_LIST_INIT(medical_lightup_areas, zebra_typecacheof(list(
+	/area/medical = TRUE,
+	/area/security/checkpoint/medical = TRUE,
+	/area/medical/abandoned = FALSE,
+	/area/medical/apothecary = FALSE,
+	/area/medical/chemistry = FALSE,
+	/area/medical/genetics = FALSE,
+	/area/medical/morgue = FALSE,
+	/area/medical/surgery = FALSE,
+	/area/medical/virology = FALSE,
+)))
 
-GLOBAL_LIST_INIT(engineering_lightup_areas,		\
-	typecacheof(list(							\
-		/area/construction,						\
-		/area/engine,							\
-		/area/security/checkpoint/engineering,	\
-		/area/solar,							\
-		/area/tcommsat,							\
-		/area/vacant_room						\
-	)) - typecacheof(list(						\
-		/area/engine/atmos,						\
-		/area/engine/gravity_generator			\
-	))											\
-)
+GLOBAL_LIST_INIT(science_lightup_areas, zebra_typecacheof(list(
+	/area/science = TRUE,
+	/area/security/checkpoint/science = TRUE,
+	/area/science/explab = FALSE,
+	/area/science/misc_lab = FALSE,
+	/area/science/mixing = FALSE,
+	/area/science/nanite = FALSE,
+	/area/science/robotics = FALSE,
+	/area/science/server = FALSE,
+	/area/science/storage = FALSE,
+	/area/science/xenobiology = FALSE,
+)))
 
+GLOBAL_LIST_INIT(supply_lightup_areas, zebra_typecacheof(list(
+	/area/cargo = TRUE,
+	/area/quartermaster = TRUE,
+	/area/security/checkpoint/supply = TRUE,
+	/area/quartermaster/exploration_dock = FALSE,
+	/area/quartermaster/exploration_prep = FALSE,
+	/area/quartermaster/qm = FALSE,
+	/area/quartermaster/qm_bedroom = FALSE,
+)))
 
-GLOBAL_LIST_INIT(medical_positions, list(
-	JOB_NAME_CHIEFMEDICALOFFICER,
-	JOB_NAME_MEDICALDOCTOR,
-	JOB_NAME_GENETICIST,
-	JOB_NAME_VIROLOGIST,
-	JOB_NAME_PARAMEDIC,
-	JOB_NAME_CHEMIST,
-	JOB_NAME_BRIGPHYSICIAN
-))
-
-GLOBAL_LIST_INIT(medical_lightup_areas, 	\
-	typecacheof(list(						\
-		/area/medical,						\
-		/area/security/checkpoint/medical	\
-	)) - typecacheof(list(					\
-		/area/medical/abandoned,			\
-		/area/medical/apothecary,			\
-		/area/medical/chemistry,			\
-		/area/medical/genetics,				\
-		/area/medical/morgue,				\
-		/area/medical/surgery,				\
-		/area/medical/virology				\
-	))										\
-)
-
-
-GLOBAL_LIST_INIT(science_positions, list(
-	JOB_NAME_RESEARCHDIRECTOR,
-	JOB_NAME_SCIENTIST,
-	JOB_NAME_EXPLORATIONCREW,
-	JOB_NAME_ROBOTICIST
-))
-
-GLOBAL_LIST_INIT(science_lightup_areas, 		\
-	typecacheof(list(							\
-		/area/science,							\
-		/area/security/checkpoint/science		\
-	)) - typecacheof(list(						\
-		/area/science/explab,					\
-		/area/science/misc_lab,					\
-		/area/science/mixing,					\
-		/area/science/nanite,					\
-		/area/science/robotics,					\
-		/area/science/server,					\
-		/area/science/storage,					\
-		/area/science/xenobiology				\
-	))											\
-)
-
-
-GLOBAL_LIST_INIT(supply_positions, list(
-	JOB_NAME_HEADOFPERSONNEL,
-	JOB_NAME_QUARTERMASTER,
-	JOB_NAME_CARGOTECHNICIAN,
-	JOB_NAME_SHAFTMINER
-))
-
-GLOBAL_LIST_INIT(supply_lightup_areas,			\
-	typecacheof(list(							\
-		/area/cargo,							\
-		/area/quartermaster,					\
-		/area/security/checkpoint/supply		\
-	)) - typecacheof(list(						\
-		/area/quartermaster/exploration_dock,	\
-		/area/quartermaster/exploration_prep,	\
-		/area/quartermaster/qm,					\
-		/area/quartermaster/qm_bedroom			\
-	))											\
-)
-
-
-GLOBAL_LIST_INIT(civilian_positions, list(
-	JOB_NAME_HEADOFPERSONNEL,
-	JOB_NAME_BARTENDER,
-	JOB_NAME_BOTANIST,
-	JOB_NAME_COOK,
-	JOB_NAME_JANITOR,
-	JOB_NAME_LAWYER,
-	JOB_NAME_CURATOR,
-	JOB_NAME_CHAPLAIN,
-	JOB_NAME_MIME,
-	JOB_NAME_CLOWN,
-	JOB_NAME_ASSISTANT
-))
-
-GLOBAL_LIST_INIT(gimmick_positions, list(
-	JOB_NAME_GIMMICK,
-	JOB_NAME_BARBER,
-	JOB_NAME_STAGEMAGICIAN,
-	JOB_NAME_PSYCHIATRIST,
-	JOB_NAME_VIP
-))
-
-GLOBAL_LIST_INIT(security_positions, list(
-	JOB_NAME_HEADOFSECURITY,
-	JOB_NAME_WARDEN,
-	JOB_NAME_DETECTIVE,
-	JOB_NAME_SECURITYOFFICER,
-	JOB_NAME_DEPUTY
-))
-
-GLOBAL_LIST_INIT(security_lightup_areas,	\
-	typecacheof(list(						\
-		/area/security						\
-	)) - typecacheof(list(					\
-		/area/security/detectives_office,	\
-		/area/security/nuke_storage,		\
-		/area/security/warden				\
-	))										\
-)
-
-
-GLOBAL_LIST_INIT(nonhuman_positions, list(
-	JOB_NAME_AI,
-	JOB_NAME_CYBORG,
-	ROLE_PAI
-))
-
-
-// they are for hud_icon-based crew manifest
-// we don't use 'gimmick' here. use common sense here.
-GLOBAL_LIST_INIT(command_positions_hud, list(
-	JOB_HUD_CAPTAIN,
-	JOB_HUD_ACTINGCAPTAIN ,
-	JOB_HUD_HEADOFPERSONNEL,
-	JOB_HUD_HEADOFSECURITY,
-	JOB_HUD_CHIEFENGINEER,
-	JOB_HUD_RESEARCHDIRECTOR,
-	JOB_HUD_CHEIFMEDICALOFFICIER,
-	JOB_HUD_RAWCOMMAND))
-
-GLOBAL_LIST_INIT(important_positions_hud, list(
-	JOB_HUD_VIP,
-	JOB_HUD_KING))
-
-GLOBAL_LIST_INIT(engineering_positions_hud, list(
-	JOB_HUD_CHIEFENGINEER,
-	JOB_HUD_STATIONENGINEER,
-	JOB_HUD_ATMOSPHERICTECHNICIAN,
-	JOB_HUD_RAWENGINEERING))
-
-GLOBAL_LIST_INIT(medical_positions_hud, list(
-	JOB_HUD_CHEIFMEDICALOFFICIER,
-	JOB_HUD_MEDICALDOCTOR,
-	JOB_HUD_GENETICIST,
-	JOB_HUD_VIROLOGIST,
-	JOB_HUD_PARAMEDIC,
-	JOB_HUD_CHEMIST,
-	JOB_HUD_BRIGPHYSICIAN,
-	JOB_HUD_PSYCHIATRIST,
-	JOB_HUD_RAWMEDICAL))
-
-GLOBAL_LIST_INIT(science_positions_hud, list(
-	JOB_HUD_RESEARCHDIRECTOR,
-	JOB_HUD_SCIENTIST,
-	JOB_HUD_EXPLORATIONCREW,
-	JOB_HUD_ROBOTICIST,
-	JOB_HUD_RAWSCIENCE))
-
-GLOBAL_LIST_INIT(supply_positions_hud, list(
-	JOB_HUD_QUARTERMASTER,
-	JOB_HUD_CARGOTECHNICIAN,
-	JOB_HUD_SHAFTMINER,
-	JOB_HUD_RAWCARGO))
-
-GLOBAL_LIST_INIT(civilian_positions_hud, list(
-	JOB_HUD_HEADOFPERSONNEL,
-	JOB_HUD_BARTENDER,
-	JOB_HUD_BOTANIST,
-	JOB_HUD_COOK,
-	JOB_HUD_JANITOR,
-	JOB_HUD_CURATOR,
-	JOB_HUD_LAWYER,
-	JOB_HUD_CHAPLAIN,
-	JOB_HUD_CLOWN,
-	JOB_HUD_MIME,
-	JOB_HUD_BARBER,
-	JOB_HUD_STAGEMAGICIAN,
-	JOB_HUD_ASSISTANT,
-	JOB_HUD_RAWSERVICE))
-
-//GLOBAL_LIST_INIT(gimmick_positions_hud, list()
-// NO. don't use this.
-
-GLOBAL_LIST_INIT(security_positions_hud, list(
-	JOB_HUD_HEADOFSECURITY,
-	JOB_HUD_WARDEN,
-	JOB_HUD_DETECTIVE,
-	JOB_HUD_SECURITYOFFICER,
-	JOB_HUD_DEPUTY,
-	JOB_HUD_RAWSECURITY))
+GLOBAL_LIST_INIT(security_lightup_areas, zebra_typecacheof(list(
+	/area/security = TRUE,
+	/area/security/detectives_office = FALSE,
+	/area/security/nuke_storage = FALSE,
+	/area/security/warden = FALSE,
+)))
 
 /// Put any removed jobs here so they can still show in playtime listings.
 GLOBAL_LIST_INIT(exp_removed_jobs, list(
@@ -236,24 +66,13 @@ GLOBAL_PROTECT(exp_removed_jobs)
 
 /// Put any removed jobs here so they can still show in playtime listings.
 GLOBAL_LIST_INIT(exp_removed_jobsmap, list(
-//	EXP_TYPE_CREW = list("titles" = list("Virologist")),
-//	EXP_TYPE_MEDICAL = list("titles" = list("Virologist")),
+//	EXP_TYPE_CREW = list("Virologist"),
+//	EXP_TYPE_MEDICAL = list("Virologist"),
 ))
 GLOBAL_PROTECT(exp_removed_jobsmap)
 
-GLOBAL_LIST_INIT(exp_jobsmap, list(
-	EXP_TYPE_CREW = list("titles" = command_positions | engineering_positions | medical_positions | science_positions | supply_positions | security_positions | civilian_positions | gimmick_positions | list(JOB_NAME_AI,JOB_NAME_CYBORG)), // crew positions
-	EXP_TYPE_COMMAND = list("titles" = command_positions),
-	EXP_TYPE_ENGINEERING = list("titles" = engineering_positions),
-	EXP_TYPE_MEDICAL = list("titles" = medical_positions),
-	EXP_TYPE_SCIENCE = list("titles" = science_positions),
-	EXP_TYPE_SUPPLY = list("titles" = supply_positions),
-	EXP_TYPE_SECURITY = list("titles" = security_positions),
-	EXP_TYPE_SILICON = list("titles" = list(JOB_NAME_AI,JOB_NAME_CYBORG)),
-	EXP_TYPE_SERVICE = list("titles" = civilian_positions | gimmick_positions),
-	EXP_TYPE_GIMMICK = list("titles" = gimmick_positions)
-))
-
+// DO NOT INITIALIZE HERE. department subsystem initializes this.
+GLOBAL_LIST_EMPTY(exp_jobsmap)
 GLOBAL_LIST_INIT(exp_specialmap, list(
 	EXP_TYPE_LIVING = list(), // all living mobs
 	EXP_TYPE_ANTAG = list(),
@@ -263,14 +82,9 @@ GLOBAL_LIST_INIT(exp_specialmap, list(
 GLOBAL_PROTECT(exp_jobsmap)
 GLOBAL_PROTECT(exp_specialmap)
 
-/proc/guest_jobbans(job)
-	return ((job in GLOB.command_positions) || (job in GLOB.nonhuman_positions) || (job in GLOB.security_positions))
-
-
-
 //this is necessary because antags happen before job datums are handed out, but NOT before they come into existence
 //so I can't simply use job datum.department_head straight from the mind datum, laaaaame.
-/proc/get_department_heads(var/job_title)
+/proc/get_department_heads(job_title)
 	if(!job_title)
 		return list()
 
@@ -294,7 +108,7 @@ GLOBAL_PROTECT(exp_specialmap)
 	var/static/regex/chef_expand = new("chef")
 	var/static/regex/borg_expand = new("(?<!cy)borg")
 
-	job = lowertext(job)
+	job = LOWER_TEXT(job)
 	job = cap_expand.Replace(job, "captain")
 	job = cmo_expand.Replace(job, "chief medical officer")
 	job = hos_expand.Replace(job, "head of security")

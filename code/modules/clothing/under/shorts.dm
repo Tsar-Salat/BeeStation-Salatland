@@ -5,8 +5,8 @@
 	worn_icon = 'icons/mob/clothing/under/shorts_pants_shirts.dmi'
 	gender = PLURAL
 	body_parts_covered = GROIN
-	fitted = NO_FEMALE_UNIFORM
-	supports_variations = DIGITIGRADE_VARIATION
+	female_sprite_flags = NO_FEMALE_UNIFORM
+	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION
 	can_adjust = FALSE
 
 /obj/item/clothing/under/shorts/red

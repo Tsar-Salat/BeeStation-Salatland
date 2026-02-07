@@ -109,7 +109,7 @@
 	. += ..()
 	var/datum/component/material_container/materials = get_material_container()
 	if(in_range(user, src) || isobserver(user))
-		. += "<span class='notice'>The status display reads: Storing up to <b>[materials.max_amount]</b> material units.<br>Material consumption at <b>[creation_efficiency*100]%</b>.</span>"
+		. += span_notice("The status display reads: Storing up to <b>[materials.max_amount]</b> material units.<br>Material consumption at <b>[creation_efficiency*100]%</b>.")
 
 /obj/machinery/modular_fabricator/ui_state()
 	return GLOB.default_state
@@ -159,6 +159,7 @@
 			//Add
 			categories_associative[cat] += list(list(
 				"name" = D.name,
+				"desc" = D.desc,
 				"design_id" = D.id,
 				"material_cost" = material_cost,
 			))
@@ -447,7 +448,7 @@
 			item_queue -= requested_design_id
 			removed = TRUE
 		//Requeue if necessary
-		if(queue_repeating || queue_data["repdeating"])
+		if(queue_repeating || queue_data["repeating"])
 			stored_item_amount ++
 			if(removed)
 				add_to_queue(item_queue, requested_design_id, stored_item_amount, queue_data["build_mat"])
@@ -469,7 +470,7 @@
 		return
 	begin_process()
 
-/obj/machinery/modular_fabricator/proc/make_item(power, var/list/materials_used, var/list/picked_materials, multiplier, coeff, is_stack, requested_design_id, queue_data)
+/obj/machinery/modular_fabricator/proc/make_item(power, list/materials_used, list/picked_materials, multiplier, coeff, is_stack, requested_design_id, queue_data)
 	if(QDELETED(src))
 		return
 	//Stops the queue
@@ -501,7 +502,13 @@
 	else
 		for(var/i in 1 to multiplier)
 			var/obj/item/new_item = new being_built.build_path(src.loc)
-			new_item.forceMove(A) //Forcemove to the release turf to trigger ZFall
+			//Detect if the printed item has embedded itself in another item. Used for Circuit Templates which self insert themselves into shells.
+			if(isobj(new_item.loc))
+				var/obj/new_obj = new_item.loc //Get the object it is now embedded in.
+				new_obj.forceMove(A) //Forcemove to the release turf to trigger ZFall
+			else
+				new_item.forceMove(A) //Forcemove to the release turf to trigger ZFall
+
 			if(length(picked_materials))
 				new_item.set_custom_materials(picked_materials, 1 / multiplier) //Ensure we get the non multiplied amount
 	being_built = null
@@ -513,3 +520,5 @@
 
 /obj/machinery/modular_fabricator/proc/set_working_sprite()
 	return
+
+#undef MODFAB_MAX_POWER_USE

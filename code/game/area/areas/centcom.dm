@@ -1,16 +1,12 @@
 
 // CENTCOM
 
-// Side note, be sure to change the network_root_id of any areas that are not a part of centcom
-// and just using the z space as safe harbor.  It shouldn't matter much as centcom z is isolated
-// from everything anyway
-
 /area/centcom
 	name = "CentCom"
 	icon_state = "centcom"
 	dynamic_lighting = DYNAMIC_LIGHTING_ENABLED
 	requires_power = FALSE
-	has_gravity = STANDARD_GRAVITY
+	default_gravity = STANDARD_GRAVITY
 	teleport_restriction = TELEPORT_ALLOW_NONE
 	area_flags = VALID_TERRITORY | UNIQUE_AREA
 	flags_1 = NONE
@@ -86,8 +82,9 @@
 	icon_state = "yellow"
 	dynamic_lighting = DYNAMIC_LIGHTING_ENABLED
 	requires_power = FALSE
-	has_gravity = STANDARD_GRAVITY
+	default_gravity = STANDARD_GRAVITY
 	flags_1 = NONE
+	camera_networks = list(CAMERA_NETWORK_THUNDERDOME)
 
 /area/tdome/arena
 	name = "Thunderdome Arena"
@@ -124,11 +121,10 @@
 	icon_state = "yellow"
 	dynamic_lighting = DYNAMIC_LIGHTING_ENABLED
 	requires_power = FALSE
-	has_gravity = STANDARD_GRAVITY
-	teleport_restriction = TELEPORT_ALLOW_NONE
+	default_gravity = STANDARD_GRAVITY
+	teleport_restriction = TELEPORT_ALLOW_WIZARD
 	area_flags = VALID_TERRITORY | UNIQUE_AREA
 	flags_1 = NONE
-	network_root_id = "MAGIC_NET"
 	airlock_hack_difficulty = AIRLOCK_WIRE_SECURITY_MAXIMUM
 
 //Abductors
@@ -138,9 +134,8 @@
 	requires_power = FALSE
 	teleport_restriction = TELEPORT_ALLOW_ABDUCTORS
 	area_flags = VALID_TERRITORY | UNIQUE_AREA
-	has_gravity = STANDARD_GRAVITY
+	default_gravity = STANDARD_GRAVITY
 	flags_1 = NONE
-	network_root_id = "ALIENS"
 	airlock_hack_difficulty = AIRLOCK_WIRE_SECURITY_MAXIMUM
 
 //Syndicates
@@ -148,24 +143,21 @@
 	name = "Syndicate Mothership"
 	icon_state = "syndie-ship"
 	requires_power = FALSE
-	has_gravity = STANDARD_GRAVITY
+	default_gravity = STANDARD_GRAVITY
 	teleport_restriction = TELEPORT_ALLOW_NONE
 	area_flags = VALID_TERRITORY | UNIQUE_AREA
 	flags_1 = NONE
 	ambience_index = AMBIENCE_DANGER
-	network_root_id = SYNDICATE_NETWORK_ROOT
 	airlock_hack_difficulty = AIRLOCK_WIRE_SECURITY_MAXIMUM
 
 /area/syndicate_mothership/control
 	name = "Syndicate Control Room"
 	icon_state = "syndie-control"
 	dynamic_lighting = DYNAMIC_LIGHTING_ENABLED
-	network_root_id = SYNDICATE_NETWORK_ROOT
 
 /area/syndicate_mothership/elite_squad
 	name = "Syndicate Elite Squad"
 	icon_state = "syndie-elite"
-	network_root_id = SYNDICATE_NETWORK_ROOT
 
 //CAPTURE THE FLAG
 
@@ -174,7 +166,7 @@
 	icon_state = "yellow"
 	requires_power = FALSE
 	dynamic_lighting = DYNAMIC_LIGHTING_DISABLED
-	has_gravity = STANDARD_GRAVITY
+	default_gravity = STANDARD_GRAVITY
 	airlock_hack_difficulty = AIRLOCK_WIRE_SECURITY_ELITE
 
 /area/ctf/control_room
@@ -211,7 +203,7 @@
 	icon_state = "yellow"
 	requires_power = FALSE
 	dynamic_lighting = DYNAMIC_LIGHTING_DISABLED
-	has_gravity = STANDARD_GRAVITY
+	default_gravity = STANDARD_GRAVITY
 	teleport_restriction = TELEPORT_ALLOW_CLOCKWORK
 	area_flags = VALID_TERRITORY | UNIQUE_AREA | HIDDEN_AREA
 	ambience_index = AMBIENCE_REEBE

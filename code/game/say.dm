@@ -1,5 +1,5 @@
 /*
- 	Miauw's big Say() rewrite.
+	Miauw's big Say() rewrite.
 	This file has the basic atom/movable level speech procs.
 	And the base of the send_speech() proc, which is the core of saycode.
 */
@@ -19,24 +19,55 @@ GLOBAL_LIST_INIT(freqtospan, list(
 	"[FREQ_CTF_BLUE]" = "blueteamradio"
 	))
 
-/atom/movable/proc/say(message, bubble_type, var/list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null, atom/source=src)
-	if(!can_speak())
+/atom/movable/proc/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null, message_range = 7, datum/saymode/saymode = null, atom/source=src)
+	if(!try_speak(message, ignore_spam, forced))
 		return
-	if(message == "" || !message)
+	if(!message || message == "")
 		return
 	spans |= speech_span
 	if(!language)
 		language = get_selected_language()
-	send_speech(message, 7, source, , spans, message_language=language)
+	send_speech(message, message_range, source, bubble_type, spans, message_language = language, forced = forced)
 
 /atom/movable/proc/Hear(message, atom/movable/speaker, message_language, raw_message, radio_freq, list/spans, list/message_mods = list())
 	SEND_SIGNAL(src, COMSIG_MOVABLE_HEAR, args)
 
-/atom/movable/proc/can_speak()
-	//SHOULD_BE_PURE(TRUE) // TODO: Make calls to this actually pure. Its a lot of work, best done in its own PR.
+/**
+ * Checks if our movable can speak the provided message, passing it through filters
+ * and spam detection. Does not call can_speak. CAN include feedback messages about
+ * why someone can or can't speak
+ *
+ * Used in [proc/say] and other methods of speech (radios) after a movable has inputted some message.
+ * If you just want to check if the movable is able to speak in character, use [proc/can_speak] instead.
+ *
+ * Parameters:
+ * - message (string): the original message
+ * - ignore_spam (bool): should we ignore spam?
+ * - forced (null|string): what was it forced by? null if voluntary
+ *
+ * Returns:
+ * 	TRUE of FASE depending on if our movable can speak
+ */
+/atom/movable/proc/try_speak(message, ignore_spam = FALSE, forced = null)
 	return TRUE
 
-/atom/movable/proc/send_speech(message, range = 7, obj/source = src, bubble_type, list/spans, datum/language/message_language, list/message_mods = list())
+/**
+ * Checks if our movable can currently speak, vocally, in general.
+ * Should NOT include feedback messages about why someone can or can't speak
+ * Used in various places to check if a movable is simply able to speak in general,
+ * regardless of OOC status (being muted) and regardless of what they're actually saying.
+ *
+ * Checked AFTER handling of xeno channels.
+ * (I'm not sure what this comment means, but it was here in the past, so I'll maintain it here.)
+ *
+ * allow_mimes - Determines if this check should skip over mimes. (Only matters for living mobs and up.)
+ * If FALSE, this check will always fail if the movable has a mind and is miming.
+ * if TRUE, we will check if the movable can speak REGARDLESS of if they have an active mime vow.
+ */
+/atom/movable/proc/can_speak(allow_mimes = FALSE)
+	return TRUE
+
+/atom/movable/proc/send_speech(message, range = 7, obj/source = src, bubble_type, list/spans, datum/language/message_language, list/message_mods = list(), forced = FALSE)
 	var/rendered = compose_message(src, message_language, message, , spans, message_mods)
 	var/list/show_overhead_message_to = list()
 	for(var/atom/movable/hearing_movable as anything in get_hearers_in_view(range, source, SEE_INVISIBLE_MAXIMUM))
@@ -114,7 +145,7 @@ GLOBAL_LIST_INIT(freqtospan, list(
 		if(istype(D) && D.display_icon(src))
 			languageicon = "[D.get_icon()] "
 
-	messagepart = "[space]<span class='message'>[say_emphasis(messagepart)]</span></span>"
+	messagepart = "[space][span_message("[say_emphasis(messagepart)]")]</span>"
 
 	return "[spanpart1][spanpart2][freqpart][languageicon][compose_track_href(speaker, namepart)][namepart][compose_job(speaker, message_language, raw_message, radio_freq)][endspanpart][messagepart]"
 
@@ -150,7 +181,7 @@ GLOBAL_LIST_INIT(freqtospan, list(
 	return "[say_mod], \"[spanned]\""
 
 /// Scans the input sentence for speech emphasis modifiers, notably _italics_ and **bold**
-/atom/proc/say_emphasis(message, var/list/ignore = list())
+/atom/proc/say_emphasis(message, list/ignore = list())
 	var/regex/markup
 	for(var/tag in (GLOB.markup_tags - ignore))
 		markup = GLOB.markup_regex[tag]
@@ -202,9 +233,6 @@ GLOBAL_LIST_INIT(freqtospan, list(
 /atom/movable/proc/GetVoice()
 	return "[src]"	//Returns the atom's name, prepended with 'The' if it's not a proper noun
 
-/atom/movable/proc/IsVocal()
-	return 1
-
 /atom/movable/proc/get_alt_name()
 
 //HACKY VIRTUALSPEAKER STUFF BEYOND THIS POINT
@@ -223,6 +251,8 @@ GLOBAL_LIST_INIT(freqtospan, list(
 	var/obj/item/radio/radio
 
 INITIALIZE_IMMEDIATE(/atom/movable/virtualspeaker)
+CREATION_TEST_IGNORE_SUBTYPES(/atom/movable/virtualspeaker)
+
 /atom/movable/virtualspeaker/Initialize(mapload, atom/movable/M, _radio)
 	. = ..()
 	radio = _radio
@@ -238,9 +268,9 @@ INITIALIZE_IMMEDIATE(/atom/movable/virtualspeaker)
 	if(ishuman(M))
 		// Humans use their job as seen on the crew manifest. This is so the AI
 		// can know their job even if they don't carry an ID.
-		var/datum/data/record/findjob = find_record("name", name, GLOB.data_core.general)
-		if(findjob)
-			job = findjob.fields["rank"]
+		var/datum/record/crew/found_record = find_record(name, GLOB.manifest.general)
+		if(found_record)
+			job = found_record.rank
 		else
 			job = "Unknown"
 	else if(iscarbon(M))  // Carbon nonhuman

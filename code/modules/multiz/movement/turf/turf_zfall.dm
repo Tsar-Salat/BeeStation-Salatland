@@ -9,7 +9,7 @@
 		if(flags & FALL_STOP_INTERCEPTING)
 			break
 	if(prev_turf && !(flags & FALL_NO_MESSAGE))
-		prev_turf.visible_message("<span class='danger'>[A] falls through [prev_turf]!</span>")
+		prev_turf.visible_message(span_danger("[A] falls through [prev_turf]!"))
 	if(flags & FALL_INTERCEPTED)
 		return FALSE
 	if(zFall(A, levels + 1, from_zfall = TRUE))
@@ -21,13 +21,12 @@
 /turf/proc/do_z_impact(atom/movable/A, levels)
 	// You can "crash into" openspace above zero gravity, but it looks weird to say that
 	if(!isopenspace(src))
-		A.visible_message("<span class='danger'>[A] crashes into [src]!</span>")
+		A.visible_message(span_danger("[A] crashes into [src]!"))
 	A.onZImpact(src, levels)
 
 /// returns if an atom is allowed to zfall through this turf, using zPassOut and zPassIn
 /turf/proc/can_zFall(atom/movable/A, turf/target)
-	SHOULD_BE_PURE(TRUE)
-	return zPassOut(A, DOWN, target, falling = TRUE) && target.zPassIn(A, DOWN, src, falling = TRUE)
+	return zPassOut(DOWN, falling = TRUE) && target.zPassIn(DOWN, falling = TRUE) && (!istype(target, /turf/open/space) || A.has_gravity(target))
 
 /// Determines if an atom should start zfalling or continue zfalling from the current point
 /// Basically if this turf is "fall"able
@@ -49,7 +48,10 @@
 /// Checks if we can start a zfall and then performs the zfall
 /// This function is recursive via zFall_Move -> attempt_z_impact -> zFall
 /turf/proc/zFall(atom/movable/A, levels = 1, force = FALSE, old_loc = null, from_zfall = FALSE)
-	var/turf/target = get_step_multiz(src, DOWN)
+	var/direction = DOWN
+	if(A.has_gravity() == NEGATIVE_GRAVITY)
+		direction = UP
+	var/turf/target = get_step_multiz(src, direction)
 	if(!can_start_zFall(A, target, force, from_zfall))
 		return FALSE
 	if(from_zfall) // if this is a >1 level fall

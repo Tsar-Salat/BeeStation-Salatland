@@ -5,7 +5,7 @@
 	icon_state = "piratemelee"
 	icon_living = "piratemelee"
 	icon_dead = "pirate_dead"
-	mob_biotypes = list(MOB_ORGANIC, MOB_HUMANOID)
+	mob_biotypes = MOB_ORGANIC | MOB_HUMANOID
 	speak_chance = 0
 	turns_per_move = 5
 	response_help_continuous = "pushes"
@@ -17,14 +17,14 @@
 	attack_verb_continuous = "punches"
 	attack_verb_simple = "punch"
 	attack_sound = 'sound/weapons/punch1.ogg'
-	a_intent = INTENT_HARM
+	combat_mode = TRUE
 	atmos_requirements = list("min_oxy" = 5, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 1, "min_co2" = 0, "max_co2" = 5, "min_n2" = 0, "max_n2" = 0)
-	unsuitable_atmos_damage = 15
+	unsuitable_atmos_damage = 7.5
 	speak_emote = list("yarrs")
 	loot = list(/obj/effect/mob_spawn/human/corpse/pirate,
-			/obj/item/melee/transforming/energy/sword/pirate)
+			/obj/item/melee/energy/sword/pirate)
 	del_on_death = TRUE
-	faction = list("pirate")
+	faction = list(FACTION_PIRATE)
 	mobchatspan = "syndmob"
 
 
@@ -51,11 +51,11 @@
 	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	minbodytemp = 0
 	speed = 1
-	spacewalk = TRUE
 	hardattacks = TRUE
 
 /mob/living/simple_animal/hostile/pirate/melee/Initialize(mapload)
 	. = ..()
+	ADD_TRAIT(src, TRAIT_SPACEWALK, INNATE_TRAIT)
 	sord = new(src)
 
 /mob/living/simple_animal/hostile/pirate/melee/Destroy()
@@ -89,4 +89,7 @@
 	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	minbodytemp = 0
 	speed = 1
-	spacewalk = TRUE
+
+/mob/living/simple_animal/hostile/pirate/ranged/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_SPACEWALK, INNATE_TRAIT)

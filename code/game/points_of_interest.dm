@@ -18,9 +18,13 @@
 		moblist += mob_to_sort
 	for(var/mob/dead/observer/mob_to_sort in sortmob)
 		moblist += mob_to_sort
-	for(var/mob/dead/new_player/mob_to_sort in sortmob)
+	for(var/mob/dead/new_player/authenticated/mob_to_sort in sortmob)
+		moblist += mob_to_sort
+	for(var/mob/dead/new_player/pre_auth/mob_to_sort in sortmob)
 		moblist += mob_to_sort
 	for(var/mob/living/carbon/monkey/mob_to_sort in sortmob)
+		moblist += mob_to_sort
+	for(var/mob/living/simple_animal/slime/mob_to_sort in sortmob)
 		moblist += mob_to_sort
 	for(var/mob/living/simple_animal/mob_to_sort in sortmob)
 		// We've already added slimes.
@@ -28,7 +32,5 @@
 			continue
 		moblist += mob_to_sort
 	for(var/mob/living/basic/mob_to_sort in sortmob)
-		moblist += mob_to_sort
-	for(var/mob/living/carbon/true_devil/mob_to_sort in sortmob)
 		moblist += mob_to_sort
 	return moblist

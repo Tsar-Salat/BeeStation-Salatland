@@ -1,12 +1,11 @@
 /datum/job/lawyer
 	title = JOB_NAME_LAWYER
 	description = "Ensure Security follows Space Law and Standard Operating Procedure perfectly, represent your clients in trials and other legal troubles, make sure the crew is treated fairly by the men in red."
-	department_for_prefs = DEPT_BITFLAG_CIV
+	department_for_prefs = DEPT_NAME_CIVILIAN
 	department_head = list(JOB_NAME_HEADOFPERSONNEL)
 	supervisors = "the head of personnel"
 	faction = "Station"
 	total_positions = 2
-	spawn_positions = 2
 	selection_color = "#dddddd"
 	var/lawyers = 0 //Counts lawyer amount
 
@@ -29,12 +28,18 @@
 
 	minimal_lightup_areas = list(/area/lawoffice)
 
+	manuscript_jobs = list(
+		JOB_NAME_LAWYER,
+		JOB_NAME_DETECTIVE, // a lawyer should also know how to collect evidences
+		JOB_NAME_CURATOR
+	)
+
 /datum/outfit/job/lawyer
 	name = JOB_NAME_LAWYER
 	jobtype = /datum/job/lawyer
 
 	id = /obj/item/card/id/job/lawyer
-	belt = /obj/item/modular_computer/tablet/pda/lawyer
+	belt = /obj/item/modular_computer/tablet/pda/preset/lawyer
 	ears = /obj/item/radio/headset/headset_srvsec
 	uniform = /obj/item/clothing/under/rank/civilian/lawyer/bluesuit
 	suit = /obj/item/clothing/suit/toggle/lawyer
@@ -46,13 +51,19 @@
 	chameleon_extras = /obj/item/stamp/law
 
 
-/datum/outfit/job/lawyer/pre_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
-	..()
-	if(visualsOnly)
-		return
+/datum/outfit/job/lawyer/pre_equip(mob/living/carbon/human/H, visuals_only = FALSE)
+	if(visuals_only)
+		return ..()
 
-	var/datum/job/lawyer/J = SSjob.GetJobType(jobtype)
-	J.lawyers++
-	if(J.lawyers>1)
+	var/static/use_purple_suit = FALSE //If there is one lawyer, they get the default blue suit. If another lawyer joins the round, they start with a purple suit.
+	if(use_purple_suit)
 		uniform = /obj/item/clothing/under/rank/civilian/lawyer/purpsuit
 		suit = /obj/item/clothing/suit/toggle/lawyer/purple
+	else
+		use_purple_suit = TRUE
+	..()
+
+/datum/outfit/job/lawyer/get_types_to_preload()
+	. = ..()
+	. += /obj/item/clothing/under/rank/civilian/lawyer/purpsuit
+	. += /obj/item/clothing/suit/toggle/lawyer/purple
