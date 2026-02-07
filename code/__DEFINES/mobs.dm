@@ -84,6 +84,10 @@
 #define MOB_REPTILE (1 << 8)
 /// The mob is a spooky phantasm or an evil ghast of such nature.
 #define MOB_SPIRIT (1 << 9)
+///The mob is a plant-based species, benefitting from light but suffering from darkness and plantkillers.
+//#define MOB_PLANT (1 << 10)
+///The mob is a goopy creature, probably coming from xenobiology.
+#define MOB_SLIME (1 << 11)
 
 //Organ defines for carbon mobs
 #define ORGAN_ORGANIC 1
@@ -692,6 +696,10 @@ GLOBAL_LIST_INIT(available_random_trauma_list, list(
 #define HEAL_ALL ~(HEAL_ADMIN|HEAL_RESTRAINTS)
 /// Heals everything and is as strong as / is an admin heal
 #define ADMIN_HEAL_ALL ALL
+
+/// Checking flags for [/mob/proc/can_read()]
+#define READING_CHECK_LITERACY (1<<0)
+#define READING_CHECK_LIGHT (1<<1)
 
 /// Distance which you can see someone's ID card
 /// Short enough that you can inspect over tables (bartender checking age)

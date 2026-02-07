@@ -231,7 +231,7 @@
 	RegisterSignal(owner, COMSIG_MOVABLE_MOVED, PROC_REF(recalculate_distance))
 	RegisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(check_victim_movement))
 
-	//RegisterSignal(owner, COMSIG_CARBON_PRE_MISC_HELP, PROC_REF(someome_removing_taser))
+	RegisterSignal(owner, COMSIG_CARBON_PRE_MISC_HELP, PROC_REF(someome_removing_taser))
 	SEND_SIGNAL(owner, COMSIG_LIVING_MINOR_SHOCK)
 	if(!owner.has_status_effect(type))
 		// does not use the status effect api because we snowflake it a bit

@@ -191,7 +191,7 @@
 			playsound(get_turf(target_airlock), 'sound/effects/bang.ogg', 30, 1, -1)
 			if(brujah && level_current >= 3 && target_airlock.locked)
 				target_airlock.unbolt()
-			target_airlock.open(2) // open(2) is like a crowbar or jaws of life.
+			target_airlock.open(BYPASS_DOOR_CHECKS) // open(BYPASS_DOOR_CHECKS) is like a crowbar or jaws of life.
 
 /datum/action/vampire/targeted/brawn/check_valid_target(atom/target_atom)
 	. = ..()

@@ -12,6 +12,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 	RegisterSignal(src, COMSIG_MOB_LOGOUT, PROC_REF(med_hud_set_status))
 	RegisterSignal(src, COMSIG_MOB_LOGIN, PROC_REF(med_hud_set_status))
 	RegisterSignal(src, SIGNAL_UPDATETRAIT(TRAIT_OVERRIDE_SKIN_COLOUR), PROC_REF(_signal_body_part_update))
+	ADD_TRAIT(src, TRAIT_CAN_HOLD_ITEMS, INNATE_TRAIT) // Carbons are assumed to be innately capable of having arms, we check their arms count instead
 
 /mob/living/carbon/Destroy()
 	//This must be done first, so the mob ghosts correctly before DNA etc is nulled
@@ -24,44 +25,6 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 	remove_from_all_data_huds()
 	QDEL_NULL(dna)
 	GLOB.carbon_list -= src
-
-/mob/living/carbon/swap_hand(held_index)
-	. = ..()
-	if(!.)
-		var/obj/item/held_item = get_active_held_item()
-		to_chat(usr, span_warning("Your other hand is too busy holding [held_item]."))
-		return
-
-	if(!held_index)
-		held_index = (active_hand_index % held_items.len)+1
-
-	var/oindex = active_hand_index
-	active_hand_index = held_index
-	if(hud_used)
-		var/atom/movable/screen/inventory/hand/H
-		H = hud_used.hand_slots["[oindex]"]
-		if(H)
-			H.update_icon()
-		H = hud_used.hand_slots["[held_index]"]
-		if(H)
-			H.update_icon()
-	refresh_self_screentips()
-
-/mob/living/carbon/activate_hand(selhand) //l/r OR 1-held_items.len
-	if(!selhand)
-		selhand = (active_hand_index % held_items.len)+1
-
-	if(istext(selhand))
-		selhand = LOWER_TEXT(selhand)
-		if(selhand == "right" || selhand == "r")
-			selhand = 2
-		if(selhand == "left" || selhand == "l")
-			selhand = 1
-
-	if(selhand != active_hand_index)
-		swap_hand(selhand)
-	else
-		mode() // Activate held item
 
 /mob/living/carbon/attackby(obj/item/I, mob/living/user, params)
 	for(var/datum/surgery/operations as anything in surgeries)
@@ -442,6 +405,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 	if(HAS_TRAIT(src, TRAIT_NOVOMIT))
 		return TRUE
 
+	var/starting_dir = dir
 	if(nutrition < 100 && !blood)
 		if(message)
 			visible_message(span_warning("[src] dry heaves!"), \
@@ -485,7 +449,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 		else
 			if(T)
 				T.add_vomit_floor(src, toxic, purge)//toxic barf looks different
-		T = get_step(T, dir)
+		T = get_step(T, starting_dir)
 		if (T?.is_blocked_turf())
 			break
 	return TRUE

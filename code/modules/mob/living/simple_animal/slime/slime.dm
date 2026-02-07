@@ -28,7 +28,7 @@
 
 	maxHealth = 150
 	health = 150
-	healable = 0
+	mob_biotypes = MOB_SLIME
 	gender = NEUTER
 
 	see_in_dark = NIGHTVISION_FOV_RANGE
@@ -538,9 +538,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/slime)
 /mob/living/simple_animal/slime/get_mob_buckling_height(mob/seat)
 	if(..())
 		return 3
-
-/mob/living/simple_animal/slime/can_be_implanted()
-	return TRUE
 
 CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/slime/random)
 

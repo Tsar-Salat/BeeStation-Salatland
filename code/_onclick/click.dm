@@ -307,8 +307,11 @@
 	return
 
 
-/*
- * Translates into [atom/proc/attack_hand], etc.
+/**
+ * UnarmedAttack: The higest level of mob click chain discounting click itself.
+ *
+ * This handles, just "clicking on something" without an item. It translates
+ * into [atom/proc/attack_hand], [atom/proc/attack_animal] etc.
  *
  * Note: proximity_flag here is used to distinguish between normal usage (flag=1),
  * and usage when clicking on things telekinetically (flag=0).  This proc will
@@ -434,6 +437,8 @@
 	A.AltClick(src)
 
 /atom/proc/AltClick(mob/user)
+	if(!user.can_interact_with(src))
+		return FALSE
 	if(SEND_SIGNAL(src, COMSIG_CLICK_ALT, user) & COMPONENT_CANCEL_CLICK_ALT)
 		return
 	var/turf/T = get_turf(src)
@@ -450,7 +455,7 @@
 
 ///The base proc of when something is right clicked on when alt is held
 /atom/proc/alt_click_secondary(mob/user)
-	if(!can_interact(user))
+	if(!user.can_interact_with(src))
 		return FALSE
 	if(SEND_SIGNAL(src, COMSIG_CLICK_ALT_SECONDARY, user) & COMPONENT_CANCEL_CLICK_ALT_SECONDARY)
 		return

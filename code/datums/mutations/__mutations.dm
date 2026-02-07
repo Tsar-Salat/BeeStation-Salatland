@@ -115,21 +115,13 @@
 	grant_power() //we do checks here so nothing about hulk getting magic
 	if(!modified && can_chromosome == CHROMOSOME_USED)
 		addtimer(CALLBACK(src, PROC_REF(modify), 0.5 SECONDS)) //gonna want children calling ..() to run first
-	RegisterSignal(owner, COMSIG_MOVABLE_MOVED, PROC_REF(on_move))
 	for(var/trait in traits)
 		ADD_TRAIT(acquirer, trait, "[type]")
 
 /datum/mutation/proc/get_visual_indicator()
 	return
 
-/datum/mutation/proc/on_attack_hand(atom/target, proximity)
-	return
-
 /datum/mutation/proc/on_ranged_attack(mob/living/carbon/human/source, atom/target, modifiers)
-	return
-
-/datum/mutation/proc/on_move(new_loc)
-	SIGNAL_HANDLER
 	return
 
 /datum/mutation/proc/on_life(delta_time, times_fired)
@@ -152,7 +144,6 @@
 	// so deleting ourself will also delete it and remove it
 	// ...Why don't all mutations delete on loss? Not sure.
 		qdel(src)
-	UnregisterSignal(owner, COMSIG_MOVABLE_MOVED)
 	REMOVE_TRAITS_IN(owner, "[type]")
 
 /mob/living/carbon/proc/update_mutations_overlay()

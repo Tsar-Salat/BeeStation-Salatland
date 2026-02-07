@@ -46,6 +46,10 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_HUSK "husk"
 #define TRAIT_BADDNA "baddna"
 #define TRAIT_CLUMSY "clumsy"
+/// Trait that means you are capable of holding items in some form
+#define TRAIT_CAN_HOLD_ITEMS "can_hold_items"
+/// Trait which lets you clamber over a barrier
+#define TRAIT_FENCE_CLIMBER "can_climb_fences"
 //means that you can't use weapons with normal trigger guards.
 #define TRAIT_CHUNKYFINGERS "chunkyfingers"
 #define TRAIT_FINGERPRINT_PASSTHROUGH "fingerprint_passthrough"
@@ -185,7 +189,6 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_SURGEON           "surgeon" //Grants access to all surgeries
 #define TRAIT_ABDUCTOR_SURGEON  "abductor-surgery-training" //Grants access to all surgeries except for certain blacklisted ones
 #define	TRAIT_STRONG_GRABBER	"strong_grabber"
-#define	TRAIT_MAGIC_CHOKE		"magic_choke"
 #define TRAIT_SOOTHED_THROAT    "soothed-throat"
 #define TRAIT_LAW_ENFORCEMENT_METABOLISM "law-enforcement-metabolism"
 #define TRAIT_MEDICAL_METABOLISM "medical-metabolism"

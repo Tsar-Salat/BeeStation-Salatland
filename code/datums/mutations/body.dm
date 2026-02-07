@@ -160,7 +160,8 @@
 	var/original_name
 
 /datum/mutation/race/on_acquiring(mob/living/carbon/human/owner)
-	if(..())
+	. = ..()
+	if(.)
 		return
 	if(!ismonkey(owner))
 		original_species = owner.dna.species.type

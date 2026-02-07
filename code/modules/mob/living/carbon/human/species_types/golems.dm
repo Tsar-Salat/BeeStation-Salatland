@@ -1198,8 +1198,20 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/cloth_pile)
 		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/golem/durathread
 	)
 
-/datum/species/golem/durathread/spec_unarmedattack(mob/living/carbon/human/user, mob/living/carbon/human/target)
+/datum/species/golem/durathread/on_species_gain(mob/living/carbon/C, datum/species/old_species)
 	. = ..()
+	RegisterSignal(C, COMSIG_MOB_ATTACK_HAND, PROC_REF(on_unarmed_attack))
+
+/datum/species/golem/durathread/on_species_loss(mob/living/carbon/C)
+	UnregisterSignal(C, COMSIG_MOB_ATTACK_HAND)
+	return ..()
+
+/datum/species/golem/durathread/proc/on_unarmed_attack(mob/living/carbon/human/source, mob/living/carbon/human/target, datum/martial_art/attacker_style)
+	SIGNAL_HANDLER
+
+	if(!isliving(target) || !source.combat_mode)
+		return
+
 	target.apply_status_effect(/datum/status_effect/strandling)
 
 /datum/species/golem/bone

@@ -70,6 +70,11 @@
 	bodytype = BODYTYPE_LARVA_PLACEHOLDER | BODYTYPE_ORGANIC
 	acceptable_bodytype = BODYTYPE_LARVA_PLACEHOLDER
 
+/// Parent Type for arms, should not appear in game.
+/obj/item/bodypart/arm
+	/// The noun to use when referring to this arm's appendage, e.g. "hand" or "paw"
+	var/appendage_noun = "hand"
+
 /obj/item/bodypart/arm/left
 	name = "left arm"
 	desc = "Did you know that the word 'sinister' stems originally from the \
@@ -159,6 +164,7 @@
 	px_x = -5
 	px_y = -3
 	dmg_overlay_type = SPECIES_MONKEY
+	appendage_noun = "paw"
 
 /obj/item/bodypart/arm/left/monkey/teratoma
 	icon_state = "teratoma_l_arm"
@@ -175,6 +181,7 @@
 	can_be_disabled = FALSE
 	max_damage = 100
 	should_draw_greyscale = FALSE
+	appendage_noun = "scythe-like hand"
 
 /obj/item/bodypart/arm/right
 	name = "right arm"
@@ -263,6 +270,7 @@
 	px_x = 5
 	px_y = -3
 	dmg_overlay_type = SPECIES_MONKEY
+	appendage_noun = "paw"
 
 /obj/item/bodypart/arm/right/monkey/teratoma
 	icon_state = "teratoma_r_arm"
@@ -280,6 +288,7 @@
 	can_be_disabled = FALSE
 	max_damage = 100
 	should_draw_greyscale = FALSE
+	appendage_noun = "scythe-like hand"
 
 /obj/item/bodypart/leg/left
 	name = "left leg"

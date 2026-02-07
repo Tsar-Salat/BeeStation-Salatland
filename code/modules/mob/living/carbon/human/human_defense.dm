@@ -218,17 +218,6 @@
 		H.dna.species.spec_attack_hand(H, src, null, modifiers)
 
 /mob/living/carbon/human/attack_paw(mob/living/carbon/human/user, list/modifiers)
-	if(check_shields(user, 0, "the [user.name]", UNARMED_ATTACK))
-		visible_message(
-			span_danger("[user] attempts to touch [src]!"),
-			span_danger("[user] attempts to touch you!"),
-			span_hear("You hear a swoosh!"),
-		null,
-		user
-		)
-		to_chat(user, span_warning("You attempt to touch [src]!"))
-		return FALSE
-
 	var/dam_zone = pick(BODY_ZONE_CHEST, BODY_ZONE_PRECISE_L_HAND, BODY_ZONE_PRECISE_R_HAND, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
 	var/obj/item/bodypart/affecting = get_bodypart(user.get_random_valid_zone(dam_zone))
 
@@ -251,9 +240,10 @@
 		if(..()) //successful monkey bite, this handles disease contraction.
 			var/damage = melee_damage
 			if(!damage)
-				return
-			if(stat != DEAD)
-				apply_damage(damage, BRUTE, affecting, run_armor_check(affecting, MELEE))
+				return FALSE
+			if(check_shields(user, damage, "the [user.name]"))
+				return FALSE
+			apply_damage(damage, BRUTE, affecting, run_armor_check(affecting, MELEE))
 		return TRUE
 
 /mob/living/carbon/human/attack_alien(mob/living/carbon/alien/humanoid/user, list/modifiers)
@@ -640,27 +630,16 @@
 			. = rand(-1000, 1000)
 	..()
 
-/mob/living/carbon/human/help_shake_act(mob/living/carbon/M)
-	if(!istype(M))
+/mob/living/carbon/human/help_shake_act(mob/living/carbon/helper)
+	if(!istype(helper))
 		return
 
-	if(src == M)
-		if(has_status_effect(/datum/status_effect/strandling))
-			to_chat(src, span_notice("You attempt to remove the durathread strand from around your neck."))
-			if(do_after(src, 35, src, timed_action_flags = IGNORE_HELD_ITEM))
-				to_chat(src, span_notice("You succesfuly remove the durathread strand."))
-				remove_status_effect(/datum/status_effect/strandling)
-			return
-		check_self_for_injuries()
+	if(wear_suit)
+		wear_suit.add_fingerprint(helper)
+	else if(w_uniform)
+		w_uniform.add_fingerprint(helper)
 
-
-	else
-		if(wear_suit)
-			wear_suit.add_fingerprint(M)
-		else if(w_uniform)
-			w_uniform.add_fingerprint(M)
-
-		..()
+	return ..()
 
 /mob/living/carbon/human/check_self_for_injuries()
 	if(stat >= UNCONSCIOUS)

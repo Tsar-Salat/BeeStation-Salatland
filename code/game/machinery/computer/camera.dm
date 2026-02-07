@@ -8,7 +8,7 @@
 	circuit = /obj/item/circuitboard/computer/security
 	light_color = LIGHT_COLOR_RED
 
-
+	interaction_flags_machine = INTERACT_MACHINE_ALLOW_SILICON|INTERACT_MACHINE_SET_MACHINE|INTERACT_MACHINE_REQUIRES_SIGHT
 
 	var/list/network = list(CAMERA_NETWORK_STATION)
 	var/obj/machinery/camera/active_camera

@@ -43,13 +43,13 @@
 	passtable_on(H, SPECIES_TRAIT)
 	H.dna.add_mutation(/datum/mutation/race, MUT_NORMAL)
 	H.dna.activate_mutation(/datum/mutation/race)
-	//H.AddElement(/datum/element/human_biter)
+	H.AddElement(/datum/element/human_biter)
 
 /datum/species/monkey/on_species_loss(mob/living/carbon/C)
 	. = ..()
 	passtable_off(C, SPECIES_TRAIT)
 	C.dna.remove_mutation(/datum/mutation/race)
-	//C.RemoveElement(/datum/element/human_biter)
+	C.RemoveElement(/datum/element/human_biter)
 
 /datum/species/monkey/check_roundstart_eligible()
 	if(SSevents.holidays && SSevents.holidays[MONKEYDAY])

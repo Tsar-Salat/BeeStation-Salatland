@@ -335,70 +335,69 @@
 	if(should_stun)
 		Paralyze(60)
 
-/mob/living/carbon/proc/help_shake_act(mob/living/carbon/M)
+/mob/living/carbon/proc/help_shake_act(mob/living/carbon/helper)
 	if(on_fire)
-		to_chat(M, span_warning("You can't put [p_them()] out with just your bare hands!"))
+		to_chat(helper, span_warning("You can't put [p_them()] out with just your bare hands!"))
 		return
 
-	if(M == src && check_self_for_injuries())
+	if(SEND_SIGNAL(src, COMSIG_CARBON_PRE_MISC_HELP, helper) & COMPONENT_BLOCK_MISC_HELP)
+		return
+
+	if(helper == src)
+		check_self_for_injuries()
 		return
 
 	if(body_position == LYING_DOWN)
 		if(buckled)
-			to_chat(M, span_warning("You need to unbuckle [src] first to do that!"))
+			to_chat(helper, span_warning("You need to unbuckle [src] first to do that!"))
 			return
-		M.visible_message(span_notice("[M] shakes [src] trying to get [p_them()] up!"), \
+		helper.visible_message(span_notice("[helper] shakes [src] trying to get [p_them()] up!"), \
 						span_notice("You shake [src] trying to get [p_them()] up!"))
-	else if(M.is_zone_selected(BODY_ZONE_CHEST))
-		M.visible_message(span_notice("[M] hugs [src] to make [p_them()] feel better!"), \
+	else if(helper.is_zone_selected(BODY_ZONE_CHEST))
+		helper.visible_message(span_notice("[helper] hugs [src] to make [p_them()] feel better!"), \
 					span_notice("You hug [src] to make [p_them()] feel better!"))
 
 		// Warm them up with hugs
-		share_bodytemperature(M)
-		if(bodytemperature > M.bodytemperature)
-			SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT, "hug", /datum/mood_event/warmhug, src) // Hugger got a warm hug
+		share_bodytemperature(helper)
+		if(bodytemperature > helper.bodytemperature)
+			SEND_SIGNAL(helper, COMSIG_ADD_MOOD_EVENT, "hug", /datum/mood_event/warmhug, src) // Hugger got a warm hug
 			SEND_SIGNAL(src, COMSIG_ADD_MOOD_EVENT, "hug", /datum/mood_event/hug) // Reciver always gets a mood for being hugged
 		else
-			SEND_SIGNAL(src, COMSIG_ADD_MOOD_EVENT, "hug", /datum/mood_event/warmhug, M) // You got a warm hug
+			SEND_SIGNAL(src, COMSIG_ADD_MOOD_EVENT, "hug", /datum/mood_event/warmhug, helper) // You got a warm hug
 
 		// Let people know if they hugged someone really warm or really cold
-		if(M.bodytemperature > BODYTEMP_HEAT_DAMAGE_LIMIT || M.has_status_effect(/datum/status_effect/vampire_sol))
-			to_chat(src, span_warning("It feels like [M] is over heating as [M.p_they()] hug[M.p_s()] you."))
-		else if(M.bodytemperature < BODYTEMP_COLD_DAMAGE_LIMIT)
-			to_chat(src, span_warning("It feels like [M] is freezing as [M.p_they()] hug[M.p_s()] you."))
+		if(helper.bodytemperature > BODYTEMP_HEAT_DAMAGE_LIMIT || helper.has_status_effect(/datum/status_effect/vampire_sol))
+			to_chat(src, span_warning("It feels like [helper] is over heating as [helper.p_they()] hug[helper.p_s()] you."))
+		else if(helper.bodytemperature < BODYTEMP_COLD_DAMAGE_LIMIT)
+			to_chat(src, span_warning("It feels like [helper] is freezing as [helper.p_they()] hug[helper.p_s()] you."))
 
 		if(bodytemperature > BODYTEMP_HEAT_DAMAGE_LIMIT || has_status_effect(/datum/status_effect/vampire_sol))
-			to_chat(M, span_warning("It feels like [src] is over heating as you hug [p_them()]."))
+			to_chat(helper, span_warning("It feels like [src] is over heating as you hug [p_them()]."))
 		else if(bodytemperature < BODYTEMP_COLD_DAMAGE_LIMIT)
-			to_chat(M, span_warning("It feels like [src] is freezing as you hug [p_them()]."))
+			to_chat(helper, span_warning("It feels like [src] is freezing as you hug [p_them()]."))
 
-		if(HAS_TRAIT(M, TRAIT_FRIENDLY))
-			var/datum/component/mood/mood = M.GetComponent(/datum/component/mood)
+		if(HAS_TRAIT(helper, TRAIT_FRIENDLY))
+			var/datum/component/mood/mood = helper.GetComponent(/datum/component/mood)
 			if (mood.sanity >= SANITY_GREAT)
-				SEND_SIGNAL(src, COMSIG_ADD_MOOD_EVENT, "friendly_hug", /datum/mood_event/besthug, M)
+				SEND_SIGNAL(src, COMSIG_ADD_MOOD_EVENT, "friendly_hug", /datum/mood_event/besthug, helper)
 			else if (mood.sanity >= SANITY_DISTURBED)
-				SEND_SIGNAL(src, COMSIG_ADD_MOOD_EVENT, "friendly_hug", /datum/mood_event/betterhug, M)
-		for(var/datum/brain_trauma/trauma in M.get_traumas())
-			trauma.on_hug(M, src)
-	else if(M.is_zone_selected(BODY_ZONE_HEAD))
-		M.visible_message(span_notice("[M] pats [src] on the head."), \
+				SEND_SIGNAL(src, COMSIG_ADD_MOOD_EVENT, "friendly_hug", /datum/mood_event/betterhug, helper)
+	else if(helper.is_zone_selected(BODY_ZONE_HEAD))
+		helper.visible_message(span_notice("[helper] pats [src] on the head."), \
 					span_notice("You pat [src] on the head."))
-		for(var/datum/brain_trauma/trauma in M.get_traumas())
-			trauma.on_hug(M, src)
-	else if((M.is_zone_selected(BODY_ZONE_L_ARM)) || (M.is_zone_selected(BODY_ZONE_R_ARM)))
-		if(!get_bodypart(check_zone(M.get_combat_bodyzone(src))))
-			to_chat(M, span_warning("[src] does not have a [M.get_combat_bodyzone(src) == BODY_ZONE_L_ARM ? "left" : "right"] arm!"))
+	else if((helper.is_zone_selected(BODY_ZONE_L_ARM)) || (helper.is_zone_selected(BODY_ZONE_R_ARM)))
+		if(!get_bodypart(check_zone(helper.get_combat_bodyzone(src))))
+			to_chat(helper, span_warning("[src] does not have a [helper.get_combat_bodyzone(src) == BODY_ZONE_L_ARM ? "left" : "right"] arm!"))
 		else
-			M.visible_message(span_notice("[M] shakes [src]'s hand."), \
+			helper.visible_message(span_notice("[helper] shakes [src]'s hand."), \
 						span_notice("You shake [src]'s hand."))
-	else if(M.is_zone_selected(BODY_ZONE_PRECISE_GROIN, precise_only = TRUE))
-		to_chat(M, span_warning("ERP is not allowed on this server!"))
-	AdjustStun(-60)
-	AdjustKnockdown(-60)
-	AdjustUnconscious(-60)
-	AdjustSleeping(-100)
-	AdjustParalyzed(-60)
-	AdjustImmobilized(-60)
+	else if(helper.is_zone_selected(BODY_ZONE_PRECISE_GROIN, precise_only = TRUE))
+		to_chat(helper, span_warning("ERP is not allowed on this server!"))
+
+	SEND_SIGNAL(src, COMSIG_CARBON_HELP_ACT, helper)
+	SEND_SIGNAL(helper, COMSIG_CARBON_HELPED, src)
+
+	adjust_status_effects_on_shake_up()
 	set_resting(FALSE)
 	if(body_position != STANDING_UP && !resting && !buckled && !HAS_TRAIT(src, TRAIT_FLOORED))
 		get_up(TRUE)
