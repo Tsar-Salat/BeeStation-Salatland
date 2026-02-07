@@ -74,3 +74,7 @@
 		particle_mob.vis_contents += src
 	//readd to ourselves
 	attached_to.vis_contents |= src
+
+/// Sets the particles position to the passed coordinates
+/obj/effect/abstract/particle_holder/proc/set_particle_position(x = 0, y = 0, z = 0)
+	particles.position = list(x, y, z)
