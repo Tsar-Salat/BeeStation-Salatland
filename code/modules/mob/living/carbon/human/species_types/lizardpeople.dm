@@ -3,7 +3,6 @@
 	name = "\improper Lizardperson"
 	plural_form = "Lizardfolk"
 	id = SPECIES_LIZARD
-	bodyflag = FLAG_LIZARD
 	species_traits = list(
 		MUTCOLORS,
 		EYECOLOR,
@@ -115,8 +114,8 @@
 	)
 	inherent_traits = list(
 		TRAIT_CHUNKYFINGERS,
-		TRAIT_VIRUSIMMUNE
-		)
+		TRAIT_VIRUSIMMUNE,
+	)
 	species_language_holder = /datum/language_holder/lizard/ash
 	mutantlungs = /obj/item/organ/lungs/ashwalker
 	mutantbrain = /obj/item/organ/brain/primitive

@@ -69,10 +69,10 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/rend)
 	else
 		return ..()
 
-/obj/effect/rend/singularity_pull()
+/obj/effect/rend/singularity_pull(obj/anomaly/singularity/singularity, current_size)
 	return
 
-/obj/effect/rend/singularity_pull()
+/obj/effect/rend/singularity_pull(obj/anomaly/singularity/singularity, current_size)
 	return
 
 /obj/item/veilrender/vealrender
@@ -345,7 +345,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/rend)
 		else if(istype(I, /obj/item/bikehorn))
 			to_chat(target, span_userdanger("HONK"))
 			SEND_SOUND(target, 'sound/items/airhorn.ogg')
-			target.adjustEarDamage(0,3)
+			var/obj/item/organ/ears/ears = user.get_organ_slot(ORGAN_SLOT_EARS)
+			if(ears)
+				ears.adjustEarDamage(0, 3)
 			GiveHint(target)
 		cooldown = world.time +cooldown_time
 		return
@@ -444,7 +446,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/rend)
 /obj/item/voodoo/fire_act(exposed_temperature, exposed_volume)
 	if(target)
 		target.adjust_fire_stacks(20)
-		target.IgniteMob()
+		target.ignite_mob()
 		GiveHint(target,1)
 	return ..()
 
