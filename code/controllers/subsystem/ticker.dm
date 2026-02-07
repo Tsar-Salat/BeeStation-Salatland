@@ -849,6 +849,7 @@ SUBSYSTEM_DEF(ticker)
 	gather_newscaster() //called here so we ensure the log is created even upon admin reboot
 	save_admin_data()
 	update_everything_flag_in_db()
+	
 	rustg_file_append(login_music, "data/last_round_lobby_music.txt")
 
 #undef ROUND_START_MUSIC_LIST

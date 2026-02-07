@@ -302,12 +302,17 @@ GLOBAL_VAR(survivor_report) //! Contains shared survivor report for roundend rep
 	//stop collecting feedback during grifftime
 	SSblackbox.Seal()
 
+	TriggerRoundEndTgsEvent()
+
 	if(CONFIG_GET(flag/automapvote))
 		INVOKE_ASYNC(SSvote, TYPE_PROC_REF(/datum/controller/subsystem/vote, initiate_vote), /datum/vote/map_vote, "Map Rotation", null, TRUE)
 
 	sleep(50)
 	ready_for_reboot = TRUE
 	standard_reboot()
+
+/datum/controller/subsystem/ticker/proc/TriggerRoundEndTgsEvent()
+	world.TgsTriggerEvent("tg-Roundend", wait_for_completion = TRUE)
 
 /datum/controller/subsystem/ticker/proc/standard_reboot()
 	if(ready_for_reboot)

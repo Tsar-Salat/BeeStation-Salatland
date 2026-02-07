@@ -258,7 +258,12 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////admins2.dm merge
 //i.e. buttons/verbs
 
-
+#define REGULAR_RESTART "Regular Restart"
+#define REGULAR_RESTART_DELAYED "Regular Restart (with delay)"
+#define NO_EVENT_RESTART "Restart, Skip TGS Event"
+#define HARD_RESTART "Hard Restart (No Delay/Feedback Reason)"
+#define HARDEST_RESTART "Hardest Restart (No actions, just reboot)"
+#define TGS_RESTART "Server Restart (Kill and restart DD)"
 /datum/admins/proc/restart()
 	set category = "Server"
 	set name = "Reboot World"
@@ -266,38 +271,52 @@
 	if (!usr.client.holder)
 		return
 
-	var/list/options = list("Regular Restart", "Regular Restart (with delay)", "Hard Restart (No Delay/Feeback Reason)", "Hardest Restart (No actions, just reboot)")
+	var/list/options = list(REGULAR_RESTART, REGULAR_RESTART_DELAYED, HARD_RESTART, HARDEST_RESTART)
 	if(world.TgsAvailable())
-		options += "Server Restart (Kill and restart DD)";
+		options.Insert(3, NO_EVENT_RESTART)
+		options += TGS_RESTART;
 
-	var/rebootconfirm
 	if(SSticker.admin_delay_notice)
-		if(alert(usr, "Are you sure? An admin has already delayed the round end for the following reason: [SSticker.admin_delay_notice]", "Confirmation", "Yes", "No") == "Yes")
-			rebootconfirm = TRUE
-	else
-		rebootconfirm = TRUE
-	if(rebootconfirm)
-		var/result = input(usr, "Select reboot method", "World Reboot", options[1]) as null|anything in options
-		if(result)
-			SSblackbox.record_feedback("tally", "admin_verb", 1, "Reboot World") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-			var/init_by = "Initiated by [usr.client.holder.fakekey ? "Admin" : usr.key]."
-			switch(result)
-				if("Regular Restart")
-					SSticker.Reboot(init_by, "admin reboot - by [usr.key] [usr.client.holder.fakekey ? "(stealth)" : ""]", 10)
-				if("Regular Restart (with delay)")
-					var/delay = input("What delay should the restart have (in seconds)?", "Restart Delay", 5) as num|null
-					if(!delay)
-						return FALSE
-					SSticker.Reboot(init_by, "admin reboot - by [usr.key] [usr.client.holder.fakekey ? "(stealth)" : ""]", delay * 10)
-				if("Hard Restart (No Delay, No Feeback Reason)")
-					to_chat(world, "World reboot - [init_by]")
-					world.Reboot()
-				if("Hardest Restart (No actions, just reboot)")
-					to_chat(world, "Hard world reboot - [init_by]")
-					world.Reboot(fast_track = TRUE)
-				if("Server Restart (Kill and restart DD)")
-					to_chat(world, "Server restart - [init_by]")
-					world.TgsEndProcess()
+		if(alert(usr, "Are you sure? An admin has already delayed the round end for the following reason: [SSticker.admin_delay_notice]", "Confirmation", "Yes", "No") != "Yes")
+			return FALSE
+
+	var/result = input(usr, "Select reboot method", "World Reboot", options[1]) as null|anything in options
+	if(isnull(result))
+		return
+
+	SSblackbox.record_feedback("tally", "admin_verb", 1, "Reboot World") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	var/init_by = "Initiated by [usr.client.holder.fakekey ? "Admin" : usr.key]."
+	switch(result)
+		if(REGULAR_RESTART, REGULAR_RESTART_DELAYED, NO_EVENT_RESTART)
+			var/delay = 1
+			if(result == REGULAR_RESTART_DELAYED)
+				delay = input("What delay should the restart have (in seconds)?", "Restart Delay", 5) as num|null
+			if(!delay)
+				return FALSE
+			if(!usr.client.is_localhost())
+				if(alert(usr,"Are you sure you want to restart the server?","This server is live", "Restart", "Cancel") != "Restart")
+					return FALSE
+
+			if (result != NO_EVENT_RESTART)
+				SSticker.TriggerRoundEndTgsEvent()
+
+			SSticker.Reboot(init_by, "admin reboot - by [usr.key] [usr.client.holder.fakekey ? "(stealth)" : ""]", delay * 10)
+		if(HARD_RESTART)
+			to_chat(world, "World reboot - [init_by]")
+			world.Reboot()
+		if(HARDEST_RESTART)
+			to_chat(world, "Hard world reboot - [init_by]")
+			world.Reboot(fast_track = TRUE)
+		if(TGS_RESTART)
+			to_chat(world, "Server restart - [init_by]")
+			world.TgsEndProcess()
+
+#undef REGULAR_RESTART
+#undef REGULAR_RESTART_DELAYED
+#undef NO_EVENT_RESTART
+#undef HARD_RESTART
+#undef HARDEST_RESTART
+#undef TGS_RESTART
 
 /datum/admins/proc/end_round()
 	set category = "Round"
@@ -306,7 +325,7 @@
 
 	if (!usr.client.holder)
 		return
-	var/confirm = alert("End the round and  restart the game world?", "End Round", "Yes", "Cancel")
+	var/confirm = tgui_alert(usr, "End the round and restart the game world?", "End Round", list("Yes", "Cancel"))
 	if(confirm != "Yes")
 		return
 	SSticker.force_ending = ADMIN_FORCE_END_ROUND
@@ -381,21 +400,31 @@
 	set category = "Round"
 	set desc="Start the round RIGHT NOW"
 	set name="Start Now"
-	if(SSticker.current_state == GAME_STATE_PREGAME || SSticker.current_state == GAME_STATE_STARTUP)
-		SSticker.start_immediately = TRUE
-		log_admin("[usr.key] has started the game.")
-		var/msg = ""
-		if(SSticker.current_state == GAME_STATE_STARTUP)
-			msg = " (The server is still setting up, but the round will be \
-				started as soon as possible.)"
-		message_admins("<font color='blue'>\
-			[usr.key] has started the game.[msg]</font>")
-		SSblackbox.record_feedback("tally", "admin_verb", 1, "Start Now") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-		return 1
-	else
-		to_chat(usr, "<font color='red'>Error: Start Now: Game has already started.</font>")
+	var/static/list/waiting_states = list(GAME_STATE_PREGAME, GAME_STATE_STARTUP)
+	if(!(SSticker.current_state in waiting_states))
+		to_chat(usr, span_warning(span_red("The game has already started!")))
+		return
 
-	return 0
+	if(SSticker.start_immediately)
+		SSticker.start_immediately = FALSE
+		SSticker.SetTimeLeft(3 MINUTES)
+		to_chat(world, span_big(span_notice("The game will start in 3 minutes.")))
+		SEND_SOUND(world, sound('sound/ai/default/attention.ogg'))
+		message_admins(span_adminnotice("[key_name_admin(usr)] has cancelled immediate game start. Game will start in 3 minutes."))
+		log_admin("[usr.key] has cancelled immediate game start.")
+		return
+
+	if(!usr.client.is_localhost())
+		var/response = tgui_alert(usr, "Are you sure you want to start the round?", "Start Now", list("Start Now", "Cancel"))
+		if(response != "Start Now")
+			return
+	SSticker.start_immediately = TRUE
+
+	log_admin("[usr.key] has started the game.")
+	message_admins("[key_name_admin(usr)] has started the game.")
+	if(SSticker.current_state == GAME_STATE_STARTUP)
+		message_admins("The server is still setting up, but the round will be started as soon as possible.")
+	SSblackbox.record_feedback("tally", "admin_verb", 1, "Start Now") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /datum/admins/proc/toggleenter()
 	set category = "Server"
@@ -466,45 +495,65 @@
 	set name="Delay pre-game"
 
 	var/newtime = input("Set a new time in seconds. Set -1 for indefinite delay.","Set Delay",round(SSticker.GetTimeLeft()/10)) as num|null
+	if(!newtime)
+		return
 	if(SSticker.current_state > GAME_STATE_PREGAME)
 		return alert("Too late... The game has already started!")
-	if(newtime)
-		newtime = newtime*10
-		SSticker.SetTimeLeft(newtime)
-		if(newtime < 0)
-			to_chat(world, "<b>The game start has been delayed.</b>")
-			log_admin("[key_name(usr)] delayed the round start.")
-		else
-			to_chat(world, "<b>The game will start in [DisplayTimeText(newtime)].</b>")
-			SEND_SOUND(world, sound('sound/ai/default/attention.ogg'))
-			log_admin("[key_name(usr)] set the pre-game delay to [DisplayTimeText(newtime)].")
-		SSblackbox.record_feedback("tally", "admin_verb", 1, "Delay Game Start") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	newtime = newtime*10
+	SSticker.SetTimeLeft(newtime)
+	SSticker.start_immediately = FALSE
+	if(newtime < 0)
+		to_chat(world, "<b>The game start has been delayed.</b>")
+		log_admin("[key_name(usr)] delayed the round start.")
+	else
+		to_chat(world, "<b>The game will start in [DisplayTimeText(newtime)].</b>")
+		SEND_SOUND(world, sound('sound/ai/default/attention.ogg'))
+		log_admin("[key_name(usr)] set the pre-game delay to [DisplayTimeText(newtime)].")
+	SSblackbox.record_feedback("tally", "admin_verb", 1, "Delay Game Start") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /datum/admins/proc/delay_round_end()
 	set category = "Round"
 	set desc= "Delay server from rebooting the server after the round has ended"
 	set name= "Delay round end"
-	if(!SSticker.delay_end)
-		SSticker.admin_delay_notice = input(usr, "Enter a reason for delaying the round end", "Round Delay Reason") as null|text
-		if(isnull(SSticker.admin_delay_notice))
-			return
-		if(SSticker.reboot_timer)
-			SSticker.cancel_reboot(usr)
-		for(var/client/admin in GLOB.admins)
-			if(check_rights(R_FUN) && !GLOB.battle_royale && admin.tgui_panel && SSticker.current_state == GAME_STATE_FINISHED)
-				admin.tgui_panel.give_br_popup()
-	else
+
+	if(SSticker.delay_end)
 		if(alert(usr, "Really cancel current round end delay? The reason for the current delay is: \"[SSticker.admin_delay_notice]\"", "Undelay round end", "Yes", "No") != "Yes")
 			return
+
+		SSticker.delay_end = FALSE
 		SSticker.admin_delay_notice = null
-	SSticker.delay_end = !SSticker.delay_end
-	var/reason = SSticker.delay_end ? "for reason: [SSticker.admin_delay_notice]" : "."//laziness
-	var/msg = "[SSticker.delay_end ? "delayed" : "undelayed"] the round end [reason]"
-	log_admin("[key_name(usr)] [msg]")
-	message_admins("[key_name_admin(usr)] [msg]")
-	if(SSticker.ready_for_reboot && !SSticker.delay_end) //we undelayed after standard reboot would occur
-		SSticker.standard_reboot()
-	SSblackbox.record_feedback("tally", "admin_verb", 1, "Delay round end") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+
+		log_admin("[key_name(usr)] undelayed the round end.")
+		message_admins("[key_name_admin(usr)] undelayed the round end.")
+
+		if(SSticker.ready_for_reboot)
+			SSticker.standard_reboot()
+
+		SSblackbox.record_feedback("tally", "admin_verb", 1, "Undelay round end")
+		return
+
+	var/delay_reason = input(usr, "Enter a reason for delaying the round end", "Round Delay Reason") as null|text
+
+	if(isnull(delay_reason))
+		return
+
+	if(SSticker.delay_end)
+		tgui_alert(usr, "The round end is already delayed. The reason for the current delay is: \"[SSticker.admin_delay_notice]\"", "Alert", list("Ok"))
+		return
+
+	SSticker.delay_end = TRUE
+	SSticker.admin_delay_notice = delay_reason
+
+	if(SSticker.reboot_timer)
+		SSticker.cancel_reboot(usr)
+
+	for(var/client/admin in GLOB.admins)
+		if(check_rights(R_FUN) && !GLOB.battle_royale && admin.tgui_panel && SSticker.current_state == GAME_STATE_FINISHED)
+			admin.tgui_panel.give_br_popup()
+
+	log_admin("[key_name(usr)] delayed the round end for reason: [delay_reason]")
+	message_admins("[key_name_admin(usr)] delayed the round end for reason: [delay_reason]")
+	SSblackbox.record_feedback("tally", "admin_verb", 1, "Delay round end")
 
 /datum/admins/proc/unprison(mob/M in GLOB.mob_list)
 	set category = "Admin"

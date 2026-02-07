@@ -298,6 +298,9 @@
 	D.deactivate() //after logs so the deadmined admin can see the message.
 
 /datum/admins/proc/auto_deadmin()
+	if(owner.is_localhost())
+		return FALSE
+		
 	to_chat(owner, span_interface("You are now a normal player."))
 	var/old_owner = owner
 	deactivate()
