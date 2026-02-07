@@ -136,6 +136,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	name = "cigarette"
 	desc = "A roll of tobacco and nicotine."
 	icon = 'icons/obj/cigarettes.dmi'
+	worn_icon = 'icons/mob/clothing/head/mask_cig.dmi'
 	icon_state = "cigoff"
 	inhand_icon_state = "cigon" //gets overriden during intialize(), just have it for unit test sanity.
 	throw_speed = 0.5
@@ -1159,11 +1160,16 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 /obj/item/vape
 	name = "\improper E-Cigarette"
 	desc = "A classy and highly sophisticated electronic cigarette, for classy and dignified gentlemen. A warning label reads \"Warning: Do not fill with flammable materials.\""//<<< i'd vape to that.
-	icon_state = "red_vape"
+	worn_icon = 'icons/mob/clothing/head/mask_cig.dmi'
+	worn_icon_state = "vape_worn"
+	greyscale_config = /datum/greyscale_config/vape
+	greyscale_config_worn = /datum/greyscale_config/vape/worn
+	greyscale_colors = "#2e2e2e"
 	inhand_icon_state = null
 	w_class = WEIGHT_CLASS_TINY
 	slot_flags = ITEM_SLOT_MASK
 	item_flags = ISWEAPON
+	flags_1 = IS_PLAYER_COLORABLE_1
 	custom_price = 30
 
 	/// The capacity of the vape.
@@ -1183,11 +1189,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/vape)
 	. = ..()
 	create_reagents(chem_volume, NO_REACT)
 	reagents.add_reagent(/datum/reagent/drug/nicotine, 50)
-	if(!icon_state)
-		if(!param_color)
-			param_color = pick("red","blue","black","white","green","purple","yellow","orange")
-		icon_state = "[param_color]_vape"
-		inhand_icon_state = "[param_color]_vape"
 
 /obj/item/vape/suicide_act(mob/living/user)
 	user.visible_message(span_suicide("[user] is puffin hard on dat vape, [user.p_they()] trying to join the vape life on a whole notha plane!"))//it doesn't give you cancer, it is cancer
@@ -1199,30 +1200,34 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/vape)
 		to_chat(user, span_notice("You open the cap on [src]."))
 		reagents.flags |= OPENCONTAINER
 		if(obj_flags & EMAGGED)
-			add_overlay("vapeopen_high")
+			icon_state = "vapeopen_high"
+			set_greyscale(new_config = /datum/greyscale_config/vape/open_high)
 		else if(super)
-			add_overlay("vapeopen_med")
+			icon_state = "vapeopen_med"
+			set_greyscale(new_config = /datum/greyscale_config/vape/open_med)
 		else
-			add_overlay("vapeopen_low")
+			icon_state = "vapeopen_low"
+			set_greyscale(new_config = /datum/greyscale_config/vape/open_low)
 	else
 		screw = FALSE
 		to_chat(user, span_notice("You close the cap on [src]."))
 		reagents.flags &= ~(OPENCONTAINER)
-		cut_overlays()
+		icon_state = initial(icon_state)
+		set_greyscale(new_config = initial(greyscale_config))
 
 /obj/item/vape/multitool_act(mob/living/user, obj/item/tool)
 	. = TRUE
 	if(screw && !(obj_flags & EMAGGED))//also kinky //?!?!?
 		if(!super)
-			cut_overlays()
 			super = TRUE
 			to_chat(user, span_notice("You increase the voltage of [src]."))
-			add_overlay("vapeopen_med")
+			icon_state = "vapeopen_med"
+			set_greyscale(new_config = /datum/greyscale_config/vape/open_med)
 		else
-			cut_overlays()
 			super = FALSE
 			to_chat(user, span_notice("You decrease the voltage of [src]."))
-			add_overlay("vapeopen_low")
+			icon_state = "vapeopen_low"
+			set_greyscale(new_config = /datum/greyscale_config/vape/open_low)
 
 	if(screw && (obj_flags & EMAGGED))
 		to_chat(user, span_warning("[src] can't be modified!"))
@@ -1238,10 +1243,10 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/vape)
 
 /obj/item/vape/on_emag(mob/user)
 	..()
-	cut_overlays()
 	super = FALSE
 	balloon_alert(user, "voltage maximized")
-	add_overlay("vapeopen_high")
+	icon_state = "vapeopen_high"
+	set_greyscale(new_config = /datum/greyscale_config/vape/open_high)
 	var/datum/effect_system/spark_spread/sp = new /datum/effect_system/spark_spread //for effect
 	sp.set_up(5, 1, src)
 	sp.start()
@@ -1284,7 +1289,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/vape)
 
 	if(reagents.get_reagent_amount(/datum/reagent/fuel))
 		//HOT STUFF
-		vaper.fire_stacks += 2
+		vaper.adjust_fire_stacks(2)
 		vaper.ignite_mob()
 
 	if(reagents.get_reagent_amount(/datum/reagent/toxin/plasma)) // the plasma explodes when exposed to fire
@@ -1334,3 +1339,35 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/vape)
 		s.start()
 
 	handle_reagents()
+
+/obj/item/vape/red
+	greyscale_colors = "#A02525"
+	flags_1 = NONE
+
+/obj/item/vape/blue
+	greyscale_colors = "#294A98"
+	flags_1 = NONE
+
+/obj/item/vape/purple
+	greyscale_colors = "#9900CC"
+	flags_1 = NONE
+
+/obj/item/vape/green
+	greyscale_colors = "#3D9829"
+	flags_1 = NONE
+
+/obj/item/vape/yellow
+	greyscale_colors = "#DAC20E"
+	flags_1 = NONE
+
+/obj/item/vape/orange
+	greyscale_colors = "#da930e"
+	flags_1 = NONE
+
+/obj/item/vape/black
+	greyscale_colors = "#2e2e2e"
+	flags_1 = NONE
+
+/obj/item/vape/white
+	greyscale_colors = "#DCDCDC"
+	flags_1 = NONE
