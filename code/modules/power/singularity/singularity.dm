@@ -56,7 +56,13 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/anomaly/singularity)
 			new_component.target = singubeacon
 			break
 	if(!mapload)
-		notify_ghosts("IT'S LOOSE", source = src, action = NOTIFY_ORBIT, flashwindow = FALSE, ghost_sound = 'sound/machines/warning-buzzer.ogg', header = "IT'S LOOSE", notify_volume = 75)
+		notify_ghosts(
+			"IT'S LOOSE",
+			source = src,
+			header = "IT'S LOOSE",
+			ghost_sound = 'sound/machines/warning-buzzer.ogg',
+			notify_volume = 75
+		)
 
 /obj/anomaly/singularity/Destroy()
 	STOP_PROCESSING(SSsinguloprocess, src)

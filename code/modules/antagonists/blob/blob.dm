@@ -92,6 +92,13 @@
 	old_body.gib()
 	blob_cam.place_blob_core(placement_override = TRUE, pop_override = TRUE)
 
+	notify_ghosts(
+		"A Blob host has burst in [get_area_name(blob_cam.blob_core)]",
+		source = blob_cam.blob_core,
+		header = "Blob Awakening!",
+		notify_volume = 75,
+	)
+
 /datum/antagonist/blob/antag_listing_status()
 	. = ..()
 	if(owner?.current)
