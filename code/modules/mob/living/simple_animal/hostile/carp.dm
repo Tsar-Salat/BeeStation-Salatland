@@ -182,8 +182,8 @@
 	health = 60
 	maxHealth = 60
 	melee_damage = 25
-	//Same speed as a human
-	speed = -1
+	//A lil bit faster than a human
+	speed = -0.2
 	/// Keeping track of the nuke disk for the functionality of storing it.
 	var/obj/item/disk/nuclear/disky
 	/// Location of the file storing disk overlays
