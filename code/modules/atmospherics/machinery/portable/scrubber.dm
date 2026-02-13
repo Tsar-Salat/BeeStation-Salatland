@@ -154,7 +154,7 @@
 	if(close_valve)
 		if(on)
 			on = FALSE
-			update_appearance(UPDATE_OVERLAYS | UPDATE_ICON_STATE)
+			update_appearance(UPDATE_ICON)
 	else if(on && holding)
 		user.investigate_log("started a transfer into [holding].", INVESTIGATE_ATMOS)
 
@@ -206,7 +206,7 @@
 /obj/machinery/portable_atmospherics/scrubber/huge/process_atmos()
 	if((!anchored && !movable) || !is_operational)
 		on = FALSE
-		update_appearance(UPDATE_OVERLAYS | UPDATE_ICON_STATE)
+		update_appearance(UPDATE_ICON)
 	update_use_power(on ? ACTIVE_POWER_USE : IDLE_POWER_USE)
 	if(!on)
 		return ..()

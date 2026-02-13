@@ -74,7 +74,7 @@
 	if(prob(100 / severity))
 		direction = PUMP_OUT
 	target_pressure = rand(0, 100 * ONE_ATMOSPHERE)
-	update_appearance(UPDATE_OVERLAYS | UPDATE_ICON_STATE)
+	update_appearance(UPDATE_ICON)
 
 /obj/machinery/portable_atmospherics/pump/replace_tank(mob/living/user, close_valve)
 	. = ..()
@@ -163,7 +163,7 @@
 			if(holding)
 				replace_tank(usr, FALSE)
 				. = TRUE
-	update_appearance(UPDATE_OVERLAYS | UPDATE_ICON_STATE)
+	update_appearance(UPDATE_ICON)
 
 /obj/machinery/portable_atmospherics/pump/unregister_holding()
 	on = FALSE
