@@ -287,7 +287,7 @@
 	organ_traits = list(TRAIT_CAN_STRIP)
 
 /obj/item/organ/brain/primitive //No like books and stompy metal men
-	name = "Primative Brain"
+	name = "primitive brain"
 	desc = "This juicy piece of meat has a clearly underdeveloped frontal lobe."
 	organ_traits = list(
 		TRAIT_ADVANCEDTOOLUSER,
