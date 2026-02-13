@@ -8,7 +8,7 @@
 	if(mecha.mecha_flags & HAS_LIGHTS)
 		wires += WIRE_LIGHT
 	add_duds(3)
-	..()
+	return ..()
 
 /datum/wires/mecha/interactable(mob/user)
 	if(!..())
