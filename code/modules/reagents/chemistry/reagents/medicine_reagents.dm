@@ -945,7 +945,7 @@
 	chemical_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
 	taste_description = "raw egg"
 	/// All status effects we remove on metabolize.
-	/// Does not include drunk (despite what you may thing) as that's decresed gradually
+	/// Does not include drunk (despite what you may thing) as that's decreased gradually
 	var/static/list/status_effects_to_clear = list(
 		/datum/status_effect/confusion,
 		/datum/status_effect/dizziness,
