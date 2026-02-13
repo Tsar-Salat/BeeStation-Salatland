@@ -37,7 +37,10 @@
 #define MODE_TOKEN_DEPARTMENT ":h"
 
 #define MODE_ALIEN "alientalk"
+#define MODE_KEY_ALIEN "a"
+
 #define MODE_HOLOPAD "holopad"
+#define MODE_KEY_HOLOPAD "h"
 
 #define MODE_HOLOPARASITE "holoparasite"
 #define MODE_KEY_HOLOPARASITE "p"
@@ -112,13 +115,21 @@
 #define MSG_VISUAL (1<<0)
 #define MSG_AUDIBLE (1<<1)
 
-//Used in visible_message_flags, audible_message_flags and message_mods
-#define CHATMESSAGE_EMOTE "emotemessage"
+// Say mode message handling return flags, exist for readability.
+/// Say mode has handled the message.
+#define SAYMODE_MESSAGE_HANDLED (1<<0)
 
+// Used in visible_message_flags, audible_message_flags and runechat_flags
+/// Automatically applies emote related spans/fonts/formatting to the message
+#define EMOTE_MESSAGE (1<<0)
 /// By default, self_message will respect the visual / audible component of the message.
 /// Meaning that if the message is visual, and sourced from a blind mob, they will not see it.
 /// This flag skips that behavior, and will always show the self message to the mob.
-#define ALWAYS_SHOW_SELF_MESSAGE "showselfmessage"
+#define ALWAYS_SHOW_SELF_MESSAGE (1<<1)
+/// Applies emphasis formatting to the message.
+#define WITH_EMPHASIS_MESSAGE (1<<2)
+/// Blocks chat highlighting from being applied to the message sent to the self.
+#define BLOCK_SELF_HIGHLIGHT_MESSAGE (1<<3)
 
 ///How far away blind people can see visible messages from
 #define BLIND_TEXT_DIST 2

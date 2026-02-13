@@ -89,16 +89,18 @@
 	if(OOC_FILTER_CHECK(message))
 		to_chat(usr, span_warning("Your message contains forbidden words."))
 		return
-	var/spanned = say_quote(say_emphasis(message))
-	var/rendered = span_gamedeadsay("[span_prefix("DEAD:")] [span_name("[name]")][alt_name] [span_message("[emoji_parse(spanned)]")]")
+
+	var/spanned = generate_messagepart(message)
+	var/source = "<span class='game'><span class='prefix'>DEAD:</span> <span class='name'>[name]</span>[alt_name]"
+	var/rendered = " <span class='message'>[emoji_parse(spanned)]</span></span>"
 	send_chat_to_discord(CHAT_TYPE_DEADCHAT, name, spanned)
 	log_talk(message, LOG_SAY, tag="DEAD")
 	if(SEND_SIGNAL(src, COMSIG_MOB_DEADSAY, message) & MOB_DEADSAY_SIGNAL_INTERCEPT)
 		return
 	var/displayed_key = key
-	if(client.holder?.fakekey)
+	if(client?.holder?.fakekey)
 		displayed_key = null
-	deadchat_broadcast(rendered, follow_target = src, speaker_key = displayed_key)
+	deadchat_broadcast(rendered, source, follow_target = src, speaker_key = displayed_key)
 
 ///Check if this message is an emote
 /mob/proc/check_emote(message, forced)

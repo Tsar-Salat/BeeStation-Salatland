@@ -208,7 +208,7 @@
  * * ignored_mobs (optional) doesn't show any message to any mob in this list.
  * * visible_message_flags (optional) is the type of message being sent.
  */
-/atom/proc/visible_message(message, self_message, blind_message, vision_distance = DEFAULT_MESSAGE_RANGE, list/ignored_mobs, list/visible_message_flags, allow_inside_usr = FALSE, separation = " ")
+/atom/proc/visible_message(message, self_message, blind_message, vision_distance = DEFAULT_MESSAGE_RANGE, list/ignored_mobs, visible_message_flags = NONE, allow_inside_usr = FALSE, separation = " ")
 	var/turf/T = get_turf(src)
 	if(!T)
 		return
@@ -220,7 +220,9 @@
 
 	var/raw_msg = message
 	var/is_emote = FALSE
-	if(LAZYFIND(visible_message_flags, CHATMESSAGE_EMOTE))
+	if(visible_message_flags & WITH_EMPHASIS_MESSAGE)
+		message = apply_message_emphasis(message)
+	if(visible_message_flags & EMOTE_MESSAGE)
 		message = span_emote("<b>[src]</b>[separation][message]")
 		is_emote = TRUE
 
@@ -259,23 +261,25 @@
 	if(length(show_to))
 		create_chat_message(src, null, show_to, raw_msg, null, visible_message_flags)
 
-/mob/visible_message(message, self_message, blind_message, vision_distance = DEFAULT_MESSAGE_RANGE, list/ignored_mobs, list/visible_message_flags, allow_inside_usr = FALSE, separation = " ")
+/mob/visible_message(message, self_message, blind_message, vision_distance = DEFAULT_MESSAGE_RANGE, list/ignored_mobs, visible_message_flags = NONE, allow_inside_usr = FALSE, separation = " ")
 	. = ..()
 	if(!self_message)
 		return
 	var/raw_self_message = self_message
 	var/self_runechat = FALSE
-	if(LAZYFIND(visible_message_flags, CHATMESSAGE_EMOTE))
+	var/block_self_highlight = (visible_message_flags & BLOCK_SELF_HIGHLIGHT_MESSAGE)
+	if(visible_message_flags & WITH_EMPHASIS_MESSAGE)
+		self_message = apply_message_emphasis(self_message)
+	if((visible_message_flags & EMOTE_MESSAGE))
 		self_message = span_emote("<b>[src]</b> [self_message]") // May make more sense as "You do x"
 
-	if(LAZYFIND(visible_message_flags, ALWAYS_SHOW_SELF_MESSAGE))
-		to_chat(src, self_message)
+	if(visible_message_flags & ALWAYS_SHOW_SELF_MESSAGE)
+		to_chat(src, self_message, avoid_highlighting = block_self_highlight)
 		self_runechat = TRUE
-
 	else
-		self_runechat = show_message(self_message, MSG_VISUAL, blind_message, MSG_AUDIBLE)
+		self_runechat = show_message(self_message, MSG_VISUAL, blind_message, MSG_AUDIBLE, avoid_highlighting = block_self_highlight)
 
-	if(self_runechat && (LAZYFIND(visible_message_flags, CHATMESSAGE_EMOTE)) && runechat_prefs_check(src, visible_message_flags))
+	if(self_runechat && ((visible_message_flags & EMOTE_MESSAGE)) && runechat_prefs_check(src, visible_message_flags))
 		create_chat_message(src, null, list(src), raw_message = raw_self_message, message_mods = visible_message_flags)
 
 /**
@@ -289,11 +293,13 @@
   * * deaf_message (optional) is what deaf people will see.
   * * hearing_distance (optional) is the range, how many tiles away the message can be heard.
   */
-/atom/proc/audible_message(message, deaf_message, hearing_distance = DEFAULT_MESSAGE_RANGE, self_message, list/audible_message_flags, separation = " ")
+/atom/proc/audible_message(message, deaf_message, hearing_distance = DEFAULT_MESSAGE_RANGE, self_message, audible_message_flags = NONE, separation = " ")
 	var/list/hearers = mob_only_listeners(get_hearers_in_view(hearing_distance, src, SEE_INVISIBLE_MAXIMUM))
 	var/raw_msg = message
 	var/is_emote = FALSE
-	if(LAZYFIND(audible_message_flags, CHATMESSAGE_EMOTE))
+	if(audible_message_flags & WITH_EMPHASIS_MESSAGE)
+		message = apply_message_emphasis(message)
+	if(audible_message_flags & EMOTE_MESSAGE)
 		is_emote = TRUE
 		message = span_emote("<b>[src]</b>[separation][message]")
 
@@ -321,22 +327,26 @@
   * * deaf_message (optional) is what deaf people will see.
   * * hearing_distance (optional) is the range, how many tiles away the message can be heard.
   */
-/mob/audible_message(message, deaf_message, hearing_distance = DEFAULT_MESSAGE_RANGE, self_message, list/audible_message_flags, separation = " ")
+/mob/audible_message(message, deaf_message, hearing_distance = DEFAULT_MESSAGE_RANGE, self_message, audible_message_flags = NONE, separation = " ")
 	. = ..()
 	if(!self_message)
 		return
 
 	var/raw_self_message = self_message
 	var/self_runechat = FALSE
-	if(LAZYFIND(audible_message_flags, CHATMESSAGE_EMOTE))
+	var/block_self_highlight = (audible_message_flags & BLOCK_SELF_HIGHLIGHT_MESSAGE)
+	if(audible_message_flags & WITH_EMPHASIS_MESSAGE)
+		self_message = apply_message_emphasis(self_message)
+	if(audible_message_flags & EMOTE_MESSAGE)
 		self_message = span_emote("<b>[src]</b> [self_message]")
-	if(LAZYFIND(audible_message_flags, ALWAYS_SHOW_SELF_MESSAGE))
-		to_chat(src, self_message)
+
+	if(audible_message_flags & ALWAYS_SHOW_SELF_MESSAGE)
+		to_chat(src, self_message, avoid_highlighting = block_self_highlight)
 		self_runechat = TRUE
 	else
-		self_runechat = show_message(self_message, MSG_AUDIBLE, deaf_message, MSG_VISUAL)
+		self_runechat = show_message(self_message, MSG_AUDIBLE, deaf_message, MSG_VISUAL, avoid_highlighting = block_self_highlight)
 
-	if(self_runechat && (LAZYFIND(audible_message_flags, CHATMESSAGE_EMOTE)) && runechat_prefs_check(src, audible_message_flags))
+	if(self_runechat && ((audible_message_flags & EMOTE_MESSAGE)) && runechat_prefs_check(src, audible_message_flags))
 		create_chat_message(src, null, list(src), raw_message = raw_self_message, message_mods = audible_message_flags)
 
 /// Gets a linked mob, letting atoms act as proxies for actions that rely on hearing sensitivity.
@@ -352,19 +362,19 @@
 	return src
 
 ///Returns the client runechat visible messages preference according to the message type.
-/atom/proc/runechat_prefs_check(mob/target, list/visible_message_flags)
+/atom/proc/runechat_prefs_check(mob/target, visible_message_flags = NONE)
 	if(!target.client?.prefs.read_player_preference(/datum/preference/toggle/enable_runechat))
 		return FALSE
 	if (!target.client?.prefs.read_player_preference(/datum/preference/toggle/enable_runechat_non_mobs))
 		return FALSE
-	if((LAZYFIND(visible_message_flags, CHATMESSAGE_EMOTE)) && !target.client.prefs.read_player_preference(/datum/preference/toggle/see_rc_emotes))
+	if((visible_message_flags & EMOTE_MESSAGE) && !target.client.prefs.read_player_preference(/datum/preference/toggle/see_rc_emotes))
 		return FALSE
 	return TRUE
 
-/mob/runechat_prefs_check(mob/target, list/visible_message_flags)
+/mob/runechat_prefs_check(mob/target, visible_message_flags = NONE)
 	if(!target.client?.prefs.read_player_preference(/datum/preference/toggle/enable_runechat))
 		return FALSE
-	if((LAZYFIND(visible_message_flags, CHATMESSAGE_EMOTE)) && !target.client.prefs.read_player_preference(/datum/preference/toggle/see_rc_emotes))
+	if((visible_message_flags & EMOTE_MESSAGE) && !target.client.prefs.read_player_preference(/datum/preference/toggle/see_rc_emotes))
 		return FALSE
 	return TRUE
 

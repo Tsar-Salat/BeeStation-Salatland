@@ -174,7 +174,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/camera/imaginary_friend)
 	var/list/listening = get_hearers_in_view(6, owner, SEE_INVISIBLE_MAXIMUM)
 	if(!(src in listening))
 		to_chat(src, span_hear("You hear a distant voice in your head..."))
-		to_chat(src, span_gamesay("[span_name("[speaker]")] [span_message("[say_quote(speech_args[SPEECH_MESSAGE])]")]"))
+		to_chat(src, span_gamesay("[span_name("[speaker]")] [span_message("[generate_messagepart(speech_args[SPEECH_MESSAGE])]")]"))
 
 /mob/camera/imaginary_friend/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null, filterproof = null, message_range = 7, datum/saymode/saymode = null)
 	if (!message)
@@ -216,8 +216,8 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/camera/imaginary_friend)
 			hearers += owner.client
 		new /datum/chatmessage(message, src, hearers, null)
 
-	var/rendered = span_gamesay("[span_name("[name]")] [span_message("[say_quote(message)]")]")
-	var/dead_rendered = span_gamesay("[span_name("[name] (Imaginary friend of [owner])")] [span_message("[say_quote(message)]")]")
+	var/rendered = span_gamesay("[span_name("[name]")] [span_message("[generate_messagepart(message)]")]")
+	var/dead_rendered = span_gamesay("[span_name("[name] (Imaginary friend of [owner])")] [span_message("[generate_messagepart(message)]")]")
 
 	to_chat(owner, "[rendered]")
 	to_chat(src, "[rendered]")

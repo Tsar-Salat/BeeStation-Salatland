@@ -80,6 +80,14 @@
 	/// Return to prevent the movable from talking into the radio.
 	#define COMPONENT_CANNOT_USE_RADIO (1<<0)
 
+/// Sent from /atom/movable/proc/generate_messagepart() generating a quoted message, after say verb is chosen and before spans are applied.
+#define COMSIG_MOVABLE_SAY_QUOTE "movable_say_quote"
+	// Used to access COMSIG_MOVABLE_SAY_QUOTE argslist
+	/// The index of args that corresponds to the actual message
+	#define MOVABLE_SAY_QUOTE_MESSAGE 1
+	#define MOVABLE_SAY_QUOTE_MESSAGE_SPANS 2
+	#define MOVABLE_SAY_QUOTE_MESSAGE_MODS 3
+
 ///from base of atom/movable/newtonian_move(): (inertia_direction)
 #define COMSIG_MOVABLE_NEWTONIAN_MOVE "movable_newtonian_move"
 	#define COMPONENT_MOVABLE_NEWTONIAN_BLOCK (1<<0)

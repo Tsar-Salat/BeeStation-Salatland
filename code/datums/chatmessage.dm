@@ -232,7 +232,7 @@
 	text = "[prefixes?.Join("&nbsp;")][text]"
 
 	// Approximate text height
-	complete_text = "<span class='center [extra_classes.Join(" ")]' style='color: [tgt_color]'>[target.say_emphasis(text)]</span>"
+	complete_text = "<span class='center [extra_classes.Join(" ")]' style='color: [tgt_color]'>[target.apply_message_emphasis(text)]</span>"
 	approx_lines = length(text) / MESSAGE_LINE_LENGTH_ESTIMATE
 
 	// Translate any existing messages upwards, apply exponential decay factors to timers
@@ -442,7 +442,7 @@
  * * raw_message - The text content of the message
  * * spans - Additional classes to be added to the message
  */
-/proc/create_chat_message(atom/movable/speaker, datum/language/message_language, list/hearers, raw_message, list/spans, list/message_mods)
+/proc/create_chat_message(atom/movable/speaker, datum/language/message_language, list/hearers, raw_message, list/spans, list/message_mods, runechat_flags = NONE)
 	if(!length(hearers))
 		return
 
@@ -458,8 +458,8 @@
 	var/handled_message = raw_message
 
 	// Message language override, if no language was spoken emote 'makes a strange noise'
-	if(!message_language && !message_mods[CHATMESSAGE_EMOTE])
-		message_mods[CHATMESSAGE_EMOTE] = TRUE
+	if(!message_language && !(runechat_flags & EMOTE_MESSAGE))
+		runechat_flags |= EMOTE_MESSAGE
 		handled_message = "makes a strange sound."
 
 	// Check for virtual speakers (aka hearing a message through a radio)
@@ -476,7 +476,7 @@
 		spans -= "italics"
 
 	// Display visual above source
-	if(message_mods.Find(CHATMESSAGE_EMOTE))
+	if(runechat_flags & EMOTE_MESSAGE)
 		var/list/clients = list()
 		for(var/mob/M as() in hearers)
 			if(M?.should_show_chat_message(speaker, message_language, TRUE))

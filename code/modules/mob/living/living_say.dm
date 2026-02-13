@@ -96,8 +96,8 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		message_mods[LANGUAGE_EXTENSION] = istype(language) ? language.type : language
 	var/original_message = message
 	message = get_message_mods(message, message_mods)
-	saymode = SSradio.saymodes[message_mods[RADIO_KEY]]
-	if(!forced && !saymode)
+	saymode = SSradio.get_available_say_mode(src, message_mods[RADIO_KEY])
+	if(!forced && (isnull(saymode) || saymode.allows_custom_say_emotes))
 		message = check_for_custom_say_emote(message, message_mods)
 
 	if(!message)
@@ -136,9 +136,6 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 
 	var/succumbed = FALSE
 
-	if(message_mods[MODE_CUSTOM_SAY_EMOTE])
-		log_message(message_mods[MODE_CUSTOM_SAY_EMOTE], LOG_RADIO_EMOTE)
-
 	if(!message_mods[MODE_CUSTOM_SAY_ERASE_INPUT])
 		if(message_mods[WHISPER_MODE] == MODE_WHISPER)
 			if(saymode || message_mods[RADIO_EXTENSION]) //no radio while in crit
@@ -154,8 +151,8 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 				last_words = message
 				message_mods[WHISPER_MODE] = MODE_WHISPER_CRIT
 				succumbed = TRUE
-		else
-			log_talk(message, LOG_SAY, forced_by = forced, custom_say_emote = message_mods[MODE_CUSTOM_SAY_EMOTE])
+
+	log_sayverb_talk(message, message_mods, forced_by = forced)
 
 	if(message_mods[RADIO_KEY] == RADIO_KEY_UPLINK) // only uplink needs this
 		message_mods[MODE_UNTREATED_MESSAGE] = message // let's store the original message before treating those
@@ -195,7 +192,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	message_mods[SAY_MOD_VERB] = say_mod(message, message_mods)
 
 	//This is before anything that sends say a radio message, and after all important message type modifications, so you can scumb in alien chat or something
-	if(saymode && !saymode.handle_message(src, message, language))
+	if(saymode && (saymode.handle_message(src, message, spans, language, message_mods) & SAYMODE_MESSAGE_HANDLED))
 		return
 
 	var/radio_return = radio(message, message_mods, spans, language)//roughly 27% of living/say()'s total cost

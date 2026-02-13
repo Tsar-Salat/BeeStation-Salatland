@@ -111,7 +111,8 @@
 	if(!msg)
 		return
 
-	user.log_message(msg, LOG_EMOTE)
+	if(user.client)
+		user.log_message(msg, LOG_EMOTE)
 
 	var/space = should_have_space_before_emote(html_decode(msg)[1]) ? " " : ""
 	msg = punctuate(msg)
@@ -119,6 +120,7 @@
 	var/is_important = emote_type & EMOTE_IMPORTANT
 	var/is_visual = emote_type & EMOTE_VISIBLE
 	var/is_audible = emote_type & EMOTE_AUDIBLE
+	var/additional_message_flags = get_message_flags(intentional)
 
 	// Emote doesn't get printed to chat, runechat only
 	if(emote_type & EMOTE_RUNECHAT)
@@ -130,11 +132,11 @@
 					continue
 				if(is_visual && viewer.is_blind())
 					continue
-			if(user.runechat_prefs_check(viewer, CHATMESSAGE_EMOTE))
+			if(user.runechat_prefs_check(viewer, EMOTE_MESSAGE))
 				create_chat_message(
 					speaker = user,
 					raw_message = msg,
-					message_mods = list(CHATMESSAGE_EMOTE = TRUE),
+					runechat_flags = EMOTE_MESSAGE,
 				)
 			else if(is_important)
 				to_chat(viewer, span_emote("<b>[user]</b> [msg]"))
@@ -153,8 +155,15 @@
 	else if(is_important)
 		for(var/mob/viewer as anything in viewers(user))
 			to_chat(viewer, span_emote("<b>[user]</b> [msg]"))
-			if(user.runechat_prefs_check(viewer, list(CHATMESSAGE_EMOTE = TRUE)))
-				create_chat_message(user, null, list(viewer), msg, null, list(CHATMESSAGE_EMOTE = TRUE))
+			if(user.runechat_prefs_check(viewer, EMOTE_MESSAGE))
+				create_chat_message(
+					user,
+					null,
+					list(viewer),
+					msg,
+					null,
+					runechat_flags = EMOTE_MESSAGE,
+				)
 	// Emotes has both an audible and visible component
 	// Prioritize audible, and provide a visible message if the user is deaf
 	else if(is_visual && is_audible)
@@ -162,7 +171,7 @@
 			message = msg,
 			deaf_message = span_emote("You see how <b>[user]</b> [msg]"),
 			self_message = msg,
-			audible_message_flags = list(CHATMESSAGE_EMOTE = TRUE, ALWAYS_SHOW_SELF_MESSAGE = TRUE),
+			audible_message_flags = EMOTE_MESSAGE|ALWAYS_SHOW_SELF_MESSAGE|additional_message_flags,
 			separation = space
 		)
 	// Emote is entirely audible, no visible component
@@ -170,7 +179,7 @@
 		user.audible_message(
 			message = msg,
 			self_message = msg,
-			audible_message_flags = list(CHATMESSAGE_EMOTE = TRUE),
+			audible_message_flags = EMOTE_MESSAGE|additional_message_flags,
 			separation = space
 		)
 	// Emote is entirely visible, no audible component
@@ -178,7 +187,7 @@
 		user.visible_message(
 			message = msg,
 			self_message = msg,
-			visible_message_flags = list(CHATMESSAGE_EMOTE = TRUE, ALWAYS_SHOW_SELF_MESSAGE = TRUE),
+			visible_message_flags = EMOTE_MESSAGE|ALWAYS_SHOW_SELF_MESSAGE|additional_message_flags,
 		)
 	else
 		CRASH("Emote [type] has no valid emote type set!")
@@ -240,6 +249,18 @@
 
 /datum/emote/proc/get_sound(mob/living/user)
 	return sound //by default just return this var.
+
+/**
+ * To get the flags visible/audible messages for ran by the emote.
+ *
+ * Arguments:
+ * * intentional - Bool that says whether the emote was forced (FALSE) or not (TRUE).
+ *
+ * Returns the additional message flags we should be using, if any.
+ */
+/datum/emote/proc/get_message_flags(intentional)
+	// If we did it, we most often already know what's in it, so we try to avoid highlight clutter.
+	return intentional ? BLOCK_SELF_HIGHLIGHT_MESSAGE : NONE
 
 /datum/emote/proc/replace_pronoun(mob/user, message)
 	if(findtext(message, "their"))
@@ -338,18 +359,21 @@
 *
 * Returns TRUE if it was able to run the emote, FALSE otherwise.
 */
-/atom/proc/manual_emote(text)
-	if(!text)
+/atom/proc/manual_emote(text, log_emote = TRUE)
+	if (!text)
 		CRASH("Someone passed nothing to manual_emote(), fix it")
 
-	log_message(text, LOG_EMOTE)
-	visible_message(text, visible_message_flags = list(CHATMESSAGE_EMOTE = TRUE))
+	if (log_emote)
+		log_message(text, LOG_EMOTE)
+	visible_message(text, visible_message_flags = EMOTE_MESSAGE)
 	return TRUE
 
-/mob/manual_emote(text)
+/mob/manual_emote(text, log_emote = null)
 	if (stat != CONSCIOUS)
 		return FALSE
-	. = ..()
+	if (isnull(log_emote))
+		log_emote = !isnull(client)
+	. = ..(text, log_emote)
 	if (!.)
 		return FALSE
 	if (!client)

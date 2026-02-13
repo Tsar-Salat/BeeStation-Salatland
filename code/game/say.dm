@@ -60,7 +60,8 @@ GLOBAL_LIST_INIT(freqtospan, list(
 	spans |= speech_span
 	if(!language)
 		language = get_selected_language()
-	message_mods[SAY_MOD_VERB] = say_mod(message, message_mods)
+	if(!message_mods[SAY_MOD_VERB])
+		message_mods[SAY_MOD_VERB] = say_mod(message, message_mods)
 	send_speech(message_raw = message,  message_range = message_range,  source = source, bubble_type = bubble_type, spans = spans, message_language = language, message_mods = message_mods, forced = forced)
 
 /atom/movable/proc/Hear(atom/movable/speaker, message_language, raw_message, radio_freq, list/spans, list/message_mods = list(), message_range=0)
@@ -166,24 +167,20 @@ GLOBAL_LIST_INIT(freqtospan, list(
 	//End name span.
 	var/endspanpart = "</span>"
 
-	//Message
-	var/messagepart
-
+	// Language icon.
 	var/languageicon = ""
 	var/space = " "
 	if(message_mods[MODE_CUSTOM_SAY_EMOTE])
 		if(!should_have_space_before_emote(html_decode(message_mods[MODE_CUSTOM_SAY_EMOTE])[1]))
 			space = null
-	if(message_mods[MODE_CUSTOM_SAY_ERASE_INPUT])
-		messagepart = message_mods[MODE_CUSTOM_SAY_EMOTE]
-	else
-		messagepart = speaker.say_quote(raw_message, spans, message_mods)
-
+	if(!message_mods[MODE_CUSTOM_SAY_ERASE_INPUT])
 		var/datum/language/dialect = GLOB.language_datum_instances[message_language]
 		if(istype(dialect) && dialect.display_icon(src))
 			languageicon = "[dialect.get_icon()] "
 
-	messagepart = "[space][span_message("[say_emphasis(messagepart)]")]</span>"
+	// The actual message part.
+	var/messagepart = speaker.generate_messagepart(raw_message, spans, message_mods)
+	messagepart = "[space][span_message("[apply_message_emphasis(messagepart)]")]</span>"
 
 	return "[spanpart1][spanpart2][freqpart][languageicon][compose_track_href(speaker, namepart)][namepart][compose_job(speaker, message_language, raw_message, radio_freq)][endspanpart][messagepart]"
 
@@ -229,27 +226,35 @@ GLOBAL_LIST_INIT(freqtospan, list(
 
 
 /**
- * This proc is used to generate a message for chat
- * Generates the `says, "<span class='red'>meme</span>"` part of the `Grey Tider says, "meme"`.
+ * This proc is used to generate the 'message' part of a chat message.
+ * Generates the `says, "<span class='red'>meme</span>"` part of the `Grey Tider says, "meme"`,
+ * or the `taps their microphone.` part of `Grey Tider taps their microphone.`.
  *
  * input - The message to be said
  * spans - A list of spans to attach to the message. Includes the atom's speech span by default
  * message_mods - A list of message modifiers, i.e. whispering/singing
  */
-/atom/movable/proc/say_quote(input, list/spans = list(speech_span), list/message_mods = list())
+/atom/movable/proc/generate_messagepart(input, list/spans = list(speech_span), list/message_mods = list())
+	// If we only care about the emote part, early return.
+	if(message_mods[MODE_CUSTOM_SAY_ERASE_INPUT])
+		return apply_message_emphasis(message_mods[MODE_CUSTOM_SAY_EMOTE])
+
+	// Otherwise, we format our full quoted message.
 	if(!input)
 		input = "..."
 
+	var/say_mod = message_mods[MODE_CUSTOM_SAY_EMOTE] || message_mods[SAY_MOD_VERB] || say_mod(input, message_mods)
+
+	SEND_SIGNAL(src, COMSIG_MOVABLE_SAY_QUOTE, args)
+
 	if(copytext_char(input, -2) == "!!")
 		spans |= SPAN_YELL
-
-	var/say_mod = message_mods[MODE_CUSTOM_SAY_EMOTE] || message_mods[SAY_MOD_VERB] || say_mod(input, message_mods)
 
 	var/spanned = attach_spans(input, spans)
 	return "[say_mod], \"[spanned]\""
 
 /// Scans the input sentence for speech emphasis modifiers, notably _italics_ and **bold**
-/atom/proc/say_emphasis(message, list/ignore = list())
+/atom/proc/apply_message_emphasis(message, list/ignore = list())
 	var/regex/markup
 	for(var/tag in (GLOB.markup_tags - ignore))
 		markup = GLOB.markup_regex[tag]

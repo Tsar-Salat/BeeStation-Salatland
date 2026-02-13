@@ -495,6 +495,10 @@
 		return TRUE
 	return FALSE
 
+/datum/emote/living/custom/get_message_flags(intentional)
+	. = ..()
+	return .|WITH_EMPHASIS_MESSAGE
+
 /datum/emote/living/custom/run_emote(mob/user, params, type_override = null, intentional = FALSE)
 	if(params && type_override)
 		emote_type = type_override

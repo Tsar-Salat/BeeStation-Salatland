@@ -105,7 +105,7 @@
 
 	var/atom/movable/screen/ai/modpc/interfaceButton
 	var/obj/effect/overlay/holo_pad_hologram/ai_hologram
-	var/obj/machinery/holopad/current_holopad
+	VAR_FINAL/obj/machinery/holopad/current_holopad
 
 CREATION_TEST_IGNORE_SUBTYPES(/mob/living/silicon/ai)
 
@@ -797,7 +797,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/silicon/ai)
 /mob/living/silicon/ai/proc/relay_speech(atom/movable/speaker, datum/language/message_language, raw_message, radio_freq, list/spans, list/message_mods = list())
 	var/raw_translation = translate_language(speaker, message_language, raw_message)
 	var/atom/movable/source = speaker.GetSource() || speaker // is the speaker virtual/radio
-	var/treated_message = source.say_quote(raw_translation, spans, message_mods)
+	var/treated_message = source.generate_messagepart(raw_translation, spans, message_mods)
 
 	var/namepart = "[speaker.GetVoice()][speaker.get_alt_name()]"
 	var/hrefpart = "<a href='byond://?src=[REF(src)];track=[html_encode(namepart)]'>"
@@ -837,7 +837,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/silicon/ai)
 /mob/living/silicon/ai/proc/hear_holocall(atom/movable/speaker, datum/language/message_language, raw_message, radio_freq, list/spans, list/message_mods = list())
 	var/raw_translation = translate_language(speaker, message_language, raw_message)
 	var/atom/movable/source = speaker.GetSource() || speaker // is the speaker virtual/radio
-	var/treated_message = span_message(say_emphasis(source.say_quote(raw_translation, spans, message_mods)))
+	var/treated_message = span_message(apply_message_emphasis(source.generate_messagepart(raw_translation, spans, message_mods)))
 	var/namepart = "[speaker.GetVoice()][speaker.get_alt_name()]"
 	var/hrefpart = "<a href='byond://?src=[REF(src)];track=[html_encode(namepart)]'>"
 	var/jobpart = "Unknown"
@@ -875,7 +875,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/silicon/ai)
 		else // ghost removed the language themselves
 			if(!rendered_scrambled_message)
 				var/scrambled_translation = each_ghost.translate_language(speaker, message_language, raw_message)
-				rendered_scrambled_message = span_message(each_ghost.say_emphasis(source.say_quote(scrambled_translation, spans, message_mods)))
+				rendered_scrambled_message = span_message(each_ghost.apply_message_emphasis(source.generate_messagepart(scrambled_translation, spans, message_mods)))
 				rendered_scrambled_message = span_srtradioholocall("<b>\[Holocall\] [language_icon][span_name(speaker.GetVoice())]</b> [rendered_scrambled_message]")
 			to_chat(each_ghost, "[follow_link] [rendered_scrambled_message]")
 

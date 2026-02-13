@@ -72,6 +72,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/camera/blob)
 	announcement_time = world.time + OVERMIND_ANNOUNCEMENT_MAX_TIME
 	. = ..()
 	START_PROCESSING(SSobj, src)
+	GLOB.blob_telepathy_mobs |= src
 
 /mob/camera/blob/proc/validate_location()
 	var/turf/T = get_turf(src)
@@ -206,6 +207,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/camera/blob)
 
 	SSshuttle.clearHostileEnvironment(src)
 	STOP_PROCESSING(SSobj, src)
+	GLOB.blob_telepathy_mobs -= src
 
 	return ..()
 
@@ -270,21 +272,13 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/camera/blob)
 
 	if (!message)
 		return
-	if(CHAT_FILTER_CHECK(message))
-		to_chat(usr, span_warning("Your message contains forbidden words."))
-		return
-	message = treat_message_min(message)
-	src.log_talk(message, LOG_SAY, tag="blob")
 
-	var/message_a = say_quote(message)
-	var/rendered = span_big("<font color=\"#EE4000\"><b>\[Blob Telepathy\] [name](<font color=\"[blobstrain.color]\">[blobstrain.name]</font>)</b> [message_a]</font>")
-
-	for(var/mob/M in GLOB.mob_list)
-		if(isovermind(M) || istype(M, /mob/living/simple_animal/hostile/blob))
-			to_chat(M, rendered)
-		if(isobserver(M))
-			var/link = FOLLOW_LINK(M, src)
-			to_chat(M, "[link] [rendered]")
+	var/list/message_mods = list()
+	var/adjusted_message = check_for_custom_say_emote(message, message_mods)
+	log_sayverb_talk(message, message_mods, tag = "blob hivemind telepathy")
+	var/messagepart = generate_messagepart(adjusted_message, message_mods = message_mods)
+	var/rendered = span_big(span_blob("<b>\[Blob Telepathy\] [name](<font color=\"[blobstrain.color]\">[blobstrain.name]</font>)</b> [messagepart]"))
+	relay_to_list_and_observers(rendered, GLOB.blob_telepathy_mobs, src, MESSAGE_TYPE_RADIO)
 
 /mob/camera/blob/blob_act(obj/structure/blob/B)
 	return
