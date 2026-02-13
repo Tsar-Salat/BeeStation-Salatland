@@ -1092,7 +1092,7 @@
 				var/time_to_open = 50
 				playsound(src, 'sound/machines/airlock_alien_prying.ogg', 100, TRUE) //is it aliens or just the CE being a dick?
 				prying_so_hard = TRUE
-				if(I.use_tool(src, user, time_to_open, volume = 100))
+				if(I.use_tool(src, user, time_to_open, volume = 50))
 					if(check_electrified && shock(user,100))
 						prying_so_hard = FALSE
 						return
