@@ -50,7 +50,7 @@
 			if(overmind)
 				H.color = overmind.blobstrain.complementary_color
 			else
-				H.color = "#000000"
+				H.color = COLOR_BLACK
 		adjustHealth(-maxHealth * BLOBMOB_HEALING_MULTIPLIER)
 
 /mob/living/simple_animal/hostile/blob/fire_act(exposed_temperature, exposed_volume)
@@ -276,26 +276,25 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/hostile/blob/blobspore)
 			if(overmind)
 				H.color = overmind.blobstrain.complementary_color
 			else
-				H.color = "#000000"
+				H.color = COLOR_BLACK
 		if(locate(/obj/structure/blob/special/node) in blobs_in_area)
 			adjustHealth(-maxHealth*BLOBMOB_BLOBBERNAUT_HEALING_NODE * delta_time)
 			var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/heal(get_turf(src))
 			if(overmind)
 				H.color = overmind.blobstrain.complementary_color
 			else
-				H.color = "#000000"
+				H.color = COLOR_BLACK
 
 	if(!damagesources)
 		return
 
 	adjustHealth(maxHealth * BLOBMOB_BLOBBERNAUT_HEALTH_DECAY * damagesources * delta_time) //take 2.5% of max health as damage when not near the blob or if the naut has no factory, 5% if both
-	var/image/I = new('icons/mob/blob.dmi', src, "nautdamage", MOB_LAYER+0.01)
-	I.appearance_flags = RESET_COLOR
+	var/mutable_appearance/healing = mutable_appearance('icons/mob/blob.dmi', "nautdamage", MOB_LAYER+0.01)
+	healing.appearance_flags = RESET_COLOR
 
 	if(overmind)
-		I.color = overmind.blobstrain.complementary_color
-
-	flick_overlay_view(I, src, 8)
+		healing.color = overmind.blobstrain.complementary_color
+	flick_overlay_view(healing, 0.8 SECONDS)
 
 /mob/living/simple_animal/hostile/blob/blobbernaut/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
 	. = ..()

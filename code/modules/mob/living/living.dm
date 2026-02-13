@@ -847,8 +847,12 @@
 
 	// These should be tracked by status effects
 	losebreath = 0
+	set_blindness(0)
 	set_disgust(0)
+	cure_nearsighted()
+	cure_blind()
 	cure_husk()
+
 	qdel(GetComponent(/datum/component/irradiated))
 	extinguish_mob()
 
@@ -1106,7 +1110,6 @@
 		if(-INFINITY to NEGATIVE_GRAVITY)
 			if(!istype(gravity_alert, /atom/movable/screen/alert/negative))
 				throw_alert(ALERT_GRAVITY, /atom/movable/screen/alert/negative)
-				ADD_TRAIT(src, TRAIT_MOVE_UPSIDE_DOWN, NEGATIVE_GRAVITY_TRAIT)
 				var/matrix/flipped_matrix = transform
 				flipped_matrix.b = -flipped_matrix.b
 				flipped_matrix.e = -flipped_matrix.e
@@ -1131,7 +1134,6 @@
 	if(istype(gravity_alert, /atom/movable/screen/alert/weightless))
 		REMOVE_TRAIT(src, TRAIT_MOVE_FLOATING, NO_GRAVITY_TRAIT)
 	if(istype(gravity_alert, /atom/movable/screen/alert/negative))
-		REMOVE_TRAIT(src, TRAIT_MOVE_UPSIDE_DOWN, NEGATIVE_GRAVITY_TRAIT)
 		var/matrix/flipped_matrix = transform
 		flipped_matrix.b = -flipped_matrix.b
 		flipped_matrix.e = -flipped_matrix.e
