@@ -365,7 +365,7 @@
 /**
  * Create our objectives for our heretic.
  */
-/datum/antagonist/heretic/proc/forge_objectives()
+/datum/antagonist/heretic/forge_objectives()
 	var/datum/objective/heretic_research/research_objective = new()
 	research_objective.owner = owner
 	objectives += research_objective

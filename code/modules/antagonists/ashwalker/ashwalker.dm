@@ -8,7 +8,7 @@
 	show_in_antagpanel = FALSE
 	show_to_ghosts = TRUE
 	prevent_roundtype_conversion = FALSE
-	antagpanel_category = "Ash Walkers"
+	antagpanel_category = ANTAG_GROUP_ASHWALKERS
 	delay_roundend = FALSE
 	required_living_playtime = 1
 	leave_behaviour = ANTAGONIST_LEAVE_DESPAWN

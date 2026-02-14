@@ -119,7 +119,7 @@
 	icon = 'icons/obj/device.dmi'
 	icon_state = "locator"
 	/// The name of the special role given to the recruit
-	var/special_role_name = ROLE_OPERATIVE
+	var/special_role_name = ROLE_NUCLEAR_OPERATIVE
 	/// The applied outfit
 	var/datum/outfit/syndicate/outfit = /datum/outfit/syndicate/no_crystals
 	/// The antag datum applied
@@ -155,7 +155,7 @@
 
 	currently_polling_ghosts = TRUE
 	var/datum/poll_config/config = new()
-	config.check_jobban = ROLE_OPERATIVE
+	config.check_jobban = ROLE_NUCLEAR_OPERATIVE
 	config.poll_time = 5 SECONDS //15 SECONDS
 	config.jump_target = user
 	config.role_name_text = "reinforcement [special_role_name]"
