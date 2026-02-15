@@ -28,7 +28,7 @@
 
 	maxHealth = 150
 	health = 150
-	healable = 0
+	mob_biotypes = MOB_SLIME
 	gender = NEUTER
 
 	see_in_dark = NIGHTVISION_FOV_RANGE
@@ -332,7 +332,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/slime)
 		attacked += 10
 
 
-/mob/living/simple_animal/slime/attack_paw(mob/living/carbon/monkey/M)
+/mob/living/simple_animal/slime/attack_paw(mob/living/carbon/human/user, list/modifiers)
 	if(..()) //successful monkey bite.
 		attacked += 10
 
@@ -340,10 +340,11 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/slime)
 	if(..()) //successful larva bite.
 		attacked += 10
 
-/mob/living/simple_animal/slime/attack_hulk(mob/living/carbon/human/user, does_attack_animation = 0)
-	if(user.combat_mode)
-		discipline_slime(user)
-		return ..()
+/mob/living/simple_animal/slime/attack_hulk(mob/living/carbon/human/user)
+	. = ..()
+	if(!.)
+		return
+	discipline_slime(user)
 
 /mob/living/simple_animal/slime/attack_hand(mob/living/carbon/human/M, modifiers)
 	if(buckled)
@@ -537,9 +538,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/slime)
 /mob/living/simple_animal/slime/get_mob_buckling_height(mob/seat)
 	if(..())
 		return 3
-
-/mob/living/simple_animal/slime/can_be_implanted()
-	return TRUE
 
 CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/slime/random)
 

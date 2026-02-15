@@ -76,6 +76,9 @@
 		add_overlay("broken")
 
 /obj/machinery/modular_computer/AltClick(mob/user)
+	. = ..()
+	if(!can_interact(user))
+		return
 	if(cpu)
 		cpu.AltClick(user)
 
