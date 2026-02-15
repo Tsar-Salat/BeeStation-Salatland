@@ -81894,7 +81894,7 @@
 	pixel_x = -3;
 	pixel_y = 12
 	},
-/obj/item/melee/baton/cattleprod{
+/obj/item/melee/baton/security/cattleprod{
 	pixel_x = 2;
 	pixel_y = 5
 	},

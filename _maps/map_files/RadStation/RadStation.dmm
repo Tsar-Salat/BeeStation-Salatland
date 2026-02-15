@@ -65841,7 +65841,7 @@
 /obj/item/broken_bottle,
 /obj/item/cigbutt,
 /obj/item/trash/waffles,
-/obj/item/melee/classic_baton/police/deputy{
+/obj/item/melee/baton/deputy{
 	name = "old baton";
 	stamina_damage = 10
 	},
