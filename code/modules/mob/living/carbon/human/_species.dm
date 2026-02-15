@@ -866,7 +866,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 
 	//Underwear, Undershirts & Socks
 	if(!(TRAIT_NO_UNDERWEAR in inherent_traits))
-		if(H.underwear && !(H.bodytype & BODYTYPE_DIGITIGRADE))
+		if(H.underwear && !(H.bodyshape & BODYSHAPE_DIGITIGRADE))
 			var/datum/sprite_accessory/underwear/underwear = GLOB.underwear_list[H.underwear]
 			var/mutable_appearance/underwear_overlay
 			if(underwear)
@@ -886,7 +886,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 				else
 					standing += mutable_appearance(undershirt.icon, undershirt.icon_state, CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
 
-		if(H.socks && H.num_legs >= 2 && !(H.bodytype & BODYTYPE_DIGITIGRADE) && !(NOSOCKS in species_traits))
+		if(H.socks && H.num_legs >= 2 && !(H.bodyshape & BODYSHAPE_DIGITIGRADE) && !(NOSOCKS in species_traits))
 			var/datum/sprite_accessory/socks/socks = GLOB.socks_list[H.socks]
 			if(socks)
 				standing += mutable_appearance(socks.icon, socks.icon_state, CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
@@ -1036,7 +1036,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 
 	////PUT ALL YOUR WEIRD ASS REAL-LIMB HANDLING HERE
 	///Digi handling
-	if(H.bodytype & BODYTYPE_DIGITIGRADE)
+	if(H.bodyshape & BODYSHAPE_DIGITIGRADE)
 		var/uniform_compatible = FALSE
 		var/suit_compatible = FALSE
 		if(!(H.w_uniform) || (H.w_uniform.supports_variations_flags & (CLOTHING_DIGITIGRADE_VARIATION|CLOTHING_DIGITIGRADE_VARIATION_NO_NEW_ICON))) //Checks uniform compatibility
@@ -1046,12 +1046,12 @@ GLOBAL_LIST_EMPTY(features_by_species)
 
 		if((uniform_compatible && suit_compatible) || (suit_compatible && H.wear_suit?.flags_inv & HIDEJUMPSUIT)) //If the uniform is hidden, it doesnt matter if its compatible
 			for(var/obj/item/bodypart/BP as() in H.bodyparts)
-				if(BP.bodytype & BODYTYPE_DIGITIGRADE)
+				if(BP.bodyshape & BODYSHAPE_DIGITIGRADE)
 					BP.limb_id = BODYPART_ID_DIGITIGRADE
 
 		else
 			for(var/obj/item/bodypart/BP as() in H.bodyparts)
-				if(BP.bodytype & BODYTYPE_DIGITIGRADE)
+				if(BP.bodyshape & BODYSHAPE_DIGITIGRADE)
 					BP.limb_id = "lizard"
 	///End digi handling
 
@@ -1307,7 +1307,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		if(ITEM_SLOT_FEET)
 			if(H.num_legs < 2)
 				return FALSE
-			if((H.bodytype & BODYTYPE_DIGITIGRADE) && !(I.item_flags & IGNORE_DIGITIGRADE))
+			if((H.bodyshape & BODYSHAPE_DIGITIGRADE) && !(I.item_flags & IGNORE_DIGITIGRADE))
 				if(!(I.supports_variations_flags & (CLOTHING_DIGITIGRADE_VARIATION|CLOTHING_DIGITIGRADE_VARIATION_NO_NEW_ICON)))
 					if(!disable_warning)
 						to_chat(H, span_warning("The footwear around here isn't compatible with your feet!"))
