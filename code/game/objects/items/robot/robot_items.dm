@@ -685,7 +685,7 @@
 	icon_state = "shield0"
 	START_PROCESSING(SSfastprocess, src)
 	host = loc
-	RegisterSignal(host, COMSIG_LIVING_DEATH, .proc/on_death)
+	RegisterSignal(host, COMSIG_LIVING_DEATH, PROC_REF(on_death))
 
 /obj/item/borg/projectile_dampen/proc/on_death(datum/source, gibbed)
 	SIGNAL_HANDLER

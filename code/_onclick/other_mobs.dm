@@ -203,6 +203,11 @@
 		return TRUE
 	return FALSE
 
+
+/*
+	Aliens
+	Defaults to same as monkey in most places
+*/
 /mob/living/carbon/alien/resolve_unarmed_attack(atom/attack_target, list/modifiers)
 	attack_target.attack_alien(src, modifiers)
 
