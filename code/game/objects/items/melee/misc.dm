@@ -400,7 +400,7 @@
 	sleep(3)
 	if (!QDELETED(H))
 		if(!QDELETED(B))
-			H.internal_organs -= B
+			H.organs -= B
 			qdel(B)
 		new /obj/effect/gibspawner/generic(H.drop_location(), H)
 		return BRUTELOSS
