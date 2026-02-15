@@ -1,20 +1,11 @@
-/*
-//////////////////////////////////////
-
-Deafness
-
-	Slightly noticeable.
-	Lowers resistance.
-	Decreases stage speed slightly.
-	Decreases transmittablity.
-	Intense Level.
-
-Bonus
-	Causes intermittent loss of hearing.
-
-//////////////////////////////////////
+/**Deafness
+ * Slightly decreases stealth
+ * Lowers Resistance
+ * Slightly decreases stage speed
+ * Decreases transmissibility
+ * Intense level
+ * Bonus: Causes intermittent loss of hearing.
 */
-
 /datum/symptom/deafness
 
 	name = "Deafness"
@@ -33,6 +24,7 @@ Bonus
 	bodies = list("Ear")
 	threshold_desc = "<b>Resistance 9:</b> Causes permanent deafness, instead of intermittent.<br>\
 						<b>Stealth 4:</b> The symptom remains hidden until active."
+	var/causes_permanent_deafness = FALSE
 
 /datum/symptom/deafness/severityset(datum/disease/advance/A)
 	. = ..()
@@ -40,12 +32,17 @@ Bonus
 		severity += 1
 
 /datum/symptom/deafness/Start(datum/disease/advance/A)
-	if(!..())
+	. = ..()
+	if(!.)
 		return
 	if(A.stealth >= 4)
 		suppress_warning = TRUE
 	if(A.resistance >= 9) //permanent deafness
-		power = 2
+		causes_permanent_deafness = TRUE
+
+/datum/symptom/deafness/End(datum/disease/advance/advanced_disease)
+	REMOVE_TRAIT(advanced_disease.affected_mob, TRAIT_DEAF, DISEASE_TRAIT)
+	return ..()
 
 /datum/symptom/deafness/Activate(datum/disease/advance/advanced_disease)
 	. = ..()
@@ -60,11 +57,22 @@ Bonus
 			if(prob(base_message_chance) && !suppress_warning)
 				to_chat(infected_mob, span_warning("[pick("You hear a ringing in your ear.", "Your ears pop.")]"))
 		if(5)
-			if(power >= 2)
-				if(istype(ears) && ears.damage < ears.maxHealth)
+			if(causes_permanent_deafness)
+				if(ears.damage < ears.maxHealth)
 					to_chat(infected_mob, span_userdanger("Your ears pop painfully and start bleeding!"))
-					ears.damage = max(ears.damage, ears.maxHealth)
+					// Just absolutely murder me man
+					ears.apply_organ_damage(ears.maxHealth)
 					infected_mob.emote("scream")
+					ADD_TRAIT(infected_mob, TRAIT_DEAF, DISEASE_TRAIT)
 			else
 				to_chat(infected_mob, span_userdanger("Your ears pop and begin ringing loudly!"))
-				infected_mob.minimumDeafTicks(20)
+				ears.deaf = min(20, ears.deaf + 15)
+
+/datum/symptom/deafness/on_stage_change(datum/disease/advance/advanced_disease)
+	. = ..()
+	if(!.)
+		return FALSE
+	var/mob/living/carbon/infected_mob = advanced_disease.affected_mob
+	if(advanced_disease.stage < 5 || !causes_permanent_deafness)
+		REMOVE_TRAIT(infected_mob, TRAIT_DEAF, DISEASE_TRAIT)
+	return TRUE

@@ -60,7 +60,7 @@
 // Hair Definitions //
 //////////////////////
 /datum/sprite_accessory/hair
-	icon = 'icons/mob/species/human/human_face.dmi' // default icon for all hairs
+	icon = 'icons/mob/human/human_face.dmi' // default icon for all hairs
 	var/y_offset = 0 // Y offset to apply so we can have hair that reaches above the player sprite's visual bounding box
 
 	// please make sure they're sorted alphabetically and, where needed, categorized
@@ -999,7 +999,7 @@
 /////////////////////////////
 
 /datum/sprite_accessory/facial_hair
-	icon = 'icons/mob/species/human/human_face.dmi'
+	icon = 'icons/mob/human/human_face.dmi'
 	// By default, only characters generated as male can get facial hair
 
 // please make sure they're sorted alphabetically and categorized
@@ -1666,7 +1666,7 @@
 /////////////////////////////
 
 /datum/sprite_accessory/lizard_markings
-	icon = 'icons/mob/species/lizard/lizard_markings.dmi'
+	icon = 'icons/mob/human/species/lizard/lizard_markings.dmi'
 
 /datum/sprite_accessory/lizard_markings/dtiger
 	name = "Dark Tiger Body"
@@ -1689,7 +1689,7 @@
 	var/spine_key = NONE
 
 /datum/sprite_accessory/tails/lizard
-	icon = 'icons/mob/species/lizard/lizard_tails.dmi'
+	icon = 'icons/mob/human/species/lizard/lizard_tails.dmi'
 	spine_key = SPINE_KEY_LIZARD
 
 /datum/sprite_accessory/tails/lizard/none
@@ -1737,7 +1737,7 @@
 
 
 /datum/sprite_accessory/snouts
-	icon = 'icons/mob/species/lizard/lizard_misc.dmi'
+	icon = 'icons/mob/human/species/lizard/lizard_misc.dmi'
 
 /datum/sprite_accessory/snouts/sharp
 	name = "Sharp"
@@ -1756,7 +1756,7 @@
 	icon_state = "roundlight"
 
 /datum/sprite_accessory/horns
-	icon = 'icons/mob/species/lizard/lizard_misc.dmi'
+	icon = 'icons/mob/human/species/lizard/lizard_misc.dmi'
 
 /datum/sprite_accessory/horns/simple
 	name = "Simple"
@@ -1945,7 +1945,7 @@
 	dimension_y = 34
 
 /datum/sprite_accessory/frills
-	icon = 'icons/mob/species/lizard/lizard_misc.dmi'
+	icon = 'icons/mob/human/species/lizard/lizard_misc.dmi'
 
 /datum/sprite_accessory/frills/simple
 	name = "Simple"
@@ -1960,10 +1960,10 @@
 	icon_state = "aqua"
 
 /datum/sprite_accessory/tail_spines
-	icon = 'icons/mob/species/lizard/lizard_spines.dmi'
+	icon = 'icons/mob/human/species/lizard/lizard_spines.dmi'
 
 /datum/sprite_accessory/spines
-	icon = 'icons/mob/species/lizard/lizard_spines.dmi'
+	icon = 'icons/mob/human/species/lizard/lizard_spines.dmi'
 
 /datum/sprite_accessory/spines/short
 	name = "Short"
@@ -2006,15 +2006,15 @@
 	icon_state = "aqua"
 
 /datum/sprite_accessory/moth_wings
-	icon = 'icons/mob/species/moth/moth_wings.dmi'
+	icon = 'icons/mob/human/species/moth/moth_wings.dmi'
 	color_src = null
 
 /datum/sprite_accessory/moth_antennae
-	icon = 'icons/mob/species/moth/moth_antennae.dmi'
+	icon = 'icons/mob/human/species/moth/moth_antennae.dmi'
 	color_src = null
 
 /datum/sprite_accessory/moth_wingsopen
-	icon = 'icons/mob/species/moth/moth_wingsopen.dmi'
+	icon = 'icons/mob/human/species/moth/moth_wingsopen.dmi'
 	color_src = null
 	dimension_x = 76
 	center = TRUE
@@ -2202,7 +2202,7 @@
 	locked = TRUE
 
 /datum/sprite_accessory/moth_antennae //Finally splitting the sprite
-	icon = 'icons/mob/species/moth/moth_antennae.dmi'
+	icon = 'icons/mob/human/species/moth/moth_antennae.dmi'
 	color_src = null
 
 /datum/sprite_accessory/moth_antennae/plain
@@ -2295,7 +2295,7 @@
 	icon_state = "strawberry"
 
 /datum/sprite_accessory/moth_markings // the markings that moths can have. finally something other than the boring tan
-	icon = 'icons/mob/species/moth/moth_markings.dmi'
+	icon = 'icons/mob/human/species/moth/moth_markings.dmi'
 	color_src = null
 
 /datum/sprite_accessory/moth_markings/reddish

@@ -3,13 +3,13 @@
 	var/static/datum/universal_icon/lizard_with_snout
 
 	if (isnull(lizard))
-		lizard = uni_icon('icons/mob/species/lizard/bodyparts.dmi', "lizard_head", EAST)
-		var/datum/universal_icon/eyes = uni_icon('icons/mob/species/human/human_face.dmi', "eyes", EAST)
+		lizard = uni_icon('icons/mob/human/species/lizard/bodyparts.dmi', "lizard_head", EAST)
+		var/datum/universal_icon/eyes = uni_icon('icons/mob/human/human_face.dmi', "eyes", EAST)
 		eyes.blend_color(COLOR_GRAY, ICON_MULTIPLY)
 		lizard.blend_icon(eyes, ICON_OVERLAY)
 
 		lizard_with_snout = lizard.copy()
-		lizard_with_snout.blend_icon(uni_icon('icons/mob/species/lizard/lizard_misc.dmi', "m_snout_round_ADJ", EAST), ICON_OVERLAY)
+		lizard_with_snout.blend_icon(uni_icon('icons/mob/human/species/lizard/lizard_misc.dmi', "m_snout_round_ADJ", EAST), ICON_OVERLAY)
 
 	var/datum/universal_icon/final_icon = include_snout ? lizard_with_snout.copy() : lizard.copy()
 
@@ -37,7 +37,7 @@
 /datum/preference/choiced/lizard_body_markings/icon_for(value)
 	var/datum/sprite_accessory/sprite_accessory = SSaccessories.lizard_markings_list[value]
 
-	var/datum/universal_icon/final_icon = uni_icon('icons/mob/species/lizard/bodyparts.dmi', "lizard_chest_m")
+	var/datum/universal_icon/final_icon = uni_icon('icons/mob/human/species/lizard/bodyparts.dmi', "lizard_chest_m")
 
 	if (sprite_accessory.icon_state != SPRITE_ACCESSORY_NONE && sprite_accessory.icon_state != "none")
 		var/datum/universal_icon/body_markings_icon = uni_icon(
@@ -199,7 +199,7 @@
 		body_icon = uni_icon('icons/effects/effects.dmi', "nothing")
 		for (var/body_part in body_parts)
 			var/gender = body_part == BODY_ZONE_CHEST ? "_m" : ""
-			body_icon.blend_icon(uni_icon('icons/mob/species/lizard/bodyparts.dmi', "lizard_[body_part][gender]", dir = EAST), ICON_OVERLAY)
+			body_icon.blend_icon(uni_icon('icons/mob/human/species/lizard/bodyparts.dmi', "lizard_[body_part][gender]", dir = EAST), ICON_OVERLAY)
 
 	var/datum/universal_icon/final_icon = body_icon.copy()
 
@@ -212,10 +212,10 @@
 		var/icon_state_name
 		switch(key)
 			if("tail")
-				icon_file = 'icons/mob/species/lizard/lizard_tails.dmi'
+				icon_file = 'icons/mob/human/species/lizard/lizard_tails.dmi'
 				icon_state_name = "m_tail_lizard_[sprite_accessory.icon_state]_[ex]"
 			if("spines")
-				icon_file = 'icons/mob/species/lizard/lizard_spines.dmi'
+				icon_file = 'icons/mob/human/species/lizard/lizard_spines.dmi'
 				icon_state_name = "m_[key]_[sprite_accessory.icon_state]_[ex]"
 			else
 				icon_file = 'icons/mob/mutant_bodyparts.dmi'

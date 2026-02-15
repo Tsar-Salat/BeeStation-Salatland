@@ -90,7 +90,9 @@
 		return
 	switch(source_disease.stage)
 		if(4, 5)
-			ill_mob.restoreEars()
+			var/obj/item/organ/ears/ears = ill_mob.get_organ_slot(ORGAN_SLOT_EARS)
+			if(ears)
+				ears.adjustEarDamage(-4, -4)
 
 			if(HAS_TRAIT_FROM(ill_mob, TRAIT_BLIND, EYE_DAMAGE))
 				if(prob(20))

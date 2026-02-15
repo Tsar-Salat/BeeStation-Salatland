@@ -26,7 +26,7 @@
 	return TRUE
 
 /datum/bodypart_overlay/texture/spacey
-	blocks_emissive = FALSE
+	blocks_emissive = EMISSIVE_BLOCK_NONE
 	texture_icon_state = "spacey"
 	//texture_icon = 'icons/mob/human/textures.dmi'
 	//overlay_priority = BODYPART_OVERLAY_VOIDWALKER_CURSE

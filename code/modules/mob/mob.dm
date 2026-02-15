@@ -457,7 +457,7 @@
 // Convinience proc.  Collects crap that fails to equip either onto the mob's back, or drops it.
 // Used in job equipping so shit doesn't pile up at the start loc.
 /mob/living/carbon/human/proc/equip_or_collect(obj/item/W, slot)
-	if(W.mob_can_equip(src, null, slot, TRUE, TRUE))
+	if(W.mob_can_equip(src, slot, disable_warning = TRUE, bypass_equip_delay_self = TRUE))
 		//Mob can equip.  Equip it.
 		equip_to_slot_or_del(W, slot)
 	else

@@ -166,7 +166,7 @@
 		var/obj/item/organ/eyes/eyes = locate(/obj/item/organ/eyes) in src
 		// This is a bit of copy/paste code from eyes.dm:generate_body_overlay
 		if(eyes?.eye_icon_state && (head_flags & HEAD_EYESPRITES))
-			var/image/eyes_overlay = image('icons/mob/species/human/human_face.dmi', "[eyes.eye_icon_state]", layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER), dir = SOUTH)
+			var/image/eyes_overlay = image('icons/mob/human/human_face.dmi', "[eyes.eye_icon_state]", layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER), dir = SOUTH)
 			if(head_flags & HEAD_EYECOLOR)
 				if(eyes.eye_color)
 					eyes_overlay.color = eyes.eye_color
@@ -179,7 +179,7 @@
 				worn_face_offset.apply_offset(eyes_overlay)
 			. += eyes_overlay
 		else if(!eyes && (head_flags & HEAD_EYEHOLES))
-			var/image/no_eyes = image('icons/mob/species/human/human_face.dmi', "eyes_missing", layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER), dir = SOUTH)
+			var/image/no_eyes = image('icons/mob/human/human_face.dmi', "eyes_missing", layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER), dir = SOUTH)
 			worn_face_offset?.apply_offset(no_eyes)
 			. += no_eyes
 

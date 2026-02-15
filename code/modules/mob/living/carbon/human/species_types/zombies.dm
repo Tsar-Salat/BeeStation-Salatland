@@ -112,6 +112,15 @@
 /datum/species/zombie/infectious/on_species_gain(mob/living/carbon/human/new_zombie, datum/species/old_species, pref_load, regenerate_icons)
 	. = ..()
 	new_zombie.set_combat_mode(TRUE)
+
+	// Deal with the source of this zombie corruption
+	// Infection organ needs to be handled separately from mutant_organs
+	// because it persists through species transitions
+	var/obj/item/organ/zombie_infection/infection = new_zombie.get_organ_slot(ORGAN_SLOT_ZOMBIE)
+	if(isnull(infection))
+		infection = new()
+		infection.Insert(new_zombie)
+
 	new_zombie.AddComponent( \
 		/datum/component/mutant_hands, \
 		mutant_hand_path = muthands_path, \
@@ -152,18 +161,6 @@
 	infection = C.get_organ_slot(ORGAN_SLOT_ZOMBIE)
 	if(infection)
 		qdel(infection)
-
-/datum/species/zombie/infectious/on_species_gain(mob/living/carbon/C, datum/species/old_species, pref_load, regenerate_icons)
-	. = ..()
-
-	// Deal with the source of this zombie corruption
-	//  Infection organ needs to be handled separately from mutant_organs
-	//  because it persists through species transitions
-	var/obj/item/organ/zombie_infection/infection
-	infection = C.get_organ_slot(ORGAN_SLOT_ZOMBIE)
-	if(!infection)
-		infection = new()
-		infection.Insert(C)
 
 /datum/species/zombie/infectious/viral
 	name = "\improper Infected Zombie"

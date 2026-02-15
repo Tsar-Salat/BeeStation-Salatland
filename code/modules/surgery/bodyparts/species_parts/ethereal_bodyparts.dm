@@ -1,5 +1,5 @@
 /obj/item/bodypart/head/ethereal
-	icon_greyscale = 'icons/mob/species/ethereal/bodyparts.dmi'
+	icon_greyscale = 'icons/mob/human/species/ethereal/bodyparts.dmi'
 	limb_id = SPECIES_ETHEREAL
 	is_dimorphic = FALSE
 	dmg_overlay_type = null
@@ -17,7 +17,7 @@
 		species_color = eth_holder.current_color
 
 /obj/item/bodypart/chest/ethereal
-	icon_greyscale = 'icons/mob/species/ethereal/bodyparts.dmi'
+	icon_greyscale = 'icons/mob/human/species/ethereal/bodyparts.dmi'
 	limb_id = SPECIES_ETHEREAL
 	is_dimorphic = FALSE
 	dmg_overlay_type = null
@@ -32,7 +32,7 @@
 		species_color = eth_holder.current_color
 
 /obj/item/bodypart/arm/left/ethereal
-	icon_greyscale = 'icons/mob/species/ethereal/bodyparts.dmi'
+	icon_greyscale = 'icons/mob/human/species/ethereal/bodyparts.dmi'
 	limb_id = SPECIES_ETHEREAL
 	dmg_overlay_type = null
 	attack_type = BURN //burn bish
@@ -49,7 +49,7 @@
 		species_color = eth_holder.current_color
 
 /obj/item/bodypart/arm/right/ethereal
-	icon_greyscale = 'icons/mob/species/ethereal/bodyparts.dmi'
+	icon_greyscale = 'icons/mob/human/species/ethereal/bodyparts.dmi'
 	limb_id = SPECIES_ETHEREAL
 	dmg_overlay_type = null
 	attack_type = BURN // bish buzz
@@ -66,7 +66,7 @@
 		species_color = eth_holder.current_color
 
 /obj/item/bodypart/leg/left/ethereal
-	icon_greyscale = 'icons/mob/species/ethereal/bodyparts.dmi'
+	icon_greyscale = 'icons/mob/human/species/ethereal/bodyparts.dmi'
 	limb_id = SPECIES_ETHEREAL
 	dmg_overlay_type = null
 	attack_type = BURN // bish buzz
@@ -82,7 +82,7 @@
 		species_color = eth_holder.current_color
 
 /obj/item/bodypart/leg/right/ethereal
-	icon_greyscale = 'icons/mob/species/ethereal/bodyparts.dmi'
+	icon_greyscale = 'icons/mob/human/species/ethereal/bodyparts.dmi'
 	limb_id = SPECIES_ETHEREAL
 	dmg_overlay_type = null
 	attack_type = BURN // bish buzz

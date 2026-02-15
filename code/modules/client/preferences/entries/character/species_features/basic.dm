@@ -1,7 +1,7 @@
 /proc/generate_icon_with_head_accessory(datum/sprite_accessory/sprite_accessory)
 	var/static/datum/universal_icon/head_icon
 	if (isnull(head_icon))
-		head_icon = uni_icon('icons/mob/species/human/bodyparts_greyscale.dmi', "human_head_m")
+		head_icon = uni_icon('icons/mob/human/bodyparts_greyscale.dmi', "human_head_m")
 		head_icon.blend_color(skintone2hex("caucasian1"), ICON_MULTIPLY)
 
 	var/datum/universal_icon/final_icon = head_icon.copy()
@@ -120,7 +120,7 @@
 		return uni_icon('icons/mob/landmarks.dmi', "x")
 
 	// Create base head
-	var/datum/universal_icon/final_icon = uni_icon('icons/mob/species/human/bodyparts_greyscale.dmi', "human_head_m")
+	var/datum/universal_icon/final_icon = uni_icon('icons/mob/human/bodyparts_greyscale.dmi', "human_head_m")
 	final_icon.blend_color(skintone2hex("caucasian1"), ICON_MULTIPLY)
 
 	// Use a standard facial hair style for the preview
@@ -261,7 +261,7 @@
 		return uni_icon('icons/mob/landmarks.dmi', "x")
 
 	// Create base head
-	var/datum/universal_icon/final_icon = uni_icon('icons/mob/species/human/bodyparts_greyscale.dmi', "human_head_m")
+	var/datum/universal_icon/final_icon = uni_icon('icons/mob/human/bodyparts_greyscale.dmi', "human_head_m")
 	final_icon.blend_color(skintone2hex("caucasian1"), ICON_MULTIPLY)
 
 	// Use a standard hair style for the preview

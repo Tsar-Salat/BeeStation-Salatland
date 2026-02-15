@@ -87,7 +87,7 @@
 ///The mob is a spooky phantasm or an evil ghast of such nature.
 #define MOB_SPIRIT (1 << 9)
 
-#define DEFAULT_BODYPART_ICON_ORGANIC 'icons/mob/species/human/bodyparts_greyscale.dmi'
+#define DEFAULT_BODYPART_ICON_ORGANIC 'icons/mob/human/bodyparts_greyscale.dmi'
 #define DEFAULT_BODYPART_ICON_ROBOTIC 'icons/mob/augmentation/augments.dmi'
 
 #define MONKEY_BODYPART "monkey"

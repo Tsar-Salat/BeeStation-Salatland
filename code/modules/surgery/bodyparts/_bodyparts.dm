@@ -206,7 +206,6 @@
 		return FALSE
 	return  ..()
 
-
 /obj/item/bodypart/proc/on_forced_removal(atom/old_loc, dir, forced, list/old_locs)
 	SIGNAL_HANDLER
 
@@ -554,9 +553,6 @@
 	if(HAS_TRAIT(owner, TRAIT_EASYLIMBDISABLE))
 		disable_threshold = 0.6 //Easy limb disable disables the limb at 40% health instead of 0%
 
-	else
-		disable_threshold = 1
-
 	if(total_damage >= max_damage * disable_threshold)
 		if(!last_maxed)
 			if(owner.stat < UNCONSCIOUS)
@@ -568,7 +564,6 @@
 	if(bodypart_disabled && total_damage <= max_damage * 0.5)
 		last_maxed = FALSE
 		set_disabled(FALSE)
-
 
 ///Proc to change the value of the `disabled` variable and react to the event of its change.
 /obj/item/bodypart/proc/set_disabled(new_disabled)
@@ -955,6 +950,19 @@
 
 	drop_organs()
 	return ..()
+
+/// INTERNAL PROC, DO NOT USE
+/// Properly sets us up to manage an inserted embeded object
+/obj/item/bodypart/proc/_embed_object(obj/item/embed)
+	if(embed in embedded_objects) // go away
+		return
+	// We don't need to do anything with projectile embedding, because it will never reach this point
+	embedded_objects += embed
+
+/// INTERNAL PROC, DO NOT USE
+/// Cleans up any attachment we have to the embedded object, removes it from our list
+/obj/item/bodypart/proc/_unembed_object(obj/item/unembed)
+	embedded_objects -= unembed
 
 //A multi-purpose setter for all things immediately important to the icon and iconstate of the limb.
 /obj/item/bodypart/proc/change_appearance(icon, id, greyscale, dimorphic)

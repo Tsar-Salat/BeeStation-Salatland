@@ -97,7 +97,7 @@
 	if(isnull(eye_icon_state))
 		return list()
 
-	var/mutable_appearance/eye_overlay = mutable_appearance('icons/mob/species/human/human_face.dmi', "[eye_icon_state]", layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
+	var/mutable_appearance/eye_overlay = mutable_appearance('icons/mob/human/human_face.dmi', "[eye_icon_state]", layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
 	var/list/overlays = list(eye_overlay)
 
 	var/obscured = parent.check_obscured_slots()
@@ -275,7 +275,7 @@
 
 /obj/item/organ/eyes/robotic/glow/Initialize(mapload)
 	. = ..()
-	mob_overlay = image('icons/mob/species/human/human_face.dmi', "eyes_glow_gs")
+	mob_overlay = image('icons/mob/human/human_face.dmi', "eyes_glow_gs")
 
 /obj/item/organ/eyes/robotic/glow/Destroy()
 	terminate_effects()

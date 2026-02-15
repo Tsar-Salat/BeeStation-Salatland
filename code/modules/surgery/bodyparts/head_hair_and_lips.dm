@@ -72,7 +72,7 @@
 	if(!facial_hair_hidden && lip_style && (head_flags & HEAD_LIPS))
 		//not a sprite accessory, don't ask
 		//Overlay
-		var/image/lip_overlay = image('icons/mob/species/human/human_face.dmi', "lips_[lip_style]", layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER), dir = image_dir)
+		var/image/lip_overlay = image('icons/mob/human/human_face.dmi', "lips_[lip_style]", layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER), dir = image_dir)
 		lip_overlay.color = lip_color
 		//Emissive blocker
 		if(blocks_emissive)
@@ -146,7 +146,7 @@
 /// Returns an appropriate debrained overlay
 /obj/item/bodypart/head/proc/get_debrain_overlay(can_rotate = TRUE)
 	RETURN_TYPE(/image)
-	var/debrain_icon = 'icons/mob/species/human/human_face.dmi'
+	var/debrain_icon = 'icons/mob/human/human_face.dmi'
 	var/debrain_icon_state = "debrained"
 	if(bodytype & BODYTYPE_ALIEN)
 		debrain_icon = 'icons/mob/species/alien/bodyparts.dmi'
@@ -169,7 +169,7 @@
 /// Returns an appropriate missing eyes overlay
 /obj/item/bodypart/head/proc/get_eyeless_overlay(can_rotate = TRUE)
 	RETURN_TYPE(/image)
-	var/eyeless_icon = 'icons/mob/species/human/human_face.dmi'
+	var/eyeless_icon = 'icons/mob/human/human_face.dmi'
 	var/eyeless_icon_state = "eyes_missing"
 
 	var/image/eyeless_overlay

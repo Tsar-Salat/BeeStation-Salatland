@@ -83,5 +83,3 @@
 	name = "infected zombie claw"
 	viral = TRUE
 	force = 15
-
-
