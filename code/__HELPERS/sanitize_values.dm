@@ -52,7 +52,6 @@
 				return default
 	return default
 
-/// Return `color` if it is a valid hex color, otherwise `default`
 /proc/sanitize_hexcolor(color, desired_format = DEFAULT_HEX_COLOR_LEN, include_crunch = TRUE, default)
 	var/crunch = include_crunch ? "#" : ""
 	if(!istext(color))

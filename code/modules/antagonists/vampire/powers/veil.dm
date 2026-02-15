@@ -60,7 +60,7 @@
 	user.skin_tone = pick(GLOB.skin_tones)
 	user.hairstyle = random_hairstyle(user.gender)
 	user.facial_hairstyle = pick(random_facial_hairstyle(user.gender), "Shaved")
-	user.hair_color = random_short_color()
+	user.hair_color = ready_random_color()
 	user.facial_hair_color = user.hair_color
 	user.underwear = random_underwear(user.gender)
 	user.undershirt = random_undershirt(user.gender)

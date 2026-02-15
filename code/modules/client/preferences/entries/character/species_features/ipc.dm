@@ -55,7 +55,7 @@
 		eyes_organ.old_eye_color = value
 
 /datum/preference/color/ipc_screen_color/create_default_value()
-	return "#ffffff"
+	return COLOR_WHITE
 
 /datum/preference/choiced/ipc_antenna
 	db_key = "feature_ipc_antenna"

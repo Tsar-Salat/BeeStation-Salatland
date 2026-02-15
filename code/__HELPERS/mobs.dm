@@ -23,7 +23,7 @@
 		if("albino")
 			return "#" + pick("cc","dd","ee","ff") + pick("00","11","22","33","44","55","66","77","88","99") + pick("00","11","22","33","44","55","66","77","88","99")
 		else
-			return "#000000"
+			return COLOR_BLACK
 
 
 /proc/random_hair_color()

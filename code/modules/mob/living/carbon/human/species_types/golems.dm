@@ -161,7 +161,7 @@
 /datum/species/golem/diamond
 	name = "Diamond Golem"
 	id = SPECIES_GOLEM_DIAMOND
-	fixed_mut_color = "#00ffff"
+	fixed_mut_color = COLOR_CYAN
 	damage_modifier = 70 //up from 55
 	meat = /obj/item/stack/ore/diamond
 	info_text = "As a " + span_danger("Diamond Golem") + ", you are more resistant than the average golem."
@@ -279,7 +279,7 @@
 /datum/species/golem/titanium
 	name = "Titanium Golem"
 	id = SPECIES_GOLEM_TITANIUM
-	fixed_mut_color = "#ffffff"
+	fixed_mut_color = COLOR_WHITE
 	meat = /obj/item/stack/ore/titanium
 	info_text = "As a " + span_danger("Titanium Golem") + ", you are immune to ash storms, and slightly more resistant to burn damage."
 	prefix = "Titanium"
@@ -306,7 +306,7 @@
 /datum/species/golem/plastitanium
 	name = "Plastitanium Golem"
 	id = SPECIES_GOLEM_PLASTITANIUM
-	fixed_mut_color = "#333333"
+	fixed_mut_color = "#888888"
 	meat = /obj/item/stack/ore/titanium
 	info_text = "As a " + span_danger("Plastitanium Golem") + ", you are immune to both ash storms and lava, and slightly more resistant to burn damage."
 	prefix = "Plastitanium"
@@ -1028,7 +1028,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/cloth_pile)
 	)
 	prefix = "Plastic"
 	special_names = list("Sheet", "Bag", "Bottle")
-	fixed_mut_color = "#fffa"
+	fixed_mut_color = "#ffffffaa"
 	info_text = "As a " + span_danger("Plastic Golem") + ", you are capable of ventcrawling and passing through plastic flaps as long as you are naked."
 
 /datum/species/golem/bronze

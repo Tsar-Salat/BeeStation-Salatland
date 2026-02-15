@@ -22,6 +22,6 @@
 
 	H.hairstyle = "Long Hair 3"
 	H.facial_hairstyle = "Beard (Full)"
-	H.hair_color = "#FFFFFF"
-	H.facial_hair_color = "#FFFFFF"
+	H.hair_color = COLOR_WHITE
+	H.facial_hair_color = COLOR_WHITE
 	H.update_body_parts(update_limb_data = TRUE)

@@ -32,13 +32,13 @@
 	if(visuals_only)
 		return
 	H.fully_replace_character_name(null,"Waldo")
-	H.eye_color = "#000000"
+	H.eye_color = COLOR_BLACK
 	H.gender = MALE
 	H.skin_tone = "caucasian3"
 	H.hairstyle = "Business Hair 3"
 	H.facial_hairstyle = "Shaved"
-	H.hair_color = "#000000"
-	H.facial_hair_color = "#000000"
+	H.hair_color = COLOR_BLACK
+	H.facial_hair_color = COLOR_BLACK
 	H.update_body()
 
 	var/list/no_drops = list()

@@ -183,13 +183,13 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/mirror)
 					H.dna.update_ui_block(DNA_SKIN_TONE_BLOCK)
 
 			else if(HAS_TRAIT(H, TRAIT_MUTANT_COLORS) && !HAS_TRAIT(H, TRAIT_FIXED_MUTANT_COLORS))
-				var/new_mutantcolor = tgui_color_picker(user, "Choose your skin color:", "Race change",H.dna.features["mcolor"])
+				var/new_mutantcolor = tgui_color_picker(user, "Choose your skin color:", "Race change", H.dna.features["mcolor"])
 				if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
 					return
 				if(new_mutantcolor)
-					var/temp_hsv = RGBtoHSV(new_mutantcolor)
+					var/list/mutant_hsv = rgb2hsv(new_mutantcolor)
 
-					if(ReadHSV(temp_hsv)[3] >= ReadHSV("#7F7F7F")[3]) // mutantcolors must be bright
+					if(mutant_hsv[3] >= 50) // mutantcolors must be bright
 						H.dna.features["mcolor"] = sanitize_hexcolor(new_mutantcolor)
 						H.dna.update_uf_block(DNA_MUTANT_COLOR_BLOCK)
 

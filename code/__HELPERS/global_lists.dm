@@ -7,12 +7,12 @@
 	for(var/spath in subtypesof(/datum/species))
 		var/datum/species/S = new spath()
 		GLOB.species_list[S.id] = spath
-	sort_list(GLOB.species_list)
+	sort_list(GLOB.species_list, /proc/cmp_typepaths_asc)
 
 	//Surgeries
 	for(var/path in subtypesof(/datum/surgery))
 		GLOB.surgeries_list += new path()
-	sort_list(GLOB.surgeries_list)
+	sort_list(GLOB.surgeries_list, /proc/cmp_typepaths_asc)
 	GLOB.emote_list = init_emote_list()
 
 	// Keybindings

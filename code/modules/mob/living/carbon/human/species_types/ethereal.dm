@@ -42,12 +42,6 @@
 	var/default_color
 	var/EMPeffect = FALSE
 	var/emageffect = FALSE
-	var/r1
-	var/g1
-	var/b1
-	var/static/r2 = 237
-	var/static/g2 = 164
-	var/static/b2 = 149
 	//this is shit but how do i fix it? no clue.
 	var/drain_time = 0 //used to keep ethereals from spam draining power sources
 	var/obj/effect/dummy/lighting_obj/ethereal_light
@@ -61,16 +55,12 @@
 	. = ..()
 	if(!ishuman(new_ethereal))
 		return
-	var/mob/living/carbon/human/ethereal = new_ethereal
-	default_color = ethereal.dna.features["ethcolor"]
-	r1 = GETREDPART(default_color)
-	g1 = GETGREENPART(default_color)
-	b1 = GETBLUEPART(default_color)
-	RegisterSignal(ethereal, COMSIG_ATOM_SHOULD_EMAG, PROC_REF(should_emag))
-	RegisterSignal(ethereal, COMSIG_ATOM_ON_EMAG, PROC_REF(on_emag))
-	RegisterSignal(ethereal, COMSIG_ATOM_EMP_ACT, PROC_REF(on_emp_act))
-	ethereal_light = ethereal.mob_light(light_type = /obj/effect/dummy/lighting_obj/moblight/species)
-	spec_updatehealth(ethereal)
+	default_color = new_ethereal.dna.features["ethcolor"]
+	RegisterSignal(new_ethereal, COMSIG_ATOM_SHOULD_EMAG, PROC_REF(should_emag))
+	RegisterSignal(new_ethereal, COMSIG_ATOM_ON_EMAG, PROC_REF(on_emag))
+	RegisterSignal(new_ethereal, COMSIG_ATOM_EMP_ACT, PROC_REF(on_emp_act))
+	ethereal_light = new_ethereal.mob_light(light_type = /obj/effect/dummy/lighting_obj/moblight/species)
+	spec_updatehealth(new_ethereal)
 	new_ethereal.set_safe_hunger_level()
 
 	var/obj/item/organ/heart/ethereal/ethereal_heart = new_ethereal.get_organ_slot(ORGAN_SLOT_HEART)
@@ -101,15 +91,16 @@
 	if(!ethereal_light)
 		return
 
-	if(default_color != ethereal.dna.features["ethcolor"])
-		var/new_color = ethereal.dna.features["ethcolor"]
-		r1 = GETREDPART(new_color)
-		g1 = GETGREENPART(new_color)
-		b1 = GETBLUEPART(new_color)
 	if(ethereal.stat != DEAD && !EMPeffect)
 		var/healthpercent = max(ethereal.health, 0) / 100
 		if(!emageffect)
-			current_color = rgb(r2 + ((r1-r2)*healthpercent), g2 + ((g1-g2)*healthpercent), b2 + ((b1-b2)*healthpercent))
+			var/static/list/skin_color = rgb2num("#eda495")
+			var/list/colors = rgb2num(ethereal.dna.features["ethcolor"])
+			var/list/built_color = list()
+			for(var/i in 1 to 3)
+				built_color += skin_color[i] + ((colors[i] - skin_color[i]) * healthpercent)
+			current_color = rgb(built_color[1], built_color[2], built_color[3])
+
 		ethereal_light.set_light_range_power_color(1 + (2 * healthpercent), 1 + (1 * healthpercent), current_color)
 		ethereal_light.set_light_on(TRUE)
 		fixed_mut_color = current_color
@@ -118,7 +109,7 @@
 		ethereal.set_haircolor(current_color, override = TRUE,  update = TRUE)
 	else
 		ethereal_light.set_light_on(FALSE)
-		var/dead_color = rgb(128,128,128)
+		var/dead_color = COLOR_GRAY
 		fixed_mut_color = dead_color
 		ethereal.update_body()
 		ethereal.set_facial_haircolor(dead_color, override = TRUE, update = FALSE)
@@ -165,7 +156,7 @@
 /datum/species/ethereal/proc/handle_emag(mob/living/carbon/human/H)
 	if(!emageffect)
 		return
-	current_color = "#[GLOB.color_list_ethereal[pick(GLOB.color_list_ethereal)]]"	//Picks a random colour from the Ethereal colour list
+	current_color = GLOB.color_list_ethereal[pick(GLOB.color_list_ethereal)]
 	spec_updatehealth(H)
 	addtimer(CALLBACK(src, PROC_REF(handle_emag), H), 5) //Call ourselves every 0.5 seconds to change color
 

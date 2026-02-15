@@ -159,7 +159,7 @@
 /datum/reagent/consumable/ethanol/kahlua/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()
 	affected_mob.set_dizzy_if_lower(10 SECONDS * REM * delta_time)
-	affected_mob.drowsyness = max(affected_mob.drowsyness - (3 * REM * delta_time), 0)
+	affected_mob.adjust_drowsiness(-6 SECONDS * REM * delta_time)
 	affected_mob.AdjustSleeping(-40 * REM * delta_time)
 
 	if(!HAS_TRAIT(affected_mob, TRAIT_ALCOHOL_TOLERANCE))
@@ -202,10 +202,9 @@
 
 /datum/reagent/consumable/ethanol/thirteenloko/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()
-	affected_mob.drowsyness = max(affected_mob.drowsyness - (7 * REM * delta_time))
-	affected_mob.AdjustSleeping(-40 * REM * delta_time)
+	affected_mob.adjust_drowsiness(-14 SECONDS * REM * delta_time)
+	affected_mob.AdjustSleeping(-4 SECONDS * REM * delta_time)
 	affected_mob.adjust_bodytemperature(-5 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * delta_time, affected_mob.get_body_temp_normal())
-
 	if(!HAS_TRAIT(affected_mob, TRAIT_ALCOHOL_TOLERANCE))
 		affected_mob.set_jitter_if_lower(10 SECONDS)
 
@@ -308,7 +307,7 @@
 
 /datum/reagent/consumable/ethanol/threemileisland/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()
-	affected_mob.set_drugginess(50 * REM * delta_time)
+	affected_mob.set_drugginess(100 SECONDS * REM * delta_time)
 
 /datum/reagent/consumable/ethanol/gin
 	name = "Gin"
@@ -769,7 +768,7 @@
 		return
 	to_chat(affected_mob, span_notice("You feel gentle warmth spread through your body!"))
 	light_holder = new(affected_mob)
-	light_holder.set_light(3, 0.7, "#FFCC00") //Tequila Sunrise makes you radiate dim light, like a sunrise!
+	light_holder.set_light(3, 0.7, COLOR_YELLOW) //Tequila Sunrise makes you radiate dim light, like a sunrise!
 
 /datum/reagent/consumable/ethanol/tequila_sunrise/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()
@@ -1043,7 +1042,7 @@
 
 /datum/reagent/consumable/ethanol/manhattan_proj/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()
-	affected_mob.set_drugginess(30 * REM * delta_time)
+	affected_mob.set_drugginess(1 MINUTES * REM * delta_time)
 
 /datum/reagent/consumable/ethanol/whiskeysoda
 	name = "Whiskey Soda"
@@ -1107,7 +1106,7 @@
 /datum/reagent/consumable/ethanol/snowwhite
 	name = "Snow White"
 	description = "A cold refreshment."
-	color = "#FFFFFF" // rgb: 255, 255, 255
+	color = COLOR_WHITE // rgb: 255, 255, 255
 	chemical_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_BOTANY | CHEMICAL_GOAL_BARTENDER_SERVING
 	boozepwr = 35
 	quality = DRINK_NICE
@@ -1700,7 +1699,7 @@
 
 /datum/reagent/consumable/ethanol/atomicbomb/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()
-	affected_mob.set_drugginess(50 * REM * delta_time)
+	affected_mob.set_drugginess(100 SECONDS * REM * delta_time)
 	if(!HAS_TRAIT(affected_mob, TRAIT_ALCOHOL_TOLERANCE))
 		affected_mob.adjust_confusion(2 SECONDS * REM * delta_time)
 	affected_mob.set_dizzy_if_lower(20 SECONDS * REM * delta_time)
@@ -1739,8 +1738,8 @@
 			if(DT_PROB(30, delta_time))
 				affected_mob.adjust_confusion(3 SECONDS * REM * delta_time)
 		if(55 to 200)
-			affected_mob.set_drugginess(55 * REM * delta_time)
-		if(201 to INFINITY)
+			affected_mob.set_drugginess(110 SECONDS * REM * delta_time)
+		if(200 to INFINITY)
 			affected_mob.adjustToxLoss(2 * REM * delta_time, updating_health = FALSE)
 			return UPDATE_MOB_HEALTH
 
@@ -1773,29 +1772,28 @@
 
 /datum/reagent/consumable/ethanol/neurotoxin/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()
-	affected_mob.set_drugginess(50 * REM * delta_time)
+	affected_mob.set_drugginess(100 SECONDS * REM * delta_time)
 	affected_mob.adjust_dizzy(4 SECONDS * REM * delta_time)
-	affected_mob.adjustOrganLoss(ORGAN_SLOT_BRAIN, 1 * REM * delta_time, 150)
 
+	var/need_mob_update
+	need_mob_update = affected_mob.adjustOrganLoss(ORGAN_SLOT_BRAIN, 1 * REM * delta_time, 150)
 	if(DT_PROB(10, delta_time))
-		affected_mob.adjustStaminaLoss(10, updating_stamina = FALSE)
-		. = UPDATE_MOB_HEALTH
+		need_mob_update += affected_mob.adjustStaminaLoss(10 * REM * delta_time, updating_stamina = FALSE)
 		affected_mob.drop_all_held_items()
 		to_chat(affected_mob, span_notice("You cant feel your hands!"))
-
-	if(current_cycle > 5)
+	if(current_cycle > 6)
 		if(DT_PROB(10, delta_time))
 			ADD_TRAIT(affected_mob, pick_trait(), "metabolize:[type]")
-			affected_mob.adjustStaminaLoss(10, updating_stamina = FALSE)
-			. = UPDATE_MOB_HEALTH
-
-		if(current_cycle > 30)
-			affected_mob.adjustOrganLoss(ORGAN_SLOT_BRAIN, 2 * REM * delta_time)
-			if(current_cycle > 50 && DT_PROB(7.5, delta_time))
+			need_mob_update += affected_mob.adjustStaminaLoss(10 * REM * delta_time, updating_stamina = FALSE)
+		if(current_cycle > 31)
+			need_mob_update += affected_mob.adjustOrganLoss(ORGAN_SLOT_BRAIN, 2 * REM * delta_time)
+			if(current_cycle > 51 && DT_PROB(7.5, delta_time))
 				if(!affected_mob.undergoing_cardiac_arrest() && affected_mob.can_heartattack())
 					affected_mob.set_heartattack(TRUE)
 					if(affected_mob.stat == CONSCIOUS)
 						affected_mob.visible_message(span_userdanger("[affected_mob] clutches at [affected_mob.p_their()] chest as if [affected_mob.p_their()] heart stopped!"))
+	if(need_mob_update)
+		return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/ethanol/neurotoxin/on_mob_end_metabolize(mob/living/carbon/affected_mob)
 	. = ..()
@@ -1847,8 +1845,9 @@
 			drinker.set_drugginess(2.5 MINUTES * REM * delta_time)
 			if(DT_PROB(23, delta_time))
 				drinker.emote(pick("twitch","giggle"))
-			drinker.adjustToxLoss(2 * REM * delta_time, updating_health = FALSE)
-			return UPDATE_MOB_HEALTH
+			if(DT_PROB(16, delta_time))
+				drinker.adjustToxLoss(2 * REM * delta_time, updating_health = FALSE)
+				return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/ethanol/eggnog
 	name = "Eggnog"
@@ -1877,7 +1876,7 @@
 /datum/reagent/consumable/ethanol/narsour
 	name = "Nar'Sour"
 	description = "Side effects include self-mutilation and hoarding plasteel."
-	color = RUNE_COLOR_DARKRED
+	color = COLOR_DARK_RED
 	chemical_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_BOTANY | CHEMICAL_GOAL_BARTENDER_SERVING
 	boozepwr = 10
 	quality = DRINK_FANTASTIC
@@ -1954,7 +1953,7 @@
 /datum/reagent/consumable/ethanol/quadruple_sec
 	name = "Quadruple Sec"
 	description = "Kicks just as hard as licking the power cell on a baton, but tastier."
-	color = "#cc0000"
+	color = COLOR_BLOOD
 	chemical_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_BOTANY | CHEMICAL_GOAL_BARTENDER_SERVING
 	boozepwr = 35
 	quality = DRINK_GOOD
@@ -1978,7 +1977,7 @@
 /datum/reagent/consumable/ethanol/quintuple_sec
 	name = "Quintuple Sec"
 	description = "Law, Order, Alcohol, and Police Brutality distilled into one single elixir of JUSTICE."
-	color = "#ff3300"
+	color = COLOR_MOSTLY_PURE_RED
 	chemical_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_BOTANY | CHEMICAL_GOAL_BARTENDER_SERVING
 	boozepwr = 60
 	quality = DRINK_FANTASTIC
@@ -2002,7 +2001,7 @@
 /datum/reagent/consumable/ethanol/grasshopper
 	name = "Grasshopper"
 	description = "A fresh and sweet dessert shooter. Difficult to look manly while drinking this."
-	color = "#00ff00"
+	color = COLOR_VIBRANT_LIME
 	chemical_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_BOTANY | CHEMICAL_GOAL_BARTENDER_SERVING
 	boozepwr = 25
 	quality = DRINK_GOOD
@@ -2034,7 +2033,7 @@
 /datum/reagent/consumable/ethanol/bastion_bourbon
 	name = "Bastion Bourbon"
 	description = "Soothing hot herbal brew with restorative properties. Hints of citrus and berry flavors."
-	color = "#00FFFF"
+	color = COLOR_CYAN
 	chemical_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_BOTANY | CHEMICAL_GOAL_BARTENDER_SERVING
 	boozepwr = 30
 	quality = DRINK_FANTASTIC
@@ -2085,7 +2084,7 @@
 /datum/reagent/consumable/ethanol/squirt_cider
 	name = "Squirt Cider"
 	description = "Fermented squirt extract with a nose of stale bread and ocean water. Whatever a squirt is."
-	color = "#FF0000"
+	color = COLOR_RED
 	chemical_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_BOTANY | CHEMICAL_GOAL_BARTENDER_SERVING
 	boozepwr = 40
 	taste_description = "stale bread with a staler aftertaste"
@@ -2437,7 +2436,7 @@
 /datum/reagent/consumable/ethanol/fruit_wine
 	name = "Fruit Wine"
 	description = "A wine made from grown plants."
-	color = "#FFFFFF"
+	color = COLOR_WHITE
 	chemical_flags = CHEMICAL_NOT_SYNTH | CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_BOTANY | CHEMICAL_GOAL_BARTENDER_SERVING
 	boozepwr = 35
 	quality = DRINK_GOOD

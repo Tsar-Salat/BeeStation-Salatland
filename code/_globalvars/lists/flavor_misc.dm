@@ -35,6 +35,7 @@ GLOBAL_LIST_INIT(color_list_ethereal, list(
 	"Royal Blue" = "#5860f5"
 ))
 
+//stores the ghost forms that support directional sprites
 GLOBAL_LIST_INIT(ghost_forms_with_directions_list, list(
 	"catghost",
 	"ghost_black",
@@ -65,7 +66,8 @@ GLOBAL_LIST_INIT(ghost_forms_with_directions_list, list(
 	"ghostking",
 	"skeleghost",
 ))
-//stores the ghost forms that support directional sprites
+
+//stores the ghost forms that support hair and other such things
 GLOBAL_LIST_INIT(ghost_forms_with_accessories_list, list(
 	"ghost",
 	"ghost_red",
@@ -90,8 +92,9 @@ GLOBAL_LIST_INIT(ghost_forms_with_accessories_list, list(
 	"ghost_pinksherbert",
 	"ghost_blazeit",
 	"ghost_mellow",
-	"ghost_camo",))
-	//stores the ghost forms that support hair and other such things
+	"ghost_camo",
+))
+
 
 GLOBAL_LIST_INIT(ai_core_display_screens, sort_list(list(
 	":thinking:",
@@ -349,54 +352,54 @@ GLOBAL_LIST_INIT(junkie_drugs, list(
 
 /// Naturally occuring hair colours
 GLOBAL_LIST_INIT(natural_hair_colours, list(
-	"f0e2ba",
-	"f4eede",
-	"c3a87c",
-	"ecd19d",
-	"feedb8",
-	"A0785F",
-	"996F53",
-	"60463D",
-	"9E7046",
-	"9B7257",
-	"523F38",
-	"50362F",
-	"A55A3B",
-	"4D3B2C",
-	"312016",
-	"432C20",
-	"2C1C11",
-	"2E3239",
-	"693822",
-	"663423"
+	"#f0e2ba",
+	"#f4eede",
+	"#c3a87c",
+	"#ecd19d",
+	"#feedb8",
+	"#A0785F",
+	"#996F53",
+	"#60463D",
+	"#9E7046",
+	"#9B7257",
+	"#523F38",
+	"#50362F",
+	"#A55A3B",
+	"#4D3B2C",
+	"#312016",
+	"#432C20",
+	"#2C1C11",
+	"#2E3239",
+	"#693822",
+	"#663423"
 ))
 
 /// Hair colours that aren't naturaly but relatively normal (I'll save the anime hair colours for custom characters)
 GLOBAL_LIST_INIT(female_dyed_hair_colours, list(
-	"733338",
-	"593333",
-	"401B24",
-	"492D38",
-	"3E262D",
+	"#733338",
+	"#593333",
+	"#401B24",
+	"#492D38",
+	"#3E262D",
 ))
 
 GLOBAL_LIST_INIT(secondary_dye_hair_colours, list(
-	"f0e2ba",
-	"f4eede",
-	"c3a87c",
-	"ecd19d",
-	"feedb8",
+	"#f0e2ba",
+	"#f4eede",
+	"#c3a87c",
+	"#ecd19d",
+	"#feedb8",
 ))
 
 GLOBAL_LIST_INIT(secondary_dye_female_hair_colours, list(
-	"f0e2ba",
-	"f4eede",
-	"c3a87c",
-	"ecd19d",
-	"feedb8",
-	"733338",
-	"593333",
-	"401B24",
-	"492D38",
-	"3E262D",
+	"#f0e2ba",
+	"#f4eede",
+	"#c3a87c",
+	"#ecd19d",
+	"#feedb8",
+	"#733338",
+	"#593333",
+	"#401B24",
+	"#492D38",
+	"#3E262D",
 ))

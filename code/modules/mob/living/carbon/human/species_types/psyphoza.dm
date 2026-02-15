@@ -21,7 +21,7 @@
 	mutant_bodyparts = list(
 		"psyphoza_cap" = "Portobello",
 		"body_size" = "Normal",
-		"mcolor" = "#ffffff"
+		"mcolor" = COLOR_WHITE
 	)
 	hair_color_mode = USE_FIXED_MUTANT_COLOR
 

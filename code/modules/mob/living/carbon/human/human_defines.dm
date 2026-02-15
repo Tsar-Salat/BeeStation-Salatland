@@ -11,7 +11,7 @@
 	flags_1 = PREVENT_CONTENTS_EXPLOSION_1
 
 	///Hair color
-	var/hair_color = "#000000"
+	var/hair_color = COLOR_BLACK
 	///Hair style
 	var/hairstyle = "Bald"
 	//Colours used for hair and facial hair gradients.
@@ -25,11 +25,11 @@
 		"None", //Facial Hair Gradient Style
 	)
 	///Facial hair colour
-	var/facial_hair_color = "#000000"
+	var/facial_hair_color = COLOR_BLACK
 	///Facial hair style
 	var/facial_hairstyle = "Shaved"
 	//Eye colour
-	var/eye_color = "#000000"
+	var/eye_color = COLOR_BLACK
 	var/skin_tone = "caucasian1"	//Skin tone
 	var/lip_style = null	//no lipstick by default- arguably misleading, as it could be used for general makeup
 	var/lip_color = COLOR_WHITE
@@ -41,7 +41,7 @@
 
 	//consider updating /mob/living/carbon/human/copy_clothing_prefs() if adding more of these
 	var/underwear = "Nude" //Which underwear the player wants
-	var/underwear_color = "#000000"
+	var/underwear_color = COLOR_BLACK
 	var/undershirt = "Nude" //Which undershirt the player wants
 	var/socks = "Nude" //Which socks the player wants
 	var/backbag = DBACKPACK //Which backpack type the player has chosen.

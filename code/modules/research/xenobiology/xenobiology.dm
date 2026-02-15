@@ -1048,7 +1048,7 @@
 
 	to_chat(user, span_notice("You slather the red gunk over [thingy], making it faster."))
 	thingy.remove_atom_colour(WASHABLE_COLOUR_PRIORITY)
-	thingy.add_atom_colour("#FF0000", FIXED_COLOUR_PRIORITY)
+	thingy.add_atom_colour(COLOR_RED, FIXED_COLOUR_PRIORITY)
 	ADD_TRAIT(thingy, TRAIT_SPEED_POTIONED, SLIME_POTION_TRAIT)
 	qdel(src)
 	return FALSE
@@ -1075,7 +1075,7 @@
 	to_chat(user, span_notice("You slather the blue gunk over [clothing], fireproofing it."))
 	clothing.name = "fireproofed [clothing.name]"
 	clothing.remove_atom_colour(WASHABLE_COLOUR_PRIORITY)
-	clothing.add_atom_colour("#000080", FIXED_COLOUR_PRIORITY)
+	clothing.add_atom_colour(COLOR_NAVY, FIXED_COLOUR_PRIORITY)
 	clothing.max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
 	clothing.heat_protection = clothing.body_parts_covered
 	clothing.resistance_flags |= FIRE_PROOF
