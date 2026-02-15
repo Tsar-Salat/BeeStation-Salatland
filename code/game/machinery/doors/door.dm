@@ -314,7 +314,6 @@
 /// Private proc that runs a series of checks to see if we should forcibly open the door. Returns TRUE if we should open the door, FALSE otherwise. Implemented in child types.
 /// In case a specific behavior isn't covered, we should default to TRUE just to be safe (simply put, this proc should have an explicit reason to return FALSE).
 /obj/machinery/door/proc/try_to_force_door_open(force_type = DEFAULT_DOOR_CHECKS)
-	PRIVATE_PROC(TRUE)
 	return TRUE // the base "door" can always be forced open since there's no power or anything like emagging it to prevent an open, not even invoked on the base type anyways.
 
 /// Public proc that simply handles closing the door. Returns TRUE if the door was closed, FALSE otherwise.
@@ -357,7 +356,6 @@
 /// Private proc that runs a series of checks to see if we should forcibly shut the door. Returns TRUE if we should shut the door, FALSE otherwise. Implemented in child types.
 /// In case a specific behavior isn't covered, we should default to TRUE just to be safe (simply put, this proc should have an explicit reason to return FALSE).
 /obj/machinery/door/proc/try_to_force_door_shut(force_type = DEFAULT_DOOR_CHECKS)
-	PRIVATE_PROC(TRUE)
 	return TRUE // the base "door" can always be forced shut
 
 /obj/machinery/door/proc/CheckForMobs()

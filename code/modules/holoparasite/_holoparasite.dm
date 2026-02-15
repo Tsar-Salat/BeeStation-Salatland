@@ -120,7 +120,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/hostile/holoparasite)
 	set_accent_color(_accent_color || pick(GLOB.color_list_rainbow), silent = TRUE)
 	set_theme(_theme)
 	if(length(_name))
-		set_name(_name, internal = TRUE)
+		set_new_name(_name, internal = TRUE)
 	if(length(_notes))
 		notes = _notes
 	set_summoner(_summoner)

@@ -10,8 +10,6 @@
 #define INTERACT_ATOM_NO_FINGERPRINT_INTERACT 		(1<<8)	//! adds hiddenprints instead of fingerprints on interact
 #define INTERACT_ATOM_ALLOW_USER_LOCATION			(1<<9)  //! allows this atom to skip the adjacency check
 
-#define INTERACT_ITEM_ATTACK_HAND_PICKUP (1<<0)		//! attempt pickup on attack_hand for items
-
 /// attempt pickup on attack_hand for items
 #define INTERACT_ITEM_ATTACK_HAND_PICKUP (1<<0)
 

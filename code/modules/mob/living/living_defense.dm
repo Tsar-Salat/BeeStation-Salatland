@@ -287,11 +287,11 @@
 	if (!user.combat_mode)
 		return FALSE
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
-		to_chat(user, "<span class='notice'>You don't want to hurt anyone!</span>")
+		to_chat(user, span_warning("You don't want to hurt anyone!"))
 		return FALSE
 
 	if(user.is_muzzled() || user.is_mouth_covered(FALSE, TRUE))
-		to_chat(user, "<span class='warning'>You can't bite with your mouth covered!</span>")
+		to_chat(user, span_warning("You can't bite with your mouth covered!"))
 		return FALSE
 	user.do_attack_animation(src, ATTACK_EFFECT_BITE)
 	log_combat(user, src, "attacked")

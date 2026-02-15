@@ -109,7 +109,6 @@
 
 /datum/unit_test/self_punch/Run()
 	var/mob/living/carbon/human/dummy = allocate(/mob/living/carbon/human/consistent)
-	ADD_TRAIT(dummy, TRAIT_PERFECT_ATTACKER, TRAIT_SOURCE_UNIT_TESTS)
 	dummy.set_combat_mode(TRUE)
 	dummy.ClickOn(dummy)
 	TEST_ASSERT_NOTEQUAL(dummy.getBruteLoss(), 0, "Dummy took no brute damage after self-punching")
@@ -120,7 +119,6 @@
 /datum/unit_test/handcuff_punch/Run()
 	var/mob/living/carbon/human/attacker = allocate(/mob/living/carbon/human/consistent)
 	var/mob/living/carbon/human/victim = allocate(/mob/living/carbon/human/consistent)
-	ADD_TRAIT(attacker, TRAIT_PERFECT_ATTACKER, TRAIT_SOURCE_UNIT_TESTS)
 	ADD_TRAIT(attacker, TRAIT_HANDS_BLOCKED, TRAIT_SOURCE_UNIT_TESTS)
 	attacker.set_combat_mode(TRUE)
 	attacker.ClickOn(victim)
@@ -136,7 +134,6 @@
 /datum/unit_test/handcuff_bite/Run()
 	var/mob/living/carbon/human/attacker = allocate(/mob/living/carbon/human/consistent)
 	var/mob/living/carbon/human/victim = allocate(/mob/living/carbon/human/consistent)
-	ADD_TRAIT(attacker, TRAIT_PERFECT_ATTACKER, TRAIT_SOURCE_UNIT_TESTS)
 	ADD_TRAIT(attacker, TRAIT_HANDS_BLOCKED, TRAIT_SOURCE_UNIT_TESTS)
 	attacker.set_combat_mode(TRUE)
 	attacker.set_species(/datum/species/monkey)

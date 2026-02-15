@@ -23,13 +23,7 @@
 			handle_blood(delta_time, times_fired)
 
 		if(stat != DEAD) //Handle brain damage
-			for(var/T in get_traumas())
-				var/datum/brain_trauma/BT = T
-				BT.on_life(delta_time, times_fired)
-
-		if(stat != DEAD && has_dna())
-			for(var/datum/mutation/HM as() in dna.mutations)
-				HM.on_life(delta_time, times_fired)
+			handle_brain_damage(delta_time, times_fired)
 
 	if(stat == DEAD)
 		stop_sound_channel(CHANNEL_HEARTBEAT)
@@ -530,6 +524,15 @@
 	adjustToxLoss(2 * delta_time, TRUE,  TRUE)
 	if(DT_PROB(15, delta_time))
 		to_chat(src, span_warning("You feel a stabbing pain in your abdomen!"))
+
+////////////////
+//BRAIN DAMAGE//
+////////////////
+
+/mob/living/carbon/proc/handle_brain_damage(delta_time, times_fired)
+	for(var/T in get_traumas())
+		var/datum/brain_trauma/BT = T
+		BT.on_life(delta_time, times_fired)
 
 /////////////////////////////////////
 //MONKEYS WITH TOO MUCH CHOLOESTROL//

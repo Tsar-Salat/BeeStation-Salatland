@@ -128,7 +128,7 @@
 			H.dna.features["tail_monkey"] = tail_type
 			H.update_body()
 
-/obj/item/organ/tail/monkey/Remove(mob/living/carbon/human/H,  special = 0)
+/obj/item/organ/tail/monkey/Remove(mob/living/carbon/human/H,  special = 0, pref_load)
 	..()
 	if(istype(H))
 		H.dna.features["tail_monkey"] = "None"

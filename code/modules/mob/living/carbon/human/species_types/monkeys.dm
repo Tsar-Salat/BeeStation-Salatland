@@ -243,7 +243,7 @@
 	dna.species.on_species_gain(src, null, FALSE)
 	dna.species.regenerate_organs(src, replace_current = TRUE)
 	//Fix initial DNA not properly handling our height
-	dna.update_body_size(height = pick(dna.species.get_species_height()))
+	dna.update_body_size()
 
 /mob/living/carbon/human/species/monkey/tumor/death(gibbed)
 	. = ..()
@@ -258,5 +258,3 @@
 			return
 		to_chat(creator, "<span class='warning'>We gain the energy to birth another Teratoma...</span>")
 		return
-
-#undef MONKEY_SPEC_ATTACK_BITE_MISS_CHANCE
