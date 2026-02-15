@@ -469,8 +469,8 @@
 /obj/item/melee/knockback_stick
 	name = "Knockback Stick"
 	desc = "An portable anti-gravity generator which knocks people back upon contact."
-	icon = 'icons/obj/items_and_weapons.dmi'
-	icon_state = "telebaton_1"
+	icon = 'icons/obj/weapons/baton.dmi'
+	icon_state = "telebaton_on"
 	inhand_icon_state = "nullrod"
 	worn_icon_state = "tele_baton"
 	lefthand_file = 'icons/mob/inhands/equipment/security_lefthand.dmi'
