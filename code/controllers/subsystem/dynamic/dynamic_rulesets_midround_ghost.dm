@@ -231,8 +231,8 @@
 	return /obj/machinery/nuclearbomb
 
 /datum/dynamic_ruleset/midround/ghost/nuclear_assault/finish_setup(mob/new_character)
-	new_character.mind.special_role = ROLE_OPERATIVE
-	new_character.mind.assigned_role = ROLE_OPERATIVE
+	new_character.mind.special_role = ROLE_NUCLEAR_OPERATIVE
+	new_character.mind.assigned_role = ROLE_NUCLEAR_OPERATIVE
 
 	if(has_made_leader)
 		return ..()

@@ -9,7 +9,10 @@
 	var/list/ckey_to_cooldown = list()
 	var/orbiters = list()
 	var/deadchat_mode
+	/// In DEMOCRACY_MODE, this is how long players have to vote on an input. In ANARCHY_MODE, this is how long between inputs for each unique player.
 	var/input_cooldown
+	///Set to true if a point of interest was created for an object, and needs to be removed if deadchat control is removed. Needed for preventing objects from having two points of interest.
+	var/generated_point_of_interest = FALSE
 
 /datum/component/deadchat_control/Initialize(_deadchat_mode, _inputs, _input_cooldown = 12 SECONDS)
 	if(!isatom(parent))
@@ -26,12 +29,17 @@
 		source = parent,
 		header = "Ghost Possession!",
 	)
+	if(!ismob(parent) && !SSpoints_of_interest.is_valid_poi(parent))
+		SSpoints_of_interest.make_point_of_interest(parent)
+		generated_point_of_interest = TRUE
 
 
 /datum/component/deadchat_control/Destroy(force, silent)
 	inputs = null
 	orbiters = null
 	ckey_to_cooldown = null
+	if(generated_point_of_interest)
+		SSpoints_of_interest.remove_point_of_interest(parent)
 	return ..()
 
 /datum/component/deadchat_control/proc/deadchat_react(mob/source, message)

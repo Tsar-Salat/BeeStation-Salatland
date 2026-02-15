@@ -53,13 +53,15 @@
 /mob/living/simple_animal/shade/attack_animal(mob/living/simple_animal/M)
 	if(isconstruct(M))
 		var/mob/living/simple_animal/hostile/construct/C = M
-		if(!C.can_repair_constructs)
+		if(!C.can_repair)
 			return
 		if(health < maxHealth)
 			adjustHealth(-25)
 			Beam(M, icon_state="sendbeam", time= 4)
-			M.visible_message(span_danger("[M] heals \the <b>[src]</b>."), \
-					   span_cult("You heal <b>[src]</b>, leaving <b>[src]</b> at <b>[health]/[maxHealth]</b> health."))
+			M.visible_message(
+				span_danger("[M] heals \the <b>[src]</b>."),
+				span_cult("You heal <b>[src]</b>, leaving <b>[src]</b> at <b>[health]/[maxHealth]</b> health.")
+			)
 		else
 			to_chat(M, span_cult("You cannot heal <b>[src]</b>, as [p_theyre()] unharmed!"))
 	else if(src != M)

@@ -71,6 +71,9 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_SPIRIT)
 	// of the mob
 	var/deadchat_name
 
+	/// The POI we're orbiting (orbit menu)
+	var/orbiting_ref
+
 /mob/dead/observer/Initialize(mapload)
 	set_invisibility(GLOB.observer_default_invisibility)
 
@@ -497,6 +500,9 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	. = ..()
 	//restart our floating animation after orbit is done.
 	pixel_y = base_pixel_y
+	// if we were autoobserving, reset perspective
+	if (!isnull(client) && !isnull(client.eye))
+		reset_perspective(null)
 
 /mob/dead/observer/verb/jumptomob() //Moves the ghost instead of just changing the ghosts's eye -Nodrak
 	set category = "Ghost"
@@ -1064,3 +1070,9 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 /mob/dead/observer/can_examine_in_detail(atom/examinify, silent)
 	return TRUE
+
+/// Called when we exit the orbiting state
+/mob/dead/observer/proc/on_deorbit(datum/source)
+	SIGNAL_HANDLER
+
+	orbiting_ref = null

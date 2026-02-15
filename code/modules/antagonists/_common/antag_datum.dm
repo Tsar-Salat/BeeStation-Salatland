@@ -66,14 +66,92 @@ GLOBAL_LIST(admin_antag_list)
 	owner = null
 	return ..()
 
+/datum/antagonist/Topic(href,href_list)
+	if(!check_rights(R_ADMIN))
+		return
+
+	//Some commands might delete/modify this datum clearing or changing owner
+	var/datum/mind/persistent_owner = owner
+
+	var/commands = get_admin_commands()
+	var/admin_command = href_list["command"]
+	if(!(admin_command in commands))
+		return
+	var/datum/callback/call_async = commands[admin_command]
+	call_async.Invoke(usr)
+	persistent_owner.traitor_panel()
+
+//This one is created by admin tools for custom objectives
+/datum/antagonist/custom
+	antagpanel_category = "Custom"
+	show_name_in_check_antagonists = TRUE //They're all different
+	leave_behaviour = ANTAGONIST_LEAVE_DESPAWN
+	var/datum/team/custom_team
+
+/datum/antagonist/custom/create_team(datum/team/team)
+	custom_team = team
+
+/datum/antagonist/custom/get_team()
+	return custom_team
+
+/datum/antagonist/custom/admin_add(datum/mind/new_owner,mob/admin)
+	var/custom_name = stripped_input(admin, "Custom antagonist name:", "Custom antag", "Antagonist")
+	if(!custom_name)
+		return
+	name = custom_name
+	..()
+
+///ANTAGONIST UI STUFF
+
+/datum/antagonist/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, ui_name, name)
+		ui.open()
+
+/datum/antagonist/ui_state(mob/user)
+	return GLOB.always_state
+
+/datum/antagonist/ui_static_data(mob/user)
+	var/list/data = list()
+	data["antag_name"] = name
+	data["objectives"] = get_objectives()
+	return data
+
+//button for antags to review their descriptions/info
+/datum/action/antag_info
+	name = "Open Antag Information:"
+	button_icon_state = "round_end"
+
+/datum/action/antag_info/New(target)
+	. = ..()
+	name += " [target]"
+
+/datum/action/antag_info/on_activate(mob/user, atom/target, trigger_flags)
+	. = ..()
+	if(!.)
+		return
+
+	target.ui_interact(owner)
+
+/datum/action/antag_info/is_available(feedback = FALSE)
+	if(!master)
+		stack_trace("[type] was used without a target antag datum!")
+		return FALSE
+	. = ..()
+	if(!.)
+		return
+	if(!owner.mind || !(master in owner.mind.antag_datums))
+		return FALSE
+	return TRUE
+
 /datum/antagonist/proc/can_be_owned(datum/mind/new_owner)
 	. = TRUE
 	var/datum/mind/tested = new_owner || owner
 	if(tested.has_antag_datum(type))
 		return FALSE
-	for(var/i in tested.antag_datums)
-		var/datum/antagonist/A = i
-		if(is_type_in_typecache(src, A.typecache_datum_blacklist))
+	for(var/datum/antagonist/badguy as anything in tested.antag_datums)
+		if(is_type_in_typecache(src, badguy.typecache_datum_blacklist))
 			return FALSE
 
 //This will be called in add_antag_datum before owner assignment.
@@ -144,11 +222,11 @@ GLOBAL_LIST(admin_antag_list)
 	info_button_ref = WEAKREF(info_button)
 	return info_button
 
-/datum/antagonist/proc/is_banned(mob/M)
-	if(!M)
+/datum/antagonist/proc/is_banned(mob/player)
+	if(!player)
 		stack_trace("Called is_banned without a mob. This shouldn't happen.")
 		return FALSE
-	. = (is_banned_from(M.ckey, banning_key) || QDELETED(M))
+	. = (is_banned_from(player.ckey, banning_key) || QDELETED(player))
 
 /datum/antagonist/proc/replace_banned_player()
 	set waitfor = FALSE
@@ -276,11 +354,9 @@ GLOBAL_LIST(admin_antag_list)
 		objective_count++
 	return objective_data
 
-/datum/antagonist/ui_static_data(mob/user)
-	var/list/data = list()
-	data["antag_name"] = name
-	data["objectives"] = get_objectives()
-	return data
+/// Used to create objectives for the antagonist.
+/datum/antagonist/proc/forge_objectives()
+	return
 
 /datum/antagonist/ui_assets(mob/user)
 	return list(
@@ -321,17 +397,6 @@ GLOBAL_LIST(admin_antag_list)
 		owner.traitor_panel()
 		return
 
-	//Some commands might delete/modify this datum clearing or changing owner
-	var/datum/mind/persistent_owner = owner
-
-	var/commands = get_admin_commands()
-	for(var/admin_command in commands)
-		if(href_list["command"] == admin_command)
-			var/datum/callback/C = commands[admin_command]
-			C.Invoke(usr)
-			persistent_owner.traitor_panel()
-			return
-
 /datum/antagonist/proc/edit_memory(mob/user)
 	var/new_memo = stripped_multiline_input(user, "Write new memory", "Memory", antag_memory, MAX_MESSAGE_LEN)
 	if (isnull(new_memo))
@@ -342,27 +407,6 @@ GLOBAL_LIST(admin_antag_list)
 /datum/antagonist/proc/hijack_speed()
 	var/datum/objective/hijack/H = locate() in objectives
 	return H?.hijack_speed_override || hijack_speed
-
-//This one is created by admin tools for custom objectives
-/datum/antagonist/custom
-	antagpanel_category = "Custom"
-	show_name_in_check_antagonists = TRUE //They're all different
-	leave_behaviour = ANTAGONIST_LEAVE_DESPAWN
-	var/datum/team/custom_team
-
-/datum/antagonist/custom/create_team(datum/team/team)
-	custom_team = team
-
-/datum/antagonist/custom/get_team()
-	return custom_team
-
-/datum/antagonist/custom/admin_add(datum/mind/new_owner,mob/admin)
-	var/custom_name = tgui_input_text(admin, "Custom antagonist name:", "Custom antag", "Antagonist")
-	if(custom_name)
-		name = custom_name
-	else
-		return
-	..()
 
 /proc/generate_admin_antag_list()
 	GLOB.admin_antag_list = list()
@@ -403,26 +447,3 @@ GLOBAL_LIST(admin_antag_list)
 				to_chat(C, span_boldnotice("[message]"))
 		else
 			C.dna.add_mutation(/datum/mutation/clumsy) // We're removing their antag status, add back clumsy
-
-//button for antags to review their descriptions/info
-/datum/action/antag_info
-	name = "Open Special Role Information:"
-	button_icon_state = "round_end"
-
-/datum/action/antag_info/New(master)
-	. = ..()
-	name = "Open [master] Information"
-
-/datum/action/antag_info/on_activate(mob/user, atom/target)
-	target.ui_interact(owner)
-
-/datum/action/antag_info/is_available(feedback = FALSE)
-	if(!master)
-		stack_trace("[type] was used without a target antag datum!")
-		return FALSE
-	. = ..()
-	if(!.)
-		return
-	if(!owner.mind || !(master in owner.mind.antag_datums))
-		return FALSE
-	return TRUE
