@@ -125,7 +125,7 @@
 	if(!active || LAZYACCESS(modifiers, RIGHT_CLICK))
 		return BATON_DO_NORMAL_ATTACK
 
-	if(cooldown_check > world.time)
+	if(!COOLDOWN_FINISHED(src, cooldown_check))
 		var/wait_desc = get_wait_description()
 		if(wait_desc)
 			to_chat(user, wait_desc)
@@ -177,7 +177,7 @@
 	if(!in_attack_chain && HAS_TRAIT_FROM(target, TRAIT_IWASBATONED, REF(user)))
 		return BATON_ATTACK_DONE
 
-	cooldown_check = world.time + cooldown
+	COOLDOWN_START(src, cooldown_check, cooldown)
 	if(on_stun_sound)
 		playsound(get_turf(src), on_stun_sound, on_stun_volume, TRUE, -1)
 	if(user)
@@ -201,15 +201,16 @@
 		target.Paralyze((isnull(stun_override) ? stun_time_cyborg : stun_override) * (trait_check ? 0.1 : 1))
 		additional_effects_cyborg(target, user)
 		return TRUE
+	else
+		if(ishuman(target))
+			var/mob/living/carbon/human/human_target = target
+			if(prob(force_say_chance))
+				human_target.force_say()
 
-	// Non-cyborg: delegate to hook
-	return baton_effect_non_cyborg(target, user, modifiers, stun_override, trait_check)
+		// Non-cyborg: delegate to hook
+		return baton_effect_non_cyborg(target, user, modifiers, stun_override, trait_check)
 
 /obj/item/melee/baton/proc/baton_effect_non_cyborg(mob/living/target, mob/living/user, modifiers, stun_override, trait_check)
-	if(ishuman(target) && prob(force_say_chance))
-		var/mob/living/carbon/human/H = target
-		H.force_say()
-
 	target.adjustStaminaLoss(stamina_damage)
 	if(!trait_check)
 		target.Knockdown((isnull(stun_override) ? knockdown_time : stun_override))
@@ -550,6 +551,7 @@
 	worn_icon_state = "baton"
 	force = 8
 	stamina_damage = 40
+	cooldown = 0
 	attack_verb_continuous = list("beats")
 	attack_verb_simple = list("beat")
 	armor_type = /datum/armor/melee_baton
@@ -715,7 +717,7 @@
 	if(. != BATON_DO_NORMAL_ATTACK)
 		return .
 	if(LAZYACCESS(modifiers, RIGHT_CLICK))
-		if(active && cooldown_check <= world.time && !check_parried(target, user))
+		if(active && COOLDOWN_FINISHED(src, cooldown_check) && !check_parried(target, user))
 			finalize_baton_attack(target, user, modifiers, in_attack_chain = FALSE)
 			return BATON_ATTACK_DONE
 	else if(!user.combat_mode)
@@ -730,31 +732,64 @@
 			return FALSE
 	else if(!deductcharge(cell_hit_cost))
 		return FALSE
-	stun_override = 0 //Avoids knocking people down prematurely.
-	return ..()
+
+	// For cyborgs, use parent behavior (they get stunned)
+	if(iscyborg(target))
+		return ..()
+
+	var/trait_check = HAS_TRAIT(target, TRAIT_BATON_RESISTANCE)
+	return baton_effect_non_cyborg(target, user, modifiers, stun_override, trait_check)
+
+/obj/item/melee/baton/security/baton_effect_non_cyborg(mob/living/target, mob/living/user, modifiers, stun_override, trait_check)
+	// Special handling stamina-immune species
+	if(ishuman(target))
+		var/mob/living/carbon/human/H = target
+		if(H.dna?.species && H.dna.species.staminamod == 0)
+			// take burn damage from electrical shock instead of stamina
+			var/target_zone = user ? user.get_combat_bodyzone(H) : BODY_ZONE_CHEST
+			var/obj/item/bodypart/affecting = H.get_bodypart(target_zone)
+			if(!affecting)
+				affecting = H.bodyparts[1]
+			var/armor_block = H.run_armor_check(affecting, STAMINA, armour_penetration = armour_penetration)
+
+			// Electrocute and deal burn damage (force/4)
+			H.electrocute_act(1, src, flags = SHOCK_NOGLOVES|SHOCK_NOSTUN)
+			H.apply_damage(force/4, BURN, affecting, armor_block)
+
+			// Still apply effects and signals
+			if(stun_animation)
+				target.do_stun_animation(target)
+			SEND_SIGNAL(target, COMSIG_LIVING_MINOR_SHOCK)
+			additional_effects_non_cyborg(target, user)
+			return TRUE
+
+	target.adjustStaminaLoss(stamina_damage)
+
+	// Apply minor effects
+	if(stun_animation)
+		target.do_stun_animation(target)
+	SEND_SIGNAL(target, COMSIG_LIVING_MINOR_SHOCK)
+
+	// Call any additional effects
+	additional_effects_non_cyborg(target, user)
+	return TRUE
 
 /*
- * After a target is hit, we apply some status effects.
- * After a period of time, we then check to see what stun duration we give.
+ * Additional effects after stamina damage.
+ * For stun batons, this is minimal - just a brief trait to prevent rapid double-batoning.
  */
 /obj/item/melee/baton/security/additional_effects_non_cyborg(mob/living/target, mob/living/user)
-	target.do_stun_animation(target)
-	target.adjust_stutter(stamina_damage / 2) //0.5 seconds of stuttering speech for every 10 stamina damage
-
-	SEND_SIGNAL(target, COMSIG_LIVING_MINOR_SHOCK)
-	addtimer(CALLBACK(src, PROC_REF(apply_stun_effect_end), target), 2 SECONDS)
-
-/// After the initial stun period, we check to see if the target needs to have the stun applied.
-/obj/item/melee/baton/security/proc/apply_stun_effect_end(mob/living/target)
-	var/trait_check = HAS_TRAIT(target, TRAIT_BATON_RESISTANCE) //var since we check it in out to_chat as well as determine stun duration
-	if(!target.IsKnockdown())
-		to_chat(target, span_warning("Your muscles seize, making you collapse[trait_check ? ", but your body quickly recovers..." : "!"]"))
-
-	if(!trait_check)
-		target.Knockdown(knockdown_time)
+	// Brief anti-double-baton trait (1 second)
+	var/user_ref = REF(user)
+	ADD_TRAIT(target, TRAIT_IWASBATONED, user_ref)
+	addtimer(TRAIT_CALLBACK_REMOVE(target, TRAIT_IWASBATONED, user_ref), 1 SECONDS)
 
 /obj/item/melee/baton/security/get_wait_description()
-	return span_danger("The baton is still charging!")
+	if(!cell)
+		return span_warning("[src] does not have a power source!")
+	if(cell.charge < cell_hit_cost)
+		return span_warning("[src] is out of charge.")
+	return span_danger("The baton is still charging!") // Shouldn't happen with cooldown=0
 
 /obj/item/melee/baton/security/get_stun_description(mob/living/target, mob/living/user)
 	. = list()
