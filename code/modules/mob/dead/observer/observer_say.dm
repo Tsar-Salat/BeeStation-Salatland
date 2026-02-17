@@ -1,3 +1,6 @@
+/mob/dead/observer/check_emote(message, forced)
+	return emote(copytext(message, length(message[1]) + 1), intentional = !forced, force_silence = TRUE)
+
 /mob/dead/observer/say(
 	message,
 	bubble_type,

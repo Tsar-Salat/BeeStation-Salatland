@@ -178,7 +178,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/split_personality)
 	to_chat(src, span_warning("You cannot speak, your other self is controlling your body!"))
 	return FALSE
 
-/mob/living/split_personality/emote(act, m_type = null, message = null, intentional = FALSE)
+/mob/living/split_personality/emote(act, type_override = NONE, message = null, intentional = FALSE, force_silence = FALSE, forced = FALSE)
 	return FALSE
 
 ///////////////BRAINWASHING////////////////////

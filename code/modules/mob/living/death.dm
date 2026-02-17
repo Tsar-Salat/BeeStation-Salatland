@@ -116,6 +116,9 @@
 
 		INVOKE_ASYNC(client, TYPE_PROC_REF(/client, give_award), /datum/award/achievement/misc/ghosts, src)
 
+	if(!gibbed && (deathsound || deathmessage))
+		INVOKE_ASYNC(src, /mob.proc/emote, "deathgasp")
+
 	if(mind?.current)
 		client?.tgui_panel?.give_dead_popup()
 

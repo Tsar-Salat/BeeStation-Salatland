@@ -33,13 +33,14 @@
 	if(message_mods[WHISPER_MODE] || message_mods[MODE_RELAY]) //Too quiet lad
 		return FALSE
 	if(speaker == src)
-		return
+		return FALSE
 
 	if(listening && !radio_freq)
 		record_speech(speaker, raw_message, message_language)
 	else
 		if(check_activation(speaker, raw_message))
 			addtimer(CALLBACK(src, PROC_REF(pulse), 0), 10)
+	return TRUE
 
 /obj/item/assembly/voice/proc/record_speech(atom/movable/speaker, raw_message, datum/language/message_language)
 	switch(mode)

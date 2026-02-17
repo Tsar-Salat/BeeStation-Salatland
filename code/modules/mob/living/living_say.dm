@@ -136,6 +136,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 
 	var/succumbed = FALSE
 
+	// If it's not erasing the input portion, then something is being said and this isn't a pure custom say emote.
 	if(!message_mods[MODE_CUSTOM_SAY_ERASE_INPUT])
 		if(message_mods[WHISPER_MODE] == MODE_WHISPER)
 			if(saymode || message_mods[RADIO_EXTENSION]) //no radio while in crit
@@ -156,7 +157,9 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 
 	if(message_mods[RADIO_KEY] == RADIO_KEY_UPLINK) // only uplink needs this
 		message_mods[MODE_UNTREATED_MESSAGE] = message // let's store the original message before treating those
-	message = treat_message(message) // unfortunately we still need this
+
+	var/list/message_data = treat_message(message) // unfortunately we still need this
+	message = message_data["message"]
 
 #ifdef UNIT_TESTS
 	// Saves a ref() to our arglist specifically.
@@ -229,7 +232,8 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 
 /mob/living/Hear(atom/movable/speaker, datum/language/message_language, raw_message, radio_freq, list/spans, list/message_mods = list(), message_range=0)
 	if(!GET_CLIENT(src))
-		return
+		return FALSE
+
 	var/deaf_message
 	var/deaf_type
 
@@ -242,8 +246,12 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	var/avoid_highlight = src == (istype(holopad_speaker) ? holopad_speaker.source : speaker)
 
 	var/is_custom_emote = message_mods[MODE_CUSTOM_SAY_ERASE_INPUT]
+	var/understood = TRUE
 	if(!is_custom_emote) // we do not translate emotes
-		raw_message = translate_language(src, message_language, raw_message) // translate
+		var/untranslated_raw_message = raw_message
+		raw_message = translate_language(speaker, message_language, raw_message, spans, message_mods) // translate
+		if(raw_message != untranslated_raw_message)
+			understood = FALSE
 
 	var/message = ""
 	// if someone is whispering we make an extra type of message that is obfuscated for people out of range
@@ -286,9 +294,8 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 
 	// Recompose message for AI hrefs, language incomprehension.
 	message = compose_message(speaker, message_language, raw_message, radio_freq, spans, message_mods)
-
-	show_message(message, MSG_AUDIBLE, deaf_message, deaf_type, avoid_highlight)
-	return message
+	var/show_message_success = show_message(message, MSG_AUDIBLE, deaf_message, deaf_type, avoid_highlight)
+	return understood && show_message_success
 
 /mob/living/send_speech(message_raw, message_range = 6, obj/source = src, bubble_type = bubble_icon, list/spans, datum/language/message_language = null, list/message_mods = list(), forced = null)
 	var/whisper_range = 0
@@ -383,13 +390,19 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
  *
  * message - The message to treat.
  * capitalize_message - Whether we run capitalize() on the message after we're done.
+ *
+ * Returns a list, which is a packet of information corresponding to the message that has been treated, which
+ * contains the new message.
  */
 /mob/living/proc/treat_message(message, capitalize_message = TRUE)
+	RETURN_TYPE(/list)
 
 	if(HAS_TRAIT(src, TRAIT_UNINTELLIGIBLE_SPEECH))
 		message = unintelligize(message)
 
+	var/list/data = list(message)
 	SEND_SIGNAL(src, COMSIG_LIVING_TREAT_MESSAGE, args)
+	message = data[TREAT_MESSAGE_ARG]
 
 	return treat_message_min(message, capitalize_message)
 
@@ -397,7 +410,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	message = punctuate(message)
 	if(capitalize_message)
 		message = capitalize(message)
-	return message
+	return list("message" = message)
 
 /mob/living/proc/radio(message, list/message_mods = list(), list/spans, language)
 	var/obj/item/implant/radio/imp = locate() in src

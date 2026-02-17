@@ -198,7 +198,7 @@
 */
 /mob/living/carbon/monkey/UnarmedAttack(atom/A, proximity)
 	if(HAS_TRAIT(src, TRAIT_HANDS_BLOCKED))
-		if(!combat_mode || is_muzzled())
+		if(!combat_mode)
 			return
 		if(!iscarbon(A))
 			return

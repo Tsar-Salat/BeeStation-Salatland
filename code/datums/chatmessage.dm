@@ -110,6 +110,8 @@
   * * text - The text content of the overlay
   * * target - The target atom to display the overlay at
   * * owner - The mob that owns this overlay, only this mob will be able to view it
+  * * hearers - The clients that can see this message
+  * * language - The language this message was spoken in
   * * extra_classes - Extra classes to apply to the span that holds the text
   * * lifespan - The lifespan of the message in deciseconds
   */

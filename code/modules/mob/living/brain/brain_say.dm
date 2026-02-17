@@ -33,4 +33,4 @@
 /mob/living/brain/treat_message(message, capitalize_message = TRUE)
 	if(capitalize_message)
 		message = capitalize(message)
-	return treat_message_min(message)
+	return treat_message_min(list(message))

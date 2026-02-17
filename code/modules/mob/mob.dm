@@ -155,7 +155,6 @@
   * Show a message to this mob (visual or audible)
   */
 /mob/proc/show_message(msg, type, alt_msg, alt_type, avoid_highlighting = FALSE, dist)//Message, type of message (1 or 2), alternative message, alt message type (1 or 2)
-
 	if(!client)
 		return FALSE
 
@@ -259,7 +258,7 @@
 
 	//Create the chat message
 	if(length(show_to))
-		create_chat_message(src, null, show_to, raw_msg, null, visible_message_flags)
+		create_chat_message(speaker = src, message_language = null, hearers = show_to, raw_message = raw_msg, spans = null, runechat_flags = visible_message_flags)
 
 /mob/visible_message(message, self_message, blind_message, vision_distance = DEFAULT_MESSAGE_RANGE, list/ignored_mobs, visible_message_flags = NONE, allow_inside_usr = FALSE, separation = " ")
 	. = ..()
@@ -280,7 +279,7 @@
 		self_runechat = show_message(self_message, MSG_VISUAL, blind_message, MSG_AUDIBLE, avoid_highlighting = block_self_highlight)
 
 	if(self_runechat && ((visible_message_flags & EMOTE_MESSAGE)) && runechat_prefs_check(src, visible_message_flags))
-		create_chat_message(src, null, list(src), raw_message = raw_self_message, message_mods = visible_message_flags)
+		create_chat_message(src, null, list(src), raw_message = raw_self_message, runechat_flags = visible_message_flags)
 
 /**
   * Show a message to all mobs in earshot of this atom
@@ -314,7 +313,7 @@
 		hearing_mob.show_message(message, MSG_AUDIBLE, deaf_message, MSG_VISUAL)
 
 	if(length(show_to))
-		create_chat_message(src, null, show_to, raw_message = raw_msg, spans = list("italics"), message_mods = audible_message_flags)
+		create_chat_message(src, null, show_to, raw_message = raw_msg, spans = list("italics"), runechat_flags = audible_message_flags)
 
 /**
   * Show a message to all mobs in earshot of this one
@@ -347,7 +346,7 @@
 		self_runechat = show_message(self_message, MSG_AUDIBLE, deaf_message, MSG_VISUAL, avoid_highlighting = block_self_highlight)
 
 	if(self_runechat && ((audible_message_flags & EMOTE_MESSAGE)) && runechat_prefs_check(src, audible_message_flags))
-		create_chat_message(src, null, list(src), raw_message = raw_self_message, message_mods = audible_message_flags)
+		create_chat_message(src, null, list(src), raw_message = raw_self_message, runechat_flags = audible_message_flags)
 
 /// Gets a linked mob, letting atoms act as proxies for actions that rely on hearing sensitivity.
 /// For example, AIs hearing around their holopads, and dullahans hearing around their heads.
@@ -999,10 +998,6 @@
 		return
 	if(isAI(M))
 		return
-
-///Is the mob muzzled (default false)
-/mob/proc/is_muzzled()
-	return FALSE
 
 /datum/action/proc/get_stat_label()
 	var/label = ""
