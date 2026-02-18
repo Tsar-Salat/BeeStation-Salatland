@@ -545,16 +545,21 @@
 	check_passout()
 
 /**
-* Check to see if we should be passed out from oyxloss
+* Check to see if we should be passed out from oxyloss
 */
 /mob/living/carbon/proc/check_passout()
-	if(!isnum(oxyloss))
-		return
-	if(oxyloss <= 50)
-		if(getOxyLoss() > 50)
+	var/mob_oxyloss = getOxyLoss()
+	if(mob_oxyloss >= 50)
+		if(!HAS_TRAIT_FROM(src, TRAIT_KNOCKEDOUT, OXYLOSS_TRAIT))
 			ADD_TRAIT(src, TRAIT_KNOCKEDOUT, OXYLOSS_TRAIT)
-	else if(getOxyLoss() <= 50)
+	else if(mob_oxyloss < 50)
 		REMOVE_TRAIT(src, TRAIT_KNOCKEDOUT, OXYLOSS_TRAIT)
+
+/mob/living/carbon/get_organic_health()
+	. = health
+	for (var/obj/item/bodypart/limb as anything in bodyparts)
+		if (!IS_ORGANIC_LIMB(limb))
+			. += (limb.brute_dam * limb.body_damage_coeff) + (limb.burn_dam * limb.body_damage_coeff)
 
 /mob/living/carbon/bullet_act(obj/projectile/P, def_zone, piercing_hit)
 	var/obj/item/bodypart/affecting = get_bodypart(check_zone(def_zone))
