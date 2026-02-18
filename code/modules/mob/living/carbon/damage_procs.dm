@@ -218,7 +218,7 @@
 			parts += BP
 	return parts
 
-//Returns a list of damageable bodyparts
+///Returns a list of damageable bodyparts
 /mob/living/carbon/proc/get_damageable_bodyparts(required_bodytype)
 	var/list/obj/item/bodypart/parts = list()
 	for(var/obj/item/bodypart/BP as() in bodyparts)
@@ -247,10 +247,15 @@
 		update_damage_overlays()
 	return (damage_calculator - picked.get_damage(TRUE))
 
-//Damages ONE bodypart randomly selected from damagable ones.
-//It automatically updates damage overlays if necessary
-//It automatically updates health status
-/mob/living/carbon/take_bodypart_damage(brute = 0, burn = 0, stamina = 0, updating_health = TRUE, required_bodytype, check_armor = FALSE)
+
+/**
+ * Damages ONE bodypart randomly selected from damagable ones.
+ *
+ * It automatically updates damage overlays if necessary
+ *
+ * It automatically updates health status
+ */
+/mob/living/carbon/take_bodypart_damage(brute = 0, burn = 0, stamina = 0, updating_health = TRUE, required_bodytype, check_armor = FALSE, sharpness = NONE)
 	. = FALSE
 	if(HAS_TRAIT(src, TRAIT_GODMODE))
 		return
@@ -260,7 +265,7 @@
 
 	var/obj/item/bodypart/picked = pick(parts)
 	var/damage_calculator = picked.get_damage(TRUE)
-	if(picked.receive_damage(abs(brute), abs(burn), abs(stamina), check_armor ? run_armor_check(picked, (brute ? MELEE : burn ? FIRE : stamina ? STAMINA : null)) : FALSE))
+	if(picked.receive_damage(abs(brute), abs(burn), abs(stamina), check_armor ? run_armor_check(picked, (brute ? MELEE : burn ? FIRE : stamina ? STAMINA : null)) : FALSE, sharpness = sharpness))
 		update_damage_overlays()
 	return (damage_calculator - picked.get_damage(TRUE))
 

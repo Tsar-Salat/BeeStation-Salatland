@@ -1,5 +1,3 @@
-#define REGENERATION_DELAY 60  // After taking damage, how long it takes for automatic regeneration to begin
-
 /datum/species/zombie
 	// 1spooky
 	name = "High-Functioning Zombie"
@@ -203,4 +201,3 @@
 			BP.should_draw_greyscale = TRUE
 			BP.name = "human [parse_zone(BP.body_zone)]"
 			BP.update_limb()
-
