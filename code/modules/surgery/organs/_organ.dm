@@ -264,14 +264,17 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 	return //so we don't grant the organ's action to mobs who pick up the organ.
 
 ///Adjusts an organ's damage by the amount "damage_amount", up to a maximum amount, which is by default max damage. Returns the net change in organ damage.
-/obj/item/organ/proc/apply_organ_damage(damage_amount, maximum = maxHealth)	//use for damaging effects
+/obj/item/organ/proc/apply_organ_damage(damage_amount, maximum = maxHealth, required_organ_flag = NONE) //use for damaging effects
 	if(!damage_amount) //Micro-optimization.
 		return FALSE
 	maximum = clamp(maximum, 0, maxHealth) // the logical max is, our max
 	if(maximum < damage)
 		return FALSE
+	if(required_organ_flag && !(organ_flags & required_organ_flag))
+		return FALSE
 	damage = clamp(damage + damage_amount, 0, maximum)
-	var/message = check_damage_thresholds()
+	. = (prev_damage - damage) // return net damage
+	var/message = check_damage_thresholds(owner)
 	prev_damage = damage
 
 	if(message && owner && owner.stat <= SOFT_CRIT)
