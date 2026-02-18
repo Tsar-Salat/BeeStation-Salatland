@@ -71,7 +71,6 @@
 
 	return final_mod
 
-
 //These procs fetch a cumulative total damage from all bodyparts
 /mob/living/carbon/getBruteLoss()
 	var/amount = 0
@@ -84,7 +83,6 @@
 	for(var/obj/item/bodypart/BP as() in bodyparts)
 		amount += BP.burn_dam
 	return amount
-
 
 /mob/living/carbon/adjustBruteLoss(amount, updating_health = TRUE, forced = FALSE, required_bodytype)
 	if(!can_adjust_brute_loss(amount, forced, required_bodytype))
@@ -230,9 +228,13 @@
 			parts += BP
 	return parts
 
-//Heals ONE bodypart randomly selected from damaged ones.
-//It automatically updates damage overlays if necessary
-//It automatically updates health status
+/**
+ * Heals ONE bodypart randomly selected from damaged ones.
+
+ * It automatically updates damage overlays if necessary
+ *
+ * It automatically updates health status
+ */
 /mob/living/carbon/heal_bodypart_damage(brute = 0, burn = 0, stamina = 0, updating_health = TRUE, required_bodytype = NONE, target_zone = null)
 	. = FALSE
 	var/list/obj/item/bodypart/parts = get_damaged_bodyparts(brute, burn, stamina, required_bodytype, target_zone)
@@ -260,7 +262,7 @@
 	var/damage_calculator = picked.get_damage(TRUE)
 	if(picked.receive_damage(abs(brute), abs(burn), abs(stamina), check_armor ? run_armor_check(picked, (brute ? MELEE : burn ? FIRE : stamina ? STAMINA : null)) : FALSE))
 		update_damage_overlays()
-	return (damage_calculator - picked.get_damage())
+	return (damage_calculator - picked.get_damage(TRUE))
 
 /mob/living/carbon/heal_overall_damage(brute = 0, burn = 0, stamina = 0, required_bodytype, updating_health = TRUE, forced = FALSE)
 	. = FALSE
