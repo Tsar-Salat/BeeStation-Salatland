@@ -53,20 +53,21 @@
 	/// are we a hand? if so, which one!
 	var/held_index = 0
 
+	///Controls whether bodypart_disabled makes sense or not for this limb.
+	var/can_be_disabled = FALSE
 	///If disabled, limb is as good as missing.
 	var/bodypart_disabled = FALSE
 
-	///Controls whether bodypart_disabled makes sense or not for this limb.
-	var/can_be_disabled = FALSE
-
 	var/body_damage_coeff = 1 //Multiplier of the limb's damage that gets applied to the mob
 	var/stam_damage_coeff = 0.7 //Why is this the default???
-	var/brutestate = 0
-	var/burnstate = 0
 	var/brute_dam = 0
 	var/burn_dam = 0
 	var/max_stamina_damage = 0
 	var/max_damage = 0
+
+	//Used in determining overlays for limb damage states. As the mob receives more burn/brute damage, their limbs update to reflect.
+	var/brutestate = 0
+	var/burnstate = 0
 
 	var/stamina_dam = 0
 	var/stamina_heal_rate = 1	//Stamina heal multiplier

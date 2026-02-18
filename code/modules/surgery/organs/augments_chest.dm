@@ -107,7 +107,7 @@
 		Destroy()
 
 /obj/item/organ/cyberimp/chest/reviver/syndicate
-	syndicate_implant = TRUE
+	organ_flags = ORGAN_ROBOTIC | ORGAN_HIDDEN
 
 /obj/item/organ/cyberimp/chest/thrusters
 	name = "implantable thrusters set"

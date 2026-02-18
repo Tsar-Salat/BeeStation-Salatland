@@ -872,11 +872,11 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 		if(dna && !HAS_TRAIT(src, TRAIT_NOBLOOD))
 			blood_volume += (excess_healing * 2) //1 excess = 10 blood
 
-		for(var/obj/item/organ/organ as anything in internal_organs)
-			if(organ.organ_flags & ORGAN_SYNTHETIC)
+		for(var/obj/item/organ/target_organ as anything in internal_organs)
+			if(!target_organ.damage)
 				continue
 
-			organ.apply_organ_damage(excess_healing * -1) //1 excess = 5 organ damage healed
+			target_organ.apply_organ_damage(excess_healing * -1, required_organ_flag = ORGAN_ORGANIC) //1 excess = 5 organ damage healed
 
 	return ..()
 
