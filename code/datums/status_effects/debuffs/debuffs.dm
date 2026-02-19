@@ -194,6 +194,7 @@
 	if(.)
 		update_time_of_death()
 		owner.reagents?.end_metabolization(owner, FALSE)
+		owner.update_incapacitated()
 		SEND_SIGNAL(owner, COMSIG_LIVING_ENTER_STASIS)
 
 /datum/status_effect/grouped/stasis/on_apply()
@@ -208,6 +209,7 @@
 /datum/status_effect/grouped/stasis/on_remove()
 	owner.remove_traits(list(TRAIT_IMMOBILIZED, TRAIT_HANDS_BLOCKED), TRAIT_STATUS_EFFECT(id))
 	update_time_of_death()
+	owner.update_incapacitated()
 	SEND_SIGNAL(owner, COMSIG_LIVING_EXIT_STASIS)
 	return ..()
 
@@ -309,7 +311,7 @@
 	. = ..()
 	if(usr != owner)
 		return
-	if(owner.incapacitated())
+	if(owner.incapacitated)
 		return
 	var/list/syringes = list()
 	if(iscarbon(owner))
@@ -617,7 +619,7 @@
 					to_chat(owner, span_warning("Your leg spasms!"))
 					step(owner, pick(GLOB.cardinals))
 			if(2)
-				if(owner.incapacitated())
+				if(owner.incapacitated)
 					return
 				var/obj/item/I = owner.get_active_held_item()
 				if(I)
@@ -646,7 +648,7 @@
 				owner.ClickOn(owner)
 				owner.set_combat_mode(FALSE)
 			if(5)
-				if(owner.incapacitated())
+				if(owner.incapacitated)
 					return
 				var/obj/item/I = owner.get_active_held_item()
 				var/list/turf/targets = list()
