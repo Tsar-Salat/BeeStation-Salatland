@@ -155,7 +155,7 @@
 		flip(user)
 
 /obj/item/clothing/head/fedora/det_hat/proc/flip(mob/user)
-	if(!user.incapacitated() && adjustable == TRUE)
+	if(!user.incapacitated && adjustable == TRUE)
 		adjusted = !adjusted
 		if(adjusted)
 			worn_icon_state = aura_icon_on
@@ -188,7 +188,7 @@
 
 /obj/item/clothing/head/beret/color
 	name = "white beret"
-	greyscale_colors = "#ffffff"
+	greyscale_colors = COLOR_WHITE
 
 /obj/item/clothing/head/beret/rainbow
 	name = "rainbow beret"

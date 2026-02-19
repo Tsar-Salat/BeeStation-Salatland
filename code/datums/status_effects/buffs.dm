@@ -298,7 +298,7 @@
 /datum/status_effect/sword_spin/on_apply()
 	owner.visible_message(span_danger("[owner] begins swinging the sword with inhuman strength!"))
 	var/oldcolor = owner.color
-	owner.color = "#ff0000"
+	owner.color = COLOR_RED
 	owner.add_stun_absorption("bloody bastard sword", duration, 2, "doesn't even flinch as the sword's power courses through them!", "You shrug off the stun!", " glowing with a blazing red aura!")
 	owner.spin(duration,1)
 	animate(owner, color = oldcolor, time = duration, easing = EASE_IN)
@@ -553,7 +553,7 @@
 
 /datum/status_effect/regenerative_core
 	id = "Regenerative Core"
-	duration = 300
+	duration = 1 MINUTES
 	status_type = STATUS_EFFECT_REPLACE
 	alert_type = /atom/movable/screen/alert/status_effect/regenerative_core
 	show_duration = TRUE
@@ -579,7 +579,6 @@
 	if(istype(owner, /mob/living/carbon/human))
 		var/mob/living/carbon/human/humi = owner
 		humi.coretemperature = humi.get_body_temp_normal()
-	owner.restoreEars()
 	duration = rand(150, 450) * duration_mod
 	return TRUE
 

@@ -10,7 +10,6 @@
 	maxHealth = INFINITY
 	plane = GHOST_PLANE
 	healable = FALSE
-	spacewalk = TRUE
 	sight = SEE_SELF
 	throwforce = 0
 
@@ -64,7 +63,7 @@
 /mob/living/simple_animal/eminence/gib()
 	return
 
-/mob/living/simple_animal/eminence/UnarmedAttack(atom/A)
+/mob/living/simple_animal/eminence/UnarmedAttack(atom/A, proximity_flag, modifiers)
 	return FALSE
 
 /mob/living/simple_animal/eminence/start_pulling(atom/movable/AM, state, force = move_force, supress_message = FALSE)
@@ -92,6 +91,8 @@
 	internal_radio = new(src)
 
 	cogs = GLOB.installed_integration_cogs
+
+	ADD_TRAIT(src, TRAIT_SPACEWALK, INNATE_TRAIT)
 
 /mob/living/simple_animal/eminence/Destroy()
 	var/datum/component/tracking_beacon/beacon = GetComponent(/datum/component/tracking_beacon)
