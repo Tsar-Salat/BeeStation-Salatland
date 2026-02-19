@@ -616,7 +616,7 @@
 			if(!(istype(C) && C.has_dna() && C.dna.check_mutation(/datum/mutation/telekinesis)))
 				return FALSE
 
-		if(L.incapacitated()) // Finally make sure we aren't incapacitated
+		if(L.incapacitated) // Finally make sure we aren't incapacitated
 			return FALSE
 
 	else // If we aren't a silicon, living, or admin ghost, bad!
@@ -693,7 +693,7 @@
 	else
 		user.changeNext_move(CLICK_CD_MELEE)
 		user.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
-		var/damage = take_damage(4, BRUTE, MELEE, 1)
+		var/damage = take_damage(4, BRUTE, MELEE, 1, get_dir(src, user))
 		user.visible_message(span_danger("[user] smashes [src] with [user.p_their()] paws[damage ? "." : ", without leaving a mark!"]"), null, null, COMBAT_MESSAGE_RANGE)
 
 /obj/machinery/attack_robot(mob/user)
