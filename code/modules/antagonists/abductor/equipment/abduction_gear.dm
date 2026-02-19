@@ -548,7 +548,7 @@ Congratulations! You are now trained for invasive xenobiology research!"}
 
 /obj/item/melee/baton/abductor/proc/SleepAttack(mob/living/L,mob/living/user)
 	playsound(src, on_stun_sound, 50, TRUE, -1)
-	if(L.incapacitated(IGNORE_RESTRAINTS|IGNORE_GRAB))
+	if(INCAPACITATED_IGNORING(L, INCAPABLE_RESTRAINTS|INCAPABLE_GRAB))
 		if(istype(L.get_item_by_slot(ITEM_SLOT_HEAD), /obj/item/clothing/head/costume/foilhat))
 			to_chat(user,
 				span_warning("The specimen's protective headgear is interfering with the sleep inducement!")
