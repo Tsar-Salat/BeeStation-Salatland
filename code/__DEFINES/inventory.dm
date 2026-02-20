@@ -213,7 +213,6 @@ GLOBAL_LIST_INIT(detective_vest_allowed, (list(
 	/obj/item/lighter,
 	/obj/item/melee/baton,
 	/obj/item/melee/tonfa,
-	/obj/item/melee/baton,
 	/obj/item/reagent_containers/peppercloud_deployer,
 	/obj/item/restraints/handcuffs,
 	/obj/item/storage/fancy/cigarettes,
