@@ -72,7 +72,9 @@
 	if(!affecting) //missing limb? we select the first bodypart (you can never have zero, because of chest)
 		affecting = bodyparts[1]
 	SEND_SIGNAL(I, COMSIG_ITEM_ATTACK_ZONE, src, user, affecting)
-	send_item_attack_message(I, user, parse_zone(affecting.body_zone))
+	send_item_attack_message(I, user, affecting.plaintext_zone)
+	if(I.stamina_damage)
+		stamina.adjust(-1 * (I.stamina_damage * (prob(I.stamina_critical_chance) ? I.stamina_critical_modifier : 1)))
 	if (I.bleed_force)
 		var/armour_block = run_armor_check(affecting, BLEED, armour_penetration = I.armour_penetration, silent = (I.force > 0))
 		var/hit_amount = (100 - armour_block) / 100
@@ -114,7 +116,7 @@
 			//Easy dismemberment on the mob allows even blunt weapons to potentially delimb, but only if the limb is already damaged
 			//Certain weapons are so sharp/strong they have a chance to cleave right through a limb without following the normal restrictions
 
-		else if(weapon_sharpness > SHARP || (weapon_sharpness == SHARP && stat == DEAD))
+		else if(weapon_sharpness >= SHARP || (weapon_sharpness == SHARP && stat == DEAD))
 			//Delimbing cannot normally occur with blunt weapons
 			//You also aren't cutting someone's arm off with a scalpel unless they're already dead
 
@@ -265,8 +267,12 @@
  * src is the attacker
 */
 /mob/living/carbon/proc/disarm(mob/living/carbon/target)
+	///Consume stamina to disarm
+	src.stamina_swing(STAMINA_DISARM_COST)
+
 	do_attack_animation(target, ATTACK_EFFECT_DISARM)
 	playsound(target, 'sound/weapons/thudswoosh.ogg', 50, TRUE, -1)
+
 	if (ishuman(target))
 		var/mob/living/carbon/human/human_target = target
 		human_target.w_uniform?.add_fingerprint(src)
@@ -274,11 +280,8 @@
 	SEND_SIGNAL(target, COMSIG_HUMAN_DISARM_HIT, src, get_combat_bodyzone(target))
 	target.disarm_effect(src)
 
-/mob/living/carbon/is_shove_knockdown_blocked() //If you want to add more things that block shove knockdown, extend this
-	for (var/obj/item/clothing/clothing in get_equipped_items())
-		if(clothing.clothing_flags & BLOCKS_SHOVE_KNOCKDOWN)
-			return TRUE
-	return FALSE
+/mob/living/carbon/proc/shove_resistance()
+	. = 0
 
 /mob/living/carbon/blob_act(obj/structure/blob/B)
 	if (stat == DEAD)

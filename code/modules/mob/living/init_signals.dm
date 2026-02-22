@@ -33,7 +33,8 @@
 	RegisterSignal(src, SIGNAL_ADDTRAIT(TRAIT_NIGHT_VISION), PROC_REF(on_night_vision_trait_gain))
 	RegisterSignal(src, SIGNAL_REMOVETRAIT(TRAIT_NIGHT_VISION), PROC_REF(on_night_vision_trait_loss))
 
-
+	RegisterSignal(src, SIGNAL_ADDTRAIT(TRAIT_EXHAUSTED), PROC_REF(on_exhausted_trait_gain))
+	RegisterSignal(src, SIGNAL_REMOVETRAIT(TRAIT_EXHAUSTED), PROC_REF(on_exhausted_trait_loss))
 
 	RegisterSignals(src, list(
 		SIGNAL_ADDTRAIT(TRAIT_CRITICAL_CONDITION),
@@ -238,6 +239,18 @@
 /mob/living/proc/on_night_vision_trait_loss(datum/source)
 	SIGNAL_HANDLER
 	update_sight()
+
+/// Called when [TRAIT_EXHAUSTED] is added to the mob.
+/mob/living/proc/on_exhausted_trait_gain(datum/source)
+	SIGNAL_HANDLER
+	add_movespeed_modifier(/datum/movespeed_modifier/living_exhaustion)
+	to_chat(src, span_danger("You begin to tire out."))
+
+/// Called when [TRAIT_EXHAUSTED] is removed from the mob.
+/mob/living/proc/on_exhausted_trait_loss(datum/source)
+	SIGNAL_HANDLER
+	if(remove_movespeed_modifier(/datum/movespeed_modifier/living_exhaustion))
+		to_chat(src, span_notice("You catch your breath."))
 
 
 /**

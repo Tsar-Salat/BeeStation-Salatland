@@ -96,7 +96,7 @@
 	affected_mob.AdjustImmobilized(-20 * REM * delta_time)
 	affected_mob.AdjustParalyzed(-20 * REM * delta_time)
 	affected_mob.adjustToxLoss(0.75 * REM * delta_time, updating_health = FALSE)
-	affected_mob.adjustStaminaLoss(-18 * REM * delta_time, updating_health = FALSE)
+	affected_mob.stamina.adjust(18 * REM * delta_time)
 	return UPDATE_MOB_HEALTH
 
 /datum/reagent/drug/crank/overdose_process(mob/living/carbon/affected_mob, delta_time, times_fired)
@@ -168,7 +168,7 @@
 	affected_mob.AdjustUnconscious(-40 * REM * delta_time)
 	affected_mob.AdjustParalyzed(-40 * REM * delta_time)
 	affected_mob.AdjustImmobilized(-40 * REM * delta_time)
-	affected_mob.adjustStaminaLoss(-40 * REM * delta_time, updating_health = FALSE)
+	affected_mob.stamina.adjust(40 * REM * delta_time)
 	affected_mob.set_drowsiness_if_lower(-8 SECONDS * REM * delta_time)
 	affected_mob.set_jitter_if_lower(4 SECONDS * REM * delta_time)
 	affected_mob.adjustOrganLoss(ORGAN_SLOT_BRAIN, 1)
@@ -226,7 +226,7 @@
 		for(var/i = 1 to 2)
 			step(affected_mob, pick(GLOB.cardinals))
 
-	affected_mob.adjustStaminaLoss(-5 * REM * delta_time, updating_health = FALSE)
+	affected_mob.stamina.adjust(5 * REM * delta_time)
 	affected_mob.adjustOrganLoss(ORGAN_SLOT_BRAIN, 4 * REM * delta_time)
 	affected_mob.adjust_hallucinations(10 SECONDS * REM * delta_time)
 	return UPDATE_MOB_HEALTH
@@ -263,7 +263,7 @@
 		affected_mob.losebreath++
 		affected_mob.adjustOxyLoss(1, updating_health = FALSE)
 
-	affected_mob.adjustStaminaLoss(-18 * REM * delta_time, updating_health = FALSE)
+	affected_mob.stamina.adjust(18 * REM * delta_time)
 	affected_mob.adjustToxLoss(0.5 * REM * delta_time, updating_health = FALSE)
 	return UPDATE_MOB_HEALTH
 

@@ -401,25 +401,22 @@
 		else if(findtext(message, right_words))
 			direction = EAST
 		for(var/iter in 1 to 5 * power_multiplier)
-			for(var/V in listeners)
-				var/mob/living/L = V
-				addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(_step), L, direction? direction : pick(GLOB.cardinals)), 10 * (iter - 1))
+			for(var/mob/living/target as anything in listeners)
+				addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(_step), target, direction? direction : pick(GLOB.cardinals)), 10 * (iter - 1))
 
 	//WALK
 	else if((findtext(message, walk_words)))
 		cooldown = COOLDOWN_MEME
-		for(var/V in listeners)
-			var/mob/living/L = V
-			if(L.m_intent != MOVE_INTENT_WALK)
-				L.toggle_move_intent()
+		for(var/mob/living/target as anything in listeners)
+			if(target.m_intent != MOVE_INTENT_WALK)
+				target.set_move_intent(MOVE_INTENT_WALK)
 
 	//RUN
 	else if((findtext(message, run_words)))
 		cooldown = COOLDOWN_MEME
-		for(var/V in listeners)
-			var/mob/living/L = V
-			if(L.m_intent != MOVE_INTENT_RUN)
-				L.toggle_move_intent()
+		for(var/mob/living/target as anything in listeners)
+			if(target.m_intent == MOVE_INTENT_WALK)
+				target.set_move_intent(MOVE_INTENT_RUN)
 
 	//THROW/CATCH
 	else if((findtext(message, throwmode_words)))

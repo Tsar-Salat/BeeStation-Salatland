@@ -320,10 +320,7 @@
 	if(!affecting) //Not if we can't fucking do it buddy. Then we just do normal damage
 		owner.apply_damage((stamina_per_second * seconds_between_ticks) / 3, BURN)
 		return
-
-	// Switch to chest after we finish our damage
-	if (affecting.stamina_dam > affecting.max_stamina_damage)
-		affecting = owner.get_bodypart(BODY_ZONE_CHEST)
+		
 	var/armor_block = owner.run_armor_check(affecting, STAMINA)
 	owner.apply_damage(stamina_per_second * seconds_between_ticks, STAMINA, affecting, armor_block)
 	SEND_SIGNAL(owner, COMSIG_LIVING_MINOR_SHOCK)

@@ -283,7 +283,7 @@
 	target.adjustFireLoss(-amount_healed)
 	target.adjustToxLoss(-amount_healed)
 	target.adjustCloneLoss(-amount_healed)
-	target.adjustStaminaLoss(-amount_healed*2)
+	target.stamina.adjust(amount_healed*2)
 	target.visible_message(span_notice("[target]'s wounds close before your eyes!"))
 
 /obj/projectile/magic/potential

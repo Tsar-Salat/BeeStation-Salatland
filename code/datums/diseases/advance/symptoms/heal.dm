@@ -154,13 +154,13 @@
 /datum/symptom/heal/coma/Heal(mob/living/carbon/M, datum/disease/advance/A, actual_power)
 	var/heal_amt = 4 * actual_power
 
-	var/list/parts = M.get_damaged_bodyparts(1,1)
+	var/list/parts = M.get_damaged_bodyparts(brute = 1, burn = 1, status = BODYTYPE_ORGANIC)
 
 	if(!parts.len)
 		return
 
-	for(var/obj/item/bodypart/L in parts)
-		if(L.heal_damage(heal_amt/parts.len, heal_amt/parts.len, null, BODYTYPE_ORGANIC))
+	for(var/obj/item/bodypart/L as anything in parts)
+		if(L.heal_damage(brute = heal_amt/parts.len, burn = heal_amt/parts.len, required_status = BODYTYPE_ORGANIC))
 			M.update_damage_overlays()
 
 	if(active_coma && M.getBruteLoss() + M.getFireLoss() == 0)
@@ -257,7 +257,7 @@
 	C.reagents.metabolize(C, metabolic_boost * SSMOBS_DT, 0, can_overdose=TRUE) //this works even without a liver; it's intentional since the virus is metabolizing by itself
 	C.overeatduration = max(C.overeatduration - 4 SECONDS, 0)
 	var/lost_nutrition = 9 - (reduced_hunger * 5)
-	C.adjust_nutrition(-lost_nutrition * HUNGER_FACTOR) //Hunger depletes at 10x the normal speed
+	C.adjust_nutrition(-lost_nutrition * HUNGER_DECAY) //Hunger depletes at 10x the normal speed
 	if(prob(2) && C.stat != DEAD)
 		to_chat(C, span_notice("You feel an odd gurgle in your stomach, as if it was working much faster than normal."))
 	return 1
@@ -986,7 +986,7 @@ im not even gonna bother with these for the following symptoms. typed em out, co
 				M.emote("twitch")
 				to_chat(M, span_notice("[pick("You feel energetic!", "You feel well-rested.", "You feel great!")]"))
 		if(4 to 5)
-			M.adjustStaminaLoss((-5 * power), 0)
+			M.stamina.adjust(-(-5 * power))
 			M.set_drowsiness_if_lower(4 SECONDS * power)
 			M.AdjustSleeping(-10 * power)
 			M.AdjustUnconscious(-10 * power)

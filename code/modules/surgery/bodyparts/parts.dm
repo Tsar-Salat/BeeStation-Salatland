@@ -9,8 +9,8 @@
 	is_dimorphic = TRUE
 	px_x = 0
 	px_y = 0
-	stam_damage_coeff = 1
-	max_stamina_damage = 120
+	grind_results = null
+
 	///The bodytype(s) allowed to attach to this chest.
 	var/acceptable_bodytype = BODYTYPE_HUMANOID
 
@@ -79,8 +79,7 @@
 	icon_state = "default_human_l_arm"
 	attack_verb_continuous = list("slaps", "punches")
 	attack_verb_simple = list("slap", "punch")
-	max_damage = 40
-	max_stamina_damage = 50
+	max_damage = 50
 	body_zone = BODY_ZONE_L_ARM
 	body_part = ARM_LEFT
 	plaintext_zone = "left arm"
@@ -184,7 +183,6 @@
 	attack_verb_continuous = list("slaps", "punches")
 	attack_verb_simple = list("slap", "punch")
 	max_damage = 40
-	max_stamina_damage = 50
 	body_zone = BODY_ZONE_R_ARM
 	body_part = ARM_RIGHT
 	plaintext_zone = "right arm"
@@ -295,7 +293,6 @@
 	body_damage_coeff = 0.75
 	px_x = -2
 	px_y = 12
-	max_stamina_damage = 50
 	can_be_disabled = TRUE
 
 
@@ -393,7 +390,6 @@
 	body_damage_coeff = 0.75
 	px_x = 2
 	px_y = 12
-	max_stamina_damage = 50
 	can_be_disabled = TRUE
 
 

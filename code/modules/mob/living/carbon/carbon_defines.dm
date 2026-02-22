@@ -76,9 +76,6 @@
 	/// This number is also reset to 0 every tick of carbon Life(). Pain.
 	var/damageoverlaytemp = 0
 
-	var/stam_regen_start_time = 0 //used to halt stamina regen temporarily
-	var/stam_heal = 10	//Stamina healed per 2 seconds overall. When the mob has taken more than 60 stamina damage, the rate of stamina regeneration will be increased, up to 20 per second when the mob has taken 120 stamina damage.
-
 	/// Protection (insulation) from the heat, Value 0-1 corresponding to the percentage of protection
 	var/heat_protection = 0 // No heat protection
 	/// Protection (insulation) from the cold, Value 0-1 corresponding to the percentage of protection
@@ -92,3 +89,9 @@
 
 	/// A bitfield of "bodytypes", updated by /obj/item/bodypart/proc/synchronize_bodytypes()
 	var/bodytype = BODYTYPE_HUMANOID | BODYTYPE_ORGANIC
+	///Is this carbon trying to sprint?
+	var/sprint_key_down = FALSE
+	var/sprinting = FALSE
+	///How many tiles we have continuously moved in the same direction
+	var/sustained_moves = 0
+

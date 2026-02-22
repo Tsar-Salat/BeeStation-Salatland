@@ -842,7 +842,7 @@
 	. = ..()
 	if(HAS_MIND_TRAIT(drinker, TRAIT_LAW_ENFORCEMENT_METABOLISM))
 		. = UPDATE_MOB_HEALTH
-		drinker.adjustStaminaLoss(-10 * REM * delta_time, 0)
+		drinker.stamina.adjust(-10 * REM * delta_time)
 		if(DT_PROB(10, delta_time))
 			drinker.cause_hallucination(get_random_valid_hallucination_subtype(/datum/hallucination/nearby_fake_item), name)
 		if(DT_PROB(5, delta_time))
@@ -1777,13 +1777,13 @@
 	var/need_mob_update
 	need_mob_update = affected_mob.adjustOrganLoss(ORGAN_SLOT_BRAIN, 1 * REM * delta_time, 150)
 	if(DT_PROB(10, delta_time))
-		need_mob_update += affected_mob.adjustStaminaLoss(10 * REM * delta_time, updating_health = FALSE)
+		affected_mob.stamina.adjust(-10 * REM * delta_time)
 		affected_mob.drop_all_held_items()
 		to_chat(affected_mob, span_notice("You cant feel your hands!"))
 	if(current_cycle > 6)
 		if(DT_PROB(10, delta_time))
 			ADD_TRAIT(affected_mob, pick_trait(), "metabolize:[type]")
-			need_mob_update += affected_mob.adjustStaminaLoss(10 * REM * delta_time, updating_health = FALSE)
+			affected_mob.stamina.adjust(-10 * REM * delta_time)
 		if(current_cycle > 31)
 			need_mob_update += affected_mob.adjustOrganLoss(ORGAN_SLOT_BRAIN, 2 * REM * delta_time)
 			if(current_cycle > 51 && DT_PROB(7.5, delta_time))
@@ -1796,7 +1796,7 @@
 
 /datum/reagent/consumable/ethanol/neurotoxin/on_mob_end_metabolize(mob/living/carbon/affected_mob)
 	. = ..()
-	affected_mob.adjustStaminaLoss(10)
+	affected_mob.stamina.adjust(-10)
 
 /datum/reagent/consumable/ethanol/hippies_delight
 	name = "Hippie's Delight"
@@ -2060,7 +2060,7 @@
 		affected_mob.adjustFireLoss(-1, updating_health = FALSE)
 		affected_mob.adjustToxLoss(-1, updating_health = FALSE)
 		affected_mob.adjustOxyLoss(-1, updating_health = FALSE)
-		affected_mob.adjustStaminaLoss(-1, updating_health = FALSE)
+		affected_mob.stamina.adjust(1)
 		. = UPDATE_MOB_HEALTH
 	affected_mob.visible_message(span_warning("[affected_mob] shivers with renewed vigor!"), span_notice("One taste of [LOWER_TEXT(name)] fills you with energy!"))
 	if(!affected_mob.stat && heal_points == 20) //brought us out of softcrit
@@ -2072,7 +2072,8 @@
 		L.adjustFireLoss(-1 * REM * delta_time)
 		L.adjustToxLoss(-0.5 * REM * delta_time)
 		L.adjustOxyLoss(-3 * REM * delta_time)
-		L.adjustStaminaLoss(-5 * REM * delta_time)
+		L.updatehealth()
+		L.stamina.adjust(5 * REM * delta_time)
 		. = TRUE
 	..()
 
@@ -2378,7 +2379,7 @@
 /datum/reagent/consumable/ethanol/fanciulli/on_mob_metabolize(mob/living/carbon/affected_mob)
 	. = ..()
 	if(affected_mob.health > 0)
-		affected_mob.adjustStaminaLoss(20, updating_health = TRUE)
+		affected_mob.stamina.adjust(-20)
 
 /datum/reagent/consumable/ethanol/branca_menta
 	name = "Branca Menta"
@@ -2398,7 +2399,7 @@
 /datum/reagent/consumable/ethanol/branca_menta/on_mob_metabolize(mob/living/carbon/affected_mob)
 	. = ..()
 	if(affected_mob.health > 0)
-		affected_mob.adjustStaminaLoss(35, updating_health = TRUE)
+		affected_mob.stamina.adjust(-35)
 
 /datum/reagent/consumable/ethanol/branca_menta/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()
@@ -2666,7 +2667,7 @@
 	if(DT_PROB(2, delta_time))
 		to_chat(affected_mob, span_notice(pick("You feel disregard for the rule of law.", "You feel pumped!", "Your head is pounding.", "Your thoughts are racing..")))
 
-	affected_mob.adjustStaminaLoss(-0.25 * affected_mob.get_drunk_amount() * REM * delta_time, updating_health = FALSE)
+	affected_mob.stamina.adjust(0.25 * affected_mob.get_drunk_amount() * REM * delta_time)
 	return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/ethanol/old_timer

@@ -47,8 +47,6 @@
 				adjustOxyLoss(damage)
 			if(CLONE)
 				adjustCloneLoss(damage)
-			if(STAMINA)
-				adjustStaminaLoss(damage)
 
 /mob/living/silicon/attack_paw(mob/living/user)
 	return attack_hand(user)

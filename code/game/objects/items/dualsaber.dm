@@ -12,6 +12,7 @@
 	throwforce = 5
 	throw_speed = 3
 	throw_range = 5
+	sharpness = SHARP_DISMEMBER_EASY
 	w_class = WEIGHT_CLASS_SMALL
 	var/w_class_on = WEIGHT_CLASS_BULKY
 	hitsound = "swing_hit"
@@ -84,7 +85,6 @@
 		if(user.dna.check_mutation(/datum/mutation/hulk))
 			to_chat(user, span_warning("You lack the grace to wield this!"))
 			return COMPONENT_TWOHANDED_BLOCK_WIELD
-	sharpness = SHARP_DISMEMBER_EASY
 	bleed_force = BLEED_DEEP_WOUND
 	w_class = w_class_on
 	hitsound = 'sound/weapons/blade1.ogg'
@@ -96,16 +96,15 @@
 /obj/item/dualsaber/proc/on_unwield(obj/item/source, mob/living/carbon/user)
 	SIGNAL_HANDLER
 
-	sharpness = initial(sharpness)
 	w_class = initial(w_class)
 	bleed_force = initial(bleed_force)
 	hitsound = "swing_hit"
 	STOP_PROCESSING(SSobj, src)
 	set_light_on(FALSE)
 
-/obj/item/dualsaber/update_icon()
-	icon_state = "dualsaber0"
-	..()
+/obj/item/dualsaber/update_icon_state()
+	icon_state = inhand_icon_state = HAS_TRAIT(src, TRAIT_WIELDED) ? "dualsaber[saber_color][HAS_TRAIT(src, TRAIT_WIELDED)]" : "dualsaber0"
+	return ..()
 
 /obj/item/dualsaber/suicide_act(mob/living/carbon/user)
 	if(ISWIELDED(src))
@@ -154,7 +153,7 @@
 	if(ISWIELDED(src))
 		user.take_bodypart_damage(20,25,check_armor = TRUE)
 	else
-		user.adjustStaminaLoss(25)
+		user.stamina.adjust(-25)
 
 /obj/item/dualsaber/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", damage = 0, attack_type = MELEE_ATTACK)
 	if(ISWIELDED(src))
@@ -212,7 +211,7 @@
 			to_chat(user, span_warning("2XRNBW_ENGAGE"))
 			saber_color = "rainbow"
 			AddComponent(/datum/component/two_handed, icon_wielded="dualsaber[saber_color]1")
-			update_icon()
+			update_appearance()
 		else
 			to_chat(user, span_warning("It's starting to look like a triple rainbow - no, nevermind."))
 	else

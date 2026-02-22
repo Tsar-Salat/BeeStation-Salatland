@@ -186,7 +186,7 @@
 
 	var/cooldown = 20 // Default wait time until can stun again.
 	var/stun_time_silicon = (5 SECONDS) // If enabled, how long do we stun silicons.
-	var/stamina_damage = 55 // Do we deal stamina damage.
+	var/stamina_damag = 55 // Do we deal stamina damage.
 	var/affect_silicon = FALSE // Does it stun silicons.
 	var/on_sound // "On" sound, played when switching between able to stun or not.
 	var/on_stun_sound = 'sound/effects/woodhit.ogg' // Default path to sound for when we stun.
@@ -203,8 +203,8 @@
 /obj/item/melee/classic_baton/Initialize(mapload)
 	. = ..()
 	// Adding an extra break for the sake of presentation
-	if(stamina_damage != 0)
-		offensive_notes = "It takes [span_warning("[CEILING(100 / stamina_damage, 1)] stunning hit\s")] to stun an enemy."
+	if(stamina_damag != 0)
+		offensive_notes = "It takes [span_warning("[CEILING(100 / stamina_damag, 1)] stunning hit\s")] to stun an enemy."
 
 // Description for trying to stun when still on cooldown.
 /obj/item/melee/classic_baton/proc/get_wait_description()
@@ -270,7 +270,7 @@
 	add_fingerprint(user)
 	if((HAS_TRAIT(user, TRAIT_CLUMSY)) && prob(50))
 		to_chat(user, span_danger("You hit yourself over the head."))
-		user.adjustStaminaLoss(stamina_damage)
+		user.stamina.adjust(-stamina_damag)
 
 		additional_effects_carbon(user) // user is the target here
 		if(ishuman(user))
@@ -323,7 +323,7 @@
 			playsound(get_turf(src), on_stun_sound, 75, 1, -1)
 			additional_effects_carbon(target, user)
 			if((user.is_zone_selected(BODY_ZONE_HEAD)) || (user.is_zone_selected(BODY_ZONE_CHEST)))
-				target.apply_damage(stamina_damage, STAMINA, BODY_ZONE_CHEST, def_check)
+				target.apply_damage(stamina_damag, STAMINA, BODY_ZONE_CHEST, def_check)
 				log_combat(user, target, "stunned", src)
 				target.visible_message(desc["visiblestun"], desc["localstun"])
 			if((user.is_zone_selected(BODY_ZONE_R_LEG)) || (user.is_zone_selected(BODY_ZONE_L_LEG)))
@@ -352,7 +352,7 @@
 	name = "deputy baton"
 	force = 12
 	cooldown = 10
-	stamina_damage = 20
+	stamina_damag = 20
 	stun_animation = TRUE
 	custom_price = 120
 
@@ -364,7 +364,7 @@
 	icon_state = "telebaton_0"
 	lefthand_file = 'icons/mob/inhands/weapons/melee_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/melee_righthand.dmi'
-	stamina_damage = 0
+	stamina_damag = 0
 	stun_animation = FALSE
 	inhand_icon_state = null
 	slot_flags = ITEM_SLOT_BELT
@@ -444,11 +444,11 @@
 	force = 5
 	on = FALSE
 	var/knockdown_time_carbon = (1.5 SECONDS) // Knockdown length for carbons.
-	var/stamina_damage_non_target = 55
-	var/stamina_damage_target = 85
+	var/stamina_damag_non_target = 55
+	var/stamina_damag_target = 85
 	var/target_confusion = 4 SECONDS
 
-	stamina_damage = 85
+	stamina_damag = 85
 	affect_silicon = TRUE
 	on_sound = 'sound/weapons/contractorbatonextend.ogg'
 	on_stun_sound = 'sound/effects/contractorbatonhit.ogg'
@@ -513,7 +513,7 @@
 		to_chat(user, span_danger("You hit yourself over the head."))
 
 		user.Paralyze(knockdown_time_carbon * force)
-		user.adjustStaminaLoss(stamina_damage)
+		user.stamina.adjust(-stamina_damag)
 
 		additional_effects_carbon(user) // user is the target here
 		if(ishuman(user))
@@ -568,12 +568,12 @@
 			if(is_target)
 				target.Knockdown(knockdown_time_carbon)
 				target.drop_all_held_items()
-				target.adjustStaminaLoss(stamina_damage)
+				target.stamina.adjust(-stamina_damag)
 				if(target_confusion > 0)
 					target.adjust_confusion_up_to(target_confusion, 6 SECONDS)
 			else
 				target.Knockdown(knockdown_time_carbon)
-				target.adjustStaminaLoss(stamina_damage_non_target)
+				target.stamina.adjust(-stamina_damag_non_target)
 			additional_effects_carbon(target, user)
 
 			log_combat(user, target, "stunned", src)
@@ -610,9 +610,9 @@
 	name = "bounty hunter baton"
 	desc = "A compact, specialised retractible stun baton assigned to bounty hunters."
 	knockdown_time_carbon = (2 SECONDS)
-	stamina_damage_non_target = 60
-	stamina_damage_target = 60
-	stamina_damage = 60
+	stamina_damag_non_target = 60
+	stamina_damag_target = 60
+	stamina_damag = 60
 	target_confusion = 0
 
 // Supermatter Sword
@@ -983,7 +983,7 @@
 	add_fingerprint(user)
 	if((HAS_TRAIT(user, TRAIT_CLUMSY)) && prob(50))
 		to_chat(user, span_danger("You hit yourself over the head."))
-		user.adjustStaminaLoss(stamina_force)
+		user.stamina.adjust(-stamina_force)
 
 		// Deal full damage
 		force = initial(force)
@@ -1016,8 +1016,8 @@
 		log_combat(user, target, "attacked", src)
 
 		// If the target has a lot of stamina loss, knock them down
-		if ((user.is_zone_selected(BODY_ZONE_L_LEG) || user.is_zone_selected(BODY_ZONE_R_LEG)) && target.getStaminaLoss() > 22)
-			var/effectiveness = CLAMP01((target.getStaminaLoss() - 22) / 50)
+		if ((user.is_zone_selected(BODY_ZONE_L_LEG) || user.is_zone_selected(BODY_ZONE_R_LEG)) && target.stamina.loss_as_percent > 22)
+			var/effectiveness = CLAMP01((target.stamina.loss_as_percent - 22) / 50)
 			log_combat(user, target, "knocked-down", src, "(additional effect)")
 			// Move the target back upon knockdown, to give them some time to recover
 			var/shove_dir = get_dir(user.loc, target.loc)

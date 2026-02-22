@@ -885,6 +885,11 @@ Recharging stations are available in robotics, the dormitory bathrooms, and the 
 	if(L.last_special <= world.time)
 		return L.resist_buckle()
 
+/atom/movable/screen/alert/softcrit
+	name = "Critical Condition"
+	desc = "You are in very bad shape. Max stamina reduced by 100 and stamina regen reduced by 5."
+	icon_state = ALERT_SOFTCRIT
+
 // PRIVATE = only edit, use, or override these if you're editing the system as a whole
 
 // Re-render all alerts - also called in /datum/hud/show_hud() because it's needed there

@@ -21,3 +21,11 @@
 #define INTERACT_MACHINE_SET_MACHINE 		(1<<6)		//! MACHINES HAVE THIS BY DEFAULT, SOMEONE SHOULD RUN THROUGH MACHINES AND REMOVE IT FROM THINGS LIKE LIGHT SWITCHES WHEN POSSIBLE!!--------------------------
 												//This flag determines if a machine set_machine's the user when the user uses it, making updateUsrDialog make the user re-call interact() on it.
 												//THIS FLAG IS ON ALL MACHINES BY DEFAULT, NEEDS TO BE RE-EVALUATED LATER!!
+
+#define INTERACT_GENERIC "interact"
+#define INTERACT_HELP "help"
+#define INTERACT_DISARM "disarm"
+#define INTERACT_HARM "harm"
+#define INTERACT_GRAB "grab"
+#define INTERACT_PULL "pull"
+#define INTERACT_UNPULL "unpull"

@@ -162,8 +162,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 	if(pushed_mob.loc != loc) //Something prevented the tabling
 		return
 	pushed_mob.Knockdown(30)
-	pushed_mob.apply_damage(40, STAMINA)
-	if(user.mind?.martial_art?.smashes_tables)
+	pushed_mob.apply_damage(10, BRUTE)
+	pushed_mob.stamina.adjust(-40)
+	if(user.mind?.martial_art.smashes_tables && user.mind?.martial_art.can_use(user))
 		deconstruct(FALSE)
 	if(pushed_mob.nutrition > NUTRITION_LEVEL_FAT) //lol
 		deconstruct(FALSE)
@@ -181,8 +182,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 
 /obj/structure/table/proc/tableheadsmash(mob/living/user, mob/living/pushed_mob)
 	pushed_mob.Knockdown(30)
-	pushed_mob?.apply_damage(40, BRUTE, BODY_ZONE_HEAD)
-	pushed_mob.apply_damage(60, STAMINA)
+	var/obj/item/bodypart/banged_limb = pushed_mob.get_bodypart(user.zone_selected) || pushed_mob.get_bodypart(BODY_ZONE_HEAD)
+	banged_limb?.receive_damage(30)
+	pushed_mob.stamina.adjust(-60)
 	take_damage(50)
 	if(user.mind?.martial_art?.smashes_tables)
 		deconstruct(FALSE)

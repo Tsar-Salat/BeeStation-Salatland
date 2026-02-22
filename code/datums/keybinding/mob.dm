@@ -288,13 +288,19 @@
 		return
 	if(!user.mob) return
 	var/mob/M = user.mob
-	M.toggle_move_intent()
+	if(M.m_intent != MOVE_INTENT_WALK)
+		M.set_move_intent(MOVE_INTENT_WALK)
+	else
+		M.set_move_intent(MOVE_INTENT_RUN)
 	return TRUE
 
 /datum/keybinding/mob/toggle_move_intent/up(client/user)
 	if(!user.mob) return
 	var/mob/M = user.mob
-	M.toggle_move_intent()
+	if(M.m_intent != MOVE_INTENT_WALK)
+		M.set_move_intent(MOVE_INTENT_WALK)
+	else
+		M.set_move_intent(MOVE_INTENT_RUN)
 	return TRUE
 
 /datum/keybinding/mob/toggle_move_intent_alternative
@@ -309,7 +315,10 @@
 	if(.)
 		return
 	var/mob/M = user.mob
-	M.toggle_move_intent()
+	if(M.m_intent != MOVE_INTENT_WALK)
+		M.set_move_intent(MOVE_INTENT_WALK)
+	else
+		M.set_move_intent(MOVE_INTENT_RUN)
 	return TRUE
 
 /datum/keybinding/mob/prevent_movement

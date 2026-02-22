@@ -36,7 +36,6 @@
 	else
 		var/bprv = handle_bodyparts()
 		if(bprv & BODYPART_LIFE_UPDATE_HEALTH)
-			update_stamina() //needs to go before updatehealth to remove stamcrit
 			updatehealth()
 
 	if(. && mind) //. == not dead
@@ -86,7 +85,7 @@
 	var/datum/gas_mixture/breath
 
 	if(!get_organ_slot(ORGAN_SLOT_BREATHING_TUBE))
-		if(health <= HEALTH_THRESHOLD_FULLCRIT || (pulledby && pulledby.grab_state >= GRAB_KILL) || HAS_TRAIT(src, TRAIT_MAGIC_CHOKE) || !lungs || lungs.organ_flags & ORGAN_FAILING)
+		if(health <= crit_threshold || (pulledby?.grab_state >= GRAB_KILL) || HAS_TRAIT(src, TRAIT_MAGIC_CHOKE) || (lungs?.organ_flags & ORGAN_FAILING))
 			losebreath++  //You can't breath at all when in critical or when being choked, so you're going to miss a breath
 
 		else if(health <= crit_threshold)
@@ -145,13 +144,13 @@
 
 	var/obj/item/organ/lungs = get_organ_slot(ORGAN_SLOT_LUNGS)
 	if(!lungs)
-		adjustOxyLoss(2)
+		adjustOxyLoss(4)
 
 	//CRIT
 	if(!breath || (breath.total_moles() == 0) || !lungs)
 		if(reagents.has_reagent(/datum/reagent/medicine/epinephrine, needs_metabolizing = TRUE) && lungs)
 			return
-		adjustOxyLoss(1)
+		adjustOxyLoss(2)
 
 		failed_last_breath = 1
 		throw_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
@@ -172,8 +171,6 @@
 
 	//OXYGEN
 	if(O2_partialpressure < safe_oxy_min) //Not enough oxygen
-		if(prob(20))
-			emote("gasp")
 		if(O2_partialpressure > 0)
 			var/ratio = 1 - O2_partialpressure/safe_oxy_min
 			adjustOxyLoss(min(5*ratio, 3))
@@ -279,30 +276,8 @@
 	return
 
 /mob/living/carbon/proc/handle_bodyparts(delta_time, times_fired)
-	var/stam_regen = FALSE
-	if(stam_regen_start_time <= world.time)
-		stam_regen = TRUE
-		if(HAS_TRAIT_FROM(src, TRAIT_INCAPACITATED, STAMINA))
-			. |= BODYPART_LIFE_UPDATE_HEALTH //make sure we remove the stamcrit
-	var/bodyparts_with_stam = 0
-	var/stam_heal_multiplier = 1
-	var/total_stamina_loss = 0	//Quicker to put it here too than do it again with getStaminaLoss
-	var/force_heal = 0
-	//Find how many bodyparts we have with stamina damage
-	if(stam_regen)
-		for(var/obj/item/bodypart/BP as() in bodyparts)
-			if(BP.stamina_dam >= DAMAGE_PRECISION)
-				bodyparts_with_stam++
-				total_stamina_loss += BP.stamina_dam * BP.stam_damage_coeff
-		//Force bodyparts to heal if we have more than 120 stamina damage (6 seconds)
-		force_heal = max(0, total_stamina_loss - 120) / max(bodyparts_with_stam, 1)
-	//Increase damage the more stam damage
-	//Incraesed stamina healing when above 50 stamloss, up to 2x healing rate when at 100 stamloss.
-	stam_heal_multiplier = clamp(total_stamina_loss / 50, 1, 2)
-	//Heal bodypart stamina damage
-	for(var/obj/item/bodypart/BP as() in bodyparts)
-		if(BP.needs_processing)
-			. |= BP.on_life(delta_time, times_fired, stam_regen = (force_heal + ((stam_regen * stam_heal * stam_heal_multiplier) / max(bodyparts_with_stam, 1))))
+	for(var/obj/item/bodypart/limb as anything in bodyparts)
+		. |= limb.on_life(delta_time, times_fired)
 
 /mob/living/carbon/proc/handle_organs(delta_time, times_fired)
 	if(stat == DEAD)

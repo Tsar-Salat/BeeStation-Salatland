@@ -120,7 +120,7 @@
 		clicked_atom = get_turf_in_angle(tackle_angle, get_turf(user), min_distance)
 
 	user.Knockdown(base_knockdown, ignore_canstun = TRUE)
-	user.adjustStaminaLoss(stamina_cost)
+	user.stamina.adjust(-stamina_cost)
 	user.throw_at(clicked_atom, range, speed, user, FALSE, force = MOVE_FORCE_WEAK)
 	addtimer(CALLBACK(src, PROC_REF(resetTackle)), base_knockdown, TIMER_STOPPABLE)
 	return(COMSIG_MOB_CANCEL_CLICKON)
@@ -400,8 +400,6 @@
 			defense_mod += 2
 		if(tackle_target.mob_negates_gravity())
 			defense_mod += 1
-		if(tackle_target.is_shove_knockdown_blocked()) // riot armor and such
-			defense_mod += 5
 		if(tackle_target.combat_mode) // they're ready for you
 			defense_mod += 5
 		if(tackle_target.throw_mode) //they're REALLY ready for you
@@ -446,11 +444,11 @@
 		var/datum/component/mood/human_sacker_sanity = human_sacker.GetComponent(/datum/component/mood)
 		if(human_sacker_sanity.sanity == SANITY_INSANE) //I've gone COMPLETELY INSANE
 			attack_mod += 5
-			human_sacker.adjustStaminaLoss(150) //AHAHAHAHAHAHAHAHA
+			human_sacker.stamina.adjust(-150) //AHAHAHAHAHAHAHAHA
 
 		if(human_sacker.is_shove_knockdown_blocked()) // tackling with riot specialized armor, like riot armor, is effective but tiring
 			attack_mod += 2
-			human_sacker.adjustStaminaLoss(20)
+			human_sacker.stamina.adjust(-20)
 
 	var/randomized_tackle_roll = rand(-6, 6) - defense_mod + attack_mod + skill_mod
 	return randomized_tackle_roll
@@ -603,7 +601,7 @@
 		var/glass_breaking_sound = pick('sound/effects/glassbr1.ogg','sound/effects/glassbr2.ogg','sound/effects/glassbr3.ogg')
 		playsound(user, glass_breaking_sound, 140, TRUE)
 		qdel(windscreen_casualty)
-		user.adjustStaminaLoss(10 * speed)
+		user.stamina.adjust(-10 * speed)
 		user.Paralyze(3 SECONDS)
 		user.visible_message("<span class='danger'>[user] smacks into [windscreen_casualty] and shatters it, shredding [user.p_them()]self with glass!</span>",
 							"<span class='userdanger'>You smacks into [windscreen_casualty] and shatter it, shredding yourself with glass!</span>")
@@ -614,7 +612,7 @@
 		user.Paralyze(1 SECONDS)
 		user.Knockdown(3 SECONDS)
 		windscreen_casualty.take_damage(30 * speed)
-		user.adjustStaminaLoss(10 * speed, updating_health=FALSE)
+		user.stamina.adjust(-10 * speed)
 		user.adjustBruteLoss(5 * speed)
 
 ///Check to see if we hit a table, and if so, make a big mess!
@@ -655,7 +653,7 @@
 
 	owner.visible_message("<span class='danger'>[owner] trips over [kevved] and slams into it face-first[HOW_big_of_a_miss_did_we_just_make]!</span>",
 						"<span class='userdanger'>You trip over [kevved] and slam into it face-first[HOW_big_of_a_miss_did_we_just_make]!</span>")
-	owner.adjustStaminaLoss(15 + messes.len * 2, updating_health = FALSE)
+	owner.stamina.adjust(-15 + length(messes) * -2)
 	owner.adjustBruteLoss(8 + messes.len, updating_health = FALSE)
 	owner.Paralyze(0.4 SECONDS * messes.len) // .4 seconds of paralyze for each thing you knock around
 	owner.Knockdown(2 SECONDS + 0.4 SECONDS * messes.len) // 2 seconds of knockdown after the paralyze

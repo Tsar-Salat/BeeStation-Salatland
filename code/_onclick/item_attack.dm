@@ -101,6 +101,7 @@
 /obj/item/proc/pre_attack(atom/A, mob/living/user, params) //do stuff before attackby!
 	if(SEND_SIGNAL(src, COMSIG_ITEM_PRE_ATTACK, A, user, params) & COMPONENT_CANCEL_ATTACK_CHAIN)
 		return TRUE
+
 	return FALSE //return TRUE to avoid calling attackby after this proc does stuff
 
 /**
@@ -243,6 +244,8 @@
 
 	target_mob.lastattacker = user.real_name
 	target_mob.lastattackerckey = user.ckey
+
+	user.stamina_swing(src.stamina_cost)
 
 	user.do_attack_animation(target_mob)
 	var/time = world.time

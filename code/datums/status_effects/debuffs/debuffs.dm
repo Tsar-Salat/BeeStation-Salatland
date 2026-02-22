@@ -96,8 +96,8 @@
 	return ..()
 
 /datum/status_effect/incapacitating/unconscious/tick(seconds_between_ticks)
-	if(owner.getStaminaLoss())
-		owner.adjustStaminaLoss(-0.3) //reduce stamina loss by 0.3 per tick, 6 per 2 seconds
+	if(owner.stamina.loss)
+		owner.stamina.adjust(-0.3) //reduce stamina loss by 0.3 per tick, 6 per 2 seconds
 
 
 //SLEEPING
@@ -154,7 +154,7 @@
 			need_mob_update += owner.adjustBruteLoss(healing, updating_health = FALSE)
 			need_mob_update += owner.adjustFireLoss(healing, updating_health = FALSE)
 			need_mob_update += owner.adjustToxLoss(healing * 0.5, updating_health = FALSE, forced = TRUE)
-			need_mob_update += owner.adjustStaminaLoss(healing, updating_health = FALSE)
+			need_mob_update += owner.stamina.adjust(-healing)
 			if(need_mob_update)
 				owner.updatehealth()
 
@@ -740,8 +740,8 @@
 	var/running_toggled = FALSE
 
 /datum/status_effect/interdiction/tick()
-	if(owner.m_intent == MOVE_INTENT_RUN)
-		owner.toggle_move_intent(owner)
+	if(owner.m_intent != MOVE_INTENT_WALK)
+		owner.set_move_intent(MOVE_INTENT_WALK)
 		owner.adjust_confusion_up_to(10 SECONDS, max_duration = 10 SECONDS)
 		running_toggled = TRUE
 		to_chat(owner, span_warning("You know you shouldn't be running here."))
@@ -750,7 +750,7 @@
 /datum/status_effect/interdiction/on_remove()
 	owner.remove_movespeed_modifier(/datum/movespeed_modifier/status_effect/interdiction)
 	if(running_toggled && owner.m_intent == MOVE_INTENT_WALK)
-		owner.toggle_move_intent(owner)
+		owner.set_move_intent(MOVE_INTENT_RUN)
 
 /atom/movable/screen/alert/status_effect/interdiction
 	name = "Interdicted"
@@ -890,7 +890,7 @@
 /datum/status_effect/heretic_mark/ash/on_effect()
 	if(iscarbon(owner))
 		var/mob/living/carbon/carbon_owner = owner
-		carbon_owner.adjustStaminaLoss(6 * repetitions)
+		carbon_owner.stamina.adjust(-6 * repetitions)
 		carbon_owner.adjustFireLoss(3 * repetitions)
 		for(var/mob/living/carbon/victim in ohearers(1,carbon_owner))
 			if(IS_HERETIC(victim))

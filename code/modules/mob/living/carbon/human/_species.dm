@@ -1202,7 +1202,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		H.losebreath = 0
 
 		var/takes_crit_damage = (!HAS_TRAIT(H, TRAIT_NOCRITDAMAGE))
-		if((H.health <= H.crit_threshold) && takes_crit_damage)
+		if((H.health <= H.hardcrit_threshold) && takes_crit_damage)
 			H.adjustBruteLoss(0.5 * delta_time)
 	if(H.get_organ_by_type(/obj/item/organ/wings))
 		handle_flight(H)
@@ -1453,7 +1453,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	// nutrition decrease and satiety
 	if (H.nutrition > 0 && H.stat != DEAD && !HAS_TRAIT(H, TRAIT_NOHUNGER))
 		// THEY HUNGER
-		var/hunger_rate = HUNGER_FACTOR
+		var/hunger_rate = HUNGER_DECAY
 		var/datum/component/mood/mood = H.GetComponent(/datum/component/mood)
 		if(mood && mood.sanity > SANITY_DISTURBED)
 			hunger_rate *= max(1 - 0.002 * mood.sanity, 0.5) //0.85 to 0.75
@@ -1461,14 +1461,14 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		if(H.satiety > MAX_SATIETY)
 			H.satiety = MAX_SATIETY
 		else if(H.satiety > 0)
-			H.satiety--
+			H.satiety = max(H.satiety - (SATIETY_DECAY * delta_time), 0)
 		else if(H.satiety < -MAX_SATIETY)
 			H.satiety = -MAX_SATIETY
 		else if(H.satiety < 0)
-			H.satiety++
+			H.satiety = min(H.satiety + (SATIETY_DECAY * delta_time), 0)
 			if(DT_PROB(round(-H.satiety/77), delta_time))
 				H.set_jitter_if_lower(10 SECONDS)
-			hunger_rate = 3 * HUNGER_FACTOR
+			hunger_rate = 3 * HUNGER_DECAY
 		hunger_rate *= H.physiology.hunger_mod
 		H.adjust_nutrition(-hunger_rate * delta_time)
 
@@ -1645,7 +1645,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		to_chat(user, span_warning("Your attack at [target] was blocked!"))
 		return FALSE
 	if(attacker_style?.harm_act(user,target) == MARTIAL_ATTACK_SUCCESS)
-		return TRUE
+		return ATTACK_HANDLED
 	else
 
 		var/atk_verb = user.dna.species.attack_verb
@@ -1696,10 +1696,13 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			log_combat(user, target, "kicked", "punch")
 		else//other attacks deal full raw damage + 1.5x in stamina damage
 			target.apply_damage(damage, attack_type, affecting, armor_block)
-			target.apply_damage(damage*1.5, STAMINA, affecting, armor_block)
+			target.stamina.adjust(-STAMINA_DAMAGE_UNARMED)
 			if(damage >= 9)
 				target.force_say()
 			log_combat(user, target, "punched", "punch")
+			. |= ATTACK_CONSUME_STAMINA
+
+		return ATTACK_CONTINUE | .
 
 /datum/species/proc/spec_unarmedattack(mob/living/carbon/human/user, atom/target, modifiers)
 	return FALSE
@@ -1711,6 +1714,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		to_chat(user, span_warning("Your shove at [target] was blocked!"))
 		return FALSE
 	if(attacker_style?.disarm_act(user,target) == MARTIAL_ATTACK_SUCCESS)
+		user.animate_interact(target, INTERACT_DISARM)
 		return TRUE
 	if(user.resting || user.IsKnockdown())
 		return FALSE
@@ -1718,8 +1722,8 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		return FALSE
 	if(user.loc == target.loc)
 		return FALSE
-	else
-		user.disarm(target)
+	user.disarm(target)
+	return TRUE
 
 /datum/species/proc/spec_hitby(atom/movable/AM, mob/living/carbon/human/H)
 	return
@@ -1745,12 +1749,20 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	SEND_SIGNAL(target, COMSIG_MOB_HAND_ATTACKED, target, attacker, attacker_style)
 
 	if(LAZYACCESS(modifiers, RIGHT_CLICK))
-		disarm(attacker, target, attacker_style)
+		. = disarm(attacker, target, attacker_style)
+		if(.)
+			attacker.animate_interact(target, INTERACT_DISARM)
 		return // dont attack after
 	if(attacker.combat_mode)
-		harm(attacker, target, attacker_style)
+		. = harm(attacker, target, attacker_style)
+		if(. & ATTACK_CONTINUE)
+			attacker.animate_interact(target, INTERACT_HARM)
+		if(. & ATTACK_CONSUME_STAMINA)
+			attacker.stamina_swing(STAMINA_SWING_COST_UNARMED)
 	else
-		help(attacker, target, attacker_style)
+		. = help(attacker, target, attacker_style)
+		if(.)
+			attacker.animate_interact(target, INTERACT_HELP)
 
 /datum/species/proc/spec_attacked_by(obj/item/I, mob/living/user, obj/item/bodypart/affecting, mob/living/carbon/human/H)
 	// Allows you to put in item-specific reactions based on species
@@ -1770,9 +1782,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	var/def_zone = affecting.body_zone
 
 	var/armor_block = H.run_armor_check(affecting, MELEE, span_notice("Your armor has protected your [hit_area]!"), span_warning("Your armor has softened a hit to your [hit_area]!"),I.armour_penetration)
-	var/Iforce = I.force //to avoid runtimes on the forcesay checks at the bottom. Some items might delete themselves if you drop them. (stunning yourself, ninja swords)
 	var/limb_damage = affecting.get_damage() //We need to save this for later to simplify dismemberment
-	apply_damage(I.force, I.damtype, def_zone, armor_block, H)
 
 	//This must be placed after blocking checks
 	if(istype(I, /obj/item/melee/baton) && I.damtype == STAMINA)
@@ -1808,8 +1818,13 @@ GLOBAL_LIST_EMPTY(features_by_species)
 
 	H.send_item_attack_message(I, user, hit_area)
 
+	apply_damage(I.force, I.damtype, def_zone, armor_block, H)
+
+	if(I.stamina_damage)
+		H.stamina.adjust(-I.stamina_damage * (prob(I.stamina_critical_chance) ? I.stamina_critical_modifier : 1))
+
 	if(!I.force)
-		return 0 //item force is zero
+		return FALSE //item force is zero
 
 	var/dismember_limb = FALSE
 	var/weapon_sharpness = I.is_sharp()
@@ -1820,7 +1835,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		//Easy dismemberment on the mob allows even blunt weapons to potentially delimb, but only if the limb is already damaged
 		//Certain weapons are so sharp/strong they have a chance to cleave right through a limb without following the normal restrictions
 
-	else if(weapon_sharpness > SHARP || mob_dismember_weakness || (weapon_sharpness == SHARP && H.stat == DEAD))
+	else if(weapon_sharpness >= SHARP || mob_dismember_weakness || (weapon_sharpness == SHARP && H.stat == DEAD))
 		//Delimbing cannot normally occur with blunt weapons
 		//You also aren't cutting someone's arm off with a scalpel unless they're already dead
 
@@ -1833,11 +1848,11 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		playsound(get_turf(H), I.get_dismember_sound(), 80, 1)
 
 	if(I.damtype == BRUTE && (I.force >= max(10, armor_block) && hit_area == BODY_ZONE_HEAD))
-		if(!I.is_sharp() && H.mind && H.stat == CONSCIOUS && H != user && (H.health - (I.force * I.attack_weight)) <= 0) // rev deconversion through blunt trauma.
+		if(!I.is_sharp() && H.mind && H.stat <= SOFT_CRIT && H != user && (H.health - (I.force * I.attack_weight)) <= 0) // rev deconversion through blunt trauma.
 			var/datum/antagonist/rev/rev = IS_REVOLUTIONARY(H)
 			if(rev)
 				rev.remove_revolutionary(FALSE, user)
-		if(Iforce > 10 || Iforce >= 5 && prob(33))
+		if(I.force > 10 || I.force >= 5 && prob(33))
 			H.force_say(user)
 	else if (I.damtype == BURN && H.is_bleeding())
 		H.cauterise_wounds(AMOUNT_TO_BLEED_INTENSITY(I.force / 3))
@@ -1845,7 +1860,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		playsound(H, 'sound/surgery/cautery2.ogg', 70)
 	return TRUE
 
-/datum/species/proc/apply_damage(damage, damagetype = BRUTE, def_zone = null, blocked, mob/living/carbon/human/H, forced = FALSE, spread_damage = FALSE)
+/datum/species/proc/apply_damage(damage, damagetype = BRUTE, def_zone = null, blocked, mob/living/carbon/human/H, forced = FALSE, spread_damage = FALSE, cap_loss_at = 0)
 	SEND_SIGNAL(H, COMSIG_MOB_APPLY_DAMAGE, damage, damagetype, def_zone)
 	var/hit_percent = (100-(blocked+armor))/100
 	hit_percent = (hit_percent * (100-H?.physiology?.damage_resistance))/100
@@ -1890,12 +1905,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			var/damage_amount = forced ? damage : damage * hit_percent * clonemod * H.physiology.clone_mod
 			H.adjustCloneLoss(damage_amount, forced = forced)
 		if(STAMINA)
-			var/damage_amount = forced ? damage : damage * hit_percent * staminamod * H.physiology.stamina_mod
-			if(BP)
-				if(BP.receive_damage(0, 0, damage_amount))
-					H.update_stamina(TRUE)
-			else
-				H.adjustStaminaLoss(damage_amount, forced = forced)
+			CRASH("You get the idea")
 		if(BRAIN)
 			var/damage_amount = forced ? damage : damage * hit_percent * H.physiology.brain_mod
 			H.adjustOrganLoss(ORGAN_SLOT_BRAIN, damage_amount)

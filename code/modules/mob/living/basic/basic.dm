@@ -13,8 +13,6 @@
 
 	///Defines how fast the basic mob can move. This is a multiplier
 	var/speed = 1
-	///How much stamina the mob recovers per second
-	var/stamina_recovery = 5
 
 	///how much damage this basic mob does to objects, if any.
 	var/obj_damage = 0
@@ -124,12 +122,6 @@
 
 	if(unsuitable_cold_damage != 0 && unsuitable_heat_damage != 0)
 		AddElement(/datum/element/basic_body_temp_sensitive, minimum_survivable_temperature, maximum_survivable_temperature, unsuitable_cold_damage, unsuitable_heat_damage)
-
-/mob/living/basic/Life(delta_time = SSMOBS_DT, times_fired)
-	. = ..()
-	///Automatic stamina re-gain
-	if(staminaloss > 0)
-		adjustStaminaLoss(-stamina_recovery * delta_time, updating_health = FALSE, forced = TRUE)
 
 /mob/living/basic/say_mod(input, list/message_mods = list())
 	if(length(speak_emote))
