@@ -51,7 +51,7 @@ BONUS
 	var/mob/living/carbon/M = A.affected_mob
 	var/obj/item/bodypart/bodypart = M.get_bodypart(M.get_random_valid_zone(even_weights = TRUE))
 	if(bodypart && IS_ORGANIC_LIMB(bodypart) && !(bodypart.bodypart_flags & BODYPART_PSEUDOPART))  //robotic limbs will mean less scratching overall (why are golems able to damage themselves with self-scratching, but not androids? the world may never know)
-		var/can_scratch = scratch && !M.incapacitated()
+		var/can_scratch = scratch && !M.incapacitated
 		if(can_scratch)
 			bodypart.receive_damage(0.5)
 		M.visible_message("[can_scratch ? span_warning("[M] scratches [M.p_their()] [bodypart.plaintext_zone].") : ""]", span_notice("Your [bodypart.plaintext_zone] itches. [can_scratch ? " You scratch it." : ""]"))

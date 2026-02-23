@@ -113,7 +113,8 @@
 
 /datum/config_entry/flag/no_summon_events	//Allowed
 
-/datum/config_entry/flag/no_intercept_report	//Whether or not to send a communications intercept report roundstart. This may be overridden by gamemodes.
+/datum/config_entry/flag/intercept_report	//Whether or not to send a communications intercept report roundstart. This may be overridden by gamemodes.
+	config_entry_value = TRUE
 
 /datum/config_entry/number/arrivals_shuttle_dock_window	//Time from when a player late joins on the arrivals shuttle to when the shuttle docks on the station
 	config_entry_value = 55
@@ -343,7 +344,7 @@
 /datum/config_entry/flag/shift_time_realtime
 
 /datum/config_entry/keyed_list/antag_rep
-	key_mode = KEY_MODE_TEXT
+	key_mode = KEY_MODE_TEXT  
 	value_mode = VALUE_MODE_NUM
 
 /datum/config_entry/flag/allow_crew_objectives
@@ -352,6 +353,10 @@
 /datum/config_entry/number/max_cube_monkeys
 	config_entry_value = 100
 	default = 100
+	min_val = 0
+
+/datum/config_entry/number/ratcap
+	config_entry_value = 64
 	min_val = 0
 
 /datum/config_entry/number/max_chickens
