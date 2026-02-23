@@ -21,7 +21,7 @@
 		BB_VISION_RANGE = AI_DOG_VISION_RANGE,
 		BB_PET_TARGETING_STRATEGY = /datum/targeting_strategy/basic/not_friends,
 		BB_BABIES_PARTNER_TYPES = list(/mob/living/basic/pet/dog),
-		BB_BABIES_CHILD_TYPES = list(/mob/living/basic/pet/dog/corgi/puppy = 95, /mob/living/basic/pet/dog/corgi/puppy/void = 5),
+		BB_BABIES_CHILD_TYPES = list(/mob/living/basic/pet/dog/corgi),
 	)
 
 	planning_subtrees = list(

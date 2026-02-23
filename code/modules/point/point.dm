@@ -123,11 +123,18 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/temp_visual/point)
 	set category = "Object"
 	if(isnewplayer(src))
 		return FALSE
-	if(client && !(A in view(client.view, src)))
-		return FALSE
 	if(istype(A, /obj/effect/temp_visual/point))
 		return FALSE
-	if (SEND_SIGNAL(src, COMSIG_MOB_POINTED, A) & COMSIG_MOB_POINTED_CANCEL)
+
+	INVOKE_ASYNC(src, PROC_REF(_pointed), A, params)
+
+/// possibly delayed verb that finishes the pointing process starting in [/mob/verb/pointed()].
+/mob/proc/_pointed(atom/pointing_at, params)
+	if(client && !(pointing_at in view(client.view, src)))
+		return FALSE
+
+	if (SEND_SIGNAL(src, COMSIG_MOB_POINTED, pointing_at) & COMSIG_MOB_POINTED_CANCEL)
 		return
-	point_at(A, params, usr)
+
+	point_at(pointing_at, params, usr)
 	return TRUE

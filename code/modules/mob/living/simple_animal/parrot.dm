@@ -917,6 +917,8 @@ GLOBAL_LIST_INIT(strippable_parrot_items, create_strippable_list(list(
 	..()
 
 /mob/living/simple_animal/parrot/Poly/death(gibbed)
+	if(HAS_TRAIT(src, TRAIT_DONT_WRITE_MEMORY))
+		return ..() // Don't read memory either.
 	if(!memory_saved)
 		Write_Memory(TRUE)
 	if(rounds_survived == longest_survival || rounds_survived == longest_deathstreak || prob(0.666))
@@ -947,7 +949,10 @@ GLOBAL_LIST_INIT(strippable_parrot_items, create_strippable_list(list(
 	if(!islist(speech_buffer))
 		speech_buffer = list()
 
-/mob/living/simple_animal/parrot/Poly/proc/Write_Memory(dead)
+/mob/living/simple_animal/parrot/Poly/Write_Memory(dead)
+	. = ..()
+	if(!.)
+		return
 	var/json_file = file("data/npc_saves/Poly.json")
 	var/list/file_data = list()
 	if(islist(speech_buffer))
@@ -1024,7 +1029,7 @@ GLOBAL_LIST_INIT(strippable_parrot_items, create_strippable_list(list(
 	faction = list(FACTION_RATVAR)
 	gold_core_spawnable = NO_SPAWN
 	del_on_death = TRUE
-	deathsound = 'sound/magic/clockwork/anima_fragment_death.ogg'
+	death_sound = 'sound/magic/clockwork/anima_fragment_death.ogg'
 
 #undef PARROT_PERCH
 #undef PARROT_SWOOP

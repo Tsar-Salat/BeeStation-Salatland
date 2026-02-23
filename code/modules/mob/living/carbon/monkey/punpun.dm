@@ -72,7 +72,10 @@
 		relic_hat = text2path(json["relic_hat"]) // We convert these to paths for type checking
 		relic_mask = text2path(json["relic_mask"])
 
-/mob/living/carbon/monkey/punpun/proc/Write_Memory(dead, gibbed)
+/mob/living/carbon/monkey/punpun/Write_Memory(dead, gibbed)
+	. = ..()
+	if(!.)
+		return
 	var/json_file = file("data/npc_saves/Punpun.json")
 	var/list/file_data = list()
 	if(gibbed)

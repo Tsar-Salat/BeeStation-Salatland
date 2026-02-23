@@ -7,14 +7,15 @@
 
 	school = SCHOOL_MIME
 	cooldown_time = 5 MINUTES
+	spell_requirements = NONE
 
 	spell_max_level = 1
 
-/datum/action/cooldown/spell/vow_of_silence/Grant(mob/grant_to)
+/datum/action/spell/vow_of_silence/Grant(mob/grant_to)
 	. = ..()
 	ADD_TRAIT(grant_to, TRAIT_MIMING, "[type]")
 
-/datum/action/cooldown/spell/vow_of_silence/Remove(mob/living/remove_from)
+/datum/action/spell/vow_of_silence/Remove(mob/living/remove_from)
 	. = ..()
 	REMOVE_TRAIT(remove_from, TRAIT_MIMING, "[type]")
 	SEND_SIGNAL(remove_from, COMSIG_CLEAR_MOOD_EVENT, "vow")

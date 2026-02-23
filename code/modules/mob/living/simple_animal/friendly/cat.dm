@@ -137,22 +137,6 @@
 	if(isnull(family))
 		family = list()
 
-/mob/living/simple_animal/pet/cat/Runtime/proc/Write_Memory(dead)
-	var/json_file = file("data/npc_saves/Runtime.json")
-	var/list/file_data = list()
-	family = list()
-	if(!dead)
-		for(var/mob/living/simple_animal/pet/cat/kitten/C in children)
-			if(istype(C,type) || C.stat || !C.z || !C.butcher_results) //That last one is a work around for hologram cats
-				continue
-			if(C.type in family)
-				family[C.type] += 1
-			else
-				family[C.type] = 1
-	file_data["family"] = family
-	fdel(json_file)
-	WRITE_FILE(json_file, json_encode(file_data))
-
 /mob/living/simple_animal/pet/cat/Runtime/proc/Deploy_The_Cats()
 	cats_deployed = 1
 	for(var/cat_type in family)
@@ -252,8 +236,8 @@
 	response_harm_continuous = "takes a bite out of"
 	response_harm_simple = "take a bite out of"
 	attacked_sound = 'sound/items/eatfood.ogg'
-	deathmessage = "loses its false life and collapses!"
-	deathsound = "bodyfall"
+	death_message = "loses its false life and collapses!"
+	death_sound = "bodyfall"
 	held_state = "cak"
 
 /mob/living/simple_animal/pet/cat/cak/CheckParts(list/parts)
