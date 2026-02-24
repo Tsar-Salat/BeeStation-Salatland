@@ -36,7 +36,7 @@
  */
 /datum/ai_behavior/find_and_set/edible
 
-/datum/ai_behavior/find_and_set/edible/search_tactic(datum/ai_controller/controller, locate_path, search_range)
+/datum/ai_behavior/find_and_set/edible/search_tactic(datum/ai_controller/controller, locate_path, search_range = SEARCH_TACTIC_DEFAULT_RANGE)
 	var/mob/living/living_pawn = controller.pawn
 	var/list/food_candidates = list()
 	for(var/held_candidate as anything in living_pawn.held_items)

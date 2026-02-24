@@ -36,9 +36,17 @@
 
 /// Called when a client mouses over this atom
 /atom/proc/on_mouse_enter(client/client)
+	SHOULD_NOT_SLEEP(TRUE)
+
+	var/mob/user = client?.mob
+	if(isnull(user))
+		return
+
+	SEND_SIGNAL(user, COMSIG_ATOM_MOUSE_ENTERED, src)
+
 	if (!client.show_screentips)
 		return
-	if (isnewplayer(client.mob))
+	if (isnewplayer(user))
 		return
 	// =====================================================
 	// Initialise data

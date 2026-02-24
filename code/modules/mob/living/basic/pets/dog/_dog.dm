@@ -7,15 +7,15 @@
 	speech_commands = list("good dog", "good boy", "brav")
 
 // Set correct attack behaviour
-/datum/pet_command/point_targeting/attack/dog
+/datum/pet_command/attack/dog
 	attack_behaviour = /datum/ai_behavior/basic_melee_attack/dog
 	speech_commands = list("attack", "sic", "kill", "fass")
 
-/datum/pet_command/point_targeting/attack/dog/set_command_active(mob/living/parent, mob/living/commander)
+/datum/pet_command/attack/dog/set_command_active(mob/living/parent, mob/living/commander)
 	. = ..()
 	parent.ai_controller.set_blackboard_key(BB_DOG_HARASS_HARM, TRUE)
 
-/datum/pet_command/point_targeting/fetch/dog
+/datum/pet_command/fetch/dog
 	speech_commands = list("fetch", "apport", "bring")
 
 /datum/pet_command/play_dead/dog
@@ -42,10 +42,11 @@
 	var/static/list/pet_commands = list(
 		/datum/pet_command/idle,
 		/datum/pet_command/free,
+		/datum/pet_command/move,
 		/datum/pet_command/good_boy/dog,
 		/datum/pet_command/follow/dog,
-		/datum/pet_command/point_targeting/attack/dog,
-		/datum/pet_command/point_targeting/fetch/dog,
+		/datum/pet_command/attack/dog,
+		/datum/pet_command/fetch/dog,
 		/datum/pet_command/play_dead/dog,
 	)
 	///icon state of the collar we can wear

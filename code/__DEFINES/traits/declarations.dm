@@ -413,6 +413,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Trait given to a mob that is currently thinking (giving off the "thinking" icon), used in an IC context
 #define TRAIT_THINKING_IN_CHARACTER "currently_thinking_IC"
 
+///Trait given by /datum/element/relay_attacker
+#define TRAIT_RELAYING_ATTACKER "relaying_attacker"
+
 /// This mob can strip other mobs.
 #define TRAIT_CAN_STRIP "can_strip"
 
@@ -506,6 +509,10 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Trait given to mobs that have the basic eating element
 #define TRAIT_MOB_EATER "mob_eater"
 
-#define TRAIT_BEAST_EMPATHY "beast_empathy" // you're good with animals, such as with taming them
+/// you're good with animals, such as with taming them
+#define TRAIT_BEAST_EMPATHY "beast_empathy"
+
+///Mobs with these trait do not get italicized/quiet speech when speaking in low pressure
+#define TRAIT_SPEECH_BOOSTER "speech_booster"
 
 // END TRAIT DEFINES

@@ -97,3 +97,5 @@
 /// From base of datum/element/movetype_handler/on_movement_type_trait_loss: (flag, old_movement_type)
 #define COMSIG_MOVETYPE_FLAG_DISABLED "movetype_flag_disabled"
 
+///from base of /atom/movable/point_at: (atom/A, obj/effect/temp_visual/point/point)
+#define COMSIG_MOVABLE_POINTED "movable_pointed"
