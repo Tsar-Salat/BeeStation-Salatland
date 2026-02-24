@@ -166,7 +166,7 @@
 	icon_living = "honkmon"
 	death_message = "fades out, as all of its friends are released from its \
 		prison of hugs."
-	loot = list(/mob/living/simple_animal/pet/cat/kitten{name = "Laughter"})
+	loot = list(/mob/living/basic/pet/cat/kitten{name = "Laughter"})
 	crawl_type = /datum/action/spell/jaunt/bloodcrawl/slaughter_demon/funny
 
 	playstyle_string = span_bigbold("You are a laughter demon") + "\
