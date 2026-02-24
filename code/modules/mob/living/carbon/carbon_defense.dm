@@ -193,30 +193,30 @@
 	return FALSE
 
 
-/mob/living/carbon/attack_paw(mob/living/carbon/human/M, list/modifiers)
+/mob/living/carbon/attack_paw(mob/living/carbon/human/user, list/modifiers)
 
-	if(try_inject(M, injection_flags = INJECT_TRY_SHOW_ERROR_MESSAGE))
+	if(try_inject(user, injection_flags = INJECT_TRY_SHOW_ERROR_MESSAGE))
 		for(var/thing in diseases)
 			var/datum/disease/D = thing
 			if((D.spread_flags & DISEASE_SPREAD_CONTACT_SKIN) && prob(85))
-				M.ContactContractDisease(D)
+				user.ContactContractDisease(D)
 
-	for(var/thing in M.diseases)
+	for(var/thing in user.diseases)
 		var/datum/disease/D = thing
 		if(D.spread_flags & DISEASE_SPREAD_CONTACT_SKIN)
 			ContactContractDisease(D)
 
-	if(!M.combat_mode)
-		help_shake_act(M)
+	if(!user.combat_mode)
+		help_shake_act(user)
 		return FALSE
 
-	if(..() && can_inject(M, get_combat_bodyzone(), INJECT_CHECK_PENETRATE_THICK | INJECT_TRY_SHOW_ERROR_MESSAGE)) //successful monkey bite.
-		for(var/thing in M.diseases)
+	if(..()) //successful monkey bite.
+		for(var/thing in user.diseases)
 			var/datum/disease/D = thing
 			if(D.spread_flags & (DISEASE_SPREAD_SPECIAL | DISEASE_SPREAD_NON_CONTAGIOUS))
 				continue
 			ForceContractDisease(D)
-		return 1
+		return TRUE
 
 
 /mob/living/carbon/attack_slime(mob/living/simple_animal/slime/M, list/modifiers)

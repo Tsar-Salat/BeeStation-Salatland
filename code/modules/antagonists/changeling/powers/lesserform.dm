@@ -33,7 +33,10 @@
 	var/datum/antagonist/changeling/changeling = user.mind.has_antag_datum(/datum/antagonist/changeling)
 	var/datum/changeling_profile/chosen_form = select_form(changeling, user)
 	if(!chosen_form)
-		return FALSE
+		// If no profile stored, transform to default human
+		user.humanize(species = /datum/species/human, instant = transform_instantly)
+		user.regenerate_icons()
+		return TRUE
 	to_chat(user, span_notice("We transform our appearance."))
 	var/datum/dna/chosen_dna = chosen_form.dna
 	var/datum/species/chosen_species = chosen_dna.species
@@ -65,7 +68,7 @@
 /datum/action/changeling/lesserform/proc/update_button_status()
 	if (ismonkey(owner))
 		name = "Human Form"
-		desc = "We change back into a human. Costs 5 chemicals."
+		desc = "We change back into a human. Costs 20 chemicals."
 	else
 		name = initial(name)
 		desc = initial(desc)

@@ -121,7 +121,7 @@
 	icon_state = "severedmonkeytail"
 
 /obj/item/organ/tail/monkey/Insert(mob/living/carbon/human/H, special = 0, drop_if_replaced = TRUE)
-	..()
+	. = ..()
 	if(istype(H))
 		if(!("tail_monkey" in H.dna.species.mutant_bodyparts))
 			H.dna.species.mutant_bodyparts |= "tail_monkey"
