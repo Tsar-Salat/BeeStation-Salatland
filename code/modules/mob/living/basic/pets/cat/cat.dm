@@ -31,6 +31,8 @@
 	attack_verb_simple = "claw"
 	attack_sound = 'sound/weapons/slash.ogg'
 	attack_vis_effect = ATTACK_EFFECT_CLAW
+	chat_color = "#FFD586"
+
 	///icon of the collar we can wear
 	var/collar_icon_state = "cat"
 	///can this cat breed?
@@ -220,3 +222,8 @@
 	icon_living = "cat"
 	icon_dead = "cat_dead"
 	held_state = "cat"
+
+/mob/living/basic/pet/cat/halal
+	icon_state = "cathalal"
+	icon_living = "cathalal"
+	held_state = "cathalal"
