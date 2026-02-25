@@ -3717,10 +3717,6 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer4,
 /turf/open/floor/iron/dark,
 /area/science/xenobiology)
-"aPU" = (
-/mob/living/simple_animal/mouse/brown/Tom,
-/turf/open/floor/wood,
-/area/security/prison)
 "aPW" = (
 /obj/structure/cable/yellow{
 	icon_state = "1-2"
@@ -9749,29 +9745,6 @@
 	},
 /turf/open/floor/plating/airless,
 /area/engine/engine_room/external)
-"cbf" = (
-/obj/structure/bookcase,
-/obj/item/book/manual/wiki/sopcommand,
-/obj/item/book/manual/wiki/sopscience,
-/obj/item/book/manual/wiki/sopsupply,
-/obj/item/book/manual/wiki/telescience,
-/obj/item/book/manual/wiki/robotics_cyborgs,
-/obj/item/book/manual/wiki/plumbing,
-/obj/item/book/manual/wiki/infections,
-/obj/item/book/manual/wiki/engineering_hacking,
-/obj/item/book/manual/wiki/detective,
-/obj/item/book/manual/wiki/barman_recipes,
-/obj/item/toy/plush/carpplushie{
-	color = "red";
-	name = "Nanotrasen wildlife department space carp plushie";
-	pixel_y = 18;
-	pixel_x = 17
-	},
-/obj/machinery/newscaster/directional/north{
-	pixel_y = 31
-	},
-/turf/open/floor/iron/smooth,
-/area/bridge/meeting_room)
 "cbh" = (
 /obj/effect/turf_decal/stripes/closeup,
 /obj/machinery/door/airlock/external{
@@ -12686,6 +12659,32 @@
 	},
 /turf/open/floor/iron/smooth,
 /area/hallway/upper/primary/port)
+"cHe" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 1
+	},
+/obj/item/reagent_containers/cup/glass/dry_ramen{
+	pixel_y = 49;
+	pixel_x = 2
+	},
+/obj/item/cigarette{
+	pixel_y = 47;
+	pixel_x = -6
+	},
+/obj/item/match{
+	burnt = 1;
+	pixel_x = -9;
+	pixel_y = 9;
+	icon_state = "match_burnt"
+	},
+/obj/item/match{
+	burnt = 1;
+	pixel_x = 5;
+	pixel_y = 1;
+	icon_state = "match_burnt"
+	},
+/turf/open/floor/wood,
+/area/vacant_room/office)
 "cHg" = (
 /obj/machinery/shieldgen,
 /obj/machinery/light/small/directional/east,
@@ -44268,6 +44267,10 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer4,
 /turf/open/floor/catwalk_floor/iron_smooth,
 /area/hallway/primary/aft)
+"jHU" = (
+/mob/living/basic/mouse/brown/tom,
+/turf/open/floor/wood,
+/area/security/prison)
 "jHV" = (
 /obj/structure/lattice,
 /obj/machinery/camera/motion/directional/west,
@@ -55726,6 +55729,29 @@
 /obj/effect/landmark/event_spawn,
 /turf/open/floor/catwalk_floor/iron,
 /area/maintenance/department/medical)
+"mhG" = (
+/obj/structure/table/reinforced,
+/obj/item/cigarette/cigar{
+	pixel_x = 6
+	},
+/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
+	pixel_y = 2;
+	pixel_x = 11
+	},
+/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
+	pixel_y = 13;
+	pixel_x = -7
+	},
+/obj/item/reagent_containers/cup/glass/bottle/vodka/badminka{
+	pixel_x = -1;
+	pixel_y = 14
+	},
+/obj/item/cigarette/cigar{
+	pixel_x = -8
+	},
+/obj/machinery/light/small/directional/south,
+/turf/open/floor/carpet/red,
+/area/crew_quarters/heads/hos)
 "mhM" = (
 /obj/machinery/computer/station_alert{
 	dir = 8
@@ -68633,29 +68659,6 @@
 	dir = 4
 	},
 /area/engine/atmos)
-"oZQ" = (
-/obj/structure/table/reinforced,
-/obj/item/cigarette/cigar{
-	pixel_x = 6
-	},
-/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
-	pixel_y = 2;
-	pixel_x = 11
-	},
-/obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
-	pixel_y = 13;
-	pixel_x = -7
-	},
-/obj/item/reagent_containers/cup/glass/bottle/vodka/badminka{
-	pixel_x = -1;
-	pixel_y = 14
-	},
-/obj/item/cigarette/cigar{
-	pixel_x = -8
-	},
-/obj/machinery/light/small/directional/south,
-/turf/open/floor/carpet/red,
-/area/crew_quarters/heads/hos)
 "oZR" = (
 /obj/effect/turf_decal/trimline/white/filled/line{
 	dir = 8
@@ -81477,6 +81480,29 @@
 	},
 /turf/open/floor/grass/no_border,
 /area/medical/virology)
+"rOO" = (
+/obj/structure/bookcase,
+/obj/item/book/manual/wiki/sopcommand,
+/obj/item/book/manual/wiki/sopscience,
+/obj/item/book/manual/wiki/sopsupply,
+/obj/item/book/manual/wiki/telescience,
+/obj/item/book/manual/wiki/robotics_cyborgs,
+/obj/item/book/manual/wiki/plumbing,
+/obj/item/book/manual/wiki/infections,
+/obj/item/book/manual/wiki/engineering_hacking,
+/obj/item/book/manual/wiki/detective,
+/obj/item/book/manual/wiki/barman_recipes,
+/obj/item/toy/plush/carpplushie{
+	greyscale_colors = "#ff5050#000000";
+	name = "Nanotrasen wildlife department space carp plushie";
+	pixel_y = 18;
+	pixel_x = 17
+	},
+/obj/machinery/newscaster/directional/north{
+	pixel_y = 31
+	},
+/turf/open/floor/iron/smooth,
+/area/bridge/meeting_room)
 "rOQ" = (
 /turf/open/floor/iron/edge,
 /area/quartermaster/sorting)
@@ -82478,32 +82504,6 @@
 	initial_gas_mix = "n2=100;TEMP=80"
 	},
 /area/science/xenobiology)
-"rYK" = (
-/obj/effect/turf_decal/siding/wood{
-	dir = 1
-	},
-/obj/item/reagent_containers/cup/glass/dry_ramen{
-	pixel_y = 49;
-	pixel_x = 2
-	},
-/obj/item/cigarette{
-	pixel_y = 47;
-	pixel_x = -6
-	},
-/obj/item/match{
-	burnt = 1;
-	pixel_x = -9;
-	pixel_y = 9;
-	icon_state = "match_burnt"
-	},
-/obj/item/match{
-	burnt = 1;
-	pixel_x = 5;
-	pixel_y = 1;
-	icon_state = "match_burnt"
-	},
-/turf/open/floor/wood,
-/area/vacant_room/office)
 "rYO" = (
 /obj/machinery/holopad,
 /obj/structure/cable/yellow{
@@ -129885,7 +129885,7 @@ mwO
 mwO
 mwO
 wGn
-cbf
+rOO
 lXZ
 vGv
 pbx
@@ -139637,7 +139637,7 @@ smP
 smP
 yda
 htq
-rYK
+cHe
 ieb
 mvD
 xcb
@@ -152458,7 +152458,7 @@ phN
 dTz
 kWd
 ofJ
-oZQ
+mhG
 phN
 nNI
 dqg
@@ -153244,7 +153244,7 @@ rbX
 dbk
 ibw
 qaf
-aPU
+jHU
 mEr
 bGY
 wDq

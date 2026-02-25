@@ -612,7 +612,7 @@
 	var/mob/living/carbon/carbon_holder = quirk_target
 	var/obj/item/organ/lungs/smoker_lungs = null
 	var/obj/item/organ/lungs/old_lungs = carbon_holder.get_organ_slot(ORGAN_SLOT_LUNGS)
-	if(old_lungs && !(old_lungs.organ_flags & ORGAN_SYNTHETIC))
+	if(old_lungs && IS_ORGANIC_ORGAN(old_lungs))
 		if(isplasmaman(carbon_holder))
 			smoker_lungs = /obj/item/organ/lungs/plasmaman/plasmaman_smoker
 		else

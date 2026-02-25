@@ -8155,35 +8155,6 @@
 "cnM" = (
 /turf/closed/wall/r_wall,
 /area/teleporter)
-"cnW" = (
-/obj/structure/table/wood,
-/obj/item/cigarette/cigar/cohiba{
-	pixel_x = 6
-	},
-/obj/item/cigarette/cigar/havana{
-	pixel_x = 2
-	},
-/obj/item/cigarette/cigar{
-	pixel_x = 4.5
-	},
-/obj/item/phone{
-	desc = "Supposedly a direct line to Nanotrasen Central Command. It's not even plugged in.";
-	pixel_x = -3;
-	pixel_y = 3
-	},
-/obj/machinery/button/door{
-	id = "hosprivacy";
-	name = "Privacy Shutters Control";
-	pixel_x = 6;
-	pixel_y = -31;
-	req_access_txt = "58"
-	},
-/obj/machinery/keycard_auth{
-	pixel_x = -7;
-	pixel_y = -31
-	},
-/turf/open/floor/carpet/red,
-/area/crew_quarters/heads/hos)
 "cof" = (
 /obj/structure/cable/yellow{
 	icon_state = "4-8"
@@ -11453,25 +11424,6 @@
 	},
 /turf/open/floor/iron/grid/steel,
 /area/science/research)
-"did" = (
-/obj/structure/table/wood,
-/obj/item/cigarette/cigar/cohiba{
-	pixel_x = 3
-	},
-/obj/item/cigarette/cigar/havana{
-	pixel_x = -3
-	},
-/obj/item/cigarette/cigar,
-/obj/machinery/button/door{
-	id = "heads_meeting";
-	name = "Security Shutters";
-	pixel_y = 24
-	},
-/obj/effect/turf_decal/siding/wood/corner{
-	dir = 8
-	},
-/turf/open/floor/wood,
-/area/bridge/meeting_room/council)
 "dii" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
@@ -18757,6 +18709,13 @@
 	},
 /turf/open/floor/wood,
 /area/bridge/meeting_room/council)
+"fhd" = (
+/mob/living/basic/mouse/gray,
+/obj/structure/lattice/catwalk,
+/obj/item/food/cheese/wheel,
+/obj/item/food/breadslice/creamcheese,
+/turf/open/floor/plating,
+/area/maintenance/port/central)
 "fho" = (
 /obj/structure/cable/yellow{
 	icon_state = "1-2"
@@ -32419,6 +32378,35 @@
 	},
 /turf/open/floor/iron/white,
 /area/medical/medbay/central)
+"iPf" = (
+/obj/structure/table/wood,
+/obj/item/cigarette/cigar/cohiba{
+	pixel_x = 6
+	},
+/obj/item/cigarette/cigar/havana{
+	pixel_x = 2
+	},
+/obj/item/cigarette/cigar{
+	pixel_x = 4.5
+	},
+/obj/item/phone{
+	desc = "Supposedly a direct line to Nanotrasen Central Command. It's not even plugged in.";
+	pixel_x = -3;
+	pixel_y = 3
+	},
+/obj/machinery/button/door{
+	id = "hosprivacy";
+	name = "Privacy Shutters Control";
+	pixel_x = 6;
+	pixel_y = -31;
+	req_access_txt = "58"
+	},
+/obj/machinery/keycard_auth{
+	pixel_x = -7;
+	pixel_y = -31
+	},
+/turf/open/floor/carpet/red,
+/area/crew_quarters/heads/hos)
 "iPh" = (
 /obj/machinery/light{
 	dir = 4
@@ -33396,6 +33384,25 @@
 	},
 /turf/open/floor/iron/dark,
 /area/ai_monitored/turret_protected/ai)
+"jdr" = (
+/obj/structure/table/wood,
+/obj/item/cigarette/cigar/cohiba{
+	pixel_x = 3
+	},
+/obj/item/cigarette/cigar/havana{
+	pixel_x = -3
+	},
+/obj/item/cigarette/cigar,
+/obj/machinery/button/door{
+	id = "heads_meeting";
+	name = "Security Shutters";
+	pixel_y = 24
+	},
+/obj/effect/turf_decal/siding/wood/corner{
+	dir = 8
+	},
+/turf/open/floor/wood,
+/area/bridge/meeting_room/council)
 "jdu" = (
 /obj/structure/cable/yellow{
 	icon_state = "0-8"
@@ -42390,31 +42397,6 @@
 	},
 /turf/open/floor/iron,
 /area/hallway/primary/central)
-"lvT" = (
-/obj/structure/table/reinforced,
-/obj/item/folder/blue{
-	pixel_x = 4;
-	pixel_y = 4
-	},
-/obj/item/folder/yellow,
-/obj/item/cigarette/cigar/cohiba,
-/obj/item/lighter,
-/obj/effect/turf_decal/bot,
-/obj/item/phone{
-	desc = "Supposedly a direct line to Nanotrasen Central Command. It's not even plugged in.";
-	pixel_x = -3;
-	pixel_y = 3
-	},
-/obj/machinery/newscaster{
-	pixel_y = 31
-	},
-/obj/effect/turf_decal/tile/yellow/opposingcorners{
-	dir = 1
-	},
-/obj/effect/turf_decal/tile/red/opposingcorners,
-/obj/item/book/manual/wiki/sopengineering,
-/turf/open/floor/iron,
-/area/crew_quarters/heads/chief)
 "lwl" = (
 /obj/machinery/door/firedoor,
 /obj/effect/turf_decal/stripes/closeup{
@@ -44618,6 +44600,30 @@
 	},
 /turf/open/floor/iron,
 /area/engine/atmos)
+"mcr" = (
+/obj/structure/table/wood,
+/obj/item/cigarette/cigar/havana{
+	pixel_x = -3
+	},
+/obj/item/storage/fancy/cigarettes/cigpack_robustgold{
+	pixel_x = 8;
+	pixel_y = 8
+	},
+/obj/item/cigarette/cigar,
+/obj/item/lighter,
+/obj/item/book/manual/wiki/detective{
+	pixel_x = 7;
+	pixel_y = -5
+	},
+/obj/item/restraints/handcuffs{
+	pixel_x = -5;
+	pixel_y = 6
+	},
+/obj/machinery/newscaster{
+	pixel_y = 31
+	},
+/turf/open/floor/carpet/green,
+/area/security/detectives_office)
 "mcv" = (
 /obj/machinery/atmospherics/pipe/smart/simple/cyan/visible{
 	dir = 4
@@ -56177,6 +56183,27 @@
 	},
 /turf/open/floor/circuit/green/telecomms/mainframe,
 /area/tcommsat/server)
+"poI" = (
+/obj/effect/turf_decal/tile/red/opposingcorners,
+/obj/structure/table/wood,
+/obj/item/flashlight/lamp{
+	pixel_x = -3;
+	pixel_y = 12
+	},
+/obj/item/melee/baton/security/cattleprod{
+	pixel_x = 2;
+	pixel_y = 5
+	},
+/obj/item/clothing/glasses/blindfold{
+	pixel_x = -2;
+	pixel_y = 1
+	},
+/obj/item/wallframe/camera{
+	pixel_x = 3;
+	pixel_y = -2
+	},
+/turf/open/floor/iron/dark,
+/area/security/main)
 "poJ" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 8
@@ -59632,6 +59659,23 @@
 /obj/machinery/door/firedoor,
 /turf/open/floor/iron/grid/steel,
 /area/hallway/secondary/entry)
+"qme" = (
+/obj/structure/table/wood,
+/obj/item/reagent_containers/cup/glass/shaker,
+/obj/machinery/computer/security/telescreen/minisat{
+	dir = 1;
+	pixel_y = -29
+	},
+/obj/item/cigarette/cigar/cohiba{
+	pixel_x = 3
+	},
+/obj/item/cigarette/cigar,
+/obj/item/cigarette/cigar/havana{
+	pixel_x = -3
+	},
+/obj/machinery/light/small,
+/turf/open/floor/carpet/royalblue,
+/area/crew_quarters/heads/captain)
 "qmf" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer2,
 /obj/machinery/airalarm/directional/west{
@@ -61556,26 +61600,6 @@
 	},
 /turf/open/floor/plating,
 /area/maintenance/central)
-"qOC" = (
-/obj/structure/table/wood,
-/obj/machinery/airalarm/directional/west{
-	pixel_x = -22
-	},
-/obj/item/toy/beach_ball{
-	desc = "The simple beach ball is one of Nanotrasen's most popular products. 'Why do we make beach balls? Because we can! (TM)' - Nanotrasen";
-	name = "Nanotrasen-brand beach ball";
-	pixel_y = 7
-	},
-/obj/item/toy/plush/carpplushie{
-	color = "red";
-	name = "Nanotrasen wildlife department space carp plushie"
-	},
-/obj/item/paicard{
-	desc = "A real Nanotrasen success, these personal AIs provide all of the companionship of an AI without any law related red-tape.";
-	name = "Nanotrasen-brand personal AI device exhibit"
-	},
-/turf/open/floor/wood,
-/area/bridge/showroom/corporate)
 "qOF" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer4,
 /obj/structure/cable/yellow{
@@ -61830,14 +61854,6 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer2,
 /turf/open/floor/iron/white,
 /area/medical/apothecary)
-"qRm" = (
-/obj/structure/table/reinforced,
-/obj/item/cigarette/cigar,
-/obj/effect/turf_decal/tile/red/anticorner/contrasted{
-	dir = 1
-	},
-/turf/open/floor/iron/dark,
-/area/bridge)
 "qRp" = (
 /obj/effect/turf_decal/bot,
 /obj/machinery/computer/prisoner/management,
@@ -66887,6 +66903,14 @@
 /obj/machinery/firealarm/directional/west,
 /turf/open/floor/iron/sepia,
 /area/construction/mining/aux_base)
+"skm" = (
+/obj/structure/table/reinforced,
+/obj/item/cigarette/cigar,
+/obj/effect/turf_decal/tile/red/anticorner/contrasted{
+	dir = 1
+	},
+/turf/open/floor/iron/dark,
+/area/bridge)
 "sko" = (
 /obj/machinery/computer/camera_advanced/base_construction,
 /turf/open/floor/iron/sepia,
@@ -67141,6 +67165,26 @@
 /obj/machinery/atmospherics/pipe/smart/simple/scrubbers/visible,
 /turf/open/floor/iron,
 /area/engine/atmos)
+"snn" = (
+/obj/structure/table/wood,
+/obj/machinery/airalarm/directional/west{
+	pixel_x = -22
+	},
+/obj/item/toy/beach_ball{
+	desc = "The simple beach ball is one of Nanotrasen's most popular products. 'Why do we make beach balls? Because we can! (TM)' - Nanotrasen";
+	name = "Nanotrasen-brand beach ball";
+	pixel_y = 7
+	},
+/obj/item/toy/plush/carpplushie{
+	greyscale_colors = "#ff5050#000000";
+	name = "Nanotrasen wildlife department space carp plushie"
+	},
+/obj/item/paicard{
+	desc = "A real Nanotrasen success, these personal AIs provide all of the companionship of an AI without any law related red-tape.";
+	name = "Nanotrasen-brand personal AI device exhibit"
+	},
+/turf/open/floor/wood,
+/area/bridge/showroom/corporate)
 "snr" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/caution,
@@ -71420,14 +71464,6 @@
 "tvl" = (
 /turf/open/floor/glass/reinforced,
 /area/crew_quarters/heads/captain)
-"tvr" = (
-/obj/structure/table/wood,
-/obj/item/cigarette/cigar,
-/obj/structure/cable/yellow{
-	icon_state = "4-8"
-	},
-/turf/open/floor/carpet,
-/area/crew_quarters/bar/atrium)
 "tvz" = (
 /obj/item/soap/nanotrasen,
 /obj/effect/turf_decal/tile/blue/opposingcorners{
@@ -71638,6 +71674,31 @@
 /obj/machinery/atmospherics/pipe/smart/simple/pink/visible,
 /turf/open/floor/iron/grid/steel,
 /area/engine/atmos)
+"tzb" = (
+/obj/structure/table/reinforced,
+/obj/item/folder/blue{
+	pixel_x = 4;
+	pixel_y = 4
+	},
+/obj/item/folder/yellow,
+/obj/item/cigarette/cigar/cohiba,
+/obj/item/lighter,
+/obj/effect/turf_decal/bot,
+/obj/item/phone{
+	desc = "Supposedly a direct line to Nanotrasen Central Command. It's not even plugged in.";
+	pixel_x = -3;
+	pixel_y = 3
+	},
+/obj/machinery/newscaster{
+	pixel_y = 31
+	},
+/obj/effect/turf_decal/tile/yellow/opposingcorners{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/red/opposingcorners,
+/obj/item/book/manual/wiki/sopengineering,
+/turf/open/floor/iron,
+/area/crew_quarters/heads/chief)
 "tzj" = (
 /obj/docking_port/stationary{
 	dir = 2;
@@ -75921,11 +75982,6 @@
 /obj/machinery/camera/directional/east,
 /turf/open/floor/wood,
 /area/crew_quarters/bar/atrium)
-"uJh" = (
-/obj/structure/table/wood,
-/obj/item/cigarette/pipe,
-/turf/open/floor/carpet,
-/area/crew_quarters/bar/atrium)
 "uJr" = (
 /obj/effect/spawner/xmastree,
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer4,
@@ -76581,6 +76637,11 @@
 "uTg" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer4,
 /turf/open/floor/carpet/red,
+/area/crew_quarters/bar/atrium)
+"uTw" = (
+/obj/structure/table/wood,
+/obj/item/cigarette/pipe,
+/turf/open/floor/carpet,
 /area/crew_quarters/bar/atrium)
 "uTB" = (
 /obj/structure/cable/yellow{
@@ -77741,23 +77802,6 @@
 	dir = 4
 	},
 /area/hallway/primary/port)
-"viq" = (
-/obj/structure/table/wood,
-/obj/item/reagent_containers/cup/glass/shaker,
-/obj/machinery/computer/security/telescreen/minisat{
-	dir = 1;
-	pixel_y = -29
-	},
-/obj/item/cigarette/cigar/cohiba{
-	pixel_x = 3
-	},
-/obj/item/cigarette/cigar,
-/obj/item/cigarette/cigar/havana{
-	pixel_x = -3
-	},
-/obj/machinery/light/small,
-/turf/open/floor/carpet/royalblue,
-/area/crew_quarters/heads/captain)
 "vit" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
@@ -78353,6 +78397,14 @@
 /obj/effect/landmark/start/station_engineer,
 /turf/open/floor/iron/grid/steel,
 /area/engine/storage_shared)
+"voM" = (
+/obj/structure/table/wood,
+/obj/item/cigarette/cigar,
+/obj/structure/cable/yellow{
+	icon_state = "4-8"
+	},
+/turf/open/floor/carpet,
+/area/crew_quarters/bar/atrium)
 "voQ" = (
 /obj/structure/cable/yellow{
 	icon_state = "4-8"
@@ -79414,6 +79466,16 @@
 	},
 /turf/open/floor/iron,
 /area/hallway/primary/aft)
+"vyP" = (
+/obj/structure/table/wood,
+/obj/item/razor{
+	pixel_x = -4;
+	pixel_y = 2
+	},
+/obj/item/cigarette/cigar,
+/obj/item/reagent_containers/cup/glass/flask/gold,
+/turf/open/floor/carpet/royalblue,
+/area/crew_quarters/heads/captain/private)
 "vyZ" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 8
@@ -81887,27 +81949,6 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer4,
 /turf/open/floor/iron/dark,
 /area/crew_quarters/bar/atrium)
-"wdH" = (
-/obj/effect/turf_decal/tile/red/opposingcorners,
-/obj/structure/table/wood,
-/obj/item/flashlight/lamp{
-	pixel_x = -3;
-	pixel_y = 12
-	},
-/obj/item/melee/baton/cattleprod{
-	pixel_x = 2;
-	pixel_y = 5
-	},
-/obj/item/clothing/glasses/blindfold{
-	pixel_x = -2;
-	pixel_y = 1
-	},
-/obj/item/wallframe/camera{
-	pixel_x = 3;
-	pixel_y = -2
-	},
-/turf/open/floor/iron/dark,
-/area/security/main)
 "wdR" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
@@ -82484,16 +82525,6 @@
 /obj/effect/spawner/structure/window/reinforced,
 /turf/open/floor/plating,
 /area/engine/break_room)
-"wmv" = (
-/obj/structure/table/wood,
-/obj/item/razor{
-	pixel_x = -4;
-	pixel_y = 2
-	},
-/obj/item/cigarette/cigar,
-/obj/item/reagent_containers/cup/glass/flask/gold,
-/turf/open/floor/carpet/royalblue,
-/area/crew_quarters/heads/captain/private)
 "wmy" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 1
@@ -86029,30 +86060,6 @@
 /obj/effect/turf_decal/tile/red/half/contrasted,
 /turf/open/floor/iron/dark,
 /area/ai_monitored/security/armory)
-"xgk" = (
-/obj/structure/table/wood,
-/obj/item/cigarette/cigar/havana{
-	pixel_x = -3
-	},
-/obj/item/storage/fancy/cigarettes/cigpack_robustgold{
-	pixel_x = 8;
-	pixel_y = 8
-	},
-/obj/item/cigarette/cigar,
-/obj/item/lighter,
-/obj/item/book/manual/wiki/detective{
-	pixel_x = 7;
-	pixel_y = -5
-	},
-/obj/item/restraints/handcuffs{
-	pixel_x = -5;
-	pixel_y = 6
-	},
-/obj/machinery/newscaster{
-	pixel_y = 31
-	},
-/turf/open/floor/carpet/green,
-/area/security/detectives_office)
 "xgl" = (
 /obj/structure/table/reinforced,
 /obj/item/folder/white{
@@ -87731,13 +87738,6 @@
 /obj/effect/landmark/event_spawn,
 /turf/open/floor/iron/ridged/steel,
 /area/science/lobby)
-"xyo" = (
-/mob/living/simple_animal/mouse/gray,
-/obj/structure/lattice/catwalk,
-/obj/item/food/cheese/wheel,
-/obj/item/food/breadslice/creamcheese,
-/turf/open/floor/plating,
-/area/maintenance/port/central)
 "xyr" = (
 /obj/effect/turf_decal/bot,
 /turf/open/floor/iron/dark/side{
@@ -111803,7 +111803,7 @@ tuj
 mRd
 mRd
 toR
-uJh
+uTw
 pxz
 vAS
 wpL
@@ -112313,7 +112313,7 @@ ksN
 pFH
 njT
 mRd
-tvr
+voM
 dGX
 mRd
 mRd
@@ -122583,7 +122583,7 @@ gsN
 xAn
 wrM
 vUR
-wdH
+poI
 rGl
 jFK
 pYu
@@ -122608,7 +122608,7 @@ wyg
 wyg
 hUT
 iSJ
-xgk
+mcr
 iOM
 njq
 irV
@@ -124074,7 +124074,7 @@ lHA
 jID
 jID
 jID
-xyo
+fhd
 jID
 aVq
 asn
@@ -126959,7 +126959,7 @@ geq
 lpA
 rzi
 sOP
-cnW
+iPf
 xIV
 imQ
 dKS
@@ -127503,7 +127503,7 @@ xZk
 teS
 nup
 eii
-qOC
+snn
 fFh
 teS
 qqW
@@ -132576,7 +132576,7 @@ nnx
 nnx
 nnx
 xWV
-did
+jdr
 edo
 oVT
 eBy
@@ -133096,7 +133096,7 @@ dRk
 bhm
 iuy
 oGQ
-qRm
+skm
 sfU
 irn
 oVu
@@ -135671,14 +135671,14 @@ hrQ
 wfA
 hip
 hGf
-wmv
+vyP
 wfA
 uzu
 gwI
 ivG
 gUi
 jvr
-viq
+qme
 yiC
 mqi
 aTF
@@ -137530,7 +137530,7 @@ xbv
 wWM
 wWM
 tzY
-lvT
+tzb
 iGM
 cPo
 pZg

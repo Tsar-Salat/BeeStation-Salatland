@@ -115,7 +115,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	if(istype(mask_item, /obj/item/cigarette))
 		return mask_item
 
-/obj/item/match/is_hot()
+/obj/item/match/get_temperature()
 	return lit * heat
 
 /obj/item/match/firebrand
@@ -216,7 +216,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	if(!QDELETED(src) && !QDELETED(dropee) && how_long_have_we_been_smokin >= 4 SECONDS && iscarbon(dropee) && iscarbon(loc))
 		var/mob/living/carbon/smoker = dropee
 		// This relies on the fact that dropped is called before slot is nulled
-		if(src == smoker.wear_mask && !smoker.incapacitated())
+		if(src == smoker.wear_mask && !smoker.incapacitated)
 			long_exhale(smoker)
 
 	UnregisterSignal(dropee, COMSIG_ATOM_DIR_CHANGE)
@@ -439,7 +439,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	how_long_have_we_been_smokin += delta_time * (1 SECONDS)
 	reagents.expose(smoker, INGEST, min(to_smoke / reagents.total_volume, 1))
 	var/obj/item/organ/lungs/lungs = smoker.get_organ_slot(ORGAN_SLOT_LUNGS)
-	if(lungs && !(lungs.organ_flags & ORGAN_SYNTHETIC))
+	if(lungs && IS_ORGANIC_ORGAN(lungs))
 		var/smoker_resistance = HAS_TRAIT(smoker, TRAIT_SMOKER) ? 0.5 : 1
 		smoker.adjustOrganLoss(ORGAN_SLOT_LUNGS, lung_harm * smoker_resistance)
 	if(!reagents.trans_to(smoker, to_smoke, method = INGEST/*, ignore_stomach = TRUE*/))
@@ -530,7 +530,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 		log_game("[src] that contains fuel was lit by the environment - Last touched by [src.fingerprintslast]!")
 	light()
 
-/obj/item/cigarette/is_hot()
+/obj/item/cigarette/get_temperature()
 	return lit * heat
 
 /obj/item/cigarette/proc/make_mob_smoke(mob/living/smoker)
@@ -902,7 +902,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	return mutable_appearance(icon, "lighter_overlay_[overlay_state][lit ? "-on" : ""]")
 
 /obj/item/lighter/ignition_effect(atom/A, mob/user)
-	if(is_hot())
+	if(get_temperature())
 		. = span_infoplain(span_rose("With a single flick of [user.p_their()] wrist, [user] smoothly lights [A] with [src]. Damn [user.p_theyre()] cool."))
 
 /obj/item/lighter/proc/set_lit(new_lit)
@@ -1023,7 +1023,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 /obj/item/lighter/process()
 	open_flame(heat)
 
-/obj/item/lighter/is_hot()
+/obj/item/lighter/get_temperature()
 	return lit * heat
 
 
@@ -1073,7 +1073,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	return lighter_overlay
 
 /obj/item/lighter/greyscale/ignition_effect(atom/A, mob/user)
-	if(is_hot())
+	if(get_temperature())
 		. = span_notice("After some fiddling, [user] manages to light [A] with [src].")
 
 
@@ -1125,7 +1125,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 		current_viewer.flash_act(4)
 
 /obj/item/lighter/bright/ignition_effect(atom/A, mob/user)
-	if(is_hot())
+	if(get_temperature())
 		. = span_infoplain(span_rose("[user] lifts the [src] to the [A], igniting it with a brilliant flash of light!"))
 		var/mob/living/current_viewer = user
 		current_viewer.flash_act(4)

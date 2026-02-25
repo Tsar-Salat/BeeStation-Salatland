@@ -18845,16 +18845,6 @@
 	},
 /turf/open/floor/iron/dark,
 /area/science/shuttledock)
-"eyz" = (
-/obj/effect/turf_decal/tile/red/opposingcorners,
-/obj/item/wallframe/camera,
-/obj/structure/table/wood,
-/obj/item/melee/baton/cattleprod,
-/obj/item/flashlight/lamp,
-/obj/item/clothing/glasses/blindfold,
-/obj/item/clothing/mask/muzzle,
-/turf/open/floor/iron/dark,
-/area/security/brig)
 "eyM" = (
 /obj/structure/cable/yellow{
 	icon_state = "1-2"
@@ -22545,19 +22535,6 @@
 	},
 /turf/open/floor/iron/showroomfloor,
 /area/science/explab)
-"fNQ" = (
-/obj/structure/table/wood,
-/obj/effect/decal/cleanable/dirt,
-/obj/item/clipboard,
-/obj/item/clothing/mask/fakemoustache,
-/obj/item/cigarette/pipe,
-/obj/effect/turf_decal/tile/neutral/anticorner/contrasted{
-	dir = 8
-	},
-/turf/open/floor/plating{
-	burnt = 1
-	},
-/area/maintenance/port/fore)
 "fNU" = (
 /obj/machinery/door/firedoor,
 /obj/machinery/door/airlock/engineering/glass{
@@ -27878,6 +27855,31 @@
 	},
 /turf/open/floor/iron/showroomfloor,
 /area/security/main)
+"hCF" = (
+/obj/structure/table/wood,
+/obj/effect/turf_decal/stripes/corner{
+	dir = 1
+	},
+/obj/item/folder/red,
+/obj/item/lighter{
+	pixel_x = -4;
+	pixel_y = 4
+	},
+/obj/item/cigarette/cigar/cohiba{
+	pixel_x = 6
+	},
+/obj/item/cigarette/cigar,
+/obj/machinery/light{
+	dir = 8
+	},
+/obj/machinery/airalarm/directional/west{
+	pixel_x = -23
+	},
+/obj/effect/turf_decal/siding/wood/end{
+	dir = 1
+	},
+/turf/open/floor/wood,
+/area/crew_quarters/heads/hos)
 "hCR" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/disposalpipe/segment{
@@ -40240,6 +40242,19 @@
 	},
 /turf/open/floor/plating,
 /area/maintenance/port/aft)
+"lTU" = (
+/obj/structure/table/wood,
+/obj/effect/decal/cleanable/dirt,
+/obj/item/clipboard,
+/obj/item/clothing/mask/fakemoustache,
+/obj/item/cigarette/pipe,
+/obj/effect/turf_decal/tile/neutral/anticorner/contrasted{
+	dir = 8
+	},
+/turf/open/floor/plating{
+	burnt = 1
+	},
+/area/maintenance/port/fore)
 "lUc" = (
 /obj/machinery/door/airlock/maintenance{
 	req_access_txt = "12"
@@ -41215,6 +41230,19 @@
 /obj/structure/reagent_dispensers/watertank,
 /turf/open/floor/plating,
 /area/maintenance/port/fore)
+"mik" = (
+/obj/structure/table/reinforced,
+/obj/item/folder/blue{
+	pixel_x = 4;
+	pixel_y = 4
+	},
+/obj/item/folder/yellow,
+/obj/item/lighter,
+/obj/item/cigarette/cigar/cohiba,
+/obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
+/obj/item/book/manual/wiki/sopcommand,
+/turf/open/floor/iron,
+/area/crew_quarters/heads/chief)
 "miv" = (
 /obj/structure/table/glass,
 /obj/machinery/smartfridge/disks{
@@ -48537,19 +48565,6 @@
 	},
 /turf/open/floor/iron,
 /area/quartermaster/office)
-"oIj" = (
-/obj/structure/table/reinforced,
-/obj/item/folder/blue{
-	pixel_x = 4;
-	pixel_y = 4
-	},
-/obj/item/folder/yellow,
-/obj/item/lighter,
-/obj/item/cigarette/cigar/cohiba,
-/obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
-/obj/item/book/manual/wiki/sopcommand,
-/turf/open/floor/iron,
-/area/crew_quarters/heads/chief)
 "oIk" = (
 /obj/structure/filingcabinet,
 /obj/effect/turf_decal/bot,
@@ -55618,31 +55633,6 @@
 	},
 /turf/open/floor/plating,
 /area/maintenance/solars/starboard/fore)
-"rdg" = (
-/obj/structure/table/wood,
-/obj/effect/turf_decal/stripes/corner{
-	dir = 1
-	},
-/obj/item/folder/red,
-/obj/item/lighter{
-	pixel_x = -4;
-	pixel_y = 4
-	},
-/obj/item/cigarette/cigar/cohiba{
-	pixel_x = 6
-	},
-/obj/item/cigarette/cigar,
-/obj/machinery/light{
-	dir = 8
-	},
-/obj/machinery/airalarm/directional/west{
-	pixel_x = -23
-	},
-/obj/effect/turf_decal/siding/wood/end{
-	dir = 1
-	},
-/turf/open/floor/wood,
-/area/crew_quarters/heads/hos)
 "rdj" = (
 /obj/effect/turf_decal/tile/neutral/half/contrasted{
 	dir = 4
@@ -71984,6 +71974,16 @@
 	},
 /turf/open/floor/iron/dark,
 /area/science/xenobiology)
+"wDN" = (
+/obj/effect/turf_decal/tile/red/opposingcorners,
+/obj/item/wallframe/camera,
+/obj/structure/table/wood,
+/obj/item/melee/baton/security/cattleprod,
+/obj/item/flashlight/lamp,
+/obj/item/clothing/glasses/blindfold,
+/obj/item/clothing/mask/muzzle,
+/turf/open/floor/iron/dark,
+/area/security/brig)
 "wDW" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/atmospherics/components/binary/pump/on/layer2{
@@ -95060,7 +95060,7 @@ njG
 uoK
 njG
 giB
-eyz
+wDN
 njG
 aaa
 aaa
@@ -95756,7 +95756,7 @@ czz
 cxo
 cwp
 cRg
-fNQ
+lTU
 hxE
 aNG
 dae
@@ -96086,7 +96086,7 @@ fll
 wVu
 ulh
 sGH
-rdg
+hCF
 alJ
 rMY
 wVu
@@ -113549,7 +113549,7 @@ cfo
 awV
 lHz
 nHs
-oIj
+mik
 iBM
 fkX
 clO

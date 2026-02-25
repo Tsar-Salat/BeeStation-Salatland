@@ -16131,17 +16131,6 @@
 /obj/structure/extinguisher_cabinet/directional/east,
 /turf/open/floor/iron/techmaint,
 /area/gateway)
-"fqh" = (
-/obj/effect/turf_decal/bot,
-/obj/effect/turf_decal/stripes/line{
-	dir = 10
-	},
-/obj/structure/closet/crate/hydroponics,
-/obj/item/clothing/head/utility/beekeeper_head,
-/obj/item/clothing/suit/utility/beekeeper_suit,
-/obj/item/vape,
-/turf/open/floor/iron/grid/steel,
-/area/hydroponics)
 "fqx" = (
 /obj/machinery/holopad,
 /obj/effect/turf_decal/box,
@@ -17823,6 +17812,17 @@
 	},
 /turf/open/floor/iron,
 /area/engine/engineering)
+"fVF" = (
+/obj/effect/turf_decal/bot,
+/obj/effect/turf_decal/stripes/line{
+	dir = 10
+	},
+/obj/structure/closet/crate/hydroponics,
+/obj/item/clothing/head/utility/beekeeper_head,
+/obj/item/clothing/suit/utility/beekeeper_suit,
+/obj/item/vape,
+/turf/open/floor/iron/grid/steel,
+/area/hydroponics)
 "fVI" = (
 /obj/effect/spawner/room/fivexfour,
 /turf/open/floor/plating,
@@ -26116,22 +26116,6 @@
 /obj/item/folder/white,
 /turf/open/floor/plating,
 /area/medical/apothecary)
-"iXg" = (
-/obj/structure/window/reinforced/spawner/directional/south,
-/obj/structure/flora/ausbushes/fullgrass,
-/obj/structure/flora/ausbushes/ppflowers,
-/mob/living/simple_animal/mouse/brown{
-	desc = "This one doesn't squeal";
-	name = "Tony";
-	pixel_x = 7;
-	pixel_y = 12
-	},
-/obj/machinery/holopad{
-	pixel_x = 16;
-	pixel_y = 17
-	},
-/turf/open/floor/grass/no_border,
-/area/hallway/secondary/exit/departure_lounge)
 "iXm" = (
 /obj/machinery/light{
 	dir = 8
@@ -39371,6 +39355,22 @@
 	},
 /turf/open/floor/iron/dark,
 /area/security/brig)
+"nzr" = (
+/obj/effect/turf_decal/tile/dark_red/anticorner/contrasted,
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/closet/crate/trashcart,
+/obj/item/trash/boritos{
+	pixel_y = -9
+	},
+/obj/item/broken_bottle,
+/obj/item/cigbutt,
+/obj/item/trash/waffles,
+/obj/item/melee/baton/deputy{
+	name = "old baton";
+	stamina_damage = 10
+	},
+/turf/open/floor/iron,
+/area/maintenance/department/security)
 "nzD" = (
 /obj/machinery/holopad,
 /obj/effect/turf_decal/box,
@@ -59613,6 +59613,22 @@
 /obj/machinery/firealarm/directional/south,
 /turf/open/floor/iron,
 /area/engine/engine_room)
+"uAZ" = (
+/obj/structure/window/reinforced/spawner/directional/south,
+/obj/structure/flora/ausbushes/fullgrass,
+/obj/structure/flora/ausbushes/ppflowers,
+/mob/living/basic/mouse/brown{
+	desc = "This one doesn't squeal";
+	name = "Tony";
+	pixel_x = 7;
+	pixel_y = 12
+	},
+/obj/machinery/holopad{
+	pixel_x = 16;
+	pixel_y = 17
+	},
+/turf/open/floor/grass/no_border,
+/area/hallway/secondary/exit/departure_lounge)
 "uBm" = (
 /turf/closed/wall,
 /area/hallway/primary/central)
@@ -65831,22 +65847,6 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer2,
 /turf/open/floor/iron/dark,
 /area/security/prison)
-"wGA" = (
-/obj/effect/turf_decal/tile/dark_red/anticorner/contrasted,
-/obj/effect/decal/cleanable/dirt,
-/obj/structure/closet/crate/trashcart,
-/obj/item/trash/boritos{
-	pixel_y = -9
-	},
-/obj/item/broken_bottle,
-/obj/item/cigbutt,
-/obj/item/trash/waffles,
-/obj/item/melee/classic_baton/police/deputy{
-	name = "old baton";
-	stamina_damage = 10
-	},
-/turf/open/floor/iron,
-/area/maintenance/department/security)
 "wHb" = (
 /obj/effect/turf_decal/tile/dark_red/fourcorners/contrasted{
 	alpha = 180;
@@ -99989,7 +99989,7 @@ wzF
 fFX
 uNT
 voS
-wGA
+nzr
 kwq
 bVL
 jBw
@@ -112359,7 +112359,7 @@ amC
 heE
 gyK
 rEf
-iXg
+uAZ
 pWy
 qPp
 xFb
@@ -112846,7 +112846,7 @@ cqW
 mdu
 fkz
 sxp
-fqh
+fVF
 xtE
 tEB
 wqw
