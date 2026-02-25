@@ -1404,88 +1404,79 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	else
 		help(attacker, target, attacker_style)
 
-/datum/species/proc/spec_attacked_by(obj/item/I, mob/living/user, obj/item/bodypart/affecting, mob/living/carbon/human/H)
+/datum/species/proc/spec_attacked_by(obj/item/weapon, mob/living/user, obj/item/bodypart/affecting, mob/living/carbon/human/human)
 	// Allows you to put in item-specific reactions based on species
-	if(user != H)
-		if(H.check_shields(I, I.force, "the [I.name]", MELEE_ATTACK, I.armour_penetration))
-			return 0
-	if(H.check_block())
-		H.visible_message(span_warning("[H] blocks [I]!"), \
-						span_userdanger("You block [I]!"))
-		return 0
+	if(user != human)
+		if(human.check_shields(weapon, weapon.force, "the [weapon.name]", MELEE_ATTACK, weapon.armour_penetration))
+			return FALSE
+	if(human.check_block())
+		human.visible_message(span_warning("[human] blocks [weapon]!"), \
+						span_userdanger("You block [weapon]!"))
+		return FALSE
 
-	affecting ||= H.bodyparts[1] //Something went wrong. Maybe the limb is missing?
-	//This must be placed after blocking checks
-	if(istype(I, /obj/item/melee/baton) && I.damtype == STAMINA)
-		H.batong_act(I)
-
+	affecting ||= human.bodyparts[1] //Something went wrong. Maybe the limb is missing?
 	var/hit_area = affecting.plaintext_zone
 
-	var/armor_block = H.run_armor_check(
+	var/armor_block = human.run_armor_check(
 		def_zone = affecting,
 		attack_flag = MELEE,
 		absorb_text = span_notice("Your armor has protected your [hit_area]!"),
 		soften_text = span_warning("Your armor has softened a hit to your [hit_area]!"),
-		armour_penetration = I.armour_penetration,
+		armour_penetration = weapon.armour_penetration,
 	)
-	var/Iforce = I.force //to avoid runtimes on the forcesay checks at the bottom. Some items might delete themselves if you drop them. (stunning yourself, ninja swords)
 	var/limb_damage = affecting.get_damage() //We need to save this for later to simplify dismemberment
 
-	H.send_item_attack_message(I, user, hit_area, affecting)
-	var/damage_dealt = H.apply_damage(
-		damage = I.force,
-		damagetype = I.damtype,
-		def_zone = affecting,
-		blocked = armor_block,
-		sharpness = I.is_sharp(),
-		attack_direction = get_dir(user, H),
-	)
-
-	//This must be placed after blocking checks
-	if(istype(I, /obj/item/melee/baton) && I.damtype == STAMINA)
-		H.batong_act(I, user, affecting, armor_block)
-
-	if (I.bleed_force)
-		var/armour_block = user.run_armor_check(affecting, BLEED, armour_penetration = I.armour_penetration, silent = (I.force > 0))
+	if (weapon.bleed_force)
+		var/armour_block = user.run_armor_check(affecting, BLEED, armour_penetration = weapon.armour_penetration, silent = (weapon.force > 0))
 		var/hit_amount = (100 - armour_block) / 100
-		H.add_bleeding(I.bleed_force * hit_amount)
+		human.add_bleeding(weapon.bleed_force * hit_amount)
 		if(IS_ORGANIC_LIMB(affecting))
-			I.add_mob_blood(H)	//Make the weapon bloody, not the person.
-			if(get_dist(user, H) <= 1)	//people with TK won't get smeared with blood
-				user.add_mob_blood(H)
+			weapon.add_mob_blood(human)	//Make the weapon bloody, not the person.
+			if(get_dist(user, human) <= 1)	//people with TK won't get smeared with blood
+				user.add_mob_blood(human)
 			switch(hit_area)
 				if(BODY_ZONE_HEAD)
-					if(H.wear_mask)
-						H.wear_mask.add_mob_blood(H)
-						H.update_worn_mask()
-					if(H.head)
-						H.head.add_mob_blood(H)
-						H.update_worn_head()
-					if(H.glasses && prob(33))
-						H.glasses.add_mob_blood(H)
-						H.update_worn_glasses()
+					if(human.wear_mask)
+						human.wear_mask.add_mob_blood(human)
+						human.update_worn_mask()
+					if(human.head)
+						human.head.add_mob_blood(human)
+						human.update_worn_head()
+					if(human.glasses && prob(33))
+						human.glasses.add_mob_blood(human)
+						human.update_worn_glasses()
 
 				if(BODY_ZONE_CHEST)
-					if(H.wear_suit)
-						H.wear_suit.add_mob_blood(H)
-						H.update_worn_oversuit()
-					if(H.w_uniform)
-						H.w_uniform.add_mob_blood(H)
-						H.update_worn_undersuit()
+					if(human.wear_suit)
+						human.wear_suit.add_mob_blood(human)
+						human.update_worn_oversuit()
+					if(human.w_uniform)
+						human.w_uniform.add_mob_blood(human)
+						human.update_worn_undersuit()
+
+	human.send_item_attack_message(weapon, user, hit_area, affecting)
+	var/damage_dealt = human.apply_damage(
+		damage = weapon.force,
+		damagetype = weapon.damtype,
+		def_zone = affecting,
+		blocked = armor_block,
+		sharpness = weapon.get_sharpness(),
+		attack_direction = get_dir(user, human),
+	)
 
 	if(damage_dealt <= 0)
 		return FALSE //item force is zero
 
 	var/dismember_limb = FALSE
-	var/weapon_sharpness = I.is_sharp()
-	var/mob_dismember_weakness = HAS_TRAIT(H, TRAIT_EASYDISMEMBER)
+	var/weapon_sharpness = weapon.get_sharpness()
+	var/mob_dismember_weakness = HAS_TRAIT(human, TRAIT_EASYDISMEMBER)
 
-	if(((mob_dismember_weakness && limb_damage) || (weapon_sharpness == SHARP_DISMEMBER_EASY)) && prob(I.force))
+	if(((mob_dismember_weakness && limb_damage) || (weapon_sharpness == SHARP_DISMEMBER_EASY)) && prob(weapon.force))
 		dismember_limb = TRUE
 		//Easy dismemberment on the mob allows even blunt weapons to potentially delimb, but only if the limb is already damaged
 		//Certain weapons are so sharp/strong they have a chance to cleave right through a limb without following the normal restrictions
 
-	else if(weapon_sharpness > SHARP || mob_dismember_weakness || (weapon_sharpness == SHARP && H.stat == DEAD))
+	else if(weapon_sharpness > SHARP || mob_dismember_weakness || (weapon_sharpness == SHARP && human.stat == DEAD))
 		//Delimbing cannot normally occur with blunt weapons
 		//You also aren't cutting someone's arm off with a scalpel unless they're already dead
 
@@ -1493,21 +1484,21 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			dismember_limb = TRUE
 			//You can only cut a limb off if it is already damaged enough to be fully disabled
 
-	if(dismember_limb && affecting.dismember(I.damtype))
-		I.add_mob_blood(H)
-		playsound(get_turf(H), I.get_dismember_sound(), 80, 1)
+	if(dismember_limb && affecting.dismember(weapon.damtype))
+		weapon.add_mob_blood(human)
+		playsound(get_turf(human), weapon.get_dismember_sound(), 80, 1)
 
-	if(I.damtype == BRUTE && (I.force >= max(10, armor_block) && hit_area == BODY_ZONE_HEAD))
-		if(!I.is_sharp() && H.mind && H.stat == CONSCIOUS && H != user && (H.health - (I.force * I.attack_weight)) <= 0) // rev deconversion through blunt trauma.
-			var/datum/antagonist/rev/rev = IS_REVOLUTIONARY(H)
+	if(weapon.damtype == BRUTE && (weapon.force >= max(10, armor_block) && hit_area == BODY_ZONE_HEAD))
+		if(!weapon.get_sharpness() && human.mind && human.stat == CONSCIOUS && human != user && (human.health - (weapon.force * weapon.attack_weight)) <= 0) // rev deconversion through blunt trauma.
+			var/datum/antagonist/rev/rev = IS_REVOLUTIONARY(human)
 			if(rev)
 				rev.remove_revolutionary(FALSE, user)
-		if(Iforce > 10 || Iforce >= 5 && prob(33))
-			H.force_say(user)
-	else if (I.damtype == BURN && H.is_bleeding())
-		H.cauterise_wounds(AMOUNT_TO_BLEED_INTENSITY(I.force / 3))
-		to_chat(H, span_userdanger("The heat from [I] cauterizes your bleeding!"))
-		playsound(H, 'sound/surgery/cautery2.ogg', 70)
+		if(weapon.force > 10 || weapon.force >= 5 && prob(33))
+			human.force_say(user)
+	else if (weapon.damtype == BURN && human.is_bleeding())
+		human.cauterise_wounds(AMOUNT_TO_BLEED_INTENSITY(weapon.force / 3))
+		to_chat(human, span_userdanger("The heat from [weapon] cauterizes your bleeding!"))
+		playsound(human, 'sound/surgery/cautery2.ogg', 70)
 	return TRUE
 
 /datum/species/proc/on_hit(obj/projectile/P, mob/living/carbon/human/H)

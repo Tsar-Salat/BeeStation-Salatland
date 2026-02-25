@@ -58,6 +58,7 @@
 #define TRAIT_REGEN_COMA "regencoma"
 
 // unique trait sources, still defines
+#define EMP_TRAIT "emp_trait"
 #define CLONING_POD_TRAIT "cloning-pod"
 #define STATUE_MUTE "statue"
 #define CHANGELING_DRAIN "drain"
@@ -174,6 +175,8 @@
 /// Sources for TRAIT_IGNORING_GRAVITY
 #define IGNORING_GRAVITY_NEGATION "ignoring_gravity_negation"
 #define FROM_SHADOW_SECT "shadow_sect"
+/// From a priority directive
+#define FROM_DIRECTIVE "directive"
 
 /**
 * Trait granted by [/mob/living/carbon/Initialize] and

@@ -4,15 +4,16 @@
  * Arguments:
  * * amount The amount that will be used to adjust the mob's health
  * * updating_health If the mob's health should be immediately updated to the new value
- * * forced If we should force update the adjustment of the mob's health no matter the restrictions, like GODMODE
+ * * forced If we should force update the adjustment of the mob's health no matter the restrictions, like TRAIT_GODMODE
  */
 /mob/living/simple_animal/proc/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
 	. = FALSE
 	if(forced || !HAS_TRAIT(src, TRAIT_GODMODE))
+		var/old_loss = bruteloss
 		bruteloss = round(clamp(bruteloss + amount, 0, maxHealth * 2), DAMAGE_PRECISION)
 		if(updating_health)
 			updatehealth()
-		. = amount
+		. = old_loss - bruteloss
 	if(ckey || stat)
 		return
 	if(AIStatus == AI_IDLE)
@@ -58,5 +59,12 @@
 	else if(damage_coeff[CLONE])
 		. = adjustHealth(amount * damage_coeff[CLONE] * CONFIG_GET(number/damage_multiplier), updating_health, forced)
 
-/mob/living/simple_animal/adjustStaminaLoss(amount, updating_stamina = TRUE, forced = FALSE, required_biotype)
-	return
+/mob/living/simple_animal/adjustStaminaLoss(amount, updating_stamina, forced = FALSE, required_biotype)
+	if(!can_adjust_stamina_loss(amount, forced, required_biotype))
+		return 0
+	if(forced)
+		staminaloss = max(0, min(max_staminaloss, staminaloss + amount))
+	else
+		staminaloss = max(0, min(max_staminaloss, staminaloss + (amount * damage_coeff[STAMINA])))
+	if(updating_stamina)
+		update_stamina()

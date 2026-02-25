@@ -419,27 +419,33 @@
 	limb_id = "cultgolem"
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
+	movespeed_contribution = 0
 
 /obj/item/bodypart/chest/golem/runic
 	limb_id = "cultgolem"
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
+	movespeed_contribution = 0
 
 /obj/item/bodypart/arm/left/golem/runic
 	limb_id = "cultgolem"
 	should_draw_greyscale = FALSE
+	movespeed_contribution = 0
 
 /obj/item/bodypart/arm/right/golem/runic
 	limb_id = "cultgolem"
 	should_draw_greyscale = FALSE
+	movespeed_contribution = 0
 
 /obj/item/bodypart/leg/left/golem/runic
 	limb_id = "cultgolem"
 	should_draw_greyscale = FALSE
+	movespeed_contribution = 0
 
 /obj/item/bodypart/leg/right/golem/runic
 	limb_id = "cultgolem"
 	should_draw_greyscale = FALSE
+	movespeed_contribution = 0
 
 ///
 /obj/item/bodypart/head/golem/clock

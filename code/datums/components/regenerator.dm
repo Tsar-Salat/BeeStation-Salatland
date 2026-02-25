@@ -34,7 +34,7 @@
 	oxy_per_second = 0,
 	heals_wounds = FALSE,
 	ignore_damage_types = list(STAMINA),
-	outline_colour = "#20e28e",
+	outline_colour = COLOR_PALE_GREEN,
 )
 	if (!isliving(parent))
 		return COMPONENT_INCOMPATIBLE
@@ -96,7 +96,7 @@
 	animate(filter)
 	living_parent.remove_filter(REGENERATION_FILTER)
 
-/datum/component/regenerator/process(seconds_per_tick = SSMOBS_DT)
+/datum/component/regenerator/process(delta_time = SSMOBS_DT)
 	if (!should_be_regenning(parent))
 		stop_regenerating()
 		return
@@ -107,22 +107,13 @@
 
 	var/need_mob_update = FALSE
 	if(brute_per_second)
-		need_mob_update += living_parent.adjustBruteLoss(-1 * heal_mod * brute_per_second * seconds_per_tick, updating_health = FALSE)
+		need_mob_update += living_parent.adjustBruteLoss(-1 * heal_mod * brute_per_second * delta_time, updating_health = FALSE)
 	if(burn_per_second)
-		need_mob_update += living_parent.adjustFireLoss(-1 * heal_mod * burn_per_second * seconds_per_tick, updating_health = FALSE)
+		need_mob_update += living_parent.adjustFireLoss(-1 * heal_mod * burn_per_second * delta_time, updating_health = FALSE)
 	if(tox_per_second)
-		need_mob_update += living_parent.adjustToxLoss(-1 * heal_mod * tox_per_second * seconds_per_tick, updating_health = FALSE)
+		need_mob_update += living_parent.adjustToxLoss(-1 * heal_mod * tox_per_second * delta_time, updating_health = FALSE)
 	if(oxy_per_second)
-		need_mob_update += living_parent.adjustOxyLoss(-1 * heal_mod * oxy_per_second * seconds_per_tick, updating_health = FALSE)
-
-	/*
-	if(heals_wounds && iscarbon(parent))
-		var/mob/living/carbon/carbon_parent = living_parent
-		for(var/datum/wound/iter_wound as anything in carbon_parent.all_wounds)
-			if(SPT_PROB(2 - (iter_wound.severity / 2), seconds_per_tick))
-				iter_wound.remove_wound()
-				need_mob_update++
-	*/
+		need_mob_update += living_parent.adjustOxyLoss(-1 * heal_mod * oxy_per_second * delta_time, updating_health = FALSE)
 
 	if(need_mob_update)
 		living_parent.updatehealth()
@@ -131,12 +122,6 @@
 /datum/component/regenerator/proc/should_be_regenning(mob/living/who)
 	if(who.stat == DEAD)
 		return FALSE
-	/*
-	if(heals_wounds && iscarbon(who))
-		var/mob/living/carbon/carbon_who = who
-		if(length(carbon_who.all_wounds) > 0)
-			return TRUE
-	*/
 	if(who.health != who.maxHealth)
 		return TRUE
 	return FALSE

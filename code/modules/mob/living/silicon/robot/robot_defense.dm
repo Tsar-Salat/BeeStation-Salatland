@@ -48,7 +48,6 @@
 		damage *= 1.1
 	damage = round(damage / 2) // borgs receive half damage
 	adjustBruteLoss(damage)
-	updatehealth()
 
 	return
 

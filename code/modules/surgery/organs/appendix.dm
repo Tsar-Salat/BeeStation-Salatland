@@ -25,8 +25,10 @@
 	. = ..()
 	if(!owner)
 		return
+
 	if(organ_flags & ORGAN_FAILING)
-		owner.adjustToxLoss(2 * delta_time, TRUE, TRUE)//forced to ensure people don't use it to gain tox as slime person
+		// forced to ensure people don't use it to gain tox as slime person
+		owner.adjustToxLoss(2 * delta_time, forced = TRUE)
 
 /obj/item/organ/appendix/get_availability(datum/species/owner_species, mob/living/owner_mob)
 	return owner_species.mutantappendix

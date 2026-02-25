@@ -49,25 +49,25 @@
 /**
  * Negates oxygen damage for the holoparasite - it's a bluespace crystallization, it does not breathe.
  */
-/mob/living/simple_animal/hostile/holoparasite/adjustOxyLoss(amount, updating_health, forced, required_biotype)
+/mob/living/simple_animal/hostile/holoparasite/adjustOxyLoss(amount, updating_health = TRUE, forced = FALSE, required_biotype)
 	return FALSE
 
 /**
  * Negates toxin damage for the holoparasite - it's a bluespace crystallization, it can't be poisoned.
  */
-/mob/living/simple_animal/hostile/holoparasite/adjustToxLoss(amount, updating_health, forced, required_biotype)
+/mob/living/simple_animal/hostile/holoparasite/adjustToxLoss(amount, updating_health = TRUE, forced = FALSE, required_biotype)
 	return FALSE
 
 /**
  * Negates stamina damage for the holoparasite - it's a bluespace crystallization, it has no stamina.
  */
-/mob/living/simple_animal/hostile/holoparasite/adjustStaminaLoss(amount, updating_stamina, forced, required_biotype)
+/mob/living/simple_animal/hostile/holoparasite/adjustStaminaLoss(amount, updating_stamina = TRUE, forced = FALSE, required_biotype)
 	return FALSE
 
 /**
  * Negates cellular damage for the holoparasite - it's a bluespace crystallization, it has no cells.
  */
-/mob/living/simple_animal/hostile/holoparasite/adjustCloneLoss(amount, updating_health, forced, required_biotype)
+/mob/living/simple_animal/hostile/holoparasite/adjustCloneLoss(amount, updating_health = TRUE, forced = FALSE, required_biotype)
 	return FALSE
 
 /**

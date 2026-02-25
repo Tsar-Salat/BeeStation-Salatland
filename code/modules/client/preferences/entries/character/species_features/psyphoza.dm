@@ -13,7 +13,7 @@
 	var/static/datum/universal_icon/psyphoza_head
 
 	if (isnull(psyphoza_head))
-		psyphoza_head = uni_icon('icons/mob/species/psyphoza/bodyparts.dmi', "psyphoza_head", dir = SOUTH)
+		psyphoza_head = uni_icon('icons/mob/human/species/psyphoza/bodyparts.dmi', "psyphoza_head", dir = SOUTH)
 
 	var/datum/sprite_accessory/cap = SSaccessories.psyphoza_cap_list[value]
 	var/datum/universal_icon/icon_with_cap = psyphoza_head.copy()

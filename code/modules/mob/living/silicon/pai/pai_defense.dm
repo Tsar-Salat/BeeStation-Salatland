@@ -58,7 +58,7 @@
 		to_chat(src, span_userdanger("The impact degrades your holochassis!"))
 	return amount
 
-/// Called when we take burn or brute damage, pass it to the shell instead
+// Called when we take burn or brute damage, pass it to the shell instead
 /mob/living/silicon/pai/proc/on_shell_damaged(datum/hurt, type, amount, forced)
 	SIGNAL_HANDLER
 	take_holo_damage(amount)
@@ -70,8 +70,8 @@
 	take_holo_damage(amount * ((forced) ? 1 : 0.25))
 	return COMPONENT_IGNORE_CHANGE
 
-/mob/living/silicon/pai/getBruteLoss(amount, updating_health, forced, required_biotype)
+/mob/living/silicon/pai/getBruteLoss()
 	return emittermaxhealth - emitterhealth
 
-/mob/living/silicon/pai/getFireLoss(amount, updating_health, forced, required_biotype)
+/mob/living/silicon/pai/getFireLoss()
 	return emittermaxhealth - emitterhealth

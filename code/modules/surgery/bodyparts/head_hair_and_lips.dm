@@ -149,13 +149,13 @@
 	var/debrain_icon = 'icons/mob/human/human_face.dmi'
 	var/debrain_icon_state = "debrained"
 	if(bodytype & BODYTYPE_ALIEN)
-		debrain_icon = 'icons/mob/species/alien/bodyparts.dmi'
+		debrain_icon = 'icons/mob/human/species/alien/bodyparts.dmi'
 		debrain_icon_state = "debrained_alien"
 	else if(bodytype & BODYTYPE_LARVA_PLACEHOLDER)
-		debrain_icon = 'icons/mob/species/alien/bodyparts.dmi'
+		debrain_icon = 'icons/mob/human/species/alien/bodyparts.dmi'
 		debrain_icon_state = "debrained_larva"
 	//else if(bodytype & BODYTYPE_GOLEM)
-	//	debrain_icon = 'icons/mob/species/golems.dmi'
+	//	debrain_icon = 'icons/mob/human/species/golems.dmi'
 	//	debrain_icon_state = "debrained"
 
 	var/image/debrain_overlay

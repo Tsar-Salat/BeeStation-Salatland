@@ -145,7 +145,7 @@
 	return FALSE
 
 /datum/species/zombie/infectious/spec_stun(mob/living/carbon/human/H,amount)
-	. = min(2 SECONDS, amount)
+	return min(2 SECONDS, amount)
 
 /datum/species/zombie/infectious/spec_life(mob/living/carbon/carbon_mob, delta_time, times_fired)
 	. = ..()

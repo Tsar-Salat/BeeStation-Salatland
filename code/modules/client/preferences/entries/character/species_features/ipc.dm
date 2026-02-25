@@ -13,7 +13,7 @@
 	var/static/datum/universal_icon/ipc_head
 
 	if (isnull(ipc_head))
-		ipc_head = uni_icon('icons/mob/species/ipc/bodyparts.dmi', "mcgipc_head", dir = SOUTH)
+		ipc_head = uni_icon('icons/mob/human/species/ipc/bodyparts.dmi', "mcgipc_head", dir = SOUTH)
 
 	var/datum/sprite_accessory/screen = SSaccessories.ipc_screens_list[value]
 	var/datum/universal_icon/icon_with_screen = ipc_head.copy()
@@ -72,7 +72,7 @@
 	var/static/datum/universal_icon/ipc_head
 
 	if (isnull(ipc_head))
-		ipc_head = uni_icon('icons/mob/species/ipc/bodyparts.dmi', "mcgipc_head", dir = SOUTH)
+		ipc_head = uni_icon('icons/mob/human/species/ipc/bodyparts.dmi', "mcgipc_head", dir = SOUTH)
 
 	var/datum/sprite_accessory/antenna = SSaccessories.ipc_antennas_list[value]
 	var/datum/universal_icon/icon_with_antennae = ipc_head.copy()
@@ -140,7 +140,7 @@
 	var/datum/universal_icon/icon_with_chassis = uni_icon('icons/effects/effects.dmi', "nothing")
 
 	for (var/body_part in body_parts)
-		icon_with_chassis.blend_icon(uni_icon('icons/mob/species/ipc/bodyparts.dmi', "[chassis.limbs_id]_[body_part]", dir = SOUTH), ICON_OVERLAY)
+		icon_with_chassis.blend_icon(uni_icon('icons/mob/human/species/ipc/bodyparts.dmi', "[chassis.limbs_id]_[body_part]", dir = SOUTH), ICON_OVERLAY)
 
 	return icon_with_chassis
 

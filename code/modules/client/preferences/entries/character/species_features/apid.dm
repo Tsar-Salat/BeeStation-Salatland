@@ -12,7 +12,7 @@
 /datum/preference/choiced/apid_stripes/icon_for(value)
 	var/datum/sprite_accessory/stripe = SSaccessories.apid_stripes_list[value]
 
-	var/datum/universal_icon/icon_with_stripes = uni_icon('icons/mob/species/apid/bodyparts.dmi', "apid_chest_m", dir = SOUTH)
+	var/datum/universal_icon/icon_with_stripes = uni_icon('icons/mob/human/species/apid/bodyparts.dmi', "apid_chest_m", dir = SOUTH)
 	if (stripe.icon_state != "none")
 		var/datum/universal_icon/stripes_icon = uni_icon(stripe.icon, "m_apid_stripes_[stripe.icon_state]_ADJ", dir = SOUTH)
 		stripes_icon.blend_color(COLOR_YELLOW, ICON_MULTIPLY)
@@ -42,7 +42,7 @@
 	var/static/datum/universal_icon/apid_head
 
 	if (isnull(apid_head))
-		apid_head = uni_icon('icons/mob/species/apid/bodyparts.dmi', "apid_head_m", dir = SOUTH)
+		apid_head = uni_icon('icons/mob/human/species/apid/bodyparts.dmi', "apid_head_m", dir = SOUTH)
 
 	var/datum/sprite_accessory/antenna = SSaccessories.apid_antenna_list[value]
 
@@ -74,7 +74,7 @@
 	var/static/datum/universal_icon/apid_head
 
 	if (isnull(apid_head))
-		apid_head = uni_icon('icons/mob/species/apid/bodyparts.dmi', "apid_head_m", dir = SOUTH)
+		apid_head = uni_icon('icons/mob/human/species/apid/bodyparts.dmi', "apid_head_m", dir = SOUTH)
 
 	var/datum/sprite_accessory/headstripe = SSaccessories.apid_headstripes_list[value]
 

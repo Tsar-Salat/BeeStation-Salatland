@@ -253,6 +253,18 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 #define EMP_HEAVY 1
 #define EMP_LIGHT 2
 
+/// Base brute damage dealt to augmented limbs by EMPs
+#define AUGGED_LIMB_EMP_BRUTE_DAMAGE 2
+/// Base burn damage dealt to augmented limbs by EMPs
+#define AUGGED_LIMB_EMP_BURN_DAMAGE 1.5
+/// Base time augmented limbs are disabled by EMPs (stamina damage lasts this long)
+#define AUGGED_LIMB_EMP_PARALYZE_TIME (10 SECONDS)
+/// Augmented limbs only get stamina-disabled if they're above this damage threshold (0-1 scale)
+#define ROBOTIC_EMP_PARALYZE_DAMAGE_THRESHOLD 0.3
+
+/// When hit by an EMP, the time an augged head will make vision fucky for.
+#define AUGGED_HEAD_EMP_GLITCH_DURATION 6 SECONDS
+
 #define GRENADE_CLUMSY_FUMBLE 1
 #define GRENADE_NONCLUMSY_FUMBLE 2
 #define GRENADE_NO_FUMBLE 3
@@ -322,3 +334,11 @@ GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 #define ENERGY_SHIELD_EMP_VULNERABLE (1 << 3)
 /// Energy shield starts at 0 health
 #define ENERGY_SHIELD_DEPLETE_EQUIP (1 << 4)
+
+/// Return values used in item/melee/baton/baton_attack.
+/// Does a normal item attack.
+#define BATON_DO_NORMAL_ATTACK 1
+/// The attack has been stopped. Either because the user was clumsy or the attack was blocked.
+#define BATON_ATTACK_DONE 2
+/// The baton attack is still going. baton_effect() is called.
+#define BATON_ATTACKING 3

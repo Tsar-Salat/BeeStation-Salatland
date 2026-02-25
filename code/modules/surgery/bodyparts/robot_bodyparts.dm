@@ -271,6 +271,23 @@
 	var/obj/item/assembly/flash/handheld/flash1 = null
 	var/obj/item/assembly/flash/handheld/flash2 = null
 
+#define EMP_GLITCH "EMP_GLITCH"
+
+/obj/item/bodypart/head/robot/emp_effect(severity, protection)
+	. = ..()
+	if(!. || isnull(owner))
+		return
+
+	to_chat(owner, span_danger("Your [plaintext_zone]'s optical transponders glitch out and malfunction!"))
+
+	var/glitch_duration = AUGGED_HEAD_EMP_GLITCH_DURATION
+
+	owner.add_client_colour(/datum/client_colour/malfunction)
+
+	addtimer(CALLBACK(owner, TYPE_PROC_REF(/mob/living/carbon/human, remove_client_colour), /datum/client_colour/malfunction), glitch_duration)
+	return
+
+#undef EMP_GLITCH
 
 /obj/item/bodypart/head/robot/handle_atom_del(atom/A)
 	if(A == flash1)

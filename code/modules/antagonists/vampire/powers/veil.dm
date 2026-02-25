@@ -109,7 +109,6 @@
 	// Apply Appearance
 	user.UnsetSpecialVoice()
 	user.update_body() // Outfit and underwear, also body.
-	user.update_hair()
 	user.update_body_parts() // Body itself, maybe skin color?
 
 	cast_effect() // POOF

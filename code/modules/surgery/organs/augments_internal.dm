@@ -6,7 +6,6 @@
 	organ_flags = ORGAN_ROBOTIC
 	var/implant_color = COLOR_WHITE
 	var/implant_overlay
-	var/syndicate_implant = FALSE //Makes the implant invisible to health analyzers and medical HUDs.
 
 /obj/item/organ/cyberimp/New(mob/M = null)
 	if(iscarbon(M))
@@ -122,7 +121,7 @@
 		owner.SetParalyzed(0)
 
 /obj/item/organ/cyberimp/brain/anti_stun/syndicate
-	syndicate_implant = TRUE
+	organ_flags = ORGAN_ROBOTIC | ORGAN_HIDDEN
 
 
 /obj/item/organ/cyberimp/brain/linkedsurgery

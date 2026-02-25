@@ -56,24 +56,23 @@
 #define COMSIG_MOB_RECEIVE_ARTIFACT "mob_receive_artifact"			//
 	#define COMPONENT_BLOCK_ARTIFACT 1
 
+/// from /mob/living/proc/apply_damage(): (list/damage_mods, damage, damagetype, def_zone, sharpness, attack_direction, attacking_item)
+/// allows you to add multiplicative damage modifiers to the damage mods argument to adjust incoming damage
+/// not sent if the apply damage call was forced
+#define COMSIG_MOB_APPLY_DAMAGE_MODIFIERS "mob_apply_damage_modifiers"
+/// from base of /mob/living/proc/apply_damage(): (damage, damagetype, def_zone, blocked, sharpness, attack_direction, attacking_item)
+#define COMSIG_MOB_APPLY_DAMAGE "mob_apply_damage"
+/// from /mob/living/proc/apply_damage(): (damage, damagetype, def_zone, blocked, sharpness, attack_direction, attacking_item)
+/// works like above but after the damage is actually inflicted
+#define COMSIG_MOB_AFTER_APPLY_DAMAGE "mob_after_apply_damage"
+
 #define COMSIG_MOB_ATTACK_ALIEN "mob_attack_alien"				//! from base of /mob/living/attack_alien(): (user)
 #define COMSIG_MOB_MOVESPEED_UPDATED "mob_update_movespeed"		//! From base of mob/update_movespeed():area
-
 
 #define COMSIG_MOB_HUD_CREATED "mob_hud_created"				//! from base of mob/create_mob_hud(): ()
 #define COMSIG_MOB_ATTACK_HAND_TURF "mob_attack_hand_turf"		//! from base of turf/attack_hand
 #define COMSIG_MOB_HAND_ATTACKED "mob_hand_attacked"			//! from base of
 #define COMSIG_MOB_DROPPED_ITEM "mob_dropped_item"				//! from base of /item/dropped(): (/mob/user, /obj/item, loc)
-
-/// from /mob/living/proc/apply_damage(): (list/damage_mods, damage, damagetype, def_zone, sharpness, attack_direction, attacking_item)
-/// allows you to add multiplicative damage modifiers to the damage mods argument to adjust incoming damage
-/// not sent if the apply damage call was forced
-#define COMSIG_MOB_APPLY_DAMAGE_MODIFIERS "mob_apply_damage_modifiers"
-/// from base of /mob/living/proc/apply_damage(): (damage, damagetype, def_zone, blocked, wound_bonus, bare_wound_bonus, sharpness, attack_direction, attacking_item)
-#define COMSIG_MOB_APPLY_DAMAGE "mob_apply_damage"
-/// from /mob/living/proc/apply_damage(): (damage, damagetype, def_zone, blocked, sharpness, attack_direction, attacking_item)
-/// works like above but after the damage is actually inflicted
-#define COMSIG_MOB_AFTER_APPLY_DAMAGE "mob_after_apply_damage"
 
 #define COMSIG_MOB_THROW "mob_throw"							//! from base of /mob/throw_item(): (atom/target)
 #define COMSIG_MOB_UPDATE_SIGHT "mob_update_sight"				//! from base of /mob/update_sight(): ()
@@ -105,6 +104,11 @@
 #define COMSIG_TRY_MODIFY_SPEECH "try_modify_speech"
 	///Return value if we prevent speech from being modified
 	#define PREVENT_MODIFY_SPEECH 1
+
+/// Sent from /proc/do_after if someone starts a do_after action bar.
+#define COMSIG_DO_AFTER_BEGAN "mob_do_after_began"
+/// Sent from /proc/do_after once a do_after action completes, whether via the bar filling or via interruption.
+#define COMSIG_DO_AFTER_ENDED "mob_do_after_ended"
 
 ///from /mob/living/emote(): ()
 #define COMSIG_MOB_EMOTE "mob_emote"
@@ -141,19 +145,19 @@
 #define COMSIG_MOB_BEFORE_FIRE_GUN "before_fire_gun"
 	#define GUN_HIT_SELF (1 << 0)
 
+/// from /mob/update_incapacitated: (old_incap, new_incap)
+#define COMSIG_MOB_INCAPACITATE_CHANGED "mob_incapacitated"
 /// From /obj/item/proc/pickup(): (/obj/item/picked_up_item)
 #define COMSIG_LIVING_PICKED_UP_ITEM "living_picked_up_item"
 
 /// from mob/proc/dropItemToGround()
 #define COMSIG_MOB_DROPPING_ITEM "mob_dropping_item"
 
-/// Sent from /mob/living/basic/proc/look_dead() : ()
-#define COMSIG_BASICMOB_LOOK_DEAD "basicmob_look_dead"
-/// Sent from /mob/living/basic/proc/look_alive() : ()
-#define COMSIG_BASICMOB_LOOK_ALIVE "basicmob_look_alive"
-
 /// Signal sent when a blackboard key is set to a new value
 #define COMSIG_AI_BLACKBOARD_KEY_SET(blackboard_key) "ai_blackboard_key_set_[blackboard_key]"
+
+///Signal sent before a blackboard key is cleared
+#define COMSIG_AI_BLACKBOARD_KEY_PRECLEAR(blackboard_key) "ai_blackboard_key_pre_clear_[blackboard_key]"
 
 /// Signal sent when a blackboard key is cleared
 #define COMSIG_AI_BLACKBOARD_KEY_CLEARED(blackboard_key) "ai_blackboard_key_clear_[blackboard_key]"

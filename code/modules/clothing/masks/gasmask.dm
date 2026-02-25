@@ -107,7 +107,7 @@
 	mask_designs["The Lunatic"] = image(icon = src.icon, icon_state = "trickymask")
 
 /obj/item/clothing/mask/gas/clown_hat/ui_action_click(mob/user)
-	if(!istype(user) || user.incapacitated())
+	if(!istype(user) || user.incapacitated)
 		return
 	var/list/options = list()
 	options["True Form"] = "clown"
@@ -121,7 +121,7 @@
 	if(!choice)
 		return FALSE
 
-	if(src && choice && !user.incapacitated() && in_range(user,src))
+	if(src && choice && !user.incapacitated && in_range(user,src))
 		icon_state = options[choice]
 		user.update_worn_mask()
 		for(var/X in actions)
@@ -159,7 +159,7 @@
 	mask_designs["Excité"] = image(icon = src.icon, icon_state = "sexymime")
 
 /obj/item/clothing/mask/gas/mime/ui_action_click(mob/user)
-	if(!istype(user) || user.incapacitated())
+	if(!istype(user) || user.incapacitated)
 		return
 
 	var/list/options = list()
@@ -172,7 +172,7 @@
 	if(!choice)
 		return FALSE
 
-	if(src && choice && !user.incapacitated() && in_range(user,src))
+	if(src && choice && !user.incapacitated && in_range(user,src))
 		icon_state = options[choice]
 		user.update_worn_mask()
 		for(var/X in actions)

@@ -23,7 +23,7 @@
 	if (isnull(diona_body))
 		diona_body = uni_icon('icons/effects/effects.dmi', "nothing")
 		for (var/body_part in body_parts)
-			diona_body.blend_icon(uni_icon('icons/mob/species/diona/bodyparts.dmi', "diona_[body_part]", dir = SOUTH), ICON_OVERLAY)
+			diona_body.blend_icon(uni_icon('icons/mob/human/species/diona/bodyparts.dmi', "diona_[body_part]", dir = SOUTH), ICON_OVERLAY)
 
 	var/datum/sprite_accessory/markings = SSaccessories.diona_leaves_list[value]
 	var/datum/universal_icon/icon_with_markings = diona_body.copy()
@@ -68,7 +68,7 @@
 	if (isnull(diona_body))
 		diona_body = uni_icon('icons/effects/effects.dmi', "nothing")
 		for (var/body_part in body_parts)
-			diona_body.blend_icon(uni_icon('icons/mob/species/diona/bodyparts.dmi', "diona_[body_part]", dir = SOUTH), ICON_OVERLAY)
+			diona_body.blend_icon(uni_icon('icons/mob/human/species/diona/bodyparts.dmi', "diona_[body_part]", dir = SOUTH), ICON_OVERLAY)
 
 	var/datum/sprite_accessory/markings = SSaccessories.diona_thorns_list[value]
 	var/datum/universal_icon/icon_with_markings = diona_body.copy()
@@ -113,7 +113,7 @@
 	if (isnull(diona_body))
 		diona_body = uni_icon('icons/effects/effects.dmi', "nothing")
 		for (var/body_part in body_parts)
-			diona_body.blend_icon(uni_icon('icons/mob/species/diona/bodyparts.dmi', "diona_[body_part]", dir = SOUTH), ICON_OVERLAY)
+			diona_body.blend_icon(uni_icon('icons/mob/human/species/diona/bodyparts.dmi', "diona_[body_part]", dir = SOUTH), ICON_OVERLAY)
 
 	var/datum/sprite_accessory/markings = SSaccessories.diona_flowers_list[value]
 	var/datum/universal_icon/icon_with_markings = diona_body.copy()
@@ -157,7 +157,7 @@
 	if (isnull(diona_body))
 		diona_body = uni_icon('icons/effects/effects.dmi', "nothing")
 		for (var/body_part in body_parts)
-			diona_body.blend_icon(uni_icon('icons/mob/species/diona/bodyparts.dmi', "diona_[body_part]", dir = SOUTH), ICON_OVERLAY)
+			diona_body.blend_icon(uni_icon('icons/mob/human/species/diona/bodyparts.dmi', "diona_[body_part]", dir = SOUTH), ICON_OVERLAY)
 
 	var/datum/sprite_accessory/markings = SSaccessories.diona_moss_list[value]
 	var/datum/universal_icon/icon_with_markings = diona_body.copy()
@@ -201,7 +201,7 @@
 	if (isnull(diona_body))
 		diona_body = uni_icon('icons/effects/effects.dmi', "nothing")
 		for (var/body_part in body_parts)
-			diona_body.blend_icon(uni_icon('icons/mob/species/diona/bodyparts.dmi', "diona_[body_part]", dir = SOUTH), ICON_OVERLAY)
+			diona_body.blend_icon(uni_icon('icons/mob/human/species/diona/bodyparts.dmi', "diona_[body_part]", dir = SOUTH), ICON_OVERLAY)
 
 	var/datum/sprite_accessory/markings = SSaccessories.diona_mushroom_list[value]
 	var/datum/universal_icon/icon_with_markings = diona_body.copy()
@@ -245,7 +245,7 @@
 	if (isnull(diona_body))
 		diona_body = uni_icon('icons/effects/effects.dmi', "nothing")
 		for (var/body_part in body_parts)
-			diona_body.blend_icon(uni_icon('icons/mob/species/diona/bodyparts.dmi', "diona_[body_part]", dir = SOUTH), ICON_OVERLAY)
+			diona_body.blend_icon(uni_icon('icons/mob/human/species/diona/bodyparts.dmi', "diona_[body_part]", dir = SOUTH), ICON_OVERLAY)
 
 	var/datum/sprite_accessory/markings = SSaccessories.diona_antennae_list[value]
 	var/datum/universal_icon/icon_with_markings = diona_body.copy()
@@ -327,7 +327,7 @@
 	if (isnull(diona_body))
 		diona_body = uni_icon('icons/effects/effects.dmi', "nothing")
 		for (var/body_part in body_parts)
-			diona_body.blend_icon(uni_icon('icons/mob/species/diona/bodyparts.dmi', "diona_[body_part]", dir = SOUTH), ICON_OVERLAY)
+			diona_body.blend_icon(uni_icon('icons/mob/human/species/diona/bodyparts.dmi', "diona_[body_part]", dir = SOUTH), ICON_OVERLAY)
 
 	var/datum/sprite_accessory/markings = SSaccessories.diona_pbody_list[value]
 	var/datum/universal_icon/icon_with_markings = diona_body.copy()

@@ -49,6 +49,7 @@
 					forced = forced,
 					sharpness = sharpness,
 					attack_direction = attack_direction,
+					damage_source = attacking_item,
 				))
 					update_damage_overlays()
 				damage_dealt = actual_hit.get_damage() - delta // Unfortunately bodypart receive_damage doesn't return damage dealt so we do it manually
@@ -64,6 +65,7 @@
 					forced = forced,
 					sharpness = sharpness,
 					attack_direction = attack_direction,
+					damage_source = attacking_item,
 				))
 					update_damage_overlays()
 				damage_dealt = actual_hit.get_damage() - delta // See above
@@ -264,7 +266,6 @@
 	if(updating_health)
 		updatehealth()
 
-
 /mob/living/proc/setBruteLoss(amount, updating_health = TRUE, forced = FALSE, required_bodytype = ALL)
 	if(!forced && HAS_TRAIT(src, TRAIT_GODMODE))
 		return FALSE
@@ -369,7 +370,7 @@
 
 /mob/living/proc/setFireLoss(amount, updating_health = TRUE, forced = FALSE, required_bodytype = ALL)
 	if(!forced && HAS_TRAIT(src, TRAIT_GODMODE))
-		return FALSE
+		return 0
 	. = fireloss
 	fireloss = amount
 	. -= fireloss
@@ -381,7 +382,7 @@
 /mob/living/proc/getCloneLoss()
 	return cloneloss
 
-/mob/living/proc/can_adjust_clone_loss(amount, forced, required_biotype)
+/mob/living/proc/can_adjust_clone_loss(amount, forced, required_biotype = ALL)
 	if(!forced && (!(mob_biotypes & required_biotype) || HAS_TRAIT(src, TRAIT_GODMODE) || HAS_TRAIT(src, TRAIT_NOCLONELOSS)))
 		return FALSE
 	if(SEND_SIGNAL(src, COMSIG_LIVING_ADJUST_CLONE_DAMAGE, CLONE, amount, forced) & COMPONENT_IGNORE_CHANGE)
@@ -391,8 +392,6 @@
 /mob/living/proc/adjustCloneLoss(amount, updating_health = TRUE, forced = FALSE, required_biotype = ALL)
 	if(!can_adjust_clone_loss(amount, forced, required_biotype))
 		return 0
-	if(!forced && !(mob_biotypes & required_biotype))
-		return FALSE
 	. = cloneloss
 	cloneloss = clamp((cloneloss + (amount * CONFIG_GET(number/damage_multiplier))), 0, maxHealth * 2)
 	. -= cloneloss
@@ -434,9 +433,15 @@
 	return TRUE
 
 /mob/living/proc/adjustStaminaLoss(amount, updating_stamina = TRUE, forced = FALSE, required_biotype = ALL)
+	if(!can_adjust_stamina_loss(amount, forced, required_biotype))
+		return 0
 	return
 
 /mob/living/proc/setStaminaLoss(amount, updating_stamina = TRUE, forced = FALSE, required_biotype = ALL)
+	if(!forced && (HAS_TRAIT(src, TRAIT_GODMODE)))
+		return FALSE
+	if(!forced && !(mob_biotypes & required_biotype))
+		return FALSE
 	return
 
 /**
@@ -461,7 +466,7 @@
 		updatehealth()
 		update_stamina(stamina >= DAMAGE_PRECISION)
 
-// heal MANY bodyparts, in random order
+/// heal MANY bodyparts, in random order.
 /mob/living/proc/heal_overall_damage(brute = 0, burn = 0, stamina = 0, required_bodytype, updating_health = TRUE, forced = FALSE)
 	. = (adjustBruteLoss(-abs(brute), updating_health = FALSE, forced = forced) + \
 			adjustFireLoss(-abs(burn), updating_health = FALSE, forced = forced) + \
@@ -483,7 +488,7 @@
 		updatehealth()
 		update_stamina(stamina >= DAMAGE_PRECISION)
 
-//heal up to amount damage, in a given order
+///heal up to amount damage, in a given order
 /mob/living/proc/heal_ordered_damage(amount, list/damage_types)
 	. = 0 //we'll return the amount of damage healed
 	for(var/damagetype in damage_types)

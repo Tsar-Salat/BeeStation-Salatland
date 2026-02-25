@@ -107,7 +107,7 @@
 
 /obj/item/storage/book/bible/proc/reskin_bible(mob/M)//Total override of the proc because I need some new things added to it
 	var/choice = show_radial_menu(M, src, unique_reskin, radius = 42, require_near = TRUE, tooltips = TRUE)
-	if(!QDELETED(src) && choice && !current_skin && !M.incapacitated() && in_range(M,src))
+	if(!QDELETED(src) && choice && !current_skin && !M.incapacitated && in_range(M,src))
 		if(!unique_reskin[choice])
 			return
 		current_skin = choice
@@ -233,7 +233,7 @@
 			return
 		to_chat(user, span_notice("You begin to exorcise [SS]."))
 		playsound(src,'sound/hallucinations/veryfar_noise.ogg',40,1)
-		if(do_after(user, 40, target = SS))
+		if(do_after(user, 4 SECONDS, target = SS))
 			playsound(src,'sound/effects/pray_chaplain.ogg',60,1)
 			SS.required_role = null
 			SS.theme = THEME_HOLY
