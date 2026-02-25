@@ -696,52 +696,52 @@ em {
   margin: 10px 20px;
 }
 
-//RKz's cute staffwho colors (manually colorpicked from discord role colors)
+//RKz's cute staffwho colors (manually colorpicked from discord role colors, lightness adjusted for dark theme)
 
 //These must match the rank strings exactly to work
 
 .host {
-  color: #d6680e;
+  color: hsl(27, 87.7%, 60%);
 }
 
 .headdev {
-  color: #2c76ff;
+  color: hsl(219, 100%, 65%);
 }
 
 .headmin {
-  color: #d73c42;
+  color: hsl(358, 65.9%, 62%);
 }
 
 .s_codermin {
-  color: #516ca4;
+  color: hsl(220, 44.5%, 60%);
 }
 
 .seniormin {
-  color: #ef2040;
+  color: hsl(351, 86.6%, 62%);
 }
 
 .codermin {
-  color: #647acb;
+  color: hsl(227, 96.1%, 72%);
 }
 
 .admin {
-  color: #fa4385;
+  color: hsl(338, 94.8%, 68%);
 }
 
 .moderator {
-  color: #f08080;
+  color: hsl(0, 78.9%, 75%);
 }
 
 .maintainer {
-  color: #9faee5;
+  color: hsl(227, 57.4%, 80%);
 }
 
 .mentor {
-  color: #7bca96;
+  color: hsl(140, 55.1%, 72%);
 }
 
 .localhost {
-  color: #feda5e;
+  color: hsl(46, 98.8%, 72%);
 }
 
 .death_message {
