@@ -320,7 +320,7 @@
 	SHOULD_CALL_PARENT(TRUE)
 
 	var/hit_percent = (100-blocked)/100
-	if((!brute && !burn) || hit_percent <= 0)
+	if((!brute && !burn && !stamina) || hit_percent <= 0)
 		return FALSE
 	if (!forced)
 		if(!isnull(owner))

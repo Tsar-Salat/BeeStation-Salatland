@@ -58,12 +58,8 @@
 		amount_after = testing_mob.getStaminaLoss() - expected // stamina loss applies to both carbon and basic mobs the same way, so that's why we're using it here
 	if(!apply_damage(testing_mob, amount, expected, included_types, biotypes, bodytypes, forced))
 		return FALSE
-	// DISABLED: This verify_damage check is flaky especially on cloning and stamina damage
-	// TODO: Fix the amount_after calculation logic to not expect negative damage amounts
-	/*
 	if(!verify_damage(testing_mob, amount_after, included_types))
 		return FALSE
-	*/
 	return TRUE
 
 /**
@@ -87,12 +83,8 @@
 		amount_after = testing_mob.getStaminaLoss() - expected
 	if(!set_damage(testing_mob, amount, expected, included_types, biotypes, bodytypes, forced))
 		return FALSE
-	// DISABLED: This verify_damage check is flaky because it expects impossible negative damage values
-	// TODO: Fix the amount_after calculation logic to not expect negative damage amounts
-	/*
 	if(!verify_damage(testing_mob, amount_after, included_types))
 		return FALSE
-	*/
 	return TRUE
 
 /**
@@ -105,9 +97,6 @@
  * * included_types - Bitflag of damage types to check.
  */
 /datum/unit_test/mob_damage/proc/verify_damage(mob/living/testing_mob, amount, included_types = ALL)
-	// DISABLED: Clone and stamina damage have implementation issues
-	included_types &= ~(CLONELOSS | STAMINALOSS)
-
 	if(included_types & TOXLOSS)
 		TEST_ASSERT_EQUAL(testing_mob.getToxLoss(), amount, \
 			"[testing_mob] should have [amount] toxin damage, instead they have [testing_mob.getToxLoss()]!")
@@ -120,9 +109,12 @@
 	if(included_types & OXYLOSS)
 		TEST_ASSERT_EQUAL(testing_mob.getOxyLoss(), amount, \
 			"[testing_mob] should have [amount] oxy damage, instead they have [testing_mob.getOxyLoss()]!")
-	// DISABLED: Clone and stamina damage have implementation issues
-	// if(included_types & CLONELOSS)
-	// if(included_types & STAMINALOSS)
+	if(included_types & CLONELOSS)
+		TEST_ASSERT_EQUAL(testing_mob.getCloneLoss(), amount, \
+			"[testing_mob] should have [amount] clone damage, instead they have [testing_mob.getCloneLoss()]!")
+	if(included_types & STAMINALOSS)
+		TEST_ASSERT_EQUAL(testing_mob.getStaminaLoss(), amount, \
+			"[testing_mob] should have [amount] stamina damage, instead they have [testing_mob.getStaminaLoss()]!")
 	return TRUE
 
 /**
@@ -139,17 +131,11 @@
  * * forced - whether or not this is forced damage
  */
 /datum/unit_test/mob_damage/proc/apply_damage(mob/living/testing_mob, amount, expected = -amount, included_types = ALL, biotypes = ALL, bodytypes = ALL, forced = FALSE)
-	// DISABLED: Clone and stamina damage have implementation issues
-	//Edit: Radiation means that tox is not uniform either, so thats out as well
-	included_types &= ~(CLONELOSS | STAMINALOSS)
-
 	var/damage_returned
 	if(included_types & TOXLOSS)
 		damage_returned = testing_mob.adjustToxLoss(amount, updating_health = FALSE, forced = forced, required_biotype = biotypes)
-		// DISABLED: Toxin damage return value assertion - has precision/rounding issues
-		//TEST_ASSERT_EQUAL(damage_returned, expected,
-		//	"adjustToxLoss() should have returned [expected], but returned [damage_returned] instead!")
-
+		TEST_ASSERT_EQUAL(damage_returned, expected, \
+			"adjustToxLoss() should have returned [expected], but returned [damage_returned] instead!")
 	if(included_types & BRUTELOSS)
 		damage_returned = round(testing_mob.adjustBruteLoss(amount, updating_health = FALSE, forced = forced, required_bodytype = bodytypes), 1)
 		TEST_ASSERT_EQUAL(damage_returned, expected, \
@@ -162,18 +148,14 @@
 		damage_returned = testing_mob.adjustOxyLoss(amount, updating_health = FALSE, forced = forced, required_biotype = biotypes)
 		TEST_ASSERT_EQUAL(damage_returned, expected, \
 			"adjustOxyLoss() should have returned [expected], but returned [damage_returned] instead!")
-	/*
-	// DISABLED: Clone damage has return value bugs
-	// if(included_types & CLONELOSS)
-	//	 damage_returned = testing_mob.adjustCloneLoss(amount, updating_health = TRUE, forced = forced, required_biotype = biotypes)
-	//	 TEST_ASSERT_EQUAL(damage_returned, expected, \
-	//		 "adjustCloneLoss() should have returned [expected], but returned [damage_returned] instead!")
-	// DISABLED: Stamina damage is not properly implemented
-	// if(included_types & STAMINALOSS)
-	//	 damage_returned = testing_mob.adjustStaminaLoss(amount, updating_stamina = TRUE, forced = forced, required_biotype = biotypes)
-	//	 TEST_ASSERT_EQUAL(damage_returned, expected, \
-	//		 "adjustStaminaLoss() should have returned [expected], but returned [damage_returned] instead!")
-	*/
+	if(included_types & CLONELOSS)
+		damage_returned = testing_mob.adjustCloneLoss(amount, updating_health = TRUE, forced = forced, required_biotype = biotypes)
+		TEST_ASSERT_EQUAL(damage_returned, expected, \
+			"adjustCloneLoss() should have returned [expected], but returned [damage_returned] instead!")
+	if(included_types & STAMINALOSS)
+		damage_returned = testing_mob.adjustStaminaLoss(amount, updating_stamina = TRUE, forced = forced, required_biotype = biotypes)
+		TEST_ASSERT_EQUAL(damage_returned, expected, \
+			"adjustStaminaLoss() should have returned [expected], but returned [damage_returned] instead!")
 	return TRUE
 
 /**
@@ -190,10 +172,6 @@
  * * forced - whether or not this is forced damage
  */
 /datum/unit_test/mob_damage/proc/set_damage(mob/living/testing_mob, amount, expected = -amount, included_types = ALL, biotypes = ALL, bodytypes = ALL, forced = FALSE)
-	// DISABLED: Clone and stamina damage have implementation issues
-	//Edit: Radiation means that tox is not uniform either, so thats out as well
-	included_types &= ~(CLONELOSS | STAMINALOSS)
-
 	var/damage_returned
 	if(included_types & TOXLOSS)
 		damage_returned = testing_mob.setToxLoss(amount, updating_health = FALSE, forced = forced, required_biotype = biotypes)
@@ -211,12 +189,14 @@
 		damage_returned = testing_mob.setOxyLoss(amount, updating_health = FALSE, forced = forced, required_biotype = biotypes)
 		TEST_ASSERT_EQUAL(damage_returned, expected, \
 			"setOxyLoss() should have returned [expected], but returned [damage_returned] instead!")
-	/*
-	// DISABLED: Clone and stamina damage have implementation issues
-
-	// if(included_types & CLONELOSS)
-	// if(included_types & STAMINALOSS)
-	*/
+	if(included_types & CLONELOSS)
+		damage_returned = testing_mob.setCloneLoss(amount, updating_health = FALSE, forced = forced, required_biotype = biotypes)
+		TEST_ASSERT_EQUAL(damage_returned, expected, \
+			"setCloneLoss() should have returned [expected], but returned [damage_returned] instead!")
+	if(included_types & STAMINALOSS)
+		damage_returned = testing_mob.setStaminaLoss(amount, updating_stamina = FALSE, forced = forced, required_biotype = biotypes)
+		TEST_ASSERT_EQUAL(damage_returned, expected, \
+			"setStaminaLoss() should have returned [expected], but returned [damage_returned] instead!")
 	return TRUE
 
 ///	Sanity tests damage and healing using adjustToxLoss, adjustBruteLoss, etc
@@ -491,12 +471,14 @@
 	TEST_ASSERT_EQUAL(dummy.getToxLoss(), 0, \
 		"[src] should have 0 toxin damage, but has [dummy.getToxLoss()] instead!")
 
-/// Tests that mob damage procs are working as intended for basic mobs
-/datum/unit_test/mob_damage/basic
+/// Tests that mob damage procs are working as intended for basic and simple mobs
+/datum/unit_test/mob_damage/animal
 
-/datum/unit_test/mob_damage/basic/Run()
+/datum/unit_test/mob_damage/animal/Run()
 	SSmobs.pause()
-	var/mob/living/basic/pet/dog/corgi/gusgus = allocate(/mob/living/basic/pet/dog/corgi)
+
+	// Basic mobs
+	var/mob/living/basic/mouse/gray/gusgus = allocate(/mob/living/basic/mouse/gray)
 	// give gusgus a damage_coeff of 1 for this test
 	gusgus.damage_coeff = list(BRUTE = 1, BURN = 1, TOX = 1, CLONE = 1, STAMINA = 1, OXY = 1)
 	// tank mouse
@@ -504,6 +486,15 @@
 
 	test_sanity_simple(gusgus)
 	test_sanity_complex(gusgus)
+
+	// Simplemobs
+	var/mob/living/simple_animal/abstract_thing = allocate(/mob/living/simple_animal)
+	// give the mob a damage_coeff of 1 for this test
+	abstract_thing.damage_coeff = list(BRUTE = 1, BURN = 1, TOX = 1, CLONE = 1, STAMINA = 1, OXY = 1)
+	abstract_thing.maxHealth = 200
+
+	test_sanity_simple(abstract_thing)
+	test_sanity_complex(abstract_thing)
 
 /**
  * Check that the mob has a specific amount of damage. Note: basic mobs have all incoming damage types besides stam converted into brute damage.
@@ -515,7 +506,7 @@
  * * expected - the expected return value of the damage procs, if it differs from the default of (amount * 5)
  * * included_types - Bitflag of damage types to check.
  */
-/datum/unit_test/mob_damage/basic/verify_damage(mob/living/testing_mob, amount, expected, included_types = ALL)
+/datum/unit_test/mob_damage/animal/verify_damage(mob/living/testing_mob, amount, expected, included_types = ALL)
 	if(included_types & TOXLOSS)
 		TEST_ASSERT_EQUAL(testing_mob.getToxLoss(), 0, \
 			"[testing_mob] should have [0] toxin damage, instead they have [testing_mob.getToxLoss()]!")
@@ -534,109 +525,108 @@
 			"[testing_mob] should have [0] oxy damage, instead they have [testing_mob.getOxyLoss()]!")
 	return TRUE
 
-/datum/unit_test/mob_damage/basic/test_sanity_simple(mob/living/basic/pet/dog/corgi/gusgus)
+/datum/unit_test/mob_damage/animal/test_sanity_simple(mob/living/test_mob)
 	// check to see if basic mob damage works
 
 	// Simple damage and healing
 	// Take 1 damage, heal for 1
-	if(!test_apply_damage(gusgus, amount = 1))
+	if(!test_apply_damage(test_mob, amount = 1))
 		TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! damage was not applied correctly")
 
-	if(!test_apply_damage(gusgus, amount = -1))
+	if(!test_apply_damage(test_mob, amount = -1))
 		TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! healing was not applied correctly")
 
-	// Give 2 damage of every time (translates to 10 brute, 2 staminaloss)
-	if(!test_apply_damage(gusgus, amount = 2))
+	// Give 2 damage of every time (translates to 8 brute, 2 staminaloss)
+	if(!test_apply_damage(test_mob, amount = 2))
 		TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! damage was not applied correctly")
 
-	// underhealing: heal 1 damage of every type (translates to 5 brute, 1 staminaloss)
-	if(!test_apply_damage(gusgus, amount = -1))
+	// underhealing: heal 1 damage of every type (translates to 4 brute, 1 staminaloss)
+	if(!test_apply_damage(test_mob, amount = -1))
 		TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! healing was not applied correctly")
 
 	// overhealing
 
-	// heal 11 points of toxloss (should take care of all 5 brute damage remaining)
-	if(!apply_damage(gusgus, -11, expected = 5, included_types = TOXLOSS))
+	// heal 11 points of toxloss (should take care of all 4 brute damage remaining)
+	if(!apply_damage(test_mob, -11, expected = 4, included_types = TOXLOSS))
 		TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! toxloss was not applied correctly")
-	/*
 	// heal the remaining point of staminaloss
-	//if(!apply_damage(gusgus, -11, expected = 1, included_types = STAMINALOSS))
-	//	TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! failed to heal staminaloss correctly")
-	*/
+	if(!apply_damage(test_mob, -11, expected = 1, included_types = STAMINALOSS))
+		TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! failed to heal staminaloss correctly")
 	// heal 35 points of each type, we should already be at full health so nothing should happen
-	if(!test_apply_damage(gusgus, amount = -35, expected = 0))
+	if(!test_apply_damage(test_mob, amount = -35, expected = 0))
 		TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! overhealing was not applied correctly")
 
-/datum/unit_test/mob_damage/basic/test_sanity_complex(mob/living/basic/pet/dog/corgi/gusgus)
+/datum/unit_test/mob_damage/animal/test_sanity_complex(mob/living/test_mob)
 	// Heal up, so that errors from the previous tests we won't cause this one to fail
-	gusgus.fully_heal(HEAL_DAMAGE)
+	test_mob.fully_heal(HEAL_DAMAGE)
 	var/damage_returned
 	// overall damage procs
 
+	var/type_string = isbasicmob(test_mob) ? "basic" : "simple"
 	// take 5 brute, 2 burn
-	damage_returned = gusgus.take_bodypart_damage(5, 2, updating_health = FALSE)
+	damage_returned = test_mob.take_bodypart_damage(5, 2, updating_health = FALSE)
 	TEST_ASSERT_EQUAL(damage_returned, -7, \
-		"take_bodypart_damage() should have returned -7, but returned [damage_returned] instead!")
+		"take_bodypart_damage() should have returned -7, but returned [damage_returned] instead on a [type_string] mob!")
 
-	TEST_ASSERT_EQUAL(gusgus.bruteloss, 7, \
-		"Mouse should have 7 brute damage, instead they have [gusgus.bruteloss]!")
-	TEST_ASSERT_EQUAL(gusgus.fireloss, 0, \
-		"Mouse should have 0 burn damage, instead they have [gusgus.fireloss]!")
+	TEST_ASSERT_EQUAL(test_mob.bruteloss, 7, \
+		"Mouse should have 7 brute damage, instead they have [test_mob.bruteloss] on a [type_string] mob!")
+	TEST_ASSERT_EQUAL(test_mob.fireloss, 0, \
+		"Mouse should have 0 burn damage, instead they have [test_mob.fireloss] on a [type_string] mob!")
 
 	// heal 4 brute, 1 burn
-	damage_returned = gusgus.heal_bodypart_damage(4, 1, updating_health = FALSE)
+	damage_returned = test_mob.heal_bodypart_damage(4, 1, updating_health = FALSE)
 	TEST_ASSERT_EQUAL(damage_returned, 5, \
-		"heal_bodypart_damage() should have returned 5, but returned [damage_returned] instead!")
+		"heal_bodypart_damage() should have returned 5, but returned [damage_returned] instead on a [type_string] mob!")
 
-	TEST_ASSERT_EQUAL(gusgus.bruteloss, 2, \
-		"Mouse should have 2 brute damage, instead they have [gusgus.bruteloss]!")
-	TEST_ASSERT_EQUAL(gusgus.fireloss, 0, \
-		"Mouse should have 0 burn damage, instead they have [gusgus.fireloss]!")
+	TEST_ASSERT_EQUAL(test_mob.bruteloss, 2, \
+		"Mouse should have 2 brute damage, instead they have [test_mob.bruteloss] on a [type_string] mob!")
+	TEST_ASSERT_EQUAL(test_mob.fireloss, 0, \
+		"Mouse should have 0 burn damage, instead they have [test_mob.fireloss] on a [type_string] mob!")
 
 	// heal 1 brute, 1 burn
-	damage_returned = gusgus.heal_overall_damage(1, 1, updating_health = FALSE)
+	damage_returned = test_mob.heal_overall_damage(1, 1, updating_health = FALSE)
 	TEST_ASSERT_EQUAL(damage_returned, 2, \
-		"heal_overall_damage() should have returned 2, but returned [damage_returned] instead!")
+		"heal_overall_damage() should have returned 2, but returned [damage_returned] instead on a [type_string] mob!")
 
-	TEST_ASSERT_EQUAL(gusgus.bruteloss, 0, \
-		"Mouse should have 0 brute damage, instead they have [gusgus.bruteloss]!")
-	TEST_ASSERT_EQUAL(gusgus.fireloss, 0, \
-		"Mouse should have 0 burn damage, instead they have [gusgus.fireloss]!")
+	TEST_ASSERT_EQUAL(test_mob.bruteloss, 0, \
+		"Mouse should have 0 brute damage, instead they have [test_mob.bruteloss] on a [type_string] mob!")
+	TEST_ASSERT_EQUAL(test_mob.fireloss, 0, \
+		"Mouse should have 0 burn damage, instead they have [test_mob.fireloss] on a [type_string] mob!")
 
 	// take 50 brute, 50 burn
-	damage_returned = gusgus.take_overall_damage(3, 3, updating_health = FALSE)
+	damage_returned = test_mob.take_overall_damage(3, 3, updating_health = FALSE)
 	TEST_ASSERT_EQUAL(damage_returned, -6, \
-		"take_overall_damage() should have returned -6, but returned [damage_returned] instead!")
+		"take_overall_damage() should have returned -6, but returned [damage_returned] instead on a [type_string] mob!")
 
-	if(!verify_damage(gusgus, 1, expected = 6, included_types = BRUTELOSS))
-		TEST_FAIL("take_overall_damage did not apply its damage correctly on the mouse!")
+	if(!verify_damage(test_mob, 1, expected = 6, included_types = BRUTELOSS))
+		TEST_FAIL("take_overall_damage did not apply its damage correctly on a [type_string] mob!")
 
 	// testing negative args with the overall damage procs
 
-	damage_returned = gusgus.take_bodypart_damage(-1, -1, updating_health = FALSE)
+	damage_returned = test_mob.take_bodypart_damage(-1, -1, updating_health = FALSE)
 	TEST_ASSERT_EQUAL(damage_returned, -2, \
-		"take_bodypart_damage() should have returned -2, but returned [damage_returned] instead!")
+		"take_bodypart_damage() should have returned -2, but returned [damage_returned] instead on a [type_string] mob!")
 
-	damage_returned = gusgus.heal_bodypart_damage(-1, -1, updating_health = FALSE)
+	damage_returned = test_mob.heal_bodypart_damage(-1, -1, updating_health = FALSE)
 	TEST_ASSERT_EQUAL(damage_returned, 2, \
-		"heal_bodypart_damage() should have returned 2, but returned [damage_returned] instead!")
+		"heal_bodypart_damage() should have returned 2, but returned [damage_returned] instead on a [type_string] mob!")
 
-	damage_returned = gusgus.take_overall_damage(-1, -1, updating_health = FALSE)
+	damage_returned = test_mob.take_overall_damage(-1, -1, updating_health = FALSE)
 	TEST_ASSERT_EQUAL(damage_returned, -2, \
-		"take_overall_damage() should have returned -2, but returned [damage_returned] instead!")
+		"take_overall_damage() should have returned -2, but returned [damage_returned] instead on a [type_string] mob!")
 
-	damage_returned = gusgus.heal_overall_damage(-1, -1, updating_health = FALSE)
+	damage_returned = test_mob.heal_overall_damage(-1, -1, updating_health = FALSE)
 	TEST_ASSERT_EQUAL(damage_returned, 2, \
-		"heal_overall_damage() should have returned 2, but returned [damage_returned] instead!")
+		"heal_overall_damage() should have returned 2, but returned [damage_returned] instead on a [type_string] mob!")
 
-	if(!verify_damage(gusgus, 1, expected = 6, included_types = BRUTELOSS))
-		TEST_FAIL("heal_overall_damage did not apply its healing correctly on the mouse!")
+	if(!verify_damage(test_mob, 1, expected = 6, included_types = BRUTELOSS))
+		TEST_FAIL("heal_overall_damage did not apply its healing correctly on a [type_string] mob!")
 
 	// testing overhealing
 
-	damage_returned = gusgus.heal_overall_damage(75, 99, updating_health = FALSE)
+	damage_returned = test_mob.heal_overall_damage(75, 99, updating_health = FALSE)
 	TEST_ASSERT_EQUAL(damage_returned, 6, \
-		"heal_overall_damage() should have returned 6, but returned [damage_returned] instead!")
+		"heal_overall_damage() should have returned 6, but returned [damage_returned] instead on a [type_string] mob!")
 
-	if(!verify_damage(gusgus, 0, included_types = BRUTELOSS))
-		TEST_FAIL("heal_overall_damage did not apply its healing correctly on the mouse!")
+	if(!verify_damage(test_mob, 0, included_types = BRUTELOSS))
+		TEST_FAIL("heal_overall_damage did not apply its healing correctly on a [type_string] mob!")
