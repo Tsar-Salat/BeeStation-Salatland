@@ -59,7 +59,7 @@
  */
 /datum/unit_test/mob_damage/proc/test_apply_damage(mob/living/testing_mob, amount, expected = -amount, amount_after, included_types, biotypes, bodytypes, forced)
 	if(isnull(amount_after))
-		amount_after = testing_mob.getStaminaLoss() - expected // stamina loss applies to both carbon and basic mobs the same way, so that's why we're using it here
+		amount_after = round(testing_mob.getStaminaLoss(), DAMAGE_PRECISION) - expected // stamina loss applies to both carbon and basic mobs the same way, so that's why we're using it here
 	if(!apply_damage(testing_mob, amount, expected, included_types, biotypes, bodytypes, forced))
 		return FALSE
 	if(!verify_damage(testing_mob, amount_after, included_types))
@@ -84,7 +84,7 @@
  */
 /datum/unit_test/mob_damage/proc/test_set_damage(mob/living/testing_mob, amount, expected, amount_after, included_types, biotypes, bodytypes, forced)
 	if(isnull(amount_after))
-		amount_after = testing_mob.getStaminaLoss() - expected
+		amount_after = round(testing_mob.getStaminaLoss(), DAMAGE_PRECISION) - expected
 	if(!set_damage(testing_mob, amount, expected, included_types, biotypes, bodytypes, forced))
 		return FALSE
 	if(!verify_damage(testing_mob, amount_after, included_types))
@@ -117,7 +117,7 @@
 		TEST_ASSERT_EQUAL(testing_mob.getCloneLoss(), amount, \
 			"[testing_mob] should have [amount] clone damage, instead they have [testing_mob.getCloneLoss()]!")
 	if(included_types & STAMINALOSS)
-		TEST_ASSERT_EQUAL(testing_mob.getStaminaLoss(), amount, \
+		TEST_ASSERT_EQUAL(round(testing_mob.getStaminaLoss(), DAMAGE_PRECISION), amount, \
 			"[testing_mob] should have [amount] stamina damage, instead they have [testing_mob.getStaminaLoss()]!")
 	return TRUE
 
@@ -157,7 +157,7 @@
 		TEST_ASSERT_EQUAL(damage_returned, expected, \
 			"adjustCloneLoss() should have returned [expected], but returned [damage_returned] instead!")
 	if(included_types & STAMINALOSS)
-		damage_returned = testing_mob.adjustStaminaLoss(amount, updating_stamina = TRUE, forced = forced, required_biotype = biotypes)
+		damage_returned = round(testing_mob.adjustStaminaLoss(amount, updating_stamina = TRUE, forced = forced, required_biotype = biotypes), DAMAGE_PRECISION)
 		TEST_ASSERT_EQUAL(damage_returned, expected, \
 			"adjustStaminaLoss() should have returned [expected], but returned [damage_returned] instead!")
 	return TRUE
@@ -198,7 +198,7 @@
 		TEST_ASSERT_EQUAL(damage_returned, expected, \
 			"setCloneLoss() should have returned [expected], but returned [damage_returned] instead!")
 	if(included_types & STAMINALOSS)
-		damage_returned = testing_mob.setStaminaLoss(amount, updating_stamina = FALSE, forced = forced, required_biotype = biotypes)
+		damage_returned = round(testing_mob.setStaminaLoss(amount, updating_stamina = FALSE, forced = forced, required_biotype = biotypes), DAMAGE_PRECISION)
 		TEST_ASSERT_EQUAL(damage_returned, expected, \
 			"setStaminaLoss() should have returned [expected], but returned [damage_returned] instead!")
 	return TRUE
@@ -335,31 +335,34 @@
 	dummy.set_species(/datum/species/plasmaman)
 
 	// argumentless default: should default to required_biotype = ALL. The damage should be applied in that case.
-	if(!test_apply_damage(dummy, 1, included_types = TOXLOSS|CLONELOSS))
+	if(!test_apply_damage(dummy, 1, amount_after = 1, included_types = TOXLOSS|CLONELOSS))
 		TEST_FAIL("ABOVE FAILURE: plasmaman did not take damage with biotypes = ALL")
 
 	// If we specify MOB_ORGANIC, the damage should not get applied because plasmamen lack that biotype.
-	if(!test_apply_damage(dummy, 1, expected = 0, included_types = TOXLOSS|CLONELOSS, biotypes = MOB_ORGANIC))
+	if(!test_apply_damage(dummy, 1, expected = 0, amount_after = 1, included_types = TOXLOSS|CLONELOSS, biotypes = MOB_ORGANIC))
 		TEST_FAIL("ABOVE FAILURE: plasmaman took damage with biotypes = MOB_ORGANIC")
 
 	// Now if we specify MOB_INORGANIC the damage should get applied.
-	if(!test_apply_damage(dummy, 1, included_types = TOXLOSS|CLONELOSS, biotypes = MOB_INORGANIC))
+	if(!test_apply_damage(dummy, 1, amount_after = 2, included_types = TOXLOSS|CLONELOSS, biotypes = MOB_INORGANIC))
 		TEST_FAIL("ABOVE FAILURE: plasmaman did not take damage with biotypes = MOB_INORGANIC")
 
 	// Transform back to human
 	dummy.set_species(/datum/species/human)
+	// normalize stam_damage_coeff after bodypart regeneration
+	for(var/obj/item/bodypart/BP as anything in dummy.bodyparts)
+		BP.stam_damage_coeff = 1
 
 	// We have 2 damage presently.
 	// Try to heal it; let's specify MOB_MINERAL, which should no longer work because we have changed back to a human.
-	if(!test_apply_damage(dummy, -2, expected = 0, included_types = TOXLOSS|CLONELOSS, biotypes = MOB_INORGANIC))
+	if(!test_apply_damage(dummy, -2, expected = 0, amount_after = 2, included_types = TOXLOSS|CLONELOSS, biotypes = MOB_INORGANIC))
 		TEST_FAIL("ABOVE FAILURE: human took damage with biotypes = MOB_INORGANIC")
 
 	// Force heal some of the damage. When forced = TRUE the damage/healing gets applied no matter what.
-	if(!test_apply_damage(dummy, -1, included_types = TOXLOSS|CLONELOSS, biotypes = MOB_INORGANIC, forced = TRUE))
+	if(!test_apply_damage(dummy, -1, amount_after = 1, included_types = TOXLOSS|CLONELOSS, biotypes = MOB_INORGANIC, forced = TRUE))
 		TEST_FAIL("ABOVE FAILURE: human did not get healed when biotypes = MOB_INORGANIC and forced = TRUE")
 
 	// Now heal the rest of it with the correct biotype. Make sure that this works. We should have 0 damage afterwards.
-	if(!test_apply_damage(dummy, -1, included_types = TOXLOSS|CLONELOSS, biotypes = MOB_ORGANIC))
+	if(!test_apply_damage(dummy, -1, amount_after = 0, included_types = TOXLOSS|CLONELOSS, biotypes = MOB_ORGANIC))
 		TEST_FAIL("ABOVE FAILURE: human did not get healed with biotypes = MOB_ORGANIC")
 
 /// Testing oxyloss with the TRAIT_NOBREATH
