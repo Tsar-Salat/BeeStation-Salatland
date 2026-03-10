@@ -24,8 +24,11 @@
 		addtimer(CALLBACK(src, PROC_REF(set_playable)), 2 SECONDS) //announce playable mobs to ghosts
 		// this should be delayed because some 'playable=TRUE' mobs are not actually playable because mob key is automatically given
 		// it prevents 'GLOB.poi_list' being glitched. without this, it will show xeno(or some mobs) twice in orbit panel.
+
 	//color correction
-	RegisterSignal(src, COMSIG_MOVABLE_ENTERED_AREA, PROC_REF(apply_color_correction))
+	RegisterSignal(src, COMSIG_ENTER_AREA, PROC_REF(apply_color_correction))
+	become_area_sensitive()
+
 	gravity_setup()
 	AddElement(/datum/element/movetype_handler)
 
@@ -501,6 +504,12 @@
 /mob/living/proc/setMaxHealth(newMaxHealth)
 	maxHealth = newMaxHealth
 
+/// Returns the health of the mob while ignoring damage of non-organic (prosthetic) limbs
+/// Used by cryo cells to not permanently imprison those with damage from prosthetics,
+/// as they cannot be healed through chemicals.
+/mob/living/proc/get_organic_health()
+	return health
+
 // MOB PROCS //END
 
 /mob/living/proc/mob_sleep()
@@ -781,13 +790,13 @@
 	var/oxy_to_heal = heal_to - getOxyLoss()
 	var/tox_to_heal = heal_to - getToxLoss()
 	if(brute_to_heal < 0)
-		adjustBruteLoss(brute_to_heal, FALSE)
+		adjustBruteLoss(brute_to_heal, updating_health = FALSE)
 	if(burn_to_heal < 0)
-		adjustFireLoss(burn_to_heal, FALSE)
+		adjustFireLoss(burn_to_heal, updating_health = FALSE)
 	if(oxy_to_heal < 0)
-		adjustOxyLoss(oxy_to_heal, FALSE)
+		adjustOxyLoss(oxy_to_heal, updating_health = FALSE)
 	if(tox_to_heal < 0)
-		adjustToxLoss(tox_to_heal, FALSE, TRUE)
+		adjustToxLoss(tox_to_heal, updating_health = FALSE, forced = TRUE)
 
 	// Run updatehealth once to set health for the revival check
 	updatehealth()
@@ -819,15 +828,15 @@
 	SHOULD_CALL_PARENT(TRUE)
 
 	if(heal_flags & HEAL_TOX)
-		setToxLoss(0, FALSE, TRUE)
+		setToxLoss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_OXY)
-		setOxyLoss(0, FALSE, TRUE)
+		setOxyLoss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_CLONE)
-		setCloneLoss(0, FALSE, TRUE)
+		setCloneLoss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_BRUTE)
-		setBruteLoss(0, FALSE, TRUE)
+		setBruteLoss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_BURN)
-		setFireLoss(0, FALSE, TRUE)
+		setFireLoss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_STAM)
 		stamina.adjust(INFINITY)
 		exit_stamina_stun()
@@ -2257,13 +2266,15 @@ GLOBAL_LIST_EMPTY(fire_appearances)
 		else
 			target_hostile.attack_same = FALSE //Will only attack non-passive mobs
 			if(prob(10)) //chance of sentience without loyaltyAdd commentMore actions
-				var/datum/poll_config/config = new()
-				config.question = "Do you want to play as \a [src] being revived by [reviver]?"
-				config.check_jobban = ROLE_SENTIENCE
-				config.poll_time = 15 SECONDS
-				config.jump_target = src
-				config.role_name_text = "lazarus revived mob"
-				config.alert_pic = src
+				var/datum/poll_config/config = new(
+					question = "Do you want to play as \a [src] being revived by [reviver]?",
+					check_jobban = ROLE_SENTIENCE,
+					poll_time = 15 SECONDS,
+					jump_target = src,
+					role_name_text = "lazarus revived mob",
+					alert_pic = src,
+					amount_to_pick = 1,
+				)
 				var/mob/dead/observer/candidate = SSpolling.poll_ghosts_one_choice(config)
 				if(candidate)
 					src.key = candidate.key

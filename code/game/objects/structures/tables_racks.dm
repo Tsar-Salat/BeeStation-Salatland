@@ -182,7 +182,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 
 /obj/structure/table/proc/tableheadsmash(mob/living/user, mob/living/pushed_mob)
 	pushed_mob.Knockdown(30)
-	var/obj/item/bodypart/banged_limb = pushed_mob.get_bodypart(user.zone_selected) || pushed_mob.get_bodypart(BODY_ZONE_HEAD)
+	var/obj/item/bodypart/banged_limb = pushed_mob.get_bodypart(user.get_combat_bodyzone(pushed_mob)) || pushed_mob.get_bodypart(BODY_ZONE_HEAD)
 	banged_limb?.receive_damage(30)
 	pushed_mob.stamina.adjust(-60)
 	take_damage(50)

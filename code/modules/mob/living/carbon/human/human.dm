@@ -17,6 +17,8 @@
 
 	// This needs to be called very very early in human init (before organs / species are created at the minimum)
 	setup_organless_effects()
+	// Physiology needs to be created before species, as some species modify physiology
+	setup_physiology()
 
 	setup_human_dna()
 
@@ -28,7 +30,6 @@
 
 	//initialise organs
 	create_internal_organs() //most of it is done in set_species now, this is only for parent call
-	physiology = new()
 
 	. = ..()
 
@@ -47,6 +48,9 @@
 		AddComponent(/datum/component/mood)
 
 	GLOB.human_list += src
+
+/mob/living/carbon/human/proc/setup_physiology()
+	physiology = new()
 
 /// This proc is for holding effects applied when a mob is missing certain organs
 /// It is called very, very early in human init because all humans innately spawn with no organs and gain them during init
@@ -313,7 +317,7 @@
 					investigate_log("SecHUD auto-crime | Added to [target_record.name] by [key_name(human_user)]", INVESTIGATE_RECORDS)
 
 				investigate_log("has been set from [target_record.wanted_status] to [new_status] via HUD by [key_name(human_user)].", INVESTIGATE_RECORDS)
-				target_record.wanted_status = new_status
+				target_record.set_wanted_status(human_user, new_status)
 				update_matching_security_huds(target_record.name)
 				return
 

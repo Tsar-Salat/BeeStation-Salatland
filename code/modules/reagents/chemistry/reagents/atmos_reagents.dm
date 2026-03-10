@@ -64,9 +64,9 @@
 
 /datum/reagent/nitrosyl_plasmide/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()
-	affected_mob.stamina.adjust(-1 * (clamp((-10 + current_cycle), -8, 3)) * REM * delta_time)
 	if(!warned && current_cycle >= 13)
 		to_chat(affected_mob, span_danger("Your body feels like it's on fire!")) // Nitrosyl is now draining more than Nitrium is giving
 		warned = TRUE
 
+	affected_mob.stamina.adjust((clamp((-10 + current_cycle), -8, 3)) * REM * delta_time)
 	return UPDATE_MOB_HEALTH

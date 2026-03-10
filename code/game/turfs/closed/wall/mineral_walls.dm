@@ -147,7 +147,7 @@
 	max_integrity = 400
 
 /turf/closed/wall/mineral/plasma/attackby(obj/item/attacking_item, mob/user, params)
-	if(attacking_item.is_hot() > 300 && plasma_ignition(6))//If the temperature of the object is over 300, then ignite
+	if(attacking_item.get_temperature() > 300 && plasma_ignition(6))//If the temperature of the object is over 300, then ignite
 		new /obj/structure/girder/displaced(loc)
 	return ..()
 

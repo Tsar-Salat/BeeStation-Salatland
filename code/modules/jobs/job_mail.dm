@@ -201,7 +201,7 @@
 		//maybe better than a lame PAi after all
 		/obj/item/toy/plush/flushed = 5,
 		//rare, but not that much...
-		/obj/item/paicard = 2,
+		/obj/item/pai_card = 2,
 		//definetly better than the lame PAi
 		/obj/item/toy/plush/flushed/rainbow = 2,
 	)
@@ -417,7 +417,7 @@
 		/obj/item/assembly/flash/handheld = 7,
 		/obj/effect/spawner/mail/rdonut = 5,
 		//we don't have boomerangs here, ask ausstation
-		/obj/item/melee/classic_baton/police/telescopic = 1,
+		/obj/item/melee/baton/telescopic = 1,
 	)
 
 //SHAFT MINER
@@ -484,7 +484,7 @@
 		/obj/item/storage/box/rubbershot = 10,
 		/obj/item/storage/box/lethalshot = 5,
 		/obj/item/storage/box/handcuffs = 5,
-		/obj/item/melee/classic_baton/police/telescopic = 1,
+		/obj/item/melee/baton/telescopic = 1,
 		)
 
 //Prisoner

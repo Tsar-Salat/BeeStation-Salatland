@@ -653,7 +653,7 @@
 
 	owner.visible_message("<span class='danger'>[owner] trips over [kevved] and slams into it face-first[HOW_big_of_a_miss_did_we_just_make]!</span>",
 						"<span class='userdanger'>You trip over [kevved] and slam into it face-first[HOW_big_of_a_miss_did_we_just_make]!</span>")
-	owner.stamina.adjust(-15 + length(messes) * -2)
+	owner.stamina.adjust(-15 + length(messes) * 2)
 	owner.adjustBruteLoss(8 + messes.len, updating_health = FALSE)
 	owner.Paralyze(0.4 SECONDS * messes.len) // .4 seconds of paralyze for each thing you knock around
 	owner.Knockdown(2 SECONDS + 0.4 SECONDS * messes.len) // 2 seconds of knockdown after the paralyze

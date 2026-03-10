@@ -223,7 +223,7 @@
 			var/orbit_link
 			if (source && action == NOTIFY_ORBIT)
 				orbit_link = " <a href='byond://?src=[REF(O)];follow=[REF(source)]'>(Orbit)</a>"
-			to_chat(O, span_ghostalert("[message][(enter_link) ? " [enter_link]" : ""][orbit_link]"))
+			to_chat(O, span_ghostalert("[message][enter_link ? " [enter_link]" : ""][orbit_link]"))
 			if(ghost_sound)
 				SEND_SOUND(O, sound(ghost_sound, volume = notify_volume))
 			if(flashwindow)
@@ -256,7 +256,7 @@
 		else
 			dam = 0
 		if((brute_heal > 0 && (affecting.brute_dam > 0 || (H.is_bleeding() && H.has_mechanical_bleeding()))) || (burn_heal > 0 && affecting.burn_dam > 0))
-			if(affecting.heal_damage(brute_heal, burn_heal, 0, BODYTYPE_ROBOTIC))
+			if(affecting.heal_damage(brute_heal, burn_heal, required_bodytype = BODYTYPE_ROBOTIC))
 				H.update_damage_overlays()
 			if (brute_heal > 0 && H.is_bleeding() && H.has_mechanical_bleeding())
 				H.cauterise_wounds(0.4)
@@ -342,13 +342,15 @@
 		if(A)
 			poll_message = "[poll_message] Status:[A.name]."
 			ban_key = A.banning_key
-	var/datum/poll_config/config = new()
-	config.question = poll_message
-	config.check_jobban = ban_key
-	config.role_name_text = M.real_name
-	config.poll_time = 10 SECONDS
-	config.jump_target = M
-	config.alert_pic = M
+	var/datum/poll_config/config = new(
+		question = poll_message,
+		check_jobban = ban_key,
+		role_name_text = M.real_name,
+		poll_time = 10 SECONDS,
+		jump_target = M,
+		alert_pic = M,
+		amount_to_pick = 1,
+	)
 	return config
 
 ///Clicks a random nearby mob with the source from this mob

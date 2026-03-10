@@ -41,12 +41,6 @@
 				adjustBruteLoss(damage)
 			if(BURN)
 				adjustFireLoss(damage)
-			if(TOX)
-				adjustToxLoss(damage)
-			if(OXY)
-				adjustOxyLoss(damage)
-			if(CLONE)
-				adjustCloneLoss(damage)
 
 /mob/living/silicon/attack_paw(mob/living/user)
 	return attack_hand(user)

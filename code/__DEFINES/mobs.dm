@@ -86,10 +86,6 @@
 /// The mob is a spooky phantasm or an evil ghast of such nature.
 #define MOB_SPIRIT (1 << 9)
 
-//Organ defines for carbon mobs
-#define ORGAN_ORGANIC 1
-#define ORGAN_ROBOTIC 2
-
 #define DEFAULT_BODYPART_ICON_ORGANIC 'icons/mob/human/bodyparts_greyscale.dmi'
 #define DEFAULT_BODYPART_ICON_ROBOTIC 'icons/mob/augmentation/augments.dmi'
 
@@ -406,8 +402,6 @@ GLOBAL_LIST_INIT(available_random_trauma_list, list(
 #define POCKET_STRIP_DELAY	(4 SECONDS)	//! time taken to search somebody's pockets
 #define DOOR_CRUSH_DAMAGE	15	//! the amount of damage that airlocks deal when they crush you
 
-#define REAGENTS_EFFECT_MULTIPLIER (REAGENTS_METABOLISM / 0.4) // By defining the effect multiplier this way, it'll exactly adjust all effects according to how they originally were with the 0.4 metabolism
-
 // Eye protection
 // THese values are additive to determine your overall flash protection.
 #define FLASH_PROTECTION_SENSITIVE -1
@@ -456,8 +450,10 @@ GLOBAL_LIST_INIT(available_random_trauma_list, list(
 
 // Mob Playability Set By Admin Or Ghosting
 #define SENTIENCE_SKIP 0
-#define SENTIENCE_RETAIN 1	//a player ghosting out of the mob will make the mob playable for others, if it was already playable
-#define SENTIENCE_FORCE 2		//the mob will be made playable by force when a player is forcefully ejected from a mob (by admin, for example)
+/// a player ghosting out of the mob will make the mob playable for others, if it was already playable
+#define SENTIENCE_RETAIN 1
+/// the mob will be made playable by force when a player is forcefully ejected from a mob (by admin, for example)
+#define SENTIENCE_FORCE 2
 #define SENTIENCE_ERASE 3
 
 //Flavor Text When Entering A Playable Mob
