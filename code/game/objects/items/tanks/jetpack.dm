@@ -116,7 +116,7 @@
 	if(ion_trail)
 		ion_trail.start()
 
-	JETPACK_SPEED_CHECK(known_user, MOVESPEED_ID_JETPACK, -1, full_speed)
+	JETPACK_SPEED_CHECK(known_user, /datum/movespeed_modifier/jetpack/fullspeed, -1, full_speed)
 
 /obj/item/tank/jetpack/proc/turn_off(mob/user)
 	if(!known_user)
@@ -145,7 +145,7 @@
 		return
 	allow_thrust(THRUST_REQUIREMENT_SPACEMOVE, user)
 	// Update speed according to pressure
-	JETPACK_SPEED_CHECK(known_user, MOVESPEED_ID_JETPACK, -1, full_speed)
+	JETPACK_SPEED_CHECK(known_user, /datum/movespeed_modifier/jetpack/fullspeed, -1, full_speed)
 
 /obj/item/tank/jetpack/proc/spacemove_react(mob/user, movement_dir)
 	SIGNAL_HANDLER

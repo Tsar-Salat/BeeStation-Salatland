@@ -9,6 +9,7 @@
 
 /datum/movespeed_modifier/jetpack/fullspeed
 	id = MOVESPEED_ID_JETPACK
+	variable = TRUE
 	multiplicative_slowdown = -0.5
 
 /datum/movespeed_modifier/die_of_fate

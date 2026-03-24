@@ -148,7 +148,7 @@
 			ion_trail.start()
 			RegisterSignal(owner, COMSIG_MOVABLE_MOVED, PROC_REF(move_react))
 			RegisterSignal(owner, COMSIG_MOVABLE_SPACEMOVE, PROC_REF(spacemove_react))
-			JETPACK_SPEED_CHECK(owner, MOVESPEED_ID_CYBER_THRUSTER, -1, TRUE)
+			JETPACK_SPEED_CHECK(owner, /datum/movespeed_modifier/jetpack/cybernetic, -1, TRUE)
 			if(!silent)
 				to_chat(owner, span_notice("You turn your thrusters set on."))
 	else
