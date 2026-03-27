@@ -122,6 +122,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/rune)
 	var/list/invokers = can_invoke(user)
 	if(length(invokers) >= req_cultists)
 		invoke(invokers)
+		SSblackbox.record_feedback("tally", "cult_rune_invoke", 1, "[name]")
 	else
 		to_chat(user, span_danger("You need [req_cultists - length(invokers)] more adjacent cultists to use this rune in such a manner."))
 		fail_invoke()
@@ -1097,7 +1098,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/rune/wall)
 			SEND_SOUND(M, pick(sound('sound/ambience/antag/bloodcult.ogg'),sound('sound/spookoween/ghost_whisper.ogg'),sound('sound/spookoween/ghosty_wind.ogg')))
 		else
 			var/construct = pick("floater","artificer","behemoth")
-			var/image/B = image('icons/mob/mob.dmi',M,construct, ABOVE_MOB_LAYER)
+			var/image/B = image('icons/mob/simple/mob.dmi',M,construct, ABOVE_MOB_LAYER)
 			B.override = 1
 			add_alt_appearance(/datum/atom_hud/alternate_appearance/basic/noncult, "mob_apoc", B, NONE)
 			addtimer(CALLBACK(M,TYPE_PROC_REF(/atom, remove_alt_appearance),"mob_apoc",TRUE), duration)

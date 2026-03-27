@@ -89,15 +89,15 @@ GLOBAL_LIST_INIT(battle_royale_good_loot, list(
 		/obj/item/fireaxe,
 		/obj/item/stack/sheet/telecrystal/five,
 		/obj/item/stack/sheet/telecrystal/twenty,
-		/obj/item/clothing/suit/space/hardsuit/syndi
+		/obj/item/mod/control/pre_equipped/traitor
 	))
 
 GLOBAL_LIST_INIT(battle_royale_insane_loot, list(
 		/obj/item/gun/ballistic/automatic/l6_saw/unrestricted,
 		/obj/item/energy_katana,
-		/obj/item/clothing/suit/space/hardsuit/shielded/syndi,
+		/obj/item/mod/control/pre_equipped/elite/flamethrower,
 		/obj/item/his_grace,
-		/obj/vehicle/sealed/mecha/combat/marauder/mauler/loaded,
+		/obj/vehicle/sealed/mecha/marauder/mauler/loaded,
 		/obj/item/holoparasite_creator/tech,
 		/obj/item/mjolnir,
 		/obj/item/pneumatic_cannon/pie/selfcharge,
@@ -195,7 +195,7 @@ GLOBAL_DATUM(battle_royale, /datum/battle_royale_controller)
 	var/list/death_wall
 	var/field_delay = 15
 	var/debug_mode = FALSE
-	var/datum/action/spell/aoe/knock/knock = new /datum/action/spell/aoe/knock
+	var/datum/action/cooldown/spell/aoe/knock/knock = new /datum/action/cooldown/spell/aoe/knock
 
 /datum/battle_royale_controller/Destroy(force, ...)
 	QDEL_LIST(death_wall)
@@ -205,7 +205,7 @@ GLOBAL_DATUM(battle_royale, /datum/battle_royale_controller)
 	GLOB.enter_allowed = TRUE
 
 	//BR finished? Let people play as borgs/golems again
-	ENABLE_BITFIELD(GLOB.ghost_role_flags, (GHOSTROLE_SPAWNER | GHOSTROLE_SILICONS))
+	GLOB.ghost_role_flags |= (GHOSTROLE_SPAWNER | GHOSTROLE_SILICONS)
 
 	GLOB.battle_royale = null
 
@@ -273,7 +273,7 @@ GLOBAL_DATUM(battle_royale, /datum/battle_royale_controller)
 	GLOB.enter_allowed = FALSE
 
 	//Don't let anyone join as posibrains/golems etc
-	DISABLE_BITFIELD(GLOB.ghost_role_flags, (GHOSTROLE_SPAWNER | GHOSTROLE_SILICONS))
+	GLOB.ghost_role_flags &= ~(GHOSTROLE_SPAWNER | GHOSTROLE_SILICONS)
 
 	if(SSticker.current_state < GAME_STATE_PREGAME)
 		to_chat(world, span_boldannounce("Battle Royale: Waiting for server to be ready..."))
@@ -331,6 +331,8 @@ GLOBAL_DATUM(battle_royale, /datum/battle_royale_controller)
 	)
 	var/list/participants = SSpolling.poll_ghost_candidates(config)
 	var/turf/spawn_turf = get_safe_random_station_turfs()
+	if(!spawn_turf)
+		return
 	var/obj/structure/closet/supplypod/centcompod/pod = new()
 	pod.setStyle()
 	players = list()
@@ -389,6 +391,8 @@ GLOBAL_DATUM(battle_royale, /datum/battle_royale_controller)
 	if(!item_path)
 		return
 	var/turf/target = get_safe_random_station_turfs()
+	if(!target)
+		return
 	var/obj/structure/closet/supplypod/battleroyale/pod = new()
 	if(islist(item_path))
 		for(var/thing in item_path)

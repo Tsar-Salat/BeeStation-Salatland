@@ -28,8 +28,11 @@
 #define CLOTHING_TRAIT "clothing"
 #define MASK_TRAIT "mask" //inherited from the mask
 #define SHOES_TRAIT "shoes" //inherited from your sweet kicks
+/// Trait inherited by implants
+#define IMPLANT_TRAIT "implant"
 #define CLOTHING_FEET_TRAIT "feet"
-#define VEHICLE_TRAIT "vehicle" // inherited from riding vehicles
+/// inherited from riding vehicles
+#define VEHICLE_TRAIT "vehicle"
 #define INNATE_TRAIT "innate"
 #define CRIT_HEALTH_TRAIT "crit_health"
 #define OXYLOSS_TRAIT "oxyloss"
@@ -153,6 +156,8 @@
 #define BASIC_MOB_DEATH_TRAIT "basic_mob_death"
 /// Trait applied to a mob when it gets a required "operational datum" (components/elements). Sends out the source as the type of the element.
 #define TRAIT_SUBTREE_REQUIRED_OPERATIONAL_DATUM "element-required"
+/// Trait given by mech equipment
+#define TRAIT_MECH_EQUIPMENT(equipment_type) "mech_equipment_[equipment_type]"
 
 /// This trait comes from when a mob is currently typing.
 #define CURRENTLY_TYPING_TRAIT "currently_typing"
@@ -166,6 +171,8 @@
 
 /// A trait gained from a mob's leap action, like the leaper
 #define LEAPING_TRAIT "leaping"
+/// A trait gained from a mob's swoop action, like the ash drake
+#define SWOOPING_TRAIT "swooping"
 /// Sources for TRAIT_IGNORING_GRAVITY
 #define IGNORING_GRAVITY_NEGATION "ignoring_gravity_negation"
 #define FROM_SHADOW_SECT "shadow_sect"
@@ -174,7 +181,7 @@
 
 /**
 * Trait granted by [/mob/living/carbon/Initialize] and
-* granted/removed by [/obj/item/organ/internal/tongue]
+* granted/removed by [/obj/item/organ/tongue]
 * Used for ensuring that carbons without tongues cannot taste anything
 * so it is added in Initialize, and then removed when a tongue is inserted
 * and readded when a tongue is removed.

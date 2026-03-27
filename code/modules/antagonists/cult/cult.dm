@@ -125,6 +125,8 @@
 		if(cult_team.cult_ascendent)
 			cult_team.ascend(current)
 
+	ADD_TRAIT(current, TRAIT_HEALS_FROM_CULT_PYLONS, CULT_TRAIT)
+
 /datum/antagonist/cult/master/apply_innate_effects(mob/living/mob_override)
 	. = ..()
 	var/mob/living/current = owner.current
@@ -132,7 +134,7 @@
 		reckoning.Grant(current)
 	bloodmark.Grant(current)
 	throwing.Grant(current)
-	current.update_action_buttons_icon()
+	current.update_mob_action_buttons()
 	current.apply_status_effect(/datum/status_effect/cult_master)
 
 /datum/antagonist/cult/remove_innate_effects(mob/living/mob_override)
@@ -155,6 +157,13 @@
 			REMOVE_LUM_SOURCE(H, LUM_SOURCE_HOLY)
 		H.update_body()
 
+	REMOVE_TRAIT(current, TRAIT_HEALS_FROM_CULT_PYLONS, CULT_TRAIT)
+
+/datum/antagonist/cult/on_mindshield(mob/implanter)
+	if(!silent)
+		to_chat(owner.current, span_warning("You feel something interfering with your mental conditioning, but you resist it!"))
+	return
+
 /datum/antagonist/cult/master/remove_innate_effects(mob/living/mob_override)
 	. = ..()
 	var/mob/living/current = owner.current
@@ -163,7 +172,7 @@
 	reckoning.Remove(current)
 	bloodmark.Remove(current)
 	throwing.Remove(current)
-	current.update_action_buttons_icon()
+	current.update_mob_action_buttons()
 	current.remove_status_effect(/datum/status_effect/cult_master)
 
 /datum/antagonist/cult/on_removal()
@@ -197,6 +206,10 @@
 		if(istype(o, /obj/item/melee/cultblade/dagger) || istype(o, /obj/item/stack/sheet/runed_metal))
 			qdel(o)
 
+///Returns whether or not this datum is its team's leader.
+/datum/antagonist/cult/proc/is_cult_leader()
+	return (cult_team.cult_leader_datum == src)
+
 /datum/antagonist/cult/master
 	ignore_implant = TRUE
 	show_in_antagpanel = FALSE //Feel free to add this later
@@ -209,11 +222,15 @@
 	QDEL_NULL(reckoning)
 	QDEL_NULL(bloodmark)
 	QDEL_NULL(throwing)
+	if(!cult_team.cult_leader_datum)
+		return FALSE
+	cult_team.cult_leader_datum = null
 	return ..()
 
 /datum/antagonist/cult/master/on_gain()
 	. = ..()
 	var/mob/living/current = owner.current
+	cult_team.cult_leader_datum = src
 	set_antag_hud(current, "cultmaster")
 
 /datum/antagonist/cult/master/greet()
@@ -230,6 +247,8 @@
 
 	var/cult_vote_called = FALSE
 	var/mob/living/cult_master
+	///The cult leader
+	var/datum/antagonist/cult/cult_leader_datum
 	var/reckoning_complete = FALSE
 	var/cult_risen = FALSE
 	var/cult_ascendent = FALSE

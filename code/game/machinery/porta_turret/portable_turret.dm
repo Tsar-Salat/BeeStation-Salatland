@@ -660,7 +660,10 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/porta_turret)
 	button_icon = 'icons/hud/actions/actions_mecha.dmi'
 	button_icon_state = "mech_cycle_equip_off"
 
-/datum/action/turret_toggle/on_activate(mob/user, atom/target)
+/datum/action/turret_toggle/trigger(mob/clicker, trigger_flags)
+	. = ..()
+	if(!.)
+		return
 	var/obj/machinery/porta_turret/turret = target
 	if(!istype(turret))
 		return
@@ -671,7 +674,10 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/porta_turret)
 	button_icon = 'icons/hud/actions/actions_mecha.dmi'
 	button_icon_state = "mech_eject"
 
-/datum/action/turret_quit/on_activate(mob/user, atom/target)
+/datum/action/turret_quit/trigger(mob/clicker, trigger_flags)
+	. = ..()
+	if(!.)
+		return
 	var/obj/machinery/porta_turret/P = target
 	if(!istype(P))
 		return
@@ -710,7 +716,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/porta_turret)
 	check_should_process()
 	return TRUE
 
-/obj/machinery/porta_turret/InterceptClickOn(mob/living/clicker, params, atom/A)
+/obj/machinery/porta_turret/proc/InterceptClickOn(mob/living/clicker, params, atom/A)
 	if(!manual_control)
 		return FALSE
 	if(!can_interact(clicker))

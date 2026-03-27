@@ -693,7 +693,7 @@
 	else
 		user.changeNext_move(CLICK_CD_MELEE)
 		user.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
-		var/damage = take_damage(4, BRUTE, MELEE, 1)
+		var/damage = take_damage(4, BRUTE, MELEE, 1, get_dir(src, user))
 		user.visible_message(span_danger("[user] smashes [src] with [user.p_their()] paws[damage ? "." : ", without leaving a mark!"]"), null, null, COMBAT_MESSAGE_RANGE)
 
 /obj/machinery/attack_robot(mob/user)
@@ -1033,13 +1033,16 @@
 				. += "It appears heavily damaged."
 			if(0 to 25)
 				. += span_warning("It's falling apart!")
-	if(user.research_scanner && component_parts)
-		. += display_parts(user, TRUE)
 	if(GET_ATOM_BLOOD_DNA(src))
 		. += span_warning("It's smeared with blood!")
 
 /obj/machinery/examine_descriptor(mob/user)
 	return "machine"
+
+/obj/machinery/examine_more(mob/user)
+	. = ..()
+	if(HAS_TRAIT(user, TRAIT_RESEARCH_SCANNER) && component_parts)
+		. += display_parts(user, TRUE)
 
 //called on machinery construction (i.e from frame to machinery) but not on initialization
 /obj/machinery/proc/on_construction()

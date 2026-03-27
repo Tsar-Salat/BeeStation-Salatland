@@ -28,7 +28,7 @@
 	visor_flags_cover = MASKCOVERSMOUTH
 	gas_transfer_coefficient = 0.9
 	armor_type = /datum/armor/mask_surgical
-	actions_types = list(/datum/action/item_action/adjust)
+	actions_types = list(/datum/action/item_action/adjust_style)
 
 
 /datum/armor/mask_surgical
@@ -75,30 +75,19 @@
 	flags_inv = HIDESNOUT
 	flags_cover = MASKCOVERSEYES
 	resistance_flags = FLAMMABLE
-	actions_types = list(/datum/action/item_action/adjust)
+	unique_reskin = list(
+			"Joy" = "joy",
+			"Flushed" = "flushed",
+			"Pensive" = "pensive",
+			"Angry" = "angry",
+			"Pleading" = "pleading"
+	)
 
-/obj/item/clothing/mask/joy/ui_action_click(mob/user)
-	if(!istype(user) || user.incapacitated)
-		return
 
-	var/list/options = list()
-	options["Joy"] = "joy"
-	options["Flushed"] = "flushed"
-	options["Pensive"] = "pensive"
-	options["Angry"] = "angry"
-	options["Pleading"] ="pleading"
-
-	var/choice = input(user,"To what form do you wish to Morph this mask?","Morph Mask") in sort_list(options)
-
-	if(src && choice && !user.incapacitated && in_range(user,src))
-		icon_state = options[choice]
-		user.update_worn_mask()
-		for(var/X in actions)
-			var/datum/action/A = X
-			A.update_buttons()
-		to_chat(user, span_notice("Your emotion mask has now morphed into [choice]!"))
-		return 1
-
+/obj/item/clothing/mask/joy/reskin_obj(mob/user)
+	. = ..()
+	user.update_worn_mask()
+	current_skin = null
 
 /obj/item/clothing/mask/pig
 	name = "pig mask"
@@ -111,7 +100,7 @@
 	modifies_speech = TRUE
 
 /obj/item/clothing/mask/pig/handle_speech(datum/source, list/speech_args)
-	if(!CHECK_BITFIELD(clothing_flags, VOICEBOX_DISABLED))
+	if(!(clothing_flags & VOICEBOX_DISABLED))
 		speech_args[SPEECH_MESSAGE] = pick("Oink!","Squeeeeeeee!","Oink Oink!")
 
 /obj/item/clothing/mask/pig/cursed
@@ -137,7 +126,7 @@
 	modifies_speech = TRUE
 
 /obj/item/clothing/mask/frog/handle_speech(datum/source, list/speech_args) //whenever you speak
-	if(!CHECK_BITFIELD(clothing_flags, VOICEBOX_DISABLED))
+	if(!(clothing_flags & VOICEBOX_DISABLED))
 		if(prob(5)) //sometimes, the angry spirit finds others words to speak.
 			speech_args[SPEECH_MESSAGE] = pick("HUUUUU!!","SMOOOOOKIN'!!","Hello my baby, hello my honey, hello my rag-time gal.", "Feels bad, man.", "GIT DIS GUY OFF ME!!" ,"SOMEBODY STOP ME!!", "NORMIES, GET OUT!!")
 		else
@@ -166,7 +155,7 @@
 	modifies_speech = TRUE
 
 /obj/item/clothing/mask/cowmask/handle_speech(datum/source, list/speech_args)
-	if(!CHECK_BITFIELD(clothing_flags, VOICEBOX_DISABLED))
+	if(!(clothing_flags & VOICEBOX_DISABLED))
 		speech_args[SPEECH_MESSAGE] = pick("Moooooooo!","Moo!","Moooo!")
 
 /obj/item/clothing/mask/cowmask/cursed
@@ -191,7 +180,7 @@
 	modifies_speech = TRUE
 
 /obj/item/clothing/mask/horsehead/handle_speech(datum/source, list/speech_args)
-	if(!CHECK_BITFIELD(clothing_flags, VOICEBOX_DISABLED))
+	if(!(clothing_flags & VOICEBOX_DISABLED))
 		speech_args[SPEECH_MESSAGE] = pick("NEEIIGGGHHHH!", "NEEEIIIIGHH!", "NEIIIGGHH!", "HAAWWWWW!", "HAAAWWW!")
 
 /obj/item/clothing/mask/horsehead/cursed

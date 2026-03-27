@@ -127,20 +127,15 @@
 	icon_state = "purple"
 	inhand_icon_state = "glasses"
 	emissive_state = "meson_emissive"
-	actions_types = list(/datum/action/item_action/toggle_research_scanner)
 	glass_colour_type = /datum/client_colour/glass_colour/purple
 	resistance_flags = ACID_PROOF
 	armor_type = /datum/armor/glasses_science
-	clothing_traits = list(TRAIT_REAGENT_SCANNER)
+	clothing_traits = list(TRAIT_REAGENT_SCANNER, TRAIT_RESEARCH_SCANNER)
 
 
 /datum/armor/glasses_science
 	fire = 80
 	acid = 100
-
-/obj/item/clothing/glasses/science/item_action_slot_check(slot)
-	if(slot == ITEM_SLOT_EYES)
-		return 1
 
 /obj/item/clothing/glasses/science/prescription
 	name = "prescription science goggles"
@@ -593,6 +588,7 @@
 	name = "Scan"
 	desc = "Scan an enemy, to get their location and stagger them, increasing their time between attacks."
 	background_icon_state = "bg_clock"
+	overlay_icon_state = "bg_clock_border"
 	button_icon = 'icons/hud/actions/actions_items.dmi'
 	button_icon_state = "scan"
 
@@ -600,7 +596,7 @@
 	cooldown_time = 45 SECONDS
 	ranged_mousepointer = 'icons/effects/mouse_pointers/scan_target.dmi'
 
-/datum/action/scan/is_available()
+/datum/action/scan/is_available(feedback = FALSE)
 	return ..() && isliving(owner)
 
 /datum/action/scan/on_activate(atom/scanned)

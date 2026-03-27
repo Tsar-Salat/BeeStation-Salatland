@@ -19,7 +19,11 @@
 	low_threshold = 45
 	high_threshold = 120
 
-	organ_traits = list(TRAIT_ADVANCEDTOOLUSER, TRAIT_CAN_STRIP)
+	organ_traits = list(
+		TRAIT_ADVANCEDTOOLUSER,
+		//TRAIT_LITERATE,
+		TRAIT_CAN_STRIP
+	)
 
 	var/suicided = FALSE
 	var/mob/living/brain/brainmob = null
@@ -293,13 +297,14 @@
 	icon_state = "brain-x"
 	variant_traits_removed = list(/*TRAIT_LITERATE,*/ TRAIT_ADVANCEDTOOLUSER)
 
-/obj/item/organ/brain/primitive
+/obj/item/organ/brain/primitive //No like books and stompy metal men
 	name = "primitive brain"
 	desc = "This juicy piece of meat has a clearly underdeveloped frontal lobe."
 	variant_traits_added = list(
 		TRAIT_PRIMITIVE,
 		TRAIT_BEAST_EMPATHY,
 	)
+
 
 /obj/item/organ/brain/primate
 	name = "primate brain"
@@ -355,7 +360,7 @@
 		var/datum/brain_trauma/BT = X
 		if(!istype(BT, brain_trauma_type))
 			continue
-		if(special_method && CHECK_BITFIELD(BT.trauma_flags, TRAUMA_SPECIAL_CURE_PROOF))
+		if(special_method && (BT.trauma_flags & TRAUMA_SPECIAL_CURE_PROOF))
 			continue
 		if(BT.resilience > resilience)
 			continue
@@ -367,7 +372,7 @@
 		var/datum/brain_trauma/BT = X
 		if(!istype(BT, brain_trauma_type))
 			continue
-		if(special_method && CHECK_BITFIELD(BT.trauma_flags, TRAUMA_SPECIAL_CURE_PROOF))
+		if(special_method && (BT.trauma_flags & TRAUMA_SPECIAL_CURE_PROOF))
 			continue
 		if(BT.resilience > resilience)
 			continue
@@ -463,7 +468,7 @@
 	var/list/datum/brain_trauma/possible_traumas = list()
 	for(var/T in subtypesof(brain_trauma_type))
 		var/datum/brain_trauma/BT = T
-		if(can_gain_trauma(BT, resilience) && !CHECK_BITFIELD(initial(BT.trauma_flags), TRAUMA_NOT_RANDOM))
+		if(can_gain_trauma(BT, resilience) && !(initial(BT.trauma_flags) & TRAUMA_NOT_RANDOM))
 			possible_traumas += BT
 
 	if(!LAZYLEN(possible_traumas))

@@ -65,6 +65,8 @@
 		register_antimagic_signals(parent)
 		var/mob/mob_parent = parent
 		ADD_TRAIT(mob_parent, TRAIT_SEE_ANTIMAGIC, identifier)
+		if(antimagic_flags & MAGIC_RESISTANCE)
+			ADD_TRAIT(mob_parent, TRAIT_HOLY, identifier)
 		var/image/forbearance = image('icons/effects/genetics.dmi', mob_parent, "servitude", MOB_OVERLAY_LAYER_ABSOLUTE(mob_parent.layer, MUTATIONS_LAYER))
 		forbearance.plane = mob_parent.plane
 		mob_parent.add_alt_appearance(/datum/atom_hud/alternate_appearance/basic/blessedAware, "magic_protection_[identifier]", forbearance)
@@ -87,6 +89,8 @@
 		var/mob/user = parent
 		UnregisterSignal(user, COMSIG_MOB_RECEIVE_MAGIC)
 		REMOVE_TRAIT(user, TRAIT_SEE_ANTIMAGIC, identifier)
+		if(antimagic_flags & MAGIC_RESISTANCE)
+			REMOVE_TRAIT(user, TRAIT_HOLY, identifier)
 		user.remove_alt_appearance("magic_protection_[identifier]")
 		user.update_alt_appearances()
 	return ..()
@@ -97,15 +101,15 @@
 
 	if(!(inventory_flags & slot)) //Check that the slot is valid for antimagic
 		unregister_antimagic_signals(equipper)
-		equipper.update_action_buttons()
 		REMOVE_TRAIT(equipper, TRAIT_SEE_ANTIMAGIC, identifier)
 		equipper.remove_alt_appearance("magic_protection_[identifier]")
 		equipper.update_alt_appearances()
 		return
 
 	register_antimagic_signals(equipper)
-	equipper.update_action_buttons()
 	var/mob/mob_parent = equipper
+	if(antimagic_flags & MAGIC_RESISTANCE)
+		ADD_TRAIT(mob_parent, TRAIT_HOLY, identifier)
 	if(!HAS_TRAIT(equipper, TRAIT_SEE_ANTIMAGIC))
 		ADD_TRAIT(mob_parent, TRAIT_SEE_ANTIMAGIC, identifier)
 		var/image/forbearance = image('icons/effects/genetics.dmi', mob_parent, "servitude", MOB_OVERLAY_LAYER_ABSOLUTE(mob_parent.layer, MUTATIONS_LAYER))
@@ -116,7 +120,7 @@
 	if(!alert_caster_on_equip)
 		return
 // Check to see if we have any spells that are blocked due to antimagic
-	for(var/datum/action/spell/magic_spell in equipper.actions)
+	for(var/datum/action/cooldown/spell/magic_spell in equipper.actions)
 		if(!(magic_spell.spell_requirements & SPELL_REQUIRES_NO_ANTIMAGIC))
 			continue
 
@@ -134,8 +138,9 @@
 	if(source.loc != user)
 		alert_caster_on_equip = TRUE
 	unregister_antimagic_signals(user)
-	user.update_action_buttons()
 	REMOVE_TRAIT(user, TRAIT_SEE_ANTIMAGIC, identifier)
+	if(antimagic_flags & MAGIC_RESISTANCE)
+		REMOVE_TRAIT(user, TRAIT_HOLY, identifier)
 	user.remove_alt_appearance("magic_protection_[identifier]")
 	user.update_alt_appearances()
 

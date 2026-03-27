@@ -167,21 +167,18 @@
 		if("Slaughter Demon")
 			name = "slaughter demon"
 			desc = "A cardboard cutout of a slaughter demon."
-			icon = 'icons/mob/mob.dmi'
+			icon = 'icons/mob/simple/mob.dmi'
 			icon_state = "daemon"
 		if("Laughter Demon")
 			name = "laughter demon"
 			desc = "A cardboard cutout of a laughter demon."
-			icon = 'icons/mob/mob.dmi'
+			icon = 'icons/mob/simple/mob.dmi'
 			icon_state = "bowmon"
 		if("Private Security Officer")
 			name = "Private Security Officer"
 			desc = "A cardboard cutout of a private security officer."
 			icon_state = "cutout_ntsec"
 	return 1
-
-/obj/item/cardboard_cutout/setDir(newdir)
-	dir = SOUTH
 
 //Purchased by Syndicate agents, these cutouts are indistinguishable from normal cutouts but aren't discolored when their appearance is changed
 /obj/item/cardboard_cutout/adaptive
@@ -306,13 +303,13 @@
 /obj/item/cardboard_cutout/adaptive/slaughterdemon
 	name = "slaughter demon"
 	desc = "A cardboard cutout of a slaughter demon."
-	icon = 'icons/mob/mob.dmi'
+	icon = 'icons/mob/simple/mob.dmi'
 	icon_state = "daemon"
 
 /obj/item/cardboard_cutout/adaptive/laughterdemon
 	name = "laughter demon"
 	desc = "A cardboard cutout of a laughter demon."
-	icon = 'icons/mob/mob.dmi'
+	icon = 'icons/mob/simple/mob.dmi'
 	icon_state = "bowmon"
 
 /obj/item/cardboard_cutout/adaptive/securityofficer

@@ -3,6 +3,8 @@
 	name = "Summon Rune"
 	desc = "Summons a rune"
 	background_icon_state = "bg_demon"
+	overlay_icon_state = "bg_demon_border"
+
 	var/obj/effect/rune/rune_type
 	var/cooldown = 0
 	var/base_cooldown = 1800
@@ -14,7 +16,7 @@
 	var/obj/effect/temp_visual/cult/rune_spawn/rune_center_type
 	var/rune_color
 
-/datum/action/innate/cult/create_rune/is_available()
+/datum/action/innate/cult/create_rune/is_available(feedback = FALSE)
 	if(!rune_type || cooldown > world.time)
 		return FALSE
 	return ..()
@@ -34,7 +36,7 @@
 	return TRUE
 
 
-/datum/action/innate/cult/create_rune/on_activate()
+/datum/action/innate/cult/create_rune/Activate()
 	var/turf/T = get_turf(owner)
 	if(turf_check(T))
 		var/chosen_keyword
@@ -56,8 +58,8 @@
 			R4 = new rune_center_type(T, scribe_time, rune_color)
 
 		cooldown = base_cooldown + world.time
-		owner.update_action_buttons_icon()
-		addtimer(CALLBACK(owner, TYPE_PROC_REF(/mob, update_action_buttons_icon)), base_cooldown)
+		owner.update_mob_action_buttons()
+		addtimer(CALLBACK(owner, TYPE_PROC_REF(/mob, update_mob_action_buttons)), base_cooldown + 1)
 		var/list/health
 		if(damage_interrupt && isliving(owner))
 			var/mob/living/L = owner
@@ -78,7 +80,7 @@
 			if(R4)
 				qdel(R4)
 			cooldown = 0
-			owner.update_action_buttons_icon()
+			owner.update_mob_action_buttons()
 
 //teleport rune
 /datum/action/innate/cult/create_rune/tele
@@ -101,7 +103,7 @@
 	rune_center_type = /obj/effect/temp_visual/cult/rune_spawn/rune4/center
 	rune_color = COLOR_DARK_RED
 
-/datum/action/innate/cult/create_rune/wall/on_activate()
+/datum/action/innate/cult/create_rune/wall/Activate()
 	. = ..()
 	var/obj/effect/rune/wall/W = locate(/obj/effect/rune/wall) in owner.loc
 	if(W)

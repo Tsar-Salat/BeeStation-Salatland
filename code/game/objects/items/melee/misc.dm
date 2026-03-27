@@ -19,6 +19,7 @@
 	righthand_file = 'icons/mob/inhands/weapons/melee_righthand.dmi'
 	flags_1 = CONDUCT_1
 	slot_flags = ITEM_SLOT_BELT
+	action_slots = ALL
 	force = 10
 	throwforce = 7
 	w_class = WEIGHT_CLASS_NORMAL
@@ -678,7 +679,7 @@
 /obj/item/stake/proc/can_be_staked(mob/living/carbon/target)
 	if(!istype(target))
 		return FALSE
-	if(!CHECK_BITFIELD(target.mobility_flags, MOBILITY_MOVE))
+	if(!(target.mobility_flags & MOBILITY_MOVE))
 		return TRUE
 	return FALSE
 

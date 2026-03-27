@@ -87,9 +87,6 @@
 	var/mob/living/carbon/owner
 	var/datum/brain_trauma/special/imaginary_friend/trauma
 
-	var/datum/action/innate/imaginary_join/join
-	var/datum/action/innate/imaginary_hide/hide
-
 /mob/camera/imaginary_friend/Login()
 	. = ..()
 	if(!. || !client)
@@ -115,10 +112,11 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/camera/imaginary_friend)
 
 	setup_friend()
 
-	join = new
-	join.Grant(src)
-	hide = new
-	hide.Grant(src)
+	var/static/list/grantable_actions = list(
+		/datum/action/innate/imaginary_join,
+		/datum/action/innate/imaginary_hide,
+	)
+	grant_actions_by_list(grantable_actions)
 
 	// Update icon on turn
 	RegisterSignal(src, COMSIG_ATOM_DIR_CHANGE, PROC_REF(Show))
@@ -127,8 +125,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/camera/imaginary_friend)
 	RegisterSignal(owner, COMSIG_MOB_SAY, PROC_REF(owner_speech))
 
 /mob/camera/imaginary_friend/Destroy()
-	qdel(join)
-	qdel(hide)
 	UnregisterSignal(src, COMSIG_ATOM_DIR_CHANGE)
 	if(owner)
 		UnregisterSignal(owner, COMSIG_MOB_SAY)
@@ -273,9 +269,10 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/camera/imaginary_friend)
 	desc = "Join your owner, following them from inside their mind."
 	button_icon = 'icons/hud/actions/actions_minor_antag.dmi'
 	background_icon_state = "bg_revenant"
+	overlay_icon_state = "bg_revenant_border"
 	button_icon_state = "join"
 
-/datum/action/innate/imaginary_join/on_activate()
+/datum/action/innate/imaginary_join/Activate()
 	var/mob/camera/imaginary_friend/I = owner
 	I.recall()
 
@@ -284,6 +281,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/camera/imaginary_friend)
 	desc = "Hide yourself from your owner's sight."
 	button_icon = 'icons/hud/actions/actions_minor_antag.dmi'
 	background_icon_state = "bg_revenant"
+	overlay_icon_state = "bg_revenant_border"
 	button_icon_state = "hide"
 
 /datum/action/innate/imaginary_hide/proc/update_status()
@@ -296,13 +294,32 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/camera/imaginary_friend)
 		name = "Hide"
 		desc = "Hide yourself from your owner's sight."
 		button_icon_state = "hide"
-	update_buttons()
+	build_all_button_icons()
 
-/datum/action/innate/imaginary_hide/on_activate()
-	var/mob/camera/imaginary_friend/I = owner
-	I.hidden = !I.hidden
-	I.Show()
-	update_status()
+/datum/action/innate/imaginary_hide/Activate()
+	var/mob/camera/imaginary_friend/fake_friend = owner
+	fake_friend.hidden = !fake_friend.hidden
+	fake_friend.Show()
+	build_all_button_icons(UPDATE_BUTTON_NAME|UPDATE_BUTTON_ICON)
+
+/datum/action/innate/imaginary_hide/update_button_name(atom/movable/screen/movable/action_button/button, force)
+	var/mob/camera/imaginary_friend/fake_friend = owner
+	if(fake_friend.hidden)
+		name = "Show"
+		desc = "Become visible to your owner."
+	else
+		name = "Hide"
+		desc = "Hide yourself from your owner's sight."
+	return ..()
+
+/datum/action/innate/imaginary_hide/apply_button_icon(atom/movable/screen/movable/action_button/current_button, force = FALSE)
+	var/mob/camera/imaginary_friend/fake_friend = owner
+	if(fake_friend.hidden)
+		button_icon_state = "unhide"
+	else
+		button_icon_state = "hide"
+
+	return ..()
 
 //down here is the trapped mind
 //like imaginary friend but a lot less imagination and more like mind prison//
@@ -340,4 +357,4 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/camera/imaginary_friend)
 /mob/camera/imaginary_friend/trapped/setup_friend()
 	real_name = "[owner.real_name]?"
 	name = real_name
-	human_image = icon('icons/mob/lavaland/lavaland_monsters.dmi', icon_state = "curseblob")
+	human_image = icon('icons/mob/simple/lavaland/lavaland_monsters.dmi', icon_state = "curseblob")

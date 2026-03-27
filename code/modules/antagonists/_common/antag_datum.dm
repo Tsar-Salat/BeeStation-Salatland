@@ -3,7 +3,7 @@ GLOBAL_LIST(admin_antag_list)
 
 /datum/antagonist
 	var/tips
-	var/name = "Antagonist"
+	var/name = "\improper Antagonist"
 	var/roundend_category = "other antagonists"				//Section of roundend report, datums with same category will be displayed together, also default header for the section
 	var/show_in_roundend = TRUE								//Set to false to hide the antagonists from roundend report
 	var/prevent_roundtype_conversion = TRUE		//If false, the roundtype will still convert with this antag active
@@ -26,6 +26,9 @@ GLOBAL_LIST(admin_antag_list)
 	/// such as uplinks can detect this datum's objectives for the cases where a syndicate
 	/// gets new objectives due to conversion.
 	var/faction = null
+
+	/// Flags for antags to turn on or off and check!
+	var/antag_flags = NONE
 
 	var/can_elimination_hijack = ELIMINATION_NEUTRAL //If these antags are alone when a shuttle elimination happens.
 	/// If above 0, this is the multiplier for the speed at which we hijack the shuttle. Do not directly read, use hijack_speed().
@@ -71,7 +74,9 @@ GLOBAL_LIST(admin_antag_list)
 
 /datum/antagonist/Destroy()
 	GLOB.antagonists -= src
-	if(owner)
+	if(!owner)
+		stack_trace("Destroy()ing antagonist datum when it has no owner.")
+	else
 		LAZYREMOVE(owner.antag_datums, src)
 	owner = null
 	return ..()
@@ -115,6 +120,16 @@ GLOBAL_LIST(admin_antag_list)
 /datum/antagonist/proc/remove_innate_effects(mob/living/mob_override)
 	return
 
+/// This is called when the antagonist is being mindshielded.
+/datum/antagonist/proc/pre_mindshield(mob/implanter, mob/living/mob_override)
+	SIGNAL_HANDLER
+	return COMPONENT_MINDSHIELD_PASSED
+
+/// This is called when the antagonist is successfully mindshielded.
+/datum/antagonist/proc/on_mindshield(mob/implanter, mob/living/mob_override)
+	SIGNAL_HANDLER
+	return
+
 //Assign default team and creates one for one of a kind team antagonists
 /datum/antagonist/proc/create_team(datum/team/team)
 	return
@@ -135,8 +150,11 @@ GLOBAL_LIST(admin_antag_list)
 			to_chat(owner.current, span_boldnotice("For more info, read the panel. \
 				You can always come back to it using the button in the top left."))
 			info_button?.trigger()
+
 	apply_innate_effects()
 	give_antag_moodies()
+	RegisterSignal(owner, COMSIG_PRE_MINDSHIELD_IMPLANT, PROC_REF(pre_mindshield))
+	RegisterSignal(owner, COMSIG_MINDSHIELD_IMPLANTED, PROC_REF(on_mindshield))
 	if(is_banned(owner.current) && replace_banned)
 		replace_banned_player()
 	else if(owner.current.client?.holder && (CONFIG_GET(flag/auto_deadmin_antagonists) || owner.current.client.prefs?.read_player_preference(/datum/preference/toggle/deadmin_antagonist)))
@@ -150,15 +168,28 @@ GLOBAL_LIST(admin_antag_list)
 	if(!ui_name)
 		return
 	var/datum/action/antag_info/info_button = new(src)
+	if(antag_flags & ANTAG_OBSERVER_VISIBLE_PANEL)
+		info_button.show_to_observers = TRUE
+		info_button.allow_observer_click = TRUE
 	info_button.Grant(owner.current)
 	info_button_ref = WEAKREF(info_button)
 	return info_button
 
-/datum/antagonist/proc/is_banned(mob/M)
-	if(!M)
+/**
+ * Proc that checks the sent mob against the banlist for this antagonist.
+ * Returns FALSE if no mob is sent, or the mob is not found to be banned.
+ *
+ *  * mob/player: The mob that you are looking for on the banlist.
+ */
+/datum/antagonist/proc/is_banned(mob/player)
+	if(!player)
 		stack_trace("Called is_banned without a mob. This shouldn't happen.")
 		return FALSE
-	. = (is_banned_from(M.ckey, banning_key) || QDELETED(M))
+
+	if(!player.ckey)
+		return FALSE
+
+	. = (is_banned_from(player.ckey, banning_key) || QDELETED(player))
 
 /datum/antagonist/proc/replace_banned_player()
 	set waitfor = FALSE
@@ -184,17 +215,21 @@ GLOBAL_LIST(admin_antag_list)
 ///Called by the remove_antag_datum() and remove_all_antag_datums() mind procs for the antag datum to handle its own removal and deletion.
 /datum/antagonist/proc/on_removal()
 	SHOULD_CALL_PARENT(TRUE)
+	if(!owner)
+		CRASH("Antag datum with no owner.")
+
 	remove_innate_effects()
 	clear_antag_moodies()
 	if(info_button_ref)
 		QDEL_NULL(info_button_ref)
-	if(owner)
-		LAZYREMOVE(owner.antag_datums, src)
-		if(!LAZYLEN(owner.antag_datums))
-			owner.current.remove_from_current_living_antags()
-		if(!silent && owner.current)
-			farewell()
-		owner.current.update_action_buttons()
+	LAZYREMOVE(owner.antag_datums, src)
+	if(!LAZYLEN(owner.antag_datums))
+		owner.current.remove_from_current_living_antags()
+	if(!silent && owner.current)
+		farewell()
+	owner.current.update_action_buttons()
+	UnregisterSignal(owner, COMSIG_PRE_MINDSHIELD_IMPLANT)
+	UnregisterSignal(owner, COMSIG_MINDSHIELD_IMPLANTED)
 	var/datum/team/team = get_team()
 	if(team)
 		team.remove_member(owner)
@@ -288,6 +323,11 @@ GLOBAL_LIST(admin_antag_list)
 		))
 		objective_count++
 	return objective_data
+
+/datum/antagonist/ui_status(mob/user, datum/ui_state/state)
+	. = ..()
+	if(isobserver(user) && antag_flags & ANTAG_OBSERVER_VISIBLE_PANEL)
+		return UI_UPDATE
 
 /datum/antagonist/ui_static_data(mob/user)
 	var/list/data = list()
@@ -433,21 +473,26 @@ GLOBAL_LIST(admin_antag_list)
 /datum/action/antag_info
 	name = "Open Special Role Information:"
 	button_icon_state = "round_end"
+	show_to_observers = FALSE
 
-/datum/action/antag_info/New(master)
+/datum/action/antag_info/New(target)
 	. = ..()
-	name = "Open [master] Information"
+	name = "Open [target] Information"
 
-/datum/action/antag_info/on_activate(mob/user, atom/target)
-	target.ui_interact(owner)
+/datum/action/antag_info/trigger(mob/clicker, trigger_flags)
+	. = ..()
+	if(!.)
+		return
+
+	target.ui_interact(clicker || owner)
 
 /datum/action/antag_info/is_available(feedback = FALSE)
-	if(!master)
+	if(!target)
 		stack_trace("[type] was used without a target antag datum!")
 		return FALSE
 	. = ..()
 	if(!.)
 		return
-	if(!owner.mind || !(master in owner.mind.antag_datums))
+	if(!owner.mind || !(target in owner.mind.antag_datums))
 		return FALSE
 	return TRUE

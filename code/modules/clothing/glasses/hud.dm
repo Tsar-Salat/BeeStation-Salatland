@@ -117,6 +117,20 @@
 	glitching_hud.transform = M
 	glitching_hud.filters = filter(type="motion_blur", x=rand(1, 3))
 
+/obj/item/clothing/glasses/hud/suicide_act(mob/user)
+	if(user.is_blind() || !isliving(user))
+		return ..()
+	var/mob/living/living_user = user
+	user.visible_message(span_suicide("[user] looks through [src] and looks overwhelmed with the information! It looks like [user.p_theyre()] trying to commit suicide!"))
+	if(living_user.getOrganLoss(ORGAN_SLOT_BRAIN) >= BRAIN_DAMAGE_SEVERE)
+		var/mob/thing = pick((/mob in view()) - user)
+		if(thing)
+			user.say("VALID MAN IS WANTER, ARREST HE!!")
+			user.pointed(thing)
+		else
+			user.say("WHY IS THERE A BAR ON MY HEAD?!!")
+	return OXYLOSS
+
 /obj/item/clothing/glasses/hud/health
 	name = "health scanner HUD"
 	desc = "A heads-up display that scans the humans in view and provides accurate data about their health status."
@@ -383,11 +397,11 @@
 	darkness_view = 8
 	flash_protect = FLASH_PROTECTION_WELDER
 	vision_correction = 1
-	clothing_traits = list(TRAIT_BOOZE_SLIDER, TRAIT_REAGENT_SCANNER)
+	clothing_traits = list(TRAIT_BOOZE_SLIDER, TRAIT_REAGENT_SCANNER, TRAIT_RESEARCH_SCANNER)
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	hud_type = list(DATA_HUD_MEDICAL_ADVANCED, DATA_HUD_DIAGNOSTIC_ADVANCED, DATA_HUD_SECURITY_ADVANCED)
 	resistance_flags = INDESTRUCTIBLE
-	actions_types = list(/datum/action/item_action/toggle,/datum/action/item_action/toggle_research_scanner)
+	actions_types = list(/datum/action/item_action/toggle)
 	var/xray = TRUE
 
 /obj/item/clothing/glasses/hud/debug/attack_self(mob/user)

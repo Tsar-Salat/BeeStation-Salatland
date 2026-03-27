@@ -186,9 +186,9 @@
 	///Start auto timer
 	addtimer(CALLBACK(src, PROC_REF(auto_sense)), auto_cooldown)
 
-/datum/action/item_action/organ_action/psychic_highlight/on_activate(mob/user, atom/target)
+/datum/action/item_action/organ_action/psychic_highlight/do_effect(trigger_flags)
 	if(!owner || !check_head())
-		return
+		return FALSE
 	//Reveal larger area of sense
 	dim_overlay()
 	//Blind sense stuffs
@@ -196,8 +196,9 @@
 	if(BS)
 		for(var/mob/living/L in urange(9, owner, 1))
 			BS.highlight_object(L, "mob", L.dir)
-	update_buttons()
+	build_all_button_icons()
 	addtimer(CALLBACK(src, PROC_REF(finish_cooldown)), cooldown + sense_time) //Overwrite this line from the original to support my fucked up use
+	return TRUE
 
 /datum/action/item_action/organ_action/psychic_highlight/proc/remove()
 	owner?.clear_fullscreen("psychic_highlight")
@@ -218,7 +219,7 @@
 	addtimer(CALLBACK(src, PROC_REF(auto_sense)), auto_cooldown)
 
 /datum/action/item_action/organ_action/psychic_highlight/proc/finish_cooldown()
-	update_buttons()
+	build_all_button_icons()
 
 //Allows user to see images through walls - mostly for if this action is added to something without xray
 /datum/action/item_action/organ_action/psychic_highlight/proc/toggle_eyes_fowards()
@@ -412,7 +413,10 @@
 
 	qdel(src)
 
-/datum/action/change_psychic_visual/on_activate(mob/user, atom/target)
+/datum/action/change_psychic_visual/trigger(mob/clicker, trigger_flags)
+	. = ..()
+	if(!.)
+		return
 	if(!psychic_overlay)
 		psychic_overlay = locate(/atom/movable/screen/fullscreen/blind/psychic_highlight) in owner?.client?.screen
 	psychic_overlay?.cycle_visuals()
@@ -441,11 +445,14 @@
 
 	qdel(src)
 
-/datum/action/change_psychic_auto/on_activate(mob/user, atom/target)
+/datum/action/change_psychic_auto/trigger(mob/clicker, trigger_flags)
+	. = ..()
+	if(!.)
+		return
 	psychic_action?.auto_sense = !psychic_action?.auto_sense
-	update_buttons()
+	build_all_button_icons()
 
-/datum/action/change_psychic_auto/is_available()
+/datum/action/change_psychic_auto/is_available(feedback = FALSE)
 	. = ..()
 	if(psychic_action?.auto_sense)
 		return FALSE
@@ -476,7 +483,10 @@
 
 	qdel(src)
 
-/datum/action/change_psychic_texture/on_activate(mob/user, atom/target)
+/datum/action/change_psychic_texture/trigger(mob/clicker, trigger_flags)
+	. = ..()
+	if(!.)
+		return
 	psychic_overlay = psychic_overlay || owner?.screens["psychic_highlight"]
 	psychic_overlay?.cycle_textures()
 	blind_overlay = blind_overlay || owner?.screens["blind"]

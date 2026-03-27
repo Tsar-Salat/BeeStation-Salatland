@@ -1436,11 +1436,6 @@
 	else if(key)
 		new_mob.key = key
 
-/mob/living/can_block_magic(casted_magic_flags)
-	. = ..()
-	if(.)
-		return
-
 /mob/living/proc/unfry_mob() //Callback proc to tone down spam from multiple sizzling frying oil dipping.
 	REMOVE_TRAIT(src, TRAIT_OIL_FRIED, "cooking_oil_react")
 
