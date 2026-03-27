@@ -6,6 +6,7 @@ Doesn't work on other aliens/AI.*/
 
 
 /datum/action/alien
+	abstract_type = /datum/action/alien
 	name = "Alien Power"
 	background_icon_state = "bg_alien"
 	button_icon = 'icons/hud/actions/actions_xeno.dmi'
@@ -50,6 +51,7 @@ Doesn't work on other aliens/AI.*/
 	stat[STAT_STATUS] = GENERATE_STAT_TEXT("PLASMA - [plasma_cost]")
 
 /datum/action/alien/make_structure
+	abstract_type = /datum/action/alien/make_structure
 	/// The type of structure the action makes on use
 	var/obj/structure/made_structure_type
 

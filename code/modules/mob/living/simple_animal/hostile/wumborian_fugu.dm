@@ -63,6 +63,7 @@
 	E.trigger()
 
 /datum/action/innate/fugu
+	abstract_type = /datum/action/innate/fugu
 	button_icon_state = null
 	button_icon = 'icons/hud/actions/actions_animal.dmi'
 
