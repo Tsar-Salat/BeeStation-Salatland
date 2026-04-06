@@ -63,6 +63,11 @@
 	else
 		return ..()
 
+/obj/item/circuitboard/computer/accounting
+	name = "Account Lookup Console (Computer Board)"
+	icon_state = "command"
+	build_path = /obj/machinery/computer/accounting
+
 //obj/item/circuitboard/computer/shield
 //	name = "Shield Control (Computer Board)"
 //	build_path = /obj/machinery/computer/stationshield

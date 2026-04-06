@@ -93,16 +93,16 @@ GLOBAL_LIST_INIT(whitelisted_cargo_types, typecacheof(list(
 	var/list/misc_order_num = list() //list of strings of order numbers, so that the manifest can show all orders in a box
 	var/list/misc_contents = list() //list of lists of items that each box will contain
 	var/list/misc_costs = list() //list of overall costs sustained by each buyer.
-	if(!SSsupply.shoppinglist.len)
-		return
 
 	var/list/empty_turfs = list()
-	for(var/place in shuttle_areas)
-		var/area/shuttle/shuttle_area = place
-		for(var/turf/open/floor/T in shuttle_area)
-			if(T.is_blocked_turf())
+	for(var/area/shuttle/shuttle_area as anything in shuttle_areas)
+		for(var/turf/open/floor/shuttle_turf in shuttle_area)
+			if(shuttle_turf.is_blocked_turf())
 				continue
-			empty_turfs += T
+			empty_turfs += shuttle_turf
+
+	if(!SSsupply.shoppinglist.len)
+		return
 
 	var/value = 0
 	var/purchases = 0
@@ -129,6 +129,7 @@ GLOBAL_LIST_INIT(whitelisted_cargo_types, typecacheof(list(
 
 		if(SO.paying_account)
 			D.bank_card_talk("Cargo order #[SO.id] has shipped. [price] credits have been charged to your bank account.")
+			SSeconomy.track_purchase(D, price, SO.pack.name)
 			var/datum/bank_account/department/cargo = SSeconomy.get_budget_account(ACCOUNT_CAR_ID)
 			cargo.adjust_money(price - SO.pack.get_cost()) //Cargo gets the handling fee
 		value += SO.pack.get_cost()

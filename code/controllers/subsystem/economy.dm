@@ -20,7 +20,12 @@ SUBSYSTEM_DEF(economy)
 	var/list/dep_cards = list()
 	///The modifier multiplied to the value of bounties paid out.
 	///Multiplied as they go to all department accounts rather than just cargo.
-	var/bounty_modifier = 9
+	var/bounty_modifier = 1
+	/**
+	 * A list of strings containing a basic transaction history of purchases on the station.
+	 * Added to any time when player accounts purchase something.
+	 */
+	var/list/audit_log = list()
 
 	/// Number of mail items generated.
 	var/mail_waiting
@@ -164,3 +169,19 @@ SUBSYSTEM_DEF(economy)
 		if(D.nonstation_account)
 			D.adjust_money(amount) // Who'd think Nanotrasen gets a lot of profit from your station
 
+/**
+ * Proc that adds a set of strings and ints to the audit log, tracked by the economy SS.
+ *
+ * * account: The bank account of the person purchasing the item.
+ * * price_to_use: The cost of the purchase made for this transaction.
+ * * vendor: The object or structure medium that is charging the user. For Vending machines that's the machine, for payment component that's the parent, cargo that's the crate, etc.
+ */
+/datum/controller/subsystem/economy/proc/track_purchase(datum/bank_account/account, price_to_use, vendor)
+	if(!account || !price_to_use || !vendor)
+		CRASH("Track purchases was missing an argument! (Account, Price, or Vendor.)")
+
+	audit_log += list(list(
+		"account" = account.account_holder,
+		"cost" = price_to_use,
+		"vendor" = vendor,
+	))

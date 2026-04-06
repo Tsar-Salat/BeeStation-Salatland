@@ -63,6 +63,8 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/checkoutmachine)
 	acid = 80
 
 /obj/structure/checkoutmachine/Initialize(mapload, mob/living/user)
+	if(QDELETED(src))
+		return
 	bogdanoff = user
 	add_overlay("flaps")
 	add_overlay("hatch")
@@ -72,6 +74,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/checkoutmachine)
 	max_integrity = min(300+player_modifier*15, 600)
 	atom_integrity = max_integrity
 	calculate_runaway_condition()
+	ADD_TRAIT(SSeconomy, TRAIT_MARKET_CRASHING, REF(src))
 
 	existing_machines++
 	. = ..()
@@ -180,6 +183,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/checkoutmachine)
 			B.withdrawDelay = 0
 	priority_announce("The credit deposit machine at [get_area(src)] has been destroyed. Station funds have stopped draining!", sound = SSstation.announcer.get_rand_alert_sound(), sender_override = "CRAB-17 Protocol", )
 	explosion(src, 0,0,1, flame_range = 2)
+	REMOVE_TRAIT(SSeconomy, TRAIT_MARKET_CRASHING, REF(src))
 	return ..()
 
 /obj/structure/checkoutmachine/proc/start_dumping()

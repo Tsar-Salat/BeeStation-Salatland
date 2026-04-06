@@ -3,6 +3,7 @@
 /datum/bank_account
 	var/account_holder = "Rusty Venture"
 	var/account_balance = 0
+	var/payday_modifier
 	var/custom_currency = list(ACCOUNT_CURRENCY_MINING = 0)
 	var/datum/job/account_job
 	/// List of physical cards that bound to this account
@@ -21,10 +22,11 @@
 	/// bonus from each department.
 	var/list/bonus_per_department = list()
 
-/datum/bank_account/New(newname, job)
+/datum/bank_account/New(newname, job, modifier = 1)
 	account_holder = newname
 	account_job = job
 	account_id = rand(111111,999999)
+	payday_modifier = modifier
 	for(var/i in 1 to ACCOUNT_CREATION_MAX_ATTEMPT)
 		if(!SSeconomy.get_bank_account_by_id(account_id)) // Don't get the same account ID
 			break
@@ -81,7 +83,7 @@
 		if(payment_per_department[D] <= 0 && bonus_per_department[D] <= 0)
 			continue
 
-		var/money_to_transfer = payment_per_department[D] * amt_of_paychecks
+		var/money_to_transfer = payment_per_department[D] * payday_modifier * amt_of_paychecks
 		if((money_to_transfer + bonus_per_department[D]) < 0) //Check if the bonus is docking more pay than possible
 			bonus_per_department[D] -= money_to_transfer //Remove the debt with the payday
 			money_to_transfer = 0 //No money for you

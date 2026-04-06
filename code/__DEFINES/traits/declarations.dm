@@ -331,6 +331,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Climbable trait, given and taken by the climbable element when added or removed. Exists to be easily checked via HAS_TRAIT().
 #define TRAIT_CLIMBABLE "trait_climbable"
 
+///SSeconomy trait, if the market is crashing and people can't withdraw credits from ID cards.
+#define TRAIT_MARKET_CRASHING "market_crashing"
+
 /**
  * Item Traits
  */
@@ -448,6 +451,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define STATION_TRAIT_BOTS_GLITCHED "station_trait_bot_glitch"
 #define STATION_TRAIT_MACHINES_GLITCHED "station_trait_machine_glitch"
 #define STATION_TRAIT_UNIQUE_AI "station_trait_unique_ai"
+
+//From the market_crash event
+#define MARKET_CRASH_EVENT_TRAIT "crashed_market_event"
 
 /// Trait applied when the MMI component is added to an [/obj/item/integrated_circuit]
 #define TRAIT_COMPONENT_MMI "component_mmi"
