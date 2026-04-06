@@ -129,7 +129,7 @@ GLOBAL_LIST_INIT(whitelisted_cargo_types, typecacheof(list(
 
 		if(SO.paying_account)
 			D.bank_card_talk("Cargo order #[SO.id] has shipped. [price] credits have been charged to your bank account.")
-			SSeconomy.track_purchase(D, price, SO.pack.name)
+			SSeconomy.add_audit_entry(D, price, SO.pack.name)
 			var/datum/bank_account/department/cargo = SSeconomy.get_budget_account(ACCOUNT_CAR_ID)
 			cargo.adjust_money(price - SO.pack.get_cost()) //Cargo gets the handling fee
 		value += SO.pack.get_cost()

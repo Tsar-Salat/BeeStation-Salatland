@@ -22,6 +22,9 @@
 	/// bonus from each department.
 	var/list/bonus_per_department = list()
 
+	/// How many paychecks to skip when payday is called.
+	var/paydays_to_skip = 0
+
 /datum/bank_account/New(newname, job, modifier = 1)
 	account_holder = newname
 	account_job = job
@@ -95,41 +98,58 @@
 		return TRUE
 	return FALSE
 
-/datum/bank_account/proc/payday(amt_of_paychecks, free = FALSE)
+/datum/bank_account/proc/payday(amount_of_paychecks, free = FALSE, skippable = FALSE, event = "Payday")
+	if(!account_job)
+		return FALSE
 	if(suspended)
-		bank_card_talk("ERROR: Payday aborted, account closed by Nanotrasen Space Finance.")
-		return
+		bank_card_talk("ERROR: [event] aborted, account closed by Nanotrasen Space Finance.")
+		return FALSE
 
+	if(skippable && !free)
+		while(paydays_to_skip > 0 && amount_of_paychecks > 0)
+			amount_of_paychecks -= 1
+			paydays_to_skip -= 1
+
+	if(amount_of_paychecks <= 0)
+		return FALSE
+
+	var/any_paid = FALSE
 	for(var/D in payment_per_department)
 		if(payment_per_department[D] <= 0 && bonus_per_department[D] <= 0)
 			continue
 
-		var/money_to_transfer = payment_per_department[D] * payday_modifier * amt_of_paychecks
+		var/money_to_transfer = round(payment_per_department[D] * payday_modifier * amount_of_paychecks)
 		if((money_to_transfer + bonus_per_department[D]) < 0) //Check if the bonus is docking more pay than possible
 			bonus_per_department[D] -= money_to_transfer //Remove the debt with the payday
 			money_to_transfer = 0 //No money for you
 		else
 			money_to_transfer += bonus_per_department[D]
+
 		if(free)
 			adjust_money(money_to_transfer)
 			SSblackbox.record_feedback("amount", "free_income", money_to_transfer)
 			log_econ("[money_to_transfer] credits were given to [src.account_holder]'s account from income.")
 			if(bonus_per_department[D] > 0) //Get rid of bonus if we have one
 				bonus_per_department[D] = 0
-		else
-			var/datum/bank_account/B = SSeconomy.get_budget_account(D)
-			if(!B)
-				bank_card_talk("ERROR: Payday aborted, unable to query [D] departmental account.")
-			else
-				if(!transfer_money(B, money_to_transfer))
-					bank_card_talk("ERROR: Payday aborted, [D] departmental funds insufficient.")
-					bonus_per_department[D] += (money_to_transfer-bonus_per_department[D]) // you'll get paid someday
-					continue
-				else
-					bank_card_talk("Payday processed, account now holds $[account_balance], paid with $[money_to_transfer] from [D] budget.")
-					//The bonus only resets once it goes through.
-					if(bonus_per_department[D] > 0) //And we're not getting rid of debt
-						bonus_per_department[D] = 0
+			any_paid = TRUE
+			continue
+
+		var/datum/bank_account/B = SSeconomy.get_budget_account(D)
+		if(isnull(B))
+			bank_card_talk("ERROR: [event] aborted, unable to query [D] departmental account.")
+			continue
+
+		if(!transfer_money(B, money_to_transfer))
+			bank_card_talk("ERROR: [event] aborted, [D] departmental funds insufficient.")
+			bonus_per_department[D] += (money_to_transfer-bonus_per_department[D]) // you'll get paid someday
+			continue
+
+		bank_card_talk("[event] processed, account now holds $[account_balance], paid with $[money_to_transfer] from [D] budget.")
+		//The bonus only resets once it goes through.
+		if(bonus_per_department[D] > 0) //And we're not getting rid of debt
+			bonus_per_department[D] = 0
+		any_paid = TRUE
+	return any_paid
 
 /datum/bank_account/proc/bank_card_talk(message, force)
 	if(!message || !bank_cards.len)

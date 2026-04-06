@@ -77,7 +77,7 @@ SUBSYSTEM_DEF(economy)
 /datum/controller/subsystem/economy/fire(resumed = 0)
 	for(var/id in bank_accounts_by_id)
 		var/datum/bank_account/B = bank_accounts_by_id[id]
-		B.payday(1)
+		B.payday(1, skippable = TRUE)
 	var/effective_mailcount = living_player_count()
 	mail_waiting = clamp(mail_waiting + clamp(effective_mailcount, 1, MAX_MAIL_PER_MINUTE * (wait / (1 MINUTES))), 0, MAX_MAIL_LIMIT)
 
@@ -176,12 +176,13 @@ SUBSYSTEM_DEF(economy)
  * * price_to_use: The cost of the purchase made for this transaction.
  * * vendor: The object or structure medium that is charging the user. For Vending machines that's the machine, for payment component that's the parent, cargo that's the crate, etc.
  */
-/datum/controller/subsystem/economy/proc/track_purchase(datum/bank_account/account, price_to_use, vendor)
-	if(!account || !price_to_use || !vendor)
+/datum/controller/subsystem/economy/proc/add_audit_entry(datum/bank_account/account, price_to_use, vendor)
+	if(isnull(account) || isnull(price_to_use) || !vendor)
 		CRASH("Track purchases was missing an argument! (Account, Price, or Vendor.)")
 
 	audit_log += list(list(
-		"account" = account.account_holder,
+		"account" = "[account.account_holder]",
 		"cost" = price_to_use,
-		"vendor" = vendor,
+		"vendor" = "[vendor]",
+		"stationtime" = station_time_timestamp("hh:mm"),
 	))
