@@ -55,7 +55,7 @@
 	if(.)
 		return
 
-	playsound(src, SFX_TERMINAL_TYPE, 50, FALSE)
+	playsound(src, "terminal_type", 50, FALSE)
 	var/datum/bank_account/bank_account = SSeconomy.bank_accounts_by_id[params["account_id"]]
 	if(isnull(bank_account) || !(bank_account.account_job?.job_flags & JOB_CREW_MANIFEST))
 		return
@@ -69,8 +69,11 @@
 		if("change_pay_mod")
 			var/old_modifier = bank_account.payday_modifier
 			bank_account.payday_modifier = clamp(round(text2num(params["pay_mod"]), 0.05), MIN_PAY_MOD, MAX_PAY_MOD)
-			var/new_check_total = bank_account.payday_modifier * bank_account.account_job.paycheck
-			var/raise_or_cut = new_check_total > old_modifier * bank_account.account_job.paycheck ? "raised" : "cut"
+			var/base_pay = 0
+			for(var/D in bank_account.payment_per_department)
+				base_pay += bank_account.payment_per_department[D]
+			var/new_check_total = round(bank_account.payday_modifier * base_pay)
+			var/raise_or_cut = new_check_total > round(old_modifier * base_pay) ? "raised" : "cut"
 			bank_account.bank_card_talk("Paycheck [raise_or_cut] to [new_check_total]cr.")
 			SSeconomy.add_audit_entry(bank_account, new_check_total, "Paycheck [raise_or_cut]")
 			return TRUE

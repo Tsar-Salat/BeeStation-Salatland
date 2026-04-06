@@ -135,26 +135,22 @@ SUBSYSTEM_DEF(job)
 	return 1
 
 /datum/controller/subsystem/job/proc/is_job_empty(rank)
-	return GetJob(rank).current_positions == 0
+	return GetJob(rank)?.current_positions == 0
 
 /datum/controller/subsystem/job/proc/GetJob(rank)
 	RETURN_TYPE(/datum/job)
 	if(!rank)
-		CRASH("proc has taken no job name")
+		return
 	if(!occupations.len)
 		SetupOccupations()
-	if(!name_occupations[rank])
-		CRASH("job name [rank] is not valid")
 	return name_occupations[rank]
 
 /datum/controller/subsystem/job/proc/GetJobType(jobtype)
 	RETURN_TYPE(/datum/job)
 	if(!jobtype)
-		CRASH("proc has taken no job type")
+		return
 	if(!occupations.len)
 		SetupOccupations()
-	if(!type_occupations[jobtype])
-		CRASH("job type [jobtype] is not valid")
 	return type_occupations[jobtype]
 
 /datum/controller/subsystem/job/proc/GetJobActiveDepartment(rank)
@@ -184,8 +180,8 @@ SUBSYSTEM_DEF(job)
 		if(player.mind.assigned_role)
 			var/datum/job/current_job = SSjob.GetJob(player.mind.assigned_role)
 			current_job.current_positions--
-			player.mind.assigned_role = null
-		player.mind.assigned_role = rank
+			player.mind.set_assigned_role(null)
+		player.mind.set_assigned_role(rank, job)
 		unassigned -= player
 		job.current_positions++
 		if(!latejoin)
@@ -268,7 +264,7 @@ SUBSYSTEM_DEF(job)
 	JobDebug("Occupations reset.")
 	for(var/mob/dead/new_player/authenticated/player in GLOB.player_list)
 		if((player) && (player.mind))
-			player.mind.assigned_role = null
+			player.mind.set_assigned_role(null)
 			player.mind.special_role = null
 			SSpersistence.antag_rep_change[player.ckey] = 0
 	SetupOccupations()
@@ -421,7 +417,7 @@ SUBSYSTEM_DEF(job)
 				continue
 			// Provisional assignment
 			job.current_positions++
-			player.mind.assigned_role = job.title
+			player.mind.set_assigned_role(job.title, job)
 			JobDebug("DO [player.ckey] was assigned the provisional job [job.title]")
 			break
 	// Step 4: Create a random ordering of players
@@ -459,10 +455,10 @@ SUBSYSTEM_DEF(job)
 				if (player.mind.assigned_role)
 					var/datum/job/current_job = SSjob.GetJob(player.mind.assigned_role)
 					current_job.current_positions--
-					player.mind.assigned_role = null
+					player.mind.set_assigned_role(null)
 				// Provisional assignment
 				job.current_positions++
-				player.mind.assigned_role = job.title
+				player.mind.set_assigned_role(job.title, job)
 				changed = TRUE
 				break
 	// Step 5: Assign job roles that we have so far
@@ -577,7 +573,7 @@ SUBSYSTEM_DEF(job)
 
 
 	if(living_mob.mind)
-		living_mob.mind.assigned_role = rank
+		living_mob.mind.set_assigned_role(rank, job)
 	to_chat(M, "<b>You are the [rank].</b>")
 	if(job)
 		var/new_mob = job.equip(living_mob, null, null, joined_late , null, M.client)
