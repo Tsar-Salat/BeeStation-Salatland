@@ -581,6 +581,14 @@
 	category = list("initial","Equipment")
 	departmental_flags = DEPARTMENTAL_FLAG_SERVICE
 
+/datum/design/ticket_machine
+	name = "Ticket Machine Frame"
+	id = "ticket_machine"
+	build_type = AUTOLATHE | PROTOLATHE
+	materials = list(/datum/material/iron = 700, /datum/material/glass = 400)
+	build_path = /obj/item/wallframe/ticket_machine
+	category = list("initial")
+	departmental_flags = DEPARTMENTAL_FLAG_SERVICE
 
 /////////////////////////////////////////
 ////////////Tackle Gloves////////////////
