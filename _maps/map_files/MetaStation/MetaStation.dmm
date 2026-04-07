@@ -3126,15 +3126,13 @@
 /turf/open/floor/iron,
 /area/engine/engineering)
 "aFs" = (
-/obj/machinery/newscaster{
-	pixel_x = 32
-	},
 /obj/machinery/computer/security/mining{
 	dir = 8
 	},
 /obj/effect/turf_decal/siding/wood{
 	dir = 4
 	},
+/obj/machinery/newscaster/directional/east,
 /turf/open/floor/wood,
 /area/crew_quarters/heads/hop)
 "aFt" = (
@@ -3736,11 +3734,11 @@
 /area/hallway/primary/fore)
 "aJY" = (
 /obj/structure/window/reinforced/spawner/directional/south,
-/obj/machinery/computer/records/security{
-	dir = 4
-	},
 /obj/effect/turf_decal/siding/wood{
 	dir = 10
+	},
+/obj/machinery/computer/accounting{
+	dir = 4
 	},
 /turf/open/floor/wood,
 /area/crew_quarters/heads/hop)
@@ -6020,9 +6018,11 @@
 /turf/open/floor/iron,
 /area/hallway/primary/central)
 "baR" = (
-/obj/structure/filingcabinet/chestdrawer/wheeled,
 /obj/effect/turf_decal/siding/wood,
 /obj/effect/turf_decal/siding/wood{
+	dir = 1
+	},
+/obj/machinery/computer/records/security{
 	dir = 1
 	},
 /turf/open/floor/wood,
@@ -7260,12 +7260,9 @@
 /turf/open/floor/iron,
 /area/crew_quarters/kitchen)
 "biU" = (
-/obj/item/storage/secure/safe{
-	pixel_x = 6;
-	pixel_y = -30
-	},
 /obj/machinery/modular_fabricator/autolathe,
 /obj/effect/turf_decal/tile/neutral/opposingcorners,
+/obj/item/storage/secure/safe/directional/south,
 /turf/open/floor/iron,
 /area/vacant_room/commissary)
 "biX" = (
@@ -8430,6 +8427,11 @@
 	name = "Head of Personnel APC";
 	pixel_y = 24
 	},
+/obj/structure/table/wood,
+/obj/machinery/fax{
+	fax_name = "Head of Personnel's Office";
+	name = "Head of Personnel's Fax Machine"
+	},
 /turf/open/floor/carpet/blue,
 /area/crew_quarters/heads/hop)
 "btJ" = (
@@ -9317,9 +9319,6 @@
 /obj/machinery/door/poddoor/shutters/preopen{
 	id = "hopqueue";
 	name = "HoP Queue Shutters"
-	},
-/obj/structure/cable/yellow{
-	icon_state = "4-8"
 	},
 /obj/effect/turf_decal/loading_area{
 	dir = 1
@@ -14406,14 +14405,17 @@
 /area/science/nanite)
 "cBm" = (
 /obj/machinery/recharger,
-/obj/item/storage/secure/safe{
-	pixel_x = 34
-	},
 /obj/structure/table/wood,
 /obj/effect/turf_decal/siding/wood{
 	dir = 5
 	},
 /obj/item/book/manual/wiki/sopcommand,
+/obj/item/book/manual/wiki/sopservice,
+/obj/item/flashlight/lamp/green{
+	pixel_x = -12;
+	pixel_y = 5
+	},
+/obj/item/storage/secure/safe/directional/east,
 /turf/open/floor/wood,
 /area/crew_quarters/heads/hop)
 "cBs" = (
@@ -24424,11 +24426,6 @@
 /turf/open/floor/engine,
 /area/engine/engineering)
 "fBa" = (
-/obj/item/flashlight/lamp/green{
-	pixel_x = 1;
-	pixel_y = 5
-	},
-/obj/structure/table/wood,
 /obj/effect/turf_decal/siding/wood{
 	dir = 9
 	},
@@ -24438,7 +24435,15 @@
 	pixel_y = 25;
 	req_access_txt = "28"
 	},
-/obj/item/book/manual/wiki/sopservice,
+/obj/structure/table/wood,
+/obj/item/paper_bin{
+	pixel_x = 5;
+	pixel_y = 4
+	},
+/obj/item/pen{
+	pixel_x = 5;
+	pixel_y = 6
+	},
 /turf/open/floor/wood,
 /area/crew_quarters/heads/hop)
 "fBc" = (
@@ -42941,6 +42946,10 @@
 	dir = 4
 	},
 /obj/machinery/firealarm/directional/west,
+/mob/living/basic/pet/cat{
+	name = "Josito";
+	dir = 4
+	},
 /turf/open/floor/carpet/red,
 /area/medical/exam_room)
 "meO" = (
@@ -52751,9 +52760,11 @@
 /obj/machinery/computer/security/telescreen/entertainment{
 	pixel_y = 32
 	},
-/obj/item/kirbyplants/random,
 /obj/effect/turf_decal/siding/wood/end{
 	dir = 4
+	},
+/obj/structure/filingcabinet/chestdrawer/wheeled{
+	pixel_y = 2
 	},
 /turf/open/floor/wood,
 /area/crew_quarters/heads/hop)
@@ -54644,6 +54655,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
+/obj/machinery/ticket_machine/directional/north,
 /turf/open/floor/iron,
 /area/hallway/secondary/command)
 "qeW" = (
@@ -66070,15 +66082,19 @@
 	pixel_x = 5;
 	pixel_y = 4
 	},
-/obj/item/stamp/head_of_personnel{
-	pixel_x = -6
-	},
 /obj/item/pen{
 	pixel_x = 5;
 	pixel_y = 6
 	},
 /obj/effect/turf_decal/siding/wood/end{
 	dir = 4
+	},
+/obj/machinery/button/ticket_machine{
+	pixel_x = -6;
+	pixel_y = 7
+	},
+/obj/item/stamp/head_of_personnel{
+	pixel_x = -6
 	},
 /turf/open/floor/wood,
 /area/crew_quarters/heads/hop)
@@ -71214,9 +71230,6 @@
 "vUN" = (
 /obj/machinery/disposal/bin,
 /obj/structure/disposalpipe/trunk{
-	dir = 1
-	},
-/obj/effect/turf_decal/bot{
 	dir = 1
 	},
 /obj/effect/turf_decal/siding/wood/end{
@@ -101532,7 +101545,7 @@ rFa
 vUN
 bkz
 jih
-bBz
+bzJ
 qeU
 eBX
 bGy
@@ -102046,7 +102059,7 @@ oql
 udr
 bkz
 gnR
-bBB
+bBz
 sUw
 eBX
 bGA

@@ -4781,7 +4781,7 @@
 /obj/structure/platform/wood{
 	dir = 10
 	},
-/obj/machinery/modular_computer/console/preset/command{
+/obj/machinery/computer/accounting{
 	dir = 4;
 	pixel_x = -2
 	},
@@ -9056,6 +9056,11 @@
 /obj/structure/railing/perspective/wood/corner{
 	dir = 1
 	},
+/obj/structure/table/wood/fancy/blue,
+/obj/machinery/fax{
+	fax_name = "Head of Personnel's Office";
+	name = "Head of Personnel's Fax Machine"
+	},
 /turf/open/floor/wood/big,
 /area/crew_quarters/heads/hop)
 "bVh" = (
@@ -13090,6 +13095,7 @@
 	dir = 4
 	},
 /obj/machinery/light/directional/south,
+/obj/machinery/ticket_machine/directional/south,
 /turf/open/floor/iron/edge,
 /area/hallway/primary/port)
 "cLE" = (
@@ -19114,6 +19120,10 @@
 /obj/item/storage/box/PDAs{
 	pixel_x = 4;
 	pixel_y = 4
+	},
+/obj/machinery/button/ticket_machine{
+	pixel_x = -8;
+	pixel_y = 32
 	},
 /turf/open/floor/iron/smooth_edge{
 	dir = 1
@@ -52901,9 +52911,8 @@
 /obj/structure/platform/wood{
 	dir = 8
 	},
-/obj/machinery/computer/card{
-	dir = 4;
-	pixel_x = -2
+/obj/machinery/modular_computer/console/preset/command{
+	dir = 4
 	},
 /turf/open/floor/iron/smooth_corner,
 /area/crew_quarters/heads/hop)
@@ -66607,7 +66616,6 @@
 /obj/effect/turf_decal/siding/wood{
 	dir = 4
 	},
-/obj/machinery/status_display/evac/directional/north,
 /obj/structure/railing/perspective/wood{
 	dir = 4
 	},
@@ -72681,7 +72689,7 @@
 /obj/machinery/button/flasher{
 	id = "hopflash";
 	pixel_x = 23;
-	pixel_y = 36;
+	pixel_y = 40;
 	req_access_txt = "28"
 	},
 /obj/machinery/pdapainter{

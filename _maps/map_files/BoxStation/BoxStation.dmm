@@ -2574,12 +2574,9 @@
 /turf/open/floor/iron,
 /area/security/brig)
 "aNt" = (
+/obj/effect/turf_decal/tile/dark_blue/fourcorners/contrasted,
 /obj/structure/chair/office{
 	dir = 8
-	},
-/obj/effect/turf_decal/tile/dark_blue/fourcorners/contrasted,
-/obj/item/radio/intercom{
-	pixel_y = 24
 	},
 /obj/effect/landmark/start/head_of_personnel,
 /turf/open/floor/iron/dark,
@@ -5672,6 +5669,14 @@
 /obj/machinery/door/firedoor,
 /turf/open/floor/plating,
 /area/hydroponics)
+"bBw" = (
+/obj/machinery/door/firedoor,
+/obj/effect/turf_decal/tile/dark_blue{
+	dir = 4
+	},
+/obj/machinery/ticket_machine/directional/east,
+/turf/open/floor/iron,
+/area/hallway/primary/central)
 "bBD" = (
 /turf/open/floor/iron/white/side{
 	dir = 9
@@ -13579,6 +13584,9 @@
 "dbO" = (
 /obj/effect/turf_decal/delivery,
 /obj/effect/turf_decal/tile/blue/fourcorners/contrasted,
+/obj/machinery/flasher/directional/north{
+	id = "hopflash"
+	},
 /turf/open/floor/iron,
 /area/hallway/primary/central)
 "dbR" = (
@@ -20831,7 +20839,10 @@
 /obj/machinery/keycard_auth{
 	pixel_y = -28
 	},
-/obj/item/book/manual/wiki/sopcommand,
+/obj/machinery/fax{
+	fax_name = "Head of Personnel's Office";
+	name = "Head of Personnel's Fax Machine"
+	},
 /turf/open/floor/carpet/blue,
 /area/crew_quarters/heads/hop)
 "fSW" = (
@@ -21654,6 +21665,10 @@
 "gly" = (
 /obj/structure/grille/broken,
 /obj/effect/spawner/random/decoration/glowstick,
+/obj/structure/closet,
+/obj/item/toy/plush/moth/random,
+/obj/item/clothing/shoes/jackboots,
+/obj/effect/spawner/random/maintenance,
 /turf/open/floor/plating,
 /area/maintenance/central)
 "glE" = (
@@ -28431,15 +28446,6 @@
 	},
 /turf/open/floor/iron,
 /area/hallway/primary/aft)
-"iYl" = (
-/obj/structure/closet,
-/obj/effect/spawner/random/maintenance,
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/item/clothing/shoes/jackboots,
-/obj/item/toy/plush/moth/random,
-/turf/open/floor/plating,
-/area/maintenance/central)
 "iYm" = (
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 1
@@ -36905,10 +36911,6 @@
 	},
 /turf/open/floor/iron,
 /area/security/checkpoint/medical)
-"mxi" = (
-/obj/structure/grille,
-/turf/open/floor/plating,
-/area/maintenance/central)
 "mxV" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/monorust/intensity2,
@@ -40562,23 +40564,11 @@
 	dir = 8;
 	name = "Reception Window"
 	},
-/obj/machinery/flasher{
-	id = "hopflash";
-	pixel_y = 28
-	},
 /obj/machinery/door/poddoor/shutters/preopen{
 	id = "hopshutter";
 	name = "Privacy Shutters"
 	},
 /obj/machinery/door/firedoor,
-/obj/item/paper_bin{
-	pixel_x = 4;
-	pixel_y = -4
-	},
-/obj/item/pen{
-	pixel_x = 4;
-	pixel_y = -4
-	},
 /obj/structure/desk_bell/wired/command{
 	pixel_x = -7;
 	pixel_y = 8
@@ -47704,6 +47694,29 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer4,
 /turf/open/floor/iron,
 /area/construction/mining/aux_base)
+"raa" = (
+/obj/effect/turf_decal/tile/dark_blue/fourcorners/contrasted,
+/obj/item/radio/intercom{
+	pixel_y = 24
+	},
+/obj/machinery/button/door/directional/west{
+	id = "hopqueue";
+	name = "Queue Shutter Control";
+	req_access_txt = "57"
+	},
+/obj/machinery/button/door/directional/west{
+	pixel_y = -9;
+	req_access_txt = "57";
+	name = "Privacy Shutter Control";
+	id = "hopshutter"
+	},
+/obj/machinery/button/flasher{
+	id = "hopflash";
+	pixel_x = -34
+	},
+/obj/machinery/computer/card,
+/turf/open/floor/iron/dark,
+/area/crew_quarters/heads/hop)
 "rag" = (
 /obj/machinery/disposal/bin,
 /obj/structure/disposalpipe/trunk{
@@ -50941,6 +50954,7 @@
 	dir = 8
 	},
 /obj/effect/turf_decal/tile/blue/fourcorners/contrasted,
+/obj/machinery/digital_clock/directional/north,
 /turf/open/floor/iron,
 /area/hallway/primary/central)
 "spI" = (
@@ -61957,26 +61971,11 @@
 /area/medical/medbay/central)
 "wQJ" = (
 /obj/effect/turf_decal/trimline/dark_blue/filled/line{
-	dir = 5
+	dir = 4
 	},
-/obj/machinery/button/door{
-	id = "hopshutter";
-	name = "Privacy Shutter Control";
-	pixel_x = 6;
-	pixel_y = 26;
-	req_access_txt = "57"
-	},
-/obj/machinery/button/door{
-	id = "hopqueue";
-	name = "Queue Shutter Control";
-	pixel_x = -5;
-	pixel_y = 26;
-	req_access_txt = "57"
-	},
-/obj/machinery/button/flasher{
-	id = "hopflash";
-	pixel_x = 6;
-	pixel_y = 36
+/obj/machinery/button/ticket_machine{
+	pixel_x = -7;
+	pixel_y = 30
 	},
 /turf/open/floor/iron/dark,
 /area/crew_quarters/heads/hop)
@@ -62904,15 +62903,15 @@
 /turf/open/floor/iron/tech,
 /area/crew_quarters/lounge)
 "xkq" = (
-/obj/machinery/computer/card{
-	dir = 1
-	},
 /obj/effect/turf_decal/tile/dark_blue/fourcorners/contrasted,
 /obj/effect/turf_decal/siding/dark_blue{
 	dir = 4
 	},
 /obj/effect/turf_decal/siding/dark_blue{
 	dir = 5
+	},
+/obj/machinery/computer/accounting{
+	dir = 4
 	},
 /turf/open/floor/iron/dark,
 /area/crew_quarters/heads/hop)
@@ -63611,6 +63610,21 @@
 	},
 /turf/open/floor/engine,
 /area/science/mixing/chamber)
+"xBc" = (
+/obj/effect/turf_decal/trimline/dark_blue/filled/line{
+	dir = 5
+	},
+/obj/structure/table/reinforced,
+/obj/item/paper_bin{
+	pixel_x = 4;
+	pixel_y = -4
+	},
+/obj/item/pen{
+	pixel_x = 4;
+	pixel_y = -4
+	},
+/turf/open/floor/iron/dark,
+/area/crew_quarters/heads/hop)
 "xBn" = (
 /obj/structure/pool_ladder,
 /turf/open/indestructible/sound/pool/end,
@@ -65186,6 +65200,7 @@
 	pixel_y = 8
 	},
 /obj/item/book/manual/wiki/sopsupply,
+/obj/item/book/manual/wiki/sopcommand,
 /turf/open/floor/carpet/blue,
 /area/crew_quarters/heads/hop)
 "ykR" = (
@@ -90273,7 +90288,7 @@ ebc
 aYl
 aYl
 sEj
-aLh
+bBw
 klN
 gJA
 eBb
@@ -91036,7 +91051,7 @@ vfO
 hem
 eWC
 hfr
-mxi
+bmr
 bmr
 nWE
 kPV
@@ -91293,8 +91308,8 @@ jzA
 xXW
 bjz
 hfr
-iYl
 bmr
+raa
 aNt
 xkq
 bff
@@ -91551,7 +91566,7 @@ lyg
 bjz
 hfr
 bmr
-bmr
+xBc
 wQJ
 dAN
 ykW
