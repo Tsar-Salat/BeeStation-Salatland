@@ -21,7 +21,8 @@
 	stamina_cost = 0
 	stamina_critical_chance = 0
 
-	flags_1 = CONDUCT_1 | PREVENT_CONTENTS_EXPLOSION_1 // We detonate upon being exploded.
+	obj_flags = CONDUCTS_ELECTRICITY
+	flags_1 = PREVENT_CONTENTS_EXPLOSION_1 // We detonate upon being exploded.
 	slot_flags = ITEM_SLOT_BELT
 	resistance_flags = FLAMMABLE
 	max_integrity = 40

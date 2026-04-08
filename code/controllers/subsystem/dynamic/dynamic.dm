@@ -1,8 +1,3 @@
-// If this is defined, then any storyteller configs which do not have
-// a 'Version' tag that match this value will not be loaded.
-// #define STORYTELLER_VERSION "GamemodeAntagonists"
-
-
 SUBSYSTEM_DEF(dynamic)
 	name = "Dynamic"
 	runlevels = RUNLEVEL_GAME
@@ -388,13 +383,18 @@ SUBSYSTEM_DEF(dynamic)
  * Called at roundstart, set roundstart points and choose rulesets
  */
 /datum/controller/subsystem/dynamic/proc/select_roundstart_antagonists()
+	// No configured storyteller, let's pick a random one
+	if(!current_storyteller && length(dynamic_storyteller_jsons))
+		set_storyteller(pick(dynamic_storyteller_jsons))
+
 	set_roundstart_points()
 
+	log_dynamic("Starting a round with the storyteller: \"[current_storyteller?["Name"] || "None"]\"")
 	log_dynamic("ROUNDSTART: Listing [length(supplementary_configured_rulesets)] roundstart rulesets, and [length(roundstart_candidates)] players ready.")
+
 	if(!length(roundstart_candidates))
 		return TRUE
 
-	log_dynamic("Starting a round with the storyteller: \"[current_storyteller?["Name"] || "None"]\"")
 	execute_gamemode_roundstart(gamemode_configured_rulesets)
 	execute_supplementary_roundstart_rulesets(supplementary_configured_rulesets)
 
@@ -933,7 +933,7 @@ SUBSYSTEM_DEF(dynamic)
 			continue
 		gamemode_executed = TRUE
 	// Check if a gamemode antagonist is in existance, even if not spawned through us
-	for (var/datum/antagonist/antagonist in GLOB.antagonists)
+	for (var/datum/antagonist/antagonist as anything in GLOB.active_antagonists)
 		for (var/datum/dynamic_ruleset/gamemode/gamemode_antagonist as anything in subtypesof(/datum/dynamic_ruleset/gamemode))
 			if (gamemode_antagonist::antag_datum && ispath(antagonist.type, gamemode_antagonist))
 				gamemode_executed = TRUE
@@ -1090,7 +1090,3 @@ SUBSYSTEM_DEF(dynamic)
 	if (flag & DYNAMIC_MIDROUND_HEAVY)
 		texts += "HEAVY"
 	return jointext(texts, " | ")
-
-#ifdef STORYTELLER_VERSION
-#undef STORYTELLER_VERSION
-#endif

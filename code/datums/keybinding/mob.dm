@@ -295,7 +295,11 @@
 	return TRUE
 
 /datum/keybinding/mob/toggle_move_intent/up(client/user)
-	if(!user.mob) return
+	. = ..()
+	if(.)
+		return
+	if(!user.mob)
+		return
 	var/mob/M = user.mob
 	if(M.m_intent != MOVE_INTENT_WALK)
 		M.set_move_intent(MOVE_INTENT_WALK)
@@ -339,6 +343,13 @@
 	if(.)
 		return
 	user.movement_locked = FALSE
+
+/datum/keybinding/living/view_pet_data
+	keys = list("Shift")
+	name = "view_pet_commands"
+	full_name = "View Pet Commands"
+	description = "Hold down to see all the commands you can give your pets!"
+	keybind_signal = COMSIG_KB_LIVING_VIEW_PET_COMMANDS
 
 /datum/keybinding/mob/show_extended_screentips
 	keys = list("Shift")

@@ -123,10 +123,9 @@
 	if(unsuitable_cold_damage != 0 && unsuitable_heat_damage != 0)
 		AddElement(/datum/element/basic_body_temp_sensitive, minimum_survivable_temperature, maximum_survivable_temperature, unsuitable_cold_damage, unsuitable_heat_damage)
 
-/mob/living/basic/say_mod(input, list/message_mods = list())
-	if(length(speak_emote))
-		verb_say = pick(speak_emote)
-	return ..()
+
+/mob/living/basic/get_default_say_verb()
+	return length(speak_emote) ? pick(speak_emote) : ..()
 
 /mob/living/basic/death(gibbed)
 	. = ..()

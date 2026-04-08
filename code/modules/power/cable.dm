@@ -506,7 +506,7 @@ GLOBAL_LIST_INIT(cable_coil_recipes, list (
 	stamina_critical_chance = 10
 
 	mats_per_unit = list(/datum/material/iron=10, /datum/material/glass=5)
-	flags_1 = CONDUCT_1
+	obj_flags = CONDUCTS_ELECTRICITY
 	slot_flags = ITEM_SLOT_BELT
 	attack_verb_continuous = list("whips", "lashes", "disciplines", "flogs")
 	attack_verb_simple = list("whip", "lash", "discipline", "flog")

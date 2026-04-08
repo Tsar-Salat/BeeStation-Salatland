@@ -325,7 +325,7 @@
 
 /datum/dynamic_ruleset/midround/ghost/space_dragon/generate_ruleset_body(mob/dead/observer/chosen_mob)
 	var/mob/living/simple_animal/hostile/space_dragon/dragon_body = new(pick(spawn_locations))
-	dragon_body.key = chosen_mob
+	dragon_body.key = chosen_mob.key
 
 	playsound(dragon_body, 'sound/magic/ethereal_exit.ogg', 50, TRUE, -1)
 	priority_announce("It appears a lifeform with magical traces is approaching [station_name()], please stand-by.", "Lifesign Alert")
@@ -673,7 +673,7 @@
 
 /datum/dynamic_ruleset/midround/ghost/fugitives/get_spawn_locations()
 	for(var/turf/turf in GLOB.xeno_spawn)
-		if(istype(turf.loc, /area/maintenance))
+		if(istype(turf.loc, /area/station/maintenance))
 			spawn_locations += turf
 
 /datum/dynamic_ruleset/midround/ghost/fugitives/execute()
