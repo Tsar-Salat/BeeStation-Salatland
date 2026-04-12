@@ -31,7 +31,7 @@
 	)
 	biohazard = 25 //still deals with the sick and injured, just less than a medical doctor
 
-	minimal_lightup_areas = list(/area/medical/morgue)
+	minimal_lightup_areas = list(/area/station/medical/morgue)
 
 	manuscript_jobs = list(
 		JOB_NAME_BRIGPHYSICIAN,
