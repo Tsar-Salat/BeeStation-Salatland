@@ -312,6 +312,18 @@
 /datum/holiday/beer/getStationPrefix()
 	return pick("Stout","Porter","Lager","Ale","Malt","Bock","Doppelbock","Hefeweizen","Pilsner","IPA","Lite") //I'm sorry for the last one
 
+/datum/holiday/ianbirthday
+	name = IAN_HOLIDAY //github.com/tgstation/tgstation/commit/de7e4f0de0d568cd6e1f0d7bcc3fd34700598acb
+	begin_month = SEPTEMBER
+	begin_day = 9
+	end_day = 10
+
+/datum/holiday/ianbirthday/greet()
+	return "Happy birthday, Ian!"
+
+/datum/holiday/ianbirthday/getStationPrefix()
+	return pick("Ian", "Corgi", "Erro")
+
 /datum/holiday/pirate
 	name = "Talk-Like-a-Pirate Day"
 	begin_day = 19

@@ -7,8 +7,10 @@
 	var/description
 
 	///Job access. The use of minimal_access or access is determined by a config setting: config.jobs_have_minimal_access
-	var/list/base_access = list()  // access list that's basically given to jobs.
-	var/list/extra_access = list() // EXTRA access list that's given in lowpop.
+	// access list that's basically given to jobs.
+	var/list/base_access = list()
+	// EXTRA access list that's given in lowpop.
+	var/list/extra_access = list()
 
 	///Determines who can demote this position
 	var/department_head = list()
@@ -33,7 +35,7 @@
 	var/department_head_for_prefs
 
 	///Players will be allowed to spawn in as jobs that are set to "Station"
-	var/faction = "None"
+	var/faction = FACTION_NONE
 
 	///How many players can be this job
 	var/total_positions = 0
@@ -98,6 +100,8 @@
 	var/allow_bureaucratic_error = TRUE
 	///how at risk is this occupation at for being a carrier of a dormant disease
 	var/biohazard = 20
+
+	var/job_flags = NONE
 
 	///A dictionary of species IDs and a path to the outfit.
 	var/list/species_outfits = null
@@ -448,8 +452,8 @@
 			H.set_species(/datum/species/human)
 			H.apply_pref_name(/datum/preference/name/backup_human, preference_source)
 	if(!visuals_only)
-		var/datum/bank_account/bank_account = new(H.real_name, src)
-		bank_account.payday(STARTING_PAYCHECKS, TRUE)
+		var/datum/bank_account/bank_account = new(H.real_name, src, H.dna.species.payday_modifier)
+		bank_account.payday(STARTING_PAYCHECKS, free = TRUE)
 		H.mind?.account_id = bank_account.account_id
 
 	//Equip the rest of the gear
@@ -650,13 +654,11 @@
 		card.update_label()
 		card.update_icon()
 
-		for(var/datum/bank_account/account in SSeconomy.bank_accounts)
-			if(!user.mind)
-				continue
-			if(account.account_id == user.mind.account_id)
+		if(user.mind)
+			var/datum/bank_account/account = SSeconomy.bank_accounts_by_id["[user.mind.account_id]"]
+			if(account)
 				card.registered_account = account
 				account.bank_cards += card
-				break
 		user.sec_hud_set_ID()
 
 	var/obj/item/modular_computer/tablet/pda/PDA = user.get_item_by_slot(pda_slot)
@@ -689,6 +691,7 @@
 
 /// Applies the preference options to the spawning mob, taking the job into account. Assumes the client has the proper mind.
 /mob/living/proc/apply_prefs_job(client/player_client, datum/job/job)
+
 
 /mob/living/carbon/human/apply_prefs_job(client/player_client, datum/job/job)
 	var/fully_randomize = is_banned_from(player_client.ckey, "Appearance")

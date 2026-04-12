@@ -3,11 +3,12 @@
 /datum/bank_account
 	var/account_holder = "Rusty Venture"
 	var/account_balance = 0
+	var/payday_modifier
 	var/custom_currency = list(ACCOUNT_CURRENCY_MINING = 0)
 	var/datum/job/account_job
 	/// List of physical cards that bound to this account
 	var/list/bank_cards = list()
-	/// If TRUE, SSeconomy will store an account into `SSeconomy.bank_accounts`
+	/// If TRUE, SSeconomy will store an account into `SSeconomy.bank_accounts_by_id`
 	var/add_to_accounts = TRUE
 	var/account_id
 	var/withdrawDelay = 0
@@ -21,16 +22,13 @@
 	/// bonus from each department.
 	var/list/bonus_per_department = list()
 
-/datum/bank_account/New(newname, job)
+	/// How many paychecks to skip when payday is called.
+	var/paydays_to_skip = 0
+
+/datum/bank_account/New(newname, job, modifier = 1)
 	account_holder = newname
 	account_job = job
-	account_id = rand(111111,999999)
-	for(var/i in 1 to ACCOUNT_CREATION_MAX_ATTEMPT)
-		if(!SSeconomy.get_bank_account_by_id(account_id)) // Don't get the same account ID
-			break
-		account_id = rand(111111,999999)
-		if(i == ACCOUNT_CREATION_MAX_ATTEMPT)
-			CRASH("Something's wrong on creating a bank account")
+	payday_modifier = modifier
 
 	// initialising payment data into an account for each department including non-station
 	for(var/datum/bank_account/department/each as() in subtypesof(/datum/bank_account/department))
@@ -41,13 +39,41 @@
 	for(var/D in account_job.payment_per_department)
 		payment_per_department[D] = account_job.payment_per_department[D]
 
-	if(add_to_accounts)
-		SSeconomy.bank_accounts += src // this should be added when New() is finished
+	setup_unique_account_id()
 
 /datum/bank_account/Destroy()
 	if(add_to_accounts)
-		SSeconomy.bank_accounts -= src
+		SSeconomy.bank_accounts_by_id -= "[account_id]"
 	return ..()
+
+/// Generates a unique account_id and registers it in SSeconomy.bank_accounts_by_id.
+/datum/bank_account/proc/setup_unique_account_id()
+	if(account_id && !SSeconomy.bank_accounts_by_id["[account_id]"])
+		if(add_to_accounts)
+			SSeconomy.bank_accounts_by_id["[account_id]"] = src
+		return
+	for(var/i in 1 to ACCOUNT_CREATION_MAX_ATTEMPT)
+		account_id = rand(111111, 999999)
+		if(!SSeconomy.bank_accounts_by_id["[account_id]"])
+			break
+	if(SSeconomy.bank_accounts_by_id["[account_id]"])
+		stack_trace("Unable to find a unique account ID, substituting currently existing account of id [account_id].")
+	if(add_to_accounts)
+		SSeconomy.bank_accounts_by_id["[account_id]"] = src
+
+/datum/bank_account/vv_edit_var(var_name, var_value)
+	var/old_id = account_id
+	. = ..()
+	switch(var_name)
+		if(NAMEOF(src, account_id))
+			if(add_to_accounts)
+				SSeconomy.bank_accounts_by_id -= "[old_id]"
+				setup_unique_account_id()
+		if(NAMEOF(src, add_to_accounts))
+			if(add_to_accounts)
+				setup_unique_account_id()
+			else
+				SSeconomy.bank_accounts_by_id -= "[account_id]"
 
 /datum/bank_account/proc/_adjust_money(amt)
 	account_balance += amt
@@ -72,41 +98,58 @@
 		return TRUE
 	return FALSE
 
-/datum/bank_account/proc/payday(amt_of_paychecks, free = FALSE)
+/datum/bank_account/proc/payday(amount_of_paychecks, free = FALSE, skippable = FALSE, event = "Payday")
+	if(!account_job)
+		return FALSE
 	if(suspended)
-		bank_card_talk("ERROR: Payday aborted, account closed by Nanotrasen Space Finance.")
-		return
+		bank_card_talk("ERROR: [event] aborted, account closed by Nanotrasen Space Finance.")
+		return FALSE
 
+	if(skippable && !free)
+		while(paydays_to_skip > 0 && amount_of_paychecks > 0)
+			amount_of_paychecks -= 1
+			paydays_to_skip -= 1
+
+	if(amount_of_paychecks <= 0)
+		return FALSE
+
+	var/any_paid = FALSE
 	for(var/D in payment_per_department)
 		if(payment_per_department[D] <= 0 && bonus_per_department[D] <= 0)
 			continue
 
-		var/money_to_transfer = payment_per_department[D] * amt_of_paychecks
+		var/money_to_transfer = round(payment_per_department[D] * payday_modifier * amount_of_paychecks)
 		if((money_to_transfer + bonus_per_department[D]) < 0) //Check if the bonus is docking more pay than possible
 			bonus_per_department[D] -= money_to_transfer //Remove the debt with the payday
 			money_to_transfer = 0 //No money for you
 		else
 			money_to_transfer += bonus_per_department[D]
+
 		if(free)
 			adjust_money(money_to_transfer)
 			SSblackbox.record_feedback("amount", "free_income", money_to_transfer)
 			log_econ("[money_to_transfer] credits were given to [src.account_holder]'s account from income.")
 			if(bonus_per_department[D] > 0) //Get rid of bonus if we have one
 				bonus_per_department[D] = 0
-		else
-			var/datum/bank_account/B = SSeconomy.get_budget_account(D)
-			if(!B)
-				bank_card_talk("ERROR: Payday aborted, unable to query [D] departmental account.")
-			else
-				if(!transfer_money(B, money_to_transfer))
-					bank_card_talk("ERROR: Payday aborted, [D] departmental funds insufficient.")
-					bonus_per_department[D] += (money_to_transfer-bonus_per_department[D]) // you'll get paid someday
-					continue
-				else
-					bank_card_talk("Payday processed, account now holds $[account_balance], paid with $[money_to_transfer] from [D] budget.")
-					//The bonus only resets once it goes through.
-					if(bonus_per_department[D] > 0) //And we're not getting rid of debt
-						bonus_per_department[D] = 0
+			any_paid = TRUE
+			continue
+
+		var/datum/bank_account/B = SSeconomy.get_budget_account(D)
+		if(isnull(B))
+			bank_card_talk("ERROR: [event] aborted, unable to query [D] departmental account.")
+			continue
+
+		if(!transfer_money(B, money_to_transfer))
+			bank_card_talk("ERROR: [event] aborted, [D] departmental funds insufficient.")
+			bonus_per_department[D] += (money_to_transfer-bonus_per_department[D]) // you'll get paid someday
+			continue
+
+		bank_card_talk("[event] processed, account now holds $[account_balance], paid with $[money_to_transfer] from [D] budget.")
+		//The bonus only resets once it goes through.
+		if(bonus_per_department[D] > 0) //And we're not getting rid of debt
+			bonus_per_department[D] = 0
+		any_paid = TRUE
+	return any_paid
 
 /datum/bank_account/proc/bank_card_talk(message, force)
 	if(!message || !bank_cards.len)

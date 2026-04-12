@@ -63,6 +63,8 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/checkoutmachine)
 	acid = 80
 
 /obj/structure/checkoutmachine/Initialize(mapload, mob/living/user)
+	if(QDELETED(src))
+		return
 	bogdanoff = user
 	add_overlay("flaps")
 	add_overlay("hatch")
@@ -72,6 +74,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/checkoutmachine)
 	max_integrity = min(300+player_modifier*15, 600)
 	atom_integrity = max_integrity
 	calculate_runaway_condition()
+	ADD_TRAIT(SSeconomy, TRAIT_MARKET_CRASHING, REF(src))
 
 	existing_machines++
 	. = ..()
@@ -176,14 +179,15 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/checkoutmachine)
 	STOP_PROCESSING(SSfastprocess, src)
 	existing_machines--
 	if(!existing_machines)
-		for(var/datum/bank_account/B in SSeconomy.bank_accounts)
+		for(var/datum/bank_account/B in flatten_list(SSeconomy.bank_accounts_by_id))
 			B.withdrawDelay = 0
 	priority_announce("The credit deposit machine at [get_area(src)] has been destroyed. Station funds have stopped draining!", sound = SSstation.announcer.get_rand_alert_sound(), sender_override = "CRAB-17 Protocol", )
 	explosion(src, 0,0,1, flame_range = 2)
+	REMOVE_TRAIT(SSeconomy, TRAIT_MARKET_CRASHING, REF(src))
 	return ..()
 
 /obj/structure/checkoutmachine/proc/start_dumping()
-	for(var/datum/bank_account/B in SSeconomy.bank_accounts)
+	for(var/datum/bank_account/B in flatten_list(SSeconomy.bank_accounts_by_id))
 		if(protected_accounts["[B.account_id]"])
 			continue
 		B.withdrawDelay = world.time + 4 MINUTES
@@ -196,7 +200,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/checkoutmachine)
 	var/datum/bank_account/crab_account = bogdanoff?.get_bank_account()
 	var/total_credits_stolen = 0
 	var/victim_count = 0
-	for(var/datum/bank_account/B in SSeconomy.bank_accounts)
+	for(var/datum/bank_account/B in flatten_list(SSeconomy.bank_accounts_by_id))
 		if(protected_accounts["[B.account_id]"])
 			continue
 		B.withdrawDelay += 30 SECONDS // we apologize for the extended maintenance, but we need to steal your credits

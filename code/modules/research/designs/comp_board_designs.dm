@@ -335,3 +335,12 @@
 	build_path = /obj/item/circuitboard/computer/shuttle/flight_control
 	category = list("Computer Boards", "Shuttle Machinery")
 	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE | DEPARTMENTAL_FLAG_ENGINEERING
+
+/datum/design/board/accounting_console
+	name = "Computer Design (Account Lookup Console)"
+	desc = "Allows for the construction of circuit boards used to assess the wealth of crewmates on station."
+	id = "account_console"
+	build_type = IMPRINTER
+	build_path = /obj/item/circuitboard/computer/accounting
+	category = list("Computer Boards")
+	departmental_flags = DEPARTMENTAL_FLAG_SECURITY //Honestly should have a bridge techfab for this sometime.

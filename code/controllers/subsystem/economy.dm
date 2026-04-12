@@ -12,15 +12,23 @@ SUBSYSTEM_DEF(economy)
 	var/budget_pool = 50000
 	var/full_ancap = FALSE // Enables extra money charges for things that normally would be free, such as sleepers/cryo/cloning.
 							//Take care when enabling, as players will NOT respond well if the economy is set up for low cash flows.
-	/// List of normal accounts (not department accounts)
-	var/list/bank_accounts = list()
+	/**
+	 * Associative list of account identifiers (as strings) to datum accounts, for O(1) lookups.
+	 * A flat list of sole account datums can be obtained with flatten_list().
+	 */
+	var/list/bank_accounts_by_id = list()
 	/// List of budget accounts (including nonstation accounts)
 	var/list/budget_accounts = list()
 	///
 	var/list/dep_cards = list()
 	///The modifier multiplied to the value of bounties paid out.
 	///Multiplied as they go to all department accounts rather than just cargo.
-	var/bounty_modifier = 9
+	var/bounty_modifier = 1
+	/**
+	 * A list of strings containing a basic transaction history of purchases on the station.
+	 * Added to any time when player accounts purchase something.
+	 */
+	var/list/audit_log = list()
 
 	/// Number of mail items generated.
 	var/mail_waiting
@@ -62,27 +70,24 @@ SUBSYSTEM_DEF(economy)
 	return SS_INIT_SUCCESS
 
 /datum/controller/subsystem/economy/Recover()
+	bank_accounts_by_id = SSeconomy.bank_accounts_by_id
 	budget_accounts = SSeconomy.budget_accounts
 	dep_cards = SSeconomy.dep_cards
 
 /datum/controller/subsystem/economy/fire(resumed = 0)
-	for(var/A in bank_accounts)
-		var/datum/bank_account/B = A
-		B.payday(1)
+	for(var/id in bank_accounts_by_id)
+		var/datum/bank_account/B = bank_accounts_by_id[id]
+		B.payday(1, skippable = TRUE)
 	var/effective_mailcount = living_player_count()
 	mail_waiting = clamp(mail_waiting + clamp(effective_mailcount, 1, MAX_MAIL_PER_MINUTE * (wait / (1 MINUTES))), 0, MAX_MAIL_LIMIT)
 
 /datum/controller/subsystem/economy/proc/get_bank_account_by_id(target_id)
-	if(!length(bank_accounts))
-		return FALSE
+	if(!length(bank_accounts_by_id))
+		return null
 	if(istype(target_id, /datum/bank_account))
 		stack_trace("proc took account type itself, but it is supposed to take account id number.")
 		return target_id
-	target_id = text2num(target_id) // failsafe to replace the string into number
-	for(var/datum/bank_account/target_account in bank_accounts)
-		if(target_account.account_id == target_id)
-			return target_account
-	return null
+	return bank_accounts_by_id["[target_id]"]
 
 /// Returns a budget account type, but it will return the united budget account(cargo one) if united budget is active
 /datum/controller/subsystem/economy/proc/get_budget_account(dept_id, force=FALSE)
@@ -164,3 +169,20 @@ SUBSYSTEM_DEF(economy)
 		if(D.nonstation_account)
 			D.adjust_money(amount) // Who'd think Nanotrasen gets a lot of profit from your station
 
+/**
+ * Proc that adds a set of strings and ints to the audit log, tracked by the economy SS.
+ *
+ * * account: The bank account of the person purchasing the item.
+ * * price_to_use: The cost of the purchase made for this transaction.
+ * * vendor: The object or structure medium that is charging the user. For Vending machines that's the machine, for payment component that's the parent, cargo that's the crate, etc.
+ */
+/datum/controller/subsystem/economy/proc/add_audit_entry(datum/bank_account/account, price_to_use, vendor)
+	if(isnull(account) || isnull(price_to_use) || !vendor)
+		CRASH("Track purchases was missing an argument! (Account, Price, or Vendor.)")
+
+	audit_log += list(list(
+		"account" = "[account.account_holder]",
+		"cost" = price_to_use,
+		"vendor" = "[vendor]",
+		"stationtime" = station_time_timestamp("hh:mm"),
+	))

@@ -87,6 +87,8 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	var/oxymod = 1
 	var/clonemod = 1
 	var/toxmod = 1
+	///multiplier for money paid at payday
+	var/payday_modifier = 1
 	var/attack_type = BRUTE //Type of damage attack does
 	var/punchdamage = 7      //highest possible punch damage
 	var/siemens_coeff = 1 //base electrocution coefficient
