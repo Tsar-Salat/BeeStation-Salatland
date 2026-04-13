@@ -194,110 +194,6 @@
 		if(BODY_ZONE_R_LEG)
 			return LEG_RIGHT|FOOT_RIGHT
 
-//Turns a Body_parts_covered bitfield into a list of organ/limb names.
-//(I challenge you to find a use for this) -I found a use for it!! | So did I!.
-/proc/cover_flags2body_zones(bpc)
-	var/list/covered_parts = list()
-
-	if(!bpc)
-		return 0
-
-	if(bpc == FULL_BODY)
-		covered_parts |= list(BODY_ZONE_L_ARM,BODY_ZONE_R_ARM,BODY_ZONE_HEAD,BODY_ZONE_CHEST,BODY_ZONE_L_LEG,BODY_ZONE_R_LEG)
-
-	else
-		if(bpc & HEAD)
-			covered_parts |= list(BODY_ZONE_HEAD)
-		if(bpc & CHEST)
-			covered_parts |= list(BODY_ZONE_CHEST)
-		if(bpc & GROIN)
-			covered_parts |= list(BODY_ZONE_CHEST)
-
-		if(bpc & ARMS)
-			covered_parts |= list(BODY_ZONE_L_ARM,BODY_ZONE_R_ARM)
-		else
-			if(bpc & ARM_LEFT)
-				covered_parts |= list(BODY_ZONE_L_ARM)
-			if(bpc & ARM_RIGHT)
-				covered_parts |= list(BODY_ZONE_R_ARM)
-
-		if(bpc & HANDS)
-			covered_parts |= list(BODY_ZONE_L_ARM,BODY_ZONE_R_ARM)
-		else
-			if(bpc & HAND_LEFT)
-				covered_parts |= list(BODY_ZONE_L_ARM)
-			if(bpc & HAND_RIGHT)
-				covered_parts |= list(BODY_ZONE_R_ARM)
-
-		if(bpc & LEGS)
-			covered_parts |= list(BODY_ZONE_L_LEG,BODY_ZONE_R_LEG)
-		else
-			if(bpc & LEG_LEFT)
-				covered_parts |= list(BODY_ZONE_L_LEG)
-			if(bpc & LEG_RIGHT)
-				covered_parts |= list(BODY_ZONE_R_LEG)
-
-		if(bpc & FEET)
-			covered_parts |= list(BODY_ZONE_L_LEG,BODY_ZONE_R_LEG)
-		else
-			if(bpc & FOOT_LEFT)
-				covered_parts |= list(BODY_ZONE_L_LEG)
-			if(bpc & FOOT_RIGHT)
-				covered_parts |= list(BODY_ZONE_R_LEG)
-
-/// Converts an RGB color to an HSL color
-/proc/rgb2hsl(red, green, blue)
-	red /= 255;green /= 255;blue /= 255;
-	var/max = max(red,green,blue)
-	var/min = min(red,green,blue)
-	var/range = max-min
-
-	var/hue=0;var/saturation=0;var/lightness=0;
-	lightness = (max + min)/2
-	if(range != 0)
-		if(lightness < 0.5)
-			saturation = range/(max+min)
-		else
-			saturation = range/(2-max-min)
-
-		var/dred = ((max-red)/(6*max)) + 0.5
-		var/dgreen = ((max-green)/(6*max)) + 0.5
-		var/dblue = ((max-blue)/(6*max)) + 0.5
-
-		if(max==red)
-			hue = dblue - dgreen
-		else if(max==green)
-			hue = dred - dblue + (1/3)
-		else
-			hue = dgreen - dred + (2/3)
-		if(hue < 0)
-			hue++
-		else if(hue > 1)
-			hue--
-
-	return list(hue, saturation, lightness)
-
-/// Converts an HSL color to an RGB color
-/proc/hsl2rgb(hue, saturation, lightness)
-	var/red;var/green;var/blue;
-	if(saturation == 0)
-		red = lightness * 255
-		green = red
-		blue = red
-	else
-		var/a;var/b;
-		if(lightness < 0.5)
-			b = lightness*(1+saturation)
-		else
-			b = (lightness+saturation) - (saturation*lightness)
-		a = 2*lightness - b
-
-		red = round(255 * hue2rgb(a, b, hue+(1/3)))
-		green = round(255 * hue2rgb(a, b, hue))
-		blue = round(255 * hue2rgb(a, b, hue-(1/3)))
-
-	return list(red, green, blue)
-
 /// Converts an ABH color to an RGB color
 /proc/hue2rgb(a, b, hue)
 	if(hue < 0)
@@ -359,14 +255,14 @@
 
 
 
-/// Turns a Body_parts_covered bitfield into a list of organ/limb names. (I challenge you to find a use for this)
-/proc/body_parts_covered2organ_names(bpc)
+/// Turns a Body_parts_covered bitfield into a list of organ/limb names. (I challenge you to find a use for this) //Fuck you
+/proc/cover_flags2body_zones(bpc)
 	var/list/covered_parts = list()
 
 	if(!bpc)
 		return 0
 
-	if(bpc & FULL_BODY)
+	if(bpc == FULL_BODY)
 		covered_parts |= list(BODY_ZONE_L_ARM,BODY_ZONE_R_ARM,BODY_ZONE_HEAD,BODY_ZONE_CHEST,BODY_ZONE_L_LEG,BODY_ZONE_R_LEG)
 
 	else

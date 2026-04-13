@@ -126,6 +126,8 @@
 #define WAS_SHOCKED "was_shocked"
 /// Trait source for turfs
 #define TURF_TRAIT "turf"
+/// Trait granted by lipstick
+#define LIPSTICK_TRAIT "lipstick_trait"
 /// Trait applied by by [/datum/component/soulstoned]
 #define SOULSTONE_TRAIT "soulstone"
 /// Trait applied to slimes by low temperature
@@ -138,7 +140,8 @@
 #define BRAIN_UNAIDED "brain-unaided"
 /// Trait applied by MODsuits.
 #define MOD_TRAIT "mod"
-#define TRAIT_PRESERVE_UI_WITHOUT_CLIENT "preserve_ui_without_client" //this mob should never close ui even if it doesn't have a client
+/// This mob should never close UI even if it doesn't have a client
+#define TRAIT_PRESERVE_UI_WITHOUT_CLIENT "preserve_ui_without_client"
 #define EXPERIMENTAL_SURGERY_TRAIT "experimental_surgery"
 #define NINJA_KIDNAPPED_TRAIT "ninja_kidnapped"
 #define TABLE_TRAIT "table_trait"
@@ -155,6 +158,10 @@
 #define TRAIT_SUBTREE_REQUIRED_OPERATIONAL_DATUM "element-required"
 /// Trait given by mech equipment
 #define TRAIT_MECH_EQUIPMENT(equipment_type) "mech_equipment_[equipment_type]"
+/// Don't draw external organs/species features like wings, horns, frills and stuff
+#define TRAIT_HIDE_EXTERNAL_ORGANS "hide_external_organs"
+///When people are floating from zero-grav or something, we can move around freely!
+#define TRAIT_FREE_FLOAT_MOVEMENT "free_float_movement"
 
 /// This trait comes from when a mob is currently typing.
 #define CURRENTLY_TYPING_TRAIT "currently_typing"
@@ -193,7 +200,18 @@
 /// Trait granted by [/mob/living/silicon/robot]
 /// Traits applied to a silicon mob by their module.
 #define MODULE_TRAIT "module_trait"
+/// Trait from an organ being inside a bodypart
+#define ORGAN_INSIDE_BODY_TRAIT "organ_inside_body"
 /// trait that prevents AI controllers from planning detached from ai_status to prevent weird state stuff.
 #define TRAIT_AI_PAUSED "TRAIT_AI_PAUSED"
 /// Source for chameleon ietms
 #define FROM_CHAMELEON "from_chameleon"
+
+/// some trait sorces dirived from bodyparts BODYPART_TRAIT is generic.
+#define BODYPART_TRAIT "bodypart"
+#define HEAD_TRAIT "head"
+#define CHEST_TRAIT "chest"
+#define RIGHT_ARM_TRAIT "right_arm"
+#define LEFT_ARM_TRAIT "left_arm"
+#define RIGHT_LEG_TRAIT "right_leg"
+#define LEFT_LEG_TRAIT "left_leg"

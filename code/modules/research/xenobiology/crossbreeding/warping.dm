@@ -537,7 +537,7 @@ GLOBAL_DATUM(blue_storage, /obj/item/storage/backpack/holding/bluespace)
 
 /obj/effect/warped_rune/greenspace/on_entered(datum/source, atom/movable/AM, oldloc)
 	if(ishuman(AM))
-		randomize_human(AM, TRUE)
+		randomize_human_normie(AM)
 		activated_on_step = TRUE
 	. = ..()
 
@@ -794,7 +794,6 @@ GLOBAL_DATUM(warped_room, /datum/map_template/warped_room)
 /area/warped_room
 	name = "warped room"
 	icon_state = "yellow"
-	dynamic_lighting = DYNAMIC_LIGHTING_ENABLED
 	requires_power = FALSE
 	default_gravity = STANDARD_GRAVITY
 	teleport_restriction = TELEPORT_ALLOW_NONE

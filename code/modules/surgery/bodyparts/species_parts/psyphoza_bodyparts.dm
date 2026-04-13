@@ -4,6 +4,7 @@
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
 	burn_modifier = 1.25
+	head_flags = HEAD_DEBRAIN
 
 /obj/item/bodypart/chest/psyphoza
 	icon_static = 'icons/mob/human/species/psyphoza/bodyparts.dmi'
@@ -11,6 +12,7 @@
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
 	burn_modifier = 1.25
+	wing_types = NONE
 
 /obj/item/bodypart/arm/left/psyphoza
 	icon_static = 'icons/mob/human/species/psyphoza/bodyparts.dmi'

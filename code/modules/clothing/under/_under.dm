@@ -5,6 +5,7 @@
 	body_parts_covered = CHEST|GROIN|LEGS|ARMS
 	slot_flags = ITEM_SLOT_ICLOTHING
 	armor_type = /datum/armor/clothing_under
+	supports_variations_flags = CLOTHING_DIGITIGRADE_MASK
 	drop_sound = 'sound/items/handling/cloth_drop.ogg'
 	pickup_sound =  'sound/items/handling/cloth_pickup.ogg'
 	/// The variable containing the flags for how the woman uniform cropping is supposed to interact with the sprite.
@@ -119,9 +120,13 @@
 		if(!alt_covers_chest)
 			body_parts_covered |= CHEST
 
-	if(ishuman(user) || ismonkey(user))
+	if((supports_variations_flags & CLOTHING_DIGITIGRADE_VARIATION) && ishuman(user))
 		var/mob/living/carbon/human/H = user
+		if(H.bodyshape & BODYSHAPE_DIGITIGRADE)
+			adjusted = DIGITIGRADE_STYLE
+			update_appearance()
 		H.update_worn_undersuit()
+
 	if(slot == ITEM_SLOT_ICLOTHING)
 		update_sensors(sensor_mode, TRUE)
 
@@ -153,6 +158,10 @@
 			accessory_appearance.pixel_y -= 8 - 8 * current_pixel_y
 			current_pixel_y ++
 		. += accessory_appearance
+
+/obj/item/clothing/under/generate_digitigrade_icons(icon/base_icon, greyscale_colors)
+	var/icon/legs = icon(SSgreyscale.GetColoredIconByType(/datum/greyscale_config/digitigrade, greyscale_colors), "jumpsuit_worn")
+	return replace_icon_legs(base_icon, legs)
 
 /obj/item/clothing/under/equipped(mob/user, slot)
 	..()

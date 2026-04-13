@@ -1,7 +1,4 @@
-#define CULT_POLL_WAIT 2400
-
-/// 200 proc calls deep and shit breaks, this is a bit lower to give some safety room
-#define MAX_PROC_DEPTH 195 // no idea where to put this
+#define GET_ERROR_ROOM ((locate(/obj/effect/landmark/error) in GLOB.landmarks_list) || locate(4,4,1))
 
 /proc/get_area_name(atom/X, format_text = FALSE)
 	var/area/A = isarea(X) ? X : get_area(X)
@@ -94,7 +91,7 @@
 
 		else if(istype(A, /mob/living/carbon))
 			var/mob/living/carbon/Q = A
-			for(var/organ in Q.internal_organs)
+			for(var/organ in Q.organs)
 				found_organ = organ
 				found_organ.organ_flags ^= ORGAN_FROZEN
 
