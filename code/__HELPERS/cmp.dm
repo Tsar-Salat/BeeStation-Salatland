@@ -174,3 +174,7 @@
 
 /proc/cmp_heretic_knowledge(datum/heretic_knowledge/knowledge_a, datum/heretic_knowledge/knowledge_b)
 	return initial(knowledge_b.priority) - initial(knowledge_a.priority)
+
+/// Orders codex entries by name alphabetically
+/proc/cmp_codex_name(datum/codex_entry/a, datum/codex_entry/b)
+	return sorttext(b.name, a.name)

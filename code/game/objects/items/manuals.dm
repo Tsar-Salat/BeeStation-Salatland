@@ -456,3 +456,26 @@
 	title = "Service Standard Operating Procedures"
 	page_link = "Department_Standard_Operating_Procedure:_Service"
 	dye_color = DYE_GREEN
+
+/*
+ *
+ * Codex Books
+ *
+ */
+
+/obj/item/book/manual/codex
+	abstract_type = /obj/item/book/manual/codex
+	name = "Abstract Codex Book"
+
+	/// Type or String (Type preferred for compiletime checking, if possible.) of the codex entry to open.
+	var/datum/codex_entry/target_entry
+
+/obj/item/book/manual/codex/on_read(mob/user)
+	//No parent call.
+	if(!istype(target_entry))
+		target_entry = SScodex.get_codex_entry(target_entry)
+		if(!target_entry)
+			to_chat(user, span_warning("\The [src] is blank...?"))
+			return
+	SScodex.present_codex_entry(user, target_entry)
+	return

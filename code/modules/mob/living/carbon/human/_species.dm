@@ -189,8 +189,9 @@ GLOBAL_LIST_EMPTY(features_by_species)
 ///////////
 
 /datum/species/New()
-	if(!plural_form)
-		plural_form = "[name]\s"
+
+	//This isn't a simple \s use because it fucks up the codex.
+	plural_form ||= findtext_char(name, "s", -1) ? name : "[name]s"
 	return ..()
 
 /// Gets a list of all species available to choose in roundstart.

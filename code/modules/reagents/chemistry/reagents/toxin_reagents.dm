@@ -72,6 +72,7 @@
 	chemical_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
 	toxpwr = 3
 	process_flags = ORGANIC | SYNTHETIC
+	codex_mechanics = "Plasma will ignite at 519.15 K, take care when handling."
 
 /datum/reagent/toxin/plasma/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()

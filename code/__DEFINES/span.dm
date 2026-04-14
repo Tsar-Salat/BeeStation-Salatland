@@ -238,3 +238,6 @@
 //More generic macros
 #define span_style(style, X) "<span style=\"[style]\">[X]</span>"
 #define span_color(color, text) span_style("color: [color]", "[text]")
+
+// Codex
+#define CODEX_LINK(str, entrytext) ("<span codexlink='" + entrytext + "'>" + (str) + "</span>")

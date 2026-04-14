@@ -468,6 +468,16 @@
 /mob/living/carbon/human/examine_more(mob/user)
 	. = ..()
 
+	var/skipface = (wear_mask && (wear_mask.flags_inv & HIDEFACE)) || (head && (head.flags_inv & HIDEFACE))
+
+	var/species_text
+	if(dna.species && !skipface)
+		species_text = ", \a [dna.species.name]"
+		if(SScodex.get_codex_entry(get_codex_value(user)))
+			species_text += span_notice(" \[<a href='?src=\ref[SScodex];show_examined_info=\ref[src];show_to=\ref[user]'>?</a>\]")
+
+	. = list("<span class='info'>This is <EM>[name][species_text].</EM><hr>")
+
 	if(istype(w_uniform, /obj/item/clothing/under) && !(check_obscured_slots() & ITEM_SLOT_ICLOTHING) && !HAS_TRAIT(w_uniform, TRAIT_EXAMINE_SKIP))
 		var/obj/item/clothing/under/undershirt = w_uniform
 		if(undershirt.has_sensor == BROKEN_SENSORS)

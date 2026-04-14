@@ -49,6 +49,11 @@
 /atom/proc/examine(mob/user)
 	. = examine_base(user, FALSE)
 
+	var/datum/codex_entry/entry = SScodex.get_codex_entry(get_codex_value(user))
+	if(entry)
+		var/information_type = length(entry.controls_text) ? "controls" : "relevant information"
+		. += span_notice("The codex has <b><a href='?src=\ref[SScodex];show_examined_info=\ref[src];show_to=\ref[user]'>[information_type]</a></b> available.")
+
 	if(reagents)
 		var/user_sees_reagents = user.can_see_reagents()
 		var/reagent_sigreturn = SEND_SIGNAL(src, COMSIG_PARENT_REAGENT_EXAMINE, user, ., user_sees_reagents)

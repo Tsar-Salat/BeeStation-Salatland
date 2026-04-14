@@ -113,6 +113,9 @@
 #warn IF YOU PUT THIS ON LIVE I WILL FIND YOU AND MAKE YOU WISH YOU WERE NEVE-
 #endif
 
+/// Force codex SQLite generation and loading despite being a debug server. Also forces the codex to always regenerate on world start.
+//#define FORCE_CODEX_DATABASE 1
+
 // If defined, we will compile with FULL timer debug info, rather then a limited scope
 // Be warned, this increases timer creation cost by 5x
 // #define TIMER_DEBUG
@@ -156,6 +159,10 @@
 
 #ifdef CITESTING
 #define TESTING
+#endif
+
+#ifndef FORCE_CODEX_DATABASE
+#define FORCE_CODEX_DATABASE 0
 #endif
 
 #if defined(UNIT_TESTS)

@@ -23,6 +23,7 @@
 #include "breath.dm"
 #include "check_adjustable_clothing.dm"
 #include "closets.dm"
+#include "codex.dm"
 #include "combat.dm"
 #include "component_tests.dm"
 #include "connect_loc.dm"

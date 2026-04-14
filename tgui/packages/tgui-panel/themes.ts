@@ -107,6 +107,8 @@ export const setClientTheme = (name) => {
     'github.text-color': desired_text,
     'report-issue.background-color': '#492020',
     'report-issue.text-color': desired_text,
+    'codex_button.background-color': '#494949',
+    'codex_button.text-color': desired_text,
     // Status and verb tabs
     'output.background-color': desired_background_darker,
     'output.text-color': desired_text,

@@ -13,6 +13,9 @@
 
 #define isimage(thing) (istype(thing, /image))
 
+/// Instantiating abstract paths is illegal.
+#define isabstract(foo) (initial(foo.type) == initial(foo.abstract_type))
+
 GLOBAL_VAR_INIT(magic_appearance_detecting_image, new /image) // appearances are awful to detect safely, but this seems to be the best way ~ninjanomnom
 #define isappearance(thing) (!isimage(thing) && !ispath(thing) && istype(GLOB.magic_appearance_detecting_image, thing))
 
