@@ -361,6 +361,11 @@
 	R.handle_reactions()
 	return amount
 
+#define HAS_SILENT_TOXIN 0 //don't provide a feedback message if this is the only toxin present
+#define HAS_NO_TOXIN 1
+#define HAS_PAINFUL_TOXIN 2
+#define MAX_TOXIN_LIVER_DAMAGE 2 //the max damage the liver can receive per second (~1 min at max damage will destroy liver)
+
 /**
  * Triggers metabolizing for all the reagents in this holder
  *
@@ -381,16 +386,22 @@
 	var/need_mob_update = FALSE
 	var/obj/item/organ/stomach/belly = owner.get_organ_slot(ORGAN_SLOT_STOMACH)
 	var/obj/item/organ/liver/liver = owner.get_organ_slot(ORGAN_SLOT_LIVER)
-	var/liver_tolerance
+	var/liver_tolerance = 0
+	var/liver_damage = 0
+	var/provide_pain_message
+	var/amount
 	if(liver)
 		var/liver_health_percent = (liver.maxHealth - liver.damage) / liver.maxHealth
 		liver_tolerance = liver.toxTolerance * liver_health_percent
+		provide_pain_message = HAS_NO_TOXIN
 
 	for(var/datum/reagent/reagent as anything in cached_reagents)
+		var/datum/reagent/toxin/toxin
+		if(istype(reagent, /datum/reagent/toxin))
+			toxin = reagent
 		// skip metabolizing effects for small units of toxins
-		if(istype(reagent, /datum/reagent/toxin) && liver && !dead)
-			var/datum/reagent/toxin/toxin = reagent
-			var/amount = round(toxin.volume, CHEMICAL_QUANTISATION_LEVEL)
+		if(toxin && liver && !dead)
+			amount = round(toxin.volume, CHEMICAL_QUANTISATION_LEVEL)
 			if(belly)
 				amount += belly.reagents.get_reagent_amount(toxin.type)
 
@@ -400,10 +411,35 @@
 
 		need_mob_update += metabolize_reagent(owner, reagent, delta_time, times_fired, can_overdose, liverless, dead)
 
+		// If applicable, calculate any toxin-related liver damage
+		// Note: we have to do this AFTER metabolize_reagent, because we want handle_reagent to run before we make the determination.
+		// The order is really important unfortunately.
+		if(toxin && liver && liver.filterToxins && !HAS_TRAIT(owner, TRAIT_TOXINLOVER))
+			if(toxin.affected_organ_flags && !(liver.organ_flags & toxin.affected_organ_flags)) //this particular toxin does not affect this type of organ
+				continue
+
+			// a 15u syringe is a nice baseline to scale lethality by
+			liver_damage += ((amount/15) * toxin.toxpwr * toxin.liver_damage_multiplier) / liver.liver_resistance
+
+			if(provide_pain_message != HAS_PAINFUL_TOXIN)
+				provide_pain_message = toxin.silent_toxin ? HAS_SILENT_TOXIN : HAS_PAINFUL_TOXIN
+
+	// if applicable, apply our liver damage and display the accompanying pain message
+	if(liver_damage)
+		liver.apply_organ_damage(min(liver_damage * delta_time , MAX_TOXIN_LIVER_DAMAGE * delta_time))
+
+	if(provide_pain_message && liver.damage > 10 && DT_PROB(liver.damage/6, delta_time)) //the higher the damage the higher the probability
+		to_chat(owner, span_warning("You feel a dull pain in your abdomen."))
+
 	if(owner && need_mob_update) //some of the metabolized reagents had effects on the mob that requires some updates.
 		owner.updatehealth()
 		owner.update_stamina()
 	update_total()
+
+#undef HAS_SILENT_TOXIN
+#undef HAS_NO_TOXIN
+#undef HAS_PAINFUL_TOXIN
+#undef MAX_TOXIN_LIVER_DAMAGE
 
 /*
  * Metabolises a single reagent for a target owner carbon mob. See above.

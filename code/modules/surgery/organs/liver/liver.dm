@@ -1,7 +1,6 @@
 #define LIVER_DEFAULT_TOX_TOLERANCE 3 //amount of toxins the liver can filter out
 #define LIVER_DEFAULT_TOX_RESISTANCE 1 //lower values lower how harmful toxins are to the liver
 #define LIVER_FAILURE_STAGE_SECONDS 60 //amount of seconds before liver failure reaches a new stage
-#define MAX_TOXIN_LIVER_DAMAGE 2 //the max damage the liver can recieve per second (~1 min at max damage will destroy liver)
 
 /obj/item/organ/liver
 	name = "liver"
@@ -26,12 +25,12 @@
 	var/liver_resistance = LIVER_DEFAULT_TOX_RESISTANCE
 	var/filterToxins = TRUE //whether to filter toxins
 
-/// Registers COMSIG_MOB_REAGENT_CHECK from owner
+/// Registers COMSIG_SPECIES_HANDLE_CHEMICAL from owner
 /obj/item/organ/liver/on_insert(mob/living/carbon/organ_owner, special)
 	. = ..()
 	RegisterSignal(organ_owner, COMSIG_SPECIES_HANDLE_CHEMICAL, PROC_REF(handle_chemical))
 
-/// Unregisters COMSIG_MOB_REAGENT_CHECK from owner
+/// Unregisters COMSIG_SPECIES_HANDLE_CHEMICAL from owner
 /obj/item/organ/liver/on_remove(mob/living/carbon/organ_owner, special)
 	. = ..()
 	UnregisterSignal(organ_owner, COMSIG_SPECIES_HANDLE_CHEMICAL)
@@ -46,45 +45,19 @@
 /obj/item/organ/liver/proc/handle_chemical(mob/living/carbon/organ_owner, datum/reagent/chem, seconds_per_tick, times_fired)
 	SIGNAL_HANDLER
 
-#define HAS_SILENT_TOXIN 0 //don't provide a feedback message if this is the only toxin present
-#define HAS_NO_TOXIN 1
-#define HAS_PAINFUL_TOXIN 2
-
 /obj/item/organ/liver/on_life(delta_time, times_fired)
 	var/mob/living/carbon/liver_owner = owner
 	. = ..() //perform general on_life()
 	//If your liver is failing or you lack a metabolism then we use the liverless version of metabolize
-	if(organ_flags & ORGAN_FAILING || HAS_TRAIT(liver_owner, TRAIT_NOMETABOLISM))
+	if((organ_flags & ORGAN_FAILING) || HAS_TRAIT(owner, TRAIT_LIVERLESS_METABOLISM))
+		owner.reagents.end_metabolization(keep_liverless = TRUE)
 		liver_owner.reagents.metabolize(liver_owner, delta_time, times_fired, can_overdose=TRUE, liverless=TRUE)
 		return
 
-	var/obj/belly = liver_owner.get_organ_slot(ORGAN_SLOT_STOMACH)
-	var/list/cached_reagents = liver_owner.reagents.reagent_list
-	var/liver_damage = 0
-	var/provide_pain_message = HAS_NO_TOXIN
-
-	if(filterToxins && !HAS_TRAIT(liver_owner, TRAIT_TOXINLOVER))
-		for(var/datum/reagent/toxin/toxin in cached_reagents)
-			var/amount = round(toxin.volume, CHEMICAL_QUANTISATION_LEVEL) // this is an optimization
-			if(belly)
-				amount += belly.reagents.get_reagent_amount(toxin.type)
-
-			// a 15u syringe is a nice baseline to scale lethality by
-			liver_damage += ((amount/15) * toxin.toxpwr) / liver_resistance
-
-			if(provide_pain_message != HAS_PAINFUL_TOXIN)
-				provide_pain_message = toxin.silent_toxin ? HAS_SILENT_TOXIN : HAS_PAINFUL_TOXIN
-
-	liver_owner.reagents.metabolize(liver_owner, delta_time, times_fired, can_overdose=TRUE)
-
-	if(liver_damage)
-		apply_organ_damage(damage_amount = min(liver_damage * delta_time , MAX_TOXIN_LIVER_DAMAGE * delta_time))
-
-	if(provide_pain_message && damage > 10 && DT_PROB(damage/6, delta_time)) //the higher the damage the higher the probability
-		to_chat(liver_owner, span_warning("You feel a dull pain in your abdomen."))
+	liver_owner.reagents?.metabolize(liver_owner, delta_time, times_fired, can_overdose=TRUE)
 
 /obj/item/organ/liver/handle_failing_organs(delta_time)
-	if(HAS_TRAIT(owner, TRAIT_STABLELIVER) || HAS_TRAIT(owner, TRAIT_NOMETABOLISM))
+	if(HAS_TRAIT(owner, TRAIT_STABLELIVER) || HAS_TRAIT(owner, TRAIT_LIVERLESS_METABOLISM))
 		return
 	return ..()
 
@@ -219,10 +192,6 @@
 	desc = "A mass of plant vines and leaves, seeming to be responsible for chemical digestion."
 	icon_state = "diona_liver"
 
-#undef HAS_SILENT_TOXIN
-#undef HAS_NO_TOXIN
-#undef HAS_PAINFUL_TOXIN
 #undef LIVER_DEFAULT_TOX_TOLERANCE
 #undef LIVER_DEFAULT_TOX_RESISTANCE
 #undef LIVER_FAILURE_STAGE_SECONDS
-#undef MAX_TOXIN_LIVER_DAMAGE

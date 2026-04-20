@@ -3,7 +3,7 @@
 
 	//Traits that register add only
 	RegisterSignal(src, SIGNAL_ADDTRAIT(TRAIT_NOBREATH), PROC_REF(on_nobreath_trait_gain))
-	//RegisterSignal(src, SIGNAL_ADDTRAIT(TRAIT_LIVERLESS_METABOLISM), PROC_REF(on_liverless_metabolism_trait_gain))
+	RegisterSignal(src, SIGNAL_ADDTRAIT(TRAIT_LIVERLESS_METABOLISM), PROC_REF(on_liverless_metabolism_trait_gain))
 	RegisterSignal(src, SIGNAL_ADDTRAIT(TRAIT_VIRUSIMMUNE), PROC_REF(on_virusimmune_trait_gain))
 	RegisterSignal(src, SIGNAL_ADDTRAIT(TRAIT_TOXIMMUNE), PROC_REF(on_toximmune_trait_gain))
 	RegisterSignal(src, SIGNAL_ADDTRAIT(TRAIT_GENELESS), PROC_REF(on_geneless_trait_gain))
@@ -47,6 +47,19 @@
 	SEND_SIGNAL(src, COMSIG_CLEAR_MOOD_EVENT, "chemical_euphoria")
 	SEND_SIGNAL(src, COMSIG_CLEAR_MOOD_EVENT, "smell")
 	SEND_SIGNAL(src, COMSIG_CLEAR_MOOD_EVENT, "suffocation")
+
+/**
+ * On gain of TRAIT_LIVERLESS_METABOLISM
+ *
+ * This will clear all moods related to addictions and stop metabolization.
+ */
+/mob/living/carbon/proc/on_liverless_metabolism_trait_gain(datum/source)
+	SIGNAL_HANDLER
+
+	for(var/addiction_type in subtypesof(/datum/addiction))
+		mind?.remove_addiction_points(addiction_type, MAX_ADDICTION_POINTS) //Remove the addiction!
+
+	reagents.end_metabolization(keep_liverless = TRUE)
 
 /**
  * On gain of TRAIT_VIRUSIMMUNE
