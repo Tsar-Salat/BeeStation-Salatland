@@ -12,7 +12,7 @@
 		. = ..()
 	else
 		//Reagent processing needs to come before breathing, to prevent edge cases.
-		//handle_dead_metabolization(delta_time, times_fired) //Dead metabolization first since it can modify life metabolization.
+		handle_dead_metabolization(delta_time, times_fired) //Dead metabolization first since it can modify life metabolization.
 		handle_organs(delta_time, times_fired)
 
 		. = ..()
@@ -372,6 +372,19 @@
 		if(HM?.timeout)
 			dna.remove_mutation(HM.type)
 
+/**
+ * Handles calling metabolization for dead people.
+ * Due to how reagent metabolization code works this couldn't be done anywhere else.
+ *
+ * Arguments:
+ * - delta_time: The amount of time that has elapsed since the last tick.
+ * - times_fired: The number of times SSmobs has ticked.
+ */
+/mob/living/carbon/proc/handle_dead_metabolization(delta_time, times_fired)
+	if (stat != DEAD)
+		return
+	reagents.metabolize(src, delta_time, times_fired, can_overdose = TRUE, liverless = TRUE, dead = TRUE) // Your liver doesn't work while you're dead.
+
 /// Base carbon environment handler, adds natural stabilization
 /mob/living/carbon/handle_environment(datum/gas_mixture/environment, delta_time, times_fired)
 	var/areatemp = get_temperature(environment)
@@ -507,27 +520,29 @@
 //LIVER//
 /////////
 
-///Decides if the liver is failing or not.
+///Check to see if we have the liver, if not automatically gives you last-stage effects of lacking a liver.
+
 /mob/living/carbon/proc/handle_liver(delta_time, times_fired)
 	if(!dna)
 		return
+
 	var/obj/item/organ/liver/liver = get_organ_slot(ORGAN_SLOT_LIVER)
-	if(!liver)
-		liver_failure(delta_time, times_fired)
+	if(liver)
+		return
+
+	reagents.end_metabolization(src, keep_liverless = TRUE) //Stops trait-based effects on reagents, to prevent permanent buffs
+	reagents.metabolize(src, delta_time, times_fired, can_overdose=TRUE, liverless = TRUE)
+
+	if(HAS_TRAIT(src, TRAIT_STABLELIVER) || HAS_TRAIT(src, TRAIT_NOMETABOLISM))
+		return
+
+	adjustToxLoss(0.6 * delta_time, TRUE,  TRUE)
+	adjustOrganLoss(pick(ORGAN_SLOT_HEART, ORGAN_SLOT_LUNGS, ORGAN_SLOT_STOMACH, ORGAN_SLOT_EYES, ORGAN_SLOT_EARS), 0.5* delta_time)
 
 /mob/living/carbon/proc/undergoing_liver_failure()
 	var/obj/item/organ/liver/liver = get_organ_slot(ORGAN_SLOT_LIVER)
-	if(liver && (liver.organ_flags & ORGAN_FAILING))
+	if(liver?.organ_flags & ORGAN_FAILING)
 		return TRUE
-
-/mob/living/carbon/proc/liver_failure(delta_time, times_fired)
-	reagents.end_metabolization(src, keep_liverless = TRUE) //Stops trait-based effects on reagents, to prevent permanent buffs
-	reagents.metabolize(src, delta_time, times_fired, can_overdose=FALSE, liverless = TRUE)
-	if(HAS_TRAIT(src, TRAIT_STABLELIVER) || HAS_TRAIT(src, TRAIT_NOMETABOLISM))
-		return
-	adjustToxLoss(2 * delta_time, TRUE,  TRUE)
-	if(DT_PROB(15, delta_time))
-		to_chat(src, span_warning("You feel a stabbing pain in your abdomen!"))
 
 /////////////////////////////////////
 //MONKEYS WITH TOO MUCH CHOLOESTROL//

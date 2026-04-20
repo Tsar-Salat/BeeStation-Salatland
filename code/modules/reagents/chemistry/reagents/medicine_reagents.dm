@@ -967,11 +967,16 @@
 
 /datum/reagent/medicine/neurine/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()
-	if(affected_mob.reagents.has_reagent(/datum/reagent/consumable/ethanol/neurotoxin))
-		affected_mob.reagents.remove_reagent(/datum/reagent/consumable/ethanol/neurotoxin, 5 * REM * delta_time)
+	if(holder.has_reagent(/datum/reagent/consumable/ethanol/neurotoxin))
+		holder.remove_reagent(/datum/reagent/consumable/ethanol/neurotoxin, 5 * REM * delta_time)
 
 	if(DT_PROB(8, delta_time))
 		affected_mob.cure_trauma_type(resilience = TRAUMA_RESILIENCE_BASIC)
+
+/datum/reagent/medicine/neurine/on_mob_dead(mob/living/carbon/affected_mob, delta_time)
+	. = ..()
+	if(affected_mob.adjustOrganLoss(ORGAN_SLOT_BRAIN, -1 * REM * delta_time, required_organ_flag = affected_organ_flags))
+		return UPDATE_MOB_HEALTH
 
 /datum/reagent/medicine/mutadone
 	name = "Mutadone"

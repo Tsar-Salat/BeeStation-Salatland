@@ -8,7 +8,7 @@
 	chemical_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_GOAL_BOTANIST_HARVEST
 	taste_description = "bitterness"
 	taste_mult = 1.2
-	/// How much toxin we deal
+	///The amount of toxin damage this will cause when metabolized (also used to calculate liver damage)
 	var/toxpwr = 1.5
 	/// Won't produce a pain message when processed by liver/life() if there isn't another non-silent toxin present.
 	var/silent_toxin = FALSE
