@@ -25,15 +25,14 @@
 	var/liver_resistance = LIVER_DEFAULT_TOX_RESISTANCE
 	var/filterToxins = TRUE //whether to filter toxins
 
-/// Registers COMSIG_SPECIES_HANDLE_CHEMICAL from owner
 /obj/item/organ/liver/on_insert(mob/living/carbon/organ_owner, special)
 	. = ..()
 	RegisterSignal(organ_owner, COMSIG_SPECIES_HANDLE_CHEMICAL, PROC_REF(handle_chemical))
+	RegisterSignal(organ_owner, COMSIG_ATOM_EXAMINE, PROC_REF(on_owner_examine))
 
-/// Unregisters COMSIG_SPECIES_HANDLE_CHEMICAL from owner
 /obj/item/organ/liver/on_remove(mob/living/carbon/organ_owner, special)
 	. = ..()
-	UnregisterSignal(organ_owner, COMSIG_SPECIES_HANDLE_CHEMICAL)
+	UnregisterSignal(organ_owner, list(COMSIG_SPECIES_HANDLE_CHEMICAL, COMSIG_ATOM_EXAMINE))
 
 /**
  * This proc can be overriden by liver subtypes so they can handle certain chemicals in special ways.
@@ -46,15 +45,14 @@
 	SIGNAL_HANDLER
 
 /obj/item/organ/liver/on_life(delta_time, times_fired)
-	var/mob/living/carbon/liver_owner = owner
 	. = ..() //perform general on_life()
 	//If your liver is failing or you lack a metabolism then we use the liverless version of metabolize
 	if((organ_flags & ORGAN_FAILING) || HAS_TRAIT(owner, TRAIT_LIVERLESS_METABOLISM))
 		owner.reagents.end_metabolization(keep_liverless = TRUE)
-		liver_owner.reagents.metabolize(liver_owner, delta_time, times_fired, can_overdose=TRUE, liverless=TRUE)
+		owner.reagents.metabolize(owner, delta_time, times_fired, can_overdose=TRUE, liverless=TRUE)
 		return
 
-	liver_owner.reagents?.metabolize(liver_owner, delta_time, times_fired, can_overdose=TRUE)
+	owner.reagents?.metabolize(owner, delta_time, times_fired, can_overdose=TRUE)
 
 /obj/item/organ/liver/handle_failing_organs(delta_time)
 	if(HAS_TRAIT(owner, TRAIT_STABLELIVER) || HAS_TRAIT(owner, TRAIT_LIVERLESS_METABOLISM))
@@ -111,7 +109,7 @@
 			if(DT_PROB(3, delta_time))
 				owner.emote("drool")
 
-/obj/item/organ/liver/on_owner_examine(datum/source, mob/user, list/examine_list)
+/obj/item/organ/liver/proc/on_owner_examine(datum/source, mob/user, list/examine_list)
 	if(!ishuman(owner) || !(organ_flags & ORGAN_FAILING))
 		return
 

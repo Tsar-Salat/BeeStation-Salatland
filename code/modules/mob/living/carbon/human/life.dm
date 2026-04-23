@@ -33,9 +33,9 @@
 	if(!IS_IN_STASIS(src))
 		if(stat != DEAD)
 			//heart attack stuff
-			handle_heart()
+			handle_heart(delta_time)
 			//handles liver failure effects, if we lack a liver
-			handle_liver()
+			handle_liver(delta_time)
 
 		dna.species.spec_life(src, delta_time, times_fired) // for mutantraces
 
@@ -293,8 +293,7 @@
 			return TRUE
 	return ..()
 
-/mob/living/carbon/human/handle_heart(delta_time, times_fired)
-	//heart attack stuff
+/mob/living/carbon/human/proc/handle_heart(delta_time)
 	var/we_breath = !HAS_TRAIT_FROM(src, TRAIT_NOBREATH, SPECIES_TRAIT)
 
 	if(!undergoing_cardiac_arrest())

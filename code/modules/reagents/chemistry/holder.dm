@@ -384,7 +384,7 @@
 		expose_temperature(owner.bodytemperature, 0.25)
 
 	var/need_mob_update = FALSE
-	var/obj/item/organ/stomach/belly = owner.get_organ_slot(ORGAN_SLOT_STOMACH)
+	//var/obj/item/organ/stomach/belly = owner.get_organ_slot(ORGAN_SLOT_STOMACH)
 	var/obj/item/organ/liver/liver = owner.get_organ_slot(ORGAN_SLOT_LIVER)
 	var/liver_tolerance = 0
 	var/liver_damage = 0
@@ -402,8 +402,8 @@
 		// skip metabolizing effects for small units of toxins
 		if(toxin && liver && !dead)
 			amount = round(toxin.volume, CHEMICAL_QUANTISATION_LEVEL)
-			if(belly)
-				amount += belly.reagents.get_reagent_amount(toxin.type)
+			//if(belly)
+			//	amount += belly.reagents.get_reagent_amount(toxin.type)
 
 			if(amount <= liver_tolerance)
 				owner.reagents.remove_reagent(toxin.type, toxin.metabolization_rate * owner.metabolism_efficiency * delta_time)
