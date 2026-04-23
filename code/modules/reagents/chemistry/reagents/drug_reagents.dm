@@ -48,7 +48,7 @@
 	chemical_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY | CHEMICAL_GOAL_BOTANIST_HARVEST | CHEMICAL_GOAL_BARTENDER_SERVING
 	taste_description = "smoke"
 	trippy = FALSE
-	overdose_threshold=15
+	overdose_threshold = 15
 	metabolization_rate = 0.125 * REAGENTS_METABOLISM
 	addiction_types = list(/datum/addiction/nicotine = 15) // 6 per 2 seconds
 
@@ -59,11 +59,7 @@
 
 	SEND_SIGNAL(affected_mob, COMSIG_ADD_MOOD_EVENT, "smoked", /datum/mood_event/smoked, name)
 	affected_mob.remove_status_effect(/datum/status_effect/jitter)
-	affected_mob.AdjustStun(-50  * REM * delta_time)
-	affected_mob.AdjustKnockdown(-50 * REM * delta_time)
-	affected_mob.AdjustUnconscious(-50 * REM * delta_time)
-	affected_mob.AdjustParalyzed(-50 * REM * delta_time)
-	affected_mob.AdjustImmobilized(-50 * REM * delta_time)
+	affected_mob.AdjustAllImmobility(-50 * REM * delta_time)
 	return UPDATE_MOB_HEALTH
 
 /datum/reagent/drug/nicotine/overdose_process(mob/living/carbon/affected_mob, delta_time, times_fired)
