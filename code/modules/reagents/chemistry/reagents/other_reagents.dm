@@ -252,11 +252,18 @@
 		new /obj/item/stack/sheet/leather/wetleather(get_turf(hide), hide.amount)
 		qdel(hide)
 
-/*
- *	Water reaction to a mob
- */
 
+/// How many wet stacks you get per units of water when it's applied by touch.
+#define WATER_TO_WET_STACKS_FACTOR_TOUCH 0.5
+/// How many wet stacks you get per unit of water when it's applied by vapor. Much less effective than by touch, of course.
+#define WATER_TO_WET_STACKS_FACTOR_VAPOR 0.1
+
+
+/**
+ * Water reaction to a mob
+ */
 /datum/reagent/water/expose_mob(mob/living/exposed_mob, method = TOUCH, reac_volume)//Splashing people with water can help put them out!
+	. = ..()
 	if(!istype(exposed_mob))
 		return
 	if(isoozeling(exposed_mob))
@@ -266,10 +273,16 @@
 		exposed_mob.blood_volume = max(exposed_mob.blood_volume - 30 * (1 - touch_mod), 0)
 		if(touch_mod < 0.9)
 			to_chat(exposed_mob, span_warning("The water causes you to melt away!"))
+
 	if(method == TOUCH)
-		exposed_mob.adjust_wet_stacks(reac_volume / 10)
 		exposed_mob.extinguish_mob()
-	..()
+		exposed_mob.adjust_wet_stacks(reac_volume * WATER_TO_WET_STACKS_FACTOR_TOUCH) // Water makes you wet, at a 50% water-to-wet-stacks ratio. Which, in turn, gives you some mild protection from being set on fire!
+
+	if(method == VAPOR)
+		exposed_mob.adjust_wet_stacks(reac_volume * WATER_TO_WET_STACKS_FACTOR_VAPOR) // Spraying someone with water with the hope to put them out is just simply too funny to me not to add it.
+
+#undef WATER_TO_WET_STACKS_FACTOR_TOUCH
+#undef WATER_TO_WET_STACKS_FACTOR_VAPOR
 
 /datum/reagent/water/holywater
 	name = "Holy Water"
