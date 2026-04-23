@@ -70,6 +70,7 @@
 #include "outfit_sanity.dm"
 #include "oxyloss_suffocation.dm"
 #include "pda_power.dm"
+#include "pills.dm"
 #include "preference_species.dm"
 #include "preferences.dm"
 #include "projectiles.dm"

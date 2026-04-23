@@ -950,14 +950,16 @@
 	return FALSE
 
 /**
- * Check if this holder contains this reagent.
- * Reagent takes a PATH to a reagent.
- * Amount checks for having a specific amount of that chemical.
- * Needs metabolizing takes into consideration if the chemical is metabolizing when it's checked.
+ * Returns a reagent from this holder if it matches all the specified arguments
+ * Arguments
+ *
+ * * [target_reagent][datum/reagent] - the reagent typepath to check for. can be null to return any reagent
+ * * amount - checks for having a specific amount of that chemical
+ * * needs_metabolizing - takes into consideration if the chemical is metabolizing when it's checked.
  */
 /datum/reagents/proc/has_reagent(datum/reagent/target_reagent, amount = -1, needs_metabolizing = FALSE)
-	if(!ispath(target_reagent))
-		stack_trace("invalid reagent path passed to has reagent [target_reagent]")
+	if(!isnull(target_reagent) && !ispath(target_reagent))
+		stack_trace("invalid reagent path passed to has_reagent [target_reagent]")
 		return FALSE
 
 	var/list/cached_reagents = reagent_list
@@ -965,17 +967,15 @@
 		if (holder_reagent.type == target_reagent)
 			if(!amount)
 				if(needs_metabolizing && !holder_reagent.metabolizing)
-					return
+					return FALSE
 				return holder_reagent
 			else
 				if(FLOOR(holder_reagent.volume, CHEMICAL_QUANTISATION_LEVEL) >= amount)
 					if(needs_metabolizing && !holder_reagent.metabolizing)
-						return
+						return FALSE
 					return holder_reagent
-				else
-					return
 
-	return
+	return FALSE
 
 /**
  * Get the amount of this reagent or the sum of all its subtypes if specified

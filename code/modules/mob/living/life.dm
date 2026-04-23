@@ -90,6 +90,18 @@
 		else if(!stat && !(HAS_TRAIT(src, TRAIT_BLIND)))
 			adjust_blindness(-0.5 * delta_time)
 
+/**
+ * Check if the mob contains this reagent.
+ *
+ * This will validate the the reagent holder for the mob and any sub holders contain the requested reagent.
+ * Vars:
+ * * reagent (typepath) takes a PATH to a reagent.
+ * * amount (int) checks for having a specific amount of that chemical.
+ * * needs_metabolizing (bool) takes into consideration if the chemical is matabolizing when it's checked.
+ */
+/mob/living/proc/has_reagent(reagent, amount = -1, needs_metabolizing = FALSE)
+	return reagents?.has_reagent(reagent, amount, needs_metabolizing)
+
 /mob/living/proc/update_damage_hud()
 	return
 
