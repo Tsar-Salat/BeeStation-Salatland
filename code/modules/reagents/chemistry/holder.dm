@@ -452,35 +452,47 @@
  * * liverless - Stops reagents that aren't set as [/datum/reagent/var/self_consuming] from metabolizing
  */
 /datum/reagents/proc/metabolize_reagent(mob/living/carbon/owner, datum/reagent/reagent, delta_time, times_fired, can_overdose = FALSE, liverless = FALSE, dead = FALSE)
-	var/need_mob_update = FALSE
 	if(QDELETED(reagent.holder))
 		return FALSE
 
 	if(!owner)
 		owner = reagent.holder.my_atom
 
-	if(owner && reagent && (!dead || (reagent.chemical_flags & REAGENT_DEAD_PROCESS)))
-		if(!owner.reagent_check(reagent, delta_time, times_fired) != TRUE)
-			return
-		if(liverless && !reagent.self_consuming) //need to be metabolized
-			return
-		if(!reagent.metabolizing)
-			reagent.metabolizing = TRUE
-			reagent.on_mob_metabolize(owner)
-		if(can_overdose)
-			if(reagent.overdose_threshold)
-				if(reagent.volume >= reagent.overdose_threshold && !reagent.overdosed)
-					reagent.overdosed = TRUE
-					need_mob_update += reagent.overdose_start(owner)
-					log_game("[key_name(owner)] has started overdosing on [reagent.name] at [reagent.volume] units.")
-			for(var/addiction in reagent.addiction_types)
-				owner.mind?.add_addiction_points(addiction, reagent.addiction_types[addiction] * REAGENTS_METABOLISM)
+	if(!owner || !reagent || (dead && !(reagent.chemical_flags & REAGENT_DEAD_PROCESS)))
+		return FALSE
 
-			if(reagent.overdosed)
-				need_mob_update += reagent.overdose_process(owner, delta_time, times_fired)
-		need_mob_update += reagent.on_mob_life(owner, delta_time, times_fired)
-		if(dead && !QDELETED(owner) && !QDELETED(reagent))
-			need_mob_update += reagent.on_mob_dead(owner, delta_time)
+	if(!owner.reagent_check(reagent, delta_time, times_fired) != TRUE)
+		return FALSE
+
+	if(liverless && !reagent.self_consuming) //need to be metabolized
+		return FALSE
+
+	var/need_mob_update = FALSE
+	if(!reagent.metabolizing)
+		reagent.metabolizing = TRUE
+		reagent.on_mob_metabolize(owner)
+
+	var/metabolized_volume = reagent.compute_metabolization(owner, delta_time)
+
+	if(can_overdose)
+		if(reagent.overdose_threshold && reagent.volume >= reagent.overdose_threshold && !reagent.overdosed)
+			reagent.overdosed = TRUE
+			need_mob_update += reagent.overdose_start(owner)
+			log_game("[key_name(owner)] has started overdosing on [reagent.name] at [reagent.volume] units.")
+
+		for(var/addiction, threshold in reagent.addiction_types)
+			var/datum/addiction/addiction_type = addiction
+			// point gain is scaled based on how much we metabolized per second
+			owner.mind?.add_addiction_points(addiction, addiction_type::addiction_gain_threshold / (threshold / metabolized_volume))
+
+		if(reagent.overdosed)
+			need_mob_update += reagent.overdose_process(owner, delta_time, times_fired)
+
+	reagent.current_cycle++
+	need_mob_update += reagent.on_mob_life(owner, delta_time, times_fired)
+
+	if(dead && !QDELETED(owner) && !QDELETED(reagent))
+		need_mob_update += reagent.on_mob_dead(owner, delta_time)
 
 	return need_mob_update
 
@@ -1271,7 +1283,7 @@
 /datum/reagents/proc/parse_addictions(datum/reagent/reagent)
 	var/addict_text = list()
 	for(var/entry in reagent.addiction_types)
-		var/datum/addiction/ref = SSaddiction.all_addictions[entry]
+		var/datum/addiction/ref = GLOB.addictions[entry]
 		switch(reagent.addiction_types[entry])
 			if(-INFINITY to 0)
 				continue

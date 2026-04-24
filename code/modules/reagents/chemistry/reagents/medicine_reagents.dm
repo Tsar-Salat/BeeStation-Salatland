@@ -1535,13 +1535,15 @@
 
 /datum/reagent/medicine/modafinil/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()
-	if(!overdosed) // We do not want any effects on OD
-		overdose_threshold = overdose_threshold + ((rand(-10, 10) / 10) * REM * delta_time) // for extra fun
-		affected_mob.AdjustAllImmobility(-20 * REM * delta_time)
-		affected_mob.adjustStaminaLoss(-15 * REM * delta_time, updating_stamina = FALSE)
-		affected_mob.set_jitter_if_lower(1 SECONDS * REM * delta_time)
-		metabolization_rate = 0.005 * REAGENTS_METABOLISM * rand(5, 20) // randomizes metabolism between 0.02 and 0.08 per second
-		return UPDATE_MOB_HEALTH
+	if(overdosed) // We do not want any effects on OD
+		return
+
+	overdose_threshold = overdose_threshold + ((rand(-10, 10) / 10) * REM * delta_time) // for extra fun
+	affected_mob.AdjustAllImmobility(-20 * REM * delta_time)
+	affected_mob.adjustStaminaLoss(-15 * REM * delta_time, updating_stamina = FALSE)
+	affected_mob.set_jitter_if_lower(1 SECONDS * REM * delta_time)
+	metabolization_rate = 0.005 * REAGENTS_METABOLISM * rand(5, 20) // randomizes metabolism between 0.02 and 0.08 per second
+	return UPDATE_MOB_HEALTH
 
 /datum/reagent/medicine/modafinil/overdose_start(mob/living/affected_mob)
 	to_chat(affected_mob, span_userdanger("You feel awfully out of breath and jittery!"))

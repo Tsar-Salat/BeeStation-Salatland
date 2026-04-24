@@ -969,8 +969,8 @@
 
 /datum/reagent/chlorine/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()
-	affected_mob.take_bodypart_damage(0.5 * REM * delta_time, updating_health = FALSE)
-	return UPDATE_MOB_HEALTH
+	if(affected_mob.take_bodypart_damage(0.5 * REM * delta_time, updating_health = FALSE))
+		return UPDATE_MOB_HEALTH
 
 /datum/reagent/fluorine
 	name = "Fluorine"
@@ -1169,7 +1169,7 @@
 	chemical_flags = CHEMICAL_BASIC_ELEMENT
 	taste_description = "gross metal"
 	process_flags = ORGANIC | SYNTHETIC
-	addiction_types = list(/datum/addiction/alcohol = 4)
+	addiction_types = list(/datum/addiction/alcohol = 300)
 
 /datum/glass_style/drinking_glass/fuel
 	required_drink_type = /datum/reagent/fuel
@@ -1276,7 +1276,7 @@
 	color = "#C8A5DC" // rgb: 200, 165, 220A
 	chemical_flags = CHEMICAL_RNG_GENERAL | CHEMICAL_RNG_FUN | CHEMICAL_RNG_BOTANY
 	taste_description = "numbness"
-	addiction_types = list(/datum/addiction/opioids = 10)
+	addiction_types = list(/datum/addiction/opioids = 120)
 
 /datum/reagent/impedrezene/on_mob_life(mob/living/carbon/affected_mob, delta_time, times_fired)
 	. = ..()

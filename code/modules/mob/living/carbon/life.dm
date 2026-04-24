@@ -22,10 +22,10 @@
 		if(.) //not dead
 			handle_blood(delta_time, times_fired)
 
-		if(stat != DEAD) //Handle brain damage
-			for(var/T in get_traumas())
-				var/datum/brain_trauma/BT = T
-				BT.on_life(delta_time, times_fired)
+		if(stat != DEAD) // still not dead (blood could have changed that)
+			for(var/key in mind?.addiction_points)
+				GLOB.addictions[key].process_addiction(src, delta_time)
+			handle_brain_damage(delta_time)
 
 		if(stat != DEAD && has_dna())
 			for(var/datum/mutation/HM as() in dna.mutations)
@@ -39,10 +39,6 @@
 			update_stamina() //needs to go before updatehealth to remove stamcrit
 			updatehealth()
 
-	if(. && mind) //. == not dead
-		for(var/key in mind.addiction_points)
-			var/datum/addiction/addiction = SSaddiction.all_addictions[key]
-			addiction.process_addiction(src, delta_time, times_fired)
 	if(stat != DEAD)
 		return TRUE
 
@@ -543,6 +539,15 @@
 	var/obj/item/organ/liver/liver = get_organ_slot(ORGAN_SLOT_LIVER)
 	if(liver?.organ_flags & ORGAN_FAILING)
 		return TRUE
+
+////////////////
+//BRAIN DAMAGE//
+////////////////
+
+/mob/living/carbon/proc/handle_brain_damage(seconds_per_tick)
+	for(var/T in get_traumas())
+		var/datum/brain_trauma/BT = T
+		BT.on_life(seconds_per_tick)
 
 /////////////////////////////////////
 //MONKEYS WITH TOO MUCH CHOLOESTROL//
