@@ -159,7 +159,8 @@
 			if(!(FACEHAIR in H.dna.species.species_traits))
 				to_chat(user, span_warning("There is no facial hair to shave!"))
 				return
-			if(!get_location_accessible(H, location))
+			var/covering = H.is_mouth_covered()
+			if(covering)
 				to_chat(user, span_warning("The mask is in the way!"))
 				return
 			if(H.facial_hair_style == "Shaved")

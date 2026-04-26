@@ -93,34 +93,10 @@
 	worn_icon_state = "rapid"
 	item_flags = ISWEAPON
 	clothing_traits = list(TRAIT_FINGERPRINT_PASSTHROUGH)
-	var/warcry = "AT"
-	var/speed = CLICK_CD_RAPID
 
-/obj/item/clothing/gloves/rapid/Touch(atom/A, proximity)
-	var/mob/living/M = loc
-	if(get_dist(A, M) <= 1)
-		if(isliving(A) && M.combat_mode)
-			M.changeNext_move(speed)
-			if(warcry)
-				M.say("[warcry]", ignore_spam = TRUE, forced = "north star warcry")
-
-	else if(M.combat_mode)
-		for(var/mob/living/L in oview(1, M))
-			L.attack_hand(M)
-			M.changeNext_move(speed)
-			if(warcry)
-				M.say("[warcry]", ignore_spam = TRUE, forced = "north star warcry")
-			break
-	.= FALSE
-
-/obj/item/clothing/gloves/rapid/attack_self(mob/user)
-	var/input = stripped_input(user,"What do you want your battlecry to be? Max length of 6 characters.", ,"", 7)
-	if(input == "*me") //If they try to do a *me emote it will stop the attack to prompt them for an emote then they can walk away and enter the emote for a punch from far away
-		to_chat(user, span_warning("Invalid battlecry, please use another. Battlecry cannot contain *me."))
-	else if(CHAT_FILTER_CHECK(input))
-		to_chat(user, span_warning("Invalid battlecry, please use another. Battlecry contains prohibited word(s)."))
-	else if(input)
-		warcry = input
+/obj/item/clothing/gloves/rapid/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/wearertargeting/punchcooldown)
 
 /obj/item/clothing/gloves/rapid/vampire
 	name = "Strange Blur"
@@ -128,12 +104,14 @@
 	icon_state = "exactitude"
 	inhand_icon_state = "exactitude"
 	worn_icon_state = null
-	item_flags = ISWEAPON
-	clothing_traits = list(TRAIT_FINGERPRINT_PASSTHROUGH)
-	warcry = null // We are not so silly.
-	speed = CLICK_CD_MELEE // Slower than the gloves because vamps are also stronger
 
-/obj/item/clothing/gloves/rapid/vampire/attack_self(mob/user)	// Just in case
+/obj/item/clothing/gloves/rapid/vampire/Initialize(mapload)
+	. = ..()
+	var/datum/component/wearertargeting/punchcooldown/local_var = GetComponent(/datum/component/wearertargeting/punchcooldown)
+	local_var.warcry = null
+	local_var.attackspeed = CLICK_CD_MELEE // Slower than the gloves as vamps are also stronger
+
+/obj/item/clothing/gloves/rapid/vampire/attack_self(mob/user) // Just in case
 	return
 
 /obj/item/clothing/gloves/rapid/vampire/New()

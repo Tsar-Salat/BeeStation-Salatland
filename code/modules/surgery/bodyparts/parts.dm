@@ -9,10 +9,13 @@
 	is_dimorphic = TRUE
 	px_x = 0
 	px_y = 0
+	grind_results = null
 	stam_damage_coeff = 1
 	max_stamina_damage = 120
+	///The bodyshape(s) allowed to attach to this chest.
+	var/acceptable_bodyshape = BODYSHAPE_HUMANOID
 	///The bodytype(s) allowed to attach to this chest.
-	var/acceptable_bodytype = BODYTYPE_HUMANOID
+	var/acceptable_bodytype = ALL
 
 	var/obj/item/cavity_item
 
@@ -37,26 +40,27 @@
 	icon_state = "default_monkey_chest"
 	limb_id = SPECIES_MONKEY
 	should_draw_greyscale = FALSE
-	is_dimorphic = FALSE
-	bodytype = BODYTYPE_MONKEY | BODYTYPE_ORGANIC
-	acceptable_bodytype = BODYTYPE_MONKEY
+	bodyshape = BODYSHAPE_MONKEY
+	acceptable_bodyshape = BODYSHAPE_MONKEY
 	dmg_overlay_type = SPECIES_MONKEY
 
 /obj/item/bodypart/chest/monkey/teratoma
 	icon_state = "teratoma_chest"
 	limb_id = "teratoma"
+	is_dimorphic = FALSE
 
 /obj/item/bodypart/chest/alien
 	icon = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_static = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_state = "alien_chest"
 	limb_id = BODYPART_ID_ALIEN
-	bodytype = BODYTYPE_HUMANOID | BODYTYPE_ALIEN | BODYTYPE_ORGANIC
+	bodytype = BODYTYPE_ALIEN | BODYTYPE_ORGANIC
+	bodyshape = BODYSHAPE_HUMANOID
 	is_dimorphic = FALSE //All of them are girls
 	should_draw_greyscale = FALSE
 	bodypart_flags = BODYPART_UNREMOVABLE
 	max_damage = 500
-	acceptable_bodytype = BODYTYPE_HUMANOID
+	acceptable_bodyshape = BODYSHAPE_HUMANOID
 
 /obj/item/bodypart/chest/larva
 	icon = 'icons/mob/human/species/alien/bodyparts.dmi'
@@ -76,11 +80,15 @@
 	desc = "Hey buddy give me a HAND and report this to the github because you shouldn't be seeing this."
 	attack_verb_continuous = list("slaps", "punches")
 	attack_verb_simple = list("slap", "punch")
-	max_damage = 40
+	max_damage = 50
 	max_stamina_damage = 50
 	aux_layer = BODYPARTS_HIGH_LAYER
 	body_damage_coeff = 0.75
 	can_be_disabled = TRUE
+	body_zone = BODY_ZONE_L_ARM
+
+	/// The noun to use when referring to this arm's appendage, e.g. "hand" or "paw"
+	var/appendage_noun = "hand"
 
 /obj/item/bodypart/arm/left
 	name = "left arm"
@@ -96,7 +104,6 @@
 	held_index = 1
 	px_x = -6
 	px_y = 0
-
 
 /obj/item/bodypart/arm/left/set_owner(new_owner)
 	. = ..()
@@ -160,26 +167,30 @@
 	icon_static = 'icons/mob/animal_parts.dmi'
 	limb_id = SPECIES_MONKEY
 	should_draw_greyscale = FALSE
-	bodytype = BODYTYPE_MONKEY | BODYTYPE_ORGANIC
+	bodyshape = BODYSHAPE_MONKEY
 	px_x = -5
 	px_y = -3
 	dmg_overlay_type = SPECIES_MONKEY
+	appendage_noun = "paw"
 
 /obj/item/bodypart/arm/left/monkey/teratoma
 	icon_state = "teratoma_l_arm"
+	limb_id = "teratoma"
 
 /obj/item/bodypart/arm/left/alien
 	icon = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_static = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_state = "alien_l_arm"
 	limb_id = BODYPART_ID_ALIEN
-	bodytype = BODYTYPE_HUMANOID | BODYTYPE_ALIEN | BODYTYPE_ORGANIC
+	bodytype = BODYTYPE_ALIEN | BODYTYPE_ORGANIC
+	bodyshape = BODYSHAPE_HUMANOID
 	px_x = 0
 	px_y = 0
 	bodypart_flags = BODYPART_UNREMOVABLE
 	can_be_disabled = FALSE
 	max_damage = 100
 	should_draw_greyscale = FALSE
+	appendage_noun = "scythe-like hand"
 
 /obj/item/bodypart/arm/right
 	name = "right arm"
@@ -255,11 +266,12 @@
 	icon_state = "default_monkey_r_arm"
 	icon_static = 'icons/mob/animal_parts.dmi'
 	limb_id = SPECIES_MONKEY
-	bodytype = BODYTYPE_MONKEY | BODYTYPE_ORGANIC
+	bodyshape = BODYSHAPE_MONKEY
 	should_draw_greyscale = FALSE
 	px_x = 5
 	px_y = -3
 	dmg_overlay_type = SPECIES_MONKEY
+	appendage_noun = "paw"
 
 /obj/item/bodypart/arm/right/monkey/teratoma
 	icon_state = "teratoma_r_arm"
@@ -270,13 +282,15 @@
 	icon_static = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_state = "alien_r_arm"
 	limb_id = BODYPART_ID_ALIEN
-	bodytype = BODYTYPE_HUMANOID | BODYTYPE_ALIEN | BODYTYPE_ORGANIC
+	bodytype = BODYTYPE_ALIEN | BODYTYPE_ORGANIC
+	bodyshape = BODYSHAPE_HUMANOID
 	px_x = 0
 	px_y = 0
 	bodypart_flags = BODYPART_UNREMOVABLE
 	can_be_disabled = FALSE
 	max_damage = 100
 	should_draw_greyscale = FALSE
+	appendage_noun = "scythe-like hand"
 
 /obj/item/bodypart/leg
 	abstract_type = /obj/item/bodypart/leg
@@ -357,7 +371,7 @@
 	icon_state = "default_monkey_l_leg"
 	limb_id = SPECIES_MONKEY
 	should_draw_greyscale = FALSE
-	bodytype = BODYTYPE_MONKEY | BODYTYPE_ORGANIC
+	bodyshape = BODYSHAPE_MONKEY
 	px_y = 4
 	dmg_overlay_type = SPECIES_MONKEY
 
@@ -370,7 +384,8 @@
 	icon_static = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_state = "alien_l_leg"
 	limb_id = BODYPART_ID_ALIEN
-	bodytype = BODYTYPE_HUMANOID | BODYTYPE_ALIEN | BODYTYPE_ORGANIC
+	bodytype = BODYTYPE_ALIEN | BODYTYPE_ORGANIC
+	bodyshape = BODYSHAPE_HUMANOID
 	px_x = 0
 	px_y = 0
 	bodypart_flags = BODYPART_UNREMOVABLE
@@ -448,7 +463,7 @@
 	icon_state = "default_monkey_r_leg"
 	limb_id = SPECIES_MONKEY
 	should_draw_greyscale = FALSE
-	bodytype = BODYTYPE_MONKEY | BODYTYPE_ORGANIC
+	bodyshape = BODYSHAPE_MONKEY
 	px_y = 4
 	dmg_overlay_type = SPECIES_MONKEY
 
@@ -461,7 +476,8 @@
 	icon_static = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_state = "alien_r_leg"
 	limb_id = BODYPART_ID_ALIEN
-	bodytype = BODYTYPE_HUMANOID | BODYTYPE_ALIEN | BODYTYPE_ORGANIC
+	bodytype = BODYTYPE_ALIEN | BODYTYPE_ORGANIC
+	bodyshape = BODYSHAPE_HUMANOID
 	px_x = 0
 	px_y = 0
 	bodypart_flags = BODYPART_UNREMOVABLE
