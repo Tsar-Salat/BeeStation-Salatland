@@ -21,7 +21,6 @@
 		TRAIT_LIMBATTACHMENT,
 		TRAIT_EASYDISMEMBER,
 		TRAIT_EASYLIMBDISABLE,
-		TRAIT_POWERHUNGRY,
 		TRAIT_XENO_IMMUNE,
 		TRAIT_TOXIMMUNE,
 		TRAIT_NOSOFTCRIT,
@@ -32,8 +31,8 @@
 	mutantbrain = /obj/item/organ/brain/positron
 	mutanteyes = /obj/item/organ/eyes/robotic
 	mutanttongue = /obj/item/organ/tongue/robot
-	mutantliver = /obj/item/organ/liver/cybernetic/upgraded/ipc
-	mutantstomach = /obj/item/organ/stomach/battery/ipc
+	mutantliver = /obj/item/organ/liver/cybernetic/tier2/ipc
+	mutantstomach = /obj/item/organ/stomach/electrical/ipc
 	mutantears = /obj/item/organ/ears/robot
 	mutantheart = /obj/item/organ/heart/cybernetic/ipc
 	mutantlungs = null
@@ -146,7 +145,7 @@
 		return ..()
 	user.changeNext_move(CLICK_CD_MELEE)
 	var/mob/living/carbon/human/H = user
-	var/obj/item/organ/stomach/battery/battery = H.get_organ_slot(ORGAN_SLOT_STOMACH)
+	var/obj/item/organ/stomach/electrical/battery = H.get_organ_slot(ORGAN_SLOT_STOMACH)
 	if(!battery)
 		to_chat(H, span_warning("You try to siphon energy from \the [target], but your power cell is gone!"))
 		return
@@ -157,7 +156,7 @@
 
 	if(istype(target, /obj/machinery/power/apc))
 		var/obj/machinery/power/apc/A = target
-		if(A.cell && A.cell.charge > A.cell.maxcharge/4)
+		if(A?.cell?.charge > A.cell.maxcharge/4)
 			powerdraw_loop(A, H, TRUE)
 			return
 		else
@@ -166,16 +165,17 @@
 
 	if(isethereal(target))
 		var/mob/living/carbon/human/target_ethereal = target
-		var/obj/item/organ/stomach/battery/target_battery = target_ethereal.get_organ_slot(ORGAN_SLOT_STOMACH)
+		var/obj/item/organ/stomach/electrical/target_battery = target_ethereal.get_organ_slot(ORGAN_SLOT_STOMACH)
 		if(target_ethereal.nutrition > 0 && target_battery)
 			powerdraw_loop(target_battery, H, FALSE)
 			return
 		else
 			to_chat(user, span_warning("There is not enough charge to draw from that being!"))
 			return
+
 /obj/item/apc_powercord/proc/powerdraw_loop(atom/target, mob/living/carbon/human/H, apc_target)
 	H.visible_message(span_notice("[H] inserts a power connector into [target]."), span_notice("You begin to draw power from the [target]."))
-	var/obj/item/organ/stomach/battery/battery = H.get_organ_slot(ORGAN_SLOT_STOMACH)
+	var/obj/item/organ/stomach/electrical/battery = H.get_organ_slot(ORGAN_SLOT_STOMACH)
 	if(apc_target)
 		var/obj/machinery/power/apc/A = target
 		if(!istype(A))
@@ -200,11 +200,11 @@
 				A.cell.charge = A.cell.maxcharge/4
 				to_chat(H, span_notice("You siphon off as much as the [A] can spare."))
 				break
-			if(battery.charge >= battery.max_charge)
+			if(battery.cell.charge >= ETHEREAL_CHARGE_FULL)
 				to_chat(H, span_notice("You are now fully charged."))
 				break
 	else
-		var/obj/item/organ/stomach/battery/A = target
+		var/obj/item/organ/stomach/electrical/A = target
 		if(!istype(A))
 			return
 		var/charge_amt
@@ -215,13 +215,13 @@
 			if(loc != H)
 				to_chat(H, span_warning("You must keep your connector out while charging!"))
 				break
-			if(A.charge == 0)
+			if(A.cell.charge == 0)
 				to_chat(H, span_warning("[A] is completely drained!"))
 				break
-			charge_amt = A.charge <= 50 ? A.charge : 50
+			charge_amt = A.cell.charge <= 50 ? A.cell.charge : 50
 			A.adjust_charge(-1 * charge_amt)
 			battery.adjust_charge(charge_amt)
-			if(battery.charge >= battery.max_charge)
+			if(battery.cell.charge >= ETHEREAL_CHARGE_FULL)
 				to_chat(H, span_notice("You are now fully charged."))
 				break
 
@@ -286,6 +286,12 @@
 	var/list/to_add = list()
 
 	to_add += list(
+		list(
+			SPECIES_PERK_TYPE = SPECIES_POSITIVE_PERK,
+			SPECIES_PERK_ICON = "bolt",
+			SPECIES_PERK_NAME = "Shockingly Tasty",
+			SPECIES_PERK_DESC = "IPCs can feed on electricity from APCs and powercells to restore their charge; and do not otherwise need to eat.",
+		),
 		list(
 			SPECIES_PERK_TYPE = SPECIES_NEUTRAL_PERK,
 			SPECIES_PERK_ICON = "robot",
