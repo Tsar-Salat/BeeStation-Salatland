@@ -18,6 +18,7 @@
 		diag_hud.add_to_hud(src)
 	faction += "[REF(src)]"
 	GLOB.mob_living_list += src
+	SSpoints_of_interest.make_point_of_interest(src)
 	if (playable)
 		addtimer(CALLBACK(src, PROC_REF(set_playable)), 2 SECONDS) //announce playable mobs to ghosts
 		// this should be delayed because some 'playable=TRUE' mobs are not actually playable because mob key is automatically given
@@ -1616,9 +1617,8 @@ GLOBAL_LIST_EMPTY(fire_appearances)
 		unbuckle_all_mobs(force = TRUE)
 	refresh_gravity()
 	. = ..()
-	if(.)
-		if(client)
-			reset_perspective()
+	if(. && client)
+		reset_perspective()
 
 
 /mob/living/set_stat(new_stat)
