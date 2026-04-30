@@ -178,7 +178,6 @@
 		"none_button.png" = 'html/none_button.png',
 	)
 
-
 /datum/asset/simple/arcade
 	assets = list(
 		"boss1.gif" = 'icons/ui_icons/Arcade/boss1.gif',
@@ -705,4 +704,3 @@
 
 	for(var/tool in tool_icons)
 		insert_icon(replacetext(tool, " ", ""), tool_icons[tool])
-\
