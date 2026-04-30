@@ -47,9 +47,7 @@ module.exports = (env = {}, argv) => {
     },
     resolve: {
       extensions: ['.tsx', '.ts', '.js', '.jsx'],
-      alias: {
-        shared_assets: path.resolve(__dirname, 'packages/common/assets'),
-      },
+      alias: {},
     },
     module: {
       rules: [
@@ -97,7 +95,7 @@ module.exports = (env = {}, argv) => {
           ],
         },
         {
-          test: /\.(cur|png|jpg|svg)$/,
+          test: /\.(png|jpg|svg)$/,
           use: [
             {
               loader: require.resolve('url-loader'),

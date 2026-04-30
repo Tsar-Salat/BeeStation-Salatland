@@ -21,11 +21,6 @@ declare module '*.svg' {
   export default content;
 }
 
-declare module '*.cur' {
-  const content: string;
-  export default content;
-}
-
 type TguiMessage = {
   type: string;
   payload?: any;
