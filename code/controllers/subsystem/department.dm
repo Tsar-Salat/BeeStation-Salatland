@@ -149,7 +149,8 @@ SUBSYSTEM_DEF(department)
 	var/dept_name = "No department"
 	var/dept_id = NONE
 	var/dept_bitflag = null
-	var/dept_colour = null
+	/// The color used in the latejoin menu.
+	var/ui_color = "#ffffff"
 	var/dept_radio_channel = null
 	var/is_station = FALSE
 
@@ -172,6 +173,8 @@ SUBSYSTEM_DEF(department)
 	var/pref_category_name
 	/// Latejoin department sort by low number (Command first)
 	var/pref_category_order = 0
+	/// If TRUE, this department starts a new column in the latejoin window
+	var/latejoin_column_break = FALSE
 
 	/// Alternative department name in crew manifest.
 	/// dept_name variable will be used if this variable has no value
@@ -194,7 +197,7 @@ SUBSYSTEM_DEF(department)
 	dept_name = DEPT_NAME_COMMAND
 	dept_id = DEPT_NAME_COMMAND
 	dept_bitflag = DEPT_BITFLAG_COM
-	dept_colour = "#ddddff"
+	ui_color = "#aac1ee"
 	dept_radio_channel = FREQ_COMMAND
 	is_station = TRUE
 
@@ -236,9 +239,10 @@ SUBSYSTEM_DEF(department)
 	dept_name = DEPT_NAME_SERVICE
 	dept_id = DEPT_NAME_SERVICE
 	dept_bitflag = DEPT_BITFLAG_SRV
-	dept_colour = "#bbe291"
+	ui_color = "#bbe291"
 	dept_radio_channel = FREQ_SERVICE
 	is_station = TRUE
+	latejoin_column_break = TRUE
 
 	leaders = list(JOB_NAME_HEADOFPERSONNEL)
 	jobs = list(JOB_NAME_HEADOFPERSONNEL,
@@ -280,7 +284,7 @@ SUBSYSTEM_DEF(department)
 	dept_name = DEPT_NAME_CIVILIAN
 	dept_id = DEPT_NAME_CIVILIAN
 	dept_bitflag = DEPT_BITFLAG_CIV
-	dept_colour = "#bbe291"
+	ui_color = "#bbe291"
 	is_station = TRUE
 
 	leaders = list(JOB_NAME_HEADOFPERSONNEL)
@@ -310,7 +314,7 @@ SUBSYSTEM_DEF(department)
 	dept_name = DEPT_NAME_CARGO
 	dept_id = DEPT_NAME_CARGO
 	dept_bitflag = DEPT_BITFLAG_CAR
-	dept_colour = "#d7b088"
+	ui_color = "#d7b088"
 	dept_radio_channel = FREQ_SUPPLY
 	is_station = TRUE
 
@@ -347,7 +351,7 @@ SUBSYSTEM_DEF(department)
 	dept_name = DEPT_NAME_SCIENCE
 	dept_id = DEPT_NAME_SCIENCE
 	dept_bitflag = DEPT_BITFLAG_SCI
-	dept_colour = "#ffddff"
+	ui_color = "#e6b3e6"
 	dept_radio_channel = FREQ_SCIENCE
 	is_station = TRUE
 
@@ -386,7 +390,7 @@ SUBSYSTEM_DEF(department)
 	dept_name = DEPT_NAME_ENGINEERING
 	dept_id = DEPT_NAME_ENGINEERING
 	dept_bitflag = DEPT_BITFLAG_ENG
-	dept_colour = "#ffeeaa"
+	ui_color = "#ffd699"
 	dept_radio_channel = FREQ_ENGINEERING
 	is_station = TRUE
 
@@ -425,9 +429,10 @@ SUBSYSTEM_DEF(department)
 	dept_name = DEPT_NAME_MEDICAL
 	dept_id = DEPT_NAME_MEDICAL
 	dept_bitflag = DEPT_BITFLAG_MED
-	dept_colour = "#c1e1ec"
+	ui_color = "#99ffe6"
 	dept_radio_channel = FREQ_MEDICAL
 	is_station = TRUE
+	latejoin_column_break = TRUE
 
 	leaders = list(JOB_NAME_CHIEFMEDICALOFFICER)
 	jobs = list(JOB_NAME_CHIEFMEDICALOFFICER,
@@ -465,7 +470,7 @@ SUBSYSTEM_DEF(department)
 	dept_name = DEPT_NAME_SECURITY
 	dept_id = DEPT_NAME_SECURITY
 	dept_bitflag = DEPT_BITFLAG_SEC
-	dept_colour = "#ffdddd"
+	ui_color = "#ff9999"
 	dept_radio_channel = FREQ_SECURITY
 	is_station = TRUE
 
@@ -533,7 +538,7 @@ SUBSYSTEM_DEF(department)
 	dept_name = DEPT_NAME_SILICON
 	dept_id = DEPT_NAME_SILICON
 	dept_bitflag = DEPT_BITFLAG_SILICON
-	dept_colour = "#ccffcc"
+	ui_color = "#ccffcc"
 	// is_station = TRUE // It's station department, but silicon list... maybe not a good idea using this
 
 	leaders = list()
@@ -555,7 +560,7 @@ SUBSYSTEM_DEF(department)
 	dept_name = DEPT_NAME_CENTCOM
 	dept_id = DEPT_NAME_CENTCOM
 	dept_bitflag = DEPT_BITFLAG_CENTCOM
-	dept_colour = "#00eba4"
+	ui_color = "#00eba4"
 	dept_radio_channel = FREQ_CENTCOM
 
 	access_group_name = "CentCom"
@@ -585,7 +590,7 @@ SUBSYSTEM_DEF(department)
 	dept_name = DEPT_NAME_OTHER
 	dept_id = DEPT_NAME_OTHER
 	dept_bitflag = DEPT_BITFLAG_OTHER
-	dept_colour = "#00eba4"
+	ui_color = "#ffffff"
 	dept_radio_channel = FREQ_CENTCOM
 
 	access_group_name = "??? (Admin)"

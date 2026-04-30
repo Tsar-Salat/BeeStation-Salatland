@@ -62,37 +62,11 @@
 		output += "<p>[LINKIFY_READY("Observe", PLAYER_READY_TO_OBSERVE)]</p>"
 
 	if(!IS_GUEST_KEY(src.key))
-		if (SSdbcore.Connect())
-			var/isadmin = FALSE
-			if(client?.holder)
-				isadmin = TRUE
-			var/datum/db_query/query_get_new_polls = SSdbcore.NewQuery({"
-				SELECT id FROM [format_table_name("poll_question")]
-				WHERE (adminonly = 0 OR :isadmin = 1)
-				AND Now() BETWEEN starttime AND endtime
-				AND deleted = 0
-				AND id NOT IN (
-					SELECT pollid FROM [format_table_name("poll_vote")]
-					WHERE ckey = :ckey
-					AND deleted = 0
-				)
-				AND id NOT IN (
-					SELECT pollid FROM [format_table_name("poll_textreply")]
-					WHERE ckey = :ckey
-					AND deleted = 0
-				)
-			"}, list("isadmin" = isadmin, "ckey" = ckey))
-			var/rs = REF(src)
-			if(!query_get_new_polls.Execute())
-				qdel(query_get_new_polls)
-				return
-			if(query_get_new_polls.NextRow())
-				output += "<p><b><a href='byond://?src=[rs];showpoll=1'>Show Player Polls</A> (NEW!)</b></p>"
-			else
-				output += "<p><a href='byond://?src=[rs];showpoll=1'>Show Player Polls</A></p>"
-			qdel(query_get_new_polls)
-			if(QDELETED(src))
-				return
+		var/poll_link = get_player_poll_link(REF(src))
+		if(QDELETED(src))
+			return
+		if(poll_link)
+			output += "<p>[poll_link]</p>"
 
 	output += "</center>"
 
@@ -100,6 +74,39 @@
 	popup.set_window_options("can_close=0")
 	popup.set_content(output)
 	popup.open(FALSE)
+
+/// Returns the HTML link for player polls, or null if unavailable.
+/mob/dead/new_player/authenticated/proc/get_player_poll_link(ref)
+	if(!SSdbcore.Connect())
+		return null
+	var/isadmin = FALSE
+	if(client?.holder)
+		isadmin = TRUE
+	var/datum/db_query/query_get_new_polls = SSdbcore.NewQuery({"
+		SELECT id FROM [format_table_name("poll_question")]
+		WHERE (adminonly = 0 OR :isadmin = 1)
+		AND Now() BETWEEN starttime AND endtime
+		AND deleted = 0
+		AND id NOT IN (
+			SELECT pollid FROM [format_table_name("poll_vote")]
+			WHERE ckey = :ckey
+			AND deleted = 0
+		)
+		AND id NOT IN (
+			SELECT pollid FROM [format_table_name("poll_textreply")]
+			WHERE ckey = :ckey
+			AND deleted = 0
+		)
+	"}, list("isadmin" = isadmin, "ckey" = ckey))
+	if(!query_get_new_polls.Execute())
+		qdel(query_get_new_polls)
+		return null
+	. = null
+	if(query_get_new_polls.NextRow())
+		. = "<a href='byond://?src=[ref];showpoll=1'><b>Polls (NEW!)</b></a>"
+	else
+		. = "<a href='byond://?src=[ref];showpoll=1'>Polls</a>"
+	qdel(query_get_new_polls)
 
 /mob/dead/new_player/Topic(href, href_list[])
 	return FALSE
@@ -138,7 +145,7 @@
 		if(SSticker.current_state <= GAME_STATE_PREGAME)
 			ready = tready
 		//if it's post initialisation and they're trying to observe we do the needful
-		if(!SSticker.current_state < GAME_STATE_PREGAME && tready == PLAYER_READY_TO_OBSERVE)
+		if(SSticker.current_state >= GAME_STATE_SETTING_UP && tready == PLAYER_READY_TO_OBSERVE)
 			ready = tready
 			make_me_an_observer()
 			return
@@ -286,6 +293,9 @@
 		return JOB_UNAVAILABLE_GENERIC
 	if(!(job.job_flags & JOB_NEW_PLAYER_JOINABLE))
 		return JOB_UNAVAILABLE_LOCKED
+	var/player_count = SSjob.initial_players_to_assign || length(GLOB.clients)
+	if(job.min_pop && player_count < job.min_pop && !job.min_pop_redirect)
+		return JOB_UNAVAILABLE_MINPOP
 	if(!job.has_space())
 		if(job.title == JOB_NAME_ASSISTANT)
 			//Newbies can always be assistants
@@ -432,7 +442,7 @@
 /mob/dead/new_player/authenticated/proc/LateChoices()
 	var/list/dat = list("<div class='notice'>Round Duration: [DisplayTimeText(world.time - SSticker.round_start_time)]</div>")
 	if(SSjob.prioritized_jobs.len > 0)
-		dat+="<div class='priority' style='text-align:center'>Jobs in Green have been prioritized by the Head of Personnel.<br>Please consider joining the game as that role.</div>"
+		dat += "<div class='priority' style='text-align:center'>Jobs in Green have been prioritized by the Head of Personnel.<br>Please consider joining the game as that role.</div>"
 	if(SSshuttle.emergency)
 		switch(SSshuttle.emergency.mode)
 			if(SHUTTLE_ESCAPE)
@@ -443,33 +453,78 @@
 	for(var/datum/job/prioritized_job in SSjob.prioritized_jobs)
 		if(!prioritized_job.has_space())
 			SSjob.prioritized_jobs -= prioritized_job
-	dat += "<table><tr><td valign='top'>"
-	var/column_counter = 0
+
+	var/list/column_list = list(list())
 	for(var/datum/department_group/each_dept as anything in SSdepartment.sorted_department_for_latejoin)
+		if(each_dept.latejoin_column_break && length(column_list[length(column_list)]))
+			column_list[++column_list.len] = list()
+		var/list/current_column = column_list[length(column_list)]
+		var/list/dept_data = list()
+
 		var/dept_name = each_dept.pref_category_name
-		var/cat_color = each_dept.dept_colour || "#ff46c7" // failsafe colour
-		dat += "<fieldset style='width: 185px; border: 2px solid [cat_color]; display: inline'>"
-		dat += "<legend align='center' style='color: [cat_color]'>[dept_name]</legend>"
-		var/list/valid_jobs = list()
+		var/cat_color = each_dept.ui_color || "#ff46c7"
+		dept_data += "<fieldset style='border: 2px solid [cat_color]'>"
+		dept_data += "<legend align='center' style='color: [cat_color]'>[dept_name]</legend>"
+		dept_data += "<div class='flexColumn'>"
+
+		var/list/job_entries = list()
 		for(var/job in each_dept.jobs)
 			var/datum/job/job_datum = SSjob.name_occupations[job]
-			if(job_datum && IsJobUnavailable(job_datum.title, TRUE) == JOB_AVAILABLE)
-				var/command_bold = ""
-				if(each_dept.dept_id == DEPT_NAME_COMMAND || (job in each_dept.leaders))
-					command_bold = " command"
+			if(!job_datum)
+				continue
+			var/unavailable = IsJobUnavailable(job_datum.title, TRUE)
+			var/command_bold = ""
+			if(each_dept.dept_id == DEPT_NAME_COMMAND || (job in each_dept.leaders))
+				command_bold = " command"
+			if(unavailable == JOB_AVAILABLE)
 				if(job_datum in SSjob.prioritized_jobs)
-					valid_jobs += "<a class='job[command_bold]' href='byond://?src=[REF(src)];SelectedJob=[job_datum.title]'>[span_priority("[job_datum.title] ([job_datum.current_positions])")]</a>"
+					job_entries += "<a class='genericLink job[command_bold]' href='byond://?src=[REF(src)];SelectedJob=[job_datum.title]'>[span_priority("[job_datum.title] ([job_datum.current_positions])")]</a>"
 				else
-					valid_jobs += "<a class='job[command_bold]' href='byond://?src=[REF(src)];SelectedJob=[job_datum.title]'>[job_datum.title] ([job_datum.current_positions])</a>"
-		if(!valid_jobs.len)
-			valid_jobs += span_nopositions("No positions open.")
-		dat += jointext(valid_jobs, "")
-		dat += "</fieldset><br>"
-		column_counter++
-		if(column_counter > 0 && (column_counter % 3 == 0))
-			dat += "</td><td valign='top'>"
-	dat += "</td></tr></table></center>"
-	dat += "</div></div>"
+					job_entries += "<a class='genericLink job[command_bold]' href='byond://?src=[REF(src)];SelectedJob=[job_datum.title]'>[job_datum.title] ([job_datum.current_positions])</a>"
+			else if(unavailable != JOB_UNAVAILABLE_LOCKED)
+				var/reason = "Unavailable"
+				switch(unavailable)
+					if(JOB_UNAVAILABLE_BANNED)
+						reason = "You are banned from this role"
+					if(JOB_UNAVAILABLE_PLAYTIME)
+						reason = "Insufficient playtime for this role"
+					if(JOB_UNAVAILABLE_ACCOUNTAGE)
+						reason = "Account too new for this role"
+					if(JOB_UNAVAILABLE_SLOTFULL)
+						reason = "No positions available"
+					if(JOB_UNAVAILABLE_MINPOP)
+						reason = "Insufficient station population"
+				job_entries += "<span class='job-unavailable[command_bold]' title='[reason]'>[job_datum.title] ([job_datum.current_positions])</span>"
+
+		if(!job_entries.len)
+			job_entries += "<div class='nopositions'>No positions open.</div>"
+		dept_data += jointext(job_entries, "")
+		dept_data += "</div></fieldset>"
+		current_column += dept_data.Join()
+
+
+	var/visible_columns = 0
+	for(var/list/col in column_list)
+		if(length(col))
+			visible_columns++
+
+	dat += {"
+		<div style='display: grid; grid-template-columns: repeat(auto-fill, [round(100 / visible_columns, 1)]%);justify-content: center;'>
+	"}
+	for(var/list/column_data in column_list)
+		if(!length(column_data))
+			break
+
+		dat += {"
+			<div class='flexColumn'>
+				[column_data.Join()]
+			</div>
+		"}
+
+	dat += {"
+		</div>
+		"}
+
 	var/datum/browser/popup = new(src, "latechoices", "Choose Profession", 680, 580)
 	popup.add_stylesheet("playeroptions", 'html/browser/playeroptions.css')
 	popup.set_content(jointext(dat, ""))

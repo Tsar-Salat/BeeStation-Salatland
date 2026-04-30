@@ -1,6 +1,5 @@
 .job {
   display: block;
-  width: 173px;
 }
 
 .command {
@@ -14,4 +13,36 @@
 
 .nopositions {
   font-style: italic;
+  color: #a3a3a3;
+}
+
+.flexColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+a.genericLink, a.genericLink:visited, a.genericLink:active {
+  color: #ffffff;
+  text-decoration: none;
+  background: #3f595e;
+  border: 1px solid #161616;
+  padding: 1px 4px 1px 4px;
+  margin: 0 2px 0 0;
+  white-space: nowrap !important;
+  text-shadow: none !important;
+}
+
+a.genericLink:hover {
+  color: #ffffff;
+  background: #aa5f36;
+}
+
+.job-unavailable {
+  display: block;
+  color: #666666;
+  background: #2a2a2a;
+  border: 1px dashed #3a3a3a;
+  padding: 1px 4px;
+  margin: 0 2px 2px 0;
+  white-space: nowrap;
 }

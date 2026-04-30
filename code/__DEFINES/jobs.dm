@@ -27,6 +27,7 @@
 #define JOB_UNAVAILABLE_ACCOUNTAGE 4
 #define JOB_UNAVAILABLE_SLOTFULL 5
 #define JOB_UNAVAILABLE_LOCKED 6
+#define JOB_UNAVAILABLE_MINPOP 7
 
 // Job spawn groups
 // Spawn group representing the primary roles of a department
