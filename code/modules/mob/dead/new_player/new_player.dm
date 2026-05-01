@@ -13,6 +13,8 @@
 	var/mob/living/new_character	//for instant transfer once the round is set up
 	///Used to make sure someone doesn't get spammed with messages if they're ineligible for roles.
 	var/ineligible_for_roles = FALSE
+	/// Whether to show unavailable (greyed-out) jobs in the latejoin window
+	var/show_unavailable_jobs = TRUE
 
 /mob/dead/new_player/Initialize(mapload)
 	if(client && SSticker.state == GAME_STATE_STARTUP)
@@ -179,6 +181,11 @@
 				to_chat(usr, span_notice("You have been added to the queue to join the game. Your position in queue is [SSticker.queued_players.len]."))
 			return
 		LateChoices()
+
+	if(href_list["toggle_unavailable"])
+		show_unavailable_jobs = !show_unavailable_jobs
+		LateChoices()
+		return
 
 	if(href_list["manifest"])
 		ViewManifest()
@@ -440,7 +447,7 @@
 */
 
 /mob/dead/new_player/authenticated/proc/LateChoices()
-	var/list/dat = list("<div class='notice'>Round Duration: [DisplayTimeText(world.time - SSticker.round_start_time)]</div>")
+	var/list/dat = list("<div class='notice' style='display:flex;justify-content:space-between;align-items:center;'><span>Round Duration: [DisplayTimeText(world.time - SSticker.round_start_time)]</span><a class='noticeLink' href='byond://?src=[REF(src)];toggle_unavailable=1'>[show_unavailable_jobs ? "Hide" : "Show"] unavailable</a></div>")
 	if(SSjob.prioritized_jobs.len > 0)
 		dat += "<div class='priority' style='text-align:center'>Jobs in Green have been prioritized by the Head of Personnel.<br>Please consider joining the game as that role.</div>"
 	if(SSshuttle.emergency)
@@ -481,7 +488,7 @@
 					job_entries += "<a class='genericLink job[command_bold]' href='byond://?src=[REF(src)];SelectedJob=[job_datum.title]'>[span_priority("[job_datum.title] ([job_datum.current_positions])")]</a>"
 				else
 					job_entries += "<a class='genericLink job[command_bold]' href='byond://?src=[REF(src)];SelectedJob=[job_datum.title]'>[job_datum.title] ([job_datum.current_positions])</a>"
-			else if(unavailable != JOB_UNAVAILABLE_LOCKED)
+			else if(unavailable != JOB_UNAVAILABLE_LOCKED && show_unavailable_jobs)
 				var/reason = "Unavailable"
 				switch(unavailable)
 					if(JOB_UNAVAILABLE_BANNED)
@@ -525,7 +532,7 @@
 		</div>
 		"}
 
-	var/datum/browser/popup = new(src, "latechoices", "Choose Profession", 680, 580)
+	var/datum/browser/popup = new(src, "latechoices", "Choose Profession", 680, 700)
 	popup.add_stylesheet("playeroptions", 'html/browser/playeroptions.css')
 	popup.set_content(jointext(dat, ""))
 	popup.open(FALSE) // 0 is passed to open so that it doesn't use the onclose() proc

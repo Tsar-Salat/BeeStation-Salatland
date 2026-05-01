@@ -37,6 +37,22 @@ a.genericLink:hover {
   background: #aa5f36;
 }
 
+a.noticeLink, a.noticeLink:visited, a.noticeLink:active {
+  color: #15345A;
+  background: none;
+  border: 1px solid #15345A;
+  padding: 0px 4px;
+  font-style: normal;
+  font-weight: bold;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+a.noticeLink:hover {
+  background: #15345A;
+  color: #E9C183;
+}
+
 .job-unavailable {
   display: block;
   color: #666666;
