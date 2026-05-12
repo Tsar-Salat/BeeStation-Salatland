@@ -671,10 +671,6 @@
 			if(istype(O,objective_type))
 				return TRUE
 
-/mob/proc/sync_mind()
-	mind_initialize() //updates the mind (or creates and initializes one if one doesn't exist)
-	mind.active = TRUE //indicates that the mind is currently synced with a client
-
 /datum/mind/proc/has_martialart(string)
 	if(martial_art && martial_art.id == string)
 		return martial_art
@@ -682,15 +678,19 @@
 
 ///Adds addiction points to the specified addiction
 /datum/mind/proc/add_addiction_points(type, amount)
+	var/last_amount = LAZYACCESS(addiction_points, type) || 0
 	LAZYSET(addiction_points, type, min(LAZYACCESS(addiction_points, type) + amount, MAX_ADDICTION_POINTS))
-	var/datum/addiction/affected_addiction = SSaddiction.all_addictions[type]
-	return affected_addiction.on_gain_addiction_points(src)
+	var/new_amount = LAZYACCESS(addiction_points, type)
+	return GLOB.addictions[type].on_gain_addiction_points(src, new_amount, last_amount)
 
 ///Adds addiction points to the specified addiction
 /datum/mind/proc/remove_addiction_points(type, amount)
+	var/last_amount = LAZYACCESS(addiction_points, type) || 0
 	LAZYSET(addiction_points, type, max(LAZYACCESS(addiction_points, type) - amount, 0))
-	var/datum/addiction/affected_addiction = SSaddiction.all_addictions[type]
-	return affected_addiction.on_lose_addiction_points(src)
+	var/new_amount = LAZYACCESS(addiction_points, type)
+	if(new_amount <= 0)
+		LAZYREMOVE(addiction_points, type)
+	return GLOB.addictions[type].on_lose_addiction_points(src, new_amount, last_amount)
 
 /// Setter for assigned_role. Keeps assigned_role (string) and assigned_role_datum (job ref) in sync.
 /// Returns the previous assigned_role value.
@@ -705,6 +705,22 @@
 	//second argument was not filled, take string and find job datum. If there is no associated job-datum, it will be null anyway
 	else
 		assigned_role_datum = SSjob.GetJob(assigned_role)
+
+/// Sets us to the passed job datum, then greets them to their new job.
+/// Use this one for when you're assigning this mind to a new job for the first time,
+/// or for when someone's receiving a job they'd really want to be greeted to.
+/datum/mind/proc/set_assigned_role_with_greeting(role_title, datum/job/new_role, client/incoming_client)
+	. = set_assigned_role(role_title = role_title, job_datum = new_role)
+	if(assigned_role_datum != new_role)
+		return
+
+	var/intro_message = new_role.get_spawn_message()
+	if(incoming_client && intro_message)
+		to_chat(incoming_client, intro_message)
+
+/mob/proc/sync_mind()
+	mind_initialize() //updates the mind (or creates and initializes one if one doesn't exist)
+	mind.active = TRUE //indicates that the mind is currently synced with a client
 
 /mob/dead/new_player/sync_mind()
 	return
