@@ -101,9 +101,6 @@
 	icon_state = "innards"
 	random_icon_states = null
 
-
-
-
 //The loot from killing a slaughter demon - can be consumed to allow the user to blood crawl
 /obj/item/organ/heart/demon
 	name = "demon heart"

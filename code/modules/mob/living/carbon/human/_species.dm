@@ -780,7 +780,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 						if(FACIAL_HAIR_COLOR)
 							accessory_overlay.color = get_fixed_hair_color(source) || source.facial_hair_color
 						if(EYE_COLOR)
-							accessory_overlay.color = source.eye_color
+							accessory_overlay.color = source.eye_color_left
 				else
 					accessory_overlay.color = forced_colour
 			standing += accessory_overlay

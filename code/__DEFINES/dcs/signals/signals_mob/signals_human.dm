@@ -10,6 +10,12 @@
 ///from /datum/species/handle_fire. Called when the human is set on fire and burning clothes and stuff
 #define COMSIG_HUMAN_BURNING "human_burning"
 
+// Mob transformation signals
+///Called when a human turns into a monkey, from /mob/living/carbon/proc/finish_monkeyize()
+#define COMSIG_HUMAN_MONKEYIZE "human_monkeyize"
+///Called when a monkey turns into a human, from /mob/living/carbon/proc/finish_humanize(species)
+#define COMSIG_MONKEY_HUMANIZE "monkey_humanize"
+
 ///From mob/living/carbon/human/suicide()
 #define COMSIG_HUMAN_SUICIDE_ACT "human_suicide_act"
 
