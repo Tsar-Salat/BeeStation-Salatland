@@ -259,12 +259,15 @@
 ///Bee wings with special dash ability
 /obj/item/organ/wings/bee
 	name = "pair of bee wings"
-	desc = "A pair of bee wings. They seem tiny and undergrown."
+	desc = "A pair of bee wings."
 	icon_state = "beewings"
 	flight_level = WINGS_FLIGHTLESS
 	actions_types = list(/datum/action/item_action/organ_action/use/bee_dash)
 	sprite_accessory_override = /datum/sprite_accessory/wings/bee
 	var/jumpdist = 3
+
+/obj/item/organ/wings/bee/make_flap_sound(mob/living/carbon/wing_owner)
+	playsound(wing_owner, 'sound/emotes/moth/moth_flutter.ogg', 50, TRUE)
 
 /datum/action/item_action/organ_action/use/bee_dash
 	name = "Bee Dash"

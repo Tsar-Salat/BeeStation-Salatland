@@ -65,6 +65,7 @@
 #include "mob_damage.dm"
 #include "modsuit.dm"
 #include "mouse_bite_cable.dm"
+#include "movement_order_sanity.dm"
 #include "mutant_hands_consistency.dm"
 #include "mutant_organs.dm"
 #include "organ_bodypart_shuffle.dm"
@@ -127,7 +128,7 @@
 #include "mapping\check_disposals.dm"
 #include "mapping\check_light_attachment.dm"
 #include "mapping\check_multiple_objects.dm"
-#include "mapping\check_wire_crossing.dm"
+#include "mapping\check_wires.dm"
 #include "mapping\map_test.dm"
 
 // END_INCLUDE

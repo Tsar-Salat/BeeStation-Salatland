@@ -115,7 +115,7 @@
 		ethereal.set_facial_haircolor(dead_color, override = TRUE, update = FALSE)
 		ethereal.set_haircolor(dead_color, override = TRUE, update = TRUE)
 
-/datum/species/ethereal/proc/on_emp_act(mob/living/carbon/human/H, severity)
+/datum/species/ethereal/proc/on_emp_act(mob/living/carbon/human/H, severity, protection)
 	SIGNAL_HANDLER
 	EMPeffect = TRUE
 	spec_updatehealth(H)

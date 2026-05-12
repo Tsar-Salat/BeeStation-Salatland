@@ -108,12 +108,6 @@
 		INVOKE_ASYNC(C, TYPE_PROC_REF(/obj/vehicle/sealed/car, RunOver), src)
 	spreadFire(AM)
 
-/mob/living/carbon/human/reset_perspective(atom/new_eye, force_reset = FALSE)
-	if(dna?.species?.prevent_perspective_change && !force_reset) // This is in case a species needs to prevent perspective changes in certain cases
-		update_fullscreen()
-		return
-	return ..()
-
 /mob/living/carbon/human/Topic(href, href_list)
 	if(href_list["see_id"])
 		var/mob/viewer = usr
@@ -134,7 +128,7 @@
 		if(!same_id || (text2num(href_list["examine_time"]) + viable_time) < world.time)
 			to_chat(viewer, span_notice("You don't have that good of a memory. Examine [p_them()] again."))
 			return
-		if(HAS_TRAIT(src, TRAIT_UNKNOWN))
+		if(!isobserver(viewer) && HAS_TRAIT(src, TRAIT_UNKNOWN_APPEARANCE))
 			to_chat(viewer, span_notice("You can't make out that ID anymore."))
 			return
 		if(!isobserver(viewer) && get_dist(viewer, src) > ID_EXAMINE_DISTANCE + 1) // leeway, ignored if the viewer is a ghost
@@ -523,7 +517,7 @@
 			return FALSE
 
 		if (target.is_mouth_covered())
-			to_chat(src, span_warning("Remove [p_their()] mask first!"))
+			to_chat(src, span_warning("Remove [target.p_their()] mask first!"))
 			return FALSE
 
 		if (!get_organ_slot(ORGAN_SLOT_LUNGS))

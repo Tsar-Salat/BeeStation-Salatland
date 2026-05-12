@@ -6,7 +6,6 @@
 	resistance_flags = FIRE_PROOF
 
 
-
 /datum/armor/costume_crown
 	melee = 15
 	energy = 15

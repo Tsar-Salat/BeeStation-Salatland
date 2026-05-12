@@ -182,7 +182,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	var/preload = TRUE
 
 
-	/// Do we try to prevent reset_perspective() from working?
+	/// Do we try to prevent set_mob_eye_to(MOB_EYE_SELF) from working?
 	var/prevent_perspective_change = FALSE
 
 	///List of results you get from knife-butchering. null means you cant butcher it. Associated by resulting type - value of amount
@@ -759,6 +759,8 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			if (accessory.emissive_state)
 				accessory_overlay.overlays.Add(emissive_appearance(accessory.icon, accessory.emissive_state, layer = layer, alpha = accessory.emissive_alpha, filters = source.filters))
 				ADD_LUM_SOURCE(source, LUM_SOURCE_MUTANT_BODYPART)
+
+			accessory_overlay.alpha = accessory.overlay_alpha
 
 			if(accessory.gender_specific)
 				accessory_overlay.icon_state = "[g]_[bodypart]_[accessory.icon_state]_[layertext]"
