@@ -37,14 +37,14 @@
 	// Store Prev Appearance
 	prev_gender = user.gender
 	prev_skin_tone = user.skin_tone
-	prev_hair_style = user.hair_style
-	prev_facial_hair_style = user.facial_hair_style
+	prev_hair_style = user.hairstyle
+	prev_facial_hair_style = user.facial_hairstyle
 	prev_hair_color = user.hair_color
 	prev_facial_hair_color = user.facial_hair_color
 	prev_underwear = user.underwear
 	prev_undershirt = user.undershirt
 	prev_socks = user.socks
-	prev_eye_color = user.eye_color
+	prev_eye_color = user.eye_color_left
 	prev_disfigured = HAS_TRAIT(user, TRAIT_DISFIGURED) // I was disfigured!
 	prev_features = user.dna.features
 
@@ -57,20 +57,23 @@
 	// Change Appearance
 	user.gender = pick(MALE, FEMALE, PLURAL)
 	user.skin_tone = pick(GLOB.skin_tones)
-	user.hair_style = random_hair_style(user.gender)
-	user.facial_hair_style = pick(random_facial_hair_style(user.gender), "Shaved")
-	user.hair_color = "#[random_color()]"
+	user.hairstyle = random_hairstyle(user.gender)
+	user.facial_hairstyle = pick(random_facial_hairstyle(user.gender), "Shaved")
+	user.hair_color = ready_random_color()
 	user.facial_hair_color = user.hair_color
 	user.underwear = random_underwear(user.gender)
 	user.undershirt = random_undershirt(user.gender)
 	user.socks = random_socks(user.gender)
-	user.eye_color = random_eye_color()
+	var/new_eye_color = random_eye_color()
+	user.eye_color_left = new_eye_color
+	user.eye_color_right = new_eye_color
+
 	if(prev_disfigured)
 		REMOVE_TRAIT(user, TRAIT_DISFIGURED, null)
-	user.dna.features = random_features()
+	user.dna.features = user.dna.species.randomize_features()
 
 	// Apply Appearance
-	user.SetSpecialVoice(user.name)
+	user.override_voice = user.name
 	user.update_body() // Outfit and underwear, also body.
 	user.update_mutant_bodyparts() // Lizard tails etc
 	user.update_hair()
@@ -91,14 +94,15 @@
 	// Revert Appearance
 	user.gender = prev_gender
 	user.skin_tone = prev_skin_tone
-	user.hair_style = prev_hair_style
-	user.facial_hair_style = prev_facial_hair_style
+	user.hairstyle = prev_hair_style
+	user.facial_hairstyle = prev_facial_hair_style
 	user.hair_color = prev_hair_color
 	user.facial_hair_color = prev_facial_hair_color
 	user.underwear = prev_underwear
 	user.undershirt = prev_undershirt
 	user.socks = prev_socks
-	user.eye_color = prev_eye_color
+	user.eye_color_left = prev_eye_color
+	user.eye_color_right = prev_eye_color
 
 	if(prev_disfigured)
 		//We are ASSUMING husk. // user.status_flags |= DISFIGURED // Restore "Unknown" disfigurement
@@ -106,9 +110,8 @@
 	user.dna.features = prev_features
 
 	// Apply Appearance
-	user.UnsetSpecialVoice()
+	user.override_voice = null
 	user.update_body() // Outfit and underwear, also body.
-	user.update_hair()
 	user.update_body_parts() // Body itself, maybe skin color?
 
 	cast_effect() // POOF

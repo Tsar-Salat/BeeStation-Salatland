@@ -55,7 +55,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 	if(!istype(H))
 		return
 	var/feetCover = (H.wear_suit && (H.wear_suit.body_parts_covered & FEET)) || (H.w_uniform && (H.w_uniform.body_parts_covered & FEET))
-	if(!HAS_TRAIT(H, TRAIT_ALWAYS_STUBS) && (H.shoes || feetCover || H.body_position == LYING_DOWN || HAS_TRAIT(H, TRAIT_PIERCEIMMUNE) || H.m_intent == MOVE_INTENT_WALK || H.bodytype & BODYTYPE_DIGITIGRADE))
+	if(!HAS_TRAIT(H, TRAIT_ALWAYS_STUBS) && (H.shoes || feetCover || H.body_position == LYING_DOWN || HAS_TRAIT(H, TRAIT_PIERCEIMMUNE) || H.m_intent == MOVE_INTENT_WALK || H.bodyshape & BODYSHAPE_DIGITIGRADE))
 		return
 	if(HAS_TRAIT(H, TRAIT_ALWAYS_STUBS) || ((world.time >= last_bump + 100) && prob(5)))
 		to_chat(H, span_warning("You stub your toe on the [name]!"))
@@ -589,7 +589,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 /obj/structure/table/optable
 	name = "operating table"
 	desc = "Used for advanced medical procedures."
-	icon = 'icons/obj/surgery.dmi'
+	icon = 'icons/obj/medical/surgery.dmi'
 	icon_state = "optable"
 	buildstack = /obj/item/stack/sheet/mineral/silver
 	smoothing_flags = NONE

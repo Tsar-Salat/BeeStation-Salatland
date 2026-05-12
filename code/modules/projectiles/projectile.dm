@@ -252,23 +252,28 @@
 	var/mob/living/L = target
 
 	if(blocked != 100) // not completely blocked
-		if(damage && L.blood_volume && damage_type == BRUTE)
-			var/splatter_dir = dir
-			if(starting)
-				splatter_dir = get_dir(starting, target_loca)
-			if(isalien(L))
-				new /obj/effect/temp_visual/dir_setting/bloodsplatter/xenosplatter(target_loca, splatter_dir)
-			var/obj/item/bodypart/B = L.get_bodypart(def_zone)
-			if(B && !IS_ORGANIC_LIMB(B)) // So if you hit a robotic, it sparks instead of bloodspatters
-				do_sparks(2, FALSE, target.loc)
-			else
-				var/splatter_color = null
-				if(iscarbon(L))
-					var/mob/living/carbon/carbon_target = L
-					splatter_color = carbon_target.dna.blood_type.blood_color
-				new /obj/effect/temp_visual/dir_setting/bloodsplatter(target_loca, splatter_dir, splatter_color)
-			if(prob(33))
-				L.add_splatter_floor(target_loca)
+		var/obj/item/bodypart/hit_bodypart = L.get_bodypart(zone = def_zone)
+		if (damage && damage_type == BRUTE)
+			if (L.blood_volume && (isnull(hit_bodypart) || hit_bodypart.can_bleed()))
+				var/splatter_dir = dir
+				if(starting)
+					splatter_dir = get_dir(starting, target_loca)
+				if(isalien(L))
+					new /obj/effect/temp_visual/dir_setting/bloodsplatter/xenosplatter(target_loca, splatter_dir)
+				else
+					var/splatter_color = null
+					if(iscarbon(L))
+						var/mob/living/carbon/carbon_target = L
+						if(carbon_target.dna?.blood_type)
+							splatter_color = carbon_target.dna.blood_type.blood_color
+					new /obj/effect/temp_visual/dir_setting/bloodsplatter(target_loca, splatter_dir, splatter_color)
+				if(prob(33))
+					L.add_splatter_floor(target_loca)
+			else  // So if you hit a robotic, it sparks instead of bloodspatters
+				do_sparks(number = 2, cardinal_only = FALSE, source = target.loc)
+				if(prob(25))
+					new /obj/effect/decal/cleanable/oil(target_loca)
+
 		else if(impact_effect_type && !hitscan)
 			new impact_effect_type(target_loca, hitx, hity)
 
@@ -599,14 +604,14 @@
  * Scan turf we're now in for anything we can/should hit. This is useful for hitting non dense objects the user
  * directly clicks on, as well as for PHASING projectiles to be able to hit things at all as they don't ever Bump().
  */
-/obj/projectile/Moved(atom/OldLoc, Dir)
+/obj/projectile/Moved(atom/old_loc, movement_dir, forced, list/old_locs, momentum_change = TRUE)
 	. = ..()
 	if(!fired)
 		return
 	if(temporary_unstoppable_movement)
 		temporary_unstoppable_movement = FALSE
 		movement_type &= ~PHASING
-	scan_moved_turf()		//mostly used for making sure we can hit a non-dense object the user directly clicked on, and for penetrating projectiles that don't bump
+	scan_moved_turf() //mostly used for making sure we can hit a non-dense object the user directly clicked on, and for penetrating projectiles that don't bump
 
 /**
  * Checks if we should pierce something.
@@ -878,9 +883,10 @@
 		homing_offset_y = -homing_offset_y
 
 //Spread is FORCED!
-/obj/projectile/proc/preparePixelProjectile(atom/target, atom/source, modifiers, spread = 0)
-	if(!isnull(modifiers) && !islist(modifiers))
+/obj/projectile/proc/preparePixelProjectile(atom/target, atom/source, list/modifiers = null, spread = 0)
+	if(!(isnull(modifiers) || islist(modifiers)))
 		stack_trace("WARNING: Projectile [type] fired with non-list modifiers, likely was passed click params.")
+		modifiers = null
 
 	var/turf/current_location = get_turf(source)
 	var/turf/targloc = get_turf(target)

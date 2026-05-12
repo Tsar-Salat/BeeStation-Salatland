@@ -94,7 +94,6 @@
 		var/mob/living/carbon/human/M = loc
 		new /obj/effect/temp_visual/dir_setting/ninja/cloak(get_turf(M), M.dir)
 		RegisterSignal(M, COMSIG_HUMAN_GET_VISIBLE_NAME, PROC_REF(return_disguise_name))
-		M.name_override = disguise.name
 		M.icon = disguise.icon
 		M.icon_state = disguise.icon_state
 		M.cut_overlays()
@@ -116,7 +115,6 @@
 		var/mob/living/carbon/human/M = loc
 		new /obj/effect/temp_visual/dir_setting/ninja(get_turf(M), M.dir)
 		UnregisterSignal(M, COMSIG_HUMAN_GET_VISIBLE_NAME)
-		M.name_override = null
 		M.cut_overlays()
 		M.regenerate_icons()
 
@@ -626,7 +624,7 @@ Congratulations! You are now trained for invasive xenobiology research!"}
 		species = span_notice("[H.dna.species.name]")
 		if(IS_CHANGELING(L))
 			species = span_warning("Changeling lifeform")
-		var/obj/item/organ/heart/gland/temp = locate() in H.internal_organs
+		var/obj/item/organ/heart/gland/temp = locate() in H.organs
 		if(temp)
 			helptext = span_warning("Experimental gland detected!")
 		else

@@ -204,6 +204,9 @@
 		ADD_TRAIT(src, TRAIT_IMMOBILIZED, PAI_FOLDED)
 		ADD_TRAIT(src, TRAIT_HANDS_BLOCKED, PAI_FOLDED)
 
+	RegisterSignals(src, list(COMSIG_LIVING_ADJUST_BRUTE_DAMAGE, COMSIG_LIVING_ADJUST_BURN_DAMAGE), PROC_REF(on_shell_damaged))
+	RegisterSignal(src, COMSIG_LIVING_ADJUST_STAMINA_DAMAGE, PROC_REF(on_shell_weakened))
+
 	return INITIALIZE_HINT_LATELOAD
 
 
@@ -249,11 +252,7 @@
 	var/datum/asset/notes_assets = get_asset_datum(/datum/asset/simple/pAI)
 	mind.set_assigned_role(JOB_NAME_PAI)
 	notes_assets.send(client)
-	client.perspective = EYE_PERSPECTIVE
-	if(holoform)
-		client.set_eye(src)
-	else
-		client.set_eye(card)
+	set_mob_eye_to(holoform ? MOB_EYE_SELF : card)
 
 /mob/living/silicon/pai/get_stat_tab_status()
 	var/list/tab_data = ..()

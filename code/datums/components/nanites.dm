@@ -28,7 +28,7 @@
 	if(isliving(parent))
 		host_mob = parent
 
-		if(!(host_mob.mob_biotypes & MOB_ORGANIC) && !(host_mob.mob_biotypes & MOB_UNDEAD) && !HAS_TRAIT(host_mob, TRAIT_NANITECOMPATIBLE)) //Shouldn't happen, but this avoids HUD runtimes in case a silicon gets them somehow.
+		if(!(host_mob.mob_biotypes & (MOB_ORGANIC|MOB_UNDEAD)) && !HAS_TRAIT(host_mob, TRAIT_NANITECOMPATIBLE)) //Shouldn't happen, but this avoids HUD runtimes in case a silicon gets them somehow.
 			return COMPONENT_INCOMPATIBLE
 
 		start_time = world.time
@@ -108,7 +108,7 @@
 		adjust_nanites(amount = amount) //just add to the nanite volume
 
 /datum/component/nanites/process(delta_time)
-	if(!IS_IN_STASIS(host_mob))
+	if(!HAS_TRAIT(host_mob, TRAIT_STASIS))
 		adjust_nanites(amount = (regen_rate + (SSresearch.science_tech.researched_nodes["nanite_harmonic"] ? HARMONIC_REGEN_BOOST : 0)) * delta_time)
 		add_research()
 		for(var/datum/nanite_program/program as anything in programs)
@@ -256,7 +256,7 @@
 	nanite_percent = clamp(CEILING(nanite_percent, 10), 10, 100)
 	holder.icon_state = "nanites[nanite_percent]"
 
-/datum/component/nanites/proc/on_emp(datum/source, severity)
+/datum/component/nanites/proc/on_emp(datum/source, severity, protection)
 	SIGNAL_HANDLER
 
 	nanite_volume *= (rand(60, 90) * 0.01)		//Lose 10-40% of nanites
@@ -313,7 +313,7 @@
 /datum/component/nanites/proc/check_viable_biotype()
 	SIGNAL_HANDLER
 
-	if(!(host_mob.mob_biotypes & MOB_ORGANIC) && !(host_mob.mob_biotypes & MOB_UNDEAD) && !HAS_TRAIT(host_mob, TRAIT_NANITECOMPATIBLE))
+	if(!(host_mob.mob_biotypes & (MOB_ORGANIC|MOB_UNDEAD)) && !HAS_TRAIT(host_mob, TRAIT_NANITECOMPATIBLE))
 		qdel(src) //bodytype no longer sustains nanites
 
 /datum/component/nanites/proc/check_access(datum/source, obj/O)

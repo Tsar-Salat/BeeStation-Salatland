@@ -51,7 +51,7 @@
 	desc = "It just latches right in place!"
 	icon_state = "slime"
 	clothing_flags = SNUG_FIT
-	dynamic_hair_suffix = ""
+
 
 /obj/item/clothing/head/collectable/xenom
 	name = "collectable xenomorph helmet"
@@ -66,7 +66,6 @@
 	worn_icon = 'icons/mob/clothing/head/utility.dmi'
 	icon_state = "chef"
 	inhand_icon_state = "chef"
-	dynamic_hair_suffix = ""
 	dog_fashion = /datum/dog_fashion/head/chef
 
 /obj/item/clothing/head/collectable/paper
@@ -99,7 +98,7 @@
 	icon = 'icons/obj/clothing/head/hats.dmi'
 	worn_icon = 'icons/mob/clothing/head/hats.dmi'
 	icon_state = "policehelm"
-	dynamic_hair_suffix = ""
+
 
 	dog_fashion = /datum/dog_fashion/head/warden
 
@@ -150,7 +149,7 @@
 	icon_state = "kitty"
 	inhand_icon_state = null
 	clothing_flags = SNUG_FIT
-	dynamic_hair_suffix = ""
+
 	dog_fashion = /datum/dog_fashion/head/kitty
 
 /obj/item/clothing/head/collectable/rabbitears
@@ -159,7 +158,7 @@
 	icon_state = "bunny"
 	inhand_icon_state = null
 	clothing_flags = SNUG_FIT
-	dynamic_hair_suffix = ""
+
 	dog_fashion = /datum/dog_fashion/head/rabbit
 
 /obj/item/clothing/head/collectable/wizard
@@ -186,7 +185,7 @@
 	icon = 'icons/obj/clothing/head/hats.dmi'
 	worn_icon = 'icons/mob/clothing/head/hats.dmi'
 	icon_state = "hoscap"
-	dynamic_hair_suffix = ""
+
 
 /obj/item/clothing/head/collectable/HoP
 	name = "collectable HoP hat"

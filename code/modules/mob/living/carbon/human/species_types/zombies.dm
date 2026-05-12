@@ -2,14 +2,11 @@
 	// 1spooky
 	name = "High-Functioning Zombie"
 	id = SPECIES_ZOMBIE
-	sexes = 0
 	meat = /obj/item/food/meat/slab/human/mutant/zombie
 	mutanttongue = /obj/item/organ/tongue/zombie
-	species_traits = list(
-		NOZOMBIE,
-	)
 	inherent_traits = list(
 		// SHARED WITH ALL ZOMBIES
+		TRAIT_NO_ZOMBIFY,
 		TRAIT_EASYDISMEMBER,
 		TRAIT_FAKEDEATH,
 		TRAIT_FAST_CUFF_REMOVAL,
@@ -19,7 +16,7 @@
 		TRAIT_NOT_TRANSMORPHIC,
 		TRAIT_NODEATH,
 		TRAIT_NOHUNGER,
-		TRAIT_NOMETABOLISM,
+		TRAIT_LIVERLESS_METABOLISM,
 		TRAIT_NOSTASIS,
 		TRAIT_RADIMMUNE,
 		TRAIT_RESISTCOLD,
@@ -34,7 +31,7 @@
 	mutantheart = null
 	mutantliver = null
 	mutantlungs = null
-	inherent_biotypes = MOB_UNDEAD | MOB_HUMANOID
+	inherent_biotypes = MOB_UNDEAD|MOB_HUMANOID
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | MIRROR_MAGIC | ERT_SPAWN
 	bodytemp_normal = T0C // They have no natural body heat, the environment regulates body temp
 	bodytemp_heat_damage_limit = FIRE_MINIMUM_TEMPERATURE_TO_EXIST // Take damage at fire temp
@@ -76,7 +73,6 @@
 	name = "Infectious Zombie"
 	id = SPECIES_ZOMBIE_INFECTIOUS
 	examine_limb_id = SPECIES_ZOMBIE
-	speedmod = 1.6
 	damage_modifier = 20 // 120 damage to KO a zombie, which kills it
 	mutanteyes = /obj/item/organ/eyes/night_vision/zombie
 	var/muthands_path = /obj/item/mutant_hand/zombie
@@ -92,7 +88,7 @@
 		TRAIT_NOCLONELOSS,
 		TRAIT_NODEATH,
 		TRAIT_NOHUNGER,
-		TRAIT_NOMETABOLISM,
+		TRAIT_LIVERLESS_METABOLISM,
 		TRAIT_NOSTASIS,
 		TRAIT_RADIMMUNE,
 		TRAIT_RESISTCOLD,
@@ -113,10 +109,18 @@
 		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/zombie/infectious,
 	)
 
-/datum/species/zombie/infectious/on_species_gain(mob/living/carbon/human/new_zombie, datum/species/old_species, pref_load)
+/datum/species/zombie/infectious/on_species_gain(mob/living/carbon/human/new_zombie, datum/species/old_species, pref_load, regenerate_icons)
 	. = ..()
-
 	new_zombie.set_combat_mode(TRUE)
+
+	// Deal with the source of this zombie corruption
+	// Infection organ needs to be handled separately from mutant_organs
+	// because it persists through species transitions
+	var/obj/item/organ/zombie_infection/infection = new_zombie.get_organ_slot(ORGAN_SLOT_ZOMBIE)
+	if(isnull(infection))
+		infection = new()
+		infection.Insert(new_zombie)
+
 	new_zombie.AddComponent( \
 		/datum/component/mutant_hands, \
 		mutant_hand_path = muthands_path, \
@@ -129,20 +133,13 @@
 		tox_per_second = 0.5, \
 		oxy_per_second = 0.25, \
 		heals_wounds = TRUE, \
+		outline_colour = null, \
 	)
-	// Deal with the source of this zombie corruption
-	//  Infection organ needs to be handled separately from mutant_organs
-	//  because it persists through species transitions
-	var/obj/item/organ/zombie_infection/infection
-	infection = new_zombie.get_organ_slot(ORGAN_SLOT_ZOMBIE)
-	if(!infection)
-		infection = new()
-		infection.Insert(new_zombie)
 
-/datum/species/zombie/infectious/on_species_loss(mob/living/carbon/human/was_zombie, datum/species/new_species, pref_load)
+/datum/species/zombie/infectious/on_species_loss(mob/living/carbon/human/C, datum/species/new_species, pref_load)
 	. = ..()
-	qdel(was_zombie.GetComponent(/datum/component/mutant_hands))
-	qdel(was_zombie.GetComponent(/datum/component/regenerator))
+	qdel(C.GetComponent(/datum/component/mutant_hands))
+	qdel(C.GetComponent(/datum/component/regenerator))
 
 /datum/species/zombie/infectious/check_roundstart_eligible()
 	return FALSE
@@ -169,8 +166,7 @@
 	name = "\improper Infected Zombie"
 	id = "memezombiesfast"
 	damage_modifier = 0
-	speedmod = 0
-	inherent_biotypes = MOB_ORGANIC | MOB_UNDEAD |  MOB_HUMANOID //mob organic, so still susceptible to the disease that created it
+	inherent_biotypes = MOB_ORGANIC|MOB_UNDEAD|MOB_HUMANOID //mob organic, so still susceptible to the disease that created it
 	mutanteyes = /obj/item/organ/eyes/night_vision/zombie
 	muthands_path = /obj/item/mutant_hand/zombie/infectious
 
@@ -203,19 +199,19 @@
 		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/zombie
 	)
 
-/datum/species/human/krokodil_addict/replace_body(mob/living/carbon/C, datum/species/new_species)
+/datum/species/human/krokodil_addict/replace_body(mob/living/carbon/target, datum/species/new_species)
 	..()
 	var/skintone
-	if(ishuman(C))
-		var/mob/living/carbon/human/H = C
-		skintone = H.skin_tone
+	if(ishuman(target))
+		var/mob/living/carbon/human/human_target = target
+		skintone = human_target.skin_tone
 
-	for(var/obj/item/bodypart/BP as() in C.bodyparts)
-		if(IS_ORGANIC_LIMB(BP))
-			if(BP.body_zone == BODY_ZONE_HEAD || BP.body_zone == BODY_ZONE_CHEST)
-				BP.is_dimorphic = TRUE
-			BP.skin_tone ||= skintone
-			BP.limb_id = SPECIES_HUMAN
-			BP.should_draw_greyscale = TRUE
-			BP.name = "human [parse_zone(BP.body_zone)]"
-			BP.update_limb()
+	for(var/obj/item/bodypart/limb as anything in target.bodyparts)
+		if(IS_ORGANIC_LIMB(limb))
+			if(limb.body_zone == BODY_ZONE_HEAD || limb.body_zone == BODY_ZONE_CHEST)
+				limb.is_dimorphic = TRUE
+			limb.skin_tone ||= skintone
+			limb.limb_id = SPECIES_HUMAN
+			limb.should_draw_greyscale = TRUE
+			limb.name = "human [parse_zone(limb.body_zone)]"
+			limb.update_limb()

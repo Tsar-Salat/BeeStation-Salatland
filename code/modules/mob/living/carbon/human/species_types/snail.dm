@@ -2,15 +2,11 @@
 	name = "Snailperson"
 	plural_form = "Snailpeople"
 	id = SPECIES_SNAIL
-	offset_features = list(OFFSET_UNIFORM = list(0,0), OFFSET_ID = list(0,0), OFFSET_GLOVES = list(0,0), OFFSET_GLASSES = list(0,4), OFFSET_EARS = list(0,0), OFFSET_SHOES = list(0,0), OFFSET_S_STORE = list(0,0), OFFSET_FACEMASK = list(0,0), OFFSET_HEAD = list(0,0), OFFSET_FACE = list(0,0), OFFSET_BELT = list(0,0), OFFSET_BACK = list(0,0), OFFSET_SUIT = list(0,0), OFFSET_NECK = list(0,0))
-	species_traits = list(
-		MUTCOLORS,
-		NO_UNDERWEAR
+	inherent_traits = list(
+		TRAIT_MUTANT_COLORS,
+		TRAIT_NO_UNDERWEAR,
 	)
-	attack_verb = "slap"
 	coldmod = 0.5 //snails only come out when its cold and wet
-	speedmod = 2
-	punchdamage = 3
 	siemens_coeff = 2 //snails are mostly water
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | MIRROR_MAGIC | RACE_SWAP | ERT_SPAWN | SLIME_EXTRACT
 	sexes = FALSE //snails are hermaphrodites
@@ -37,13 +33,13 @@
 		return TRUE
 	return ..()
 
-/datum/species/snail/on_species_gain(mob/living/carbon/C, datum/species/old_species, pref_load)
+/datum/species/snail/on_species_gain(mob/living/carbon/new_snailperson, datum/species/old_species, pref_load, regenerate_icons)
 	. = ..()
-	var/obj/item/storage/backpack/bag = C.get_item_by_slot(ITEM_SLOT_BACK)
+	var/obj/item/storage/backpack/bag = new_snailperson.get_item_by_slot(ITEM_SLOT_BACK)
 	if(!istype(bag, /obj/item/storage/backpack/snail))
-		if(C.dropItemToGround(bag)) //returns TRUE even if its null
-			C.equip_to_slot_or_del(new /obj/item/storage/backpack/snail(C), ITEM_SLOT_BACK)
-	ADD_TRAIT(C, TRAIT_NOSLIPALL, SPECIES_TRAIT)
+		if(new_snailperson.dropItemToGround(bag)) //returns TRUE even if its null
+			new_snailperson.equip_to_slot_or_del(new /obj/item/storage/backpack/snail(new_snailperson), ITEM_SLOT_BACK)
+	ADD_TRAIT(new_snailperson, TRAIT_NOSLIPALL, SPECIES_TRAIT)
 
 /datum/species/snail/on_species_loss(mob/living/carbon/C)
 	. = ..()

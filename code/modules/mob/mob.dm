@@ -1,29 +1,29 @@
 /**
-  * Delete a mob
-  *
-  * Removes mob from the following global lists
-  * * GLOB.mob_list
-  * * GLOB.dead_mob_list
-  * * GLOB.alive_mob_list
-  * * GLOB.all_clockwork_mobs
-  * * GLOB.mob_directory
-  *
-  * Unsets the focus var
-  *
-  * Clears alerts for this mob
-  *
-  * Resets all the observers perspectives to the tile this mob is on
-  *
-  * qdels any client colours in place on this mob
-  *
-  * Clears any refs to the mob inside its current location
-  *
-  * Ghostizes the client attached to this mob
-  *
-  * If our mind still exists, clear its current var to prevent harddels
-  *
-  * Parent call
-  */
+ * Delete a mob
+ *
+ * Removes mob from the following global lists
+ * * GLOB.mob_list
+ * * GLOB.dead_mob_list
+ * * GLOB.alive_mob_list
+ * * GLOB.all_clockwork_mobs
+ * * GLOB.mob_directory
+ *
+ * Unsets the focus var
+ *
+ * Clears alerts for this mob
+ *
+ * Resets all the observers perspectives to the tile this mob is on
+ *
+ * qdels any client colours in place on this mob
+ *
+ * Clears any refs to the mob inside its current location
+ *
+ * Ghostizes the client attached to this mob
+ *
+ * If our mind still exists, clear its current var to prevent harddels
+ *
+ * Parent call
+ */
 /mob/Destroy()//This makes sure that mobs with clients/keys are not just deleted from the game.
 	remove_from_mob_list()
 	remove_from_dead_mob_list()
@@ -32,19 +32,19 @@
 	remove_from_disconnected_mob_list()
 
 	focus = null
+	if(length(current_mob_eye?.eye_mobs))
+		LAZYREMOVE(current_mob_eye.eye_mobs, src)
+	current_mob_eye = null
 	if(length(progressbars))
 		stack_trace("[src] destroyed with elements in its progressbars list")
 		progressbars = null
 	for (var/alert in alerts)
 		clear_alert(alert, TRUE)
-	if(observers?.len)
-		for(var/mob/dead/observe as anything in observers)
-			observe.reset_perspective(null)
+	for(var/mob/dead/observe as anything in observers)
+		observe.set_mob_eye_to(MOB_EYE_SELF)
 	qdel(hud_used)
-	for(var/cc in client_colours)
-		qdel(cc)
-	client_colours = null
-	ghostize()
+	QDEL_LIST(client_colours)
+	ghostize(can_reenter_corpse = FALSE)
 	if(mind?.current == src) //Let's just be safe yeah? This will occasionally be cleared, but not always. Can't do it with ghostize without changing behavior
 		mind.set_current(null)
 	return ..()
@@ -445,7 +445,7 @@
   * unset redraw_mob to prevent the mob icons from being redrawn at the end.
   */
 /mob/proc/equip_to_slot_if_possible(obj/item/W, slot, qdel_on_fail = FALSE, disable_warning = FALSE, redraw_mob = TRUE, bypass_equip_delay_self = FALSE, initial = FALSE)
-	if(!istype(W))
+	if(!istype(W) || QDELETED(W)) //This qdeleted is to prevent stupid behavior with things that qdel during init, like say stacks
 		return FALSE
 	if(!W.mob_can_equip(src, slot, disable_warning, bypass_equip_delay_self))
 		if(qdel_on_fail)
@@ -464,7 +464,7 @@
   *
   *In most cases you will want to use equip_to_slot_if_possible()
   */
-/mob/proc/equip_to_slot(obj/item/W, slot)
+/mob/proc/equip_to_slot(obj/item/equipping, slot, initial = FALSE)
 	return
 
 /**
@@ -533,51 +533,72 @@
 	storage.atom_storage.attempt_insert(item_to_equip)
 	return storage
 
-/**
- * Reset the attached clients perspective (viewpoint)
- *
- * reset_perspective(null) set eye to common default : mob on turf, loc otherwise
- * reset_perspective(thing) set the eye to the thing (if it's equal to current default reset to mob perspective)
- */
-/mob/proc/reset_perspective(atom/new_eye)
-	SHOULD_CALL_PARENT(TRUE)
-	/*
-	*In the future, this signal may need to be moved to the end of the proc, after the eye has been given a chance to fully updated.
-	*No issues atm, but if one occurs, try that solution first
-	*/
-	SEND_SIGNAL(src, COMSIG_MOB_RESET_PERSPECTIVE)
-	if(!client)
+/// Sets a mob eye to "new_eye" in mob wise. This will remember how a mob's eye was changed even if they are clientless.
+/mob/proc/set_mob_eye_to(atom/new_eye)
+	// somewhat tricky. If no client ever used this mob as their eye, this proc is not necessary.
+	// This is necessary because we don't want N number of mobs having 'eye_mobs = list(src)'. not necessary.
+	if(new_eye == MOB_EYE_SELF && isnull(current_mob_eye) && isnull(computer_id)) // "var/lastKnownIP" doesn't work for debug environment
 		return
+	// "new_eye == MOB_EYE_SELF" means what they have their eye as themselves. This is not necessary for clientless mob
+	// This rule is broken when "new_eye" is different. i.e.) Closet.
+	// Once this condition is broken, "current_mob_eye" will be no longer null.
+	// For "isnull(computer_id)", it's just an easy way to identify if a mob is clientless.
 
-	if(new_eye)
-		if(ismovable(new_eye))
-			//Set the new eye unless it's us
-			if(new_eye != src)
-				client.perspective = EYE_PERSPECTIVE
-				client.set_eye(new_eye)
-			else
-				client.set_eye(client.mob)
-				client.perspective = MOB_PERSPECTIVE
+	// Checks if a client uses incorrect perspective system.
+	if(client && client.perspective != EYE_PERSPECTIVE)
+		stack_trace("something changed client's eye perspective. Current: [client.perspective]")
+		client.perspective = EYE_PERSPECTIVE
 
-		else if(isturf(new_eye))
-			//Set to the turf unless it's our current turf
-			if(new_eye != loc)
-				client.perspective = EYE_PERSPECTIVE
-				client.set_eye(new_eye)
-			else
-				client.set_eye(client.mob)
-				client.perspective = MOB_PERSPECTIVE
-		else
-			return TRUE //no setting eye to stupid things like areas or whatever
-	else
-		//Reset to common defaults: mob if on turf, otherwise current loc
-		if(isturf(loc))
-			client.set_eye(client.mob)
-			client.perspective = MOB_PERSPECTIVE
-		else
-			client.perspective = EYE_PERSPECTIVE
-			client.set_eye(loc)
+	// This part checks what is your true eye through 'get_my_eye()'
+	// This is the reason why we use MOB_EYE_SELF, instead of doing 'set_mob_eye_to(src)'.
+	if(new_eye == src) // do not use when 'mob == src'
+		stack_trace("The proc received 'new_eye' as src (or it might be 'USER.set_mob_eye_to(USER)'). If you wanted to make a mob's eye to themselves, you need to do 'set_mob_eye_to(MOB_EYE_SELF)'")
+		new_eye = get_my_eye()
+	else if(isnull(new_eye))
+		stack_trace("The proc received 'new_eye' as null value. If you wanted to make a mob's eye to themselves, you need to do 'set_mob_eye_to(MOB_EYE_SELF)'")
+		new_eye = get_my_eye()
+	else if(new_eye == MOB_EYE_SELF)
+		new_eye = get_my_eye()
+	if(new_eye == current_mob_eye)
+		return // no need to do this
+
+	// Changes (atom/new_eye) argument value.
+	#define _new_eye_arg 1 // first arg. Unfortunately, there's no way to use arg name.
+	revise_proc_arg_value(_new_eye_arg, new_eye)
+	#undef _new_eye_arg
+
+	var/atom/old_eye = current_mob_eye
+
+	// Calls internal proc to finalize the eye change.
+	_on_setting_mob_eye(new_eye, old_eye)
+
+	// Sends the signal after completion of the eye change.
+	SEND_SIGNAL(src, COMSIG_MOB_SET_MOB_EYE, new_eye, old_eye)
+	// SEND_SIGNAL(src, COMSIG_MOB_RESET_PERSPECTIVE, new_eye, old_eye)
+	// ^DO NOT USE^ : This exists to warn people that they shouldn't use this. Instead, use COMSIG_MOB_SET_MOB_EYE
+
 	return TRUE
+
+/// internal usage only proc
+/mob/proc/_on_setting_mob_eye(atom/new_eye, atom/old_eye)
+	SHOULD_NOT_OVERRIDE(TRUE)
+	PROTECTED_PROC(TRUE)
+
+	if(isatom(old_eye)) // admeme vv failproof. /datum can't be their eyes
+		LAZYREMOVE(old_eye.eye_mobs, src)
+
+	current_mob_eye = new_eye
+	// If client exists, we manage the eye change at the client end as well.
+	if(client)
+		client.set_client_eye_to(current_mob_eye)
+
+	if(isatom(new_eye))
+		LAZYADD(new_eye.eye_mobs, src)
+
+// In certain situations, you should not use "src" to get your mob's eye.
+// For example, Dullahan would see the things from their head(/obj/item/item/bodypart/head) rather than their body(src as /mob)
+/mob/proc/get_my_eye()
+	return src
 
 /**
   * Examine a mob
@@ -981,7 +1002,7 @@
 /mob/verb/cancel_camera()
 	set name = "Cancel Camera View"
 	set category = "OOC"
-	reset_perspective(null)
+	set_mob_eye_to(MOB_EYE_SELF)
 	unset_machine()
 
 //suppress the .click/dblclick macros so people can't use them to identify the location of items or aimbot
@@ -1069,11 +1090,23 @@
 	if(.)
 		client.last_turn = world.time + MOB_FACE_DIRECTION_DELAY
 
-/mob/proc/swap_hand()
+/mob/proc/swap_hand(held_index)
+	SHOULD_NOT_OVERRIDE(TRUE) // Override perform_hand_swap instead
+
 	var/obj/item/held_item = get_active_held_item()
-	if(SEND_SIGNAL(src, COMSIG_MOB_SWAP_HANDS, held_item) & COMPONENT_BLOCK_SWAP)
+	if(SEND_SIGNAL(src, COMSIG_MOB_SWAPPING_HANDS, held_item) & COMPONENT_BLOCK_SWAP)
 		to_chat(src, span_warning("Your other hand is too busy holding [held_item]."))
 		return FALSE
+
+	var/result = perform_hand_swap(held_index)
+	if (result)
+		SEND_SIGNAL(src, COMSIG_MOB_SWAP_HANDS)
+
+	return result
+
+/// Performs the actual ritual of swapping hands, such as setting the held index variables
+/mob/proc/perform_hand_swap(held_index)
+	PROTECTED_PROC(TRUE)
 	return TRUE
 
 /mob/proc/activate_hand(selhand)
@@ -1502,6 +1535,7 @@ GLOBAL_LIST_INIT(mouse_cooldowns, list(
 	VV_DROPDOWN_OPTION(VV_HK_GODMODE, "Toggle Godmode")
 	VV_DROPDOWN_OPTION(VV_HK_DROP_ALL, "Drop Everything")
 	VV_DROPDOWN_OPTION(VV_HK_REGEN_ICONS, "Regenerate Icons")
+	VV_DROPDOWN_OPTION(VV_HK_REGEN_ICONS_FULL, "Regenerate Icons & Clear Stuck Overlays")
 	VV_DROPDOWN_OPTION(VV_HK_PLAYER_PANEL, "Show player panel")
 	VV_DROPDOWN_OPTION(VV_HK_BUILDMODE, "Toggle Buildmode")
 	VV_DROPDOWN_OPTION(VV_HK_DIRECT_CONTROL, "Assume Direct Control")
@@ -1511,6 +1545,12 @@ GLOBAL_LIST_INIT(mouse_cooldowns, list(
 /mob/vv_do_topic(list/href_list)
 	. = ..()
 	if(href_list[VV_HK_REGEN_ICONS] && check_rights(R_ADMIN))
+		regenerate_icons()
+
+	if(href_list[VV_HK_REGEN_ICONS_FULL])
+		if(!check_rights(NONE))
+			return
+		cut_overlays()
 		regenerate_icons()
 
 	if(href_list[VV_HK_PLAYER_PANEL] && check_rights(R_ADMIN))
@@ -1575,19 +1615,24 @@ GLOBAL_LIST_INIT(mouse_cooldowns, list(
 /mob/proc/set_nutrition(change) //Seriously fuck you oldcoders.
 	nutrition = max(0, change)
 
+///Apply a proper movespeed modifier based on items we have equipped
 /mob/proc/update_equipment_speed_mods()
-	var/speedies = equipped_speed_mods()
+	var/speedies = 0
+	for(var/obj/item/thing in get_equipped_speed_mod_items())
+		if(thing?.item_flags & NO_WORN_SLOWDOWN)
+			continue
+		speedies += thing.slowdown
 	if(!speedies)
 		remove_movespeed_modifier(/datum/movespeed_modifier/equipment_speedmod)
 	else
 		add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/equipment_speedmod, multiplicative_slowdown = speedies)
 
-/// Gets the combined speed modification of all worn items
-/// Except base mob type doesnt really wear items
-/mob/proc/equipped_speed_mods()
-	for(var/obj/item/I in held_items)
-		if(I.item_flags & SLOWS_WHILE_IN_HAND)
-			. += I.slowdown
+///Get all items in our possession that should affect our movespeed
+/mob/proc/get_equipped_speed_mod_items()
+	. = list()
+	for(var/obj/item/thing in held_items)
+		if(thing.item_flags & SLOWS_WHILE_IN_HAND)
+			. += thing
 
 // Returns TRUE if the hearer should hear radio noises
 /mob/proc/hears_radio()

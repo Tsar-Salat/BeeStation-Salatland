@@ -43,8 +43,10 @@
 	#define MOVE_ARG_DIRECTION 2
 /// From base of /client/Move()
 #define COMSIG_MOB_CLIENT_MOVED "mob_client_moved"
-/// From base of /mob/proc/reset_perspective() : ()
-#define COMSIG_MOB_RESET_PERSPECTIVE "mob_reset_perspective"
+/// From base of /mob/proc/set_mob_eye_to() : (atom/new_eye, atom/old_eye)
+#define COMSIG_MOB_SET_MOB_EYE "mob_set_mob_eye_to"
+/// This is a failsafe macro to warn someone when they port things incorrectly.
+#define COMSIG_MOB_RESET_PERSPECTIVE __do_not_use_COMSIG_MOB_RESET_PERSPECTIVE___use_COMSIG_MOB_SET_MOB_EYE()
 ///from base of obj/allowed(mob/M): (/obj) returns ACCESS_ALLOWED if mob has id access to the obj
 #define COMSIG_MOB_TRIED_ACCESS "tried_access"
 	#define ACCESS_ALLOWED (1<<0)
@@ -78,6 +80,7 @@
 #define COMSIG_MOB_ATTACK_HAND_TURF "mob_attack_hand_turf"		//! from base of turf/attack_hand
 #define COMSIG_MOB_HAND_ATTACKED "mob_hand_attacked"			//! from base of
 #define COMSIG_MOB_DROPPED_ITEM "mob_dropped_item"				//! from base of /item/dropped(): (/mob/user, /obj/item, loc)
+
 #define COMSIG_MOB_THROW "mob_throw"							//! from base of /mob/throw_item(): (atom/target)
 #define COMSIG_MOB_UPDATE_SIGHT "mob_update_sight"				//! from base of /mob/update_sight(): ()
 ///from base of /mob/verb/examinate(): (atom/target, list/examine_strings)
@@ -114,9 +117,14 @@
 /// Sent from /proc/do_after once a do_after action completes, whether via the bar filling or via interruption.
 #define COMSIG_DO_AFTER_ENDED "mob_do_after_ended"
 
-#define COMSIG_MOB_EMOTE "mob_emote" // from /mob/living/emote(): ()
-#define COMSIG_MOB_SWAP_HANDS "mob_swap_hands"        //from base of mob/swap_hand()
-	#define COMPONENT_BLOCK_SWAP 1
+///from /mob/living/emote(): ()
+#define COMSIG_MOB_EMOTE "mob_emote"
+///from base of mob/swap_hand(): (obj/item/currently_held_item)
+#define COMSIG_MOB_SWAPPING_HANDS "mob_swapping_hands"
+	#define COMPONENT_BLOCK_SWAP (1<<0)
+/// from base of mob/swap_hand(): ()
+/// Performed after the hands are swapped.
+#define COMSIG_MOB_SWAP_HANDS "mob_swap_hands"
 #define COMSIG_MOB_DEADSAY "mob_deadsay" // from /mob/say_dead(): (mob/speaker, message)
 	#define MOB_DEADSAY_SIGNAL_INTERCEPT 1
 #define COMSIG_MOB_POINTED "mob_pointed" //from base of /mob/verb/pointed: (atom/A)
@@ -152,6 +160,11 @@
 
 /// from /mob/update_incapacitated: (old_incap, new_incap)
 #define COMSIG_MOB_INCAPACITATE_CHANGED "mob_incapacitated"
+/// From /obj/item/proc/pickup(): (/obj/item/picked_up_item)
+#define COMSIG_LIVING_PICKED_UP_ITEM "living_picked_up_item"
+
+/// from mob/proc/dropItemToGround()
+#define COMSIG_MOB_DROPPING_ITEM "mob_dropping_item"
 
 /// Signal sent when a blackboard key is set to a new value
 #define COMSIG_AI_BLACKBOARD_KEY_SET(blackboard_key) "ai_blackboard_key_set_[blackboard_key]"
@@ -161,3 +174,6 @@
 
 /// Signal sent when a blackboard key is cleared
 #define COMSIG_AI_BLACKBOARD_KEY_CLEARED(blackboard_key) "ai_blackboard_key_clear_[blackboard_key]"
+
+///Fired in combat_indicator.dm, used for syncing CI between mech and pilot
+#define COMSIG_MOB_CI_TOGGLED "mob_ci_toggled"

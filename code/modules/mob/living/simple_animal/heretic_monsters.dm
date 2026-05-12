@@ -271,7 +271,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/hostile/heretic_summon/a
 	AttackingTarget()
 
 /mob/living/simple_animal/hostile/heretic_summon/armsy/AttackingTarget()
-	if(istype(target, /obj/item/bodypart/arm/right) || istype(target, /obj/item/bodypart/arm/left))
+	if(istype(target, /obj/item/bodypart/arm))
 		playsound(src, 'sound/magic/demon_consume.ogg', 50, TRUE)
 		qdel(target)
 		heal()
@@ -339,7 +339,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/hostile/heretic_summon/a
 	else if(newdir == SOUTH)
 		icon_state = "rust_walker_s"
 
-/mob/living/simple_animal/hostile/heretic_summon/rust_spirit/Moved()
+/mob/living/simple_animal/hostile/heretic_summon/rust_spirit/Moved(atom/old_loc, movement_dir, forced, list/old_locs, momentum_change = TRUE)
 	. = ..()
 	playsound(src, 'sound/effects/footstep/rustystep1.ogg', 100, TRUE)
 

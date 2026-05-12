@@ -41,7 +41,7 @@ put up a rune with bluespace effects, lots of those runes are fluff or act as a 
 	)
 	AddElement(/datum/element/connect_loc, loc_connections)
 
-/obj/effect/warped_rune/Moved(atom/OldLoc, Dir)
+/obj/effect/warped_rune/Moved(atom/old_loc, movement_dir, forced, list/old_locs, momentum_change = TRUE)
 	. = ..()
 	rune_turf = get_turf(src)
 
@@ -537,7 +537,7 @@ GLOBAL_DATUM(blue_storage, /obj/item/storage/backpack/holding/bluespace)
 
 /obj/effect/warped_rune/greenspace/on_entered(datum/source, atom/movable/AM, oldloc)
 	if(ishuman(AM))
-		randomize_human(AM, TRUE)
+		randomize_human_normie(AM)
 		activated_on_step = TRUE
 	. = ..()
 

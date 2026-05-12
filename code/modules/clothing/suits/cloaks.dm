@@ -224,7 +224,7 @@
 	icon = 'icons/obj/cult.dmi'
 	icon_state = "fakehalo"
 
-/obj/item/clothing/neck/cloak/fakehalo/mob_can_equip(mob/living/M, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE, ignore_equipped = FALSE)
+/obj/item/clothing/neck/cloak/fakehalo/mob_can_equip(mob/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE, ignore_equipped)
 	if(iscarbon(M))
 		var/mob/living/carbon/carbon_wearer = M
 		if(carbon_wearer.overlays_standing[HALO_LAYER])
@@ -239,7 +239,7 @@
 			if(carbon_user.overlays_standing[HALO_LAYER])
 				to_chat(carbon_user, span_warning("You already have a halo!"))
 				return
-			carbon_user.overlays_standing[HALO_LAYER] = mutable_appearance('icons/effects/32x64.dmi', "halo_static", CALCULATE_MOB_OVERLAY_LAYER(HALO_LAYER))
+			carbon_user.overlays_standing[HALO_LAYER] = mutable_appearance('icons/mob/effects/halo.dmi', "halo_static", CALCULATE_MOB_OVERLAY_LAYER(HALO_LAYER))
 			carbon_user.apply_overlay(HALO_LAYER)
 	return ..()
 

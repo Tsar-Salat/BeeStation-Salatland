@@ -344,7 +344,7 @@
 	listeningTo = user
 	check_range()
 
-/obj/item/shockpaddles/Moved()
+/obj/item/shockpaddles/Moved(atom/old_loc, movement_dir, forced, list/old_locs, momentum_change = TRUE)
 	. = ..()
 	if(!istype(loc, /mob/living))
 		check_range()
@@ -382,6 +382,7 @@
 
 /obj/item/shockpaddles/Initialize(mapload)
 	. = ..()
+	AddElement(/datum/element/update_icon_updates_onmob, ITEM_SLOT_BACK)
 	ADD_TRAIT(src, TRAIT_NO_STORAGE_INSERT, GENERIC_ITEM_TRAIT) //stops shockpaddles from being inserted in BoH
 
 	// Defib-specific initialization

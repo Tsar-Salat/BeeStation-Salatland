@@ -415,9 +415,8 @@ world
 	var/render_icon = curicon
 
 	if (render_icon)
-		var/curstates = icon_states(curicon)
-		if(!(curstate in curstates))
-			if ("" in curstates)
+		if(!icon_exists(curicon, curstate))
+			if(icon_exists(curicon, ""))
 				curstate = ""
 			else
 				render_icon = FALSE
@@ -1139,6 +1138,21 @@ GLOBAL_LIST_EMPTY(friendly_animal_types)
 		for(var/istate in icon_states(file))
 			GLOB.icon_states_cache[file] += istate
 			GLOB.icon_states_cache_lookup[file][istate] = TRUE
+
+/// Functions the same as `/proc/icon_exists()`, but with the addition of a stack trace if the
+/// specified file or state doesn't exist.
+///
+/// Stack traces will only be output once for each file.
+/proc/icon_exists_or_scream(file, state)
+	if(icon_exists(file, state))
+		return TRUE
+
+	var/static/list/screams = list()
+	if(!isnull(screams[file]))
+		screams[file] = TRUE
+		stack_trace("State [state] in file [file] does not exist.")
+
+	return FALSE
 
 /**
  * Center's an image.

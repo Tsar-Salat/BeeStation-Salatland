@@ -26,9 +26,11 @@
 		GSATCHEL,
 		LSATCHEL,
 		GDUFFELBAG,
+		GMESSENGER,
 		DBACKPACK,
 		DSATCHEL,
 		DDUFFELBAG,
+		DMESSENGER,
 	)
 
 /datum/preference/choiced/backpack/create_default_value()
@@ -44,6 +46,8 @@
 			return /obj/item/storage/backpack/satchel/leather
 		if (GDUFFELBAG)
 			return /obj/item/storage/backpack/duffelbag
+		if (GMESSENGER)
+			return /obj/item/storage/backpack/messenger
 
 		// In a perfect world, these would be your department's backpack.
 		// However, this doesn't factor in assistants, or no high slot, and would
@@ -55,14 +59,17 @@
 			return /obj/item/storage/backpack/satchel/med
 		if (DDUFFELBAG)
 			return /obj/item/storage/backpack/duffelbag/med
+		if (DMESSENGER)
+			return /obj/item/storage/backpack/messenger/med
 
 /datum/preference/choiced/backpack/apply_to_human(mob/living/carbon/human/target, value)
-	target.backbag = value
+	target.backpack = value
 
 /// Jumpsuit preference
 /datum/preference/choiced/jumpsuit_style
 	db_key = "jumpsuit_style"
 	preference_type = PREFERENCE_CHARACTER
+	priority = PREFERENCE_PRIORITY_BODY_TYPE
 	main_feature_name = "Jumpsuit"
 	category = PREFERENCE_CATEGORY_CLOTHING
 	should_generate_icons = TRUE
@@ -85,6 +92,9 @@
 /datum/preference/choiced/jumpsuit_style/apply_to_human(mob/living/carbon/human/target, value)
 	target.jumpsuit_style = value
 
+/datum/preference/choiced/jumpsuit_style/create_default_value()
+	return PREF_SUIT
+
 /datum/preference/choiced/jumpsuit_style/create_informed_default_value(datum/preferences/preferences)
 	var/gender = preferences.read_character_preference(/datum/preference/choiced/gender)
 	if (gender == MALE)
@@ -99,11 +109,10 @@
 	category = PREFERENCE_CATEGORY_CLOTHING
 	should_generate_icons = TRUE
 	preference_spritesheet = PREFERENCE_SHEET_LARGE
-	informed = TRUE
-	priority = PREFERENCE_PRIORITY_SOCKS
+	can_randomize = FALSE
 
 /datum/preference/choiced/socks/init_possible_values()
-	return assoc_to_keys_features(GLOB.socks_list)
+	return assoc_to_keys_features(SSaccessories.socks_list)
 
 /datum/preference/choiced/socks/icon_for(value)
 	var/static/datum/universal_icon/lower_half
@@ -114,14 +123,13 @@
 		lower_half.blend_icon(uni_icon('icons/mob/human/bodyparts_greyscale.dmi', "human_r_leg"), ICON_OVERLAY)
 		lower_half.blend_icon(uni_icon('icons/mob/human/bodyparts_greyscale.dmi', "human_l_leg"), ICON_OVERLAY)
 
-	return generate_underwear_icon(GLOB.socks_list[value], lower_half)
+	return generate_underwear_icon(SSaccessories.socks_list[value], lower_half)
+
+/datum/preference/choiced/socks/create_default_value()
+	return /datum/sprite_accessory/socks/nude::name
 
 /datum/preference/choiced/socks/apply_to_human(mob/living/carbon/human/target, value)
 	target.socks = value
-
-/datum/preference/choiced/socks/create_informed_default_value(datum/preferences/preferences)
-	var/gender = preferences.read_character_preference(/datum/preference/choiced/gender)
-	return random_socks(gender)
 
 /// Undershirt preference
 /datum/preference/choiced/undershirt
@@ -131,11 +139,10 @@
 	category = PREFERENCE_CATEGORY_CLOTHING
 	should_generate_icons = TRUE
 	preference_spritesheet = PREFERENCE_SHEET_LARGE
-	informed = TRUE
-	priority = PREFERENCE_PRIORITY_UNDERSHIRT
+	can_randomize = FALSE
 
 /datum/preference/choiced/undershirt/init_possible_values()
-	return assoc_to_keys_features(GLOB.undershirt_list)
+	return assoc_to_keys_features(SSaccessories.undershirt_list)
 
 /datum/preference/choiced/undershirt/icon_for(value)
 	var/static/datum/universal_icon/body
@@ -151,7 +158,7 @@
 	var/datum/universal_icon/icon_with_undershirt = body.copy()
 
 	if (value != "Nude")
-		var/datum/sprite_accessory/accessory = GLOB.undershirt_list[value]
+		var/datum/sprite_accessory/accessory = SSaccessories.undershirt_list[value]
 		icon_with_undershirt.blend_icon(uni_icon('icons/mob/clothing/underwear.dmi', accessory.icon_state), ICON_OVERLAY)
 
 	icon_with_undershirt.crop(9, 9, 23, 23)
@@ -161,23 +168,33 @@
 /datum/preference/choiced/undershirt/apply_to_human(mob/living/carbon/human/target, value)
 	target.undershirt = value
 
+/datum/preference/choiced/undershirt/create_default_value()
+	return /datum/sprite_accessory/undershirt/nude::name
+
 /datum/preference/choiced/undershirt/create_informed_default_value(datum/preferences/preferences)
-	var/gender = preferences.read_character_preference(/datum/preference/choiced/gender)
-	return random_undershirt(gender)
+	switch(preferences.read_preference(/datum/preference/choiced/gender))
+		if(MALE)
+			return /datum/sprite_accessory/undershirt/nude::name
+		if(FEMALE)
+			return /datum/sprite_accessory/undershirt/sports_bra::name
+
+	return ..()
 
 /// Underwear preference
 /datum/preference/choiced/underwear
 	db_key = "underwear"
 	preference_type = PREFERENCE_CHARACTER
+	priority = PREFERENCE_PRIORITY_BODY_TYPE
 	main_feature_name = "Underwear"
 	category = PREFERENCE_CATEGORY_CLOTHING
 	should_generate_icons = TRUE
 	preference_spritesheet = PREFERENCE_SHEET_LARGE
-	informed = TRUE
-	priority = PREFERENCE_PRIORITY_UNDERWEAR
 
 /datum/preference/choiced/underwear/init_possible_values()
-	return assoc_to_keys_features(GLOB.underwear_list)
+	return assoc_to_keys_features(SSaccessories.underwear_list)
+
+/datum/preference/choiced/underwear/create_default_value()
+	return /datum/sprite_accessory/underwear/male_hearts::name
 
 /datum/preference/choiced/underwear/icon_for(value)
 	var/static/datum/universal_icon/lower_half
@@ -188,7 +205,7 @@
 		lower_half.blend_icon(uni_icon('icons/mob/human/bodyparts_greyscale.dmi', "human_r_leg"), ICON_OVERLAY)
 		lower_half.blend_icon(uni_icon('icons/mob/human/bodyparts_greyscale.dmi', "human_l_leg"), ICON_OVERLAY)
 
-	return generate_underwear_icon(GLOB.underwear_list[value], lower_half, COLOR_ALMOST_BLACK)
+	return generate_underwear_icon(SSaccessories.underwear_list[value], lower_half, COLOR_ALMOST_BLACK)
 
 /datum/preference/choiced/underwear/apply_to_human(mob/living/carbon/human/target, value)
 	target.underwear = value
@@ -199,7 +216,7 @@
 
 	var/species_type = preferences.read_character_preference(/datum/preference/choiced/species)
 	var/datum/species/species = GLOB.species_prototypes[species_type]
-	return !(NO_UNDERWEAR in species.species_traits)
+	return !(TRAIT_NO_UNDERWEAR in species.inherent_traits)
 
 /datum/preference/choiced/underwear/compile_constant_data()
 	var/list/data = ..()
@@ -207,7 +224,3 @@
 	data[SUPPLEMENTAL_FEATURE_KEY] = "underwear_color"
 
 	return data
-
-/datum/preference/choiced/underwear/create_informed_default_value(datum/preferences/preferences)
-	var/gender = preferences.read_character_preference(/datum/preference/choiced/gender)
-	return random_underwear(gender)

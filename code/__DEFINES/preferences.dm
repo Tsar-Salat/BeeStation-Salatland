@@ -60,17 +60,30 @@
 #define JP_MEDIUM 2
 #define JP_HIGH 3
 
-//Backpacks
-#define GBACKPACK "Grey Backpack"
-#define GSATCHEL "Grey Satchel"
-#define GDUFFELBAG "Grey Duffel Bag"
-#define LSATCHEL "Leather Satchel"
+// Types of backpack
+/// Backpack type: Department themed backpack
 #define DBACKPACK "Department Backpack"
-#define DSATCHEL "Department Satchel"
+/// Backpack type: Department themed duffelbag
 #define DDUFFELBAG "Department Duffel Bag"
+/// Backpack type: Department themed satchel
+#define DSATCHEL "Department Satchel"
+/// Backpack type: Department themed messenger bag
+#define DMESSENGER "Department Messenger Bag"
+/// Backpack type: Grey backpack
+#define GBACKPACK "Grey Backpack"
+/// Backpack type: Grey duffelbag
+#define GDUFFELBAG "Grey Duffel Bag"
+/// Backpack type: Grey satchel
+#define GSATCHEL "Grey Satchel"
+/// Backpack type: Grey messenger bag
+#define GMESSENGER "Grey Messenger Bag"
+/// Backpack type: Leather satchel
+#define LSATCHEL "Leather Satchel"
 
 //Suit/Skirt
+/// Preference: Jumpsuit
 #define PREF_SUIT "Jumpsuit"
+/// Preference: Jumpskirt
 #define PREF_SKIRT "Jumpskirt"
 
 //Uplink spawn loc
@@ -123,10 +136,6 @@ GLOBAL_LIST_INIT(helmet_styles, list(
 /// These are preferences that are supplementary for main features,
 /// such as hair color being affixed to hair.
 #define PREFERENCE_CATEGORY_SUPPLEMENTAL_FEATURES "supplemental_features"
-
-
-/// The key used for sprite accessories that should never actually be applied to the player.
-#define SPRITE_ACCESSORY_NONE "None"
 
 
 //randomized elements
@@ -212,46 +221,34 @@ GLOBAL_PROTECT(undatumized_preference_tags_character)
 /// The priority at which gender is determined, needed for proper randomization.
 #define PREFERENCE_PRIORITY_GENDER 3
 
-/// The priority at which body model is decided, applied after gender so we can
-/// make sure they're non-binary.
-#define PREFERENCE_PRIORITY_BODY_MODEL 4
+/// The priority at which body type is decided, applied after gender so we can
+/// support the "use gender" option.
+#define PREFERENCE_PRIORITY_BODY_TYPE 4
+
+/// Used for preferences that rely on body setup being finalized.
+#define PREFERENCE_PRIORITY_LATE_BODY_TYPE 5
 
 /// The priority at which eye color is applied, needed so IPCs get the right screen color.
-#define PREFERENCE_PRIORITY_EYE_COLOR 4
-
-/// The priority at which names are decided, needed for proper randomization.
-#define PREFERENCE_PRIORITY_NAMES 4
+#define PREFERENCE_PRIORITY_EYE_COLOR 6
 
 /// The priority at which hair color is applied, needed so IPCs get the right antenna color.
 /// Dependant on gender to create an informed value
-#define PREFERENCE_PRIORITY_HAIR_COLOR 4
-
-/// Dependant on gender to create an informed value
-#define PREFERENCE_PRIORITY_HAIR_STYLE 4
-
-/// Dependant on gender to create an informed value
-#define PREFERENCE_PRIORITY_FACIAL_HAIR 4
-
-/// Dependant on gender to create an informed value
-#define PREFERENCE_PRIORITY_SOCKS 4
-
-/// Dependant on gender to create an informed value
-#define PREFERENCE_PRIORITY_UNDERSHIRT 4
-
-/// Dependant on gender to create an informed value
-#define PREFERENCE_PRIORITY_UNDERWEAR 4
+#define PREFERENCE_PRIORITY_HAIR_COLOR 7
 
 /// Dependant on gender to create an informed value
 #define PREFERENCE_PRIORITY_JUMPSUIT 4
 
 /// Dependant on hair colour to create an informed value
-#define PREFERENCE_PRIORITY_FACIAL_COLOR 5
+#define PREFERENCE_PRIORITY_FACIAL_COLOR 8
 
 /// Dependant on hair colour and gender to create an informed value
-#define PREFERENCE_PRIORITY_GRADIENT_COLOR 5
+#define PREFERENCE_PRIORITY_GRADIENT_COLOR 9
+
+/// The priority at which names are decided, needed for proper randomization.
+#define PREFERENCE_PRIORITY_NAMES 10
 
 /// The maximum preference priority, keep this updated, but don't use it for `priority`.
-#define MAX_PREFERENCE_PRIORITY PREFERENCE_PRIORITY_GRADIENT_COLOR
+#define MAX_PREFERENCE_PRIORITY PREFERENCE_PRIORITY_NAMES
 
 /// For choiced preferences, this key will be used to set display names in constant data.
 #define CHOICED_PREFERENCE_DISPLAY_NAMES "display_names"
@@ -259,3 +256,6 @@ GLOBAL_PROTECT(undatumized_preference_tags_character)
 /// For main feature preferences, this key refers to a feature considered supplemental.
 /// For instance, hair color being supplemental to hair.
 #define SUPPLEMENTAL_FEATURE_KEY "supplemental_feature"
+
+/// The key used for sprite accessories that should never actually be applied to the player.
+#define SPRITE_ACCESSORY_NONE "None"

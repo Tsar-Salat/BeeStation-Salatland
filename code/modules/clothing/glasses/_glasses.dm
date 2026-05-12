@@ -23,6 +23,9 @@
 
 /obj/item/clothing/glasses/Initialize(mapload)
 	. = ..()
+	// Glasses with emissive states should not block emissives themselves
+	if(emissive_state)
+		blocks_emissive = EMISSIVE_BLOCK_NONE
 	update_appearance(UPDATE_OVERLAYS)
 
 /obj/item/clothing/glasses/suicide_act(mob/living/carbon/user)
@@ -40,15 +43,8 @@
 		. += emissive_appearance(icon, emissive_state, layer, 100)
 		ADD_LUM_SOURCE(src, LUM_SOURCE_MANAGED_OVERLAY)
 
-/obj/item/clothing/glasses/worn_overlays(mutable_appearance/standing, isinhands = FALSE, icon_file, item_layer, atom/origin)
-	. = ..()
-	// If we have an emissive state, add it to the worn icon too
-	if (!isinhands && emissive_state)
-		. += emissive_appearance(icon_file, emissive_state, item_layer, 100, filters = origin.filters)
-		ADD_LUM_SOURCE(origin, LUM_SOURCE_GLASSES)
-
 /obj/item/clothing/glasses/visor_toggling()
-	..()
+	. = ..()
 	alternate_worn_layer = up ? ABOVE_BODY_FRONT_HEAD_LAYER : null
 	if(visor_vars_to_toggle & VISOR_VISIONFLAGS)
 		vision_flags ^= initial(vision_flags)
@@ -57,9 +53,9 @@
 	if(visor_vars_to_toggle & VISOR_INVISVIEW)
 		invis_view ^= initial(invis_view)
 
-/obj/item/clothing/glasses/weldingvisortoggle(mob/user)
+/obj/item/clothing/glasses/adjust_visor(mob/living/user)
 	. = ..()
-	if(. && user)
+	if(. && !user.is_holding(src) && (visor_vars_to_toggle & (VISOR_VISIONFLAGS|VISOR_INVISVIEW)))
 		user.update_sight()
 
 //called when thermal glasses are emped.
@@ -357,7 +353,15 @@
 	glass_colour_type = /datum/client_colour/glass_colour/gray
 
 /obj/item/clothing/glasses/welding/attack_self(mob/user)
-	weldingvisortoggle(user)
+	adjust_visor(user)
+
+/obj/item/clothing/glasses/welding/update_icon_state()
+	. = ..()
+	icon_state = "[initial(icon_state)][up ? "up" : ""]"
+
+/obj/item/clothing/glasses/welding/up/Initialize(mapload)
+	. = ..()
+	visor_toggling()
 
 /obj/item/clothing/glasses/welding/ghostbuster
 	name = "optical ecto-scanner"
@@ -376,7 +380,7 @@
 	var/datum/component/team_monitor/worn/ghost_vision = AddComponent(/datum/component/team_monitor/worn, "ghost", 1)
 	ghost_vision.toggle_hud(TRUE, null)
 
-/obj/item/clothing/glasses/welding/ghostbuster/weldingvisortoggle()
+/obj/item/clothing/glasses/welding/ghostbuster/adjust_visor(mob/living/user)
 	if(next_use_time > world.time)
 		return
 	. = ..()
@@ -426,7 +430,7 @@
 
 /obj/item/clothing/glasses/blindfold/white/update_icon(updates=ALL, mob/living/carbon/human/user)
 	if(ishuman(user) && !colored_before)
-		add_atom_colour(user.eye_color, FIXED_COLOUR_PRIORITY)
+		add_atom_colour(user.eye_color_left, FIXED_COLOUR_PRIORITY)
 		colored_before = TRUE
 
 /obj/item/clothing/glasses/blindfold/white/worn_overlays(mutable_appearance/standing, isinhands = FALSE, icon_file, item_layer, atom/origin)
@@ -435,7 +439,7 @@
 		var/mob/living/carbon/human/H = loc
 		var/mutable_appearance/M = mutable_appearance('icons/mob/clothing/eyes.dmi', "blindfoldwhite", item_layer)
 		M.appearance_flags |= RESET_COLOR
-		M.color = H.eye_color
+		M.color = H.eye_color_left
 		. += M
 
 /obj/item/clothing/glasses/sunglasses/advanced/big
@@ -467,23 +471,7 @@
 	name = "chameleon thermals"
 	desc = "A pair of thermal optic goggles with an onboard chameleon generator."
 	flash_protect = FLASH_PROTECTION_SENSITIVE
-
-	var/datum/action/item_action/chameleon/change/chameleon_action
-
-/obj/item/clothing/glasses/thermal/syndi/Initialize(mapload)
-	. = ..()
-	chameleon_action = new(src)
-	chameleon_action.chameleon_type = /obj/item/clothing/glasses
-	chameleon_action.chameleon_name = "Glasses"
-	chameleon_action.chameleon_blacklist = typecacheof(/obj/item/clothing/glasses/changeling, only_root_path = TRUE)
-	chameleon_action.initialize_disguises()
-	add_item_action(chameleon_action)
-
-/obj/item/clothing/glasses/thermal/syndi/emp_act(severity)
-	. = ..()
-	if(. & EMP_PROTECT_SELF)
-		return
-	chameleon_action.emp_randomise()
+	actions_types = list(/datum/action/item_action/chameleon/change/glasses)
 
 /obj/item/clothing/glasses/thermal/monocle
 	name = "thermoncle"

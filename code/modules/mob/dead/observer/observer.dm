@@ -53,15 +53,15 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_SPIRIT)
 	var/ghost_orbit = GHOST_ORBIT_CIRCLE
 
 	//These variables store hair data if the ghost originates from a species with head and/or facial hair.
-	var/hair_style
+	var/hairstyle
 	var/hair_color
 	var/mutable_appearance/hair_overlay
-	var/facial_hair_style
+	var/facial_hairstyle
 	var/facial_hair_color
 	var/mutable_appearance/facial_hair_overlay
 
-	var/updatedir = 1						//Do we have to update our dir as the ghost moves around?
-	var/lastsetting = null	//Stores the last setting that ghost_others was set to, for a little more efficiency when we update ghost images. Null means no update is necessary
+	var/updatedir = 1 //Do we have to update our dir as the ghost moves around?
+	var/lastsetting = null //Stores the last setting that ghost_others was set to, for a little more efficiency when we update ghost images. Null means no update is necessary
 
 	//We store copies of the ghost display preferences locally so they can be referred to even if no client is connected.
 	//If there's a bug with changing your ghost settings, it's probably related to this.
@@ -112,11 +112,12 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_SPIRIT)
 
 		if(ishuman(body))
 			var/mob/living/carbon/human/body_human = body
-			if(HAIR in body_human.dna.species.species_traits)
-				hair_style = body_human.hair_style
+			var/datum/species/human_species = body_human.dna.species
+			if(human_species.check_head_flags(HEAD_HAIR))
+				hairstyle = body_human.hairstyle
 				hair_color = ghostify_color(body_human.hair_color)
-			if(FACEHAIR in body_human.dna.species.species_traits)
-				facial_hair_style = body_human.facial_hair_style
+			if(human_species.check_head_flags(HEAD_FACIAL_HAIR))
+				facial_hairstyle = body_human.facial_hairstyle
 				facial_hair_color = ghostify_color(body_human.facial_hair_color)
 
 	update_icon()
@@ -231,22 +232,21 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_SPIRIT)
 	if((ghost_accs == GHOST_ACCS_DIR || ghost_accs == GHOST_ACCS_FULL) && (icon_state in GLOB.ghost_forms_with_directions_list)) //if this icon has dirs AND the client wants to show them, we make sure we update the dir on movement
 		updatedir = 1
 	else
-		updatedir = 0	//stop updating the dir in case we want to show accessories with dirs on a ghost sprite without dirs
-		setDir(2 		)//reset the dir to its default so the sprites all properly align up
+		updatedir = 0 //stop updating the dir in case we want to show accessories with dirs on a ghost sprite without dirs
+		setDir(2) //reset the dir to its default so the sprites all properly align up
 
 	if(ghost_accs == GHOST_ACCS_FULL && (icon_state in GLOB.ghost_forms_with_accessories_list)) //check if this form supports accessories and if the client wants to show them
-		var/datum/sprite_accessory/S
-		if(facial_hair_style)
-			S = GLOB.facial_hair_styles_list[facial_hair_style]
-			if(S?.icon_state)
+		if(facial_hairstyle)
+			var/datum/sprite_accessory/S = SSaccessories.facial_hairstyles_list[facial_hairstyle]
+			if(S)
 				facial_hair_overlay = mutable_appearance(S.icon, "[S.icon_state]", CALCULATE_MOB_OVERLAY_LAYER(HAIR_LAYER))
 				if(facial_hair_color)
 					facial_hair_overlay.color = facial_hair_color
 				facial_hair_overlay.alpha = 200
 				add_overlay(facial_hair_overlay)
-		if(hair_style)
-			S = GLOB.hair_styles_list[hair_style]
-			if(S?.icon_state)
+		if(hairstyle)
+			var/datum/sprite_accessory/hair/S = SSaccessories.hairstyles_list[hairstyle]
+			if(S)
 				hair_overlay = mutable_appearance(S.icon, "[S.icon_state]", CALCULATE_MOB_OVERLAY_LAYER(HAIR_LAYER))
 				if(hair_color)
 					hair_overlay.color = hair_color
@@ -271,7 +271,7 @@ Transfer_mind is there to check if mob is being deleted/not going to have a body
 Works together with spawning an observer, noted above.
 */
 
-/mob/proc/ghostize(can_reenter_corpse = TRUE,sentience_retention = SENTIENCE_SKIP)
+/mob/proc/ghostize(can_reenter_corpse = TRUE, sentience_retention = SENTIENCE_SKIP)
 	if(key)
 		if(key[1] != "@") // Skip aghosts.
 			stop_sound_channel(CHANNEL_HEARTBEAT) //Stop heartbeat sounds because You Are A Ghost Now
@@ -361,6 +361,17 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	if(mind.current.key && mind.current.key[1] != "@")	//makes sure we don't accidentally kick any clients
 		to_chat(usr, span_warning("Another consciousness is in your body...It is resisting you."))
 		return
+	//--------------------------------------
+	// identical to the codes from 'observe()', but calling that proc makes a SpacemanDMM warning
+	if(observetarget) // stop observing.
+		to_chat(src, span_notice("You stopped observing [observetarget]"))
+		LAZYREMOVE(observetarget.observers, src)
+		observetarget = null
+		set_mob_eye_to(MOB_EYE_SELF)
+		if(hud_used)
+			client.screen = list()
+			hud_used.show_hud(hud_used.hud_version)
+	//--------------------------------------
 	client.view_size.resetToDefault(getScreenSize(src))//Let's reset so people can't become allseeing gods //For real this time
 	SStgui.on_transfer(src, mind.current) // Transfer NanoUIs.
 	mind.current.key = key
@@ -831,13 +842,12 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 	var/species_type = client.prefs.read_character_preference(/datum/preference/choiced/species)
 	var/datum/species/species = GLOB.species_prototypes[species_type]
-
-	if(HAIR in species.species_traits)
-		hair_style = client.prefs.read_character_preference(/datum/preference/choiced/hairstyle)
+	if(species.check_head_flags(HEAD_HAIR))
+		hairstyle = client.prefs.read_character_preference(/datum/preference/choiced/hairstyle)
 		hair_color = ghostify_color(client.prefs.read_character_preference(/datum/preference/color/hair_color))
 
-	if(FACEHAIR in species.species_traits)
-		facial_hair_style = client.prefs.read_character_preference(/datum/preference/choiced/facial_hairstyle)
+	if(species.check_head_flags(HEAD_FACIAL_HAIR))
+		facial_hairstyle = client.prefs.read_character_preference(/datum/preference/choiced/facial_hairstyle)
 		facial_hair_color = ghostify_color(client.prefs.read_character_preference(/datum/preference/color/facial_hair_color))
 
 	update_icon()
@@ -870,32 +880,36 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		if(NAMEOF(src, can_respawn))
 			create_mob_hud()
 
-/mob/dead/observer/reset_perspective(atom/new_eye)
-	if(client)
-		if(ismob(client.eye) && (client.eye != src))
-			var/mob/target = client.eye
-			observetarget = null
-			if(target.observers)
-				target.observers -= src
-				UNSETEMPTY(target.observers)
-	if(..())
+/mob/dead/observer/verb/cancel_camera_ghosts()
+	set name = "Cancel Camera View"
+	set category = "Ghost"
+
+	if(observetarget) // stop observing
+		to_chat(src, span_notice("You stopped observing [observetarget]"))
+		LAZYREMOVE(observetarget.observers, src)
+		observetarget = null
+		set_mob_eye_to(MOB_EYE_SELF)
 		if(hud_used)
 			client.screen = list()
 			hud_used.show_hud(hud_used.hud_version)
 
-/mob/dead/observer/verb/cancel_camera_ghosts()
-	set name = "Cancel Camera View"
-	set category = "Ghost"
-	reset_perspective(null)
 	remove_verb(/mob/dead/observer/verb/cancel_camera_ghosts)
 
 /mob/dead/observer/verb/observe()
 	set name = "Observe"
 	set category = "Ghost"
 
-	var/list/creatures = getpois()
+	if(observetarget) // stop observing
+		to_chat(src, span_notice("You stopped observing [observetarget]"))
+		LAZYREMOVE(observetarget.observers, src)
+		observetarget = null
+		set_mob_eye_to(MOB_EYE_SELF)
+		if(hud_used)
+			client.screen = list()
+			hud_used.show_hud(hud_used.hud_version)
+		return
 
-	reset_perspective(null)
+	var/list/creatures = getpois()
 
 	var/eye_name = null
 
@@ -906,15 +920,14 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 	var/mob/mob_eye = creatures[eye_name]
 	//Istype so we filter out points of interest that are not mobs
-	if(client && mob_eye && istype(mob_eye))
-		client.set_eye(mob_eye)
-		add_verb(/mob/dead/observer/verb/cancel_camera_ghosts)
-		if(mob_eye.hud_used)
+	if(client && mob_eye && ismob(mob_eye))
+		observetarget = mob_eye
+		LAZYOR(observetarget.observers, src)
+		set_mob_eye_to(observetarget)
+		to_chat(src, span_notice("You started observing [observetarget]"))
+		if(observetarget.hud_used)
 			client.screen = list()
-			LAZYINITLIST(mob_eye.observers)
-			mob_eye.observers |= src
-			mob_eye.hud_used.show_hud(mob_eye.hud_used.hud_version, src)
-			observetarget = mob_eye
+			observetarget.hud_used.show_hud(observetarget.hud_used.hud_version, src)
 
 /mob/dead/observer/verb/register_pai_candidate()
 	set category = "Ghost"

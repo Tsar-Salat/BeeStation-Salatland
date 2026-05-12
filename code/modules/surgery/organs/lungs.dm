@@ -3,11 +3,9 @@
 #define BREATH_PLASMA	/datum/breathing_class/plasma
 
 /obj/item/organ/lungs
-	var/failed = FALSE
-	var/operated = FALSE	//whether we can still have our damages fixed through surgery
 	name = "lungs"
 	icon_state = "lungs"
-	visual = FALSE
+
 	zone = BODY_ZONE_CHEST
 	slot = ORGAN_SLOT_LUNGS
 	gender = PLURAL
@@ -16,10 +14,14 @@
 	healing_factor = STANDARD_ORGAN_HEALING
 	decay_factor = STANDARD_ORGAN_DECAY
 
+	low_threshold_passed = span_warning("You feel short of breath.")
 	high_threshold_passed = span_warning("You feel some sort of constriction around your chest as your breathing becomes shallow and rapid.")
 	now_fixed = span_warning("Your lungs seem to once again be able to hold air.")
+	low_threshold_cleared = span_info("You can breathe normally again.")
 	high_threshold_cleared = span_info("The constriction around your chest loosens as your breathing calms down.")
 
+	var/failed = FALSE
+	var/operated = FALSE //whether we can still have our damages fixed through surgery
 
 	food_reagents = list(/datum/reagent/consumable/nutriment = 5, /datum/reagent/medicine/salbutamol = 5)
 
@@ -82,19 +84,18 @@
 	. = ..()
 	populate_gas_info()
 
-/obj/item/organ/lungs/Insert(mob/living/carbon/M, special, drop_if_replaced, pref_load)
+/obj/item/organ/lungs/on_mob_insert(mob/living/carbon/receiver, special = FALSE, movement_flags)
 	// This may look weird, but uh, organ code is weird, so we FIRST check to see if this organ is going into a NEW person.
 	// If it is going into a new person, ..() will ensure that organ is Remove()d first, and we won't run into any issues with duplicate signals.
-	var/new_owner = QDELETED(owner) || owner != M
+	var/new_owner = QDELETED(owner) || owner != receiver
 	. = ..()
-	if(!.)
-		return .
-	if(new_owner)
-		RegisterSignal(M, SIGNAL_ADDTRAIT(TRAIT_NOBREATH), PROC_REF(on_nobreath))
 
-/obj/item/organ/lungs/Remove(mob/living/carbon/M, special, pref_load)
+	if(new_owner)
+		RegisterSignal(receiver, SIGNAL_ADDTRAIT(TRAIT_NOBREATH), PROC_REF(on_nobreath))
+
+/obj/item/organ/lungs/on_mob_remove(mob/living/carbon/organ_owner, special, movement_flags)
 	. = ..()
-	UnregisterSignal(M, SIGNAL_ADDTRAIT(TRAIT_NOBREATH))
+	UnregisterSignal(organ_owner, SIGNAL_ADDTRAIT(TRAIT_NOBREATH))
 	LAZYNULL(thrown_alerts)
 
 /obj/item/organ/lungs/proc/populate_gas_info()
@@ -349,17 +350,23 @@
 	breath.temperature = H.bodytemperature
 
 /obj/item/organ/lungs/on_life(delta_time, times_fired)
-	..()
-	if((!failed) && ((organ_flags & ORGAN_FAILING)))
-		if(owner.stat == CONSCIOUS)
-			owner.visible_message(span_userdanger("[owner] grabs [owner.p_their()] throat, struggling for breath!"))
-		failed = TRUE
-	else if(!(organ_flags & ORGAN_FAILING))
+	. = ..()
+	if(failed && !(organ_flags & ORGAN_FAILING))
 		failed = FALSE
-	return
+		return
+	if(damage >= low_threshold)
+		var/do_i_cough = DT_PROB((damage < high_threshold) ? 2.5 : 5, delta_time) // between : past high
+		if(do_i_cough)
+			owner.emote("cough")
+	if(organ_flags & ORGAN_FAILING && owner.stat == CONSCIOUS)
+		owner.visible_message(span_danger("[owner] grabs [owner.p_their()] throat, struggling for breath!"), span_userdanger("You suddenly feel like you can't breathe!"))
+		failed = TRUE
 
 /obj/item/organ/lungs/get_availability(datum/species/owner_species, mob/living/owner_mob)
 	return owner_species.mutantlungs
+
+#define SMOKER_ORGAN_HEALTH (STANDARD_ORGAN_THRESHOLD * 0.75)
+#define SMOKER_LUNG_HEALING (STANDARD_ORGAN_HEALING * 0.75)
 
 /obj/item/organ/lungs/plasmaman
 	name = "plasma filter"
@@ -372,9 +379,25 @@
 	..()
 	gas_max -= /datum/breathing_class/plasma
 
+/obj/item/organ/lungs/plasmaman/plasmaman_smoker
+	name = "smoker plasma filter"
+	desc = "A plasma filter that look discolored, a result from smoking a lot."
+	icon_state = "lungs_plasma_smoker"
+
+	maxHealth = SMOKER_ORGAN_HEALTH
+	healing_factor = SMOKER_LUNG_HEALING
+
 /obj/item/organ/lungs/slime
 	name = "vacuole"
 	desc = "A large organelle designed to store oxygen and filter toxins."
+
+/obj/item/organ/lungs/smoker_lungs
+	name = "smoker lungs"
+	desc = "A pair of lungs that look sickly, a result from smoking a lot."
+	icon_state = "lungs_smoker"
+
+	maxHealth = SMOKER_ORGAN_HEALTH
+	healing_factor = SMOKER_LUNG_HEALING
 
 /obj/item/organ/lungs/cybernetic
 	name = "cybernetic lungs"
@@ -441,3 +464,5 @@
 
 #undef BREATH_OXY
 #undef BREATH_PLASMA
+#undef SMOKER_ORGAN_HEALTH
+#undef SMOKER_LUNG_HEALING

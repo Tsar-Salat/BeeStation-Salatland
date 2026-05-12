@@ -7,7 +7,7 @@
 	combat_mode = TRUE
 	sentience_type = SENTIENCE_BOSS
 	environment_smash = ENVIRONMENT_SMASH_RWALLS
-	mob_biotypes = MOB_ORGANIC | MOB_SPECIAL
+	mob_biotypes = MOB_ORGANIC|MOB_SPECIAL
 	obj_damage = 400
 	light_range = 3
 	faction = list(FACTION_MINING, FACTION_BOSS)
@@ -60,7 +60,7 @@
 		var/datum/action/small_sprite/small_action = new small_sprite_type()
 		small_action.Grant(src)
 
-/mob/living/simple_animal/hostile/megafauna/Moved()
+/mob/living/simple_animal/hostile/megafauna/Moved(atom/old_loc, movement_dir, forced, list/old_locs, momentum_change = TRUE)
 	//Safety check
 	if(!loc)
 		return ..()
