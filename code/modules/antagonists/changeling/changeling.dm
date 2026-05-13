@@ -49,8 +49,6 @@
 	/// Associated list of all powers we have evolved / bought from the emporium. [path] = [instance of path]
 	var/list/purchased_powers = list()
 
-	/// The voice we're mimicing via the changeling voice ability.
-	var/mimicing = ""
 	/// Whether we can currently respec in the cellular emporium.
 	var/can_respec = FALSE
 
@@ -616,7 +614,7 @@
 	to_chat(owner.current, span_userdanger("You grow weak and lose your powers! You are no longer a changeling and are stuck in your current form!"))
 
 /// Generate objectives for our changeling.
-/datum/antagonist/changeling/proc/forge_objectives()
+/datum/antagonist/changeling/forge_objectives()
 	var/datum/objective/survival_of_the_fittest/cull_objective = new
 	cull_objective.owner = owner
 	cull_objective.generate_amount()

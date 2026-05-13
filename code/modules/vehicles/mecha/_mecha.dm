@@ -235,7 +235,7 @@
 	update_access()
 	wires = new /datum/wires/mecha(src)
 	START_PROCESSING(SSobj, src)
-	AddElement(/datum/element/point_of_interest)
+	SSpoints_of_interest.make_point_of_interest(src)
 	log_message("[src.name] created.", LOG_MECHA)
 	GLOB.mechas_list += src //global mech list
 	prepare_huds()
@@ -307,6 +307,7 @@
 	QDEL_NULL(spark_system)
 	QDEL_NULL(smoke_system)
 	QDEL_NULL(ui_view)
+	QDEL_LIST(trackers)
 	QDEL_NULL(wires)
 
 	GLOB.mechas_list -= src //global mech list

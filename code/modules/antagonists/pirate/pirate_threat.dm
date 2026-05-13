@@ -78,9 +78,17 @@ GLOBAL_VAR_INIT(pirates_spawned, FALSE)
 				var/mob/M = candidates[1]
 				spawner.create(M.ckey)
 				candidates -= M
-				notify_ghosts("The pirate ship has an object of interest: [M]!", source=M, action=NOTIFY_ORBIT, header="Something's Interesting!")
+				notify_ghosts(
+					"The pirate ship has an object of interest: [M]!",
+					source=M,
+					header="Something's Interesting!"
+				)
 			else
-				notify_ghosts("The pirate ship has an object of interest: [spawner]!", source=spawner, action=NOTIFY_ORBIT, header="Something's Interesting!")
+				notify_ghosts(
+					"The pirate ship has an object of interest: [spawner]!",
+					source=spawner,
+					header="Something's Interesting!"
+				)
 
 //Shuttle equipment
 
@@ -134,7 +142,7 @@ GLOBAL_VAR_INIT(pirates_spawned, FALSE)
 
 //interrupt_research
 /obj/machinery/shuttle_scrambler/proc/interrupt_research()
-	for(var/obj/machinery/rnd/server/S in GLOB.machines)
+	for(var/obj/machinery/rnd/server/S as anything in SSmachines.get_machines_by_type_and_subtypes(/obj/machinery/rnd/server))
 		if(S.machine_stat & (NOPOWER|BROKEN))
 			continue
 		S.emp_act(1)
@@ -264,7 +272,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/piratepad_control)
 /obj/machinery/computer/piratepad_control/LateInitialize()
 	. = ..()
 	if(cargo_hold_id)
-		for(var/obj/machinery/piratepad/P in GLOB.machines)
+		for(var/obj/machinery/piratepad/P as anything in SSmachines.get_machines_by_type_and_subtypes(/obj/machinery/piratepad))
 			if(P.cargo_hold_id == cargo_hold_id)
 				set_pad(P)
 				return
@@ -289,6 +297,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/piratepad_control)
 	return GLOB.default_state
 
 /obj/machinery/computer/piratepad_control/ui_interact(mob/user, datum/tgui/ui)
+	. = ..()
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "CargoHoldTerminal")
