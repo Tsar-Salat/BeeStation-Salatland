@@ -71,7 +71,7 @@
 	var/notified = FALSE
 
 /datum/quirk/brainproblems/on_process(delta_time)
-	if(!quirk_target.reagents.has_reagent(/datum/reagent/medicine/mannitol))
+	if(!quirk_target.has_reagent(/datum/reagent/medicine/mannitol))
 		if(prob(80))
 			quirk_target.adjustOrganLoss(ORGAN_SLOT_BRAIN, 0.1 * delta_time)
 	var/obj/item/organ/brain/B = quirk_target.get_organ_by_type(/obj/item/organ/brain)
@@ -599,6 +599,7 @@
 	medical_record_text = "Patient is a current smoker."
 	reagent_type = /datum/reagent/drug/nicotine
 	accessory_type = /obj/item/lighter/greyscale
+	mob_trait = TRAIT_SMOKER
 	process = TRUE
 
 /datum/quirk/junkie/smoker/on_spawn()
@@ -606,6 +607,19 @@
 	if(!drug_container_type)
 		drug_container_type = pick(GLOB.smoker_cigarettes)
 	. = ..()
+
+	// smoker lungs have 25% less health and healing
+	var/mob/living/carbon/carbon_holder = quirk_target
+	var/obj/item/organ/lungs/smoker_lungs = null
+	var/obj/item/organ/lungs/old_lungs = carbon_holder.get_organ_slot(ORGAN_SLOT_LUNGS)
+	if(old_lungs && IS_ORGANIC_ORGAN(old_lungs))
+		if(isplasmaman(carbon_holder))
+			smoker_lungs = /obj/item/organ/lungs/plasmaman/plasmaman_smoker
+		else
+			smoker_lungs = /obj/item/organ/lungs/smoker_lungs
+	if(!isnull(smoker_lungs))
+		smoker_lungs = new smoker_lungs
+		smoker_lungs.Insert(carbon_holder, special = TRUE, drop_if_replaced = FALSE)
 
 /datum/quirk/junkie/smoker/announce_drugs()
 	to_chat(quirk_target, span_boldnotice("There is a [initial(drug_container_type.name)] [where_drug], and a lighter [where_accessory]. Make sure you get your favorite brand when you run out."))
@@ -615,7 +629,7 @@
 	. = ..()
 	var/mob/living/carbon/human/H = quirk_target
 	var/obj/item/I = H.get_item_by_slot(ITEM_SLOT_MASK)
-	if (istype(I, /obj/item/clothing/mask/cigarette))
+	if (istype(I, /obj/item/cigarette))
 		var/obj/item/storage/fancy/cigarettes/C = drug_container_type
 		if(istype(I, initial(C.spawn_type)))
 			SEND_SIGNAL(quirk_target, COMSIG_CLEAR_MOOD_EVENT, "wrong_cigs")

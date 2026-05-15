@@ -151,7 +151,7 @@
 		return
 	// Add on teleport targets
 	var/list/L = list()
-	for(var/obj/machinery/computer/teleporter/com in GLOB.machines)
+	for(var/obj/machinery/computer/teleporter/com as anything in SSmachines.get_machines_by_type_and_subtypes(/obj/machinery/computer/teleporter))
 		var/atom/target = com.target_ref?.resolve()
 		if(!target)
 			com.target_ref = null
@@ -329,15 +329,19 @@
 	check_charges()
 
 /obj/item/teleporter/emp_act(severity)
-	if(prob(50 / severity))
-		if(istype(loc, /mob/living/carbon/human))
-			var/mob/living/carbon/human/user = loc
-			to_chat(user, span_danger("[src] buzzes and activates!"))
-			attempt_teleport(user, TRUE) //EMP Activates a teleport with no safety.
-		else
-			visible_message(span_warning("[src] activates and blinks out of existence!"))
-			do_sparks(2, 1, src)
-			qdel(src)
+	. = ..()
+	if(. & EMP_PROTECT_SELF)
+		return
+	if(!prob(50 / severity))
+		return
+	if(istype(loc, /mob/living/carbon/human))
+		var/mob/living/carbon/human/user = loc
+		to_chat(user, span_danger("[src] buzzes and activates!"))
+		attempt_teleport(user, TRUE) //EMP Activates a teleport with no safety.
+	else
+		visible_message(span_warning("[src] activates and blinks out of existence!"))
+		do_sparks(2, 1, src)
+		qdel(src)
 
 /obj/item/teleporter/proc/attempt_teleport(mob/user, EMP_D = FALSE)
 	if(!charges)

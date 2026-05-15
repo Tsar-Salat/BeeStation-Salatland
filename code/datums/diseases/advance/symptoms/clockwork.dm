@@ -73,14 +73,8 @@
 					O.organ_flags = ORGAN_ROBOTIC
 					return TRUE
 				if(ORGAN_SLOT_STOMACH)
-					if(HAS_TRAIT(H, TRAIT_POWERHUNGRY))
-						var/obj/item/organ/stomach/battery/clockwork/organ = new()
-						if(robustbits)
-							organ.max_charge = 15000
-						organ.Insert(H, TRUE, FALSE)
-					else
-						var/obj/item/organ/stomach/clockwork/organ = new()
-						organ.Insert(H, TRUE, FALSE)
+					var/obj/item/organ/stomach/clockwork/organ = new()
+					organ.Insert(H, TRUE, FALSE)
 					if(prob(40) && H.stat != DEAD)
 						to_chat(H, span_userdanger("You feel a stabbing pain in your abdomen!"))
 						H.emote("scream")
@@ -260,15 +254,10 @@
 	organ_flags = ORGAN_ROBOTIC
 
 /obj/item/organ/stomach/clockwork/emp_act(severity)
+	. = ..()
+	if(. & EMP_PROTECT_SELF)
+		return
 	owner.adjust_nutrition(-200/severity)
-
-/obj/item/organ/stomach/battery/clockwork
-	name = "biometallic flywheel"
-	desc = "A biomechanical battery which stores mechanical energy."
-	icon_state = "stomach-clock"
-	organ_flags = ORGAN_ROBOTIC
-	max_charge = 7500
-	charge = 7500
 
 /obj/item/organ/tongue/robot/clockwork
 	name = "dynamic micro-phonograph"
@@ -290,6 +279,9 @@
 	var/robust //Set to true if the robustbits causes brain replacement. Because holy fuck is the CLANG CLANG CLANG CLANG annoying
 
 /obj/item/organ/brain/clockwork/emp_act(severity)
+	. = ..()
+	if(. & EMP_PROTECT_SELF)
+		return
 	switch(severity)
 		if(1)
 			owner.adjustOrganLoss(ORGAN_SLOT_BRAIN, 75)
@@ -307,7 +299,6 @@
 	icon_state = "liver-clock"
 	organ_flags = ORGAN_ROBOTIC
 	alcohol_tolerance = 0
-	toxLethality = 0
 	toxTolerance = 1 //while the organ isn't damaged by doing its job, it doesnt do it very well
 
 /obj/item/organ/lungs/clockwork

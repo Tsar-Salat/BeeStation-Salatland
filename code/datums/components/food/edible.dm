@@ -34,7 +34,7 @@ Behavior that's still missing from this component that original food items had t
 	var/datum/callback/pre_eat
 	///Callback to be ran before composting something, in case you don't want a piece of food to be compostable for some reason.
 	var/datum/callback/on_compost
-	///Callback to be ran for when you take a bite of something
+	///Callback to be ran for when you finish eating something
 	var/datum/callback/after_eat
 	///Callback to be ran for when you finish eating something
 	var/datum/callback/on_consume
@@ -312,10 +312,9 @@ Behavior that's still missing from this component that original food items had t
 
 	if(!CanConsume(eater, feeder))
 		return
-	var/fullness = eater.nutrition + 10 //The theoretical fullness of the person eating if they were to eat this
+	var/fullness = eater.get_fullness() + 10 //The theoretical fullness of the person eating if they were to eat this
 
 	var/time_to_eat = (eater == feeder) ? eat_time : EAT_TIME_FORCE_FEED
-
 	if(eater == feeder)//If you're eating it yourself.
 		if(eat_time && !do_after(feeder, time_to_eat, eater, timed_action_flags = food_flags & FOOD_FINGER_FOOD ? IGNORE_USER_LOC_CHANGE | IGNORE_TARGET_LOC_CHANGE : NONE)) //Gotta pass the minimal eat time
 			return
@@ -533,6 +532,8 @@ Behavior that's still missing from this component that original food items had t
 	SEND_SIGNAL(parent, COMSIG_FOOD_CONSUMED, eater, feeder)
 
 	on_consume?.Invoke(eater, feeder)
+	if (QDELETED(parent)) // might be destroyed by the callback
+		return
 
 	to_chat(feeder, span_warning("There is nothing left of [parent], oh no!"))
 	if(isturf(parent))

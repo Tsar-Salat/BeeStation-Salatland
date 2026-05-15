@@ -687,7 +687,6 @@
 		M.key = candidate.key
 
 		trauma.friend.key = oldkey
-		trauma.friend.reset_perspective(null)
 		trauma.friend.Show()
 		trauma.friend_initialized = TRUE
 
@@ -731,7 +730,7 @@
 		return FALSE
 	return ..()
 
-/obj/projectile/magic/aoe/Moved(atom/OldLoc, Dir)
+/obj/projectile/magic/aoe/Moved(atom/old_loc, movement_dir, forced, list/old_locs, momentum_change = TRUE)
 	. = ..()
 	if(trail)
 		create_trail()
@@ -830,7 +829,7 @@
 
 	if(isliving(target))
 		var/mob/living/target_mob = target
-		target_mob.fire_stacks += 5 //One stop drop and roll can put this out, two if it spreads during the knockdown
+		target_mob.adjust_fire_stacks(5) //One stop drop and roll can put this out, two if it spreads during the knockdown
 		target_mob.ignite_mob()
 
 	explosion(

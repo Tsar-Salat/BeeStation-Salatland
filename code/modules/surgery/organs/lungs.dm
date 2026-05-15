@@ -16,8 +16,10 @@
 	healing_factor = STANDARD_ORGAN_HEALING
 	decay_factor = STANDARD_ORGAN_DECAY
 
+	low_threshold_passed = span_warning("You feel short of breath.")
 	high_threshold_passed = span_warning("You feel some sort of constriction around your chest as your breathing becomes shallow and rapid.")
 	now_fixed = span_warning("Your lungs seem to once again be able to hold air.")
+	low_threshold_cleared = span_info("You can breathe normally again.")
 	high_threshold_cleared = span_info("The constriction around your chest loosens as your breathing calms down.")
 
 
@@ -349,22 +351,29 @@
 	breath.temperature = H.bodytemperature
 
 /obj/item/organ/lungs/on_life(delta_time, times_fired)
-	..()
-	if((!failed) && ((organ_flags & ORGAN_FAILING)))
-		if(owner.stat == CONSCIOUS)
-			owner.visible_message(span_userdanger("[owner] grabs [owner.p_their()] throat, struggling for breath!"))
-		failed = TRUE
-	else if(!(organ_flags & ORGAN_FAILING))
+	. = ..()
+	if(failed && !(organ_flags & ORGAN_FAILING))
 		failed = FALSE
-	return
+		return
+	if(damage >= low_threshold)
+		var/do_i_cough = DT_PROB((damage < high_threshold) ? 2.5 : 5, delta_time) // between : past high
+		if(do_i_cough)
+			owner.emote("cough")
+	if(organ_flags & ORGAN_FAILING && owner.stat == CONSCIOUS)
+		owner.visible_message(span_danger("[owner] grabs [owner.p_their()] throat, struggling for breath!"), span_userdanger("You suddenly feel like you can't breathe!"))
+		failed = TRUE
 
 /obj/item/organ/lungs/get_availability(datum/species/owner_species, mob/living/owner_mob)
 	return owner_species.mutantlungs
+
+#define SMOKER_ORGAN_HEALTH (STANDARD_ORGAN_THRESHOLD * 0.75)
+#define SMOKER_LUNG_HEALING (STANDARD_ORGAN_HEALING * 0.75)
 
 /obj/item/organ/lungs/plasmaman
 	name = "plasma filter"
 	desc = "A spongy rib-shaped mass for filtering plasma from the air."
 	icon_state = "lungs-plasma"
+	organ_traits = list(TRAIT_NOHUNGER) // A fresh breakfast of plasma is a great start to any morning.
 
 	breathing_class = BREATH_PLASMA
 
@@ -372,9 +381,25 @@
 	..()
 	gas_max -= /datum/breathing_class/plasma
 
+/obj/item/organ/lungs/plasmaman/plasmaman_smoker
+	name = "smoker plasma filter"
+	desc = "A plasma filter that look discolored, a result from smoking a lot."
+	icon_state = "lungs_plasma_smoker"
+
+	maxHealth = SMOKER_ORGAN_HEALTH
+	healing_factor = SMOKER_LUNG_HEALING
+
 /obj/item/organ/lungs/slime
 	name = "vacuole"
 	desc = "A large organelle designed to store oxygen and filter toxins."
+
+/obj/item/organ/lungs/smoker_lungs
+	name = "smoker lungs"
+	desc = "A pair of lungs that look sickly, a result from smoking a lot."
+	icon_state = "lungs_smoker"
+
+	maxHealth = SMOKER_ORGAN_HEALTH
+	healing_factor = SMOKER_LUNG_HEALING
 
 /obj/item/organ/lungs/cybernetic
 	name = "cybernetic lungs"
@@ -385,13 +410,7 @@
 	safe_breath_min = 13
 	safe_breath_max = 100
 
-/obj/item/organ/lungs/cybernetic/emp_act(severity)
-	. = ..()
-	if(. & EMP_PROTECT_SELF)
-		return
-	if(prob(30/severity))
-		owner.losebreath += 10
-
+	var/emp_vulnerability = 60
 
 /obj/item/organ/lungs/cybernetic/upgraded
 	name = "upgraded cybernetic lungs"
@@ -408,6 +427,18 @@
 	cold_level_1_threshold = 200
 	cold_level_2_threshold = 140
 	cold_level_3_threshold = 100
+
+	emp_vulnerability = 40
+
+/obj/item/organ/lungs/cybernetic/emp_act(severity)
+	. = ..()
+	if(. & EMP_PROTECT_SELF)
+		return
+	if(!COOLDOWN_FINISHED(src, emp_cooldown)) //To fight against two emp guns
+		owner.losebreath += 10
+		COOLDOWN_START(src, emp_cooldown, 20 SECONDS)
+	if(prob(emp_vulnerability/severity))
+		organ_flags |= ORGAN_EMP
 
 /obj/item/organ/lungs/apid
 	name = "apid lungs"
@@ -441,3 +472,5 @@
 
 #undef BREATH_OXY
 #undef BREATH_PLASMA
+#undef SMOKER_ORGAN_HEALTH
+#undef SMOKER_LUNG_HEALING

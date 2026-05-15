@@ -72,6 +72,7 @@
 
 /obj/item/debug/omnitool/Initialize(mapload)
 	. = ..()
+	AddComponent(/datum/component/surgery_initiator)
 
 	if(!abstract_tools)
 		abstract_tools = list()
@@ -114,8 +115,6 @@
 
 /obj/item/debug/omnitool/attack(mob/living/M, mob/living/user)
 	switch(tool_behaviour)
-		if("drapes")
-			attempt_initiate_surgery(src, M, user)
 		if("debug_placeholder") // QoL. put anything you need. - pre_attack() is preffered.
 			pass()
 	. = ..()
@@ -242,8 +241,8 @@
 /obj/item/storage/backpack/debug
 	name = "bag of portable hole"
 	desc = "A backpack that opens into a localized pocket of nullspace."
-	icon_state = "holdingpack"
-	inhand_icon_state = "holdingpack"
+	icon_state = "bag_of_holding"
+	inhand_icon_state = "bag_of_holding"
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	item_flags = NO_MAT_REDEMPTION
 	armor_type = /datum/armor/backpack_debug
