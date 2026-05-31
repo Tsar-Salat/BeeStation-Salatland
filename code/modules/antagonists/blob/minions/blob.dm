@@ -21,7 +21,7 @@
 	retreat_distance = null //! retreat doesn't obey pass_flags, so won't work on blob mobs.
 
 	mobchatspan = "blob"
-	discovery_points = 1000
+	discovery_points = TECHWEB_TIER_1_POINTS
 
 	/// Blob camera that controls the blob
 	var/mob/camera/blob/overmind = null

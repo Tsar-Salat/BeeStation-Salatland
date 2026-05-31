@@ -36,29 +36,28 @@
 /datum/objective/nightmare_fluff
 
 /datum/objective/nightmare_fluff/New()
-	var/list/explanation_texts = list(
+	. = ..()
+	explanation_text = pick(
 		"Consume the last glimmer of light from the space station.",
 		"Bring judgment upon the daywalkers.",
 		"Extinguish the flame of this hellscape.",
 		"Reveal the true nature of the shadows.",
 		"From the shadows, all shall perish.",
 		"Conjure nightfall by blade or by flame.",
-		"Bring the darkness to the light."
+		"Bring the darkness to the light.",
 	)
-	explanation_text = pick(explanation_texts)
-	..()
 
 /datum/objective/nightmare_fluff/check_completion()
-	return owner.current.stat != DEAD
+	return owner.current && owner.current.stat != DEAD
 
 /datum/antagonist/nightmare/forge_objectives()
 	var/datum/objective/nightmare_fluff/objective = new
 	objective.owner = owner
 	objectives += objective
 
-/datum/antagonist/nightmare/admin_add(datum/mind/new_owner,mob/admin)
+/datum/antagonist/nightmare/admin_add(datum/mind/new_owner, mob/admin)
 	var/mob/living/carbon/C = new_owner.current
-	if(alert(admin,"Transform the player into a nightmare?","Species Change","Yes","No") == "Yes")
+	if(alert(admin, "Transform the player into a nightmare?","Species Change","Yes","No") == "Yes")
 		C.set_species(/datum/species/shadow/nightmare)
 		new_owner.set_assigned_role(ROLE_NIGHTMARE)
 		new_owner.special_role = ROLE_NIGHTMARE

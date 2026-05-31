@@ -68,7 +68,7 @@
 	var/list/drained_mobs = list() //Cannot harvest the same mob twice
 	var/perfectsouls = 0 //How many perfect, regen-cap increasing souls the revenant has. //TODO, add objective for getting a perfect soul(s?)
 	var/generated_objectives_and_spells = FALSE
-	discovery_points = 4000
+	discovery_points = TECHWEB_TIER_3_POINTS
 
 /mob/living/simple_animal/revenant/Initialize(mapload)
 	. = ..()
@@ -240,7 +240,7 @@
 /mob/living/simple_animal/revenant/attackby(obj/item/W, mob/living/user, params)
 	. = ..()
 	if(istype(W, /obj/item/nullrod))
-		visible_message(span_warning("[src] violently flinches!"), \
+		visible_message(span_warning("[src] violently flinches!"),
 						span_revendanger("As \the [W] passes through you, you feel your essence draining away!"))
 		adjustBruteLoss(25) //hella effective
 		inhibited = TRUE
@@ -482,7 +482,7 @@
 /obj/item/ectoplasm/revenant/attack_self(mob/user)
 	if(!reforming || inert)
 		return ..()
-	user.visible_message(span_notice("[user] scatters [src] in all directions."), \
+	user.visible_message(span_notice("[user] scatters [src] in all directions."),
 						span_notice("You scatter [src] across the area. The particles slowly fade away."))
 	user.dropItemToGround(src)
 	scatter()
@@ -584,7 +584,8 @@
 /datum/objective/revenant_fluff
 
 /datum/objective/revenant_fluff/New()
-	var/list/explanation_texts = list(
+	. = ..()
+	explanation_text = pick(
 		"Assist and exacerbate existing threats at critical moments.",
 		"Avoid killing in plain sight.",
 		"Cause as much chaos and anger as you can without being killed.",
@@ -595,10 +596,8 @@
 		"Make the crew as miserable as possible.",
 		"Make the clown as miserable as possible.",
 		"Make the captain as miserable as possible.",
-		"Prevent the use of energy weapons where possible."
+		"Prevent the use of energy weapons where possible.",
 	)
-	explanation_text = pick(explanation_texts)
-	..()
 
 /datum/objective/revenant_fluff/check_completion()
 	return TRUE
