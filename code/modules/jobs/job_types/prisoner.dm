@@ -16,7 +16,9 @@
 	departments_list = list(
 		/datum/department_group/other,
 		)
-	bank_account_department = NONE
+
+	bank_account_department = ACCOUNT_CIV_BITFLAG
+	payment_per_department = list(ACCOUNT_CIV_ID = 0)
 
 	display_order = JOB_DISPLAY_ORDER_PRISONER
 
@@ -61,7 +63,7 @@
 					</i></font>"
 
 	//Fax first
-	for(var/obj/machinery/fax/sec/available_sec_faxes in GLOB.fax_machines)
+	for(var/obj/machinery/fax/sec/available_sec_faxes as anything in SSmachines.get_machines_by_type_and_subtypes(/obj/machinery/fax/sec))
 		var/obj/item/paper/message = new /obj/item/paper
 		message.name = "Prisoner transfer Documentation"
 		message.add_raw_text(deets)

@@ -348,9 +348,11 @@
 /mob/living/carbon/human/on_job_equipping(datum/job/equipping, joined_late, client/player_client)
 	if(equipping.bank_account_department)
 		var/datum/bank_account/bank_account = new(real_name, equipping)
-		bank_account.payday(STARTING_PAYCHECKS, TRUE)
-		mind?.account_id = bank_account.account_id
-		player_client.mob.add_memory("Your account ID is [mind?.account_id].")
+		if(equipping.job_flags & JOB_GETS_STARTING_PAYCHECK)
+			bank_account.payday(STARTING_PAYCHECKS, TRUE)
+		if(mind)
+			mind.account_id = bank_account.account_id
+			mind.current.add_memory("Your account ID is [mind.account_id].")
 
 	dress_up_as_job(
 		equipping = equipping,
@@ -424,10 +426,11 @@
 				ACCESS_CLONING
 			)
 
-/datum/job/proc/announce_head(mob/living/carbon/human/H, channels) //tells the given channel that the given mob is the new department head. See communications.dm for valid channels.
-	if(H && GLOB.announcement_systems.len)
+/// tells the given channel that the given mob is the new department head. See communications.dm for valid channels.
+/datum/job/proc/announce_head(mob/living/carbon/human/human, channels)
+	if(human)
 		//timer because these should come after the captain announcement
-		SSticker.OnRoundstart(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(_addtimer), CALLBACK(pick(GLOB.announcement_systems), /obj/machinery/announcement_system/proc/announce, "NEWHEAD", H.real_name, H.job, channels), 1))
+		SSticker.OnRoundstart(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(_addtimer), CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(aas_config_announce), /datum/aas_config_entry/newhead, list("PERSON" = human.real_name, "RANK" = human.job), null, channels, null, TRUE), 1))
 
 //If the configuration option is set to require players to be logged as old enough to play certain jobs, then this proc checks that they are, otherwise it just returns 1
 /datum/job/proc/player_old_enough(client/C)
@@ -539,10 +542,10 @@
 				back = /obj/item/storage/backpack/satchel //Grey satchel
 			if(GDUFFELBAG)
 				back = /obj/item/storage/backpack/duffelbag //Grey Duffel bag
-			if(GMESSENGER)
-				back = /obj/item/storage/backpack/messenger //Grey messenger bag
 			if(LSATCHEL)
 				back = /obj/item/storage/backpack/satchel/leather //Leather Satchel
+			if(GMESSENGER)
+				back = /obj/item/storage/backpack/messenger //Grey messenger bag
 			if(DSATCHEL)
 				back = satchel //Department satchel
 			if(DDUFFELBAG)

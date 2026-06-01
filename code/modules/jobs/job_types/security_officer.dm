@@ -172,11 +172,14 @@ GLOBAL_LIST_EMPTY(security_officer_distribution)
 	return department
 
 /datum/job/security_officer/proc/announce_latejoin(mob/officer, department, list/distribution)
-	var/obj/machinery/announcement_system/announcement_system = pick(GLOB.announcement_systems)
+	var/obj/machinery/announcement_system/announcement_system = get_announcement_system(/datum/aas_config_entry/announce_officer, null, list(RADIO_CHANNEL_SECURITY))
 	if(isnull(announcement_system))
 		return
 
-	announcement_system.announce_officer(officer, department)
+	announcement_system.announce(/datum/aas_config_entry/announce_officer, list(
+		"OFFICER" = officer.real_name,
+		"DEPARTMENT" = department,
+	), list(RADIO_CHANNEL_SECURITY))
 
 	var/list/partners = list()
 	for(var/officer_ref in distribution)
@@ -200,7 +203,10 @@ GLOBAL_LIST_EMPTY(security_officer_distribution)
 	var/datum/signal/subspace/messaging/tablet_msg/signal = new(announcement_system, list(
 		"name" = "Security Department Update",
 		"job" = "Automated Announcement System",
-		"message" = "Officer [officer.real_name] has been assigned to your department, [department].",
+		"message" = announcement_system.compile_config_message(/datum/aas_config_entry/announce_officer, list(
+			"OFFICER" = officer.real_name,
+			"DEPARTMENT" = department,
+		)),
 		"targets" = targets,
 		"automated" = TRUE,
 	))
