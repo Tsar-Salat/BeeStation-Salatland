@@ -313,7 +313,8 @@ GLOBAL_DATUM(syndicate_code_response_regex, /regex)
 							. += generate_random_name()
 					if(2)
 						if(length(SSjob.joinable_occupations))
-							. += pick(SSjob.joinable_occupations).title
+							var/datum/job/job = pick(SSjob.joinable_occupations)
+							. += job.title
 						else
 							. += generate_random_name()
 				safety -= 1
