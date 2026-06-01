@@ -312,12 +312,10 @@ GLOBAL_DATUM(syndicate_code_response_regex, /regex)
 						else
 							. += generate_random_name()
 					if(2)
-						var/datum/job/job = pick(SSjob.joinable_occupations)
-						if(job)
-							. += job.title //Returns a job.
+						if(length(SSjob.joinable_occupations))
+							. += pick(SSjob.joinable_occupations).title
 						else
-							stack_trace("Failed to pick(SSjob.joinable_occupations) on generate_code_phrase()")
-							. += "Bug"
+							. += generate_random_name()
 				safety -= 1
 			if(2)
 				switch(rand(1,3))//Food, drinks, or things. Only selectable once.
