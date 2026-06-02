@@ -264,16 +264,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/temp_visual/medical_holosign)
 	icon_state = "lampgreen"
 	inhand_icon_state = "lampgreen"
 
-
-
-/obj/item/flashlight/lamp/verb/toggle_light()
-	set name = "Toggle light"
-	set category = "Object"
-	set src in oview(1)
-
-	if(!usr.stat)
-		attack_self(usr)
-
 //Bananalamp
 /obj/item/flashlight/lamp/bananalamp
 	name = "banana lamp"
@@ -291,10 +281,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/temp_visual/medical_holosign)
 	icon_state = "flare"
 	inhand_icon_state = "flare"
 	actions_types = list()
-	/// How many seconds of fuel we have left
-	var/fuel = 0
-	var/on_damage = 7
-	var/produce_heat = 1500
 	heat = 1000
 	light_color = LIGHT_COLOR_FLARE
 	light_system = MOVABLE_LIGHT
@@ -302,6 +288,10 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/temp_visual/medical_holosign)
 	sound_on = 'sound/items/matchstick_lit.ogg'
 	sound_off = null
 	custom_price = 10
+	/// How many seconds of fuel we have left
+	var/fuel = 0
+	var/on_damage = 7
+	var/produce_heat = 1500
 
 /obj/item/flashlight/flare/Initialize(mapload)
 	. = ..()
@@ -478,7 +468,8 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/temp_visual/medical_holosign)
 	inhand_icon_state = "glowstick"
 	grind_results = list(/datum/reagent/phenol = 15, /datum/reagent/hydrogen = 10, /datum/reagent/oxygen = 5) //Meth-in-a-stick
 	var/burn_pickup = FALSE	//If true, fuel will only decrease after being picked up or used in hand (Useful for mapping)
-	var/fuel = 0 // How many seconds of fuel we have left
+	/// How many seconds of fuel we have left
+	var/fuel = 0
 
 
 /obj/item/flashlight/glowstick/Initialize(mapload)

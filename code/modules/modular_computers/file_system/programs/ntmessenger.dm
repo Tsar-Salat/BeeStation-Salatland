@@ -426,11 +426,7 @@
 	else if(computer)
 		L = get(computer, /mob/living/silicon)
 
-	if(L)
-		if(L.stat >= UNCONSCIOUS)
-			continue
-		if(!L.is_literate())
-			continue
+	if(L && L.stat < UNCONSCIOUS && L.is_literate())
 		var/reply = "(<a href='byond://?src=[REF(src)];choice=Message;skiprefresh=1;target=[signal.data["ref"]]'>Reply</a>)"
 		var/hrefstart
 		var/hrefend

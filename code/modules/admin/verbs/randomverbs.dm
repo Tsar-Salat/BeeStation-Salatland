@@ -504,7 +504,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 				GLOB.manifest.inject(new_character)
 
 			if(alert(new_character,"Would you like an active AI to announce this character?",,"No","Yes")=="Yes")
-				AnnounceArrival(new_character, new_character.mind.assigned_role)
+				announce_arrival(new_character, new_character.mind.assigned_role)
 
 	var/msg = span_adminnotice("[admin] has respawned [player_key] as [new_character.real_name].")
 	message_admins(msg)
@@ -765,7 +765,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 		if(null, "No")
 			return
 		if("Yes (No Recall)")
-			SSshuttle.adminEmergencyNoRecall = TRUE
+			SSshuttle.admin_emergency_no_recall = TRUE
 			SSshuttle.emergency.mode = SHUTTLE_IDLE
 
 	SSshuttle.emergency.request()
@@ -785,8 +785,8 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	if(EMERGENCY_AT_LEAST_DOCKED)
 		return
 
-	if(SSshuttle.adminEmergencyNoRecall)
-		SSshuttle.adminEmergencyNoRecall = FALSE
+	if(SSshuttle.admin_emergency_no_recall)
+		SSshuttle.admin_emergency_no_recall = FALSE
 
 	SSshuttle.emergency.cancel()
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Cancel Shuttle") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!

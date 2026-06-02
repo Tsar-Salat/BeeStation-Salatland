@@ -198,7 +198,8 @@
 	name = "eyepatch"
 	desc = "Yarr."
 	icon_state = "eyepatch"
-	inhand_icon_state = "eyepatch"
+	inhand_icon_state = null
+	dog_fashion = /datum/dog_fashion/head/eyepatch
 
 /obj/item/clothing/glasses/monocle
 	name = "monocle"
