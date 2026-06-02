@@ -706,7 +706,6 @@
 	},
 /obj/structure/table/wood,
 /obj/item/flashlight/lamp/green{
-	on = 0;
 	pixel_x = -5;
 	pixel_y = -2
 	},
@@ -3065,7 +3064,7 @@
 /mob/living/basic/mothroach,
 /obj/effect/decal/remains/human,
 /obj/item/flashlight/lantern/heirloom_moth{
-	on = 1
+	start_on = 1
 	},
 /obj/machinery/conveyor{
 	dir = 1;
@@ -13915,7 +13914,6 @@
 "fgg" = (
 /obj/structure/table/wood,
 /obj/item/flashlight/lamp/green{
-	on = 0;
 	pixel_x = -5;
 	pixel_y = 8
 	},
@@ -23865,7 +23863,7 @@
 "jjL" = (
 /mob/living/basic/mothroach,
 /obj/item/flashlight/lantern/heirloom_moth{
-	on = 1
+	start_on = 1
 	},
 /obj/structure/sign/poster/official/moth9{
 	pixel_x = -32
@@ -48596,7 +48594,7 @@
 	},
 /obj/item/flashlight/lantern{
 	desc = "A dim lantern that attracts moths.";
-	light_on = 1;
+	start_on = 1;
 	pixel_y = 11
 	},
 /obj/structure/table/wood/fancy/purple,
@@ -55481,7 +55479,7 @@
 /mob/living/basic/mothroach,
 /obj/effect/decal/cleanable/blood/old,
 /obj/item/flashlight/lantern/heirloom_moth{
-	on = 1
+	start_on = 1
 	},
 /obj/machinery/conveyor{
 	id = "HB"
@@ -56198,7 +56196,7 @@
 /mob/living/basic/mothroach,
 /obj/effect/decal/cleanable/blood/old,
 /obj/item/flashlight/lantern/heirloom_moth{
-	on = 1
+	start_on = 1
 	},
 /obj/machinery/conveyor{
 	id = "HB"
