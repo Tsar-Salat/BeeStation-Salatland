@@ -10,6 +10,8 @@ GLOBAL_LIST_INIT(wood_big_turf_damage, list("damaged_woodbig1", "damaged_woodbig
 GLOBAL_LIST_INIT(glass_turf_damage, list("glass-damaged1", "glass-damaged2", "glass-damaged3"))
 GLOBAL_LIST_INIT(reinfglass_turf_damage, list("reinf_glass-damaged1", "reinf_glass-damaged2", "reinf_glass-damaged3"))
 
+GLOBAL_LIST_INIT(snow_turf_damage, list("snow_dug"))
+
 GLOBAL_LIST_INIT(turf_texture_hallway, list(/datum/turf_texture/hallway))
 GLOBAL_LIST_INIT(turf_texture_maint, list(/datum/turf_texture/maint, /datum/turf_texture/hallway, /datum/turf_texture/maint/tile))
 

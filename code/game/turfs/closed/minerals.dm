@@ -10,7 +10,7 @@
 	// 4 to the left, 4 down
 	transform = MAP_SWITCH(TRANSLATE_MATRIX(MINERAL_WALL_OFFSET, MINERAL_WALL_OFFSET), matrix())
 	smoothing_flags = SMOOTH_BITMASK | SMOOTH_BORDER
-	baseturfs = /turf/open/floor/plating/asteroid/airless
+	baseturfs = /turf/open/misc/asteroid/airless
 	initial_gas_mix = AIRLESS_ATMOS
 	opacity = TRUE
 	density = TRUE
@@ -18,7 +18,7 @@
 	temperature = T20C
 	max_integrity = 200
 	var/environment_type = "asteroid"
-	var/turf/open/floor/plating/turf_type = /turf/open/floor/plating/asteroid/airless
+	var/turf/open/floor/plating/turf_type = /turf/open/misc/asteroid/airless
 	var/obj/item/stack/ore/mineralType = null
 	var/mineralAmt = 3
 	var/last_act = 0
@@ -209,8 +209,8 @@
 
 /turf/closed/mineral/random/high_chance/volcanic
 	environment_type = "basalt"
-	turf_type = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
-	baseturfs = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
+	turf_type = /turf/open/misc/asteroid/basalt/lava_land_surface
+	baseturfs = /turf/open/misc/asteroid/basalt/lava_land_surface
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
 	defer_change = 1
 
@@ -250,9 +250,9 @@
 	icon_state = "icerock_wall"
 	base_icon_state = "icerock_wall"
 	smoothing_flags = SMOOTH_BITMASK | SMOOTH_BORDER
-	baseturfs = /turf/open/floor/plating/asteroid/basalt/iceland_surface
+	baseturfs = /turf/open/misc/asteroid/basalt/iceland_surface
 	environment_type = "snow_cavern"
-	turf_type = /turf/open/floor/plating/asteroid/basalt/iceland_surface
+	turf_type = /turf/open/misc/asteroid/basalt/iceland_surface
 	initial_gas_mix = FROZEN_ATMOS
 	defer_change = TRUE
 	mineralChance = 6
@@ -273,8 +273,8 @@
 
 /turf/closed/mineral/random/volcanic
 	environment_type = "basalt"
-	turf_type = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
-	baseturfs = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
+	turf_type = /turf/open/misc/asteroid/basalt/lava_land_surface
+	baseturfs = /turf/open/misc/asteroid/basalt/lava_land_surface
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
 	defer_change = 1
 
@@ -312,8 +312,8 @@
 
 /turf/closed/mineral/random/labormineral/volcanic
 	environment_type = "basalt"
-	turf_type = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
-	baseturfs = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
+	turf_type = /turf/open/misc/asteroid/basalt/lava_land_surface
+	baseturfs = /turf/open/misc/asteroid/basalt/lava_land_surface
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
 	defer_change = 1
 
@@ -331,8 +331,8 @@
 		/obj/item/stack/ore/iron = 95,
 	)
 /turf/closed/mineral/random/air
-	turf_type = /turf/open/floor/plating/asteroid
-	baseturfs = /turf/open/floor/plating/asteroid //the asteroid floor has air
+	turf_type = /turf/open/misc/asteroid
+	baseturfs = /turf/open/misc/asteroid //the asteroid floor has air
 	defer_change = 1
 
 /turf/closed/mineral/random/air/mineral_chances()
@@ -360,8 +360,8 @@
 	icon = MAP_SWITCH('icons/turf/walls/icerock_wall.dmi', 'icons/turf/mining.dmi')
 	icon_state = "icerock_iron"
 	base_icon_state = "icerock_wall"
-	turf_type = /turf/open/floor/plating/asteroid/snow/ice
-	baseturfs = /turf/open/floor/plating/asteroid/snow/ice
+	turf_type = /turf/open/misc/asteroid/snow/ice
+	baseturfs = /turf/open/misc/asteroid/snow/ice
 	initial_gas_mix = FROZEN_ATMOS
 	defer_change = TRUE
 
@@ -371,8 +371,8 @@
 
 /turf/closed/mineral/uranium/volcanic
 	environment_type = "basalt"
-	turf_type = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
-	baseturfs = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
+	turf_type = /turf/open/misc/asteroid/basalt/lava_land_surface
+	baseturfs = /turf/open/misc/asteroid/basalt/lava_land_surface
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
 	defer_change = 1
 
@@ -383,8 +383,8 @@
 
 /turf/closed/mineral/diamond/volcanic
 	environment_type = "basalt"
-	turf_type = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
-	baseturfs = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
+	turf_type = /turf/open/misc/asteroid/basalt/lava_land_surface
+	baseturfs = /turf/open/misc/asteroid/basalt/lava_land_surface
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
 	defer_change = 1
 
@@ -393,8 +393,8 @@
 	icon = MAP_SWITCH('icons/turf/walls/icerock_wall.dmi', 'icons/turf/mining.dmi')
 	icon_state = "icerock_iron"
 	base_icon_state = "icerock_wall"
-	turf_type = /turf/open/floor/plating/asteroid/snow/ice
-	baseturfs = /turf/open/floor/plating/asteroid/snow/ice
+	turf_type = /turf/open/misc/asteroid/snow/ice
+	baseturfs = /turf/open/misc/asteroid/snow/ice
 	initial_gas_mix = FROZEN_ATMOS
 	defer_change = TRUE
 
@@ -404,8 +404,8 @@
 
 /turf/closed/mineral/gold/volcanic
 	environment_type = "basalt"
-	turf_type = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
-	baseturfs = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
+	turf_type = /turf/open/misc/asteroid/basalt/lava_land_surface
+	baseturfs = /turf/open/misc/asteroid/basalt/lava_land_surface
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
 	defer_change = 1
 
@@ -416,8 +416,8 @@
 
 /turf/closed/mineral/silver/volcanic
 	environment_type = "basalt"
-	turf_type = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
-	baseturfs = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
+	turf_type = /turf/open/misc/asteroid/basalt/lava_land_surface
+	baseturfs = /turf/open/misc/asteroid/basalt/lava_land_surface
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
 	defer_change = 1
 
@@ -427,8 +427,8 @@
 
 /turf/closed/mineral/copper/volcanic
 	environment_type = "basalt"
-	turf_type = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
-	baseturfs = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
+	turf_type = /turf/open/misc/asteroid/basalt/lava_land_surface
+	baseturfs = /turf/open/misc/asteroid/basalt/lava_land_surface
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
 	defer_change = 1
 
@@ -438,8 +438,8 @@
 
 /turf/closed/mineral/titanium/volcanic
 	environment_type = "basalt"
-	turf_type = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
-	baseturfs = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
+	turf_type = /turf/open/misc/asteroid/basalt/lava_land_surface
+	baseturfs = /turf/open/misc/asteroid/basalt/lava_land_surface
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
 	defer_change = 1
 
@@ -450,8 +450,8 @@
 
 /turf/closed/mineral/plasma/volcanic
 	environment_type = "basalt"
-	turf_type = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
-	baseturfs = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
+	turf_type = /turf/open/misc/asteroid/basalt/lava_land_surface
+	baseturfs = /turf/open/misc/asteroid/basalt/lava_land_surface
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
 	defer_change = 1
 
@@ -460,8 +460,8 @@
 	icon = MAP_SWITCH('icons/turf/walls/icerock_wall.dmi', 'icons/turf/mining.dmi')
 	icon_state = "icerock_plasma"
 	base_icon_state = "icerock_wall"
-	turf_type = /turf/open/floor/plating/asteroid/snow/ice
-	baseturfs = /turf/open/floor/plating/asteroid/snow/ice
+	turf_type = /turf/open/misc/asteroid/snow/ice
+	baseturfs = /turf/open/misc/asteroid/snow/ice
 	initial_gas_mix = FROZEN_ATMOS
 	defer_change = TRUE
 
@@ -477,35 +477,36 @@
 
 /turf/closed/mineral/bscrystal/volcanic
 	environment_type = "basalt"
-	turf_type = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
-	baseturfs = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
+	turf_type = /turf/open/misc/asteroid/basalt/lava_land_surface
+	baseturfs = /turf/open/misc/asteroid/basalt/lava_land_surface
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
 	defer_change = 1
 
 
 /turf/closed/mineral/volcanic
 	environment_type = "basalt"
-	turf_type = /turf/open/floor/plating/asteroid/basalt
-	baseturfs = /turf/open/floor/plating/asteroid/basalt
+	turf_type = /turf/open/misc/asteroid/basalt
+	baseturfs = /turf/open/misc/asteroid/basalt
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
 
 /turf/closed/mineral/volcanic/lava_land_surface
 	environment_type = "basalt"
-	turf_type = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
-	baseturfs = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
+	turf_type = /turf/open/misc/asteroid/basalt/lava_land_surface
+	baseturfs = /turf/open/misc/asteroid/basalt/lava_land_surface
 	defer_change = 1
 
 /turf/closed/mineral/ash_rock //wall piece
 	name = "rock"
+	icon = 'icons/turf/mining.dmi'
 	icon = MAP_SWITCH('icons/turf/walls/rock_wall.dmi', 'icons/turf/mining.dmi')
 	icon_state = "rock2"
 	base_icon_state = "rock_wall"
 	smoothing_flags = SMOOTH_BITMASK | SMOOTH_BORDER
 	canSmoothWith = list(SMOOTH_GROUP_CLOSED_TURFS)
-	baseturfs = /turf/open/floor/plating/ashplanet/wateryrock
+	baseturfs = /turf/open/misc/ashplanet/wateryrock
 	initial_gas_mix = OPENTURF_LOW_PRESSURE
 	environment_type = "waste"
-	turf_type = /turf/open/floor/plating/ashplanet/rocky
+	turf_type = /turf/open/misc/ashplanet/rocky
 	defer_change = 1
 
 /turf/closed/mineral/ash_rock/station
@@ -520,10 +521,10 @@
 	base_icon_state = "mountain_wall"
 	smoothing_flags = SMOOTH_BITMASK | SMOOTH_BORDER
 	canSmoothWith = list(SMOOTH_GROUP_CLOSED_TURFS)
-	baseturfs = /turf/open/floor/plating/asteroid/snow
+	baseturfs = /turf/open/misc/asteroid/snow
 	initial_gas_mix = FROZEN_ATMOS
 	environment_type = "snow"
-	turf_type = /turf/open/floor/plating/asteroid/snow
+	turf_type = /turf/open/misc/asteroid/snow
 	defer_change = TRUE
 
 /turf/closed/mineral/snowmountain/cavern
@@ -532,9 +533,9 @@
 	icon_state = "icerock_wall"
 	base_icon_state = "icerock_wall"
 	smoothing_flags = SMOOTH_BITMASK | SMOOTH_BORDER
-	baseturfs = /turf/open/floor/plating/asteroid/basalt/iceland_surface
+	baseturfs = /turf/open/misc/asteroid/basalt/iceland_surface
 	environment_type = "snow_cavern"
-	turf_type = /turf/open/floor/plating/asteroid/basalt/iceland_surface
+	turf_type = /turf/open/misc/asteroid/basalt/iceland_surface
 
 
 //GIBTONITE
@@ -627,7 +628,7 @@
 
 /turf/closed/mineral/gibtonite/volcanic
 	environment_type = "basalt"
-	turf_type = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
-	baseturfs = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
+	turf_type = /turf/open/misc/asteroid/basalt/lava_land_surface
+	baseturfs = /turf/open/misc/asteroid/basalt/lava_land_surface
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
 	defer_change = 1

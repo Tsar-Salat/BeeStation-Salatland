@@ -6,11 +6,11 @@
 	shallow_rock_type = /turf/closed/mineral/random/jungle
 
 	river_type = /turf/open/water/air
-	beach_type = /turf/open/floor/plating/dirt/jungle/wasteland
+	beach_type = /turf/open/misc/dirt/jungle/wasteland
 
-	plains_type = /turf/open/floor/plating/dirt/jungle/dark
+	plains_type = /turf/open/misc/dirt/jungle/dark
 	plains_decoration = list(/obj/structure/flora/grass/jungle,/obj/structure/flora/grass/jungle/b, /obj/structure/flora/rock/jungle, /obj/structure/flora/rock/pile/largejungle)
 
-	jungle_type = /turf/open/floor/plating/grass/jungle
+	jungle_type = /turf/open/misc/grass/jungle
 	jungle_decoration =  list(/obj/structure/flora/grass/jungle,/obj/structure/flora/grass/jungle/b, /obj/structure/flora/tree/jungle, /obj/structure/flora/rock/jungle, /obj/structure/flora/junglebush, /obj/structure/flora/junglebush/b, /obj/structure/flora/junglebush/c, /obj/structure/flora/junglebush/large, /obj/structure/flora/rock/pile/largejungle)
 */

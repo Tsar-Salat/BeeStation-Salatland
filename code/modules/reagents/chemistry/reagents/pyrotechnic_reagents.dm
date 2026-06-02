@@ -56,16 +56,15 @@
 		if(prob(10 + plating.burnt + 5 * plating.broken)) //broken or burnt plating is more susceptible to being destroyed
 			EX_ACT(plating, EXPLODE_DEVASTATE)
 
-	else if(isfloorturf(exposed_turf))
-		var/turf/open/floor/floor = exposed_turf
-		if(prob(reac_volume))
-			floor.make_plating()
-		else if(prob(reac_volume))
-			floor.burn_tile()
-		if(isfloorturf(floor))
-			for(var/turf/open/turf in RANGE_TURFS(1,floor))
-				if(!locate(/obj/effect/hotspot) in turf)
-					new /obj/effect/hotspot/bright(floor)
+	else if(isfloorturf(exposed_turf) && prob(reac_volume))
+		var/turf/open/floor/target_floor = exposed_turf
+		target_floor.make_plating()
+	else if(prob(reac_volume))
+		exposed_turf.burn_tile()
+	if(isfloorturf(exposed_turf))
+		for(var/turf/nearby_turf in RANGE_TURFS(1, exposed_turf))
+			if(!locate(/obj/effect/hotspot) in nearby_turf)
+				new /obj/effect/hotspot/bright(nearby_turf)
 
 	else if(iswallturf(exposed_turf))
 		var/turf/closed/wall/wall = exposed_turf

@@ -17,7 +17,7 @@
 		))
 		allowed_turfs = zebra_typecacheof(list(
 			/turf/open/space = TRUE,
-			/turf/open/floor/plating/asteroid/basalt/lava_land_surface = TRUE,
+			/turf/open/misc/asteroid/basalt/lava_land_surface = TRUE,
 			/turf/open/space/bluespace = FALSE,
 			/turf/open/space/transit = FALSE,
 		))

@@ -1090,7 +1090,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/shared_storage/blue)
 	max_demand = 10
 	var/turf_type = /turf/open/lava/smooth
 	var/transform_string = "lava"
-	var/reset_turf_type = /turf/open/floor/plating/asteroid/basalt
+	var/reset_turf_type = /turf/open/misc/asteroid/basalt
 	var/reset_string = "basalt"
 	var/create_cooldown = 100
 	var/create_delay = 30

@@ -97,3 +97,10 @@
 #define TURF_PATHING_PASS_PROC 1
 /// Turf is never passable
 #define TURF_PATHING_PASS_NO 2
+
+/// Defines a consistent light power for our various basalt turfs
+#define BASALT_LIGHT_POWER 0.6
+/// Defines a consistent light range for basalt turfs that have a bigger area of lava
+#define BASALT_LIGHT_RANGE_BRIGHT 2
+/// Defines a consistent light range for basalt turfs that have a smaller area of lava
+#define BASALT_LIGHT_RANGE_DIM 1.4

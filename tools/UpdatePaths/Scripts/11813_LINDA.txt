@@ -127,10 +127,10 @@
 /obj/machinery/door/airlock/alarmlock : /obj/machinery/door/airlock/public/glass{@OLD}
 
 # Now for Echostation's COLD
-/turf/open/floor/plating/beach/deep_water : /turf/open/floor/plating/beach/deep_water/cold{@OLD}
-/turf/open/floor/plating/beach/coastline_t : /turf/open/floor/plating/beach/coastline_t/cold{@OLD}
-/turf/open/floor/plating/beach/coastline_b : /turf/open/floor/plating/beach/coastline_b/cold{@OLD}
-/turf/open/floor/plating/beach/coastline_t/sandwater_inner : /turf/open/floor/plating/beach/coastline_t/sandwater_inner/cold{@OLD}
+/turf/open/misc/beach/deep_water : /turf/open/misc/beach/deep_water/cold{@OLD}
+/turf/open/misc/beach/coastline_t : /turf/open/misc/beach/coastline_t/cold{@OLD}
+/turf/open/misc/beach/coastline_b : /turf/open/misc/beach/coastline_b/cold{@OLD}
+/turf/open/misc/beach/coastline_t/sandwater_inner : /turf/open/misc/beach/coastline_t/sandwater_inner/cold{@OLD}
 
 #Apparently we have window firelocks in shuttles. Not anymore we dont!
 /obj/machinery/door/firedoor/window : @DELETE

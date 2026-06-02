@@ -122,8 +122,6 @@
 	smoothing_flags = SMOOTH_BITMASK | SMOOTH_BORDER
 	smoothing_groups = list(SMOOTH_GROUP_TURF_OPEN, SMOOTH_GROUP_FLOOR_GRASS)
 	canSmoothWith = list(SMOOTH_GROUP_FLOOR_GRASS)
-	var/ore_type = /obj/item/stack/ore/glass
-	var/turfverb = "uproot"
 	tiled_dirt = FALSE
 	max_integrity = 80
 	transform = MAP_SWITCH(TRANSLATE_MATRIX(-9, -9), matrix())
@@ -138,14 +136,10 @@
 /turf/open/floor/grass/Initialize(mapload)
 	. = ..()
 	update_icon()
+	AddElement(/datum/element/diggable, /obj/item/stack/ore/glass, 2, "uproot", "uproots")
 
 /turf/open/floor/grass/attackby(obj/item/C, mob/user, params)
-	if((C.tool_behaviour == TOOL_SHOVEL) && params)
-		new ore_type(src, 2)
-		user.visible_message("[user] digs up [src].", span_notice("You [turfverb] [src]."))
-		playsound(src, 'sound/effects/shovel_dig.ogg', 50, 1)
-		make_plating()
-	else if(C.sharpness != BLUNT)
+	if(C.sharpness != BLUNT)
 		QUEUE_SMOOTH(src)
 		QUEUE_SMOOTH_NEIGHBORS(src)
 		icon_state = "grass"
@@ -153,8 +147,6 @@
 		canSmoothWith = list()
 		transform = null
 		playsound(src, 'sound/items/wirecutter.ogg')
-	if(..())
-		return
 
 /turf/open/floor/grass/fairy //like grass but fae-er
 	name = "fairygrass patch"
@@ -221,18 +213,20 @@
 	light_color = "#AAD84B"
 	color = "#53003f"
 
-/turf/open/floor/grass/snow
+/turf/open/floor/fake_snow
 	gender = PLURAL
 	name = "snow"
 	icon = 'icons/turf/snow.dmi'
 	desc = "Looks cold."
 	icon_state = "snow"
-	ore_type = /obj/item/stack/sheet/snow
+	flags_1 = NONE
 
-	planetary_atmos = TRUE
 	floor_tile = null
 	initial_gas_mix = FROZEN_ATMOS
-	slowdown = 2
+	bullet_bounce_sound = null
+	tiled_dirt = FALSE
+
+	slowdown = 1.5
 	bullet_sizzle = TRUE
 	footstep = FOOTSTEP_SAND
 	barefootstep = FOOTSTEP_SAND
@@ -244,61 +238,46 @@
 	smoothing_flags = NONE
 	transform = null
 
-/turf/open/floor/grass/snow/try_replace_tile(obj/item/stack/tile/T, mob/user, params)
-	return
-
-/turf/open/floor/grass/snow/crowbar_act(mob/living/user, obj/item/I)
-	return
-
-/turf/open/floor/grass/snow/basalt //By your powers combined, I am captain planet
-	gender = NEUTER
-	name = "volcanic floor"
-	icon = 'icons/turf/floors.dmi'
-	icon_state = "basalt"
-	ore_type = /obj/item/stack/ore/glass/basalt
-	initial_gas_mix = OPENTURF_LOW_PRESSURE
-	slowdown = 0
-
-/turf/open/floor/grass/snow/basalt/Initialize(mapload)
+/turf/open/floor/fake_snow/Initialize(mapload)
 	. = ..()
-	if(prob(15))
-		icon_state = "basalt[rand(0, 12)]"
-		set_basalt_light(src)
+	AddElement(/datum/element/diggable, /obj/item/stack/tile/mineral/snow, 2)
 
-/turf/open/floor/grass/snow/safe
-	slowdown = 1.5
-	planetary_atmos = FALSE
+/turf/open/floor/fake_snow/try_replace_tile(obj/item/stack/tile/T, mob/user, params)
+	return
 
-/turf/open/floor/grass/snow/safe/nocold
-	initial_gas_mix = OPENTURF_DEFAULT_ATMOS
+/turf/open/floor/fake_snow/crowbar_act(mob/living/user, obj/item/I)
+	return
 
-
-/turf/open/floor/grass/fakebasalt //Heart is not a real planeteer power
+/turf/open/floor/fakebasalt //Heart is not a real planeteer power
 	name = "aesthetic volcanic flooring"
 	desc = "Safely recreated turf for your hellplanet-scaping."
 	icon = 'icons/turf/floors.dmi'
 	icon_state = "basalt"
 	base_icon_state = "basalt"
 	floor_tile = /obj/item/stack/tile/basalt
-	ore_type = /obj/item/stack/ore/glass/basalt
-	turfverb = "dig up"
-	slowdown = 0
+	flags_1 = NONE
+	bullet_bounce_sound = null
 	footstep = FOOTSTEP_SAND
 	barefootstep = FOOTSTEP_SAND
 	clawfootstep = FOOTSTEP_SAND
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
+	tiled_dirt = FALSE
 
 	smoothing_groups = list(SMOOTH_GROUP_TURF_OPEN, SMOOTH_GROUP_OPEN_FLOOR)
 	canSmoothWith = list(SMOOTH_GROUP_TURF_OPEN, SMOOTH_GROUP_OPEN_FLOOR)
 	smoothing_flags = NONE
 	transform = null
 
-/turf/open/floor/grass/fakebasalt/Initialize(mapload)
+/turf/open/floor/fakebasalt/Initialize(mapload)
 	. = ..()
+	AddElement(/datum/element/diggable, /obj/item/stack/ore/glass/basalt, 2)
 	if(prob(15))
 		icon_state = "basalt[rand(0, 12)]"
-		set_basalt_light(src)
-
+		switch(icon_state)
+			if("basalt1", "basalt2", "basalt3")
+				set_light(BASALT_LIGHT_RANGE_BRIGHT, BASALT_LIGHT_POWER, LIGHT_COLOR_LAVA)
+			if("basalt5", "basalt9")
+				set_light(BASALT_LIGHT_RANGE_DIM, BASALT_LIGHT_POWER, LIGHT_COLOR_LAVA)
 
 /turf/open/floor/carpet
 	name = "carpet"

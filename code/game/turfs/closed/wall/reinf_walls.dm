@@ -4,9 +4,10 @@
 	icon = 'icons/turf/walls/reinforced_wall.dmi'
 	icon_state = "reinforced_wall-0"
 	base_icon_state = "reinforced_wall"
-	smoothing_flags = SMOOTH_BITMASK
 	opacity = TRUE
 	density = TRUE
+	turf_flags = IS_SOLID
+	smoothing_flags = SMOOTH_BITMASK
 	max_integrity = 900
 	damage_deflection = 21
 	armor_type = /datum/armor/r_wall_armor
@@ -273,6 +274,7 @@
 	icon = 'icons/turf/walls/plastitanium_wall.dmi'
 	icon_state = "plastitanium_wall-0"
 	base_icon_state = "plastitanium_wall"
+	turf_flags = IS_SOLID
 	smoothing_flags = SMOOTH_BITMASK | SMOOTH_DIAGONAL_CORNERS
 	smoothing_groups = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_SYNDICATE_WALLS, SMOOTH_GROUP_WALLS)
 	canSmoothWith = list(SMOOTH_GROUP_SYNDICATE_WALLS, SMOOTH_GROUP_PLASTITANIUM_WALLS, SMOOTH_GROUP_AIRLOCK, SMOOTH_GROUP_SHUTTLE_PARTS)

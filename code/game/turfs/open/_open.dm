@@ -7,10 +7,9 @@ CREATION_TEST_IGNORE_SELF(/turf/open)
 	FASTDMM_PROP(\
 		pipe_astar_cost = 1.5\
 	)
-	var/slowdown = 0 //negative for faster, positive for slower
+	///negative for faster, positive for slower
+	var/slowdown = 0
 
-	var/postdig_icon_change = FALSE
-	var/postdig_icon
 	var/wet
 
 	var/footstep = null
@@ -33,8 +32,17 @@ CREATION_TEST_IGNORE_SELF(/turf/open)
 	///Is this floor no-slip?
 	var/traction = FALSE
 
+	/// Number of variant states
+	var/variant_states = 0
+	/// Probability of a variant occuring
+	var/variant_probability = 0
+
 /turf/open/Initialize(mapload)
 	. = ..()
+
+	if (variant_probability && prob(variant_probability))
+		icon_state = "[icon_state][rand(1, variant_states)]"
+
 	if(wet)
 		AddComponent(/datum/component/wet_floor, wet, INFINITY, 0, INFINITY, TRUE)
 
@@ -276,6 +284,50 @@ CREATION_TEST_IGNORE_SELF(/turf/open)
 
 /turf/open/proc/ClearWet()//Nuclear option of immediately removing slipperyness from the tile instead of the natural drying over time
 	qdel(GetComponent(/datum/component/wet_floor))
+
+
+/// Builds with rods. This doesn't exist to be overriden, just to remove duplicate logic for turfs that want
+/// To support floor tile creation
+/// I'd make it a component, but one of these things is space. So no.
+/turf/open/proc/build_with_rods(obj/item/stack/rods/used_rods, mob/user)
+	var/obj/structure/lattice/catwalk_bait = locate(/obj/structure/lattice, src)
+	var/obj/structure/lattice/catwalk/existing_catwalk = locate(/obj/structure/lattice/catwalk, src)
+	if(existing_catwalk)
+		to_chat(user, span_warning("There is already a catwalk here!"))
+		return
+
+	if(catwalk_bait)
+		if(used_rods.use(1))
+			qdel(catwalk_bait)
+			to_chat(user, span_notice("You construct a catwalk."))
+			playsound(src, 'sound/weapons/genhit.ogg', 50, TRUE)
+			new /obj/structure/lattice/catwalk(src)
+		else
+			to_chat(user, span_warning("You need two rods to build a catwalk!"))
+		return
+
+	if(used_rods.use(1))
+		to_chat(user, span_notice("You construct a lattice."))
+		playsound(src, 'sound/weapons/genhit.ogg', 50, TRUE)
+		new /obj/structure/lattice(src)
+	else
+		to_chat(user, span_warning("You need one rod to build a lattice."))
+
+/// Very similar to build_with_rods, this exists to allow consistent behavior between different types in terms of how
+/// Building floors works
+/turf/open/proc/build_with_floor_tiles(obj/item/stack/tile/iron/used_tiles, user)
+	var/obj/structure/lattice/soon_to_be_floor = locate(/obj/structure/lattice, src)
+	if(!soon_to_be_floor)
+		to_chat(user, span_warning("The plating is going to need some support! Place metal rods first."))
+		return
+	if(!used_tiles.use(1))
+		to_chat(user, span_warning("You need one floor tile to build a floor!"))
+		return
+
+	qdel(soon_to_be_floor)
+	playsound(src, 'sound/weapons/genhit.ogg', 50, TRUE)
+	to_chat(user, span_notice("You build a floor."))
+	place_on_top(/turf/open/floor/plating, flags = CHANGETURF_INHERIT_AIR)
 
 /turf/open/proc/break_tile(force, allow_base)
 	LAZYINITLIST(damage_overlays)

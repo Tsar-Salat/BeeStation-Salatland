@@ -46,10 +46,10 @@ DEFINE_BITFIELD(smoothing_flags, list(
 #define SMOOTH_GROUP_FLOOR_LAVA S_TURF(2)				///turf/open/lava/smooth
 #define SMOOTH_GROUP_FLOOR_TRANSPARENT_GLASS S_TURF(3)	///turf/open/floor/glass
 #define SMOOTH_GROUP_OPEN_FLOOR S_TURF(4)				///turf/open/floor
-#define SMOOTH_GROUP_FLOOR_GRASS S_TURF(5)				///turf/open/floor/plating/grass
-#define SMOOTH_GROUP_FLOOR_ASH S_TURF(6)				///turf/open/floor/plating/ashplanet/ash
-#define SMOOTH_GROUP_FLOOR_ASH_ROCKY S_TURF(7)			///turf/open/floor/plating/ashplanet/rocky
-#define SMOOTH_GROUP_FLOOR_ICE S_TURF(8)				///turf/open/floor/plating/ice
+#define SMOOTH_GROUP_FLOOR_GRASS S_TURF(5)				///turf/open/misc/grass
+#define SMOOTH_GROUP_FLOOR_ASH S_TURF(6)				///turf/open/misc/ashplanet/ash
+#define SMOOTH_GROUP_FLOOR_ASH_ROCKY S_TURF(7)			///turf/open/misc/ashplanet/rocky
+#define SMOOTH_GROUP_FLOOR_ICE S_TURF(8)				///turf/open/misc/ice
 #define SMOOTH_GROUP_FLOOR_SNOWED S_TURF(9)				///turf/open/floor/plating/snowed
 #define SMOOTH_GROUP_CARPET S_TURF(10)					///turf/open/floor/carpet
 #define SMOOTH_GROUP_CARPET_BLACK S_TURF(11)			///turf/open/floor/carpet/black
@@ -73,7 +73,7 @@ DEFINE_BITFIELD(smoothing_flags, list(
 #define SMOOTH_GROUP_SURVIVAL_TITANIUM_WALLS S_TURF(30)	///turf/closed/wall/mineral/titanium/survival
 #define SMOOTH_GROUP_ELEVATED_PLASTEEL S_TURF(31)
 #define SMOOTH_GROUP_LOWERED_PLASTEEL S_TURF(32)
-#define SMOOTH_GROUP_FLOOR_BEACH S_TURF(33) 			///turf/open/floor/plating/beach/water
+#define SMOOTH_GROUP_FLOOR_BEACH S_TURF(33) 			///turf/open/misc/beach/water
 #define MAX_S_TURF SMOOTH_GROUP_LOWERED_PLASTEEL //Always match this value with the one above it.
 #define S_OBJ(num) (MAX_S_TURF + 1 + num)
 /* /obj included */

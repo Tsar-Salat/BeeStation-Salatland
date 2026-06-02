@@ -42,7 +42,7 @@ GLOBAL_ALIST_EMPTY(reftracker_skip_typecache_b)
 		// stuff below isn't 100% guaranteed to be ref-free, but they're prolly not an issue
 		/turf/closed/mineral,
 		/turf/open/lava,
-		/turf/open/floor/plating/asteroid,
+		/turf/open/misc/asteroid,
 		/turf/open/openspace,
 		/turf/open/space,
 		/obj/structure/flora,

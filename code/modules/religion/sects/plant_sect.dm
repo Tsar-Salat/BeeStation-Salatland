@@ -87,7 +87,7 @@
 				/turf/open/lava,
 				/turf/open/chasm,
 				/turf/open/openspace,
-				/turf/open/floor/plating/beach,
+				/turf/open/misc/beach,
 				/turf/open/indestructible,
 				/turf/open/floor/prison,
 			))

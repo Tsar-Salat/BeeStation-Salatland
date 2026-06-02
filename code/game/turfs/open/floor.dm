@@ -10,7 +10,7 @@
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
 	clawfootstep = FOOTSTEP_HARD_CLAW
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
-	turf_flags = CAN_BE_DIRTY_1
+	turf_flags = CAN_BE_DIRTY_1 | IS_SOLID
 	smoothing_groups = list(SMOOTH_GROUP_TURF_OPEN, SMOOTH_GROUP_OPEN_FLOOR)
 	canSmoothWith = list(SMOOTH_GROUP_TURF_OPEN, SMOOTH_GROUP_OPEN_FLOOR)
 
@@ -23,20 +23,11 @@
 
 	overfloor_placed = TRUE
 
-	var/icon_plating = "plating"
 	/// Path of the tile that this floor drops
 	var/floor_tile = null
 
-	/// Number of variant states
-	var/variant_states = 0
-	/// Probability of a variant occuring
-	var/variant_probability = 0
-
 /turf/open/floor/Initialize(mapload)
 	. = ..()
-
-	if (variant_probability && prob(variant_probability))
-		icon_state = "[icon_state][rand(1, variant_states)]"
 
 	if(mapload && prob(33))
 		MakeDirty()
@@ -52,10 +43,6 @@
 /turf/open/floor/is_shielded()
 	for(var/obj/structure/thing in contents)
 		return TRUE
-
-/turf/open/floor/update_icon()
-	. = ..()
-	update_visuals()
 
 /turf/open/floor/attack_paw(mob/user)
 	return attack_hand(user)

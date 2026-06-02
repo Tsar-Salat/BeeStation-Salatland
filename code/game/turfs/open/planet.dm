@@ -1,4 +1,4 @@
-/turf/open/floor/plating/dirt
+/turf/open/misc/dirt
 	gender = PLURAL
 	name = "dirt"
 	desc = "Upon closer examination, it's still dirt."
@@ -6,22 +6,21 @@
 	icon_state = "dirt"
 	initial_gas_mix = OPENTURF_LOW_PRESSURE
 	planetary_atmos = TRUE
-	attachment_holes = FALSE
 	footstep = FOOTSTEP_SAND
 	barefootstep = FOOTSTEP_SAND
 	clawfootstep = FOOTSTEP_SAND
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
 	tiled_dirt = FALSE
 	resistance_flags = INDESTRUCTIBLE
-	baseturfs = /turf/open/floor/plating/dirt
+	baseturfs = /turf/open/misc/dirt
 	smoothing_groups = list(SMOOTH_GROUP_TURF_OPEN, SMOOTH_GROUP_FLOOR_ICE)
 	canSmoothWith = list(SMOOTH_GROUP_FLOOR_ICE)
 
-/turf/open/floor/plating/dirt/planetary
+/turf/open/misc/dirt/planetary
 	initial_gas_mix = OPENTURF_DEFAULT_ATMOS
 	planetary_atmos = TRUE
 
-/turf/open/floor/plating/dirt/grass
+/turf/open/misc/dirt/grass
 	desc = "You're almost positive this is real grass."
 	icon = 'icons/turf/floors.dmi'
 	icon_state = "grass"
@@ -30,43 +29,61 @@
 	barefootstep = FOOTSTEP_GRASS
 	clawfootstep = FOOTSTEP_GRASS
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
-	baseturfs = /turf/open/floor/plating/dirt
+	baseturfs = /turf/open/misc/dirt
 
-/turf/open/floor/plating/dirt/dark
+/turf/open/misc/dirt/dark
 	icon_state = "greenerdirt"
+	base_icon_state = "greenerdirt"
 
-/turf/open/floor/plating/dirt/try_replace_tile(obj/item/stack/tile/T, mob/user, params)
-	return
+/turf/open/misc/dirt/dark/station
+	baseturfs = /turf/open/floor/plating
+	initial_gas_mix = OPENTURF_DEFAULT_ATMOS
+	planetary_atmos = FALSE
 
-/turf/open/floor/plating/dirt/jungle
+/turf/open/misc/dirt/dark/station/airless
+	initial_gas_mix = AIRLESS_ATMOS
+	temperature = TCMB
+
+/turf/open/misc/dirt/dark/jungle
 	slowdown = 0.5
 	initial_gas_mix = OPENTURF_DEFAULT_ATMOS
 
-/turf/open/floor/plating/dirt/jungle/dark
+/turf/open/misc/dirt/jungle/dark
 	icon_state = "greenerdirt"
+	base_icon_state = "greenerdirt"
 
-/turf/open/floor/plating/dirt/jungle/wasteland //Like a more fun version of living in Arizona.
+/turf/open/misc/dirt/jungle/wasteland //Like a more fun version of living in Arizona.
 	name = "cracked earth"
 	desc = "Looks a bit dry."
 	icon = 'icons/turf/floors.dmi'
 	icon_state = "wasteland"
+	base_icon_state = "wasteland"
 	slowdown = 1
 	variant_probability = 15
 	variant_states = 13
 
-/turf/open/floor/grass/jungle
+/turf/open/misc/grass/jungle
 	name = "jungle grass"
+	desc = "Greener on the other side."
 	initial_gas_mix = OPENTURF_DEFAULT_ATMOS
 	planetary_atmos = TRUE
-	desc = "Greener on the other side."
+	baseturfs = /turf/open/misc/dirt
+	icon_state = "junglegrass"
+	base_icon_state = "junglegrass"
 	color = "#0f9731"
 
-/turf/open/floor/grass/jungle/Initialize(mapload)
+/turf/open/misc/grass/jungle/Initialize(mapload)
 	.=..()
 	icon_state = "[initial(icon_state)][rand(1,3)]"
 
+/turf/open/misc/grass/jungle/lavaland
+	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
+
+/turf/open/misc/grass/jungle/station
+	baseturfs = /turf/open/misc/dirt/station
+
 /turf/closed/mineral/random/jungle
-	baseturfs = /turf/open/floor/plating/dirt/dark
+	baseturfs = /turf/open/misc/dirt/dark
 
 /turf/closed/mineral/random/jungle/mineral_chances()
 	return list(

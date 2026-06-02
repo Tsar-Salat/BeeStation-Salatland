@@ -13,15 +13,15 @@
 	var/view_range = 0
 	var/list/whitelist_turfs = list(
 		/turf/open/space,
-		/turf/open/floor/plating/lavaland,
-		/turf/open/floor/plating/asteroid,
+		/turf/open/floor/plating/lavaland_atmos,
+		/turf/open/misc/asteroid,
 		/turf/open/lava,
 		/turf/open/floor/dock,
 		/turf/open/floor/plating/snowed,
-		/turf/open/floor/plating/ice,
-		/turf/open/floor/plating/grass,
-		/turf/open/floor/plating/dirt/planetary,
-		/turf/open/floor/plating/beach,
+		/turf/open/misc/ice,
+		/turf/open/misc/grass,
+		/turf/open/misc/dirt/planetary,
+		/turf/open/misc/beach,
 
 	)
 	var/designate_time = 50

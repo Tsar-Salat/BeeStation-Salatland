@@ -423,7 +423,7 @@ GLOBAL_LIST_EMPTY(custom_shuttle_machines)		//Machines that require updating (He
 			to_chat(usr, span_warning("Warning, [place.mobile_port.name] is preventing designation in this region."))
 			return FALSE
 		if(!istype(t,/turf/open/floor/dock/drydock)) //Drydocks bypass the area check, but not the recursion check
-			var/static/list/drydock_types = typesof(/turf/open/floor/dock/drydock, /turf/open/floor/plating/grass, /turf/open/floor/plating/dirt/planetary, /turf/open/floor/plating/dirt/jungle/wasteland, /turf/open/floor/plating/beach/sand, /turf/open/floor/plating/asteroid/planetary)
+			var/static/list/drydock_types = typesof(/turf/open/floor/dock/drydock, /turf/open/misc/grass, /turf/open/misc/dirt/planetary, /turf/open/misc/dirt/jungle/wasteland, /turf/open/misc/beach/sand, /turf/open/misc/asteroid/planetary)
 			var/static/list/valid_area_types = typecacheof(list(
 				/area/misc/space,
 				/area/lavaland/surface/outdoors,

@@ -3,6 +3,7 @@ CREATION_TEST_IGNORE_SELF(/turf/closed)
 /turf/closed
 	abstract_type = /turf/closed
 	layer = CLOSED_TURF_LAYER
+	turf_flags = IS_SOLID
 	opacity = TRUE
 	density = TRUE
 	init_air = FALSE

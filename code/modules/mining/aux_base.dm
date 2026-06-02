@@ -103,7 +103,7 @@
 		for (var/z_level in SSmapping.levels_by_trait(ZTRAIT_MINING))
 			all_mining_turfs += Z_TURFS(z_level)
 		var/turf/LZ = safepick(all_mining_turfs) //Pick a random mining Z-level turf
-		if(!ismineralturf(LZ) && !istype(LZ, /turf/open/floor/plating/asteroid))
+		if(!ismineralturf(LZ) && !istype(LZ, /turf/open/misc/asteroid))
 		//Find a suitable mining turf. Reduces chance of landing in a bad area
 			to_chat(usr, span_warning("Landing zone scan failed. Please try again."))
 			updateUsrDialog()

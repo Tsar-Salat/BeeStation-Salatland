@@ -89,42 +89,14 @@ CREATION_TEST_IGNORE_SUBTYPES(/turf/open/openspace)
 	if(!CanBuildHere())
 		return
 	if(istype(C, /obj/item/stack/rods))
-		var/obj/item/stack/rods/R = C
-		var/obj/structure/lattice/L = locate(/obj/structure/lattice, src)
-		var/obj/structure/lattice/catwalk/W = locate(/obj/structure/lattice/catwalk, src)
-		if(W)
-			to_chat(user, span_warning("There is already a catwalk here!"))
-			return
-		if(L)
-			if(R.use(1))
-				to_chat(user, span_notice("You construct a catwalk."))
-				playsound(src, 'sound/weapons/genhit.ogg', 50, 1)
-				new/obj/structure/lattice/catwalk(src)
-			else
-				to_chat(user, span_warning("You need two rods to build a catwalk!"))
-			return
-		if(R.use(1))
-			to_chat(user, span_notice("You construct a lattice."))
-			playsound(src, 'sound/weapons/genhit.ogg', 50, 1)
-			ReplaceWithLattice()
-		else
-			to_chat(user, span_warning("You need one rod to build a lattice."))
+		build_with_rods(C, user)
+	else if(istype(C, /obj/item/stack/tile/iron))
+		build_with_floor_tiles(C, user)
+
+/turf/open/openspace/build_with_floor_tiles(obj/item/stack/tile/iron/used_tiles)
+	if(!CanCoverUp())
 		return
-	if(istype(C, /obj/item/stack/tile/iron))
-		if(!CanCoverUp())
-			return
-		var/obj/structure/lattice/L = locate(/obj/structure/lattice, src)
-		if(L)
-			var/obj/item/stack/tile/iron/S = C
-			if(S.use(1))
-				qdel(L)
-				playsound(src, 'sound/weapons/genhit.ogg', 50, 1)
-				to_chat(user, span_notice("You build a floor."))
-				place_on_top(/turf/open/floor/plating, flags = CHANGETURF_INHERIT_AIR)
-			else
-				to_chat(user, span_warning("You need one floor tile to build a floor!"))
-		else
-			to_chat(user, span_warning("The plating is going to need some support! Place iron rods first."))
+	return ..()
 
 /turf/open/openspace/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
 	if(!CanBuildHere())

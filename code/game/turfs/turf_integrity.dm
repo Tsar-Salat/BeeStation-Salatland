@@ -345,11 +345,19 @@
 /turf/proc/burn_tile()
 	return
 
+/turf/proc/break_tile()
+	return
+
 //====================================
 // Rust
 //====================================
 
 /turf/rust_heretic_act()
+	if((turf_flags & NO_RUST))
+		return
+	rust_turf()
+
+/turf/proc/rust_turf()
 	if(HAS_TRAIT(src, TRAIT_RUSTY))
 		return
 

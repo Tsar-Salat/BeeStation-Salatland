@@ -621,7 +621,7 @@
 	floor_tile = /obj/item/stack/tile/
 
 /turf/open/floor/iron/techmaint/planetary
-	baseturfs = /turf/open/floor/plating/asteroid
+	baseturfs = /turf/open/misc/asteroid
 	planetary_atmos = TRUE
 
 /turf/open/floor/iron/ridged
