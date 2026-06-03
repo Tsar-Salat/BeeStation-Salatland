@@ -17,6 +17,15 @@
 /datum/preference/choiced/quirk/junkie_drug/init_possible_values()
 	return list("Random") + assoc_to_keys(GLOB.possible_junkie_addictions)
 
+/datum/preference/choiced/quirk/junkie_drug/deserialize(input, datum/preferences/preferences)
+	if(istext(input) && length(input) && input[1] == "/")
+		var/path = text2path(input)
+		if(path)
+			for(var/name in GLOB.possible_junkie_addictions)
+				if(GLOB.possible_junkie_addictions[name] == path)
+					return name
+	return ..()
+
 /datum/preference/choiced/quirk/junkie_drug/compile_constant_data()
 	var/list/data = ..()
 	var/list/clean_names = list("Random" = "Random")
@@ -35,6 +44,15 @@
 /datum/preference/choiced/quirk/smoker_cigarettes/create_default_value()
 	return "Random"
 
+/datum/preference/choiced/quirk/smoker_cigarettes/deserialize(input, datum/preferences/preferences)
+	if(istext(input) && length(input) && input[1] == "/")
+		var/path = text2path(input)
+		if(path)
+			for(var/name in GLOB.possible_smoker_addictions)
+				if(GLOB.possible_smoker_addictions[name] == path)
+					return name
+	return ..()
+
 /datum/preference/choiced/quirk/smoker_cigarettes/compile_constant_data()
 	var/list/data = ..()
 	var/list/clean_names = list("Random" = "Random")
@@ -52,6 +70,15 @@
 
 /datum/preference/choiced/quirk/alcohol_type/create_default_value()
 	return "Random"
+
+/datum/preference/choiced/quirk/alcohol_type/deserialize(input, datum/preferences/preferences)
+	if(istext(input) && length(input) && input[1] == "/")
+		var/path = text2path(input)
+		if(path)
+			for(var/name in GLOB.possible_alcoholic_addictions)
+				if(GLOB.possible_alcoholic_addictions[name]["bottlepath"] == path)
+					return name
+	return ..()
 
 /datum/preference/choiced/quirk/alcohol_type/compile_constant_data()
 	var/list/data = ..()
