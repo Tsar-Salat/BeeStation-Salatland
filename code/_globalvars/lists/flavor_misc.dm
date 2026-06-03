@@ -44,9 +44,7 @@ GLOBAL_LIST_EMPTY(wings_open_list)
 GLOBAL_LIST_EMPTY(moth_wings_list)
 GLOBAL_LIST_EMPTY(moth_wings_roundstart_list)//this lacks the blacklisted wings such as burned, clockwork and angel
 GLOBAL_LIST_EMPTY(moth_antennae_list)
-GLOBAL_LIST_EMPTY(moth_antennae_roundstart_list)//this lacks the blacklisted antennae such as burned, clockwork and angel
 GLOBAL_LIST_EMPTY(moth_markings_list)
-GLOBAL_LIST_EMPTY(moth_markings_roundstart_list)//this lacks the blacklisted markings such as burned, clockwork and angel
 GLOBAL_LIST_EMPTY(moth_wingsopen_list)
 GLOBAL_LIST_EMPTY(caps_list)
 GLOBAL_LIST_EMPTY(ipc_screens_list)
@@ -68,28 +66,60 @@ GLOBAL_LIST_EMPTY(diona_pbody_list)
 
 
 GLOBAL_LIST_INIT(color_list_ethereal, list(
-	"Cyan" = "00ffff",
-	"Dark Green" = "0ab432",
-	"Dark Teal" = "5ea699",
-	"Denim Blue" = "3399ff",
-	"Gray" = "979497",
-	"Green" = "97ee63",
-	"Lavender" = "d1acff",
-	"Maroon" = "9c3030",
-	"Orange" = "f69c28",
-	"Orchid Purple" = "ee82ee",
-	"Powder Blue" = "95e5ff",
-	"Purple" = "a42df7",
-	"Red" = "ff3131",
-	"Rose" = "ff92b6",
-	"Royal Blue" = "5860f5",
-	"Sandy Yellow" = "ffefa5",
-	"Sea Green" = "37835b",
-	"Spring Green" = "00fa9a",
-	"Yellow" = "fbdf56",
+	"Cyan" = "#00ffff",
+	"Dark Green" = "#0ab432",
+	"Dark Teal" = "#5ea699",
+	"Denim Blue" = "#3399ff",
+	"Gray" = "#979497",
+	"Green" = "#97ee63",
+	"Lavender" = "#d1acff",
+	"Maroon" = "#9c3030",
+	"Orange" = "#f69c28",
+	"Orchid Purple" = "#ee82ee",
+	"Powder Blue" = "#95e5ff",
+	"Purple" = "#a42df7",
+	"Red" = "#ff3131",
+	"Rose" = "#ff92b6",
+	"Royal Blue" = "#5860f5",
+	"Sandy Yellow" = "#ffefa5",
+	"Sea Green" = "#37835b",
+	"Spring Green" = "#00fa9a",
+	"Yellow" = "#fbdf56",
 ))
 
-GLOBAL_LIST_INIT(ghost_forms_with_directions_list, list("ghost")) //stores the ghost forms that support directional sprites
+//stores the ghost forms that support directional sprites
+GLOBAL_LIST_INIT(ghost_forms_with_directions_list, list(
+	"catghost",
+	"ghost_black",
+	"ghost_blazeit",
+	"ghost_blue",
+	"ghost_camo",
+	"ghost_cyan",
+	"ghost_dblue",
+	"ghost_dcyan",
+	"ghost_dgreen",
+	"ghost_dpink",
+	"ghost_dred",
+	"ghost_dyellow",
+	"ghost_fire",
+	"ghost_funkypurp",
+	"ghost_green",
+	"ghost_grey",
+	"ghost_mellow",
+	"ghost_pink",
+	"ghost_pinksherbert",
+	"ghost_purpleswirl",
+	"ghost_rainbow",
+	"ghost_red",
+	"ghost_yellow",
+	"ghost",
+	"ghostian",
+	"ghostian2",
+	"ghostking",
+	"skeleghost",
+))
+
+//stores the ghost forms that support hair and other such things
 GLOBAL_LIST_INIT(ghost_forms_with_accessories_list, list(
 	"ghost",
 	"ghost_red",
@@ -114,8 +144,8 @@ GLOBAL_LIST_INIT(ghost_forms_with_accessories_list, list(
 	"ghost_pinksherbert",
 	"ghost_blazeit",
 	"ghost_mellow",
-	"ghost_camo",))
-	//stores the ghost forms that support hair and other such things
+	"ghost_camo",
+))
 
 GLOBAL_LIST_INIT(ai_core_display_screens, sort_list(list(
 	":thinking:",
@@ -188,18 +218,6 @@ GLOBAL_LIST_INIT(security_depts_prefs, sort_list(list(
 	SEC_DEPT_SUPPLY
 )))
 
-
-GLOBAL_LIST_INIT(backbaglist, list(
-	DBACKPACK,
-	DDUFFELBAG,
-	DSATCHEL,
-	GBACKPACK,
-	GDUFFELBAG,
-	GSATCHEL,
-	LSATCHEL
-))
-
-
 GLOBAL_LIST_INIT(jumpsuitlist, list(
 	PREF_SKIRT,
 	PREF_SUIT,
@@ -207,17 +225,15 @@ GLOBAL_LIST_INIT(jumpsuitlist, list(
 
 // What we show to the user
 GLOBAL_LIST_INIT(uplink_spawn_loc_list, list(
-	UPLINK_IMPLANT_WITH_PRICE,
 	UPLINK_PDA,
-	UPLINK_PEN,
 	UPLINK_RADIO,
+	UPLINK_PEN
 ))
 // What is actually saved; if the uplink implant price changes, it won't affect save files then
 GLOBAL_LIST_INIT(uplink_spawn_loc_list_save, list(
-	UPLINK_IMPLANT,
 	UPLINK_PDA,
-	UPLINK_PEN,
 	UPLINK_RADIO,
+	UPLINK_PEN
 ))
 
 	//Female Uniforms
@@ -338,7 +354,18 @@ GLOBAL_LIST_INIT(accents, list(
 	"Roadman" = ROADMAN_TALK_FILE,
 ))
 
-GLOBAL_LIST_INIT(smoker_cigarettes, list(
+GLOBAL_LIST_INIT(accents_donator, list(
+	"Cajun" = CAJUN_TALK_FILE,
+	"Texan" = TEXAN_TALK_FILE,
+	"South Metro" = SOUTHMETRO_TALK_FILE,
+	"Big Apple" = BIGAPPLE_TALK_FILE,
+	"Russian" = RUSSIAN_TALK_FILE,
+	"Dutch" = DUTCH_TALK_FILE,
+	"Finnish" = FINNISH_TALK_FILE,
+	"Irish" = IRISH_TALK_FILE,
+))
+
+GLOBAL_LIST_INIT(possible_smoker_addictions, setup_smoker_addictions(list(
 	/obj/item/storage/fancy/cigarettes,
 	/obj/item/storage/fancy/cigarettes/cigpack_midori,
 	/obj/item/storage/fancy/cigarettes/cigpack_uplift,
@@ -349,27 +376,36 @@ GLOBAL_LIST_INIT(smoker_cigarettes, list(
 	/obj/item/storage/fancy/cigarettes/cigars,
 	/obj/item/storage/fancy/cigarettes/cigars/cohiba,
 	/obj/item/storage/fancy/cigarettes/cigars/havana,
-	/obj/item/clothing/mask/vape
+	/obj/item/vape
+)))
+
+GLOBAL_LIST_INIT(possible_alcoholic_addictions, list(
+	"Buckin' Bronco's Applejack" = list("bottlepath" = /obj/item/reagent_containers/cup/glass/bottle/applejack, "reagent" = /datum/reagent/consumable/ethanol/applejack),
+	"Caccavo Guaranteed Quality Tequila" = list("bottlepath" = /obj/item/reagent_containers/cup/glass/bottle/tequila, "reagent" = /datum/reagent/consumable/ethanol/tequila),
+	"Captain Pete's Cuban Spiced Rum" = list("bottlepath" = /obj/item/reagent_containers/cup/glass/bottle/rum, "reagent" = /datum/reagent/consumable/ethanol/rum),
+	"Chateau De Baton Premium Cognac" = list("bottlepath" = /obj/item/reagent_containers/cup/glass/bottle/cognac, "reagent" = /datum/reagent/consumable/ethanol/cognac),
+	"Doublebeard's Bearded Special Wine" = list("bottlepath" = /obj/item/reagent_containers/cup/glass/bottle/wine, "reagent" = /datum/reagent/consumable/ethanol/wine),
+	"Extra-strong Absinthe" = list("bottlepath" = /obj/item/reagent_containers/cup/glass/bottle/absinthe, "reagent" = /datum/reagent/consumable/ethanol/absinthe),
+	"Goldeneye Vermouth" = list("bottlepath" = /obj/item/reagent_containers/cup/glass/bottle/vermouth, "reagent" = /datum/reagent/consumable/ethanol/vermouth),
+	"Griffeater Gin" = list("bottlepath" = /obj/item/reagent_containers/cup/glass/bottle/gin, "reagent" = /datum/reagent/consumable/ethanol/gin),
+	"Jian Hard Cider" = list("bottlepath" = /obj/item/reagent_containers/cup/glass/bottle/hcider, "reagent" = /datum/reagent/consumable/ethanol/hcider),
+	"Magm-Ale" = list("bottlepath" = /obj/item/reagent_containers/cup/glass/bottle/ale, "reagent" = /datum/reagent/consumable/ethanol/ale),
+	"Phillipes Well-aged Grappa" = list("bottlepath" = /obj/item/reagent_containers/cup/glass/bottle/grappa, "reagent" = /datum/reagent/consumable/ethanol/grappa),
+	"Robert Robust's Coffee Liqueur" = list("bottlepath" = /obj/item/reagent_containers/cup/glass/bottle/kahlua, "reagent" = /datum/reagent/consumable/ethanol/kahlua),
+	"Ryo's Traditional Sake " = list("bottlepath" = /obj/item/reagent_containers/cup/glass/bottle/sake, "reagent" = /datum/reagent/consumable/ethanol/sake),
+	"Space Beer" = list("bottlepath" = /obj/item/reagent_containers/cup/glass/bottle/beer, "reagent" = /datum/reagent/consumable/ethanol/beer),
+	"Tunguska Triple Distilled" = list("bottlepath" = /obj/item/reagent_containers/cup/glass/bottle/vodka, "reagent" = /datum/reagent/consumable/ethanol/vodka),
+	"Uncle Git's Special Reserve" = list("bottlepath" = /obj/item/reagent_containers/cup/glass/bottle/whiskey, "reagent" = /datum/reagent/consumable/ethanol/whiskey),
 ))
 
-GLOBAL_LIST_INIT(alcoholic_bottles, list(
-	/obj/item/reagent_containers/cup/glass/bottle/ale,
-	/obj/item/reagent_containers/cup/glass/bottle/beer,
-	/obj/item/reagent_containers/cup/glass/bottle/gin,
-	/obj/item/reagent_containers/cup/glass/bottle/whiskey,
-	/obj/item/reagent_containers/cup/glass/bottle/vodka,
-	/obj/item/reagent_containers/cup/glass/bottle/rum,
-	/obj/item/reagent_containers/cup/glass/bottle/applejack
-))
-
-GLOBAL_LIST_INIT(junkie_drugs, list(
+GLOBAL_LIST_INIT(possible_junkie_addictions, setup_junkie_addictions(list(
 	/datum/reagent/drug/crank,
 	/datum/reagent/drug/krokodil,
 	/datum/reagent/medicine/morphine,
 	/datum/reagent/drug/happiness,
 	/datum/reagent/drug/methamphetamine,
 	/datum/reagent/drug/ketamine
-))
+)))
 
 /// Naturally occuring hair colours
 GLOBAL_LIST_INIT(natural_hair_colours, list(

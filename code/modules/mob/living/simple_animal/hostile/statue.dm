@@ -53,7 +53,7 @@
 	var/cannot_be_seen = 1
 	var/mob/living/creator = null
 
-	discovery_points = 10000
+	discovery_points = TECHWEB_TIER_4_POINTS
 
 // No movement while seen code.
 
@@ -144,7 +144,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/hostile/statue)
 // Cannot talk
 
 /mob/living/simple_animal/hostile/statue/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
-	return 0
+	return
 
 // Turn to dust when gibbed
 

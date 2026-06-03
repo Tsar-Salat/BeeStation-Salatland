@@ -16,7 +16,7 @@ GLOBAL_LIST_INIT(dye_registry, list(
 		DYE_QM = /obj/item/clothing/under/rank/cargo/quartermaster,
 		DYE_LAW = /obj/item/clothing/under/suit/black,
 		DYE_CAPTAIN = /obj/item/clothing/under/rank/captain,
-		DYE_HOP = /obj/item/clothing/under/rank/civilian/head_of_personnel,
+		DYE_HOP = /obj/item/clothing/under/rank/civilian/hop,
 		DYE_HOS = /obj/item/clothing/under/rank/security/head_of_security,
 		DYE_CE = /obj/item/clothing/under/rank/engineering/chief_engineer,
 		DYE_RD = /obj/item/clothing/under/rank/rnd/research_director,
@@ -44,7 +44,7 @@ GLOBAL_LIST_INIT(dye_registry, list(
 		DYE_QM = /obj/item/clothing/under/rank/cargo/quartermaster/skirt,
 		DYE_LAW = /obj/item/clothing/under/suit/black/skirt,
 		DYE_CAPTAIN = /obj/item/clothing/under/rank/captain/skirt,
-		DYE_HOP = /obj/item/clothing/under/rank/civilian/head_of_personnel/skirt,
+		DYE_HOP = /obj/item/clothing/under/rank/civilian/hop/skirt,
 		DYE_HOS = /obj/item/clothing/under/rank/security/head_of_security/skirt,
 		DYE_CE = /obj/item/clothing/under/rank/engineering/chief_engineer/skirt,
 		DYE_RD = /obj/item/clothing/under/rank/rnd/research_director/skirt,
@@ -147,7 +147,7 @@ GLOBAL_LIST_INIT(dye_registry, list(
 		DYE_CLOWN = /obj/item/clothing/head/beret/clown,
 		DYE_QM = /obj/item/clothing/head/beret/cargo,
 		DYE_LAW = /obj/item/clothing/head/beret/black,
-		DYE_CAPTAIN = /obj/item/clothing/head/caphat/beret,
+		DYE_CAPTAIN = /obj/item/clothing/head/hats/caphat/beret,
 		DYE_HOS = /obj/item/clothing/head/hats/hos/beret,
 		DYE_CE = /obj/item/clothing/head/beret/ce,
 		DYE_RD = /obj/item/clothing/head/beret/science,
@@ -310,7 +310,7 @@ GLOBAL_LIST_INIT(dye_registry, list(
 	new /obj/item/food/meat/slab/corgi(loc)
 	qdel(src)
 
-/obj/item/clothing/head/mob_holder/machine_wash(obj/machinery/washing_machine/WM)
+/obj/item/mob_holder/machine_wash(obj/machinery/washing_machine/WM)
 	..()
 	held_mob.machine_wash(WM)
 	qdel(src)

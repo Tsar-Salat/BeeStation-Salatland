@@ -38,7 +38,7 @@
 	if(!ishuman(host_mob))
 		return
 
-	ADD_TRAIT(host_mob, TRAIT_NANITE_SENSORS, TRACKED_SENSORS_TRAIT)
+	ADD_TRAIT(host_mob, TRAIT_NANITE_SENSORS, TRAIT_TRACKED_SENSORS)
 	if(!HAS_TRAIT(host_mob, TRAIT_SUIT_SENSORS))
 		GLOB.suit_sensors_list += host_mob
 	host_mob.hud_set_nanite_indicator()
@@ -50,7 +50,7 @@
 	if(!ishuman(host_mob))
 		return
 
-	REMOVE_TRAIT(host_mob, TRAIT_NANITE_SENSORS, TRACKED_SENSORS_TRAIT)
+	REMOVE_TRAIT(host_mob, TRAIT_NANITE_SENSORS, TRAIT_TRACKED_SENSORS)
 	if(!HAS_TRAIT(host_mob, TRAIT_SUIT_SENSORS))
 		GLOB.suit_sensors_list -= host_mob
 	host_mob.hud_set_nanite_indicator()
@@ -172,7 +172,9 @@
 	var/points = 1
 	if(!host_mob.client) //less brainpower
 		points *= 0.25
-	SSresearch.science_tech.add_point_list(list(TECHWEB_POINT_TYPE_GENERIC = points))
+
+	var/datum/techweb/science_web = locate(/datum/techweb/science) in SSresearch.techwebs
+	science_web.add_point_list(list(TECHWEB_POINT_TYPE_GENERIC = points))
 
 /datum/nanite_program/researchplus
 	name = "Neural Network"
@@ -205,7 +207,8 @@
 	var/points = round(SSnanites.neural_network_count / 12, 0.1)
 	if(!C.client) //less brainpower
 		points *= 0.25
-	SSresearch.science_tech.add_point_list(list(TECHWEB_POINT_TYPE_GENERIC = points))
+	var/datum/techweb/science_web = locate(/datum/techweb/science) in SSresearch.techwebs
+	science_web.add_point_list(list(TECHWEB_POINT_TYPE_GENERIC = points))
 
 /datum/nanite_program/access
 	name = "Subdermal ID"

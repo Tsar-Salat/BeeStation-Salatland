@@ -6,8 +6,9 @@
 	replace_banned = FALSE
 	var/datum/mind/date
 	banning_key = UNBANNABLE_ANTAGONIST
+	leave_behaviour = ANTAGONIST_LEAVE_DESPAWN
 
-/datum/antagonist/valentine/proc/forge_objectives()
+/datum/antagonist/valentine/forge_objectives()
 	var/datum/objective/protect/protect_objective = new
 	protect_objective.owner = owner
 	protect_objective.set_target(date)

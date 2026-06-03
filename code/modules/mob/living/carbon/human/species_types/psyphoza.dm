@@ -2,9 +2,8 @@
 	name = "\improper Psyphoza"
 	plural_form = "Psyphoza"
 	id = SPECIES_PSYPHOZA
-	bodyflag = FLAG_PSYPHOZA
 	meat = /obj/item/food/meat/slab/human/mutant/psyphoza
-	species_traits = list(NOEYESPRITES, AGENDER, MUTCOLORS)
+	species_traits = list(NOEYESPRITES, AGENDER, MUTCOLORS, NOEYEHOLES)
 	sexes = FALSE
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | ERT_SPAWN | RACE_SWAP
 	species_language_holder = /datum/language_holder/psyphoza
@@ -12,13 +11,11 @@
 	allow_numbers_in_name = TRUE
 	inert_mutation = /datum/mutation/spores
 
-	offset_features = list(OFFSET_UNIFORM = list(0,0), OFFSET_ID = list(0,0), OFFSET_GLOVES = list(0,0), OFFSET_GLASSES = list(0,-2), OFFSET_EARS = list(0,-3), OFFSET_SHOES = list(0,0), OFFSET_S_STORE = list(0,0), OFFSET_FACEMASK = list(0,-2), OFFSET_HEAD = list(0,-2), OFFSET_FACE = list(0,-2), OFFSET_BELT = list(0,0), OFFSET_BACK = list(0,0), OFFSET_SUIT = list(0,0), OFFSET_NECK = list(0,0))
-
 	mutantbrain = /obj/item/organ/brain/psyphoza
 	mutanteyes = /obj/item/organ/eyes/psyphoza
 	mutanttongue = /obj/item/organ/tongue/psyphoza
 
-	mutant_bodyparts = list("psyphoza_cap" = "Portobello", "body_size" = "Normal", "mcolor" = "fff")
+	mutant_bodyparts = list("psyphoza_cap" = "Portobello", "body_size" = "Normal", "mcolor" = COLOR_WHITE)
 	hair_color = "fixedmutcolor"
 
 	bodypart_overrides = list(
@@ -29,9 +26,6 @@
 		BODY_ZONE_L_LEG = /obj/item/bodypart/leg/left/psyphoza,
 		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/psyphoza
 	)
-
-	//Fire bad!
-	burnmod = 1.25
 
 	species_height = SPECIES_HEIGHTS(2, 1, 0)
 
@@ -48,11 +42,6 @@
 	. = ..()
 	REMOVE_TRAIT(C, TRAIT_PSYCHIC_SENSE, SPECIES_TRAIT)
 	PH = null
-
-/datum/species/psyphoza/random_name(gender, unique, lastname, attempts)
-	. = "[pick(GLOB.psyphoza_first_names)] [pick(GLOB.psyphoza_last_names)]"
-	if(unique && attempts < 10 && findname(.))
-		return .(gender, TRUE, null, ++attempts)
 
 /datum/species/psyphoza/handle_chemicals(datum/reagent/chem, mob/living/carbon/human/H)
 	if(istype(chem, /datum/reagent/drug) && H.blood_volume < BLOOD_VOLUME_NORMAL)

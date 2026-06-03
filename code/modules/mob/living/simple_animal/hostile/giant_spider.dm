@@ -47,7 +47,6 @@
 	faction = list(FACTION_SPIDER)
 	pass_flags = PASSTABLE
 	move_to_delay = 4
-	ventcrawler = VENTCRAWLER_ALWAYS
 	attack_verb_continuous = "bites"
 	attack_verb_simple = "bite"
 	attack_sound = 'sound/weapons/bite.ogg'
@@ -74,7 +73,7 @@
 	var/datum/action/innate/spider/comm/comm
 	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	minbodytemp = 0
-	discovery_points = 1000
+	discovery_points = TECHWEB_TIER_1_POINTS
 	gold_core_spawnable = NO_SPAWN  //Spiders are introduced to the rounds through two types of antagonists
 
 /mob/living/simple_animal/hostile/poison/giant_spider/update_overlays() //Makes spiders eyes emissive, applies to all.
@@ -90,6 +89,7 @@
 	webbing.Grant(src)
 	wrap = new(src)
 	wrap.Grant(src)
+	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
 
 /mob/living/simple_animal/hostile/poison/giant_spider/mind_initialize()
 	. = ..()
@@ -133,7 +133,7 @@
 
 // Handles faster movement on webs
 // This is triggered after the first time a spider steps on/off a web, making web-peeking using this harder
-/mob/living/simple_animal/hostile/poison/giant_spider/Moved(atom/oldloc, dir)
+/mob/living/simple_animal/hostile/poison/giant_spider/Moved(atom/old_loc, movement_dir, forced, list/old_locs, momentum_change = TRUE)
 	. = ..()
 	if(onweb_speed == null)
 		return
@@ -561,7 +561,7 @@
 	. = ..()
 	if(!.)
 		return FALSE
-	if(owner.incapacitated())
+	if(owner.incapacitated)
 		return FALSE
 	if(DOING_INTERACTION(owner, INTERACTION_SPIDER_KEY))
 		return FALSE
@@ -715,12 +715,12 @@
 /mob/living/simple_animal/hostile/poison/giant_spider/handle_temperature_damage()
 	if(bodytemperature < minbodytemp)
 		adjustBruteLoss(10)
-		throw_alert("temp", /atom/movable/screen/alert/cold, 3)
+		throw_alert(ALERT_TEMPERATURE, /atom/movable/screen/alert/cold, 3)
 	else if(bodytemperature > maxbodytemp)
 		adjustBruteLoss(10)
-		throw_alert("temp", /atom/movable/screen/alert/hot, 3)
+		throw_alert(ALERT_TEMPERATURE, /atom/movable/screen/alert/hot, 3)
 	else
-		clear_alert("temp")
+		clear_alert(ALERT_TEMPERATURE)
 
 
 // Net casters are the balanced generalist of the spider family: Moderate stats all around, and a ranged knockdown to assist others

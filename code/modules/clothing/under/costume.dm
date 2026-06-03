@@ -1,4 +1,5 @@
 /obj/item/clothing/under/costume
+	abstract_type = /obj/item/clothing/under/costume
 	icon = 'icons/obj/clothing/under/costume.dmi'
 	worn_icon = 'icons/mob/clothing/under/costume.dmi'
 
@@ -107,7 +108,7 @@
 	female_sprite_flags = NO_FEMALE_UNIFORM
 	can_adjust = FALSE
 	resistance_flags = NONE
-	supports_variations = DIGITIGRADE_VARIATION_NO_NEW_ICON
+	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION_NO_NEW_ICON
 
 /obj/item/clothing/under/costume/gladiator/ash_walker
 	desc = "This gladiator uniform appears to be covered in ash and fairly dated."

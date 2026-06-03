@@ -14,25 +14,26 @@
 	desc = "Nothing like a good drink to make you feel on top of the world. Whenever you're drunk, you slowly recover from injuries."
 	icon = "wine-bottle"
 	quirk_value = 1
-	mob_trait = TRAIT_DRUNK_HEALING
 	gain_text = span_notice("You feel like a drink would do you good.")
 	lose_text = span_danger("You no longer feel like drinking would ease your pain.")
 	medical_record_text = "Patient has unusually efficient liver metabolism and can slowly regenerate wounds by drinking alcoholic beverages."
 	quirk_flags = QUIRK_HUMAN_ONLY|QUIRK_PROCESSES
-	//mail_goodies = list(/obj/effect/spawner/random/food_or_drink/booze)
+	mail_goodies = list(/obj/effect/spawner/random/food_or_drink/booze)
 
 /datum/quirk/drunkhealing/process(delta_time)
-	var/mob/living/carbon/carbon_holder = quirk_target
-	switch(carbon_holder.drunkenness)
+	var/need_mob_update = FALSE
+	switch(quirk_target.get_drunk_amount())
 		if (6 to 40)
-			carbon_holder.adjustBruteLoss(-0.1*delta_time, FALSE)
-			carbon_holder.adjustFireLoss(-0.05*delta_time, FALSE)
+			need_mob_update += quirk_target.adjustBruteLoss(-0.1 * delta_time, updating_health = FALSE, required_bodytype = BODYTYPE_ORGANIC)
+			need_mob_update += quirk_target.adjustFireLoss(-0.05 * delta_time, updating_health = FALSE, required_bodytype = BODYTYPE_ORGANIC)
 		if (41 to 60)
-			carbon_holder.adjustBruteLoss(-0.4*delta_time, FALSE)
-			carbon_holder.adjustFireLoss(-0.2*delta_time, FALSE)
+			need_mob_update += quirk_target.adjustBruteLoss(-0.4 * delta_time, updating_health = FALSE, required_bodytype = BODYTYPE_ORGANIC)
+			need_mob_update += quirk_target.adjustFireLoss(-0.2 * delta_time, updating_health = FALSE, required_bodytype = BODYTYPE_ORGANIC)
 		if (61 to INFINITY)
-			carbon_holder.adjustBruteLoss(-0.8*delta_time, FALSE)
-			carbon_holder.adjustFireLoss(-0.4*delta_time, FALSE)
+			need_mob_update += quirk_target.adjustBruteLoss(-0.8 * delta_time, updating_health = FALSE, required_bodytype = BODYTYPE_ORGANIC)
+			need_mob_update += quirk_target.adjustFireLoss(-0.4 * delta_time, updating_health = FALSE, required_bodytype = BODYTYPE_ORGANIC)
+	if(need_mob_update)
+		quirk_target.updatehealth()
 
 /datum/quirk/empath
 	name = "Empath"
@@ -72,10 +73,18 @@
 	desc = "You sometimes just feel happy, for no reason at all."
 	icon = "grin"
 	quirk_value = 1
-	mob_trait = TRAIT_JOLLY
 	quirk_flags = QUIRK_HUMAN_ONLY|QUIRK_MOODLET_BASED
 	medical_record_text = "Patient demonstrates constant euthymia irregular for environment. It's a bit much, to be honest."
 	mail_goodies = list(/obj/item/clothing/mask/joy)
+
+/datum/quirk/jolly/process(seconds_per_tick)
+	// 0.416% is 15 successes / 3600 seconds. Calculated with 2 minute
+	// mood runtime, so 50% average uptime across the hour.
+	if(DT_PROB(0.416, seconds_per_tick))
+		SEND_SIGNAL(quirk_target, COMSIG_ADD_MOOD_EVENT, "jolly", /datum/mood_event/jolly)
+
+/datum/quirk/jolly/remove()
+	SEND_SIGNAL(quirk_target, COMSIG_CLEAR_MOOD_EVENT, "jolly")
 
 /datum/quirk/light_step
 	name = "Light Step"
@@ -109,32 +118,15 @@
 	medical_record_text = "Patient knows more than one language."
 	var/datum/language/known_language
 
-/datum/quirk/multilingual/proc/set_up_language()
-	var/datum/language_holder/LH = quirk_target.get_language_holder()
-	if(quirk_holder.assigned_role == JOB_NAME_CURATOR)
-		return
-	var/obj/item/organ/tongue/T = quirk_target.get_organ_slot(ORGAN_SLOT_TONGUE)
-	var/list/languages_possible = T.get_possible_languages()
-	languages_possible = languages_possible - typecacheof(/datum/language/codespeak) - typecacheof(/datum/language/narsie) - typecacheof(/datum/language/ratvar)
-	languages_possible = languages_possible - LH.understood_languages
-	languages_possible = languages_possible - LH.spoken_languages
-	languages_possible = languages_possible - LH.blocked_languages
-	if(length(languages_possible))
-		known_language = pick(languages_possible)
-//Credit To Yowii/Yoworii/Yorii for a much more streamlined method of language library building
-
 /datum/quirk/multilingual/add(client/client_source)
 	known_language = read_choice_preference(/datum/preference/choiced/quirk/multilingual_language)
-	if(!known_language) // default to random
-		set_up_language()
-	var/datum/language_holder/LH = quirk_target.get_language_holder()
-	LH.grant_language(known_language, source = LANGUAGE_MULTILINGUAL)
+	known_language ||= pick(GLOB.multilingual_language_list)
+	quirk_target.grant_language(known_language, source = LANGUAGE_MULTILINGUAL)
 
 /datum/quirk/multilingual/remove()
 	if(!known_language)
 		return
-	var/datum/language_holder/LH = quirk_target.get_language_holder()
-	LH.remove_language(known_language, source = LANGUAGE_MULTILINGUAL)
+	quirk_target.remove_language(known_language, source = LANGUAGE_MULTILINGUAL)
 
 /datum/quirk/night_vision
 	name = "Night Vision"
@@ -233,14 +225,13 @@
 	gain_text = span_notice("You feel HONGRY.")
 	lose_text = span_danger("You no longer feel HONGRY.")
 	medical_record_text = "Patient has an above average appreciation for food and drink."
-	//mail_goodies = list(/obj/effect/spawner/random/food_or_drink/dinner)
+	mail_goodies = list(/obj/effect/spawner/random/food_or_drink/dinner)
 
 /datum/quirk/neet
 	name = "NEET"
 	desc = "For some reason you qualified for social welfare."
 	icon = "money-check-alt"
 	quirk_value = 1
-	mob_trait = TRAIT_NEET
 	gain_text = span_notice("You feel useless to society.")
 	lose_text = span_danger("You no longer feel useless to society.")
 	quirk_flags = QUIRK_HUMAN_ONLY|QUIRK_MOODLET_BASED

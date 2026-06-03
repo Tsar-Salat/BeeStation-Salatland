@@ -19,7 +19,7 @@
 		flip(user)
 
 /obj/item/clothing/head/soft/proc/flip(mob/user)
-	if(!user.incapacitated() && flippable == TRUE)
+	if(!user.incapacitated && flippable == TRUE)
 		flipped = !flipped
 		if(flipped)
 			icon_state = "[soft_color]soft_flipped"
@@ -31,10 +31,8 @@
 
 /obj/item/clothing/head/soft/equipped(mob/user, slot)
 	. = ..()
-	if(slot == ITEM_SLOT_HEAD)
-		if(HAS_TRAIT(user, TRAIT_PROSKATER))
-			if(!flipped)
-				flip(user)
+	if(slot == ITEM_SLOT_HEAD && HAS_TRAIT(user, TRAIT_PROSKATER) && !flipped)
+		flip(user)
 
 /obj/item/clothing/head/soft/examine(mob/user)
 	. = ..()
@@ -69,15 +67,6 @@
 	desc = "It's a baseball hat in a tasteful grey colour."
 	icon_state = "greysoft"
 	soft_color = "grey"
-
-/* A grey baseball cap that grants TRAIT_JOLLY when it's on your head.
- * Used for testing that gaining and losing the JOLLY trait behaves properly.
- * Also a perfectly valid weird admin reward.
- */
-/obj/item/clothing/head/soft/grey/jolly
-	name = "jolly grey cap"
-	desc = "It's a baseball hat in a sublime grey colour. Why, wearing this alone would boost a person's spirits!"
-	clothing_traits = list(TRAIT_JOLLY)
 
 /obj/item/clothing/head/soft/orange
 	name = "orange cap"

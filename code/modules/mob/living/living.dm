@@ -22,10 +22,14 @@
 		addtimer(CALLBACK(src, PROC_REF(set_playable)), 2 SECONDS) //announce playable mobs to ghosts
 		// this should be delayed because some 'playable=TRUE' mobs are not actually playable because mob key is automatically given
 		// it prevents 'GLOB.poi_list' being glitched. without this, it will show xeno(or some mobs) twice in orbit panel.
+
 	//color correction
-	RegisterSignal(src, COMSIG_MOVABLE_ENTERED_AREA, PROC_REF(apply_color_correction))
+	RegisterSignal(src, COMSIG_ENTER_AREA, PROC_REF(apply_color_correction))
+	become_area_sensitive()
+
 	gravity_setup()
 	AddElement(/datum/element/movetype_handler)
+
 
 /mob/living/prepare_huds()
 	..()
@@ -60,7 +64,7 @@
 		return
 	if(buckled || now_pushing)
 		return
-	if(confused && stat == CONSCIOUS && body_position == STANDING_UP && m_intent == "run" && !ismovable(A) && !HAS_TRAIT(src, TRAIT_NO_BUMP_SLAM))
+	if(has_status_effect(/datum/status_effect/confusion) && stat == CONSCIOUS && body_position == STANDING_UP && m_intent == "run" && !ismovable(A) && !HAS_TRAIT(src, TRAIT_NO_BUMP_SLAM))
 		ADD_TRAIT(src, TRAIT_NO_BUMP_SLAM, type) //Bump() is called continuously so ratelimit the check to 20 seconds if it passes or 5 if it doesn't
 		if(prob(10))
 			playsound(get_turf(src), "punch", 25, 1, -1)
@@ -420,13 +424,17 @@
 	stop_pulling()
 
 //same as above
-/mob/living/pointed(atom/A as mob|obj|turf in view())
-	if(incapacitated())
+/mob/living/pointed(atom/A as mob|obj|turf in view(client.view, src))
+	if(incapacitated)
 		return FALSE
+
+	return ..()
+
+/mob/living/_pointed(atom/pointing_at)
 	if(!..())
 		return FALSE
-	visible_message("<b>[src]</b> points at [A].", span_notice("You point at [A]."))
-	return TRUE
+	log_message("points at [pointing_at]", LOG_EMOTE)
+	visible_message(span_infoplain("[span_name("[src]")] points at [pointing_at]."), span_notice("You point at [pointing_at]."))
 
 
 /mob/living/verb/succumb(whispered as null)
@@ -446,31 +454,21 @@
 	investigate_log("has succumbed to death.", INVESTIGATE_DEATHS)
 	death()
 
-/**
- * Checks if a mob is incapacitated
- *
- * Normally being restrained, agressively grabbed, or in stasis counts as incapacitated
- * unless there is a flag being used to check if it's ignored
- *
- * args:
- * * flags (optional) bitflags that determine if special situations are exempt from being considered incapacitated
- *
- * bitflags: (see code/__DEFINES/status_effects.dm)
- * * IGNORE_RESTRAINTS - mob in a restraint (handcuffs) is not considered incapacitated
- * * IGNORE_STASIS - mob in stasis (stasis bed, etc.) is not considered incapacitated
- * * IGNORE_GRAB - mob that is agressively grabbed is not considered incapacitated
-**/
-/mob/living/incapacitated(flags)
+// Remember, anything that influences this needs to call update_incapacitated somehow when it changes
+// Most often best done in [code/modules/mob/living/init_signals.dm]
+/mob/living/build_incapacitated()
+	// Holds a set of flags that describe how we are currently incapacitated
+	var/incap_status = NONE
 	if(HAS_TRAIT(src, TRAIT_INCAPACITATED))
-		return TRUE
+		incap_status |= TRADITIONAL_INCAPACITATED
+	if(HAS_TRAIT(src, TRAIT_RESTRAINED))
+		incap_status |= INCAPABLE_RESTRAINTS
+	if(pulledby && pulledby.grab_state >= GRAB_AGGRESSIVE)
+		incap_status |= INCAPABLE_GRAB
+	if(IS_IN_STASIS(src))
+		incap_status |= INCAPABLE_STASIS
 
-	if(!(flags & IGNORE_RESTRAINTS) && HAS_TRAIT(src, TRAIT_RESTRAINED))
-		return TRUE
-	if(!(flags & IGNORE_GRAB) && pulledby && pulledby.grab_state >= GRAB_AGGRESSIVE)
-		return TRUE
-	if(!(flags & IGNORE_STASIS) && IS_IN_STASIS(src))
-		return TRUE
-	return FALSE
+	return incap_status
 
 /mob/living/canUseStorage()
 	if (usable_hands <= 0)
@@ -506,6 +504,12 @@
 /mob/living/proc/setMaxHealth(newMaxHealth)
 	maxHealth = newMaxHealth
 
+/// Returns the health of the mob while ignoring damage of non-organic (prosthetic) limbs
+/// Used by cryo cells to not permanently imprison those with damage from prosthetics,
+/// as they cannot be healed through chemicals.
+/mob/living/proc/get_organic_health()
+	return health
+
 // MOB PROCS //END
 
 /mob/living/proc/mob_sleep()
@@ -522,6 +526,14 @@
 
 /mob/proc/get_contents()
 
+/**
+ * Returns the access list for this mob
+ */
+/mob/living/proc/get_access()
+	var/obj/item/card/id/id = get_idcard()
+	if(isnull(id))
+		return list()
+	return id.GetAccess()
 
 /mob/living/proc/toggle_resting()
 	set name = "Rest"
@@ -532,8 +544,11 @@
 
 ///Proc to hook behavior to the change of value in the resting variable.
 /mob/living/proc/set_resting(new_resting, silent = TRUE, instant = FALSE)
+	if(!(mobility_flags & MOBILITY_REST))
+		return
 	if(new_resting == resting)
 		return
+
 	. = resting
 	resting = new_resting
 	if(new_resting)
@@ -579,7 +594,7 @@
 
 
 /mob/living/proc/rest_checks_callback()
-	if(resting || lying_angle == 0 || HAS_TRAIT(src, TRAIT_FLOORED))
+	if(resting || body_position == STANDING_UP || HAS_TRAIT(src, TRAIT_FLOORED))
 		return FALSE
 	return TRUE
 
@@ -593,9 +608,7 @@
 /mob/living/proc/on_lying_down(new_lying_angle)
 	if(layer == initial(layer)) //to avoid things like hiding larvas.
 		layer = LYING_MOB_LAYER //so mob lying always appear behind standing mobs
-	ADD_TRAIT(src, TRAIT_UI_BLOCKED, LYING_DOWN_TRAIT)
-	ADD_TRAIT(src, TRAIT_PULL_BLOCKED, LYING_DOWN_TRAIT)
-	ADD_TRAIT(src, TRAIT_UNDENSE, LYING_DOWN_TRAIT)
+	add_traits(list(TRAIT_UI_BLOCKED, TRAIT_PULL_BLOCKED, TRAIT_UNDENSE), LYING_DOWN_TRAIT)
 	if(HAS_TRAIT(src, TRAIT_FLOORED) && !(dir & (NORTH|SOUTH)))
 		setDir(pick(NORTH, SOUTH)) // We are and look helpless.
 
@@ -605,9 +618,7 @@
 	if(layer == LYING_MOB_LAYER)
 		layer = initial(layer)
 	density = initial(density) // We were prone before, so we become dense and things can bump into us again.
-	REMOVE_TRAIT(src, TRAIT_UI_BLOCKED, LYING_DOWN_TRAIT)
-	REMOVE_TRAIT(src, TRAIT_PULL_BLOCKED, LYING_DOWN_TRAIT)
-	REMOVE_TRAIT(src, TRAIT_UNDENSE, LYING_DOWN_TRAIT)
+	remove_traits(list(TRAIT_UI_BLOCKED, TRAIT_PULL_BLOCKED, TRAIT_UNDENSE), LYING_DOWN_TRAIT)
 
 /mob/living/proc/update_density()
 	if(HAS_TRAIT(src, TRAIT_UNDENSE))
@@ -780,13 +791,13 @@
 	var/oxy_to_heal = heal_to - getOxyLoss()
 	var/tox_to_heal = heal_to - getToxLoss()
 	if(brute_to_heal < 0)
-		adjustBruteLoss(brute_to_heal, FALSE)
+		adjustBruteLoss(brute_to_heal, updating_health = FALSE)
 	if(burn_to_heal < 0)
-		adjustFireLoss(burn_to_heal, FALSE)
+		adjustFireLoss(burn_to_heal, updating_health = FALSE)
 	if(oxy_to_heal < 0)
-		adjustOxyLoss(oxy_to_heal, FALSE)
+		adjustOxyLoss(oxy_to_heal, updating_health = FALSE)
 	if(tox_to_heal < 0)
-		adjustToxLoss(tox_to_heal, FALSE, TRUE)
+		adjustToxLoss(tox_to_heal, updating_health = FALSE, forced = TRUE)
 
 	// Run updatehealth once to set health for the revival check
 	updatehealth()
@@ -818,28 +829,31 @@
 	SHOULD_CALL_PARENT(TRUE)
 
 	if(heal_flags & HEAL_TOX)
-		setToxLoss(0, FALSE, TRUE)
+		setToxLoss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_OXY)
-		setOxyLoss(0, FALSE, TRUE)
+		setOxyLoss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_CLONE)
-		setCloneLoss(0, FALSE, TRUE)
+		setCloneLoss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_BRUTE)
-		setBruteLoss(0, FALSE, TRUE)
+		setBruteLoss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_BURN)
-		setFireLoss(0, FALSE, TRUE)
+		setFireLoss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_STAM)
-		setStaminaLoss(0, FALSE, TRUE)
+		setStaminaLoss(0, updating_stamina = FALSE, forced = TRUE)
 
 	// I don't really care to keep this under a flag
 	set_nutrition(NUTRITION_LEVEL_FED + 50)
 
 	// These should be tracked by status effects
 	losebreath = 0
+	set_blindness(0)
 	set_disgust(0)
+	cure_nearsighted()
+	cure_blind()
 	cure_husk()
+
 	qdel(GetComponent(/datum/component/irradiated))
-	ExtinguishMob()
-	fire_stacks = 0
+	extinguish_mob()
 
 	if(heal_flags & HEAL_TEMP)
 		bodytemperature = get_body_temp_normal(apply_change = FALSE)
@@ -914,6 +928,22 @@
 	if(body_position == LYING_DOWN && !buckled && prob(getBruteLoss()*200/maxHealth))
 		makeTrail(newloc, T, old_direction)
 
+/**
+ * Called by mob/living attackby()
+ * Checks if there's active surgery on the mob that can be continued with the item
+ */
+/mob/living/proc/can_perform_surgery(mob/living/user, params)
+	for(var/datum/surgery/operations as anything in surgeries)
+		if(user.combat_mode)
+			break
+		if(IS_IN_INVALID_SURGICAL_POSITION(src, operations))
+			continue
+		if(!(operations.surgery_flags & SURGERY_SELF_OPERABLE) && (user == src))
+			continue
+		var/list/modifiers = params2list(params)
+		if(operations.next_step(user, modifiers))
+			return TRUE
+	return FALSE
 
 ///Called by mob Move() when the lying_angle is different than zero, to better visually simulate crawling.
 /mob/living/proc/lying_angle_on_movement(direct)
@@ -933,7 +963,7 @@
 	var/glowyblood = FALSE
 	if(ishuman(src))
 		var/mob/living/carbon/human/humanoid = src
-		glowyblood = humanoid.dna.blood_type.glowy
+		glowyblood = humanoid.dna.blood_type?.glowy
 
 	if(isturf(start))
 		var/trail_type = getTrail()
@@ -1076,7 +1106,7 @@
 	buckled.user_unbuckle_mob(src,src)
 
 /mob/living/proc/resist_fire()
-	return
+	return FALSE
 
 /mob/living/proc/resist_restraints()
 	return
@@ -1095,7 +1125,6 @@
 		if(-INFINITY to NEGATIVE_GRAVITY)
 			if(!istype(gravity_alert, /atom/movable/screen/alert/negative))
 				throw_alert(ALERT_GRAVITY, /atom/movable/screen/alert/negative)
-				ADD_TRAIT(src, TRAIT_MOVE_UPSIDE_DOWN, NEGATIVE_GRAVITY_TRAIT)
 				var/matrix/flipped_matrix = transform
 				flipped_matrix.b = -flipped_matrix.b
 				flipped_matrix.e = -flipped_matrix.e
@@ -1120,19 +1149,18 @@
 	if(istype(gravity_alert, /atom/movable/screen/alert/weightless))
 		REMOVE_TRAIT(src, TRAIT_MOVE_FLOATING, NO_GRAVITY_TRAIT)
 	if(istype(gravity_alert, /atom/movable/screen/alert/negative))
-		REMOVE_TRAIT(src, TRAIT_MOVE_UPSIDE_DOWN, NEGATIVE_GRAVITY_TRAIT)
 		var/matrix/flipped_matrix = transform
 		flipped_matrix.b = -flipped_matrix.b
 		flipped_matrix.e = -flipped_matrix.e
 		animate(src, transform = flipped_matrix, pixel_y = pixel_y-4, time = 0.5 SECONDS, easing = EASE_OUT, flags = ANIMATION_PARALLEL)
 		base_pixel_y -= 4
 
-/mob/living/singularity_pull(S, current_size)
-	..()
+/mob/living/singularity_pull(obj/anomaly/singularity/singularity, current_size)
+	. = ..()
 	if(current_size >= STAGE_SIX) //your puny magboots/wings/whatever will not save you against supermatter singularity
-		throw_at(S, 14, 3, src, TRUE)
-	else if(!src.mob_negates_gravity())
-		step_towards(src,S)
+		throw_at(singularity, 14, 3, src, TRUE)
+	else if(!mob_negates_gravity())
+		step_towards(src, singularity)
 
 /mob/living/proc/do_stun_animation()
 	var/matrix/rotation_matrix = matrix()
@@ -1332,14 +1360,14 @@
 				/mob/living/basic/pet/dog/corgi,
 				/mob/living/simple_animal/crab,
 				/mob/living/basic/pet/dog/pug,
-				/mob/living/simple_animal/pet/cat,
-				/mob/living/simple_animal/mouse,
+				/mob/living/basic/pet/cat,
+				/mob/living/basic/mouse,
 				/mob/living/simple_animal/chicken,
 				/mob/living/basic/cow,
 				/mob/living/simple_animal/hostile/lizard,
 				/mob/living/simple_animal/pet/fox,
 				/mob/living/simple_animal/butterfly,
-				/mob/living/simple_animal/pet/cat/cak,
+				/mob/living/basic/pet/cat/cak,
 				/mob/living/simple_animal/chick,
 				/mob/living/simple_animal/slime/random,
 				/mob/living/carbon/monkey,
@@ -1430,65 +1458,152 @@
 	if(.)
 		return
 
-/mob/living/proc/fakefireextinguish()
-	return
-
-/mob/living/proc/fakefire()
-	return
-
 /mob/living/proc/unfry_mob() //Callback proc to tone down spam from multiple sizzling frying oil dipping.
 	REMOVE_TRAIT(src, TRAIT_OIL_FRIED, "cooking_oil_react")
 
 //Mobs on Fire
-/mob/living/proc/IgniteMob()
-	if(fire_stacks > 0 && !on_fire)
-		on_fire = 1
-		src.visible_message(span_warning("[src] catches fire!"), \
-						span_userdanger("You're set on fire!"))
-		new/obj/effect/dummy/lighting_obj/moblight/fire(src)
-		throw_alert("fire", /atom/movable/screen/alert/fire)
-		update_fire()
-		SEND_SIGNAL(src, COMSIG_LIVING_IGNITED,src)
-		return TRUE
-	return FALSE
 
-/mob/living/proc/ExtinguishMob()
-	if(on_fire)
-		on_fire = 0
-		fire_stacks = 0
-		for(var/obj/effect/dummy/lighting_obj/moblight/fire/F in src)
-			qdel(F)
-		clear_alert("fire")
-		SEND_SIGNAL(src, COMSIG_CLEAR_MOOD_EVENT, "on_fire")
-		SEND_SIGNAL(src, COMSIG_LIVING_EXTINGUISHED, src)
-		update_fire()
+/// Global list that containes cached fire overlays for mobs
+GLOBAL_LIST_EMPTY(fire_appearances)
 
-/mob/living/proc/adjust_fire_stacks(add_fire_stacks) //Adjusting the amount of fire_stacks we have on person
-	fire_stacks = clamp(fire_stacks + add_fire_stacks, -20, 20)
-	if(on_fire && fire_stacks <= 0)
-		ExtinguishMob()
+/mob/living/proc/ignite_mob(silent)
+	if(fire_stacks <= 0)
+		return FALSE
+
+	var/datum/status_effect/fire_handler/fire_stacks/fire_status = has_status_effect(/datum/status_effect/fire_handler/fire_stacks)
+	if(!fire_status || fire_status.on_fire)
+		return FALSE
+
+	return fire_status.ignite(silent)
+
+/mob/living/proc/extinguish_mob()
+	if(HAS_TRAIT(src, TRAIT_NO_EXTINGUISH)) //The everlasting flames will not be extinguished
+		return
+	var/datum/status_effect/fire_handler/fire_stacks/fire_status = has_status_effect(/datum/status_effect/fire_handler/fire_stacks)
+	if(!fire_status || !fire_status.on_fire)
+		return
+	remove_status_effect(/datum/status_effect/fire_handler/fire_stacks)
+
+/**
+ * Adjust the amount of fire stacks on a mob
+ *
+ * This modifies the fire stacks on a mob.
+ *
+ * Vars:
+ * * stacks: int The amount to modify the fire stacks
+ * * fire_type: type Type of fire status effect that we apply, should be subtype of /datum/status_effect/fire_handler/fire_stacks
+ */
+
+/mob/living/proc/adjust_fire_stacks(stacks, fire_type = /datum/status_effect/fire_handler/fire_stacks)
+	if(stacks < 0)
+		if(HAS_TRAIT(src, TRAIT_NO_EXTINGUISH)) //You can't reduce fire stacks of the everlasting flames
+			return
+		stacks = max(-fire_stacks, stacks)
+	apply_status_effect(fire_type, stacks)
+
+/mob/living/proc/adjust_wet_stacks(stacks, wet_type = /datum/status_effect/fire_handler/wet_stacks)
+	if(HAS_TRAIT(src, TRAIT_NO_EXTINGUISH)) //The everlasting flames will not be extinguished
+		return
+	if(stacks < 0)
+		stacks = max(fire_stacks, stacks)
+	apply_status_effect(wet_type, stacks)
+
+/**
+ * Set the fire stacks on a mob
+ *
+ * This sets the fire stacks on a mob, stacks are clamped between -20 and 20.
+ * If the fire stacks are reduced to 0 then we will extinguish the mob.
+ *
+ * Vars:
+ * * stacks: int The amount to set fire_stacks to
+ * * fire_type: type Type of fire status effect that we apply, should be subtype of /datum/status_effect/fire_handler/fire_stacks
+ * * remove_wet_stacks: bool If we remove all wet stacks upon doing this
+ */
+
+/mob/living/proc/set_fire_stacks(stacks, fire_type = /datum/status_effect/fire_handler/fire_stacks, remove_wet_stacks = TRUE)
+	if(stacks < 0) //Shouldn't happen, ever
+		CRASH("set_fire_stacks received negative [stacks] fire stacks")
+
+	if(remove_wet_stacks)
+		remove_status_effect(/datum/status_effect/fire_handler/wet_stacks)
+
+	if(stacks == 0)
+		remove_status_effect(fire_type)
+		return
+
+	apply_status_effect(fire_type, stacks, TRUE)
+
+/mob/living/proc/set_wet_stacks(stacks, wet_type = /datum/status_effect/fire_handler/wet_stacks, remove_fire_stacks = TRUE)
+	if(stacks < 0)
+		CRASH("set_wet_stacks received negative [stacks] wet stacks")
+
+	if(remove_fire_stacks)
+		remove_status_effect(/datum/status_effect/fire_handler/fire_stacks)
+
+	if(stacks == 0)
+		remove_status_effect(wet_type)
+		return
+
+	apply_status_effect(wet_type, stacks, TRUE)
 
 //Share fire evenly between the two mobs
 //Called in MobBump() and Crossed()
-/mob/living/proc/spreadFire(mob/living/L)
-	if(!istype(L))
+/mob/living/proc/spreadFire(mob/living/spread_to)
+	if(!istype(spread_to))
 		return
 
-	if(on_fire)
-		if(L.on_fire) // If they were also on fire
-			var/firesplit = (fire_stacks + L.fire_stacks)/2
-			fire_stacks = firesplit
-			L.fire_stacks = firesplit
-		else // If they were not
-			fire_stacks /= 2
-			L.fire_stacks += fire_stacks
-			if(L.IgniteMob()) // Ignite them
-				log_game("[key_name(src)] bumped into [key_name(L)] and set them on fire")
+	// can't spread fire to mobs that don't catch on fire
+	if(HAS_TRAIT(spread_to, TRAIT_NOFIRE_SPREAD) || HAS_TRAIT(src, TRAIT_NOFIRE_SPREAD))
+		return
 
-	else if(L.on_fire) // If they were on fire and we were not
-		L.fire_stacks /= 2
-		fire_stacks += L.fire_stacks
-		IgniteMob() // Ignite us
+	var/datum/status_effect/fire_handler/fire_stacks/fire_status = has_status_effect(/datum/status_effect/fire_handler/fire_stacks)
+	var/datum/status_effect/fire_handler/fire_stacks/their_fire_status = spread_to.has_status_effect(/datum/status_effect/fire_handler/fire_stacks)
+	if(fire_status && fire_status.on_fire)
+		if(their_fire_status && their_fire_status.on_fire)
+			var/firesplit = (fire_stacks + spread_to.fire_stacks) / 2
+			var/fire_type = (spread_to.fire_stacks > fire_stacks) ? their_fire_status.type : fire_status.type
+			set_fire_stacks(firesplit, fire_type)
+			spread_to.set_fire_stacks(firesplit, fire_type)
+			return
+
+		adjust_fire_stacks(-fire_stacks / 2, fire_status.type)
+		spread_to.adjust_fire_stacks(fire_stacks, fire_status.type)
+		if(spread_to.ignite_mob())
+			log_message("bumped into [key_name(spread_to)] and set them on fire.", LOG_ATTACK)
+		return
+
+	if(!their_fire_status || !their_fire_status.on_fire)
+		return
+
+	spread_to.adjust_fire_stacks(-spread_to.fire_stacks / 2, their_fire_status.type)
+	adjust_fire_stacks(spread_to.fire_stacks, their_fire_status.type)
+	ignite_mob()
+
+/**
+ * Gets the fire overlay to use for this mob
+ *
+ * Args:
+ * * stacks: Current amount of fire_stacks
+ * * on_fire: If we're lit on fire
+ *
+ * Return a mutable appearance, the overlay that will be applied.
+ */
+
+/mob/living/proc/get_fire_overlay(stacks, on_fire)
+	RETURN_TYPE(/mutable_appearance)
+	return null
+
+/**
+ * Handles effects happening when mob is on normal fire
+ *
+ * Vars:
+ * * delta_time
+ * * times_fired
+ * * fire_handler: Current fire status effect that called the proc
+ */
+
+/mob/living/proc/on_fire_stack(delta_time, times_fired, datum/status_effect/fire_handler/fire_stacks/fire_handler)
+	return
 
 //Mobs on Fire end
 
@@ -1504,6 +1619,9 @@
 
 /// Called when mob changes from a standing position into a prone while lacking the ability to stand up at the moment.
 /mob/living/proc/on_fall()
+	SHOULD_CALL_PARENT(TRUE)
+	SEND_SIGNAL(src, COMSIG_LIVING_THUD)
+	loc?.handle_fall(src)//it's loc so it doesn't call the mob's handle_fall which does nothing
 	return
 
 /mob/living/forceMove(atom/destination)
@@ -1515,8 +1633,10 @@
 	refresh_gravity()
 	. = ..()
 	if(.)
-		if(client)
-			reset_perspective()
+		if(isturf(destination))
+			set_mob_eye_to(MOB_EYE_SELF)
+		else
+			set_mob_eye_to(destination)
 
 
 /mob/living/set_stat(new_stat)
@@ -1605,6 +1725,7 @@
 
 /mob/living/set_pulledby(new_pulledby)
 	. = ..()
+	update_incapacitated()
 	if(. == FALSE) //null is a valid value here, we only want to return if FALSE is explicitly passed.
 		return
 	if(pulledby)
@@ -1627,22 +1748,43 @@
 			add_movespeed_modifier(/datum/movespeed_modifier/grab_slowdown/kill)
 
 /mob/living/proc/update_z(new_z) // 1+ to register, null to unregister
-	if (registered_z != new_z)
-		if (registered_z)
-			SSmobs.clients_by_zlevel[registered_z] -= src
-		if (client)
-			if (new_z)
-				SSmobs.clients_by_zlevel[new_z] += src
-				for (var/I in length(SSidlenpcpool.idle_mobs_by_zlevel[new_z]) to 1 step -1) //Backwards loop because we're removing (guarantees optimal rather than worst-case performance), it's fine to use .len here but doesn't compile on 511
-					var/mob/living/simple_animal/SA = SSidlenpcpool.idle_mobs_by_zlevel[new_z][I]
-					if (SA)
-						SA.toggle_ai(AI_ON) // Guarantees responsiveness for when appearing right next to mobs
-					else
-						SSidlenpcpool.idle_mobs_by_zlevel[new_z] -= SA
+	if(registered_z == new_z)
+		return
+	if(registered_z)
+		SSmobs.clients_by_zlevel[registered_z] -= src
+	if(isnull(client))
+		registered_z = null
+		return
 
-			registered_z = new_z
-		else
-			registered_z = null
+	//Check the amount of clients exists on the Z level we're leaving from,
+	//this excludes us because at this point we are not registered to any z level.
+	var/old_level_new_clients = (registered_z ? SSmobs.clients_by_zlevel[registered_z].len : null)
+	//No one is left after we're gone, shut off inactive ones
+	if(registered_z && old_level_new_clients == 0)
+		for(var/datum/ai_controller/controller as anything in GLOB.ai_controllers_by_zlevel[registered_z])
+			controller.set_ai_status(AI_STATUS_OFF)
+
+	if(new_z)
+		//Check the amount of clients exists on the Z level we're moving towards, excluding ourselves.
+		var/new_level_old_clients = SSmobs.clients_by_zlevel[new_z].len
+
+		//We'll add ourselves to the list now so get_expected_ai_status() will know we're on the z level.
+		SSmobs.clients_by_zlevel[new_z] += src
+
+		if(new_level_old_clients == 0) //No one was here before, wake up all the AIs.
+			for (var/datum/ai_controller/controller as anything in GLOB.ai_controllers_by_zlevel[new_z])
+				//We don't set them directly on, for instances like AIs acting while dead and other cases that may exist in the future.
+				//This isn't a problem for AIs with a client since the client will prevent this from being called anyway.
+				controller.set_ai_status(controller.get_expected_ai_status())
+
+			for (var/I in length(SSidlenpcpool.idle_mobs_by_zlevel[new_z]) to 1 step -1) //Backwards loop because we're removing (guarantees optimal rather than worst-case performance), it's fine to use .len here but doesn't compile on 511
+				var/mob/living/simple_animal/SA = SSidlenpcpool.idle_mobs_by_zlevel[new_z][I]
+				if (SA)
+					SA.toggle_ai(AI_ON) // Guarantees responsiveness for when appearing right next to mobs
+				else
+					SSidlenpcpool.idle_mobs_by_zlevel[new_z] -= SA
+
+	registered_z = new_z
 
 /mob/living/onTransitZ(old_z,new_z)
 	..()
@@ -1661,7 +1803,7 @@
 	if(resting)
 		resting = FALSE
 		update_resting()
-	var/obj/item/clothing/head/mob_holder/holder = new(get_turf(src), src, held_state, head_icon, held_lh, held_rh, worn_slot_flags)
+	var/obj/item/mob_holder/holder = new(get_turf(src), src, held_state, head_icon, held_lh, held_rh, worn_slot_flags)
 	L.visible_message(span_warning("[L] scoops up [src]!"))
 	L.put_in_hands(holder)
 
@@ -1691,15 +1833,21 @@
 		result += static_virus
 	return result
 
-/mob/living/reset_perspective(atom/A)
-	if(..())
-		update_sight()
-		update_fullscreen()
-		update_pipe_vision()
+/mob/living/set_mob_eye_to(atom/A)
+	. = ..()
+	update_eye_features()
 
-/// Proc used to handle the fullscreen overlay updates, realistically meant for the reset_perspective() proc.
+/mob/proc/update_eye_features()
+	update_sight()
+
+/mob/living/update_eye_features()
+	..()
+	update_fullscreen()
+	update_pipe_vision()
+
+/// Proc used to handle the fullscreen overlay updates, realistically meant for the set_mob_eye_to(MOB_EYE_SELF) proc.
 /mob/living/proc/update_fullscreen()
-	if(client.eye && client.eye != src)
+	if(client?.eye && client.eye != src)
 		var/atom/client_eye = client.eye
 		client_eye.get_remote_view_fullscreens(src)
 	else
@@ -1771,6 +1919,7 @@
 /mob/living/vv_get_dropdown()
 	. = ..()
 	VV_DROPDOWN_OPTION("", "---------")
+	VV_DROPDOWN_OPTION(VV_HK_GIVE_SPEECH_IMPEDIMENT, "Impede Speech (Slurring, stuttering, etc)")
 	VV_DROPDOWN_OPTION(VV_HK_GIVE_HALLUCINATION, "Give Hallucination")
 	VV_DROPDOWN_OPTION(VV_HK_GIVE_DELUSION_HALLUCINATION, "Give Delusion Hallucination")
 
@@ -1779,6 +1928,11 @@
 
 	if(!.)
 		return
+
+	if(href_list[VV_HK_GIVE_SPEECH_IMPEDIMENT])
+		if(!check_rights(NONE))
+			return
+		admin_give_speech_impediment(usr)
 
 	if(href_list[VV_HK_GIVE_HALLUCINATION])
 		if(!check_rights(NONE))
@@ -1936,6 +2090,14 @@
 		REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, LACKING_LOCOMOTION_APPENDAGES_TRAIT)
 	else if(!(movement_type & (FLYING | FLOATING)) && !usable_hands && !usable_legs) //Lost a hand, not flying, no hands left, no legs.
 		ADD_TRAIT(src, TRAIT_IMMOBILIZED, LACKING_LOCOMOTION_APPENDAGES_TRAIT)
+
+/// Whether or not this mob will escape from storages while being picked up/held.
+/mob/living/proc/will_escape_storage()
+	return FALSE
+
+//Used specifically for the clown box suicide act
+/mob/living/carbon/human/will_escape_storage()
+	return TRUE
 
 /// Sets the mob's hunger levels to a safe overall level. Useful for TRAIT_NOHUNGER species changes.
 /mob/living/proc/set_safe_hunger_level()
@@ -2114,13 +2276,15 @@
 		else
 			target_hostile.attack_same = FALSE //Will only attack non-passive mobs
 			if(prob(10)) //chance of sentience without loyaltyAdd commentMore actions
-				var/datum/poll_config/config = new()
-				config.question = "Do you want to play as \a [src] being revived by [reviver]?"
-				config.check_jobban = ROLE_SENTIENCE
-				config.poll_time = 15 SECONDS
-				config.jump_target = src
-				config.role_name_text = "lazarus revived mob"
-				config.alert_pic = src
+				var/datum/poll_config/config = new(
+					question = "Do you want to play as \a [src] being revived by [reviver]?",
+					check_jobban = ROLE_SENTIENCE,
+					poll_time = 15 SECONDS,
+					jump_target = src,
+					role_name_text = "lazarus revived mob",
+					alert_pic = src,
+					amount_to_pick = 1,
+				)
 				var/mob/dead/observer/candidate = SSpolling.poll_ghosts_one_choice(config)
 				if(candidate)
 					src.key = candidate.key
@@ -2131,6 +2295,37 @@
 	target.do_jitter_animation(10)
 	addtimer(CALLBACK(target, TYPE_PROC_REF(/mob/living, do_jitter_animation), 10), 5 SECONDS)
 	addtimer(CALLBACK(target, TYPE_PROC_REF(/mob/living, revive), HEAL_ALL, TRUE), 10 SECONDS)
+
+/**
+ * Proc used by different station pets such as Ian and Poly so that some of their data can persist between rounds.
+ * This base definition only contains a trait and comsig to stop memory from being (over)written.
+ * Specific behavior is defined on subtypes that use it.
+ */
+/mob/living/proc/write_memory(dead, gibbed)
+	SHOULD_CALL_PARENT(TRUE)
+	return !HAS_TRAIT(src, TRAIT_DONT_WRITE_MEMORY) //always prevent data from being written.
+
+/// Admin only proc for giving a certain speech impediment to this mob
+/mob/living/proc/admin_give_speech_impediment(mob/admin)
+	if(!admin || !check_rights(NONE))
+		return
+
+	var/list/impediments = list()
+	for(var/datum/status_effect/possible as anything in typesof(/datum/status_effect/speech))
+		if(!initial(possible.id))
+			continue
+
+		impediments[initial(possible.id)] = possible
+
+	var/chosen = tgui_input_list(admin, "What speech impediment?", "Impede Speech", impediments)
+	if(!chosen || !ispath(impediments[chosen], /datum/status_effect/speech) || QDELETED(src) || !check_rights(NONE))
+		return
+
+	var/duration = tgui_input_number(admin, "How long should it last (in seconds)? Max is infinite duration.", "Duration", 0, INFINITY, 0 SECONDS)
+	if(!isnum(duration) || duration <= 0 || QDELETED(src) || !check_rights(NONE))
+		return
+
+	adjust_timed_status_effect(duration SECONDS, impediments[chosen])
 
 /// Admin only proc for making the mob hallucinate a certain thing
 /mob/living/proc/admin_give_hallucination(mob/admin)
@@ -2162,9 +2357,13 @@
 	log_admin("[key_name(admin)] gave [src] a delusion hallucination. (Type: [delusion_args[1]])")
 	// Not using the wrapper here because we already have a list / arglist
 	_cause_hallucination(delusion_args)
-/// Proc for giving a mob a new 'friend', generally used for AI control and targetting. Returns false if already friends.
+
+/// Proc for giving a mob a new 'friend', generally used for AI control and targeting. Returns false if already friends.
 /mob/living/proc/befriend(mob/living/new_friend)
 	SHOULD_CALL_PARENT(TRUE)
+	SEND_SIGNAL(new_friend, COMSIG_LIVING_MADE_NEW_FRIEND, src)
+	if(QDELETED(new_friend))
+		return
 	var/friend_ref = REF(new_friend)
 	if (faction.Find(friend_ref))
 		return FALSE
@@ -2185,3 +2384,168 @@
 
 	SEND_SIGNAL(src, COMSIG_LIVING_UNFRIENDED, old_friend)
 	return TRUE
+
+/obj/effect/overlay/combat_indicator
+	icon = 'icons/misc/combat_indicator.dmi'
+	icon_state = "combat"
+	layer = FLY_LAYER
+	appearance_flags = APPEARANCE_UI | KEEP_APART
+	mouse_opacity = 0
+
+GLOBAL_DATUM_INIT(combat_indicator_vis, /obj/effect/overlay/combat_indicator, new)
+
+/**
+ * Called whenever a mob's stat changes.
+ * Checks if the mob's stat is greater than SOFT_CRIT, and if it is, it will disable CI.
+ *
+ * Arguments:
+ * * source -- The mob in question that toggled CI status.
+ * * new_stat -- The new stat of the mob.
+ */
+
+/mob/living/proc/ci_on_stat_change(mob/source, new_stat)
+	SIGNAL_HANDLER
+	if(new_stat <= SOFT_CRIT)
+		return
+
+	//set_combat_mode will already run set_combat_indicator, but we need to ensure involuntary is passed :)
+	set_combat_indicator(FALSE, involuntary = TRUE)
+	set_combat_mode(FALSE)
+
+/**
+ * Called whenever a mob's CI status changes for any reason.
+ *
+ * Checks if the mob is dead, if config disallows CI, or if the current CI status is the same as state, and if it is, it will change CI status to state.
+ *
+ * Arguments:
+ * * state -- Boolean. Inherited from the procs that call this, basically it's what that proc wants CI to change to - true or false, on or off.
+ * * involuntary -- Boolean. If true, the mob is dead or unconscious, and the log will reflect that.
+ */
+
+/mob/living/proc/set_combat_indicator(state, involuntary = FALSE)
+	if(!CONFIG_GET(flag/combat_indicator))
+		return
+
+	if(combat_indicator == state) // If the mob is dead (should not happen) or if the combat_indicator is the same as state (also shouldnt happen) kill the proc.
+		return
+
+	if(stat == DEAD)
+		disable_combat_indicator(involuntary)
+
+	combat_indicator = state
+
+	SEND_SIGNAL(src, COMSIG_MOB_CI_TOGGLED)
+
+	if(combat_indicator)
+		enable_combat_indicator()
+	else
+		disable_combat_indicator()
+
+/**
+ * Called whenever a mob enables CI.
+ *
+ * Plays a sound, sents a message to chat, updates their overlay, and sets the mob's CI status to true.
+ */
+
+/mob/living/proc/enable_combat_indicator()
+	if(COOLDOWN_FINISHED(src, nextcombatpopup))
+		COOLDOWN_START(src, nextcombatpopup, combat_notice_cooldown)
+		var/turf/sound_turf = get_turf(src)
+		var/maxdistance = SOUND_RANGE - 10
+		var/sound_channel = SSsounds.random_available_channel()
+		var/sound/chime = sound('sound/machines/chime.ogg')
+		for(var/mob/M in get_hearers_in_view(maxdistance, sound_turf))
+			if(M == src)
+				continue
+			M.playsound_local(sound_turf, 'sound/machines/chime.ogg', 5, FALSE, null, 4, sound_channel, FALSE, chime, maxdistance, 1)
+		flick_emote_popup_on_mob("combat", 1 SECONDS)
+		var/ciweapon
+		if(get_active_held_item())
+			ciweapon = get_active_held_item()
+			if(istype(ciweapon, /obj/item/gun))
+				visible_message(span_boldwarning("[src] raises \the [ciweapon] with [p_their()] finger on the trigger!"))
+			else
+				visible_message(span_boldwarning("[src] readies \the [ciweapon] with a tightened grip!"))
+		else
+			if(issilicon(src))
+				visible_message(span_boldwarning("[src] shifts its armour plating into a defensive stance!"))
+			if(ishuman(src))
+				visible_message(span_boldwarning("[src] raises [p_their()] fists!"))
+			if(isalien(src))
+				visible_message(span_boldwarning("[src] hisses in a terrifying stance!"))
+			else
+				visible_message(span_boldwarning("[src] gets ready for combat!"))
+	combat_indicator = TRUE
+	apply_status_effect(/datum/status_effect/grouped/surrender, src)
+	log_message("<font color='red'>[src] has turned ON the combat indicator!</font>", LOG_ATTACK)
+	RegisterSignal(src, COMSIG_MOB_STATCHANGE , PROC_REF(ci_on_stat_change))
+	vis_contents += GLOB.combat_indicator_vis
+
+/**
+ * Called whenever a mob disables CI. Or when they die or fall unconscious.
+ *
+ * Arguments:
+ * * involuntary -- Boolean. If true, the mob is dead or unconscious, and the log will reflect that.
+ */
+
+/mob/living/proc/disable_combat_indicator(involuntary = FALSE)
+	combat_indicator = FALSE
+	remove_status_effect(/datum/status_effect/grouped/surrender, src)
+	if(involuntary)
+		log_message("<font color='cyan'>[src] has fallen unconsious or has died, and lost their combat indicator!</font>", LOG_ATTACK)
+	else
+		log_message("<font color='cyan'>[src] has turned OFF the combat indicator!</font>", LOG_ATTACK)
+	UnregisterSignal(src, COMSIG_MOB_STATCHANGE)
+	vis_contents -= GLOB.combat_indicator_vis
+
+/**
+ * Called whenever a mob enters a vehicle/sealed, after everything else.
+ *
+ * Sets the vehicle's CI status to that of the mob if the mob is a driver and there are no other drivers, or if the mob is a passenger and there are no drivers.
+ *
+ * Arguments:
+ * * user -- mob/living, the mob that is entering the vehicle.
+ */
+
+/obj/vehicle/sealed/proc/handle_ci_migration(mob/living/user)
+	if(!typesof(user.loc, /obj/vehicle/sealed)) //Sanity check: If the mob's location (not the tile they are on) is NOT a type of vehicle/sealed, kill the proc.
+		return
+	//If the vehicle can have more passenger seats than driver seats (note: each driver seat counts as a passenger seat) AND both: The mob is not a driver, and the vehicle has a driver, return.
+	if ((src.max_occupants > src.max_drivers) && ((!(user in return_drivers())) && (src.driver_amount() > 0)))
+		return
+	if (user.combat_indicator && !combat_indicator_vehicle) // Finally, if all conditions prior are not met, and the mob has CI enabled and the vehicle doesn't, enable CI.
+		combat_indicator_vehicle = TRUE
+		vis_contents += GLOB.combat_indicator_vis
+
+/**
+ * Called whenever a mob exits a vehicle/sealed, after everything else.
+ *
+ * Disables the vehicle's CI if it was enabled, and if it was the only occupant (or there was noone else in the mech with CI enabled).
+ *
+ * Arguments:
+ * * user -- mob/living, the mob that is exiting the vehicle.
+ */
+
+/obj/vehicle/sealed/proc/disable_ci(mob/living/user)
+	// If the vehicle can have more occupants than drivers, and either 1. The mob is not a driver and the vehicle has drivers, or 2. The user IS a driver but there is an occupant (drivers count as occupants), return.
+	if ((src.max_occupants > src.max_drivers) && ((!(user in return_drivers()) && (src.driver_amount() > 0)) || ((user in return_drivers()) && (src.occupant_amount() > 0))))
+		return
+	// If the preceding conditions are not met, and the vehicle has CI, look at each occupant to see if there is a non-driver with CI enabled. If yes, stop the proc, if no, disable CI.
+	if (combat_indicator_vehicle)
+		var/has_occupant_with_ci = FALSE
+		if (src.occupant_amount() > src.driver_amount())
+			for (var/mob/living/vehicle_occupant in return_occupants())
+				if (vehicle_occupant in return_drivers()) //this for loop does not account for multiple clowns in clown cars. i will not account for that. fuck that.
+					continue
+				if (vehicle_occupant.combat_indicator)
+					has_occupant_with_ci = TRUE
+					break
+		if (!has_occupant_with_ci)
+			combat_indicator_vehicle = FALSE
+			vis_contents -= GLOB.combat_indicator_vis
+
+//#undef COMBAT_NOTICE_COOLDOWN
+
+/mob/living/mouse_buckle_handling(mob/living/M, mob/living/user)
+	if(can_buckle && isliving(user) && isliving(M) && !(M in buckled_mobs))
+		return user_buckle_mob(M, user, check_loc = FALSE)

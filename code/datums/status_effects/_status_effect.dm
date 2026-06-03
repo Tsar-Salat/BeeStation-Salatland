@@ -35,6 +35,8 @@
 	var/remove_on_fullheal = FALSE
 	/// If remove_on_fullheal is TRUE, what flag do we need to be removed?
 	var/heal_flag_necessary = HEAL_STATUS
+	/// A particle effect, for things like embers - Should be set on update_particles()
+	VAR_FINAL/obj/effect/abstract/particle_holder/particle_effect
 
 /datum/status_effect/New(list/arguments)
 	on_creation(arglist(arguments))
@@ -76,6 +78,7 @@
 			if(STATUS_EFFECT_PRIORITY)
 				START_PROCESSING(SSpriority_effects, src)
 
+	update_particles()
 	return TRUE
 
 /datum/status_effect/Destroy()
@@ -93,6 +96,8 @@
 		on_remove()
 		UnregisterSignal(owner, COMSIG_LIVING_POST_FULLY_HEAL)
 		owner = null
+	if(particle_effect)
+		QDEL_NULL(particle_effect)
 	return ..()
 
 /// Updates the status effect alert's maptext (if possible)
@@ -106,7 +111,7 @@
 // Status effect process. Handles adjusting its duration and ticks.
 // If you're adding processed effects, put them in [proc/tick]
 // instead of extending / overriding the process() proc.
-/datum/status_effect/process(seconds_per_tick)
+/datum/status_effect/process(delta_time)
 	SHOULD_NOT_OVERRIDE(TRUE)
 
 	if(QDELETED(owner))
@@ -114,7 +119,7 @@
 		return
 
 	if(tick_interval == STATUS_EFFECT_AUTO_TICK)
-		tick(seconds_per_tick)
+		tick(delta_time)
 	else if(tick_interval != STATUS_EFFECT_NO_TICK && tick_interval < world.time)
 		var/tick_length = (tick_interval_upperbound && tick_interval_lowerbound) ? rand(tick_interval_lowerbound, tick_interval_upperbound) : initial(tick_interval)
 		tick(tick_length / (1 SECONDS))
@@ -148,7 +153,7 @@
  *
  * * seconds_between_ticks = This is how many SECONDS that elapse between ticks.
  * This is a constant value based upon the initial tick interval set on the status effect.
- * It is similar to seconds_per_tick, from processing itself, but adjusted to the status effect's tick interval.
+ * It is similar to delta_time, from processing itself, but adjusted to the status effect's tick interval.
  */
 /datum/status_effect/proc/tick(seconds_between_ticks)
 	return
@@ -217,6 +222,14 @@
 
 	update_shown_duration()
 	return FALSE
+
+/**
+ * Updates the particles for the status effects
+ * Should be handled by subtypes!
+ */
+/datum/status_effect/proc/update_particles()
+	SHOULD_CALL_PARENT(FALSE)
+	return
 
 /datum/status_effect/vv_edit_var(var_name, var_value)
 	. = ..()

@@ -1,6 +1,7 @@
 
 //Ears: currently only used for headsets and earmuffs
 /obj/item/clothing/ears
+	abstract_type = /obj/item/clothing/ears
 	name = "ears"
 	w_class = WEIGHT_CLASS_TINY
 	throwforce = 0
@@ -12,6 +13,7 @@
 	desc = "Protects your hearing from loud noises, and quiet ones as well."
 	icon_state = "earmuffs"
 	inhand_icon_state = "earmuffs"
+	clothing_traits = list(TRAIT_DEAF)
 	strip_delay = 15
 	equip_delay_other = 25
 	resistance_flags = FLAMMABLE
@@ -80,7 +82,7 @@
 	return ..()
 
 /obj/item/clothing/ears/headphones/proc/should_stop_playing(mob/user)
-	return user.incapacitated() || !((loc == user) || (isturf(loc) && Adjacent(user)))
+	return user.incapacitated || !((loc == user) || (isturf(loc) && Adjacent(user)))
 
 /obj/item/clothing/ears/headphones/AltClick(mob/user)
 	. = ..()

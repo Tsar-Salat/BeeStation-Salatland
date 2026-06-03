@@ -6,6 +6,7 @@
 	antagpanel_category = "Prisoners"
 	show_to_ghosts = TRUE
 	prevent_roundtype_conversion = FALSE
+	leave_behaviour = ANTAGONIST_LEAVE_DESPAWN
 
 /datum/antagonist/prisoner/apply_innate_effects(mob/living/mob_override)
 	var/mob/living/M = mob_override || owner.current
@@ -19,7 +20,7 @@
 	forge_objectives()
 	return ..()
 
-/datum/antagonist/prisoner/proc/forge_objectives()
+/datum/antagonist/prisoner/forge_objectives()
 	var/datum/objective/escape/escape = new
 	escape.owner = owner
 	objectives += escape

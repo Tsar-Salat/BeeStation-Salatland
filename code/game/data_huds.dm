@@ -76,6 +76,9 @@
 			var/mob/camera/ai_eye/E = V
 			E.update_ai_detect_hud()
 
+/datum/atom_hud/hacked_apc
+	hud_icons = list(HACKED_APC_HUD)
+
 /* MED/SEC/DIAG HUD HOOKS */
 
 /*
@@ -250,7 +253,7 @@
 	holder.icon_state = "hudno_id"
 	if(wear_id?.GetID())
 		holder.icon_state = "hud[ckey(wear_id.get_item_job_icon())]"
-	if(HAS_TRAIT(src, TRAIT_UNKNOWN))
+	if(HAS_TRAIT(src, TRAIT_UNKNOWN_APPEARANCE))
 		holder.icon_state = "hudno_id"
 	sec_hud_set_security_status()
 
@@ -521,3 +524,12 @@
 		holder.icon_state = "electrified"
 	else
 		holder.icon_state = ""
+
+/*~~~~~~~~~~~~
+	APCs!
+~~~~~~~~~~~~~*/
+/obj/machinery/power/apc/proc/set_hacked_hud()
+	var/image/holder = hud_list[HACKED_APC_HUD]
+	holder.loc = src
+	holder.icon = 'icons/obj/power.dmi'
+	holder.icon_state = "apcemag"

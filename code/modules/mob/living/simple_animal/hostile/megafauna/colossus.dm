@@ -48,9 +48,9 @@ Difficulty: Very Hard
 	achievement_type = /datum/award/achievement/boss/colussus_kill
 	crusher_achievement_type = /datum/award/achievement/boss/colussus_crusher
 	score_achievement_type = /datum/award/score/colussus_score
-	loot = list(/obj/effect/spawner/lootdrop/megafaunaore, /obj/structure/closet/crate/necropolis/colossus)
-	deathmessage = "disintegrates, leaving a glowing core in its wake."
-	deathsound = 'sound/magic/demon_dies.ogg'
+	loot = list(/obj/effect/spawner/random/unsorted/megafaunaore, /obj/structure/closet/crate/necropolis/colossus)
+	death_message = "disintegrates, leaving a glowing core in its wake."
+	death_sound = 'sound/magic/demon_dies.ogg'
 	attack_action_types = list(/datum/action/innate/megafauna_attack/spiral_attack,
 							   /datum/action/innate/megafauna_attack/aoe_attack,
 							   /datum/action/innate/megafauna_attack/shotgun,
@@ -172,11 +172,11 @@ Difficulty: Very Hard
 	telegraph()
 	ranged_cooldown = world.time + 30
 
-/mob/living/simple_animal/hostile/megafauna/colossus/proc/enrage(mob/living/L)
-	if(ishuman(L))
-		var/mob/living/carbon/human/H = L
-		if(H.mind)
-			if(istype(H.mind.martial_art, /datum/martial_art/the_sleeping_carp))
+/mob/living/simple_animal/hostile/megafauna/colossus/proc/enrage(mob/living/victim)
+	if(ishuman(victim))
+		var/mob/living/carbon/human/human_victim = victim
+		if(human_victim.mind)
+			if(istype(human_victim.mind.martial_art, /datum/martial_art/the_sleeping_carp))
 				. = TRUE
 
 /mob/living/simple_animal/hostile/megafauna/colossus/proc/alternating_dir_shots()
@@ -490,8 +490,8 @@ GLOBAL_DATUM(blackbox, /obj/machinery/smartfridge/black_box)
 		. += observer_desc
 		. += "It is activated by [activation_method]."
 
-/obj/machinery/anomalous_crystal/Hear(message, atom/movable/speaker, message_langs, raw_message, radio_freq, spans, list/message_mods = list())
-	..()
+/obj/machinery/anomalous_crystal/Hear(atom/movable/speaker, message_language, raw_message, radio_freq, spans, list/message_mods = list(), message_range)
+	. = ..()
 	if(isliving(speaker))
 		ActivationReaction(speaker, ACTIVATE_SPEECH)
 
@@ -502,7 +502,7 @@ GLOBAL_DATUM(blackbox, /obj/machinery/smartfridge/black_box)
 	ActivationReaction(user, ACTIVATE_TOUCH)
 
 /obj/machinery/anomalous_crystal/attackby(obj/item/I, mob/user, params)
-	if(I.is_hot())
+	if(I.get_temperature())
 		ActivationReaction(user, ACTIVATE_HEAT)
 	else
 		ActivationReaction(user, ACTIVATE_WEAPON)
@@ -724,7 +724,6 @@ GLOBAL_DATUM(blackbox, /obj/machinery/smartfridge/black_box)
 	density = FALSE
 	is_flying_animal = TRUE
 	pass_flags = PASSTABLE | PASSGRILLE | PASSMOB
-	ventcrawler = VENTCRAWLER_ALWAYS
 	mob_size = MOB_SIZE_TINY
 	gold_core_spawnable = HOSTILE_SPAWN
 	verb_say = "warps"
@@ -751,6 +750,8 @@ GLOBAL_DATUM(blackbox, /obj/machinery/smartfridge/black_box)
 	remove_verb(/mob/verb/me_verb)
 	var/datum/atom_hud/medsensor = GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]
 	medsensor.add_hud_to(src)
+
+	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
 
 /mob/living/simple_animal/hostile/lightgeist/AttackingTarget()
 	. = ..()
@@ -838,6 +839,7 @@ GLOBAL_DATUM(blackbox, /obj/machinery/smartfridge/black_box)
 	if(isanimal_or_basicmob(loc))
 		holder_animal = loc
 	START_PROCESSING(SSobj, src)
+	AddElement(/datum/element/empprotection, EMP_PROTECT_ALL)
 
 /obj/structure/closet/stasis/Entered(atom/movable/arrived, atom/old_loc, list/atom/old_locs)
 	. = ..()
@@ -863,9 +865,6 @@ GLOBAL_DATUM(blackbox, /obj/machinery/smartfridge/black_box)
 			L.investigate_log("has died from [src].", INVESTIGATE_DEATHS)
 			L.death(FALSE)
 	..()
-
-/obj/structure/closet/stasis/emp_act()
-	return
 
 /obj/structure/closet/stasis/ex_act()
 	return
