@@ -507,6 +507,7 @@ GLOBAL_LIST_EMPTY(slime_links_by_mind)
 	plural_form = null
 	id = SPECIES_STARGAZER
 	examine_limb_id = SPECIES_OOZELING
+	mutanteyes = /obj/item/organ/eyes/jelly
 	/// Special "project thought" telepathy action for stargazers.
 	var/datum/action/innate/project_thought/project_action
 
