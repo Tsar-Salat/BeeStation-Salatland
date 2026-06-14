@@ -1,0 +1,6 @@
+author: Programs-The-Station
+delete-after: true
+changes:
+  - rscadd: Engineering Cyborgs can now wield the power of the BS RPED
+  - bugfix: Engineering Cyborgs can no longer get infinite RPEDs installed
+  - rscadd: Janitor Cyborgs can now wield the power of the BS Light Replacer
