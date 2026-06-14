@@ -138,3 +138,13 @@
   - rscadd: Adds a verb for admins to change what laws the AI will spawn with
   mrmanlikesbt, TealSeer:
   - code_imp: The codebase now supports compilation on the latest byond version
+2026-06-14:
+  BotTierPC:
+  - bugfix: 'Fixes Custom Vendor''s: They should use the correct image and sell items
+      properly once again.'
+  Isaacnml:
+  - bugfix: Cloud Controller TGUI wont crash anymore, hopefully
+  Programs-The-Station:
+  - rscadd: Engineering Cyborgs can now wield the power of the BS RPED
+  - bugfix: Engineering Cyborgs can no longer get infinite RPEDs installed
+  - rscadd: Janitor Cyborgs can now wield the power of the BS Light Replacer

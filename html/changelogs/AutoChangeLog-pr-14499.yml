@@ -1,4 +1,0 @@
-author: Isaacnml
-delete-after: true
-changes:
-  - bugfix: Cloud Controller TGUI wont crash anymore, hopefully
