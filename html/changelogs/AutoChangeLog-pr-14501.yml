@@ -1,0 +1,5 @@
+author: WhiskeyMarten
+delete-after: true
+changes:
+  - bugfix: Fixed the CardStation Supermatter area being set to rooms around the SM
+      chamber as well.
