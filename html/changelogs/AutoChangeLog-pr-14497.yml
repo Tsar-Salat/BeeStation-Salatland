@@ -1,0 +1,5 @@
+author: BotTierPC
+delete-after: true
+changes:
+  - bugfix: "Fixes Custom Vendor's: They should use the correct image and sell items\
+      \ properly once again."
