@@ -1,6 +1,0 @@
-author: MadmanMartian
-delete-after: true
-changes:
-  - tweak: Dispensers, such as Chemical, Booze, Soda, and Mutagen Dispensers, now
-      tell you when they can not be operated due to their maintenance panel being
-      open.
