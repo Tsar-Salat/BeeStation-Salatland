@@ -1,5 +1,0 @@
-author: MadmanMartian
-delete-after: true
-changes:
-  - bugfix: You can now examine emitters again to ascertain their stats, and whether
-      or not they're wired/powered properly.
