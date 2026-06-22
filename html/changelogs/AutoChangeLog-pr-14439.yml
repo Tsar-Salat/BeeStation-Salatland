@@ -1,0 +1,4 @@
+author: mrmanlikesbt
+delete-after: true
+changes:
+  - code_imp: Replaced some bad Destroy() calls with the proper qdel() calls.
