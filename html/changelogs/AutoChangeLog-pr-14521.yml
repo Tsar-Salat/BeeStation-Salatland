@@ -1,0 +1,9 @@
+author: Isaac
+delete-after: true
+changes:
+  - bugfix: ED209's no longer use old beepsky stun mechanics, they now follow the
+      new ones
+  - bugfix: Glue cant be applied to the modsuit control unit, preventing cases where
+      it literally cant be taken out of your back
+  - bugfix: Energy Shield MOD is vulnerable to EMP's  once again, how it was supposed
+      to be in the first place
