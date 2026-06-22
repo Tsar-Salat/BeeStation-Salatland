@@ -1,0 +1,10 @@
+author: WhiskeyMarten
+delete-after: true
+changes:
+  - rscadd: Added cell chargers to the prison of each map, making some minor adjustments
+      to fit them in.
+  - bugfix: Fixed some backwards chairs.
+  - bugfix: Changed the contents of the fridges in Box's kitchen so it has a balanced
+      variety of ingredients.
+  - bugfix: Fixed the marker beacons on FlandStation so they should be the properly
+      placed version.
