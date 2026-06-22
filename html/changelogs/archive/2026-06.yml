@@ -182,3 +182,21 @@
   mrmanlikesbt:
   - bugfix: Fixed the spaceproof directional windows mapping helper sometimes breaking
       the entire game
+2026-06-22:
+  Isaac:
+  - bugfix: ED209's no longer use old beepsky stun mechanics, they now follow the
+      new ones
+  - bugfix: Glue cant be applied to the modsuit control unit, preventing cases where
+      it literally cant be taken out of your back
+  - bugfix: Energy Shield MOD is vulnerable to EMP's  once again, how it was supposed
+      to be in the first place
+  WhiskeyMarten:
+  - rscadd: Added cell chargers to the prison of each map, making some minor adjustments
+      to fit them in.
+  - bugfix: Fixed some backwards chairs.
+  - bugfix: Changed the contents of the fridges in Box's kitchen so it has a balanced
+      variety of ingredients.
+  - bugfix: Fixed the marker beacons on FlandStation so they should be the properly
+      placed version.
+  mrmanlikesbt:
+  - code_imp: Replaced some bad Destroy() calls with the proper qdel() calls.
