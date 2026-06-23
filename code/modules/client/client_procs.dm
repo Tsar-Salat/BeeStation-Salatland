@@ -149,6 +149,8 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 			hsrc = mob
 		if("vars")
 			return view_var_Topic(href,href_list,hsrc)
+		if(VV_HK_VIEW_ICON) // "_src_=vars" will be extremely complicating, so I decided making another route. vv needs some refactor, honestly.
+			return send_vv_icon_to_user(usr, href, href_list)
 
 	switch(href_list["action"])
 		if("openLink")
@@ -497,11 +499,17 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 
 	..()
 
-/// Sets client eye to 1st param.
-/// * WARN: Do not change old_eye. Check client/var/eye_weakref
-/client/proc/set_eye(atom/new_eye, atom/old_eye = src.eye)
+/// Sets a client eye into given new eye. This is intended not to be used. You should use 'set_mob_eye_to(thing)'
+/client/proc/set_client_eye_to(atom/new_eye)
+	_on_setting_client_eye(new_eye, src?.eye_weakref?.resolve() || CLIENT_OLD_EYE_NULL)
+
+/client/proc/_on_setting_client_eye(atom/new_eye, atom/old_eye)
+	PRIVATE_PROC(TRUE)
 	if(new_eye == old_eye)
 		return
+
+	if(old_eye == CLIENT_OLD_EYE_NULL)
+		old_eye = null
 
 	if(isatom(old_eye)) // admeme vv failproof. /datum can't be their eyes
 		LAZYREMOVE(old_eye.eye_users, src)
@@ -512,7 +520,9 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 	if(isatom(new_eye))
 		LAZYADD(new_eye.eye_users, src)
 
-	// SEND_SIGNAL(src, COMSIG_CLIENT_SET_EYE, old_eye, new_eye) // use this when you want a thing from TG //This is from planecube pr, dragon, we most certainly dont want from that pr
+	// SEND_SIGNAL(src, COMSIG_CLIENT_SET_EYE, old_eye, new_eye) // use this when you want a thing from TG //This is from planecube pr, dragon, we most certainly dont want from that pr //EvilDragon: Hey man, this is not related with plane cube. Plane cube may use this, but this signal is not meant to be used only by plane cube...
+	// EvilDragon: Actually, I strongly recommend not using this signal.
+	// There is an alternative signal COMSIG_MOB_SET_MOB_EYE that will be working as intended in most cases.
 
 
 /client/proc/add_verbs_from_config()

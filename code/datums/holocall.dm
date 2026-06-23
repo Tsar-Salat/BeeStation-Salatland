@@ -4,8 +4,7 @@
 	H?.move_hologram(eye_user, loc)
 
 /obj/machinery/holopad/remove_eye_control(mob/living/user)
-	if(user.client)
-		user.reset_perspective(null)
+	user.set_mob_eye_to(MOB_EYE_SELF)
 	user.remote_control = null
 
 //this datum manages it's own references
@@ -151,8 +150,8 @@
 	eye.eye_user = user
 	eye.name = "Camera Eye ([user.name])"
 	user.remote_control = eye
-	user.reset_perspective(eye)
-	eye.setLoc(answering_holopad.loc)
+	user.set_mob_eye_to(eye)
+	eye.setLoc(get_turf(answering_holopad))
 
 	hangup = new(eye, src)
 	hangup.Grant(user)
@@ -220,7 +219,7 @@
 /obj/item/disk/holodisk/Initialize(mapload)
 	. = ..()
 	if(preset_record_text)
-		build_record()
+		INVOKE_ASYNC(src, PROC_REF(build_record))
 
 /obj/item/disk/holodisk/Destroy()
 	QDEL_NULL(record)

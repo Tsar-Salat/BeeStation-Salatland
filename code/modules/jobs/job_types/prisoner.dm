@@ -13,7 +13,9 @@
 
 	base_access = list()
 	departments = DEPT_BITFLAG_UNASSIGNED
-	bank_account_department = NONE
+
+	bank_account_department = ACCOUNT_CIV_BITFLAG
+	payment_per_department = list(ACCOUNT_CIV_ID = 0)
 
 	display_order = JOB_DISPLAY_ORDER_PRISONER
 
@@ -35,7 +37,7 @@
 		JOB_NAME_ASSISTANT
 	)
 
-/datum/job/prisoner/announce(mob/living/carbon/human/H)
+/datum/job/prisoner/announce_job(mob/living/carbon/human/H)
 	var/deets = "<font size = 2><b>#Prisoner Transfer Documentation</font></b> \
 					<hr> \
 					<code> \
@@ -58,7 +60,7 @@
 					</i></font>"
 
 	//Fax first
-	for(var/obj/machinery/fax/sec/available_sec_faxes in GLOB.fax_machines)
+	for(var/obj/machinery/fax/sec/available_sec_faxes as anything in SSmachines.get_machines_by_type_and_subtypes(/obj/machinery/fax/sec))
 		var/obj/item/paper/message = new /obj/item/paper
 		message.name = "Prisoner transfer Documentation"
 		message.add_raw_text(deets)
@@ -81,9 +83,12 @@
 	uniform = /obj/item/clothing/under/rank/prisoner/lowsec
 	shoes = /obj/item/clothing/shoes/sneakers/white
 
-/datum/job/prisoner/radio_help_message(mob/M)
+/datum/job/prisoner/get_spawn_message_information()
 	.=..()
-	to_chat(M,span_prisonermessage("<b>You have signed up as Low-Security Inmate, <i>This is primarily a roleplaying role.</i><hr>\
-									You are expected to create conflict using good role-play; in a way that is fun for others.<br>\
-									Good conflict escalation doesn't require spoiling the plan to a victim, but it is more interesting when you drop hints and attempt to get more players involved.<br>\
-									You are neutral to the station and are not expected to be on their side, but all conflicts must align with your character's motivations.<br></b>"))
+	var/list/info = list()
+	info += span_prisonermessage(
+		"<b>You have signed up as Low-Security Inmate, <i>This is primarily a roleplaying role.</i><hr>\
+		You are expected to create conflict using good role-play; in a way that is fun for others.<br>\
+		Good conflict escalation doesn't require spoiling the plan to a victim, but it is more interesting when you drop hints and attempt to get more players involved.<br>\
+		You are neutral to the station and are not expected to be on their side, but all conflicts must align with your character's motivations.<br></b>")
+	return info

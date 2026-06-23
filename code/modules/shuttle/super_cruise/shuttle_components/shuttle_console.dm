@@ -47,7 +47,8 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/computer/shuttle_flight)
 
 /obj/machinery/computer/shuttle_flight/Destroy()
 	. = ..()
-	SSorbits.open_orbital_maps -= SStgui.get_all_open_uis(src)
+	if(LAZYLEN(open_uis))
+		SSorbits.open_orbital_maps -= open_uis
 	shuttleObject = null
 	//De-link the port
 	if(my_port)
@@ -88,6 +89,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/computer/shuttle_flight)
 	return GLOB.default_state
 
 /obj/machinery/computer/shuttle_flight/ui_interact(mob/user, datum/tgui/ui)
+	. = ..()
 	if(!allowed(user) && !isobserver(user))
 		say("Insufficient access rights.")
 		return
@@ -103,6 +105,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/computer/shuttle_flight)
 	ui.set_autoupdate(FALSE)
 
 /obj/machinery/computer/shuttle_flight/ui_close(mob/user, datum/tgui/tgui)
+	. = ..()
 	SSorbits.open_orbital_maps -= tgui
 
 /obj/machinery/computer/shuttle_flight/ui_static_data(mob/user)
@@ -190,7 +193,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/computer/shuttle_flight)
 				"name" = "Random Drop",
 				"id" = "custom_location"
 			))
-		for(var/obj/docking_port/stationary/stationary_port as() in SSshuttle.stationary)
+		for(var/obj/docking_port/stationary/stationary_port as anything in SSshuttle.stationary_docking_ports)
 			if(LAZYLEN(shuttleObject.docking_target.linked_z_level))
 				for(var/datum/space_level/level in shuttleObject.docking_target.linked_z_level)
 					if(stationary_port.z == level.z_value && (stationary_port.id in valid_docks))
@@ -233,7 +236,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/computer/shuttle_flight)
 				//Locate the orbital object
 				var/datum/orbital_map/viewing_map = SSorbits.orbital_maps[orbital_map_index]
 				for(var/map_key in viewing_map.collision_zone_bodies)
-					for(var/datum/orbital_object/z_linked/z_linked as() in viewing_map.collision_zone_bodies[map_key])
+					for(var/datum/orbital_object/z_linked/z_linked as anything in viewing_map.collision_zone_bodies[map_key])
 						if(!istype(z_linked))
 							continue
 						if(z_linked.z_in_contents(target_port.z))
@@ -262,7 +265,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/computer/shuttle_flight)
 				return
 			var/datum/orbital_map/showing_map = SSorbits.orbital_maps[orbital_map_index]
 			for(var/map_key in showing_map.collision_zone_bodies)
-				for(var/datum/orbital_object/object as() in showing_map.collision_zone_bodies[map_key])
+				for(var/datum/orbital_object/object as anything in showing_map.collision_zone_bodies[map_key])
 					if(object.name == desiredTarget)
 						shuttleObject.shuttleTarget = object
 						return
@@ -494,7 +497,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/computer/shuttle_flight)
 		random_port.forceMove(locate(x, y, target_zvalue))
 		var/list/turfs = random_port.return_turfs()
 		var/valid = TRUE
-		for(var/turf/T as() in turfs)
+		for(var/turf/T as anything in turfs)
 			if(istype(T, /turf/open/indestructible) || istype(T, /turf/closed/indestructible))
 				valid = FALSE
 				break
