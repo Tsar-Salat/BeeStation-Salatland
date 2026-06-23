@@ -468,7 +468,17 @@
 	dir = 8
 	},
 /obj/structure/table,
-/obj/item/storage/box/donkpockets,
+/obj/item/storage/box/donkpockets{
+	pixel_x = 3;
+	pixel_y = 3
+	},
+/obj/item/reagent_containers/condiment/saltshaker{
+	pixel_x = -9;
+	pixel_y = 5
+	},
+/obj/item/reagent_containers/condiment/peppermill{
+	pixel_x = -9
+	},
 /turf/open/floor/prison/dark,
 /area/station/security/prison)
 "akc" = (
@@ -12503,7 +12513,7 @@
 	},
 /obj/item/book/manual/wiki/barman_recipes,
 /obj/item/reagent_containers/cup/glass/shaker,
-/obj/item/reagent_containers/cup/rag,
+/obj/item/rag,
 /obj/effect/turf_decal/tile/neutral/fourcorners/contrasted,
 /turf/open/floor/iron/dark,
 /area/station/service/bar)
@@ -15372,7 +15382,7 @@
 /obj/machinery/door/airlock/research{
 	name = "Research and Development Lab"
 	},
-/obj/effect/mapping_helpers/airlock/access/any/science/ordnance,
+/obj/effect/mapping_helpers/airlock/access/any/science/research,
 /obj/effect/mapping_helpers/airlock/access/any/science/robotics,
 /obj/machinery/door/poddoor/shutters/preopen{
 	id = "rdrnd";
@@ -17417,7 +17427,7 @@
 /obj/effect/turf_decal/tile/blue/opposingcorners{
 	dir = 1
 	},
-/obj/structure/sink/directional/north,
+/obj/structure/sink/directional/south,
 /obj/structure/mirror{
 	pixel_x = null;
 	pixel_y = 32
@@ -28261,17 +28271,7 @@
 	dir = 10
 	},
 /obj/structure/table,
-/obj/item/reagent_containers/condiment/saltshaker{
-	pixel_x = -9;
-	pixel_y = 5
-	},
-/obj/item/reagent_containers/condiment/enzyme{
-	pixel_x = 9;
-	pixel_y = 17
-	},
-/obj/item/reagent_containers/condiment/peppermill{
-	pixel_x = -9
-	},
+/obj/machinery/cell_charger,
 /turf/open/floor/prison/dark,
 /area/station/security/prison)
 "jkD" = (
@@ -52515,6 +52515,10 @@
 	dir = 8
 	},
 /obj/structure/table,
+/obj/item/reagent_containers/condiment/enzyme{
+	pixel_x = 9;
+	pixel_y = 17
+	},
 /turf/open/floor/prison/dark,
 /area/station/security/prison)
 "qvw" = (
@@ -57193,7 +57197,9 @@
 /obj/item/storage/firstaid/regular,
 /obj/item/clothing/neck/stethoscope,
 /obj/item/healthanalyzer,
-/obj/machinery/light,
+/obj/machinery/computer/security/telescreen/artifacts{
+	pixel_y = -32
+	},
 /turf/open/floor/iron/dark,
 /area/station/science/explab)
 "rRM" = (
@@ -62387,7 +62393,7 @@
 /obj/machinery/door/airlock/research{
 	name = "Research and Development Lab"
 	},
-/obj/effect/mapping_helpers/airlock/access/any/science/ordnance,
+/obj/effect/mapping_helpers/airlock/access/any/science/research,
 /obj/effect/mapping_helpers/airlock/access/any/science/robotics,
 /obj/structure/cable/yellow,
 /obj/effect/turf_decal/stripes/line,
@@ -74532,10 +74538,6 @@
 /obj/effect/spawner/structure/window/reinforced/prison,
 /turf/open/floor/plating,
 /area/station/security/prison)
-"xev" = (
-/obj/structure/sign/warning/secure_area,
-/turf/closed/wall/r_wall,
-/area/station/science/explab)
 "xeA" = (
 /obj/item/beacon,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer4,
@@ -75725,7 +75727,7 @@
 /turf/open/floor/iron,
 /area/station/hallway/primary/fore)
 "xxR" = (
-/obj/structure/sink/directional/north,
+/obj/structure/sink/directional/south,
 /obj/structure/mirror{
 	pixel_x = null;
 	pixel_y = 32
@@ -108124,7 +108126,7 @@ wHV
 dgi
 vfm
 rRL
-xev
+aWd
 pdg
 xzy
 mNB

@@ -7,6 +7,7 @@
 	ui_name = "AntagInfoNightmare"
 	show_name_in_check_antagonists = TRUE
 	required_living_playtime = 0
+	antag_hud_name = "nightmare"
 
 /datum/antagonist/nightmare/greet()
 	. = ..()
@@ -16,22 +17,6 @@
 /datum/antagonist/nightmare/on_gain()
 	forge_objectives()
 	. = ..()
-
-/datum/antagonist/nightmare/apply_innate_effects(mob/living/mob_override)
-	. = ..()
-	//Give nightmare appearance on hud (If they are not an antag already)
-	var/datum/atom_hud/antag/nightmarehud = GLOB.huds[ANTAG_HUD_NIGHTMARE]
-	nightmarehud.join_hud(owner.current)
-	if(!owner.antag_hud_icon_state)
-		set_antag_hud(owner.current, "nightmare")
-
-/datum/antagonist/nightmare/remove_innate_effects(mob/living/mob_override)
-	. = ..()
-	//Clear the hud if they haven't become something else and had the hud overwritten
-	var/datum/atom_hud/antag/nightmarehud = GLOB.huds[ANTAG_HUD_NIGHTMARE]
-	nightmarehud.leave_hud(owner.current)
-	if(owner.antag_hud_icon_state == "nightmare")
-		set_antag_hud(owner.current, null)
 
 /datum/objective/nightmare_fluff
 

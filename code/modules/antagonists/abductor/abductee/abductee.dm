@@ -2,11 +2,12 @@
 	name = "\improper Abductee"
 	roundend_category = "abductees"
 	antagpanel_category = ANTAG_GROUP_ABDUCTORS
+	antag_hud_name = "abductee"
 	banning_key = UNBANNABLE_ANTAGONIST
 
 /datum/antagonist/abductee/on_gain()
 	give_objective()
-	. = ..()
+	return ..()
 
 /datum/antagonist/abductee/greet()
 	owner.current.playsound_local(get_turf(owner.current), 'sound/ambience/antag/abductee.ogg', vol = 100, vary = FALSE, channel = CHANNEL_ANTAG_GREETING, pressure_affected = FALSE, use_reverb = FALSE)
@@ -37,9 +38,3 @@
 	extra_objective.owner = owner
 	objectives += extra_objective
 	log_objective(H, extra_objective.explanation_text)
-
-/datum/antagonist/abductee/apply_innate_effects(mob/living/mob_override)
-	update_abductor_icons_added(mob_override ? mob_override.mind : owner,"abductee")
-
-/datum/antagonist/abductee/remove_innate_effects(mob/living/mob_override)
-	update_abductor_icons_removed(mob_override ? mob_override.mind : owner)

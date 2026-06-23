@@ -34,7 +34,7 @@
 		generated_point_of_interest = TRUE
 
 
-/datum/component/deadchat_control/Destroy(force, silent)
+/datum/component/deadchat_control/Destroy(force)
 	inputs = null
 	orbiters = null
 	ckey_to_cooldown = null
