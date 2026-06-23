@@ -32,7 +32,7 @@ export function Orbit(props) {
         setViewMode,
       }}
     >
-      <Window title="Orbit" width={dynamicWidth} height={550} theme="ntos">
+      <Window title="Orbit" width={dynamicWidth} height={550} theme="default">
         <Window.Content>
           <Stack fill>
             <Stack.Item grow>
