@@ -14,12 +14,12 @@ type IconSettings = {
 };
 
 const normalIcon: IconSettings = {
-  dmi: 'icons/mob/hud.dmi',
+  dmi: 'icons/mob/huds/hud.dmi',
   transform: 'scale(2.3) translateX(9px) translateY(1px)',
 };
 
 const antagIcon: IconSettings = {
-  dmi: 'icons/mob/hud.dmi',
+  dmi: 'icons/mob/huds/antag_hud.dmi',
   transform: 'scale(1.8) translateX(-16px) translateY(7px)',
 };
 

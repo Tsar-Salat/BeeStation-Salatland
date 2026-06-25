@@ -4,7 +4,7 @@ import { capitalizeFirst } from 'tgui-core/string';
 import { useBackend } from '../../backend';
 import { getDisplayColor, getDisplayName } from './helpers';
 import { JobIcon } from './JobIcon';
-import { Antagonist, Observable, OrbitData, ViewMode } from './types';
+import type { Antagonist, Observable, OrbitData, ViewMode } from './types';
 
 type Props = {
   item: Observable | Antagonist;
