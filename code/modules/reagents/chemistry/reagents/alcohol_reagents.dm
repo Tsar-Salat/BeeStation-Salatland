@@ -3122,5 +3122,5 @@
 		addtimer(CALLBACK(src, PROC_REF(delayed_cure_nearsighted), affected_mob), 5 SECONDS)
 
 /datum/reagent/consumable/ethanol/ftliver/proc/delayed_cure_nearsighted(mob/living/carbon/target)
-	if(target && !QDELETED(target))
+	if(!QDELETED(target))
 		target.cure_nearsighted("ftliver")

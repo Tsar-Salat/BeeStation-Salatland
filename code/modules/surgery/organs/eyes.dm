@@ -378,9 +378,6 @@
 		eye.forceMove(src)
 	return ..()
 
-/obj/item/organ/eyes/robotic/glow/ui_state(mob/user)
-	return GLOB.default_state
-
 /obj/item/organ/eyes/robotic/glow/ui_status(mob/user)
 	if(!QDELETED(owner))
 		if(owner == user)
@@ -388,14 +385,14 @@
 				ui_status_user_is_abled(user, src),
 				ui_status_only_living(user),
 			)
-		else return UI_CLOSE
+		else
+			return UI_CLOSE
 	return ..()
 
 /obj/item/organ/eyes/robotic/glow/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "HighLuminosityEyesMenu")
-		ui.autoupdate = FALSE
 		ui.open()
 
 /obj/item/organ/eyes/robotic/glow/ui_data(mob/user)
@@ -403,7 +400,7 @@
 
 	data["eyeColor"] = list(
 		mode = eye_color_mode,
-		hasOwner = owner ? TRUE : FALSE,
+		hasOwner = !!owner,
 		left = left_eye_color_string,
 		right = right_eye_color_string,
 	)
@@ -423,12 +420,12 @@
 			set_beam_range(new_range)
 			return TRUE
 		if("pick_color")
-			var/new_color = input(
+			var/new_color = tgui_color_picker(
 				usr,
 				"Choose eye color color:",
 				"High Luminosity Eyes Menu",
 				light_color_string
-			) as color|null
+			)
 			if(new_color)
 				var/to_update = params["to_update"]
 				set_beam_color(new_color, to_update)

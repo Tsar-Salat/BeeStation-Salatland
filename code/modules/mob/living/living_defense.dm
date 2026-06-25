@@ -59,7 +59,7 @@
  * Arguments
  * * check_flags: What item slots should we check?
  *
- * Retuns a truthy value (a ref to what is covering mouth), or a falsy value (null)
+ * Returns a truthy value (a ref to what is covering mouth), or a falsey value (null)
  */
 /mob/living/proc/is_mouth_covered(check_flags = ALL)
 	return null
@@ -73,7 +73,7 @@
  * Arguments
  * * check_flags: What item slots should we check?
  *
- * Retuns a truthy value (a ref to what is covering eyes), or a falsy value (null)
+ * Returns a truthy value (a ref to what is covering eyes), or a falsey value (null)
  */
 /mob/living/proc/is_eyes_covered(check_flags = ALL)
 	return null

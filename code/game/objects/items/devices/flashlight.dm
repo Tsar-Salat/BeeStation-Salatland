@@ -186,9 +186,17 @@
 
 	to_chat(user, examine_block(jointext(results, "\n")))
 
+/// for directional sprites - so we get the same sprite in the inventory each time we pick one up
 /obj/item/flashlight/equipped(mob/user, slot, initial)
 	. = ..()
-	SEND_SIGNAL(user, COMSIG_ATOM_DIR_CHANGE, user.dir, user.dir)
+	setDir(initial(dir))
+	SEND_SIGNAL(user, COMSIG_ATOM_DIR_CHANGE, user.dir, user.dir) // This is dumb, but if we don't do this then the lighting overlay may be facing the wrong direction depending on how it is picked up
+
+/// for directional sprites - so when we drop the flashlight, it drops facing the same way the user is facing
+/obj/item/flashlight/dropped(mob/user, silent = FALSE)
+	. = ..()
+	if(istype(user) && dir != user.dir)
+		setDir(user.dir)
 
 /obj/item/flashlight/pen
 	name = "penlight"
