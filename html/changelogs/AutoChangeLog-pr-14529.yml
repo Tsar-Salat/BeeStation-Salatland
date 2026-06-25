@@ -1,5 +1,0 @@
-author: MadmanMartian
-delete-after: true
-changes:
-  - tweak: You can now examine solar panels to infer their power multiplier coefficient,
-      their maximum output, their glass type, and what tools to use on them
