@@ -32,6 +32,5 @@
 
 /datum/antagonist/space_carp/forge_objectives()
 	var/datum/objective/space_carp/objective = new
-	objective.owner = owner
 	objective.rift = rift
-	objectives += objective
+	add_objective(objective)
