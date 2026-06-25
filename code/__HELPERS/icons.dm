@@ -1237,15 +1237,15 @@ GLOBAL_LIST_EMPTY(friendly_animal_types)
 	var/width = icon_dimensions["width"]
 	var/height = icon_dimensions["height"]
 
-	if(width > world.icon_size)
-		alert_overlay.pixel_x = -(world.icon_size / 2) * ((width - world.icon_size) / world.icon_size)
-	if(height > world.icon_size)
-		alert_overlay.pixel_y = -(world.icon_size / 2) * ((height - world.icon_size) / world.icon_size)
-	if(width > world.icon_size || height > world.icon_size)
+	if(width > ICON_SIZE_X)
+		alert_overlay.pixel_w = -(ICON_SIZE_X / 2) * ((width - ICON_SIZE_X) / ICON_SIZE_X)
+	if(height > ICON_SIZE_Y)
+		alert_overlay.pixel_z = -(ICON_SIZE_Y / 2) * ((height - ICON_SIZE_Y) / ICON_SIZE_Y)
+	if(width > ICON_SIZE_X || height > ICON_SIZE_Y)
 		if(width >= height)
-			scale = world.icon_size / width
+			scale = ICON_SIZE_X / width
 		else
-			scale = world.icon_size / height
+			scale = ICON_SIZE_Y / height
 	alert_overlay.transform = alert_overlay.transform.Scale(scale)
 
 	return alert_overlay
