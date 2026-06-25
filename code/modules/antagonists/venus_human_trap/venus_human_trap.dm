@@ -22,6 +22,4 @@
 	return owner.current.stat != DEAD
 
 /datum/antagonist/venus_human_trap/forge_objectives()
-	var/datum/objective/venus_human_trap/objective = new
-	objective.owner = owner
-	objectives += objective
+	add_objective(new /datum/objective/venus_human_trap())
