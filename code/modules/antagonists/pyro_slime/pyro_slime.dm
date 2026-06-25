@@ -22,6 +22,4 @@
 	return owner.current.stat != DEAD
 
 /datum/antagonist/pyro_slime/forge_objectives()
-	var/datum/objective/pyro_slime/objective = new
-	objective.owner = owner
-	objectives += objective
+	add_objective(new /datum/objective/pyro_slime())
