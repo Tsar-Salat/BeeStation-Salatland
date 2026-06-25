@@ -59,20 +59,38 @@
 	alert_type = /atom/movable/screen/alert/status_effect/blind
 	// This is not "remove on fullheal" as in practice,
 	// fullheal should instead remove all the sources and in turn cure this
+	/// Fullscreen overlay type to use instead of the default. Set via become_blind(source, overlay_type).
+	/// Sources passing null leave any existing custom overlay untouched.
+	var/overlay_type = null
+
+/datum/status_effect/grouped/blindness/on_creation(mob/living/new_owner, source, overlay_type = null)
+	if(!isnull(overlay_type))
+		src.overlay_type = overlay_type
+		var/datum/status_effect/grouped/blindness/existing = new_owner.has_status_effect(type)
+		if(existing)
+			existing.overlay_type = overlay_type
+			existing.update_overlay()
+	return ..()
 
 /datum/status_effect/grouped/blindness/on_apply()
 	if(!CAN_BE_BLIND(owner))
 		return FALSE
 
-	owner.overlay_fullscreen(id, /atom/movable/screen/fullscreen/blind)
-	// You are blind - at most, able to make out shapes near you
-	owner.add_client_colour(/datum/client_colour/monochrome/blind)
+	update_overlay()
 
 	var/datum/component/blind_sense/B = owner.GetComponent(/datum/component/blind_sense)
 	if(!B && !QDELING(owner) && !QDELETED(owner))
 		owner.AddComponent(/datum/component/blind_sense)
 
 	return ..()
+
+/// Applies the correct fullscreen overlay and monochrome colour for the current overlay_type.
+/datum/status_effect/grouped/blindness/proc/update_overlay()
+	owner.overlay_fullscreen(id, overlay_type || /atom/movable/screen/fullscreen/blind)
+	if(!isnull(overlay_type))
+		owner.remove_client_colour(/datum/client_colour/monochrome/blind)
+	else
+		owner.add_client_colour(/datum/client_colour/monochrome/blind)
 
 /datum/status_effect/grouped/blindness/on_remove()
 	owner.clear_fullscreen(id)

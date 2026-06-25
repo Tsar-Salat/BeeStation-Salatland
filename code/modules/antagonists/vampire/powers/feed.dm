@@ -205,9 +205,7 @@
 			feed_time /= 4
 
 		feed_target.Stun(feed_time, TRUE)
-		feed_target.become_blind(TRAIT_FEED)
-		feed_target.overlay_fullscreen("blindness", /atom/movable/screen/fullscreen/blind/feed)
-		feed_target.remove_client_colour(/datum/client_colour/monochrome/blind)
+		feed_target.become_blind_with_overlay(TRAIT_FEED, /atom/movable/screen/fullscreen/blind/feed)
 		ADD_TRAIT(feed_target, TRAIT_DEAF, TRAIT_FEED)
 
 		to_chat(feed_target, span_awe("You suddenly fall into a deep trance..."), type = MESSAGE_TYPE_WARNING)

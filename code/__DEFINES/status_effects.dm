@@ -67,6 +67,8 @@
 
 /// Causes the mob to become blind via the passed source
 #define become_blind(source) apply_status_effect(/datum/status_effect/grouped/blindness, source)
+/// Causes the mob to become blind via the passed source, using a custom fullscreen overlay instead of the default
+#define become_blind_with_overlay(source, overlay_type) apply_status_effect(/datum/status_effect/grouped/blindness, source, overlay_type)
 /// Cures the mob's blindness from the passed source, removing blindness wholesale if no sources are left
 #define cure_blind(source) remove_status_effect(/datum/status_effect/grouped/blindness, source)
 

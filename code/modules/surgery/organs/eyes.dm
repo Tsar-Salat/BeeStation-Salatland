@@ -633,9 +633,7 @@
 
 /obj/item/organ/eyes/psyphoza/Insert(mob/living/carbon/eye_owner, special = FALSE, drop_if_replaced = FALSE, initialising, pref_load = FALSE)
 	. = ..()
-	eye_owner.become_blind(PSYPHOZA_BLINDNESS_SOURCE)
-	eye_owner.overlay_fullscreen("blindness", /atom/movable/screen/fullscreen/blind/psychic)
-	eye_owner.remove_client_colour(/datum/client_colour/monochrome/blind)
+	eye_owner.become_blind_with_overlay(PSYPHOZA_BLINDNESS_SOURCE, /atom/movable/screen/fullscreen/blind/psychic)
 
 	var/datum/action/item_action/organ_action/psychic_highlight/highlight_ability = new(src)
 	highlight_ability.Grant(eye_owner)
