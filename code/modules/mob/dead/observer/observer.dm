@@ -524,7 +524,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 	if(isturf(destination_turf))
 		source_mob.abstract_move(destination_turf)
-		//source_mob.update_parallax_contents()
 	else
 		to_chat(source_mob, "This mob is not located in the game world.")
 
