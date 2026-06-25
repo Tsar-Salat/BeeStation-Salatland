@@ -7,7 +7,6 @@
 		MUTANT_COLOR,
 		LIPS
 	)
-	inherent_traits = list()
 	inherent_biotypes = MOB_ORGANIC | MOB_HUMANOID |  MOB_REPTILE
 	mutant_bodyparts = list(
 		"tail_lizard" = "Smooth",

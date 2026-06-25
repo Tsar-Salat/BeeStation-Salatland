@@ -621,31 +621,32 @@
 	desc = "Designed for navigating dark hives, these eyes have improvement to low light vision."
 	see_in_dark = NIGHTVISION_FOV_RANGE
 
+#define PSYPHOZA_BLINDNESS_SOURCE "uncurable"
+
 /obj/item/organ/eyes/psyphoza
 	name = "psyphoza eyes"
 	desc = "Conduits for psychic energy, hardly even eyes."
 	icon_state = "psyphoza_eyeballs"
-	actions_types = list(/datum/action/item_action/organ_action/psychic_highlight)
 	see_in_dark = NIGHTVISION_FOV_RANGE
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	sight_flags = SEE_MOBS | SEE_OBJS | SEE_TURFS
 
-/obj/item/organ/eyes/psyphoza/Insert(mob/living/carbon/M, special, drop_if_replaced, initialising)
+/obj/item/organ/eyes/psyphoza/Insert(mob/living/carbon/eye_owner, special = FALSE, drop_if_replaced = FALSE, initialising, pref_load = FALSE)
 	. = ..()
-	M.become_blind("uncurable")
-	M.overlay_fullscreen("blindness", /atom/movable/screen/fullscreen/blind/psychic)
-	M.remove_client_colour(/datum/client_colour/monochrome/blind)
-	//Handle weird ability code
-	var/datum/action/item_action/organ_action/psychic_highlight/P = locate(/datum/action/item_action/organ_action/psychic_highlight) in M.actions
-	if(P?.removed)
-		P.Grant(M)
-		P?.removed = FALSE
+	eye_owner.become_blind(PSYPHOZA_BLINDNESS_SOURCE)
+	eye_owner.overlay_fullscreen("blindness", /atom/movable/screen/fullscreen/blind/psychic)
+	eye_owner.remove_client_colour(/datum/client_colour/monochrome/blind)
 
-/obj/item/organ/eyes/psyphoza/Remove(mob/living/carbon/M, special = FALSE, pref_load = FALSE)
-	M.cure_blind("uncurable")
-	var/datum/action/item_action/organ_action/psychic_highlight/P = locate(/datum/action/item_action/organ_action/psychic_highlight) in M.actions
-	P?.remove()
+	var/datum/action/item_action/organ_action/psychic_highlight/highlight_ability = new(src)
+	highlight_ability.Grant(eye_owner)
+
+/obj/item/organ/eyes/psyphoza/Remove(mob/living/carbon/eye_owner, special = FALSE, pref_load = FALSE)
+	eye_owner.cure_blind(PSYPHOZA_BLINDNESS_SOURCE)
+	var/datum/action/item_action/organ_action/psychic_highlight/highlight_ability = locate() in eye_owner.actions
+	highlight_ability?.Remove(eye_owner)
 	return ..()
+
+#undef PSYPHOZA_BLINDNESS_SOURCE
 
 /obj/item/organ/eyes/diona
 	name = "receptor node"
