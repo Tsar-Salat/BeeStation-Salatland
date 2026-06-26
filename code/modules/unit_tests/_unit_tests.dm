@@ -110,6 +110,7 @@
 #include "surgery_linking.dm"
 #include "techweb_sanity.dm"
 #include "teleporters.dm"
+#include "text.dm"
 #include "tgui_create_message.dm"
 #include "timer_sanity.dm"
 #include "trait_tests.dm"

@@ -176,25 +176,25 @@
 				if (!borg.radio.keyslot) // There's no encryption key. This shouldn't happen but we can cope
 					borg.radio.channels -= channel
 					if (channel == RADIO_CHANNEL_SYNDICATE)
-						borg.radio.syndie = FALSE
+						borg.radio.special_channels &= ~RADIO_SPECIAL_SYNDIE
 					else if (channel == "CentCom")
-						borg.radio.independent = FALSE
+						borg.radio.special_channels &= ~RADIO_SPECIAL_CENTCOM
 				else
 					borg.radio.keyslot.channels -= channel
 					if (channel == RADIO_CHANNEL_SYNDICATE)
-						borg.radio.keyslot.syndie = FALSE
+						borg.radio.keyslot.special_channels &= ~RADIO_SPECIAL_SYNDIE
 					else if (channel == "CentCom")
-						borg.radio.keyslot.independent = FALSE
+						borg.radio.keyslot.special_channels &= ~RADIO_SPECIAL_CENTCOM
 				message_admins("[key_name_admin(user)] removed the [channel] radio channel from [ADMIN_LOOKUPFLW(borg)].")
 				log_admin("[key_name(user)] removed the [channel] radio channel from [key_name(borg)].")
 			else	// We're adding a channel
 				if (!borg.radio.keyslot) // Assert that an encryption key exists
-					borg.radio.keyslot = new (borg.radio)
+					borg.radio.keyslot = new()
 				borg.radio.keyslot.channels[channel] = 1
 				if (channel == RADIO_CHANNEL_SYNDICATE)
-					borg.radio.keyslot.syndie = TRUE
+					borg.radio.keyslot.special_channels |= RADIO_SPECIAL_SYNDIE
 				else if (channel == "CentCom")
-					borg.radio.keyslot.independent = TRUE
+					borg.radio.keyslot.special_channels |= RADIO_SPECIAL_CENTCOM
 				message_admins("[key_name_admin(user)] added the [channel] radio channel to [ADMIN_LOOKUPFLW(borg)].")
 				log_admin("[key_name(user)] added the [channel] radio channel to [key_name(borg)].")
 			borg.radio.recalculateChannels()

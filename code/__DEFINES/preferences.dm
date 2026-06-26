@@ -138,6 +138,9 @@ GLOBAL_LIST_INIT(helmet_styles, list(
 #define PREFERENCE_CATEGORY_SUPPLEMENTAL_FEATURES "supplemental_features"
 
 
+/// These preferences will not be rendered on the preferences page, and are practically invisible unless specifically rendered. Used for quirks, currently.
+#define PREFERENCE_CATEGORY_MANUALLY_RENDERED "manually_rendered_features"
+
 /// The key used for sprite accessories that should never actually be applied to the player.
 #define SPRITE_ACCESSORY_NONE "None"
 

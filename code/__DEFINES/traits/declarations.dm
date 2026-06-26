@@ -172,7 +172,6 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_CANNOT_OPEN_PRESENTS "cannot-open-presents"
 #define TRAIT_PRESENT_VISION    "present-vision"
 #define TRAIT_DISK_VERIFIER     "disk-verifier"
-#define TRAIT_MULTILINGUAL		"multilingual" //I know another language
 #define TRAIT_LINGUIST			"linguist"
 #define TRAIT_NOMOBSWAP "no-mob-swap"
 /// Gives us turf, mob and object vision through walls

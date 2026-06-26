@@ -90,7 +90,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/radio/intercom)
 		if(isnull(position) || !(position.get_virtual_z_level() in levels))
 			return FALSE
 	if(freq == FREQ_SYNDICATE)
-		if(!(syndie))
+		if(!(special_channels &= RADIO_SPECIAL_SYNDIE))
 			return FALSE//Prevents broadcast of messages over devices lacking the encryption
 
 	return TRUE
@@ -162,8 +162,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/radio/intercom)
 	pixel_shift = 26
 	custom_materials = list(/datum/material/iron = 75, /datum/material/glass = 25)
 
-MAPPING_DIRECTIONAL_HELPERS(/obj/item/radio/intercom, 26)
-
 /obj/item/radio/intercom/chapel
 	name = "Confessional intercom"
 	anonymize = TRUE
@@ -175,5 +173,22 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/radio/intercom/chapel)
 	set_frequency(1481)
 	set_broadcasting(TRUE)
 
+/obj/item/radio/intercom/command
+	name = "command intercom"
+	desc = "The command team's special extended-frequency intercom. Mostly just used for eavesdropping, gossiping about subordinates, and complaining about the higher-ups."
+	icon_state = "intercom_command"
+	freerange = TRUE
+	command = TRUE
+
+// Intercom with loudmic and innate syndicate channel access
+/obj/item/radio/intercom/syndicate
+	name = "syndicate intercom"
+	desc = "Talk smack through this."
+	command = TRUE
+	special_channels = RADIO_SPECIAL_SYNDIE
+
+MAPPING_DIRECTIONAL_HELPERS(/obj/item/radio/intercom, 26)
 //MAPPING_DIRECTIONAL_HELPERS(/obj/item/radio/intercom/prison, 26)
 MAPPING_DIRECTIONAL_HELPERS(/obj/item/radio/intercom/chapel, 26)
+MAPPING_DIRECTIONAL_HELPERS(/obj/item/radio/intercom/command, 26)
+MAPPING_DIRECTIONAL_HELPERS(/obj/item/radio/intercom/syndicate, 26)

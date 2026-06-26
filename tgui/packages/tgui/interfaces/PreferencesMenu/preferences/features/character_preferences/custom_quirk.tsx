@@ -11,11 +11,6 @@ export const quirk_phobia: FeatureChoiced = {
   component: FeatureButtonedDropdownInput,
 };
 
-export const quirk_multilingual_language: FeatureChoiced = {
-  name: 'Second Language',
-  component: FeatureButtonedDropdownInput,
-};
-
 export const quirk_smoker_cigarettes: FeatureChoiced = {
   name: 'Type Of Cigarettes',
   component: FeatureButtonedDropdownInput,

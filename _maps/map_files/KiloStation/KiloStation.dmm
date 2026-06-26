@@ -38763,10 +38763,8 @@
 	pixel_y = 6
 	},
 /obj/item/pen/fountain/captain,
-/obj/item/radio/intercom{
+/obj/item/radio/intercom/command{
 	dir = 8;
-	freerange = 1;
-	name = "Station Intercom (Command)";
 	pixel_y = -28
 	},
 /obj/structure/table/wood,
@@ -59307,10 +59305,8 @@
 /area/station/command/bridge)
 "uxf" = (
 /obj/structure/table,
-/obj/item/radio/intercom{
+/obj/item/radio/intercom/command{
 	dir = 8;
-	freerange = 1;
-	name = "Station Intercom (Command)";
 	pixel_x = 1
 	},
 /obj/effect/turf_decal/tile/blue/half/contrasted{

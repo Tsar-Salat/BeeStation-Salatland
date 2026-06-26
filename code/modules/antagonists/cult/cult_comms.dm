@@ -32,7 +32,7 @@
 	var/my_message
 	if(!message)
 		return
-	user.whisper("O bidai nabora se[pick("'","`")]sma!", language = /datum/language/common)
+	user.whisper("O bidai nabora se[pick("'","`")]sma!", language = /datum/language/common, forced = "cult invocation")
 	user.whisper(html_decode(message), filterproof = TRUE)
 	var/title = "Acolyte"
 	var/span = "srt_radio cult italic"

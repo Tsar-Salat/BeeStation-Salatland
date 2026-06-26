@@ -163,27 +163,7 @@ export type PreferencesMenuData = {
   character_preview_view: string;
   character_profiles: (string | null)[];
 
-  character_preferences: {
-    clothing: Record<string, string>;
-    features: Record<string, string>;
-    game_preferences: Record<string, unknown>;
-    non_contextual: {
-      body_is_always_random: RandomSetting;
-      [otherKey: string]: unknown;
-    };
-    secondary_features: Record<string, unknown>;
-    supplemental_features: Record<string, unknown>;
-
-    names: Record<string, string>;
-
-    misc: {
-      gender: Gender;
-      joblessrole: JoblessRole;
-      species: string;
-    };
-
-    randomization: Record<string, RandomSetting>;
-  };
+  character_preferences: CharacterPreferencesData;
 
   content_unlocked: BooleanLike;
 
@@ -221,6 +201,29 @@ export type PreferencesMenuData = {
   save_sucess: BooleanLike;
 
   window: Window;
+};
+
+export type CharacterPreferencesData = {
+  clothing: Record<string, string>;
+  features: Record<string, string>;
+  game_preferences: Record<string, unknown>;
+  non_contextual: {
+    body_is_always_random: RandomSetting;
+    [otherKey: string]: unknown;
+  };
+  secondary_features: Record<string, unknown>;
+  supplemental_features: Record<string, unknown>;
+  manually_rendered_features: Record<string, string>;
+
+  names: Record<string, string>;
+
+  misc: {
+    gender: Gender;
+    joblessrole: JoblessRole;
+    species: string;
+  };
+
+  randomization: Record<string, RandomSetting>;
 };
 
 export type ServerData = {

@@ -69816,10 +69816,8 @@
 /area/station/engineering/main)
 "vFX" = (
 /obj/structure/table/wood,
-/obj/item/radio/intercom{
+/obj/item/radio/intercom/command{
 	dir = 8;
-	freerange = 1;
-	name = "Captain's Intercom";
 	pixel_x = -26
 	},
 /obj/item/reagent_containers/cup/glass/flask/gold,

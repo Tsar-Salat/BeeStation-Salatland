@@ -142,9 +142,11 @@
 	check_flags = AB_CHECK_CONSCIOUS
 
 /datum/action/innate/cult/blood_spell/emp/on_activate()
-	owner.whisper(invocation, language = /datum/language/common)
-	owner.visible_message(span_warning("[owner]'s hand flashes a bright blue!"), \
-						span_cultitalic("You speak the cursed words, emitting an EMP blast from your hand."))
+	owner.whisper(invocation, language = /datum/language/common, forced = "cult invocation")
+	owner.visible_message(
+		span_warning("[owner]'s hand flashes a bright blue!"),
+		span_cultitalic("You speak the cursed words, emitting an EMP blast from your hand.")
+	)
 	empulse(owner, 2, 5, holy=TRUE)
 	charges--
 	if(charges<=0)
@@ -180,9 +182,11 @@
 
 /datum/action/innate/cult/blood_spell/dagger/on_activate()
 	var/turf/owner_turf = get_turf(owner)
-	owner.whisper(invocation, language = /datum/language/common)
-	owner.visible_message(span_warning("[owner]'s hand glows red for a moment."), \
-		span_cultitalic("Your plea for aid is answered, and light begins to shimmer and take form within your hand!"))
+	owner.whisper(invocation, language = /datum/language/common, forced = "cult invocation")
+	owner.visible_message(
+		span_warning("[owner]'s hand glows red for a moment."),
+		span_cultitalic("Your plea for aid is answered, and light begins to shimmer and take form within your hand!")
+	)
 	var/obj/item/summoned_blade = new summoned_type(owner_turf)
 	if(owner.put_in_hands(summoned_blade))
 		to_chat(owner, span_warning("A [summoned_blade] appears in your hand!"))
@@ -251,11 +255,13 @@
 
 /datum/action/innate/cult/blood_spell/veiling/on_activate()
 	if(!revealing)
-		owner.visible_message(span_warning("Thin grey dust falls from [owner]'s hand!"), \
-			span_cultitalic("You invoke the veiling spell, hiding nearby runes."))
+		owner.visible_message(
+			span_warning("Thin grey dust falls from [owner]'s hand!"),
+			span_cultitalic("You invoke the veiling spell, hiding nearby runes.")
+		)
 		charges--
 		SEND_SOUND(owner, sound('sound/magic/smoke.ogg',0,1,25))
-		owner.whisper(invocation, language = /datum/language/common)
+		owner.whisper(invocation, language = /datum/language/common, forced = "cult invocation")
 		for(var/obj/effect/rune/R in range(5, owner))
 			R.conceal()
 		for(var/obj/structure/destructible/cult/S in range(5, owner))
@@ -271,7 +277,7 @@
 		owner.visible_message(span_warning("A flash of light shines from [owner]'s hand!"), \
 			span_cultitalic("You invoke the counterspell, revealing nearby runes."))
 		charges--
-		owner.whisper(invocation, language = /datum/language/common)
+		owner.whisper(invocation, language = /datum/language/common, forced = "cult invocation")
 		SEND_SOUND(owner, sound('sound/magic/enter_blood.ogg',0,1,25))
 		for(var/obj/effect/rune/R in range(7,owner)) //More range in case you weren't standing in exactly the same spot
 			R.reveal()
@@ -358,7 +364,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/melee/blood_magic)
 /obj/item/melee/blood_magic/afterattack(atom/target, mob/living/carbon/user, proximity)
 	. = ..()
 	if(invocation)
-		user.whisper(invocation, language = /datum/language/common)
+		user.whisper(invocation, language = /datum/language/common, forced = "cult invocation")
 	if(health_cost)
 		if(user.active_hand_index == 1)
 			user.apply_damage(health_cost, BRUTE, BODY_ZONE_L_ARM)

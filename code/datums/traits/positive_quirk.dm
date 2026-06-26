@@ -95,27 +95,6 @@
 	lose_text = span_danger("You can no longer recognise linguistic features for each language.")
 	medical_record_text = "Patient possesses extrasensory language feature perception."
 
-/datum/quirk/multilingual
-	name = "Multilingual"
-	desc = "You spent a portion of your life learning to understand an additional language. You may or may not be able to speak it based on your anatomy."
-	icon = "comments"
-	quirk_value = 1
-	mob_trait = TRAIT_MULTILINGUAL
-	gain_text = span_notice("You have learned to understand an additional language.")
-	lose_text = span_danger("You have forgotten how to understand a language.")
-	medical_record_text = "Patient knows more than one language."
-	var/datum/language/known_language
-
-/datum/quirk/multilingual/add()
-	known_language = read_choice_preference(/datum/preference/choiced/quirk/multilingual_language)
-	known_language ||= pick(GLOB.multilingual_language_list)
-	quirk_target.grant_language(known_language, source = LANGUAGE_MULTILINGUAL)
-
-/datum/quirk/multilingual/remove()
-	if(!known_language)
-		return
-	quirk_target.remove_language(known_language, source = LANGUAGE_MULTILINGUAL)
-
 /datum/quirk/night_vision
 	name = "Night Vision"
 	desc = "You can see slightly more clearly in full darkness than most people."

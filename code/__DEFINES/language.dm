@@ -54,6 +54,8 @@
 #define LANGUAGE_STONER	"stoner"
 #define LANGUAGE_DRUGGY	"druggy"
 #define LANGUAGE_VOICECHANGE "voicechange"
+#define LANGUAGE_RADIOKEY "radiokey"
+#define LANGUAGE_QUIRK "quirk"
 #define LANGUAGE_REAGENT "reagent"
 #define LANGUAGE_MULTILINGUAL "multilingual"
 #define LANGUAGE_EMP "emp"
@@ -67,21 +69,3 @@
 #define SPOKEN_LANGUAGE (1<<0)
 /// This language can be understood.
 #define UNDERSTOOD_LANGUAGE (1<<1)
-
-// Languages available from Multilingual
-GLOBAL_LIST_INIT(multilingual_language_list, typecacheof(list(
-	/datum/language/apidite,
-	/datum/language/beachbum,
-	/datum/language/buzzwords,
-	/datum/language/calcic,
-	/datum/language/draconic,
-	/datum/language/moffic,
-	/datum/language/monkey,
-	/datum/language/piratespeak,
-	/datum/language/shadowtongue,
-	/datum/language/slime,
-	/datum/language/sylvan,
-	/datum/language/terrum,
-	/datum/language/uncommon,
-	/datum/language/voltaic,
-)))

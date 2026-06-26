@@ -4,42 +4,63 @@
 	icon = 'icons/obj/radio.dmi'
 	icon_state = "cypherkey"
 	w_class = WEIGHT_CLASS_TINY
-	var/translate_binary = FALSE
-	var/syndie = FALSE
-	var/independent = FALSE
-	var/amplification = FALSE
+	/// What channels does this encryption key grant to the parent headset.
 	var/list/channels = list()
-
-/obj/item/encryptionkey/Initialize(mapload)
-	. = ..()
-	if(!(translate_binary || syndie || independent || amplification || length(channels)))
-		desc = "An encryption key for a radio headset. Has no special codes in it. You should probably tell a coder!"
+	/// Flags for which "special" radio networks should be accessible
+	var/special_channels = NONE
+	/// Assoc list of language to how well understood it is. 0 is invalid, 100 is perfect.
+	var/list/language_data
 
 /obj/item/encryptionkey/examine(mob/user)
 	. = ..()
-	if(LAZYLEN(channels))
-		var/list/examine_text_list = list()
-		for(var/i in channels)
-			examine_text_list += "[GLOB.channel_tokens[i]] - [LOWER_TEXT(i)]"
+	if(!LAZYLEN(channels) && !(special_channels & RADIO_SPECIAL_BINARY) && !LAZYLEN(language_data))
+		. += span_warning("Has no special codes in it. You should probably tell a coder!")
+		return
 
+	var/list/examine_text_list = list()
+	for(var/i in channels)
+		examine_text_list += "[GLOB.channel_tokens[i]] - [LOWER_TEXT(i)]"
+
+	if(special_channels & RADIO_SPECIAL_BINARY)
+		examine_text_list += "[GLOB.channel_tokens[MODE_BINARY]] - [MODE_BINARY]"
+
+	if(length(examine_text_list))
 		. += span_notice("It can access the following channels; [jointext(examine_text_list, ", ")].")
+
+	var/list/language_text_list = list()
+	for(var/lang in language_data)
+		var/langstring = "[GLOB.language_datum_instances[lang].name]"
+		switch(language_data[lang])
+			if(25 to 50)
+				langstring += " (poor)"
+			if(50 to 75)
+				langstring += " (average)"
+			if(75 to 100)
+				langstring += " (good)"
+		language_text_list += langstring
+
+	if(length(language_text_list))
+		. += span_notice("It can translate the following languages; [jointext(language_text_list, ", ")].")
 
 /obj/item/encryptionkey/syndicate
 	name = "syndicate encryption key"
 	icon_state = "syn_cypherkey"
 	channels = list(RADIO_CHANNEL_SYNDICATE = 1)
-	syndie = TRUE//Signifies that it de-crypts Syndicate transmissions
+	special_channels = RADIO_SPECIAL_SYNDIE
 
 /obj/item/encryptionkey/binary
 	name = "binary translator key"
 	desc = "An encryption key that interchanges the form of anaologue brainwave and binary electric signals."
 	icon_state = "bin_cypherkey"
-	translate_binary = TRUE
+	special_channels = RADIO_SPECIAL_BINARY
+	language_data = list(
+		/datum/language/machine = 100,
+	)
 
 /obj/item/encryptionkey/amplification
 	name = "amplification module key"
 	desc = "An amplification module key for a radio headset. It will enable the \"Loud mode\" ability on any headset it is inserted into."
-	amplification = TRUE
+	special_channels = RADIO_SPECIAL_AMPLIFIER
 
 /obj/item/encryptionkey/headset_sec
 	name = "security radio encryption key"
@@ -162,17 +183,14 @@
 /obj/item/encryptionkey/headset_cent
 	name = "\improper CentCom radio encryption key"
 	icon_state = "cent_cypherkey"
-	independent = TRUE
+	special_channels = RADIO_SPECIAL_CENTCOM
 	channels = list(RADIO_CHANNEL_CENTCOM = 1)
 
 /obj/item/encryptionkey/debug
 	name = "\improper omni radio encryption key"
 	desc = "A god-like key of omni-presence to eavesdrop anything you would want to hear."
 	icon_state = "cent_cypherkey"
-	translate_binary = TRUE
-	syndie = TRUE
-	independent = TRUE
-	amplification = TRUE
+	special_channels = RADIO_SPECIAL_SYNDIE|RADIO_SPECIAL_CENTCOM|RADIO_SPECIAL_BINARY|RADIO_SPECIAL_AMPLIFIER
 
 /obj/item/encryptionkey/debug/Initialize(mapload)
 	. = ..()
@@ -180,11 +198,20 @@
 		channels |= list("[each]" = 1)
 
 /obj/item/encryptionkey/ai //ported from NT, this goes 'inside' the AI.
-	channels = list(RADIO_CHANNEL_COMMAND = 1, RADIO_CHANNEL_SECURITY = 1, RADIO_CHANNEL_ENGINEERING = 1, RADIO_CHANNEL_SCIENCE = 1, RADIO_CHANNEL_MEDICAL = 1, RADIO_CHANNEL_SUPPLY = 1, RADIO_CHANNEL_SERVICE = 1, RADIO_CHANNEL_EXPLORATION = 1, RADIO_CHANNEL_AI_PRIVATE = 1)
+	channels = list(
+		RADIO_CHANNEL_COMMAND = 1,
+		RADIO_CHANNEL_SECURITY = 1,
+		RADIO_CHANNEL_ENGINEERING = 1,
+		RADIO_CHANNEL_SCIENCE = 1,
+		RADIO_CHANNEL_MEDICAL = 1,
+		RADIO_CHANNEL_SUPPLY = 1,
+		RADIO_CHANNEL_SERVICE = 1,
+		RADIO_CHANNEL_EXPLORATION = 1,
+		RADIO_CHANNEL_AI_PRIVATE = 1
+	)
 
 /obj/item/encryptionkey/secbot
 	channels = list(RADIO_CHANNEL_AI_PRIVATE = 1, RADIO_CHANNEL_SECURITY = 1)
-
 
 /obj/item/storage/box/command_keys // heads toys
 	name = "box of amplification keys"

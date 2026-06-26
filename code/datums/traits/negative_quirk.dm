@@ -267,27 +267,6 @@
 	lose_text = span_notice("You feel sturdy again.")
 	medical_record_text = "Patient is absurdly easy to injure. Please take all due diligence to avoid possible malpractice suits."
 
-/datum/quirk/foreigner
-	name = "Foreigner"
-	desc = "You're not from around here. You don't know Galactic Common!"
-	icon = "question-circle"
-	quirk_value = -1
-	gain_text = span_notice("The words being spoken around you don't make any sense.")
-	lose_text = span_notice("You've developed fluency in Galactic Common.")
-	medical_record_text = "Patient does not speak Galactic Common and may require an interpreter."
-
-/datum/quirk/foreigner/add()
-	var/mob/living/carbon/human/H = quirk_target
-	if(quirk_holder.assigned_role != JOB_NAME_CURATOR)
-		H.add_blocked_language(/datum/language/common)
-		H.grant_language(/datum/language/uncommon)
-
-/datum/quirk/foreigner/remove()
-	var/mob/living/carbon/human/H = quirk_target
-	if(quirk_holder.assigned_role != JOB_NAME_CURATOR)
-		H.remove_blocked_language(/datum/language/common)
-		H.remove_language(/datum/language/uncommon)
-
 /datum/quirk/heavy_sleeper
 	name = "Heavy Sleeper"
 	desc = "You sleep like a rock! Whenever you're put to sleep or knocked unconscious, you take a little bit longer to wake up."

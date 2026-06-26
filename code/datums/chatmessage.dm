@@ -509,7 +509,7 @@
 		var/scrambled_message
 		var/datum/language/language_instance = message_language ? GLOB.language_datum_instances[message_language] : null
 		if(LAZYLEN(show_icon_scrambled) || LAZYLEN(hide_icon_scrambled))
-			scrambled_message = language_instance?.scramble(handled_message) || scramble_message_replace_chars(handled_message, 100)
+			scrambled_message = language_instance?.scramble_sentence(handled_message, null) || scramble_message_replace_chars(handled_message, 100)
 
 		//Show the correct message to people who should not see the icon but understand the language (SHORTEST)
 		if(LAZYLEN(hide_icon_understand))

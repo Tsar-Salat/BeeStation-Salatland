@@ -11901,10 +11901,7 @@
 /area/centcom/central_command_areas/evacuation/ship)
 "aFm" = (
 /obj/structure/table/wood,
-/obj/item/radio/intercom{
-	desc = "Talk smack through this.";
-	syndie = 1
-	},
+/obj/item/radio/intercom/syndicate,
 /obj/machinery/door/window/brigdoor{
 	base_state = "rightsecure";
 	name = "CentCom Stand";
@@ -12611,11 +12608,7 @@
 /obj/structure/chair{
 	dir = 8
 	},
-/obj/item/radio/intercom{
-	desc = "Talk smack through this.";
-	pixel_x = -32;
-	syndie = 1
-	},
+/obj/item/radio/intercom/syndicate,
 /obj/effect/turf_decal/tile/green,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 8
@@ -15868,10 +15861,7 @@
 /area/centcom/syndicate_mothership/control)
 "aPq" = (
 /obj/structure/table/wood,
-/obj/item/radio/intercom{
-	desc = "Talk smack through this.";
-	syndie = 1
-	},
+/obj/item/radio/intercom/syndicate,
 /obj/effect/turf_decal/siding/wood{
 	dir = 8
 	},
@@ -18431,11 +18421,7 @@
 /turf/open/floor/iron/dark,
 /area/centcom/central_command_areas/evacuation/ship)
 "aVC" = (
-/obj/item/radio/intercom{
-	desc = "Talk smack through this.";
-	pixel_x = -32;
-	syndie = 1
-	},
+/obj/item/radio/intercom/syndicate,
 /turf/open/floor/iron/dark/smooth_corner{
 	dir = 4
 	},
@@ -18475,10 +18461,7 @@
 /area/centcom/central_command_areas/control)
 "aVH" = (
 /obj/structure/table/wood,
-/obj/item/radio/intercom{
-	desc = "Talk smack through this.";
-	syndie = 1
-	},
+/obj/item/radio/intercom/syndicate,
 /obj/effect/turf_decal/siding/wood{
 	dir = 4
 	},
@@ -21233,10 +21216,7 @@
 /area/centcom/syndicate_mothership/control)
 "itK" = (
 /obj/structure/table/wood,
-/obj/item/radio/intercom{
-	desc = "Talk smack through this.";
-	syndie = 1
-	},
+/obj/item/radio/intercom/syndicate,
 /obj/structure/window/reinforced/spawner/directional/south,
 /obj/effect/turf_decal/siding/wood{
 	dir = 10
@@ -23140,10 +23120,7 @@
 /area/centcom/syndicate_mothership/control)
 "uzL" = (
 /obj/structure/table/wood,
-/obj/item/radio/intercom{
-	desc = "Talk smack through this.";
-	syndie = 1
-	},
+/obj/item/radio/intercom/syndicate,
 /obj/structure/window/reinforced/spawner/directional/south,
 /obj/effect/turf_decal/siding/wood{
 	dir = 6

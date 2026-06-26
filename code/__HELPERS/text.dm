@@ -991,7 +991,11 @@ GLOBAL_LIST_INIT(alphabet, list("a","b","c","d","e","f","g","h","i","j","k","l",
 
 	return corrupted_text
 
-#define is_alpha(X) ((text2ascii(X) <= 122) && (text2ascii(X) >= 97))
+/// Checks if the char is lowercase
+#define is_lowercase_character(X) ((text2ascii(X) <= 122) && (text2ascii(X) >= 97))
+/// Checks if the char is uppercase
+#define is_uppercase_character(X) ((text2ascii(X) <= 90) && (text2ascii(X) >= 65))
+/// Checks if the char is a digit
 #define is_digit(X) ((length(X) == 1) && (length(text2num(X)) == 1))
 
 /// Slightly expensive proc to scramble a message using equal probabilities of character replacement from a list. DOES NOT SUPPORT HTML!
@@ -1176,3 +1180,38 @@ GLOBAL_LIST_INIT(alphabet, list("a","b","c","d","e","f","g","h","i","j","k","l",
 /proc/endswith(input_text, ending)
 	var/input_length = LAZYLEN(ending)
 	return !!findtext(input_text, ending, -input_length)
+
+/// All punctuation that can be stripped in strip_outer_punctuation()
+#define STRIPPED_PUNCTUATION (REGEX_QUOTE("!?.~;:,|+_`-"))
+
+/// Removes all punctuation sequences from the beginning and the end of the input string.
+/// Includes emphasis (|, +, _) and whitespace.
+/// Anything punctuation in the middle of the input will be maintained.
+/proc/strip_outer_punctuation(input)
+	var/static/regex/pre_word_regex = new("^(?:\[[STRIPPED_PUNCTUATION]\]{0,3})(.*)", "m")
+	if(pre_word_regex.Find(input))
+		input = pre_word_regex.group[1]
+
+	var/static/regex/post_word_regex = new("^(.*?)(?:\[[STRIPPED_PUNCTUATION]\]{0,3})$", "m")
+	if(post_word_regex.Find(input))
+		return trim(post_word_regex.group[1])
+
+	return trim(input)
+
+#undef STRIPPED_PUNCTUATION
+
+/// Find what punctuation is at the end of the input, returns it.
+/// Ignores emphasis (|, +, _)
+/proc/find_last_punctuation(input)
+	var/static/regex/punctuation_regex = new(@"([!?.~;:,-]{1,3})[|+_\s]*$", "m")
+	if(punctuation_regex.Find(input))
+		return punctuation_regex.group[1]
+
+	return ""
+
+/// Checks if the passed string is all uppercase, ignoring punctuation and numbers and symbols
+/proc/is_uppercase(input)
+	var/static/regex/lowercase_regex = new(@"[a-z]", "g")
+	if(lowercase_regex.Find(input))
+		return FALSE
+	return TRUE

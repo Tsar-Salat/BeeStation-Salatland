@@ -7,5 +7,5 @@
 	spans = list(SPAN_ROBOT)
 	icon_state = "ratvar"
 
-/datum/language/ratvar/scramble(input)
+/datum/language/ratvar/scramble_sentence(input, list/mutual_languages)
 	. = text2ratvar(input)

@@ -251,7 +251,7 @@ GLOBAL_LIST_INIT(strippable_parrot_items, create_strippable_list(list(
 		if(channel_to_add)
 			parrot_source.available_channels += channel_to_add
 
-	if(radio.translate_binary)
+	if(radio.special_channels & RADIO_SPECIAL_BINARY)
 		parrot_source.available_channels.Add(MODE_TOKEN_BINARY)
 
 /datum/strippable_item/parrot_headset/start_unequip(atom/source, mob/user)

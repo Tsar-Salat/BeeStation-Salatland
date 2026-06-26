@@ -25,6 +25,7 @@
 
 	var/is_admin = check_rights_for(user.client, R_ADMIN) || check_rights_for(user.client, R_DEBUG)
 	var/atom/movable/speaker = language_holder.owner
+	var/list/partial_languages = speaker?.get_partially_understood_languages()
 	data["languages"] = list()
 	for(var/datum/language/language as anything in GLOB.all_languages)
 		var/list/lang_data = list()
@@ -39,6 +40,7 @@
 			lang_data["can_speak"] = !!speaker.has_language(language, SPOKEN_LANGUAGE)
 			lang_data["could_speak"] = !!(language_holder.omnitongue || speaker.could_speak_language(language))
 			lang_data["can_understand"] = !!speaker.has_language(language, UNDERSTOOD_LANGUAGE)
+			lang_data["partial_understanding"] = partial_languages?[language] || 0
 
 		if(language == /datum/language/metalanguage) // metalanguage is only visible to admins
 			if(!(is_admin || HAS_TRAIT(user, TRAIT_METALANGUAGE_KEY_ALLOWED)))

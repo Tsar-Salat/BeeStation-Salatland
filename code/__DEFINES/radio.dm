@@ -124,3 +124,12 @@
 
 ///give this to can_receive to specify that there is no restriction on what z level this signal is sent to
 #define RADIO_NO_Z_LEVEL_RESTRICTION 0
+
+///Bitflag for if a headset can use the syndicate radio channel
+#define RADIO_SPECIAL_SYNDIE (1<<0)
+///Bitflag for if a headset can use the centcom radio channel
+#define RADIO_SPECIAL_CENTCOM (1<<1)
+///Bitflag for if a headset can use the binary radio channel
+#define RADIO_SPECIAL_BINARY (1<<2)
+///Bitflag for if a headset can amplify
+#define RADIO_SPECIAL_AMPLIFIER (1<<2)

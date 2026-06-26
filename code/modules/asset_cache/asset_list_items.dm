@@ -619,11 +619,11 @@
 	insert_all_icons("emoji", 'icons/emoji.dmi')
 	insert_all_icons("badge", 'icons/badges.dmi')
 	// pre-loading all lanugage icons also helps to avoid meta
-	insert_all_icons("language", 'icons/misc/language.dmi')
+	insert_all_icons("language", 'icons/ui/chat/language.dmi')
 	// catch languages which are pulling icons from another file
 	for(var/datum/language/L as anything in subtypesof(/datum/language))
 		var/icon = initial(L.icon)
-		if (icon != 'icons/misc/language.dmi')
+		if (icon != 'icons/ui/chat/language.dmi')
 			var/icon_state = initial(L.icon_state)
 			insert_icon("language-[icon_state]", uni_icon(icon, icon_state))
 

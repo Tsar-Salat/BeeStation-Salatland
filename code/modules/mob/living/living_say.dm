@@ -128,7 +128,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		return
 
 	if(!language) // get_message_mods() proc finds a language key, and add the language to LANGUAGE_EXTENSION
-		language = message_mods[LANGUAGE_EXTENSION] || get_selected_language()
+		language ||= message_mods[LANGUAGE_EXTENSION] || get_selected_language()
 
 	// if you add a new language that works like everyone doesn't understand (i.e. anti-metalanguage), add an additional condition after this
 	// i.e.) if(!language) language = /datum/language/nobody_understands

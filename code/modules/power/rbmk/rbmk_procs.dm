@@ -453,7 +453,7 @@ Arguments:
 		return
 	final_countdown = TRUE
 	var/speaking = "[emergency_alert] The RBMK has reached critical integrity failure. Emergency control rods lowered."
-	radio.talk_into(src, speaking, common_channel, language = get_selected_language())
+	radio.talk_into(src, speaking, common_channel)
 	var/mutable_appearance/reactor_overlay = mutable_appearance('icons/obj/machines/rbmkparts.dmi', "nuclearwaste_green")
 	notify_ghosts(
 		"The [src] has begun melting down!",

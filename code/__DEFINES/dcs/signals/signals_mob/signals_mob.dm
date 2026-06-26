@@ -109,6 +109,7 @@
 	#define SPEECH_FILTERPROOF 8
 	#define SPEECH_RANGE 9
 	#define SPEECH_SAYMODE 10
+	#define SPEECH_MODS 11
 
 ///from /datum/component/speechmod/handle_speech(): ()
 #define COMSIG_TRY_MODIFY_SPEECH "try_modify_speech"

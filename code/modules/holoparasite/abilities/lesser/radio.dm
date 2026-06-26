@@ -32,7 +32,7 @@
 	can_talk = master_stats.range >= 4
 	if(master_stats.potential >= 4)
 		binary = TRUE
-		radio.keyslot.translate_binary = TRUE
+		radio.keyslot.special_channels = RADIO_SPECIAL_BINARY
 	if(!can_talk)
 		radio.wires.cut(WIRE_TX, null)
 	radio.recalculateChannels()

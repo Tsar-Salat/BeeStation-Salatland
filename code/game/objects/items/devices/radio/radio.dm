@@ -69,12 +69,8 @@
 
 	// Encryption key handling
 	var/obj/item/encryptionkey/keyslot
-	/// If true, can hear the special binary channel.
-	var/translate_binary = FALSE
-	/// If true, can say/hear on the special CentCom channel.
-	var/independent = FALSE
-	/// If true, hears all well-known channels automatically, and can say/hear on the Syndicate channel.
-	var/syndie = FALSE
+	/// Flags for which "special" radio networks should be accessible
+	var/special_channels = NONE
 	/// associative list of the encrypted radio channels this radio is currently set to listen/broadcast to, of the form: list(channel name = TRUE or FALSE)
 	var/list/channels
 	/// associative list of the encrypted radio channels this radio can listen/broadcast to, of the form: list(channel name = channel frequency)
@@ -90,12 +86,14 @@
 	secure_radio_connections = list()
 	. = ..()
 
+	if(ispath(keyslot))
+		keyslot = new keyslot()
 	for(var/ch_name in channels)
 		secure_radio_connections[ch_name] = add_radio(src, GLOB.radiochannels[ch_name])
 
 	set_listening(listening)
 	set_broadcasting(broadcasting)
-	set_frequency(sanitize_frequency(frequency, freerange))
+	set_frequency(sanitize_frequency(frequency, freerange, (special_channels & RADIO_SPECIAL_SYNDIE)))
 	set_on(on)
 
 	AddElement(/datum/element/empprotection, EMP_PROTECT_WIRES)
@@ -103,7 +101,8 @@
 /obj/item/radio/Destroy()
 	remove_radio_all(src) //Just to be sure
 	QDEL_NULL(wires)
-	QDEL_NULL(keyslot)
+	if(istype(keyslot))
+		QDEL_NULL(keyslot)
 	return ..()
 
 /obj/item/radio/proc/set_frequency(new_frequency)
@@ -120,14 +119,7 @@
 			if(!(channel_name in channels))
 				channels[channel_name] = keyslot.channels[channel_name]
 
-		if(keyslot.translate_binary)
-			translate_binary = TRUE
-		if(keyslot.syndie)
-			syndie = TRUE
-		if(keyslot.independent)
-			independent = TRUE
-		if(keyslot.amplification)
-			command = TRUE
+		special_channels = keyslot.special_channels
 
 	if(!command)
 		use_command = FALSE
@@ -138,9 +130,7 @@
 /obj/item/radio/proc/resetChannels()
 	channels = list()
 	secure_radio_connections = list()
-	translate_binary = FALSE
-	syndie = FALSE
-	independent = FALSE
+	special_channels = NONE
 
 ///goes through all radio channels we should be listening for and readds them to the global list
 /obj/item/radio/proc/readd_listening_radio_channels()
@@ -151,8 +141,8 @@
 
 /obj/item/radio/proc/make_syndie() // Turns normal radios into Syndicate radios!
 	qdel(keyslot)
-	keyslot = new /obj/item/encryptionkey/syndicate
-	syndie = TRUE
+	keyslot = new /obj/item/encryptionkey/syndicate()
+	special_channels |= RADIO_SPECIAL_SYNDIE
 	recalculateChannels()
 	ui_update()
 
@@ -338,7 +328,7 @@
 	var/datum/signal/subspace/vocal/signal = new(src, freq, speaker, language, radio_message, spans, message_mods)
 
 	// Independent radios, on the CentCom frequency, reach all independent radios
-	if (independent && (freq == FREQ_CENTCOM || freq == FREQ_CTF_RED || freq == FREQ_CTF_BLUE))
+	if ((special_channels & RADIO_SPECIAL_CENTCOM) && (freq == FREQ_CENTCOM || freq == FREQ_CTF_RED || freq == FREQ_CTF_BLUE))
 		signal.data["compression"] = 0
 		signal.transmission_method = TRANSMISSION_SUPERSPACE
 		signal.levels = list(0)  // reaches all Z-levels
@@ -408,7 +398,7 @@
 		if(!position || !(position.get_virtual_z_level() in levels))
 			return FALSE
 
-	if (input_frequency == FREQ_SYNDICATE && !syndie)
+	if (input_frequency == FREQ_SYNDICATE && !(special_channels & RADIO_SPECIAL_SYNDIE))
 		return FALSE
 
 	// allow checks: are we listening on that frequency?
@@ -416,7 +406,7 @@
 		return TRUE
 	for(var/ch_name in channels)
 		if(channels[ch_name] & FREQ_LISTENING)
-			if(GLOB.radiochannels[ch_name] == text2num(input_frequency) || syndie)
+			if(GLOB.radiochannels[ch_name] == text2num(input_frequency) || special_channels & RADIO_SPECIAL_SYNDIE)
 				return TRUE
 	return FALSE
 
@@ -486,7 +476,7 @@
 				tune = tune * 10
 				. = TRUE
 			if(.)
-				set_frequency(sanitize_frequency(tune, freerange))
+				set_frequency(sanitize_frequency(tune, freerange, (special_channels & RADIO_SPECIAL_SYNDIE)))
 		if ("enable")
 			if (obj_flags & EMPED)
 				return FALSE
@@ -555,12 +545,6 @@
 /obj/item/radio/suicide_act(mob/living/user)
 	user.visible_message(span_suicide("[user] starts bouncing [src] off [user.p_their()] head! It looks like [user.p_theyre()] trying to commit suicide!"))
 	return BRUTELOSS
-
-/obj/item/radio/Destroy()
-	remove_radio_all(src) //Just to be sure
-	QDEL_NULL(wires)
-	QDEL_NULL(keyslot)
-	return ..()
 
 /obj/item/radio/proc/end_emp_effect(curremp)
 	if(emped != curremp) //Don't fix it if it's been EMP'd again
@@ -648,8 +632,8 @@
 		ui_update()
 
 /obj/item/radio/borg/syndicate
-	syndie = TRUE
-	keyslot = new /obj/item/encryptionkey/syndicate
+	special_channels = RADIO_SPECIAL_SYNDIE
+	keyslot = /obj/item/encryptionkey/syndicate
 
 /obj/item/radio/borg/syndicate/Initialize(mapload)
 	. = ..()

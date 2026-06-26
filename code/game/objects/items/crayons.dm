@@ -313,7 +313,7 @@
 
 
 	var/temp = "rune"
-	if(is_alpha(drawing))
+	if(is_lowercase_character(drawing))
 		temp = "letter"
 	else if(is_digit(drawing))
 		temp = "number"
