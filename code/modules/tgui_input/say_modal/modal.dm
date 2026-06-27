@@ -113,7 +113,8 @@
 	window_open = TRUE
 	if(!(payload["channel"] in GLOB.ooc_channels))
 		start_thinking()
-	log_speech_indicators("[key_name(client)] started typing at [loc_name(client.mob)].")
+	if(!client.typing_indicators)
+		log_speech_indicators("[key_name(client)] started typing at [loc_name(client.mob)].")
 	return TRUE
 
 /**
@@ -123,7 +124,8 @@
 /datum/tgui_say/proc/close()
 	window_open = FALSE
 	stop_thinking()
-	log_speech_indicators("[key_name(client)] stopped typing at [loc_name(client.mob)].")
+	if(!client.typing_indicators)
+		log_speech_indicators("[key_name(client)] stopped typing at [loc_name(client.mob)].")
 
 /**
  * The equivalent of ui_act, this waits on messages from the window

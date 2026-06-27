@@ -253,6 +253,8 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		if(raw_message != untranslated_raw_message)
 			understood = FALSE
 
+	var/speaker_is_signing = HAS_TRAIT(speaker, TRAIT_SIGN_LANG)
+
 	var/message = ""
 	// if someone is whispering we make an extra type of message that is obfuscated for people out of range
 	// Less than or equal to 0 means normal hearing. More than 0 and less than or equal to EAVESDROP_EXTRA_RANGE means
@@ -267,10 +269,14 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		if(!isturf(speaker.loc)) // If they're inside of something, probably can't see them speak
 			return FALSE
 
-		if(can_hear()) // If we can't hear we want to continue to the default deaf message
+		// But we can still see them speak
+		if(speaker_is_signing)
+			deaf_message = "[span_name("[speaker]")] [speaker.get_default_say_verb()] something, but the motions are too subtle to make out from afar."
+		else if(can_hear()) // If we can't hear we want to continue to the default deaf message
 			var/mob/living/living_speaker = speaker
 			if(istype(living_speaker) && living_speaker.is_mouth_covered()) // Can't see them speak if their mouth is covered
 				return FALSE
+
 			deaf_message = span_subtle("[span_name("[speaker]")] [speaker.verb_whisper] something, but you are too far away to hear [speaker.p_them()].")
 
 		if(deaf_message)
@@ -283,6 +289,23 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	// the raw_message first. After the raw_message is passed through the various signals, it's ready to be formatted
 	// by compose_message() to be displayed in chat boxes for to_chat or runechat
 	SEND_SIGNAL(src, COMSIG_MOVABLE_HEAR, args)
+
+	if(speaker_is_signing) //Checks if speaker is using sign language
+		deaf_message = compose_message(speaker, message_language, raw_message, radio_freq, spans, message_mods, TRUE)
+
+		if(speaker != src)
+			if(!radio_freq) //I'm about 90% sure there's a way to make this less cluttered
+				deaf_type = MSG_VISUAL
+		else
+			deaf_type = MSG_AUDIBLE
+
+		if(is_blind())
+			return FALSE
+
+		message = deaf_message
+
+		var/show_message_success = show_message(message, MSG_VISUAL, deaf_message, deaf_type, avoid_highlight)
+		return understood && show_message_success
 
 	if(speaker != src)
 		if(!radio_freq) //These checks have to be separate, else people talking on the radio will make "You can't hear yourself!" appear when hearing people over the radio while deaf.

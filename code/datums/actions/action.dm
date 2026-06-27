@@ -18,6 +18,8 @@
 	/// This is who currently owns the action, and most often, this is who is using the action if it is triggered
 	/// This can be the same as "target" but is not ALWAYS the same - this is set and unset with Grant() and Remove()
 	var/mob/owner
+	/// If False, the owner of this action does not get a hud and cannot activate it on their own
+	var/owner_has_control = TRUE
 	// =====================================
 	// Action Behaviour
 	// =====================================
@@ -138,7 +140,6 @@
 	SEND_SIGNAL(src, COMSIG_ACTION_GRANTED, owner)
 	//SEND_SIGNAL(owner, COMSIG_MOB_GRANTED_ACTION, src)
 	RegisterSignal(owner, COMSIG_QDELETING, PROC_REF(clear_ref), override = TRUE)
-	RegisterSignal(owner, COMSIG_MOB_KEYDOWN, PROC_REF(keydown), override = TRUE)
 
 	// Register some signals based on our check_flags
 	// so that our button icon updates when relevant
@@ -151,7 +152,10 @@
 	if(check_flags & AB_CHECK_LYING)
 		RegisterSignal(owner, COMSIG_LIVING_SET_BODY_POSITION, PROC_REF(update_icon_on_signal))
 
-	give_action(grant_to)
+	if(owner_has_control)
+		RegisterSignal(owner, COMSIG_MOB_KEYDOWN, PROC_REF(keydown), override = TRUE)
+		give_action(grant_to)
+
 	// Start cooldown timer if we gained it mid-cooldown
 	if(!owner)
 		return

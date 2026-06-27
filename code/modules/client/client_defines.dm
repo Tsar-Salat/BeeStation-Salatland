@@ -43,6 +43,9 @@
 	/// If this client has been fully initialized or not
 	var/fully_created = FALSE
 
+	/// Does this client have typing indicators enabled?
+	var/typing_indicators = FALSE
+
 	/// If this client has been authenticated as actually being authorized to use the attached CKEY
 	var/logged_in = FALSE
 

@@ -182,7 +182,7 @@
 			to_chat(owner, span_warning("[src] cannot be cast unless you are completely manifested in the material plane!"))
 		return FALSE
 
-	if(!try_invoke(feedback = feedback))
+	if(!try_invoke(invoker = owner, feedback = feedback))
 		return FALSE
 
 	if(ishuman(owner))
@@ -347,7 +347,7 @@
 			owner.visible_message(invocation, invocation_self_message)
 
 /// Checks if the current OWNER of the spell is in a valid state to say the spell's invocation
-/datum/action/spell/proc/try_invoke(feedback = TRUE)
+/datum/action/spell/proc/try_invoke(mob/living/invoker, feedback = TRUE)
 	if(spell_requirements & SPELL_CASTABLE_WITHOUT_INVOCATION)
 		return TRUE
 
@@ -355,20 +355,25 @@
 		return TRUE
 
 	// If you want a spell usable by ghosts for some reason, it must be INVOCATION_NONE
-	if(!isliving(owner))
+	if(!isliving(invoker))
 		if(feedback)
-			to_chat(owner, span_warning("You need to be living to invoke [src]!"))
+			to_chat(invoker, span_warning("You need to be living to invoke [src]!"))
 		return FALSE
 
-	var/mob/living/living_owner = owner
-	if(invocation_type == INVOCATION_EMOTE && HAS_TRAIT(living_owner, TRAIT_EMOTEMUTE))
-		if(feedback)
-			to_chat(owner, span_warning("You can't position your hands correctly to invoke [src]!"))
+	var/invoke_sig_return = SEND_SIGNAL(invoker, COMSIG_MOB_TRY_INVOKE_SPELL, src, feedback)
+	if(invoke_sig_return & SPELL_INVOCATION_ALWAYS_SUCCEED)
+		return TRUE // skips all of the following checks
+	if(invoke_sig_return & SPELL_INVOCATION_FAIL)
 		return FALSE
 
-	if((invocation_type == INVOCATION_WHISPER || invocation_type == INVOCATION_SHOUT) && !living_owner.can_speak())
+	if(invocation_type == INVOCATION_EMOTE && HAS_TRAIT(invoker, TRAIT_EMOTEMUTE))
 		if(feedback)
-			to_chat(owner, span_warning("You can't get the words out to invoke [src]!"))
+			to_chat(invoker, span_warning("You can't position your hands correctly to invoke [src]!"))
+		return FALSE
+
+	if((invocation_type == INVOCATION_WHISPER || invocation_type == INVOCATION_SHOUT) && !invoker.can_speak())
+		if(feedback)
+			to_chat(invoker, span_warning("You can't get the words out to invoke [src]!"))
 		return FALSE
 
 	return TRUE
