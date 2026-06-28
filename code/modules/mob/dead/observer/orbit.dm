@@ -46,7 +46,6 @@ GLOBAL_DATUM_INIT(orbit_menu, /datum/orbit_menu, new)
 			ui.send_full_update()
 			return TRUE
 
-	return FALSE
 
 
 /datum/orbit_menu/ui_data(mob/user)
