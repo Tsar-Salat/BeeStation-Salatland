@@ -122,7 +122,7 @@
 	M.set_buckled(src)
 	buckled_mobs |= M
 
-	M.throw_alert(ALERT_BUCKLED, /atom/movable/screen/alert/restrained/buckled)
+	M.throw_alert(ALERT_BUCKLED, /atom/movable/screen/alert/buckled)
 	M.set_glide_size(glide_size)
 
 	M.Move(loc)
