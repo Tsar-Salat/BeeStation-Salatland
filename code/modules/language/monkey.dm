@@ -11,8 +11,17 @@
 	space_chance = 100
 	syllables = list("oop", "aak", "chee", "eek")
 	default_priority = 80
+	// Speech stays OPEN so a transformed crewmate can still speak it; only monkeys can understand it.
+	comprehend_req = LANGUAGE_COMPREHEND_REQUIRE
+	chargen_comprehend_audience = "monkeys"
+	chargen_comprehend_icon = "paw"
+	has_written_form = FALSE // ook ook ook - no written form
 
 	icon_state = "animal"
+
+/// Monkey chatter is private to monkeys - sentient species can't parse it even if they "know" it.
+/datum/language/monkey/meets_comprehension_condition(mob/living/listener)
+	return ismonkey(listener)
 
 /datum/language/monkey/get_random_name(
 	gender = NEUTER,

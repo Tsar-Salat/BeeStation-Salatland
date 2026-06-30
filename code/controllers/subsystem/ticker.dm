@@ -440,6 +440,9 @@ SUBSYSTEM_DEF(ticker)
 			SSjob.EquipRank(player, mind.assigned_role, FALSE)
 		if((job?.job_flags & JOB_ASSIGN_QUIRKS) && CONFIG_GET(flag/roundstart_traits))
 			SSquirks.AssignQuirks(mind, player.client, TRUE)
+		// Intrinsic language loadout - applied to every character, ungated by quirk config.
+		if(ishuman(mind.current))
+			player.client?.prefs?.apply_character_languages(mind.current)
 		CHECK_TICK
 
 	if(length(spare_id_candidates))

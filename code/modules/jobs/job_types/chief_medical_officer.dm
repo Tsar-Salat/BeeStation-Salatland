@@ -1,5 +1,6 @@
 /datum/job/chief_medical_officer
 	title = JOB_NAME_CHIEFMEDICALOFFICER
+	origin_language = /datum/language/indolic // Indol academies - the educated professions
 	description = "Oversee paramedics, doctors, chemists, and geneticists. \
 		Ensure doctors and paramedics are treating people in a timely manner, request medicine and other concoctions from chemists, \
 		and ensure geneticists are following appropriate safety precautions while performing their research."

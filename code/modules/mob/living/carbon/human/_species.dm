@@ -217,7 +217,17 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			for(var/datum/language/spoken_language as anything in temp_holder.understood_languages)
 				GLOB.uncommon_roundstart_languages |= spoken_language
 
-	GLOB.uncommon_roundstart_languages -= /datum/language/common
+	// Human-web regionals/dialects aren't tied to any species holder, but should still be selectable.
+	// Solbind (common) is opt-in here too: humans default to Aurin and follow Solbind ~85% through it,
+	// but a player can learn it outright (and Command gets it from their origin). This is also the seam
+	// where a future culture system will inject its granted language set.
+	GLOB.uncommon_roundstart_languages |= list(
+		/datum/language/common,
+		/datum/language/aurin,
+		/datum/language/indolic,
+		/datum/language/dredge,
+		/datum/language/driftspeak,
+	)
 	if(!selectable_species.len)
 		selectable_species += get_fallback_species_id()
 

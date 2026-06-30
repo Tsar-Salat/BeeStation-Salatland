@@ -7,6 +7,7 @@ import { Window } from '../../layouts';
 import { AntagsPage } from './AntagsPage';
 import { PreferencesMenuData } from './data';
 import { JobsPage } from './JobsPage';
+import { LanguagesPage } from './LanguagesPage';
 import { LoadoutPage } from './LoadoutPage';
 import { MainPage } from './MainPage';
 import { PageButton } from './PageButton';
@@ -21,6 +22,7 @@ enum Page {
   Species,
   Quirks,
   Loadout,
+  Languages,
 }
 
 const CharacterProfiles = (props: {
@@ -90,6 +92,9 @@ export const CharacterPreferenceWindow = (props) => {
       break;
     case Page.Loadout:
       pageContents = <LoadoutPage />;
+      break;
+    case Page.Languages:
+      pageContents = <LanguagesPage />;
       break;
     default:
       exhaustiveCheck(currentPage);
@@ -188,6 +193,16 @@ export const CharacterPreferenceWindow = (props) => {
                   setPage={setCurrentPage}
                 >
                   Quirks
+                </PageButton>
+              </Stack.Item>
+
+              <Stack.Item grow>
+                <PageButton
+                  currentPage={currentPage}
+                  page={Page.Languages}
+                  setPage={setCurrentPage}
+                >
+                  Languages
                 </PageButton>
               </Stack.Item>
             </Stack>

@@ -52,7 +52,7 @@
 	allow_numbers_in_name = TRUE
 	deathsound = "sound/voice/borg_deathsound.ogg"
 	changesource_flags = MIRROR_BADMIN | WABBAJACK
-	species_language_holder = /datum/language_holder/synthetic
+	species_language_holder = /datum/language_holder/synthetic/ipc
 	special_step_sounds = list('sound/effects/servostep.ogg')
 
 	bodypart_overrides = list(

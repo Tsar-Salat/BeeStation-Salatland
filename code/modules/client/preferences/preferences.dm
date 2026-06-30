@@ -55,6 +55,14 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	//Quirk list
 	var/list/all_quirks = list()
 
+	/// Intrinsic language loadout - replaces the Bilingual + CSL quirks. A list of player-picked
+	/// language entries, each an assoc list:
+	/// list("language" = "<language typepath as text>", "fluency" = "Native"|"Working"|"Basic",
+	///      "understand_only" = TRUE/FALSE, "native" = TRUE/FALSE)
+	/// At most one entry is flagged native. Entries may reference a species-required language to
+	/// downgrade its fluency (the "Common Second Language" case). Applied at spawn, ungated.
+	var/list/alternate_languages = list()
+
 	//Job preferences 2.0 - indexed by job title , no key or value implies never
 	var/list/job_preferences = list()
 

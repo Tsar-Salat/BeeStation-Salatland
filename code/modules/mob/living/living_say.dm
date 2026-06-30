@@ -218,7 +218,11 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	var/datum/gas_mixture/environment = T.return_air()
 	var/pressure = environment ? environment.return_pressure() : 0
 	if(pressure < SOUND_MINIMUM_PRESSURE)
-		message_range = 1
+		// Gesture-reliant languages carry on sight, so they reach the whole room even in vacuum;
+		// ordinary speech only carries a tile. The per-listener cap zeroes the audible fraction for
+		// anyone the (silent) voice can't actually reach (see gesture_comprehension_cap).
+		if(!spoken_lang || spoken_lang.gestural_reliance <= 0)
+			message_range = 1
 
 	if(pressure < ONE_ATMOSPHERE * (HAS_TRAIT(src, TRAIT_SPEECH_BOOSTER) ? 0.1 : 0.4)) //Thin air, let's italicise the message unless we have a loud low pressure speech trait and not in vacuum
 		spans |= SPAN_ITALICS
@@ -233,6 +237,17 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 /mob/living/Hear(atom/movable/speaker, datum/language/message_language, raw_message, radio_freq, list/spans, list/message_mods = list(), message_range=0)
 	if(!GET_CLIENT(src))
 		return FALSE
+
+	// Gesture-reliant languages (e.g. Vraksh) carry partly on sight: they degrade without line of
+	// sight / over comms, and still reach non-hearers (deaf, or across a vacuum) who can see them.
+	var/datum/language/spoken_dialect = GLOB.language_datum_instances[message_language]
+	var/is_gestural = spoken_dialect?.gestural_reliance > 0
+	// Which channels are actually open to us for this language (only computed when it matters).
+	var/can_hear_them = TRUE
+	var/can_see_them = FALSE
+	if(is_gestural)
+		can_hear_them = can_hear() && (radio_freq || sound_reaches_from(speaker))
+		can_see_them = !radio_freq && !is_blind() && can_see(src, speaker)
 
 	var/deaf_message
 	var/deaf_type
@@ -249,11 +264,18 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	var/understood = TRUE
 	if(!is_custom_emote) // we do not translate emotes
 		var/untranslated_raw_message = raw_message
-		raw_message = translate_language(speaker, message_language, raw_message, spans, message_mods) // translate
+		// We always fully understand our own speech; the gesture / degraded-production caps below only
+		// apply to what we hear from someone else.
+		var/comprehension_cap = 100
+		if(speaker != src)
+			comprehension_cap = is_gestural ? gesture_comprehension_cap(speaker, spoken_dialect, can_hear_them, can_see_them) : 100
+			// A SOFT-gated language spoken without the matching anatomy (e.g. Slimic from a non-slime,
+			// Draconic from a tailless speaker) comes out degraded, so everyone understands it less.
+			if(istype(spoken_dialect) && isliving(speaker))
+				comprehension_cap = min(comprehension_cap, spoken_dialect.production_quality(speaker))
+		raw_message = translate_language(speaker, message_language, raw_message, spans, message_mods, comprehension_cap) // translate
 		if(raw_message != untranslated_raw_message)
 			understood = FALSE
-
-	var/speaker_is_signing = HAS_TRAIT(speaker, TRAIT_SIGN_LANG)
 
 	var/message = ""
 	// if someone is whispering we make an extra type of message that is obfuscated for people out of range
@@ -270,9 +292,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 			return FALSE
 
 		// But we can still see them speak
-		if(speaker_is_signing)
-			deaf_message = "[span_name("[speaker]")] [speaker.get_default_say_verb()] something, but the motions are too subtle to make out from afar."
-		else if(can_hear()) // If we can't hear we want to continue to the default deaf message
+		if(can_hear()) // If we can't hear we want to continue to the default deaf message
 			var/mob/living/living_speaker = speaker
 			if(istype(living_speaker) && living_speaker.is_mouth_covered()) // Can't see them speak if their mouth is covered
 				return FALSE
@@ -290,23 +310,6 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	// by compose_message() to be displayed in chat boxes for to_chat or runechat
 	SEND_SIGNAL(src, COMSIG_MOVABLE_HEAR, args)
 
-	if(speaker_is_signing) //Checks if speaker is using sign language
-		deaf_message = compose_message(speaker, message_language, raw_message, radio_freq, spans, message_mods, TRUE)
-
-		if(speaker != src)
-			if(!radio_freq) //I'm about 90% sure there's a way to make this less cluttered
-				deaf_type = MSG_VISUAL
-		else
-			deaf_type = MSG_AUDIBLE
-
-		if(is_blind())
-			return FALSE
-
-		message = deaf_message
-
-		var/show_message_success = show_message(message, MSG_VISUAL, deaf_message, deaf_type, avoid_highlight)
-		return understood && show_message_success
-
 	if(speaker != src)
 		if(!radio_freq) //These checks have to be separate, else people talking on the radio will make "You can't hear yourself!" appear when hearing people over the radio while deaf.
 			deaf_message = span_subtle("[span_name("[speaker]")] [speaker.get_default_say_verb()] something but you cannot hear [speaker.p_them()].")
@@ -315,8 +318,23 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		deaf_message = span_notice("You can't hear yourself!")
 		deaf_type = MSG_AUDIBLE // Since you should be able to hear yourself without looking
 
-	// Recompose message for AI hrefs, language incomprehension.
-	message = compose_message(speaker, message_language, raw_message, radio_freq, spans, message_mods)
+	// Recompose message for AI hrefs, language incomprehension. If we're reading the gestures rather
+	// than hearing the voice, swap the say verb so it reads 'gestures, "..."' not 'hisses, "..."'.
+	var/received_visually = is_gestural && speaker != src && can_see_them && !can_hear_them
+	if(received_visually)
+		var/list/visual_mods = message_mods.Copy()
+		visual_mods[SAY_MOD_VERB] = spoken_dialect.visual_say_mod
+		message = compose_message(speaker, message_language, raw_message, radio_freq, spans, visual_mods)
+	else
+		message = compose_message(speaker, message_language, raw_message, radio_freq, spans, message_mods)
+
+	// True integration: a gesture-reliant language reaches anyone who can SEE the speaker even if they
+	// can't hear it (deaf, or sound can't carry - e.g. across a vacuum). Comprehension was already
+	// capped to the visual fraction for non-hearers, so we just route the real message to the eyes.
+	if(is_gestural && !radio_freq && speaker != src)
+		deaf_message = message
+		deaf_type = MSG_VISUAL
+
 	var/show_message_success = show_message(message, MSG_AUDIBLE, deaf_message, deaf_type, avoid_highlight)
 	return understood && show_message_success
 

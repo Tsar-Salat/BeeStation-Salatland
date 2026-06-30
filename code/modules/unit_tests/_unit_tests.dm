@@ -56,6 +56,7 @@
 #include "janky_actions.dm"
 #include "keybinding_init.dm"
 #include "language_transfer.dm"
+#include "language_web.dm"
 #include "limbsanity.dm"
 #include "mecha_damage.dm"
 #include "merge_type.dm"

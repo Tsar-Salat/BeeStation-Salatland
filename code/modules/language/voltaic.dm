@@ -3,6 +3,8 @@
 	name = "Voltaic"
 	desc = "A sparky language made by manipulating electrical discharge."
 	key = "v"
+	speech_req = LANGUAGE_SPEECH_HARD // needs an ethereal body to make the electrical discharge
+	chargen_speech_note = "an ethereal body"
 	space_chance = 20
 	sentence_chance = 0
 	between_word_sentence_chance = 10

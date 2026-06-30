@@ -68,6 +68,27 @@
 
 	/// The language that an atom knows with the highest "default_priority" is selected by default.
 	var/default_priority = 0
+	/// Family header this language is offered under in the chargen "learn a language" picker.
+	/// A null category means it is never offered there (debug/internal languages like metalanguage).
+	var/chargen_category = LANGUAGE_CATEGORY_OTHER
+	/// Ordering within the chargen family: higher = more prevalent = nearer the top of the list.
+	var/chargen_priority = 0
+
+	/// Speech-gate axis: who can physically produce this language. See LANGUAGE_SPEECH_*.
+	var/speech_req = LANGUAGE_SPEECH_OPEN
+	/// Comprehension a SOFT language is produced at (0-100) when the speaker lacks the matching anatomy.
+	var/soft_speech_quality = 40
+	/// Comprehension-gate axis: who may understand this language. See LANGUAGE_COMPREHEND_*.
+	var/comprehend_req = LANGUAGE_COMPREHEND_OPEN
+	/// Chargen picker: the anatomy a SOFT/HARD language needs, as a bare noun phrase ("a slime tongue").
+	/// The full limiter sentence is assembled centrally - keep this a noun phrase, not a sentence.
+	var/chargen_speech_note
+	/// Chargen picker: who a comprehension-gated language is limited to, as a bare noun phrase
+	/// ("the blind", "monkeys"). The full sentence is assembled centrally.
+	var/chargen_comprehend_audience
+	/// Chargen picker: Font Awesome icon for the comprehension-restriction badge.
+	var/chargen_comprehend_icon = "circle-info"
+
 	/// If TRUE, when generating names, we will always use the default human namelist, even if we have syllables set.
 	/// This is to be used for languages with very outlandish syllable lists (like pirates).
 	var/always_use_default_namelist = FALSE
@@ -97,6 +118,25 @@
 	 */
 	var/list/mutual_understanding
 
+	/**
+	 * How much of this language is carried by gesture/posture rather than the voice (0-100).
+	 * 0 = a normal spoken language (heard fine, works over comms).
+	 * The voice carries (100 - gestural_reliance)% of the meaning; the rest needs line of sight.
+	 * So a high-reliance tongue is badly degraded over radio (no visual channel) and to anyone who
+	 * can't see the speaker (blind / x-ray hearing). See /mob/living/proc/gesture_comprehension_cap.
+	 */
+	var/gestural_reliance = 0
+
+	/// The say verb shown to a listener who receives this language by sight rather than by ear
+	/// (deaf, or out of earshot e.g. across a vacuum) - reads 'gestures, "..."' instead of the
+	/// speaker's spoken say_mod ('hisses, "..."'). Only used for languages with gestural_reliance > 0.
+	var/visual_say_mod = "gestures"
+
+	/// Whether this language has a written form (can be hand-written on paper, chosen in the paper
+	/// writing-language selector). FALSE for gesture/tonal/psychic/innate tongues that can't be put to
+	/// paper - e.g. Vraksh (half-posture), Machine/EAL (tonal), Sonus (psychic), Monkey, Noise.
+	var/has_written_form = TRUE
+
 // Primarily for debugging, allows for easy iteration and testing of languages.
 /datum/language/vv_edit_var(var_name, var_value)
 	. = ..()
@@ -114,6 +154,45 @@
 		scramble_cache.Cut()
 		most_common_cache.Cut()
 		last_sentence_cache.Cut()
+
+// --- Two-axis gates (speech / comprehension). Defaults are permissive; override per language. ---
+
+/// 0-100 quality this speaker produces the language at. 0 means they physically cannot speak it
+/// (HARD gate without the matching anatomy); <100 means degraded (SOFT gate without it).
+/datum/language/proc/production_quality(mob/living/speaker)
+	switch(speech_req)
+		if(LANGUAGE_SPEECH_SOFT)
+			return has_speech_anatomy(speaker) ? 100 : soft_speech_quality
+		if(LANGUAGE_SPEECH_HARD)
+			return has_speech_anatomy(speaker) ? 100 : 0
+	return 100
+
+/// Whether this speaker has the anatomy to produce the language cleanly. Default rule: the language
+/// is native to the speaker's tongue (slime tongue -> Slimic, lizard tongue -> Draconic, etc.).
+/// Override for non-tongue requirements (wings, a synthetic body...). Only consulted for SOFT/HARD.
+/datum/language/proc/has_speech_anatomy(mob/living/speaker)
+	var/mob/living/carbon/carbon_speaker = speaker
+	if(!istype(carbon_speaker))
+		return TRUE // non-carbons (silicons, simple mobs) aren't tongue-gated here
+	var/obj/item/organ/tongue/tongue = carbon_speaker.get_organ_slot(ORGAN_SLOT_TONGUE)
+	if(!tongue)
+		return FALSE // no tongue -> no specialised anatomy
+	return (type in tongue.languages_native)
+
+/// Whether this listener may comprehend the language at all, on top of actually knowing it.
+/// Resolves the comprehension axis against meets_comprehension_condition().
+/datum/language/proc/listener_can_comprehend(mob/living/listener)
+	switch(comprehend_req)
+		if(LANGUAGE_COMPREHEND_REQUIRE)
+			return meets_comprehension_condition(listener)
+		if(LANGUAGE_COMPREHEND_FORBID)
+			return !meets_comprehension_condition(listener)
+	return TRUE
+
+/// The REQUIRE/FORBID condition tested against a listener (blindness for Sonus, sentience for Monkey...).
+/// Only consulted for non-OPEN comprehension languages. Default: FALSE (no one meets an unspecified condition).
+/datum/language/proc/meets_comprehension_condition(mob/living/listener)
+	return FALSE
 
 /// Returns TRUE/FALSE based on seeing a language icon is validated to a given hearer in the parameter.
 /datum/language/proc/display_icon(atom/movable/hearer)
@@ -281,18 +360,29 @@
 	// List which indexes correspond to words in scrambled_words, records whether the word was translated
 	// Can't be a single assoc list because duplicates are expected
 	var/list/translated_index = list()
+	var/understanding = mutual_languages?[type] || 0
 	for(var/word in splittext(input, " "))
-		var/translate_prob = mutual_languages?[type] || 0
 		var/base_word = strip_outer_punctuation(word)
-		if(translate_prob > 0)
+		var/lower_word = LOWER_TEXT(base_word)
+		var/translate_prob = understanding
+		if(understanding > 0 && GLOB.language_survival_words[lower_word])
+			// CEFR "A1 survival" floor: anyone with a foothold in the language always catches
+			// these (yes/no/run/danger/medbay/...) - "I get the panic, not the plan".
+			translate_prob = 100
+		else if(understanding < LANGUAGE_TACTICAL_UNDERSTANDING_THRESHOLD && GLOB.language_tactical_words[lower_word])
+			// CEFR no-leak ceiling: plot/antag words (kill/bomb/traitor/...) don't come through
+			// to a partial listener, so the floor/frequency roll can't out an antag for free.
+			translate_prob = 0
+		else if(translate_prob > 0)
 			// the probability of managing to understand a word is based on how common it is (+10%, -15%)
 			// 1000 words in the list, so words outside the list are just treated as "the 1250th most common word"
-			var/commonness = GLOB.most_common_words_frequency[LOWER_TEXT(base_word)] || 1250
+			var/commonness = GLOB.most_common_words_frequency[lower_word] || 1250
 			translate_prob += (10 * (1 - (min(commonness, 1250) / 500)))
-			if(prob(translate_prob))
-				scrambled_words += word
-				translated_index += FALSE
-				continue
+
+		if(translate_prob > 0 && prob(translate_prob))
+			scrambled_words += word
+			translated_index += FALSE
+			continue
 
 		var/scrambled_word = scramble_word(base_word)
 		scrambled_words += scrambled_word

@@ -52,6 +52,10 @@ Key procs
 	VAR_FINAL/datum/language_menu/language_menu
 	/// Currently spoken language
 	var/selected_language
+	/// The species' primary (heritage) tongue - what a character of this species defaults to *speaking*
+	/// when their origin pref is AUTO. Resolved by /datum/job/proc/grant_origin_language and the chargen
+	/// origin display. If null, callers fall back to the first entry of spoken_languages.
+	var/datum/language/primary_language
 	/// Tracks the entity that owns the holder.
 	VAR_FINAL/atom/movable/owner
 	/// Lazyassoclist of all mutual understanding this holder has
@@ -236,7 +240,15 @@ Key procs
 /// Checks if you can speak the language. Tongue limitations should be supplied as an argument.
 /datum/language_holder/proc/can_speak_language(language)
 	var/can_speak_language_path = omnitongue || owner.could_speak_language(language)
-	return (can_speak_language_path && has_language(language, SPOKEN_LANGUAGE))
+	if(!can_speak_language_path || !has_language(language, SPOKEN_LANGUAGE))
+		return FALSE
+	// HARD-gated languages need the matching anatomy to actually be produced - you can still know and
+	// pick them (understand-only), you just can't form them without the body. Omnitongue bypasses this.
+	if(!omnitongue)
+		var/datum/language/dialect = GLOB.language_datum_instances[language]
+		if(istype(dialect) && dialect.production_quality(owner) <= 0)
+			return FALSE
+	return TRUE
 
 /// Returns selected language if it can be spoken, or decides, sets and returns a new selected language if possible.
 /datum/language_holder/proc/get_selected_language()
@@ -323,6 +335,22 @@ GLOBAL_LIST_INIT(prototype_language_holders, init_language_holder_prototypes())
 
 	return prototypes
 
+/// Resolves a species' default spoken (heritage) tongue from its language-holder prototype: the holder's
+/// primary_language, or the first spoken language as a fallback. Returns a /datum/language typepath, or
+/// null. Used by the origin (AUTO) resolution on both the spawn and chargen sides so they stay in sync.
+/proc/species_primary_language(holder_type)
+	if(!ispath(holder_type, /datum/language_holder))
+		return null
+	var/datum/language_holder/proto = GLOB.prototype_language_holders[holder_type]
+	if(!proto)
+		return null
+	if(ispath(proto.primary_language, /datum/language))
+		return proto.primary_language
+	for(var/lang in proto.spoken_languages)
+		if(ispath(lang, /datum/language))
+			return lang
+	return null
+
 /*
  * Specific language holders presets
  *
@@ -340,13 +368,16 @@ GLOBAL_LIST_INIT(prototype_language_holders, init_language_holder_prototypes())
 		/datum/language/common = list(LANGUAGE_ATOM)
 	)
 
+// Apids default to their own buzzing apidite among kin and reach the crew through Aurin (the contact
+// dialect), mirroring the lizard model - they follow Solbind ~85% through Aurin, so broadcasts still land.
 /datum/language_holder/apid
+	primary_language = /datum/language/apidite
 	understood_languages = list(
-		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/aurin = list(LANGUAGE_ATOM),
 		/datum/language/apidite = list(LANGUAGE_ATOM)
 	)
 	spoken_languages = list(
-		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/aurin = list(LANGUAGE_ATOM),
 		/datum/language/apidite = list(LANGUAGE_ATOM)
 	)
 
@@ -378,11 +409,12 @@ GLOBAL_LIST_INIT(prototype_language_holders, init_language_holder_prototypes())
 	blocked_languages = null
 
 /datum/language_holder/human_basic
+	primary_language = /datum/language/aurin
 	understood_languages = list(
-		/datum/language/common = list(LANGUAGE_ATOM)
+		/datum/language/aurin = list(LANGUAGE_ATOM)
 	)
 	spoken_languages = list(
-		/datum/language/common = list(LANGUAGE_ATOM)
+		/datum/language/aurin = list(LANGUAGE_ATOM)
 	)
 
 /datum/language_holder/jelly
@@ -395,13 +427,16 @@ GLOBAL_LIST_INIT(prototype_language_holders, init_language_holder_prototypes())
 		/datum/language/slime = list(LANGUAGE_ATOM),
 	)
 
+// Oozelings keep their melodic Slime tongue and reach the crew through Aurin (the contact dialect),
+// mirroring the lizard model. Solbind is understood ~85% through Aurin, so broadcasts still land.
 /datum/language_holder/oozeling
+	primary_language = /datum/language/slime
 	understood_languages = list(
-		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/aurin = list(LANGUAGE_ATOM),
 		/datum/language/slime = list(LANGUAGE_ATOM)
 	)
 	spoken_languages = list(
-		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/aurin = list(LANGUAGE_ATOM),
 		/datum/language/slime = list(LANGUAGE_ATOM)
 	)
 
@@ -410,19 +445,24 @@ GLOBAL_LIST_INIT(prototype_language_holders, init_language_holder_prototypes())
 	spoken_languages = list(/datum/language/slime = list(LANGUAGE_ATOM))
 	blocked_languages = list(/datum/language/common = list(LANGUAGE_ATOM))
 
+// Colony (uplifted) Vraksa: their public/work tongue is the lizard-inflected prole dialect Aurin
+// (~85% mutual with Solbind, so they still understand and are understood by standard speakers), and
+// Draconic is kept for kin and the work-floor. Ash-holdouts override this entirely (see /lizard/ash).
 /datum/language_holder/lizard
+	primary_language = /datum/language/draconic // the kin tongue is what a lizard defaults to speaking
 	understood_languages = list(
-		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/aurin = list(LANGUAGE_ATOM),
 		/datum/language/draconic = list(LANGUAGE_ATOM),
 	)
 	spoken_languages = list(
-		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/aurin = list(LANGUAGE_ATOM),
 		/datum/language/draconic = list(LANGUAGE_ATOM),
 	)
 
 /datum/language_holder/lizard/ash
-	understood_languages = list(/datum/language/draconic = list(LANGUAGE_ATOM))
-	spoken_languages = list(/datum/language/draconic = list(LANGUAGE_ATOM))
+	primary_language = /datum/language/ashic // the Ashwalker hearth tongue (Vraksh)
+	understood_languages = list(/datum/language/ashic = list(LANGUAGE_ATOM))
+	spoken_languages = list(/datum/language/ashic = list(LANGUAGE_ATOM))
 	blocked_languages = list(/datum/language/common = list(LANGUAGE_ATOM))
 
 /datum/language_holder/monkey
@@ -461,57 +501,71 @@ GLOBAL_LIST_INIT(prototype_language_holders, init_language_holder_prototypes())
 	spoken_languages = list(/datum/language/sylvan = list(LANGUAGE_ATOM))
 	blocked_languages = list(/datum/language/common = list(LANGUAGE_ATOM))
 
+// The base synthetic holder is also the initial_language_holder for actual silicons (AI, cyborgs, bots),
+// so it KEEPS Solbind - do not narrow it. The IPC *species* uses the /ipc subtype below instead.
 /datum/language_holder/synthetic
 	understood_languages = list(
 		/datum/language/common = list(LANGUAGE_ATOM),
 		/datum/language/uncommon = list(LANGUAGE_ATOM),
 		/datum/language/machine = list(LANGUAGE_ATOM),
-		/datum/language/draconic = list(LANGUAGE_ATOM),
-		/datum/language/moffic = list(LANGUAGE_ATOM),
-		/datum/language/calcic = list(LANGUAGE_ATOM),
-		/datum/language/voltaic = list(LANGUAGE_ATOM),
-		/datum/language/apidite = list(LANGUAGE_ATOM),
-		/datum/language/sonus = list(LANGUAGE_ATOM)
 	)
 	spoken_languages = list(
 		/datum/language/common = list(LANGUAGE_ATOM),
 		/datum/language/uncommon = list(LANGUAGE_ATOM),
 		/datum/language/machine = list(LANGUAGE_ATOM),
-		/datum/language/draconic = list(LANGUAGE_ATOM),
-		/datum/language/moffic = list(LANGUAGE_ATOM),
-		/datum/language/calcic = list(LANGUAGE_ATOM),
-		/datum/language/voltaic = list(LANGUAGE_ATOM),
-		/datum/language/apidite = list(LANGUAGE_ATOM),
-		/datum/language/sonus = list(LANGUAGE_ATOM)
 	)
 
+// IPC species holder: a synthetic crewmember defaults to beeping Machine/EAL among machines and reaches
+// the crew through Aurin (the contact dialect), mirroring the lizard model. Stays a /synthetic subtype so
+// istype() name-generation still treats it as synthetic; only the *species* points here, never silicons.
+/datum/language_holder/synthetic/ipc
+	primary_language = /datum/language/machine
+	understood_languages = list(
+		/datum/language/aurin = list(LANGUAGE_ATOM),
+		/datum/language/machine = list(LANGUAGE_ATOM),
+	)
+	spoken_languages = list(
+		/datum/language/aurin = list(LANGUAGE_ATOM),
+		/datum/language/machine = list(LANGUAGE_ATOM),
+	)
+
+// Moths keep their fluttering Moffic among kin and reach the crew through Aurin (the contact dialect),
+// mirroring the lizard model. Solbind is understood ~85% through Aurin, so broadcasts still land.
 /datum/language_holder/moth
+	primary_language = /datum/language/moffic
 	understood_languages = list(
-		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/aurin = list(LANGUAGE_ATOM),
 		/datum/language/moffic = list(LANGUAGE_ATOM),
 	)
 	spoken_languages = list(
-		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/aurin = list(LANGUAGE_ATOM),
 		/datum/language/moffic = list(LANGUAGE_ATOM),
 	)
 
+// Plasmamen (and skeletons) clack in Calcic - body-gated to the bone tongue, the only thing they can
+// physically speak - and reach the crew through Aurin (understood, even if the bone tongue can't form it),
+// mirroring the lizard model. Solbind is understood ~85% through Aurin, so broadcasts still land.
 /datum/language_holder/skeleton
+	primary_language = /datum/language/calcic
 	understood_languages = list(
-		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/aurin = list(LANGUAGE_ATOM),
 		/datum/language/calcic = list(LANGUAGE_ATOM),
 	)
 	spoken_languages = list(
-		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/aurin = list(LANGUAGE_ATOM),
 		/datum/language/calcic = list(LANGUAGE_ATOM),
 	)
 
+// Ethereals crackle in Voltaic among kin and reach the crew through Aurin (the contact dialect),
+// mirroring the lizard model. Solbind is understood ~85% through Aurin, so broadcasts still land.
 /datum/language_holder/ethereal
+	primary_language = /datum/language/voltaic
 	understood_languages = list(
-		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/aurin = list(LANGUAGE_ATOM),
 		/datum/language/voltaic = list(LANGUAGE_ATOM),
 	)
 	spoken_languages = list(
-		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/aurin = list(LANGUAGE_ATOM),
 		/datum/language/voltaic = list(LANGUAGE_ATOM),
 	)
 
@@ -559,13 +613,16 @@ GLOBAL_LIST_INIT(prototype_language_holders, init_language_holder_prototypes())
 		/datum/language/buzzwords = list(LANGUAGE_ATOM),
 	)
 
+// Diona rustle in Sylvan among kin and reach the crew through Aurin (the contact dialect), mirroring the
+// lizard model. Solbind is understood ~85% through Aurin, so broadcasts still land.
 /datum/language_holder/diona
+	primary_language = /datum/language/sylvan
 	understood_languages = list(
-		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/aurin = list(LANGUAGE_ATOM),
 		/datum/language/sylvan = list(LANGUAGE_ATOM),
 	)
 	spoken_languages = list(
-		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/aurin = list(LANGUAGE_ATOM),
 		/datum/language/sylvan = list(LANGUAGE_ATOM),
 	)
 
@@ -579,14 +636,19 @@ GLOBAL_LIST_INIT(prototype_language_holders, init_language_holder_prototypes())
 		/datum/language/shadowtongue = list(LANGUAGE_ATOM),
 	)
 
+// Psyphoza speak Sonus among kin (a psychic tongue only the blind perceive - which they are) and reach
+// the crew through Aurin (the contact dialect), mirroring the lizard model. Solbind is understood ~85%
+// through Aurin, so broadcasts still land. NOTE: with Sonus + Sylvan this fills all 3 required slots
+// (zero learnable) - drop Sylvan here if psyphoza should keep a learnable slot.
 /datum/language_holder/psyphoza
+	primary_language = /datum/language/sonus
 	understood_languages = list(
-		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/aurin = list(LANGUAGE_ATOM),
 		/datum/language/sonus = list(LANGUAGE_ATOM),
 		/datum/language/sylvan = list(LANGUAGE_ATOM)
 	)
 	spoken_languages = list(
-		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/aurin = list(LANGUAGE_ATOM),
 		/datum/language/sonus = list(LANGUAGE_ATOM),
 		/datum/language/sylvan = list(LANGUAGE_ATOM)
 	)

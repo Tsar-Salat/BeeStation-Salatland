@@ -188,6 +188,7 @@ GLOBAL_PROTECT(undatumized_preference_tags_player)
 #define CHARACTER_PREFERENCE_ALL_QUIRKS "all_quirks"
 #define CHARACTER_PREFERENCE_EQUIPPED_GEAR "equipped_gear"
 #define CHARACTER_PREFERENCE_ROLE_PREFERENCES "role_preferences"
+#define CHARACTER_PREFERENCE_ALTERNATE_LANGUAGES "alternate_languages"
 
 GLOBAL_LIST_INIT(undatumized_preference_tags_character, list(
 	CHARACTER_PREFERENCE_RANDOMIZE,
@@ -195,6 +196,7 @@ GLOBAL_LIST_INIT(undatumized_preference_tags_character, list(
 	CHARACTER_PREFERENCE_ALL_QUIRKS,
 	CHARACTER_PREFERENCE_EQUIPPED_GEAR,
 	CHARACTER_PREFERENCE_ROLE_PREFERENCES,
+	CHARACTER_PREFERENCE_ALTERNATE_LANGUAGES,
 ))
 
 GLOBAL_PROTECT(undatumized_preference_tags_character)

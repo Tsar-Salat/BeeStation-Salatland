@@ -4,6 +4,9 @@
 	spans = list(SPAN_ROBOT)
 	key = "6"
 	flags = NO_STUTTER
+	speech_req = LANGUAGE_SPEECH_HARD // needs a synthetic vocalizer (robot tongue); flesh can't form the tones
+	has_written_form = FALSE // encoded tones - no written form
+	chargen_speech_note = "a synthetic voice"
 	syllables = list("beep","beep","beep","beep","beep","boop","boop","boop","bop","bop","dee","dee","doo","doo","hiss","hss","buzz","buzz","bzz","ksssh","keey","wurr","wahh","tzzz")
 	space_chance = 0
 	sentence_chance = 0

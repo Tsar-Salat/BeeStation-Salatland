@@ -102,8 +102,6 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_NOFIRE_SPREAD "no_fire_spreading"
 /// Mobs that have this trait cannot be extinguished
 #define TRAIT_NO_EXTINGUISH "no_extinguish"
-/// Indicates if the mob is currently speaking with sign language
-#define TRAIT_SIGN_LANG "sign_language"
 /// Are we expected to fight antags?
 #define TRAIT_SECURITY "security_member"
 /// Are we a VIP?

@@ -592,7 +592,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/shared_storage/blue)
 	desc = "An ancient tome written in countless tongues."
 	icon = 'icons/obj/library.dmi'
 	icon_state = "book1"
-	w_class = 2
+	w_class = WEIGHT_CLASS_SMALL
 	custom_price = 10000
 	max_demand = 10
 
@@ -601,6 +601,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/shared_storage/blue)
 		return FALSE
 	to_chat(user, "You flip through the pages of the book, quickly and conveniently learning every language in existence. Somewhat less conveniently, the aging book crumbles to dust in the process. Whoops.")
 	user.grant_all_languages(source = LANGUAGE_BABEL)
+	user.remove_blocked_language(GLOB.all_languages, source = LANGUAGE_ALL)
 	new /obj/effect/decal/cleanable/ash(get_turf(user))
 	qdel(src)
 

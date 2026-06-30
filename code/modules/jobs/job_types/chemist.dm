@@ -1,5 +1,6 @@
 /datum/job/chemist
 	title = JOB_NAME_CHEMIST
+	origin_language = /datum/language/indolic // Indol academies - the educated professions
 	description = "Create healing medicines and fullfill other requests when medicine isn't needed. Label everything you produce correctly to prevent confusion."
 	department_for_prefs = DEPT_NAME_MEDICAL
 	department_head = list(JOB_NAME_CHIEFMEDICALOFFICER)

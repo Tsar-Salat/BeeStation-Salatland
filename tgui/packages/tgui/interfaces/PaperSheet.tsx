@@ -13,6 +13,8 @@ import {
   UIEventHandler,
 } from 'react';
 
+import { Dropdown } from 'tgui-core/components';
+
 import { useBackend, useLocalState } from '../backend';
 import { Box, Button, Flex, Section, TextArea } from '../components';
 import { Window } from '../layouts';
@@ -40,6 +42,18 @@ type PaperContext = {
 
   // ui_data
   held_item_details?: WritingImplement;
+  // writing/reading language (see written_language on /obj/item/paper)
+  can_set_language?: boolean;
+  write_language?: string;
+  write_language_path?: string;
+  writable_languages?: WritableLanguage[];
+  is_language_gated?: boolean;
+  reader_language_name?: string;
+};
+
+type WritableLanguage = {
+  path: string;
+  name: string;
 };
 
 type PaperInput = {
@@ -274,6 +288,68 @@ export const Stamp = (props) => {
   );
 };
 
+// A thin status line for the paper's written language: a writer picks it (while the sheet is still
+// blank, before the language locks at first ink) or sees the locked tag; a reader sees what language
+// the document is in, or that it's unfamiliar. Universal (untagged) documents show nothing.
+const PaperLanguageBar = (props: { writing: boolean }) => {
+  const { act, data } = useBackend<PaperContext>();
+  const {
+    can_set_language,
+    write_language,
+    write_language_path,
+    writable_languages,
+    is_language_gated,
+    reader_language_name,
+  } = data;
+
+  if (props.writing) {
+    if (
+      can_set_language &&
+      writable_languages &&
+      writable_languages.length > 0
+    ) {
+      return (
+        <Box p={'2px'} pl={'5px'} color="label">
+          Writing in:{' '}
+          <Dropdown
+            selected={write_language_path}
+            displayText={write_language}
+            options={writable_languages.map((language) => ({
+              displayText: language.name,
+              value: language.path,
+            }))}
+            onSelected={(value) =>
+              act('set_written_language', { language: value })
+            }
+          />
+        </Box>
+      );
+    }
+    if (is_language_gated && write_language) {
+      return (
+        <Box p={'2px'} pl={'5px'} italic color="label">
+          Written in {write_language}.
+        </Box>
+      );
+    }
+    return null;
+  }
+
+  if (is_language_gated) {
+    return (
+      <Box
+        p={'2px'}
+        pl={'5px'}
+        italic
+        color={reader_language_name ? 'label' : 'bad'}
+      >
+        Written in {reader_language_name || 'an unfamiliar language'}.
+      </Box>
+    );
+  }
+  return null;
+};
+
 // Overarching component that holds the primary view for papercode.
 export class PrimaryView extends Component {
   // Reference that gets passed to the <Section> holding the main preview.
@@ -345,6 +421,11 @@ export class PrimaryView extends Component {
       <>
         <PaperSheetStamper scrollableRef={this.scrollableRef} />
         <Flex direction="column" fillPositionedParent>
+          <Flex.Item shrink={1}>
+            <PaperLanguageBar
+              writing={interactMode === InteractionType.writing}
+            />
+          </Flex.Item>
           <Flex.Item grow={3} basis={1}>
             <PreviewView
               key={`${raw_field_input?.length || 0}_${raw_text_input?.length || 0}`}

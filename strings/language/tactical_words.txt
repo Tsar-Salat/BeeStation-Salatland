@@ -1,0 +1,57 @@
+# CEFR "no-leak" ceiling.
+# These words NEVER come through to a listener below the tactical understanding threshold
+# (see LANGUAGE_TACTICAL_UNDERSTANDING_THRESHOLD), so a half-fluent or partially-intelligible
+# listener can't out an antag for free off the survival floor / frequency roll.
+# Only near-fluent listeners (or full speakers, who bypass scrambling entirely) catch them.
+# Keep this to genuinely plot/violent-intent words; over-listing common words just makes
+# near-fluent speakers weirdly miss everyday speech. Lines starting with # are ignored.
+#
+# --- violence / intent ---
+kill
+killing
+murder
+assassinate
+assassin
+stab
+shoot
+strangle
+poison
+# --- explosives / sabotage ---
+bomb
+bombs
+explosive
+explosives
+detonate
+detonator
+nuke
+nuclear
+sabotage
+sabotaged
+rig
+rigged
+# --- antagonist / conspiracy ---
+traitor
+syndicate
+syndie
+uplink
+telecrystals
+contraband
+smuggle
+hostage
+ransom
+emag
+# --- cult / occult / heretic ---
+cult
+cultist
+sacrifice
+narsie
+ratvar
+heretic
+# --- crew threats ---
+revolution
+revs
+rev
+gang
+abductor
+changeling
+ling

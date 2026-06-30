@@ -54,6 +54,14 @@ GLOBAL_LIST_INIT(most_common_words_alphabetical, init_common_words_by_alphabetic
 /// Indexed by word, value is the rank of the word in the list. So accessing it is fasta.
 GLOBAL_LIST_INIT(most_common_words_frequency, init_common_words_by_frequency())
 
+/// CEFR "A1 survival" floor: words a listener with ANY grasp of a language always understands.
+/// Assoc set: lowercased word -> TRUE. See /datum/language/proc/scramble_sentence.
+GLOBAL_LIST_INIT(language_survival_words, init_language_wordset("strings/language/survival_words.txt"))
+
+/// CEFR "no-leak" ceiling: plot/antag words that never come through below the tactical threshold.
+/// Assoc set: lowercased word -> TRUE. See /datum/language/proc/scramble_sentence.
+GLOBAL_LIST_INIT(language_tactical_words, init_language_wordset("strings/language/tactical_words.txt"))
+
 /proc/init_language_prototypes()
 	var/list/lang_list = list()
 	for(var/datum/language/lang_type as anything in typesof(/datum/language))
@@ -98,6 +106,17 @@ GLOBAL_LIST_INIT(most_common_words_frequency, init_common_words_by_frequency())
 	for(var/word in world.file2list("strings/1400_most_common_alpha.txt"))
 		word_to_commonness_list[word] ||= 500
 	return word_to_commonness_list
+
+/// Loads a language word-set file into an assoc set of lowercased word -> TRUE.
+/// Skips blank lines and # comment lines.
+/proc/init_language_wordset(file)
+	var/list/words = list()
+	for(var/line in world.file2list(file))
+		var/word = LOWER_TEXT(trim(line))
+		if(!length(word) || copytext(word, 1, 2) == "#")
+			continue
+		words[word] = TRUE
+	return words
 
 /// An assoc list of species IDs to type paths
 GLOBAL_LIST_INIT(species_list, init_species_list())

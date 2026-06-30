@@ -1,0 +1,117 @@
+# CEFR "A1 survival" floor.
+# A listener with ANY grasp of a language (>0% understanding) always catches these,
+# even at the lowest fluency - the "I get the panic, not the plan" effect.
+# Keep this list SOCIAL / URGENT / DIRECTIONAL only. Do NOT put plot-relevant nouns here
+# (those belong in tactical_words.txt). Lines starting with # are ignored.
+#
+# --- affirmation / negation ---
+yes
+no
+yeah
+nope
+ok
+okay
+not
+dont
+cant
+# --- greetings / social glue ---
+hello
+hi
+hey
+bye
+goodbye
+please
+thanks
+thank
+sorry
+welcome
+name
+# --- urgency / danger / commands ---
+help
+stop
+go
+run
+wait
+now
+move
+come
+back
+look
+watch
+careful
+quick
+fast
+slow
+hurry
+down
+up
+out
+in
+away
+follow
+hide
+# --- danger nouns (the "something is wrong" signal, not the specifics) ---
+danger
+fire
+gun
+blood
+help
+# --- state / wellbeing ---
+good
+bad
+hurt
+pain
+dead
+alive
+sick
+safe
+hot
+cold
+# --- core question words (catch the shape of a sentence) ---
+who
+what
+where
+when
+why
+how
+which
+# --- core function words (grammar skeleton, carries no plot) ---
+the
+a
+an
+and
+or
+but
+is
+are
+was
+to
+of
+it
+this
+that
+here
+there
+# --- people ---
+i
+you
+me
+we
+us
+they
+him
+her
+them
+he
+she
+# --- station survival locations everyone learns first ---
+medbay
+medical
+doctor
+sec
+security
+bridge
+escape
+shuttle
+evac
+exit

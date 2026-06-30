@@ -67,6 +67,12 @@
 	///If TRUE, staff can read paper everywhere, but usually from requests panel.
 	var/request_state = FALSE
 
+	/// If set, this document is written in this language: a reader who doesn't fully understand it sees
+	/// the body scrambled in proportion to their comprehension (the same per-word model as speech). null
+	/// = universal / plainly legible (the default - player-written paper is never gated). Used to lock
+	/// technical & academic documents (research refs, command files...) to their register.
+	var/datum/language/written_language
+
 /obj/item/paper/Initialize(mapload)
 	. = ..()
 	if (!mapload)
@@ -147,6 +153,7 @@
 			text.field_data.colour = new_color
 
 	new_paper.input_field_count = input_field_count
+	new_paper.written_language = written_language // a photocopy of a foreign document is still foreign
 	new_paper.raw_stamp_data = copy_raw_stamps()
 	new_paper.stamp_cache = stamp_cache?.Copy()
 	new_paper.update_icon_state()
@@ -491,18 +498,78 @@
 		ui.open()
 		ui.set_autoupdate(TRUE)
 
+/// Is this language one a writer may put on paper - a real, non-debug tongue with a written form?
+/proc/language_is_writable(datum/language/language_type)
+	return ispath(language_type, /datum/language) && initial(language_type.has_written_form) && !isnull(initial(language_type.chargen_category))
+
+/// The /datum/language typepaths this writer knows (understands) that can be written - the pool for the
+/// paper writing-language selector. Returns a list of typepaths.
+/obj/item/paper/proc/writable_known_languages(mob/user)
+	var/list/result = list()
+	var/datum/language_holder/holder = user?.get_language_holder()
+	if(!holder)
+		return result
+	for(var/datum/language/known as anything in holder.understood_languages)
+		if(language_is_writable(known))
+			result += known
+	return result
+
+/// The language a fresh write auto-tags this sheet with: the writer's active spoken tongue if it can be
+/// written, else their first known writable language, else null (the sheet stays universal/plainly legible).
+/obj/item/paper/proc/default_write_language(mob/user)
+	var/datum/language/active = user?.get_selected_language()
+	if(language_is_writable(active))
+		return active
+	var/list/writable = writable_known_languages(user)
+	return length(writable) ? writable[1] : null
+
+/// 0-100: how legible this document is to the reader, given its written_language. 100 = fully readable.
+/// Mirrors the speech comprehension path: full if you understand the language, else your best partial
+/// (which includes the job-register limp-through grant), else nothing.
+/obj/item/paper/proc/reader_legibility(mob/user)
+	if(!written_language)
+		return 100 // universal document (the default) - everyone reads it plainly
+	if(!isliving(user))
+		return 100 // ghosts / observers / non-mob viewers read everything
+	if(user.has_language(written_language, UNDERSTOOD_LANGUAGE))
+		return 100 // fully fluent in the document's language
+	var/list/partial = user.get_partially_understood_languages()
+	return partial?[written_language] || 0
+
+/// Scrambles a chunk of document text for a reader who only partly understands its written_language,
+/// reusing the speech comprehension model (per-word, frequency-weighted, with the survival/tactical lists).
+/obj/item/paper/proc/scramble_for_reader(text, legibility)
+	if(legibility >= 100 || !text)
+		return text
+	var/datum/language/dialect = GLOB.language_datum_instances[written_language]
+	if(!istype(dialect))
+		return text
+	return dialect.scramble_paragraph(text, list(written_language = legibility))
+
 /obj/item/paper/ui_static_data(mob/user)
 	var/list/static_data = list()
 
 	static_data["user_name"] = user.real_name
 
+	// Per-reader legibility: a technical/academic document is garbled for anyone who can't read its
+	// written_language (null = universal, the common case, costs nothing here).
+	var/legibility = reader_legibility(user)
 	static_data["raw_text_input"] = list()
 	for(var/datum/paper_input/text_input as anything in raw_text_inputs)
-		static_data["raw_text_input"] += list(text_input.to_list())
+		var/list/text_entry = text_input.to_list()
+		if(legibility < 100)
+			text_entry["raw_text"] = scramble_for_reader(text_entry["raw_text"], legibility)
+		static_data["raw_text_input"] += list(text_entry)
 
 	static_data["raw_field_input"] = list()
 	for(var/datum/paper_field/field_input as anything in raw_field_input_data)
-		static_data["raw_field_input"] += list(field_input.to_list())
+		var/list/field_entry = field_input.to_list()
+		// A gated document's filled-in fields would otherwise leak their answers verbatim. Scramble the
+		// field's prose the same way as the body, but leave signatures legible - a signed name is an
+		// identity/accountability marker, not technical prose to be gated.
+		if(legibility < 100 && !field_input.is_signature && islist(field_entry["field_data"]))
+			field_entry["field_data"]["raw_text"] = scramble_for_reader(field_entry["field_data"]["raw_text"], legibility)
+		static_data["raw_field_input"] += list(field_entry)
 
 	static_data["raw_stamp_input"] = list()
 	for(var/datum/paper_stamp/stamp_input as anything in raw_stamp_data)
@@ -538,6 +605,23 @@
 		var/obj/structure/noticeboard/noticeboard = loc
 		if(!noticeboard.allowed(user))
 			data["held_item_details"] = null
+
+	// --- Writing/reading language (see written_language) ---
+	// The selector only appears while the sheet is still blank (the language locks at first ink).
+	data["can_set_language"] = (get_total_length() == 0)
+	// The language a fresh write would be tagged with - an explicit pick if set, else this viewer's
+	// default - shown as the selector's current value on a blank sheet.
+	var/datum/language/effective = written_language || default_write_language(user)
+	data["write_language_path"] = effective ? "[effective]" : null
+	data["write_language"] = effective ? initial(effective.name) : null
+	var/list/writable = list()
+	for(var/datum/language/known as anything in writable_known_languages(user))
+		writable += list(list("path" = "[known]", "name" = initial(known.name)))
+	data["writable_languages"] = writable
+	// Whether the finished sheet carries a language tag (null written_language = universal, no label).
+	data["is_language_gated"] = !isnull(written_language)
+	// Read-side label: name the language only if this viewer can fully read it, else it's "unfamiliar".
+	data["reader_language_name"] = (written_language && reader_legibility(user) >= 100) ? initial(written_language.name) : null
 
 	return data
 
@@ -584,6 +668,19 @@
 			update_static_data_for_all_viewers()
 			return TRUE
 
+		if("set_written_language")
+			// The document's language is fixed at first ink (like Bay), so only allow it while blank.
+			if(get_total_length() > 0)
+				return TRUE
+			var/datum/language/chosen = text2path(params["language"])
+			// Must be a real, writable tongue the writer actually knows - no crafted-action escapes.
+			if(!language_is_writable(chosen) || !user.has_language(chosen, UNDERSTOOD_LANGUAGE))
+				return TRUE
+			written_language = chosen
+			update_static_data_for_all_viewers() // legibility/scramble lives in ui_static_data
+			update_appearance()
+			return TRUE
+
 		if("add_text")
 			var/paper_input = params["text"]
 			var/this_input_length = length_char(paper_input)
@@ -615,6 +712,13 @@
 			if(new_length > MAX_PAPER_LENGTH)
 				log_paper("[key_name(user)] tried to write to [name] when it would exceed the length limit by [new_length - MAX_PAPER_LENGTH] characters: \"[paper_input]\"")
 				return TRUE
+
+			// First body write on an untagged blank sheet stamps it with the writer's language and locks
+			// it thereafter (an explicit selector pick already set written_language, so on the auto-tag
+			// path this fires; sheets that already have content - premade prose, universal forms - are
+			// left as-is). See default_write_language / set_written_language.
+			if(isnull(written_language) && current_length == 0)
+				written_language = default_write_language(user)
 
 			// Safe to assume there are writing implement details as user.can_write(...) fails with an invalid writing implement.
 			var/writing_implement_data = holding.get_writing_implement_details()

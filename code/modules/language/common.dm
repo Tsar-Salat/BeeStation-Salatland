@@ -1,10 +1,12 @@
 // 'basic' language; spoken by default.
 /datum/language/common
-	name = "Galactic Common"
-	desc = "The common galactic tongue."
+	name = "Solbind"
+	desc = "In a vast and connected web of starships, knowledge it is this one. Solbind is a constructed standard that bonds humanity's scattered registries, docks and freight lanes into a single tongue; a working language of trade and administration reaching from Geminae out to the Auri frontier. "
 	key = "0"
 	flags = TONGUELESS_SPEECH | LANGUAGE_HIDE_ICON_IF_UNDERSTOOD | LANGUAGE_ALWAYS_SHOW_ICON_IF_NOT_UNDERSTOOD
 	default_priority = 100
+	chargen_category = LANGUAGE_CATEGORY_HUMAN
+	chargen_priority = 100 // the standard; near-universal among the crew
 	space_chance = 20
 	sentence_chance = 0
 	between_word_sentence_chance = 10
@@ -62,7 +64,22 @@
 		),
 	)
 
+	// ─── The human-web intelligibility model (the design contract for every mutual_understanding list) ───
+	// Comprehension ≈ modest structural overlap + a large Solbind broadcast-exposure bonus. Solbind is the
+	// administrative *broadcast* tongue everyone is exposed to, so every human register understands Solbind
+	// well (inbound 55-85) while Solbind itself follows the working dialects poorly (outbound 15-45). Bands:
+	//   dialect->standard 85 (Aurin) · broadcast inbound 55-70 · broadcast outbound 15-45 · adjacent
+	//   register (same social stratum) 35-40 · distant register (cross-stratum) ~20 · foreign heritage
+	//   (Sertan) 10-15 · pidgin flat-bridge (Driftspeak out) flat 25 / +10 sibling Dredge / 55 Solbind ·
+	//   lizard kin 45/40. The lizard tongues (Draconic/Vraksh) are an isolated kin island: NO human tongue
+	//   partially understands them and they understand no human tongue - lizards work the human web via
+	//   Aurin learned as a full L2. Enforced by /datum/unit_test/language_web_model; lore in the compendium.
+	// The list below is Solbind's own *broadcast-outbound* row, so every value is deliberately low.
 	mutual_understanding = list(
-		/datum/language/beachbum = 33,
-		/datum/language/uncommon = 20,
+		/datum/language/aurin = 45,        // closest (Aurin is Solbind + jargon), but still outbound-capped
+		/datum/language/dredge = 25,
+		/datum/language/indolic = 20,
+		/datum/language/driftspeak = 20,
+		/datum/language/uncommon = 15,
+		// No Draconic: it's an isolated lizard-family tongue; a human only gets it by learning it outright.
 	)

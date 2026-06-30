@@ -2,6 +2,8 @@
 	name = "Slime"
 	desc = "A melodic and complex language spoken by slimes. Some of the notes are inaudible to humans."
 	key = "k"
+	speech_req = LANGUAGE_SPEECH_SOFT // anyone can attempt it; only a slime tongue forms it cleanly
+	chargen_speech_note = "a slime tongue"
 	syllables = list("qr","qrr","xuq","qil","quum","xuqm","vol","xrim","zaoo","qu-uu","qix","qoo","zix")
 	special_characters = list("!","*")
 	default_priority = 70

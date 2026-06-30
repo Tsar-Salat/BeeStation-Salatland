@@ -136,6 +136,9 @@
 		//This is likely not an actual issue but I don't have time to prove that this
 		//no longer is required
 		if(SSticker.current_state <= GAME_STATE_PREGAME)
+			// Nudge the player to review their character's languages before committing to the round.
+			if(tready == PLAYER_READY_TO_PLAY && !languages_reviewed_or_warn())
+				return
 			ready = tready
 		//if it's post initialisation and they're trying to observe we do the needful
 		if(!SSticker.current_state < GAME_STATE_PREGAME && tready == PLAYER_READY_TO_OBSERVE)
@@ -310,6 +313,28 @@
 		return JOB_UNAVAILABLE_GENERIC
 	return JOB_AVAILABLE
 
+/// Warns a player who has never reviewed this character's language loadout, once per character. Returns
+/// TRUE if they may proceed (already reviewed, or chose to proceed now); FALSE if they want to review
+/// first. Awareness backstop for the language system - never a hard block (they can always proceed).
+/mob/dead/new_player/proc/languages_reviewed_or_warn()
+	var/datum/preferences/our_prefs = client?.prefs
+	if(!our_prefs)
+		return TRUE
+	if(our_prefs.read_preference(/datum/preference/toggle/languages_confirmed))
+		return TRUE
+	var/choice = tgui_alert(src,
+		"You haven't reviewed this character's languages. By default you speak only your origin's tongue and might not understand everyone around you; some technical documents may be hard to read. Review your languages now?",
+		"Languages Not Reviewed",
+		list("Review", "Proceed Anyway"))
+	if(choice == "Proceed Anyway")
+		our_prefs.write_preference(GLOB.preference_entries[/datum/preference/toggle/languages_confirmed], TRUE)
+		return TRUE
+	if(choice == "Review")
+		our_prefs.current_window = PREFERENCE_TAB_CHARACTER_PREFERENCES
+		our_prefs.update_static_data(src)
+		our_prefs.ui_interact(src)
+	return FALSE
+
 /mob/dead/new_player/authenticated/proc/AttemptLateSpawn(rank)
 	// Check that they're picking someone new for new character respawning
 	if(CONFIG_GET(flag/allow_respawn) == RESPAWN_FLAG_NEW_CHARACTER)
@@ -344,6 +369,9 @@
 
 	if(SSticker.late_join_disabled)
 		tgui_alert(src, "An administrator has disabled late join spawning.")
+		return FALSE
+
+	if(!languages_reviewed_or_warn())
 		return FALSE
 
 	var/arrivals_docked = TRUE
@@ -412,6 +440,9 @@
 
 	if((job.job_flags & JOB_ASSIGN_QUIRKS) && CONFIG_GET(flag/roundstart_traits))
 		SSquirks.AssignQuirks(character.mind, character.client, TRUE)
+	// Intrinsic language loadout - applied to every character, ungated by quirk config.
+	if(humanc)
+		character.client?.prefs?.apply_character_languages(humanc)
 
 	if(humanc)
 		GLOB.manifest.inject(humanc)

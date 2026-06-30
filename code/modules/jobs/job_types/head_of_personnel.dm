@@ -1,5 +1,6 @@
 /datum/job/head_of_personnel
 	title = JOB_NAME_HEADOFPERSONNEL
+	origin_language = /datum/language/common // Solbind - core/corporate management
 	description = "Second in command on the station, oversee the crew assigned to service and cargo positions, handle department transfer requests by consulting relevant heads. Protect Ian at all costs."
 	department_for_prefs = DEPT_NAME_CAPTAIN
 	department_head_for_prefs = JOB_NAME_CAPTAIN

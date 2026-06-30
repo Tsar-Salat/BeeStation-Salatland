@@ -1,5 +1,6 @@
 /datum/job/cargo_technician
 	title = JOB_NAME_CARGOTECHNICIAN
+	origin_language = /datum/language/dredge // dock/extraction underclass - shares the miners' cant
 	description = "Push crates around, deliver bounty papers and mail around the station, make use of the Disposals network to make your life easier."
 	department_for_prefs = DEPT_NAME_CARGO
 	department_head_for_prefs = JOB_NAME_QUARTERMASTER

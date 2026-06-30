@@ -262,23 +262,41 @@ GLOBAL_LIST_INIT(freqtospan, list(
 	return message
 
 ///	Modifies the message by comparing the languages of the speaker with the languages of the hearer. Called on the hearer.
-/atom/movable/proc/translate_language(atom/movable/speaker, datum/language/language, raw_message, list/spans, list/message_mods)
+/// comprehension_cap (0-100) limits how much of the message we can understand regardless of fluency,
+/// used for gesture-reliant languages over comms / out of line of sight (see gesture_comprehension_cap).
+/atom/movable/proc/translate_language(atom/movable/speaker, datum/language/language, raw_message, list/spans, list/message_mods, comprehension_cap = 100)
 	if(!language)
 		return "makes a strange sound."
 
-	if(!has_language(language))
-		var/list/mutual_languages
-		// Get what we can kinda understand, factor in any bonuses passed in from say mods
-		var/list/partially_understood_languages = get_partially_understood_languages()
-		if(LAZYLEN(partially_understood_languages))
-			mutual_languages = partially_understood_languages.Copy()
-			for(var/bonus_language in message_mods[LANGUAGE_MUTUAL_BONUS])
-				mutual_languages[bonus_language] = max(message_mods[LANGUAGE_MUTUAL_BONUS][bonus_language], mutual_languages[bonus_language])
+	var/datum/language/dialect = GLOB.language_datum_instances[language]
 
-		var/datum/language/dialect = GLOB.language_datum_instances[language]
-		raw_message = dialect.scramble_paragraph(raw_message, mutual_languages)
+	var/known = has_language(language)
+	// Comprehension gate: some languages can't be understood by certain listeners even if "known"
+	// (Sonus needs blindness; Monkey is only for monkeys). Treat as unknown so it scrambles.
+	// Scoped to living listeners so ghosts/observers keep their universal understanding.
+	if(known && isliving(src) && istype(dialect) && !dialect.listener_can_comprehend(src))
+		known = FALSE
 
-	return raw_message
+	// Fast path: fully understood and no gesture/comms cap -> nothing to scramble.
+	if(known && comprehension_cap >= 100)
+		return raw_message
+
+	if(!istype(dialect))
+		return raw_message
+
+	// Get what we can kinda understand, factor in any bonuses passed in from say mods
+	var/list/mutual_languages = get_partially_understood_languages()?.Copy() || list()
+	for(var/bonus_language in message_mods[LANGUAGE_MUTUAL_BONUS])
+		mutual_languages[bonus_language] = max(message_mods[LANGUAGE_MUTUAL_BONUS][bonus_language], mutual_languages[bonus_language])
+
+	// Understanding of the spoken language: full if known outright, else our partial intelligibility,
+	// then capped by the gesture/line-of-sight channel available to us.
+	var/understanding = min(known ? 100 : (mutual_languages[language] || 0), comprehension_cap)
+	if(understanding >= 100)
+		return raw_message
+
+	mutual_languages[language] = understanding
+	return dialect.scramble_paragraph(raw_message, mutual_languages)
 
 /proc/get_radio_span(freq)
 	var/returntext = GLOB.freqtospan["[freq]"]

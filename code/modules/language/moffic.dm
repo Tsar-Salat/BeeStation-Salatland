@@ -2,6 +2,8 @@
 	name = "Moffic"
 	desc = "The language of the Mothpeople borders on complete unintelligibility."
 	key = "m"
+	speech_req = LANGUAGE_SPEECH_HARD // needs wings (a moth tongue) to beat out; known/picked otherwise, just unspeakable
+	chargen_speech_note = "a moth's wings"
 	space_chance = 5
 	sentence_chance = 0
 	between_word_sentence_chance = 10

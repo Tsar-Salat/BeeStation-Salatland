@@ -1,5 +1,6 @@
 /datum/job/virologist
 	title = JOB_NAME_VIROLOGIST
+	origin_language = /datum/language/indolic // Indol academies - the educated professions
 	description = "Collect virus samples from dormant viruses, old blood, and crusty vomit from around the station, isolate the symptoms and use them to create useful healing viruses for the crew."
 	department_for_prefs = DEPT_NAME_MEDICAL
 	department_head = list(JOB_NAME_CHIEFMEDICALOFFICER)

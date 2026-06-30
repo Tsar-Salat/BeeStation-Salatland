@@ -93,6 +93,82 @@ export type QuirkInfo = {
   quirk_blacklist: string[][];
 };
 
+export type Language = {
+  path: string;
+  name: string;
+  desc: string;
+  // Family header this language is offered under in the picker.
+  category: string;
+  // Higher = more prevalent = nearer the top of its family.
+  priority: number;
+};
+
+// Constant data: the selectable language pool + chargen constants.
+export type LanguageInfo = {
+  languages: Record<string, Language>;
+  max_languages: number;
+  fluency_levels: string[];
+  // The order families are shown in; unlisted categories are appended.
+  category_order: string[];
+  // The character-origin choices for the background picker (first is "Auto").
+  origins: string[];
+};
+
+// A player-picked loadout entry. `language` is a language typepath as text.
+export type AlternateLanguage = {
+  language: string;
+  fluency: string;
+  understand_only: BooleanLike;
+  native: BooleanLike;
+};
+
+// A species-granted language shown as "(required)" - counts against the cap.
+export type RequiredLanguage = {
+  path: string;
+  name: string;
+  desc: string;
+  spoken: BooleanLike;
+  // Why it's known - "species" today; source_label is the species name.
+  source: string;
+  source_label: string;
+};
+
+// The heritage language the character is granted at spawn (free, not budget-counted), from their
+// chosen background or - failing that - their top job.
+export type OriginLanguage = {
+  path: string;
+  name: string;
+  desc: string;
+  // True if it came from the chosen background; false if derived from the top job.
+  from_background: BooleanLike;
+  // The origin name (e.g. "Auri Frontier") or the job title.
+  source_label: string;
+};
+
+// How well the character's spoken-default register matches their top job's department register.
+// Display-only nudge: a character who "does every role" sees they'll sound foreign in most of them.
+export type OriginFit = {
+  // "native" | "passable" | "foreign".
+  fit: string;
+  // Estimated % comprehension of the department register (its gated consoles/documents).
+  understanding: number;
+  dept_name: string;
+  job_title: string;
+};
+
+// A small icon + tooltip describing a speak/understand restriction (Font Awesome icon name).
+export type LanguageBadge = {
+  icon: string;
+  color: string;
+  tooltip: string;
+};
+
+// Per-language status for the currently-selected character's body.
+export type LanguageGate = {
+  speakable: 'fine' | 'degraded' | 'unspeakable';
+  badges: LanguageBadge[];
+};
+
 export type LoadoutInfo = {
   categories: LoadoutCategory[];
   purchased_gear: string[];
@@ -182,6 +258,21 @@ export type PreferencesMenuData = {
   overflow_role: string;
   selected_quirks: string[];
 
+  alternate_languages: AlternateLanguage[];
+  required_languages: RequiredLanguage[];
+  // The effective native tongue (typepath text); authoritative, computed server-side.
+  native_language: string;
+  // Per-language speak/understand status for the current character's body, keyed by typepath text.
+  language_gates: Record<string, LanguageGate>;
+  // The character's chosen origin/background key (e.g. "Auto (from your role)").
+  origin: string;
+  // The origin choices offered to the currently-selected species (species-filtered picker).
+  origin_choices: string[];
+  // The heritage language granted at spawn (display-only), from background or top job, or null.
+  origin_language: OriginLanguage | null;
+  // Spoken-default vs. department register fit for the top job (display-only), or null.
+  origin_fit: OriginFit | null;
+
   purchased_gear: string[];
   equipped_gear: string[];
   metacurrency_balance: number;
@@ -239,6 +330,7 @@ export type ServerData = {
     types: Record<string, Name>;
   };
   quirks: QuirkInfo;
+  languages: LanguageInfo;
   loadout: LoadoutInfo;
   random: {
     randomizable: string[];

@@ -4,11 +4,13 @@
 	flags = TONGUELESS_SPEECH | LANGUAGE_HIDE_ICON_IF_UNDERSTOOD | LANGUAGE_HIDE_ICON_IF_NOT_UNDERSTOOD__LINGUIST_ONLY | LANGUAGE_ALWAYS_SHOW_ICON_TO_GHOSTS
 	key = "`"
 	default_priority = -1 // language auto-update will not choose this
+	chargen_category = null // internal/debug - never offered in the chargen picker
+	has_written_form = FALSE // internal/debug language - not writable
 	icon_state = "omniomega"
 
 /* Note:
 	This language is made to display runechat for telepathic chats. Everyone knows this language, but none of them will be possible to talk in this language.
-	This is also used to animal mobs like dog barking, cat meowing, rat squeaking, instead they say those in Galactic Common
+	This is also used to animal mobs like dog barking, cat meowing, rat squeaking, instead they say those in Solbind
 
 	This language is also a bit hardcoded because of its special usage.
 */

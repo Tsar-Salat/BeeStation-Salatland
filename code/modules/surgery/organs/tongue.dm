@@ -87,6 +87,10 @@
 		/datum/language/terrum,
 		/datum/language/uncommon,
 		/datum/language/sonus,
+		/datum/language/aurin,
+		/datum/language/indolic,
+		/datum/language/dredge,
+		/datum/language/driftspeak,
 	)
 
 /obj/item/organ/tongue/proc/handle_speech(datum/source, list/speech_args)
@@ -158,7 +162,7 @@
 	say_mod = "hisses"
 	taste_sensitivity = 10 // combined nose + tongue, extra sensitive
 	modifies_speech = TRUE
-	languages_native = list(/datum/language/draconic)
+	languages_native = list(/datum/language/draconic, /datum/language/ashic)
 	disliked_foodtypes = GRAIN | DAIRY | CLOTH | GROSS
 	liked_foodtypes = GORE | MEAT
 	var/static/list/speech_replacements = list(new /regex("s+", "g") = "sss", new /regex("S+", "g") = "SSS", new /regex(@"(\w)x", "g") = "$1kss", new /regex(@"(\w)X", "g") = "$1KSSS", new /regex(@"\bx([\-|r|R]|\b)", "g") = "ecks$1", new /regex(@"\bX([\-|r|R]|\b)", "g") = "ECKS$1")
@@ -166,6 +170,10 @@
 /obj/item/organ/tongue/lizard/New(class, timer, datum/mutation/copymut)
 	. = ..()
 	AddComponent(/datum/component/speechmod, replacements = speech_replacements, should_modify_speech = CALLBACK(src, PROC_REF(should_modify_speech)))
+
+// Only a lizard body (frill, tail, posture) can produce the gestural archaic Vraksh tongue.
+/obj/item/organ/tongue/lizard/get_possible_languages()
+	return ..() + /datum/language/ashic
 
 /obj/item/organ/tongue/fly
 	name = "proboscis"
@@ -377,6 +385,18 @@
 	liked_foodtypes = VEGETABLES
 	languages_native = list(/datum/language/calcic)
 
+// Plasma-bone anatomy can only produce the staccato clacking of Calcic. Plasmamen still
+// understand the human tongues (granted by their language holder) but physically cannot speak them.
+/obj/item/organ/tongue/bone/plasmaman/get_possible_languages()
+	return ..() - list(
+		/datum/language/common,
+		/datum/language/aurin,
+		/datum/language/uncommon,
+		/datum/language/indolic,
+		/datum/language/dredge,
+		/datum/language/driftspeak,
+	)
+
 /obj/item/organ/tongue/robot
 	name = "robotic voicebox"
 	desc = "A voice synthesizer that can interface with organic lifeforms."
@@ -530,3 +550,4 @@
 	color = "#1b1b1b"
 	liked_foodtypes = RAW | GROSS
 	disliked_foodtypes = DAIRY
+	languages_native = list(/datum/language/sonus) // its extrasensory tongue is what produces Sonus

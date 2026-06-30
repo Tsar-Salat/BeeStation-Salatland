@@ -2,6 +2,8 @@
 	name = "Calcic"
 	desc = "The disjointed and staccato language of plasmamen. Also understood by skeletons."
 	key = "b"
+	speech_req = LANGUAGE_SPEECH_HARD // needs a bone/plasma tongue to clack; known/picked otherwise, just unspeakable
+	chargen_speech_note = "a plasma or bone tongue"
 	space_chance = 10
 	sentence_chance = 2
 	between_word_sentence_chance = 10

@@ -1,8 +1,12 @@
 /datum/language/draconic
 	name = "Draconic"
-	desc = "The common language of lizard-people, composed of sibilant hisses and rattles."
+	desc = "The living in-group tongue of the colony Vraksa - spoken kin-to-kin and across the work-floor, warm and quick and thick with clan-feeling. It is not a tongue for outsiders: lizards keep it among their own and switch to worker's Aurin when dealing with anyone else. A mostly-vocal descendant of the old Cinis speech, lighter and more expressive than the holdouts' Vraksh."
 	key = "o"
 	flags = TONGUELESS_SPEECH
+	chargen_category = LANGUAGE_CATEGORY_LIZARD
+	chargen_priority = 90 // the colony Vraksa's everyday in-group tongue; the most spoken non-human language
+	speech_req = LANGUAGE_SPEECH_SOFT // a lizard tongue forms it cleanly; others slur the vocal half (the gestural half is gated separately by gestural_reliance)
+	chargen_speech_note = "a lizard's tongue"
 	space_chance = 12
 	sentence_chance = 0
 	between_word_sentence_chance = 10
@@ -24,6 +28,15 @@
 	default_name_syllable_min = 3
 	default_name_syllable_max = 5
 	random_name_spacer = "-"
+	// The colony tongue shed most of the gestures, so it's mostly vocal - it only "sort of" degrades
+	// over comms / when you can't see the speaker.
+	gestural_reliance = 25
+
+	// A distinct lizard-family tongue, sister to the holdouts' Vraksh - it understands no human language
+	// (the Vraksa reach the crew through Aurin, learned as a separate L2), only its own kin tongue.
+	mutual_understanding = list(
+		/datum/language/ashic = 45, // lizard kin (the Draconic/Vraksh diglossia pair)
+	)
 
 /datum/language/draconic/get_random_name(
 	gender = NEUTER,

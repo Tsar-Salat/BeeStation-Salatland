@@ -1,5 +1,6 @@
 /datum/job/shaft_miner
 	title = JOB_NAME_SHAFTMINER
+	origin_language = /datum/language/dredge // the Ceti->Auri extraction underclass
 	description = "Collect resources for the station, redeem them for points, and purchase gear to collect even more ores."
 	department_for_prefs = DEPT_NAME_CARGO
 	department_head_for_prefs = JOB_NAME_QUARTERMASTER

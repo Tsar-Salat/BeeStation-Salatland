@@ -1,5 +1,6 @@
 /datum/job/research_director
 	title = JOB_NAME_RESEARCHDIRECTOR
+	origin_language = /datum/language/indolic // Indol academies - the educated professions
 	description = "Oversee the scientists and roboticists and keep up with their research projects, take care of any issues with the station's AI that may arise, ensure research is being prioritized in accordance with the needs of the station."
 	department_for_prefs = DEPT_NAME_SCIENCE
 	auto_deadmin_role_flags = DEADMIN_POSITION_HEAD

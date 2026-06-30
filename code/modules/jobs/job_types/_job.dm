@@ -89,6 +89,11 @@
 
 	///Bitfield of departments this job belongs with
 	var/departments = NONE
+	/// The register this role's *department* speaks (its "shop tongue"). No longer granted to anyone -
+	/// a character's spoken default comes from their origin pref (explicit) or their species primary
+	/// (AUTO). This is reference data: it drives the chargen origin "fit" indicator and the §E lore.
+	/// Defaults to Aurin (the Auri frontier worker's dialect); cores/professions override.
+	var/datum/language/origin_language = /datum/language/aurin
 	/// Same as the departments bitflag, but only one is allowed. Used in the preferences menu.
 	var/department_for_prefs = null
 	///Is this job affected by weird spawns like the ones from station traits
@@ -291,6 +296,40 @@
 	if(!ishuman(H))
 		return
 	apply_loadout_to_mob(H, M, preference_source, on_dummy)
+
+/// Grants the character's origin (heritage) language and makes it their default spoken tongue. The
+/// character's chosen background (the origin pref) wins; if it's AUTO, we fall back to the character's
+/// *species* primary tongue (human -> Aurin, lizard -> Draconic), NOT the role - so the spoken default
+/// is an identity, not a chameleon that conforms to whatever job is taken. Free grant, humans only.
+/datum/job/proc/grant_origin_language(mob/living/carbon/human/H)
+	if(!ishuman(H))
+		return
+	var/datum/preferences/prefs = H.client?.prefs
+	var/datum/language/origin
+	var/chosen = prefs?.read_character_preference(/datum/preference/choiced/origin)
+	// Re-validate the stored origin against what this species is actually offered (origins_for_species
+	// takes a species typepath). Stops a stale/hand-set pick - e.g. an Ashwalker origin saved on a normal
+	// lizard - from still granting a gated tongue at spawn; it falls through to the AUTO resolution below.
+	if(chosen && chosen != LANGUAGE_ORIGIN_AUTO && (chosen in origins_for_species(H.dna?.species?.type)))
+		origin = GLOB.language_origin_languages[chosen]
+	if(!ispath(origin, /datum/language))
+		// AUTO (or an unmapped pref): a tongue the player marked native in the loadout wins (so e.g. a
+		// Draconic-RP lizard actually defaults to speaking Draconic), else the species' primary tongue.
+		origin = character_marked_native_language(prefs) || species_primary_language(H.dna?.species?.species_language_holder)
+	if(!ispath(origin, /datum/language))
+		return
+	H.grant_language(origin, SPOKEN_LANGUAGE | UNDERSTOOD_LANGUAGE, LANGUAGE_JOB)
+	H.set_active_language(origin) // validates speakability - a non-spoken marked tongue gracefully falls back
+
+/// Grants a weak, understand-only grasp of the assigned job's department register (its "shop tongue",
+/// origin_language), so a crewmember can limp through their own department's language-gated consoles and
+/// documents - reading them garbled - even without having invested in the language. Real fluency (an
+/// origin pick or a learned slot) erases the friction; OTHER departments' registers stay fully gated.
+/// Free, understand-only, humans only. Harmless if the character already understands it (full wins).
+/datum/job/proc/grant_job_register(mob/living/carbon/human/H)
+	if(!ishuman(H) || !ispath(origin_language, /datum/language))
+		return
+	H.grant_partial_language(origin_language, LANGUAGE_JOB_REGISTER_PARTIAL, LANGUAGE_JOB)
 
 /proc/apply_loadout_to_mob(mob/living/carbon/human/H, mob/M, client/preference_source, on_dummy = FALSE)
 	var/mob/living/carbon/human/human = H

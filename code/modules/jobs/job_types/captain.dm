@@ -1,5 +1,6 @@
 /datum/job/captain
 	title = JOB_NAME_CAPTAIN
+	origin_language = /datum/language/common // Solbind - core/corporate management
 	description = "Supreme leader of the station, oversee and appoint missing heads of staff, manage alert levels and contact CentCom if needed. Don't forget to secure the nuclear authentication disk."
 	department_for_prefs = DEPT_NAME_CAPTAIN
 	department_head_for_prefs = JOB_NAME_CAPTAIN

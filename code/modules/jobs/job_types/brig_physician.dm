@@ -1,5 +1,6 @@
 /datum/job/brig_physician
 	title = JOB_NAME_BRIGPHYSICIAN
+	origin_language = /datum/language/indolic // a trained doctor (Indol academies), just posted to the brig
 	description = "Tend to the health of Security Officers and Prisoners, help out at Medbay if you have free time."
 	department_for_prefs = DEPT_NAME_SECURITY
 	department_head_for_prefs = JOB_NAME_HEADOFSECURITY
