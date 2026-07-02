@@ -124,7 +124,7 @@
 	owner.become_blind(id)
 
 	var/datum/component/blind_sense/B = owner.GetComponent(/datum/component/blind_sense)
-	if(!B && !QDELING(owner) && !QDELETED(owner))
+	if(!B && !QDELETED(owner))
 		owner.AddComponent(/datum/component/blind_sense)
 
 	return TRUE
