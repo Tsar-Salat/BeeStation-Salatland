@@ -29,7 +29,7 @@
 		adjustBruteLoss(-heal * delta_time)
 	if((transformeffects & SLIME_EFFECT_RAINBOW) && DT_PROB(5, delta_time))
 		random_colour()
-	if(ismob(buckled))
+	if(isliving(buckled))
 		handle_feeding(delta_time, times_fired)
 	if(stat != CONSCIOUS) // Slimes in stasis don't lose nutrition, don't change mood and don't respond to speech
 		return
