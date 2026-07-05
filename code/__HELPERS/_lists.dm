@@ -40,7 +40,7 @@
 ///Returns the key of the submitted item in the list
 #define LAZYFIND(L, V) L ? L.Find(V) : 0
 ///returns L[I] if L exists and I is a valid index of L, runtimes if L is not a list
-#define LAZYACCESS(L, I) (L ? (isnum_safe(I) ? (I > 0 && I <= length(L) ? L[I] : null) : L[I]) : null)
+#define LAZYACCESS(L, I) (L ? (IS_FINITE(I) ? (I > 0 && I <= length(L) ? L[I] : null) : L[I]) : null)
 ///Sets the item K to the value V, if the list is null it will initialize it
 #define LAZYSET(L, K, V) if(!L) { L = list(); } L[K] = V;
 ///Sets the length of a lazylist
@@ -193,6 +193,41 @@
 			};\
 			__BIN_ITEM = COMPTYPE;\
 			__BIN_MID = ##COMPARISON(__BIN_ITEM) > ##COMPARISON(COMPARE) ? __BIN_MID : __BIN_MID + 1;\
+			__BIN_LIST.Insert(__BIN_MID, INPUT);\
+		};\
+	} while(FALSE)
+
+/**
+ * Custom binary search sorted insert utilising comparison procs instead of vars.
+ * INPUT: Object to be inserted
+ * LIST: List to insert object into
+ * TYPECONT: The typepath of the contents of the list
+ * COMPARE: The object to compare against, usualy the same as INPUT
+ * COMPARISON: The plaintext name of a proc on INPUT that takes a single argument to accept a single element from LIST and returns a positive, negative or zero number to perform a comparison.
+ * COMPTYPE: How should the values be compared? Either COMPARE_KEY or COMPARE_VALUE.
+ */
+#define BINARY_INSERT_PROC_COMPARE(INPUT, LIST, TYPECONT, COMPARE, COMPARISON, COMPTYPE) \
+	do {\
+		var/list/__BIN_LIST = LIST;\
+		var/__BIN_CTTL = length(__BIN_LIST);\
+		if(!__BIN_CTTL) {\
+			__BIN_LIST += INPUT;\
+		} else {\
+			var/__BIN_LEFT = 1;\
+			var/__BIN_RIGHT = __BIN_CTTL;\
+			var/__BIN_MID = (__BIN_LEFT + __BIN_RIGHT) >> 1;\
+			var ##TYPECONT/__BIN_ITEM;\
+			while(__BIN_LEFT < __BIN_RIGHT) {\
+				__BIN_ITEM = COMPTYPE;\
+				if(__BIN_ITEM.##COMPARISON(COMPARE) <= 0) {\
+					__BIN_LEFT = __BIN_MID + 1;\
+				} else {\
+					__BIN_RIGHT = __BIN_MID;\
+				};\
+				__BIN_MID = (__BIN_LEFT + __BIN_RIGHT) >> 1;\
+			};\
+			__BIN_ITEM = COMPTYPE;\
+			__BIN_MID = __BIN_ITEM.##COMPARISON(COMPARE) > 0 ? __BIN_MID : __BIN_MID + 1;\
 			__BIN_LIST.Insert(__BIN_MID, INPUT);\
 		};\
 	} while(FALSE)
@@ -585,7 +620,7 @@
 	var/temp = inserted_list.Copy()
 	inserted_list.len = 0
 	for(var/key in temp)
-		if (isnum_safe(key))
+		if (IS_FINITE(key))
 			inserted_list |= key
 		else
 			inserted_list[key] = temp[key]
@@ -773,7 +808,7 @@
 	. = inserted_list.Copy()
 	for(var/i in 1 to inserted_list.len)
 		var/key = .[i]
-		if(isnum_safe(key))
+		if(IS_FINITE(key))
 			// numbers cannot ever be associative keys
 			continue
 		var/value = .[key]
@@ -792,7 +827,7 @@
 	var/copied_list = inserted_list.Copy()
 	. = copied_list
 	for(var/key_or_value in inserted_list)
-		if(isnum_safe(key_or_value) || !inserted_list[key_or_value])
+		if(IS_FINITE(key_or_value) || !inserted_list[key_or_value])
 			continue
 		var/value = inserted_list[key_or_value]
 		var/new_value = value

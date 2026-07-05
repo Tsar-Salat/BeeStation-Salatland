@@ -11,7 +11,7 @@
 	var/needs_update_stat = FALSE
 
 /datum/status_effect/incapacitating/on_creation(mob/living/new_owner, set_duration)
-	if(isnum_safe(set_duration))
+	if(IS_FINITE(set_duration))
 		duration = set_duration
 	. = ..()
 	if(. && (needs_update_stat || issilicon(owner)))
@@ -266,14 +266,15 @@
 
 /atom/movable/screen/alert/status_effect/strandling/Click(location, control, params)
 	. = ..()
-	if(usr != owner)
+	if(!.)
 		return
+
 	to_chat(owner, span_notice("You attempt to remove the durathread strand from around your neck."))
 	if(do_after(owner, 35, target = owner, timed_action_flags = IGNORE_HELD_ITEM))
 		if(isliving(owner))
-			var/mob/living/L = owner
-			to_chat(owner, span_notice("You successfuly remove the durathread strand."))
-			L.remove_status_effect(/datum/status_effect/strandling)
+			var/mob/living/living_owner = owner
+			to_chat(living_owner , span_notice("You successfuly remove the durathread strand."))
+			living_owner.remove_status_effect(/datum/status_effect/strandling)
 
 /datum/status_effect/syringe
 	id = "syringe"
@@ -1278,6 +1279,9 @@
 	clickable_glow = TRUE
 
 /atom/movable/screen/alert/status_effect/ants/Click()
+	. = ..()
+	if(!.)
+		return
 	var/mob/living/living = owner
 	if(!istype(living) || !living.can_resist() || living != owner)
 		return
@@ -1336,11 +1340,11 @@
 		qdel(src)
 		return
 	src.target_dna = new target_dna.type
-	target_dna.copy_dna(src.target_dna)
+	target_dna.copy_dna_to(src.target_dna)
 	charge_left = rand(45, 90)
 	if(original_dna)
 		src.original_dna = new original_dna.type
-		original_dna.copy_dna(src.original_dna)
+		original_dna.copy_dna_to(src.original_dna)
 	src.already_applied = already_applied
 	return ..()
 
@@ -1355,7 +1359,7 @@
 		return
 	else if(!original_dna)
 		original_dna = new carbon_owner.dna.type
-		carbon_owner.dna.copy_dna(original_dna)
+		carbon_owner.dna.copy_dna_to(original_dna)
 	RegisterSignal(owner, COMSIG_CARBON_TRANSFORMED, PROC_REF(on_transformation))
 	if(!already_applied)
 		apply_dna(target_dna)

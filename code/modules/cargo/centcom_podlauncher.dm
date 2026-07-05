@@ -293,7 +293,7 @@
 					boomInput.Add(input("Enter the [expNames[i]] range of the explosion. WARNING: This ignores the bomb cap!", "[expNames[i]] Range",  0) as null|num)
 					if (isnull(boomInput[i]))
 						return
-					if (!isnum_safe(boomInput[i])) //If the user doesn't input a number, set that specific explosion value to zero
+					if (!IS_FINITE(boomInput[i])) //If the user doesn't input a number, set that specific explosion value to zero
 						alert(usr, "That wasn't a number! Value set to default (zero) instead.")
 						boomInput = 0
 				explosionChoice = 1
@@ -315,7 +315,7 @@
 				var/damageInput = input("Enter the amount of brute damage dealt by getting hit","How much damage to deal",  0) as null|num
 				if (isnull(damageInput))
 					return
-				if (!isnum_safe(damageInput)) //Sanitize the input for damage to deal.s
+				if (!IS_FINITE(damageInput)) //Sanitize the input for damage to deal.s
 					alert(usr, "That wasn't a number! Value set to default (zero) instead.")
 					damageInput = 0
 				damageChoice = 1
@@ -407,15 +407,23 @@
 		if("effectTarget") //Toggle: Launch at a specific mob (instead of at whatever turf you click on). Used for the supplypod smite
 			if (specificTarget)
 				specificTarget = null
-			else
-				var/list/mobs = getpois()//code stolen from observer.dm
-				var/inputTarget = input("Select a mob! (Smiting does this automatically)", "Target", null, null) as null|anything in mobs
-				if (isnull(inputTarget))
-					return
-				var/mob/target = mobs[inputTarget]
-				specificTarget = target///input specific tartget
-			. = TRUE
+				return
 
+			var/list/possible_destinations = SSpoints_of_interest.get_mob_pois()
+			var/target = input("Select a mob! (Smiting does this automatically)", "Target", null, null) as null|anything in possible_destinations
+
+			if (isnull(target))
+				return
+
+			var/mob/mob_target = possible_destinations[target]
+
+			// During the break between opening the input menu and selecting our target, has this become an invalid option?
+			if(!SSpoints_of_interest.is_valid_poi(mob_target))
+				return
+
+			specificTarget = mob_target
+
+			. = TRUE
 		////////////////////////////TIMER DELAYS//////////////////
 		if("editTiming") //Change the different timers relating to the pod
 			var/delay = params["timer"]
