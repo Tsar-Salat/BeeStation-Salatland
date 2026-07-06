@@ -350,31 +350,6 @@
 	medical_record_text = "Patient demonstrates a high level of emotional volatility."
 	mail_goodies = list(/obj/effect/spawner/random/entertainment/plushie_delux)
 
-/datum/quirk/item_quirk/nearsighted //t. errorage
-	name = "Nearsighted"
-	desc = "You are nearsighted without prescription glasses, but spawn with a pair."
-	icon = "glasses"
-	quirk_value = -1
-	gain_text = span_danger("Things far away from you start looking blurry.")
-	lose_text = span_notice("You start seeing faraway things normally again.")
-	medical_record_text = "Patient requires prescription glasses in order to counteract nearsightedness."
-	quirk_flags = QUIRK_HUMAN_ONLY|QUIRK_CHANGES_APPEARANCE
-	mail_goodies = list(/obj/item/clothing/glasses/regular) // extra pair if orginal one gets broken by somebody mean
-
-/datum/quirk/item_quirk/nearsighted/add_unique(client/client_source)
-	give_item_to_holder(/obj/item/clothing/glasses/regular, list(
-		LOCATION_EYES = ITEM_SLOT_EYES,
-		LOCATION_BACKPACK = ITEM_SLOT_BACKPACK,
-		LOCATION_HANDS = ITEM_SLOT_HANDS
-		)
-	)
-
-/datum/quirk/item_quirk/nearsighted/add(client/client_source)
-	quirk_target.become_nearsighted(QUIRK_TRAIT)
-
-/datum/quirk/item_quirk/nearsighted/remove()
-	quirk_target.cure_nearsighted(QUIRK_TRAIT)
-
 /datum/quirk/nonviolent
 	name = "Pacifist"
 	desc = "The thought of violence makes you sick. So much so, in fact, that you can't hurt anyone."
@@ -440,39 +415,6 @@
 	quirk_value = -1
 	medical_record_text = "Patient suffers from prosopagnosia and cannot recognize faces."
 
-/datum/quirk/prosthetic_limb
-	name = "Prosthetic Limb"
-	desc = "An accident caused you to lose one of your limbs. Because of this, you now have a random prosthetic!"
-	icon = "tg-prosthetic-leg"
-	quirk_value = -1
-	var/slot_string = "limb"
-	quirk_flags = QUIRK_HUMAN_ONLY|QUIRK_CHANGES_APPEARANCE
-	mail_goodies = list(/obj/item/weldingtool/mini, /obj/item/stack/cable_coil)
-
-/datum/quirk/prosthetic_limb/add_unique(client/client_source)
-	var/limb_slot = read_choice_preference(/datum/preference/choiced/quirk/prosthetic_limb_location) || pick(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG) // default to random
-	var/mob/living/carbon/human/H = quirk_target
-	var/obj/item/bodypart/prosthetic
-	switch(limb_slot)
-		if(BODY_ZONE_L_ARM)
-			prosthetic = new/obj/item/bodypart/arm/left/robot/surplus(quirk_target)
-			slot_string = "left arm"
-		if(BODY_ZONE_R_ARM)
-			prosthetic = new/obj/item/bodypart/arm/right/robot/surplus(quirk_target)
-			slot_string = "right arm"
-		if(BODY_ZONE_L_LEG)
-			prosthetic = new/obj/item/bodypart/leg/left/robot/surplus(quirk_target)
-			slot_string = "left leg"
-		if(BODY_ZONE_R_LEG)
-			prosthetic = new/obj/item/bodypart/leg/right/robot/surplus(quirk_target)
-			slot_string = "right leg"
-	H.del_and_replace_bodypart(prosthetic)
-	medical_record_text = "Patient uses a low-budget prosthetic on the [prosthetic.name]."
-
-/datum/quirk/prosthetic_limb/post_add()
-	to_chat(quirk_target, span_boldannounce("Your [slot_string] has been replaced with a surplus prosthetic. It is fragile and will easily come apart under duress. Additionally, \
-	you need to use a welding tool and cables to repair it, instead of bruise packs and ointment."))
-
 /datum/quirk/pushover
 	name = "Pushover"
 	desc = "Your first instinct is always to let people push you around. Resisting out of grabs will take conscious effort."
@@ -532,24 +474,3 @@
 	lose_text = span_notice("Your mind finally feels calm.")
 	medical_record_text = "Patient's mind is in a vulnerable state, and cannot recover from traumatic events."
 	mail_goodies = list(/obj/effect/spawner/random/entertainment/plushie)
-
-/datum/quirk/phobia
-	name = "Phobia"
-	desc = "You are irrationally afraid of something."
-	icon = "spider"
-	quirk_value = -1
-	medical_record_text = "Patient has an irrational fear of something."
-	mail_goodies = list(/obj/item/clothing/glasses/blindfold, /obj/item/storage/pill_bottle/psicodine)
-
-// Phobia will follow you between transfers
-/datum/quirk/phobia/add(client/client_source)
-	var/phobia = client_source?.prefs.read_preference(/datum/preference/choiced/quirk/phobia)
-	if(!phobia)
-		return
-
-	var/mob/living/carbon/human/human_holder = quirk_target
-	human_holder.gain_trauma(new /datum/brain_trauma/mild/phobia(phobia), TRAUMA_RESILIENCE_ABSOLUTE)
-
-/datum/quirk/phobia/remove()
-	var/mob/living/carbon/human/human_holder = quirk_target
-	human_holder.cure_trauma_type(/datum/brain_trauma/mild/phobia, TRAUMA_RESILIENCE_ABSOLUTE)

@@ -76,6 +76,10 @@ GLOBAL_LIST_INIT(preference_entries_by_key, init_preference_entries_by_key())
 	/// Disables database writes. This can be useful for a testmerged preference
 	var/disable_serialization = FALSE
 
+	/// If this is a character preference, should we update the character preview
+	/// when this preference is updated?
+	var/should_update_preview = TRUE
+
 /// Called on the saved input when retrieving.
 /// Also called by the value sent from the user through UI. Do not trust it.
 /// Input is the value inside the database, output is to tell other code
@@ -235,7 +239,7 @@ GLOBAL_LIST_INIT(preference_entries_by_key, init_preference_entries_by_key())
 
 	if (preference.preference_type == PREFERENCE_PLAYER)
 		preference.apply_to_client_updated(parent, read_preference(preference.type))
-	else
+	else if (preference.should_update_preview)
 		character_preview_view?.update_body()
 
 	// A non-preference menu source changed a preference. We should send new preferences now.

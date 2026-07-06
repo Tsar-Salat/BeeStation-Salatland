@@ -3,6 +3,7 @@
 	category = PREFERENCE_CATEGORY_NON_CONTEXTUAL
 	db_key = "pda_theme"
 	preference_type = PREFERENCE_CHARACTER
+	should_update_preview = FALSE
 
 /datum/preference/choiced/pda_theme/compile_ui_data(mob/user, value)
 	return value // The default behavior is to serialize. Don't do that.

@@ -3,6 +3,7 @@
 	preference_type = PREFERENCE_CHARACTER
 	db_key = "uplink_loc"
 	can_randomize = FALSE
+	should_update_preview = FALSE
 
 /datum/preference/choiced/uplink_location/init_possible_values()
 	return list(UPLINK_PDA, UPLINK_RADIO, UPLINK_PEN)

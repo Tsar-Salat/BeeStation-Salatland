@@ -1,11 +1,11 @@
-/datum/preference/choiced/quirk/accent
+/datum/preference/choiced/accent
 	db_key = "quirk_accent"
-	required_quirk = /datum/quirk/accent
+	preference_type = PREFERENCE_CHARACTER
 
-/datum/preference/choiced/quirk/accent/init_possible_values()
+/datum/preference/choiced/accent/init_possible_values()
 	return ..() + assoc_to_keys(GLOB.accents) + assoc_to_keys(GLOB.accents_donator)
 
-/datum/preference/choiced/quirk/accent/compile_constant_data()
+/datum/preference/choiced/accent/compile_constant_data()
 	var/list/data = ..()
 	var/list/clean_names = list("Random" = "Random")
 

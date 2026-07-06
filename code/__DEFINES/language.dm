@@ -55,7 +55,7 @@
 #define LANGUAGE_DRUGGY	"druggy"
 #define LANGUAGE_VOICECHANGE "voicechange"
 #define LANGUAGE_REAGENT "reagent"
-#define LANGUAGE_MULTILINGUAL "multilingual"
+#define LANGUAGE_QUIRK "quirk"
 #define LANGUAGE_EMP "emp"
 #define LANGUAGE_HOLOPARA "holoparasite"
 #define LANGUAGE_BABEL "babel"

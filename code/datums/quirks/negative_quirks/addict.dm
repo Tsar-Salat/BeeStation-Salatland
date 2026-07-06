@@ -8,7 +8,6 @@
 	medical_record_text = "Patient has a history of hard drugs."
 	quirk_flags = QUIRK_HUMAN_ONLY|QUIRK_PROCESSES
 	mail_goodies = list(/obj/effect/spawner/random/contraband/narcotics)
-	var/list/drug_list = list(/datum/reagent/drug/crank, /datum/reagent/drug/krokodil, /datum/reagent/medicine/morphine, /datum/reagent/drug/happiness, /datum/reagent/drug/methamphetamine, /datum/reagent/drug/ketamine) //List of possible IDs
 	var/datum/reagent/reagent_type //!If this is defined, reagent_id will be unused and the defined reagent type will be instead.
 	var/datum/reagent/reagent_instance //! actual instanced version of the reagent
 	var/obj/item/drug_container_type //! If this is defined before pill generation, pill generation will be skipped. This is the type of the pill bottle.
@@ -17,16 +16,16 @@
 	var/process_interval = 30 SECONDS //! how frequently the quirk processes
 	COOLDOWN_DECLARE(next_process) //! ticker for processing
 
-/datum/quirk/item_quirk/addict/add_unique(client/client_source)
-
-	if (!reagent_type)
-		reagent_type = pick(drug_list)
+/datum/quirk/item_quirk/addict/add(client/client_source)
+	if(!reagent_type)
+		reagent_type = GLOB.possible_junkie_addictions[pick(GLOB.possible_junkie_addictions)]
 
 	reagent_instance = new reagent_type()
 
 	for(var/addiction in reagent_instance.addiction_types)
 		quirk_holder.add_addiction_points(addiction, 1000) ///Max that shit out
 
+/datum/quirk/item_quirk/addict/add_unique(client/client_source)
 	var/current_turf = get_turf(quirk_target)
 
 	if (!drug_container_type)
@@ -87,9 +86,13 @@
 	mail_goodies = list(/obj/effect/spawner/random/contraband/narcotics)
 	drug_flavour_text = "Better hope you don't run out..."
 
+/datum/quirk_constant_data/junkie
+	associated_typepath = /datum/quirk/item_quirk/addict/junkie
+	customization_options = list(/datum/preference/choiced/junkie)
+
 /datum/quirk/item_quirk/addict/junkie/add_to_holder(mob/living/new_holder, quirk_transfer = FALSE, client/client_source, unique = TRUE, announce = TRUE)
 	if(!quirk_transfer)
-		var/addiction = reagent_type || read_choice_preference(/datum/preference/choiced/quirk/junkie_drug)
+		var/addiction = reagent_type || read_choice_preference(/datum/preference/choiced/junkie_drug)
 		if(addiction && (addiction != "Random"))
 			reagent_type = GLOB.possible_junkie_addictions[addiction]
 	return ..()
@@ -118,12 +121,16 @@
 		/obj/item/cigarette/pipe,
 	)
 
+/datum/quirk_constant_data/smoker
+	associated_typepath = /datum/quirk/item_quirk/addict/smoker
+	customization_options = list(/datum/preference/choiced/smoker)
+
 /datum/quirk/item_quirk/addict/smoker/New()
 	drug_container_type = GLOB.possible_smoker_addictions[pick(GLOB.possible_smoker_addictions)]
 	return ..()
 
 /datum/quirk/item_quirk/addict/smoker/add_unique(client/client_source)
-	var/addiction = read_choice_preference(/datum/preference/choiced/quirk/smoker_cigarettes)
+	var/addiction = read_choice_preference(/datum/preference/choiced/smoker_cigarettes)
 	if(addiction && (addiction != "Random"))
 		drug_container_type = GLOB.possible_smoker_addictions[addiction]
 	. = ..()
@@ -171,6 +178,10 @@
 	/// Cached typepath of the owner's favorite alcohol reagent
 	var/datum/reagent/consumable/ethanol/favorite_alcohol
 
+/datum/quirk_constant_data/alcoholic
+	associated_typepath = /datum/quirk/item_quirk/addict/alcoholic
+	customization_options = list(/datum/preference/choiced/alcoholic)
+
 /datum/quirk/item_quirk/addict/alcoholic/New()
 	var/random_alcohol = pick(GLOB.possible_alcoholic_addictions)
 	drug_container_type = GLOB.possible_alcoholic_addictions[random_alcohol]["bottlepath"]
@@ -178,7 +189,7 @@
 	return ..()
 
 /datum/quirk/item_quirk/addict/alcoholic/add_unique(client/client_source)
-	var/addiction = read_choice_preference(/datum/preference/choiced/quirk/alcohol_type)
+	var/addiction = read_choice_preference(/datum/preference/choiced/alcohol_type)
 	if(addiction && (addiction != "Random"))
 		drug_container_type = GLOB.possible_alcoholic_addictions[addiction]["bottlepath"]
 		favorite_alcohol = GLOB.possible_alcoholic_addictions[addiction]["reagent"]
@@ -209,7 +220,6 @@
 	//we don't care if it is not alcohol
 	if(!istype(booze, /datum/reagent/consumable/ethanol))
 		return
-
 
 	if(istype(booze, favorite_alcohol))
 		SEND_SIGNAL(quirk_target, COMSIG_CLEAR_MOOD_EVENT, "wrong_alcohol")
