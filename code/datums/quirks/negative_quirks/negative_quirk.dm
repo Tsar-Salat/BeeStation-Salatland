@@ -59,7 +59,7 @@
 	lose_text = span_notice("You feel vigorous again.")
 	medical_record_text = "Patient requires regular treatment for blood loss due to low production of blood."
 	quirk_flags = QUIRK_HUMAN_ONLY|QUIRK_PROCESSES
-	mail_goodies = list(/obj/item/reagent_containers/blood/OMinus) // universal blood type that is safe for all
+	mail_goodies = list(/obj/item/reagent_containers/blood/o_minus) // universal blood type that is safe for all
 	var/min_blood = BLOOD_VOLUME_SAFE - 25 // just barely survivable without treatment
 	var/drain_rate = 0.275
 
@@ -146,7 +146,6 @@
 	gain_text = span_danger("You can't hear anything.")
 	lose_text = span_notice("You're able to hear again!")
 	medical_record_text = "Patient's cochlear nerve is incurably damaged."
-	mail_goodies = list(/obj/item/clothing/mask/whistle)
 
 /datum/quirk/item_quirk/family_heirloom
 	name = "Family Heirloom"
@@ -185,7 +184,7 @@
 			if(JOB_NAME_BOTANIST)
 				heirloom_type = pick(/obj/item/cultivator, /obj/item/reagent_containers/cup/bucket, /obj/item/storage/bag/plants, /obj/item/toy/plush/beeplushie)
 			if(JOB_NAME_BARTENDER)
-				heirloom_type = pick(/obj/item/reagent_containers/cup/rag, /obj/item/clothing/head/hats/tophat, /obj/item/reagent_containers/cup/glass/shaker)
+				heirloom_type = pick(/obj/item/rag, /obj/item/clothing/head/hats/tophat, /obj/item/reagent_containers/cup/glass/shaker)
 			if(JOB_NAME_CURATOR)
 				heirloom_type = pick(/obj/item/pen/fountain, /obj/item/storage/pill_bottle/dice)
 			if(JOB_NAME_CHAPLAIN)
@@ -376,49 +375,6 @@
 /datum/quirk/item_quirk/nearsighted/remove()
 	quirk_target.cure_nearsighted(QUIRK_TRAIT)
 
-/datum/quirk/nyctophobia
-	name = "Nyctophobia"
-	desc = "As far as you can remember, you've always been afraid of the dark. While in the dark without a light source, you instinctually act careful, and constantly feel a sense of dread."
-	icon = "lightbulb"
-	quirk_value = -1
-	medical_record_text = "Patient demonstrates a fear of the dark."
-	mail_goodies = list(/obj/effect/spawner/random/engineering/flashlight)
-
-/datum/quirk/nyctophobia/add()
-	RegisterSignal(quirk_target, COMSIG_MOVABLE_MOVED, PROC_REF(on_holder_moved))
-
-/datum/quirk/nyctophobia/remove()
-	UnregisterSignal(quirk_target, COMSIG_MOVABLE_MOVED)
-	SEND_SIGNAL(quirk_target, COMSIG_CLEAR_MOOD_EVENT, "nyctophobia")
-
-/// Called when the quirk holder moves. Updates the quirk holder's mood.
-/datum/quirk/nyctophobia/proc/on_holder_moved(/mob/living/source, atom/old_loc, dir, forced)
-	SIGNAL_HANDLER
-
-	if(quirk_target.stat != CONSCIOUS || quirk_target.IsSleeping() || quirk_target.IsUnconscious())
-		return
-
-	var/mob/living/carbon/human/human_holder = quirk_target
-
-	if(human_holder.dna?.species.id in list(SPECIES_SHADOW, SPECIES_NIGHTMARE))
-		return
-
-	if((human_holder.sight & SEE_TURFS) == SEE_TURFS)
-		return
-
-	var/turf/holder_turf = get_turf(quirk_target)
-
-	var/lums = holder_turf.get_lumcount()
-
-	if(lums > 0.2)
-		SEND_SIGNAL(quirk_target, COMSIG_CLEAR_MOOD_EVENT, "nyctophobia")
-		return
-
-	if(quirk_target.m_intent == MOVE_INTENT_RUN)
-		to_chat(quirk_target, span_warning("Easy, easy, take it slow... you're in the dark..."))
-		quirk_target.toggle_move_intent()
-	SEND_SIGNAL(quirk_target, COMSIG_ADD_MOOD_EVENT, "nyctophobia", /datum/mood_event/nyctophobia)
-
 /datum/quirk/nonviolent
 	name = "Pacifist"
 	desc = "The thought of violence makes you sick. So much so, in fact, that you can't hurt anyone."
@@ -483,7 +439,6 @@
 	icon = "user-secret"
 	quirk_value = -1
 	medical_record_text = "Patient suffers from prosopagnosia and cannot recognize faces."
-	mail_goodies = list(/obj/item/skillchip/appraiser) // bad at recognizing faces but good at recognizing IDs
 
 /datum/quirk/prosthetic_limb
 	name = "Prosthetic Limb"
@@ -527,7 +482,7 @@
 	gain_text = span_danger("You feel like a pushover.")
 	lose_text = span_notice("You feel like standing up for yourself.")
 	medical_record_text = "Patient presents a notably unassertive personality and is easy to manipulate."
-	mail_goodies = list(/obj/item/clothing/gloves/cargo_gauntlet)
+	//mail_goodies = list(/obj/item/clothing/gloves/cargo_gauntlet)
 
 /datum/quirk/insanity
 	name = "Reality Dissociation Syndrome"
@@ -544,7 +499,6 @@
 /datum/quirk/insanity/add(client/client_source)
 	if(!iscarbon(quirk_target))
 		return
-	var/mob/living/carbon/carbon_quirk_holder = quirk_target
 	var/mob/living/carbon/carbon_quirk_target = quirk_target
 
 	// Setup our special RDS mild hallucination.

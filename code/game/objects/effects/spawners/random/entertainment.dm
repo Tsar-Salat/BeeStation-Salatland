@@ -225,3 +225,38 @@
 /obj/effect/spawner/random/entertainment/toy/Initialize(mapload)
 	loot += GLOB.arcade_prize_pool
 	return ..()
+
+/obj/effect/spawner/random/entertainment/plushie
+	name = "plushie spawner"
+	icon_state = "plushie"
+	loot = list(
+		/obj/item/toy/plush/carpplushie,
+		/obj/item/toy/plush/slimeplushie,
+		/obj/item/toy/plush/lizard_plushie,
+		/obj/item/toy/plush/snakeplushie,
+		/obj/item/toy/plush/beeplushie,
+		/obj/item/toy/plush/moth,
+	)
+
+/obj/effect/spawner/random/entertainment/plushie_delux
+	name = "plushie delux spawner"
+	icon_state = "plushie"
+	loot = list(
+		// common plushies
+		/obj/item/toy/plush/slimeplushie = 5,
+		/obj/item/toy/plush/lizard_plushie = 5,
+		/obj/item/toy/plush/snakeplushie = 5,
+		/obj/item/toy/plush/beeplushie = 5,
+		/obj/item/toy/plush/moth = 5,
+		// rare plushies
+		/obj/item/toy/plush/carpplushie = 3,
+		/obj/item/toy/plush/lizard_plushie/green = 3,
+		/obj/item/toy/plush/lizard_plushie/space/green = 3,
+		/obj/item/toy/plush/rouny = 3,
+		/obj/item/toy/plush/shark = 3,
+		/obj/item/toy/plush/donkpocket = 3,
+		// super rare plushies
+		/obj/item/toy/plush/bubbleplush = 2,
+		/obj/item/toy/plush/narplush = 2,
+		/obj/item/toy/plush/rouny = 2,
+	)

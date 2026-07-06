@@ -32,7 +32,7 @@
 	if (!drug_container_type)
 		drug_container_type = /obj/item/storage/pill_bottle
 
-	var/obj/item/drug_instance = new drug_container_type(get_turf(H))
+	var/obj/item/drug_instance = new drug_container_type(current_turf)
 	if (istype(drug_instance, /obj/item/storage/pill_bottle))
 		var/pill_state = pick(PILL_SHAPE_LIST)
 		for(var/i in 1 to 7)
@@ -166,7 +166,7 @@
 	quirk_flags = QUIRK_HUMAN_ONLY|QUIRK_PROCESSES
 	mail_goodies = list(
 		/obj/effect/spawner/random/food_or_drink/booze,
-		/obj/item/book/bible/booze,
+		/obj/item/storage/book/bible/booze,
 	)
 	/// Cached typepath of the owner's favorite alcohol reagent
 	var/datum/reagent/consumable/ethanol/favorite_alcohol

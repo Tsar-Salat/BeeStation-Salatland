@@ -76,3 +76,14 @@
 		/obj/item/toy/plush/carpplushie/dehy_carp = 6,
 		/obj/item/toy/plush/carpplushie/dehy_carp/cayenne = 2,
 	)
+
+/obj/effect/spawner/random/contraband/cannabis
+	name = "Random Cannabis Spawner"
+	icon_state = "cannabis"
+	loot = list(
+		/obj/item/food/grown/cannabis = 25,
+		/obj/item/food/grown/cannabis/white = 25,
+		/obj/item/food/grown/cannabis/death = 24,
+		/obj/item/food/grown/cannabis/rainbow = 25,
+		/obj/item/food/grown/cannabis/ultimate = 1, //very rare on purpose
+	)

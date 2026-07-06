@@ -117,3 +117,13 @@
 	icon_state = "paint"
 	loot_subtype_path = /obj/item/paint
 	loot = list()
+
+/obj/effect/spawner/random/decoration/flower
+	name = "random flower spawner"
+	icon_state = "flower"
+	loot = list(
+		/obj/item/food/grown/flower/poppy,
+		/obj/item/food/grown/flower/harebell,
+		/obj/item/food/grown/flower/trumpet,
+		/obj/item/grown/sunflower,
+	)
