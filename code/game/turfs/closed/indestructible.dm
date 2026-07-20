@@ -42,6 +42,10 @@ INITIALIZE_IMMEDIATE(/turf/closed/indestructible/splashscreen)
 	SStitle.splash_turf = src
 	if(SStitle.icon)
 		icon = SStitle.icon
+	// ChangeTurf wipes vis_contents, so stick the lobby display back on if it's already
+	// been built. first boot it hasn't been, SStitle does that in Initialize()
+	if(SStitle.master_object)
+		SStitle.setup_objects()
 
 /turf/closed/indestructible/splashscreen/vv_edit_var(var_name, var_value)
 	. = ..()

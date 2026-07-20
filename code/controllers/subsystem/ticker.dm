@@ -299,6 +299,9 @@ SUBSYSTEM_DEF(ticker)
 
 	current_state = GAME_STATE_PLAYING
 
+	// nothing left to report and nobody's looking at the lobby any more
+	SStitle.hide_progress()
+
 	// Now that nothing can enter the callback list, fire them off
 	for(var/I in round_start_events)
 		var/datum/callback/cb = I

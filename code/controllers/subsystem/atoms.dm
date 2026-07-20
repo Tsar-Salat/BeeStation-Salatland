@@ -117,8 +117,17 @@ SUBSYSTEM_DEF(atoms)
 		#ifdef TESTING
 		count = 0
 		#endif
+		// the roundstart sweep over the whole world. longest thing we do after mapload,
+		// and one of the few that actually knows how much work is left, so it can tell the
+		// bar the real number instead of leaving it to guess
+		var/all_atoms = max(length(world.contents), 1)
+		// counts everything we walk past, not just what needed initializing, so the fraction
+		// is against the same set all_atoms measures. atoms created during the sweep land in
+		// world.contents behind us and get walked too, so this can overrun - report() clamps
+		var/walked = 0
 
 		for(var/atom/A as anything in world)
+			++walked
 			if(!(A.flags_1 & INITIALIZED_1))
 				PROFILE_INIT_ATOM_BEGIN()
 				InitAtom(A, FALSE, mapload_arg)
@@ -126,7 +135,9 @@ SUBSYSTEM_DEF(atoms)
 				#ifdef TESTING
 				++count
 				#endif
-				CHECK_TICK
+				if(TICK_CHECK)
+					Master.init_estimator?.report(walked / all_atoms)
+					stoplag()
 
 	testing("Initialized [count] atoms")
 

@@ -303,6 +303,28 @@
 		} \
 	}
 
+/**
+ * MAPLOADING_CHECK_TICK, but it also feeds the lobby bar.
+ *
+ * Mapload is far and away the longest part of init, so it's worth telling the bar where
+ * we actually are rather than making it guess across the whole thing. The maths only runs
+ * when the tick check fires - see the note below about the loop this lives in, it must not
+ * cost anything per tile.
+ *
+ * Only works inside _load_impl's grid loop, that's where the locals it reads live.
+ */
+#define MAPLOADING_CHECK_TICK_REPORTING \
+	if(TICK_CHECK) { \
+		Master.init_estimator?.report((gset_index - 1 + (row_span ? (i - y_starting_skip) / row_span : 0)) / gset_count); \
+		if(loading) { \
+			SSatoms.map_loader_stop(REF(src)); \
+			stoplag(); \
+			SSatoms.map_loader_begin(REF(src)); \
+		} else { \
+			stoplag(); \
+		} \
+	}
+
 // Do not call except via load() above.
 /datum/parsed_map/proc/_load_impl(x_offset = 1, y_offset = 1, z_offset = world.maxz + 1, cropMap = FALSE, no_changeturf = FALSE, x_lower = -INFINITY, x_upper = INFINITY, y_lower = -INFINITY, y_upper = INFINITY, placeOnTop = FALSE, new_z = FALSE)
 	PRIVATE_PROC(TRUE)
@@ -419,7 +441,13 @@
 		if(!no_changeturf)
 			WARNING("Z-level expansion occurred without no_changeturf set, this may cause problems when /turf/AfterChange is called")
 
+	// worked out up here so the hot loop below only has to divide
+	var/gset_count = max(length(gridSets), 1)
+	var/row_span = (line_count - y_ending_skip) - y_starting_skip
+	var/gset_index = 0
+
 	for(var/datum/grid_set/gset as anything in gridSets)
+		gset_index++
 		var/true_xcrd = gset.xcrd + x_relative_to_absolute
 
 		// any cutoff of x means we just shouldn't iterate this gridset
@@ -461,7 +489,7 @@
 				first_y = ycrd
 			last_y = ycrd
 			ycrd--
-			MAPLOADING_CHECK_TICK
+			MAPLOADING_CHECK_TICK_REPORTING
 
 		// The x coord never changes, so not tracking first x is safe
 		// If no ycrd is found, we assume this row is totally empty and just continue on
@@ -1022,3 +1050,4 @@ GLOBAL_LIST_EMPTY(map_model_default)
 #undef MAP_UNKNOWN
 #undef TRIM_TEXT
 #undef MAPLOADING_CHECK_TICK
+#undef MAPLOADING_CHECK_TICK_REPORTING

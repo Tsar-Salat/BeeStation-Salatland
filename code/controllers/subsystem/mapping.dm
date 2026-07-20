@@ -320,6 +320,11 @@ SUBSYSTEM_DEF(mapping)
 	// load the station
 	station_start = world.maxz + 1
 	INIT_ANNOUNCE("Loading [current_map.map_name]...")
+	// the maploader counts 0..1 for every map it loads, so hand each phase its own slice of
+	// our share of the bar. room templates that load after the station re-report from 0 into
+	// this same window, but the estimator only ever moves the bar forwards, so they read as
+	// a pause at the end of the station's slice rather than a rewind
+	Master.init_estimator?.set_report_window(0, 0.75)
 	LoadGroup(FailedZs, "Station", current_map.map_path, current_map.map_file, current_map.traits, ZTRAITS_STATION, orbital_body_type = /datum/orbital_object/z_linked/station)
 
 	LoadStationRoomTemplates()
@@ -333,6 +338,7 @@ SUBSYSTEM_DEF(mapping)
 
 #ifndef LOWMEMORYMODE
 	if(current_map.minetype == "lavaland")
+		Master.init_estimator?.set_report_window(0.75, 1)
 		LoadGroup(FailedZs, "Lavaland", "map_files/Mining", "Lavaland.dmm", default_traits = ZTRAITS_LAVALAND, orbital_body_type = /datum/orbital_object/z_linked/lavaland)
 	else if (!isnull(current_map.minetype))
 		INIT_ANNOUNCE("WARNING: An unknown minetype '[current_map.minetype]' was set! This is being ignored! Update the maploader code!")

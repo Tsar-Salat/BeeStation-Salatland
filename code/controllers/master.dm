@@ -69,6 +69,9 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	/// Outside of initialization, returns null.
 	var/current_initializing_subsystem = null
 
+	/// Tracks how far through initialization we are, for the lobby progress bar.
+	var/datum/init_estimator/init_estimator
+
 	var/static/restart_clear = 0
 	var/static/restart_timeout = 0
 	var/static/restart_count = 0
@@ -203,6 +206,9 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 			Master.subsystems += new BadBoy.type	//NEW_SS_GLOBAL will remove the old one
 		subsystems = Master.subsystems
 		current_runlevel = Master.current_runlevel
+		// carry the estimator over, otherwise an MC restart strands the lobby bar wherever it
+		// got to and the boot timings never make it to disk
+		init_estimator = Master.init_estimator
 		StartProcessing(10)
 	else
 		to_chat(world, span_boldannounce("The Master Controller is having some issues, we will need to re-initialize EVERYTHING."))
@@ -322,6 +328,13 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 			subsystem_init_stage = subsystem.init_stage = INITSTAGE_MAX
 		stage_sorted_subsystems[subsystem_init_stage] += subsystem
 
+	// flatten the init order out so the estimator can weight each subsystem by whatever it
+	// took last boot
+	var/list/planned_order = list()
+	for (var/stage in 1 to INITSTAGE_MAX)
+		planned_order += stage_sorted_subsystems[stage]
+	init_estimator = new(planned_order)
+
 	// Sort subsystems by display setting for easy access.
 	var/evaluated_order = 1
 	sortTim(subsystems, GLOBAL_PROC_REF(cmp_subsystem_display))
@@ -350,6 +363,12 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	var/msg = "Initializations complete within [round(time, 0.01)] second[time == 1 ? "" : "s"]!"
 	to_chat(world, span_boldannounce("[msg]"))
 	log_world(msg)
+
+	// dump the timings here and not in Shutdown(). anything that kills us between now and
+	// then would throw the whole boot away, and a server that keeps falling over is
+	// exactly the one that never manages to build up a cache
+	init_estimator?.finish()
+	SStitle?.set_status("Ready to play")
 
 	// Set world options.
 	world.change_fps(CONFIG_GET(number/fps))
@@ -384,11 +403,18 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	log_world("Initializing [subsystem.name] subsystem.")
 	rustg_time_reset(SS_INIT_TIMER_KEY)
 
+	init_estimator?.begin_step(subsystem)
+	SStitle?.set_status("Initializing [subsystem.name]...")
+
 	var/result = subsystem.Initialize()
 
 	// Capture end time
 	var/time = rustg_time_milliseconds(SS_INIT_TIMER_KEY)
 	var/seconds = round(time / 1000, 0.01)
+
+	// closed off up here, before the early returns further down. otherwise anything
+	// returning SS_INIT_NO_NEED leaves the bar parked on its step forever
+	init_estimator?.end_step(subsystem, time / 100)
 
 	// Always update the blackbox tally regardless.
 	SSblackbox.record_feedback("tally", "subsystem_initialize", time, subsystem.name)
