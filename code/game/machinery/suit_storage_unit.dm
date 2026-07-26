@@ -12,6 +12,8 @@
 	density = TRUE
 	obj_flags = BLOCKS_CONSTRUCTION // Becomes undense when the unit is open
 	max_integrity = 250
+	state_open = FALSE
+	panel_open = FALSE
 	circuit = /obj/item/circuitboard/machine/suit_storage_unit
 
 	var/obj/item/clothing/suit/space/suit = null
@@ -32,10 +34,8 @@
 	/// What type of additional item the unit starts with when spawned.
 	var/storage_type = null
 
-	state_open = FALSE
 	/// If the SSU's doors are locked closed. Can be toggled manually via the UI, but is also locked automatically when the UV decontamination sequence is running.
 	var/locked = FALSE
-	panel_open = FALSE
 	/// If the safety wire is cut/pulsed, the SSU can run the decontamination sequence while occupied by a mob. The mob will be burned during every cycle of cook().
 	var/safeties = TRUE
 
@@ -63,6 +63,21 @@
 	/// How fast it charges cells in a suit
 	var/charge_rate = 250
 
+	/// Accesses that can lock/unlock this unit, any one is enough. Null on units that keep the old free lock/unlock behaviour.
+	var/list/req_one_access_signout
+	/// Registered name of whoever last unlocked the unit. Shown on examine as the last sign-out.
+	var/last_access_name
+	/// Assignment shown next to last_access_name on examine.
+	var/last_access_assignment
+	/// world.time of the last unlock, for the examine duration readout.
+	var/last_access_time = 0
+	/// If gear has been signed out and not yet returned. Sets the status light, cleared when the unit is relocked full.
+	var/in_use = FALSE
+	/// If the lock has been forced. The sparks and overlay clear when welded, the log entry does not.
+	var/lock_forced = FALSE
+	/// List of sign-out and break-in log strings for this round, shown on examine.
+	var/list/signout_log = list()
+
 /obj/machinery/suit_storage_unit/Initialize(mapload)
 	. = ..()
 	interaction_flags_machine |= INTERACT_MACHINE_OFFLINE
@@ -84,16 +99,19 @@
 	mod_type = /obj/item/mod/control/pre_equipped/corporate
 
 /obj/machinery/suit_storage_unit/engine
+	req_one_access_signout = list(ACCESS_ENGINE)
 	mask_type = /obj/item/clothing/mask/breath
 	mod_type = /obj/item/mod/control/pre_equipped/engineering
 	storage_type = /obj/item/clothing/shoes/magboots
 
 /obj/machinery/suit_storage_unit/atmos
+	req_one_access_signout = list(ACCESS_ATMOSPHERICS, ACCESS_ENGINE)
 	mask_type = /obj/item/clothing/mask/gas
 	storage_type = /obj/item/watertank/atmos
 	suit_type = /obj/item/clothing/suit/space/hardsuit/engine/atmos
 
 /obj/machinery/suit_storage_unit/ce
+	req_one_access_signout = list(ACCESS_ENGINE)
 	mask_type = /obj/item/clothing/mask/breath
 	storage_type = /obj/item/clothing/shoes/magboots/advance
 	mod_type = /obj/item/mod/control/pre_equipped/advanced
@@ -109,6 +127,7 @@
 	mod_type = /obj/item/mod/control/pre_equipped/safeguard
 
 /obj/machinery/suit_storage_unit/mining
+	req_one_access_signout = list(ACCESS_MINING)
 	suit_type = /obj/item/clothing/suit/hooded/explorer
 	mask_type = /obj/item/clothing/mask/gas/explorer
 	storage_type = /obj/item/gps/mining/off
@@ -119,21 +138,25 @@
 	storage_type = /obj/item/gps/mining/off
 
 /obj/machinery/suit_storage_unit/exploration
+	req_one_access_signout = list(ACCESS_MINING)
 	suit_type = /obj/item/clothing/suit/space/hardsuit/exploration
 	mask_type = /obj/item/clothing/mask/breath
 	storage_type = /obj/item/gps/mining/exploration/off
 
 /obj/machinery/suit_storage_unit/medical
+	req_one_access_signout = list(ACCESS_MEDICAL)
 	mask_type = /obj/item/clothing/mask/breath/medical
 	storage_type = /obj/item/tank/internals/oxygen
 	mod_type = /obj/item/mod/control/pre_equipped/medical
 
 /obj/machinery/suit_storage_unit/cmo
+	req_one_access_signout = list(ACCESS_MEDICAL)
 	mask_type = /obj/item/clothing/mask/breath/medical
 	storage_type = /obj/item/gps/off
 	mod_type = /obj/item/mod/control/pre_equipped/rescue
 
 /obj/machinery/suit_storage_unit/rd
+	req_one_access_signout = list(ACCESS_RESEARCH)
 	mask_type = /obj/item/clothing/mask/breath
 	mod_type = /obj/item/mod/control/pre_equipped/research
 	storage_type = /obj/item/gps/off
@@ -174,6 +197,7 @@
 	base_icon_state = "industrial"
 
 /obj/machinery/suit_storage_unit/industrial/loader
+	req_one_access_signout = list(ACCESS_CARGO, ACCESS_MINING)
 	mod_type = /obj/item/mod/control/pre_equipped/loader
 
 /obj/machinery/suit_storage_unit/Initialize(mapload)
@@ -189,6 +213,9 @@
 		mod = new mod_type(src)
 	if(storage_type)
 		storage = new storage_type(src)
+	// Units with a sign-out access list start locked.
+	if(length(req_one_access_signout))
+		locked = TRUE
 	RefreshParts()
 	update_appearance()
 
@@ -196,6 +223,18 @@
 	QDEL_NULL(wires)
 	dump_inventory_contents()
 	return ..()
+
+/obj/machinery/suit_storage_unit/examine(mob/user)
+	. = ..()
+	if(lock_forced)
+		. += span_danger("The lock has been forced - the doors are sparking and warped.")
+	else if(length(req_one_access_signout))
+		if(!is_sealed_full() && last_access_name)
+			. += span_notice("Last signed out to <b>[last_access_name]</b>[last_access_assignment ? " ([last_access_assignment])" : ""] [DisplayTimeText(world.time - last_access_time)] ago.")
+		else if(is_sealed_full())
+			. += span_notice("It is sealed. Swipe your ID to sign out its contents.")
+	if(length(signout_log))
+		. += span_notice("Access panel, last entry: [signout_log[signout_log.len]]")
 
 /obj/machinery/suit_storage_unit/update_overlays()
 	. = ..()
@@ -319,6 +358,9 @@
 		choices,
 		custom_check = CALLBACK(src, PROC_REF(check_interactable), user),
 		require_near = !issiliconoradminghost(user),
+		tooltips = TRUE,
+		//Cool thing to reduce to one option
+		autopick_single_option = FALSE,
 	)
 
 	if (!choice)
@@ -344,13 +386,15 @@
 					to_chat(mob_occupant, span_userdanger("[src]'s confines grow warm, then hot, then scorching. You're being burned [!mob_occupant.stat ? "alive" : "away"]!"))
 				cook()
 		if ("lock", "unlock")
-			if (!state_open)
-				locked = !locked
+			attempt_lock_toggle(user)
 		else
 			var/obj/item/item_to_dispense = vars[choice]
 			if (item_to_dispense)
 				vars[choice] = null
 				try_put_in_hand(item_to_dispense, user)
+				if (length(req_one_access_signout))
+					in_use = TRUE
+					signout_log += "[station_time_timestamp()] - [last_access_name || "Unknown"] took [item_to_dispense.name]"
 			else
 				var/obj/item/in_hands = user.get_active_held_item()
 				if (in_hands)
@@ -368,6 +412,86 @@
 	if (uv)
 		return FALSE
 
+	return TRUE
+
+/// Locks or unlocks the unit after an access check
+/// Shared by the radial menu (worn/held ID) and physical ID swipes
+/obj/machinery/suit_storage_unit/proc/attempt_lock_toggle(mob/user, swiped = FALSE)
+	if (state_open)
+		balloon_alert(user, "close the door first", show_in_chat = FALSE)
+		return
+	if (!is_operational)
+		balloon_alert(user, "no power", show_in_chat = FALSE)
+		return
+	var/participating = length(req_one_access_signout)
+	if (participating && !can_signout(user))
+		balloon_alert(user, "access denied", show_in_chat = FALSE)
+		playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 40, TRUE)
+		return
+	locked = !locked
+	if (locked)
+		close_session()
+	else
+		open_session(user)
+	// Quick status as a balloon (kept out of chat), plus the ID-terminal beep on participating units.
+	balloon_alert(user, locked ? "locked" : "unlocked", show_in_chat = FALSE)
+	if (participating)
+		playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 40, TRUE)
+	if (swiped)
+		user.visible_message(
+			span_notice("[user] swipes [user.p_their()] ID over [src]."),
+			span_notice("You swipe your ID over [src].")
+		)
+	// Readable identity confirmation on sign-out - the record the player may want to see.
+	if (participating && !locked)
+		balloon_alert(user, "ID logged", show_in_chat = FALSE)
+		to_chat(user, span_notice("[src] scans your ID. Signed out to <b>[last_access_name]</b>[last_access_assignment ? " ([last_access_assignment])" : ""]."))
+	update_appearance()
+
+/// Whether the mob has one of req_one_access_signout, checking their held then worn ID.
+/obj/machinery/suit_storage_unit/proc/can_signout(mob/user)
+	if (!length(req_one_access_signout))
+		return TRUE
+	if (issiliconoradminghost(user))
+		return TRUE
+	var/obj/item/card/id/id = user?.get_idcard(hand_first = TRUE)
+	if (!id)
+		return FALSE
+	var/list/user_access = id.GetAccess()
+	for (var/req in req_one_access_signout)
+		if (req in user_access)
+			return TRUE
+	return FALSE
+
+/// Records who unlocked the unit and when for the examine readout, and logs the sign-out itself -
+/// the access event, not just item removal. Guarded on in_use so repeated lock/unlock doesn't spam.
+/obj/machinery/suit_storage_unit/proc/open_session(mob/user)
+	var/obj/item/card/id/id = issiliconoradminghost(user) ? null : user?.get_idcard(hand_first = TRUE)
+	last_access_name = id?.registered_name || "Unknown"
+	last_access_assignment = id?.assignment
+	last_access_time = world.time
+	if (length(req_one_access_signout) && !in_use)
+		signout_log += "[station_time_timestamp()] - signed out by [last_access_name][last_access_assignment ? " ([last_access_assignment])" : ""]"
+		in_use = TRUE
+
+/// On relock, if all gear is back, mark the unit sealed and log it. Otherwise it stays flagged in use.
+/obj/machinery/suit_storage_unit/proc/close_session()
+	if (in_use && is_sealed_full())
+		signout_log += "[station_time_timestamp()] - sealed full by [last_access_name || "Unknown"]"
+		in_use = FALSE
+
+/// Whether every slot the unit spawned with is currently filled
+/obj/machinery/suit_storage_unit/proc/is_sealed_full()
+	if (suit_type && !suit)
+		return FALSE
+	if (helmet_type && !helmet)
+		return FALSE
+	if (mask_type && !mask)
+		return FALSE
+	if (mod_type && !mod)
+		return FALSE
+	if (storage_type && !storage)
+		return FALSE
 	return TRUE
 
 /obj/machinery/suit_storage_unit/proc/create_silhouette_of(atom/item)
@@ -393,12 +517,13 @@
 	if(occupant || helmet || suit || storage)
 		to_chat(user, span_warning("It's too cluttered inside to fit in!"))
 		return
+
 	if(target == user)
 		user.visible_message(span_warning("[user] starts squeezing into [src]!"), span_notice("You start working your way into [src]..."))
 	else
 		target.visible_message(span_warning("[user] starts shoving [target] into [src]!"), span_userdanger("[user] starts shoving you into [src]!"))
 
-	if(do_after(user, 30, target))
+	if(do_after(user, 3 SECONDS, target))
 		if(occupant || helmet || suit || storage)
 			return
 		if(target == user)
@@ -487,6 +612,8 @@
 			dump_inventory_contents()
 
 /obj/machinery/suit_storage_unit/process(delta_time)
+	if(lock_forced && DT_PROB(4, delta_time))
+		do_sparks(1, FALSE, src)
 	var/obj/item/stock_parts/cell/cell
 	if(suit && istype(suit))
 		cell = suit.cell
@@ -505,6 +632,23 @@
 		if(electrocute_mob(user, src, src, 1, TRUE))
 			return 1
 
+/// Forces the lock open. Breaks the door.
+/obj/machinery/suit_storage_unit/proc/force_lock(mob/user)
+	lock_forced = TRUE
+	locked = FALSE
+	take_damage(75, sound_effect = FALSE)
+	do_sparks(3, TRUE, src)
+	playsound(src, 'sound/machines/buzz-two.ogg', 70, TRUE)
+	signout_log += "[station_time_timestamp()] - LOCK FORCED (no ID)"
+	if(user)
+		add_fingerprint(user)
+		user.visible_message(
+			span_warning("[user] forces [src]'s lock open!"),
+			span_notice("You force [src]'s lock open.")
+		)
+	open_machine(drop = FALSE)
+	update_appearance()
+
 /obj/machinery/suit_storage_unit/relaymove(mob/living/user, direction)
 	if(locked)
 		if(message_cooldown <= world.time)
@@ -521,14 +665,18 @@
 		return
 	user.changeNext_move(CLICK_CD_BREAKOUT)
 	user.last_special = world.time + CLICK_CD_BREAKOUT
-	user.visible_message(span_notice("You see [user] kicking against the doors of [src]!"), \
+	user.visible_message(
+		span_notice("You see [user] kicking against the doors of [src]!"),
 		span_notice("You start kicking against the doors... (this will take about [DisplayTimeText(breakout_time)].)"), \
-		span_hear("You hear a thump from [src]."))
+		span_hear("You hear a thump from [src].")
+	)
 	if(do_after(user,(breakout_time), target = src))
 		if(!user || user.stat != CONSCIOUS || user.loc != src )
 			return
-		user.visible_message(span_warning("[user] successfully broke out of [src]!"), \
-			span_notice("You successfully break out of [src]!"))
+		user.visible_message(
+			span_warning("[user] successfully broke out of [src]!"),
+			span_notice("You successfully break out of [src]!")
+		)
 		locked = FALSE
 		open_machine()
 		dump_inventory_contents()
@@ -537,6 +685,27 @@
 
 
 /obj/machinery/suit_storage_unit/attackby(obj/item/I, mob/living/user, params)
+	// Crowbar a locked unit open. The only way past the lock, and it breaks the door and makes a log entry.
+	if(I.tool_behaviour == TOOL_CROWBAR && user.combat_mode && locked && !state_open && !panel_open)
+		visible_message(span_warning("[user] starts wrenching [src]'s locked doors apart!"), span_notice("You start wrenching [src]'s locked doors apart..."))
+		playsound(src, 'sound/machines/airlock_alien_prying.ogg', 60, TRUE)
+		if(do_after(user, 12 SECONDS, target = src))
+			force_lock(user)
+		return
+	// Weld away the scar from a forced entry. The log entry stays.
+	if(lock_forced && I.tool_behaviour == TOOL_WELDER && !state_open)
+		if(!I.tool_start_check(user, amount = 0))
+			return
+		visible_message(span_notice("[user] begins repairing [src]'s forced lock."), span_notice("You begin repairing [src]'s forced lock..."))
+		if(I.use_tool(src, user, 8 SECONDS, volume = 40))
+			lock_forced = FALSE
+			to_chat(user, span_notice("You repair [src]'s lock. The record of the break-in remains logged."))
+			update_appearance()
+		return
+	// Swiping an ID over a signout unit toggles its lock
+	if(length(req_one_access_signout) && I.GetID())
+		attempt_lock_toggle(user, swiped = TRUE)
+		return
 	if(I.tool_behaviour == TOOL_CROWBAR && user.combat_mode && !panel_open && machine_stat & NOPOWER)
 		if(locked)
 			to_chat(user, span_warning("[src]'s door won't budge!"))
@@ -619,7 +788,6 @@
 		to_chat(user, span_warning("It might not be wise to fiddle with [src] while it's running..."))
 		return TRUE
 	return ..()
-
 
 /obj/machinery/suit_storage_unit/default_pry_open(obj/item/I)//needs to check if the storage is locked.
 	. = !(state_open || panel_open || is_operational || locked || (flags_1 & NODECONSTRUCT_1)) && I.tool_behaviour == TOOL_CROWBAR
