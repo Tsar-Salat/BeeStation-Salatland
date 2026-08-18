@@ -427,7 +427,6 @@ SUBSYSTEM_DEF(explosions)
 	// we assert that turfs will be processed closed to farthest, so we can build this as we go along
 	// This is gonna be an array, index'd by turfs
 	var/list/cached_exp_block = list()
-	var/list/cached_exp_block = list()
 
 	//lists are guaranteed to contain at least 1 turf at this point
 	//we presuppose that we'll be iterating away from the epicenter
@@ -601,6 +600,7 @@ SUBSYSTEM_DEF(explosions)
 /datum/controller/subsystem/explosions/proc/shake_the_room(turf/epicenter, near_distance, far_distance, quake_factor, echo_factor, creaking, sound/near_sound = sound(get_sfx("explosion")), sound/far_sound = sound('sound/effects/explosionfar.ogg'), sound/echo_sound = sound('sound/effects/explosion_distant.ogg'), sound/creaking_sound = sound(get_sfx("explosion_creaking")), hull_creaking_sound = sound(get_sfx("hull_creaking")))
 	var/frequency = get_rand_frequency()
 	var/blast_z = epicenter.z
+	var/area/epicenter_area = get_area(epicenter)
 	if(isnull(creaking)) // Autoset creaking.
 		var/on_station = SSmapping.level_trait(epicenter.z, ZTRAIT_STATION)
 		if(on_station && prob((quake_factor * QUAKE_CREAK_PROB) + (echo_factor * ECHO_CREAK_PROB))) // Huge explosions are near guaranteed to make the station creak and whine, smaller ones might.
@@ -637,7 +637,7 @@ SUBSYSTEM_DEF(explosions)
 				base_shake_amount = max(base_shake_amount, quake_factor * 3, 0) // Devastating explosions rock the station and ground
 				shake_camera(listener, FAR_SHAKE_DURATION, min(base_shake_amount, FAR_SHAKE_CAP))
 
-		else if(!isspaceturf(listener_turf) && echo_factor) // Big enough explosions echo through the hull.
+		else if(!isspaceturf(listener_turf) && !(!(epicenter_area.type in GLOB.the_station_areas) && SSmapping.is_planetary()) && echo_factor) // Big enough explosions echo through the hull. Except on planetary maps if the epicenter is not on the station's area.
 			var/echo_volume
 			if(quake_factor)
 				echo_volume = 60
