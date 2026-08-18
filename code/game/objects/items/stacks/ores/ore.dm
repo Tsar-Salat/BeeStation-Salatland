@@ -69,8 +69,10 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/stack/ore)
 	pixel_y = base_pixel_y + rand(0,8) - 8
 
 /obj/item/stack/ore/ex_act(severity, target)
-	if (!severity || severity >= 2)
-		return
-	qdel(src)
+	if(severity >= EXPLODE_DEVASTATE)
+		qdel(src)
+		return TRUE
+
+	return FALSE
 
 #undef ORESTACK_OVERLAYS_MAX

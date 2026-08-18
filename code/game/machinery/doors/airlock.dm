@@ -1169,7 +1169,7 @@
 		update_appearance()
 		for(var/mob/living/carbon/human/H in view(1, door_turf))
 			H.Unconscious(80)
-		explosion(door_turf, 0, 3, 5, 4)
+		explosion(door_turf, 0, 3, 5, flash_range = 4)
 		qdel(planted_charge)
 
 	return TRUE

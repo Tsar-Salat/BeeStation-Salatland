@@ -5,7 +5,7 @@
 
 /obj/projectile/bullet/gyro/on_hit(atom/target, blocked = FALSE)
 	..()
-	explosion(target, -1, 0, 2)
+	explosion(target, devastation_range = -1, light_impact_range = 2, explosion_cause = src)
 	return BULLET_ACT_HIT
 
 /// PM9 standard HE rocket

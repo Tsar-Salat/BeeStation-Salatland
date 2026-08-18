@@ -103,10 +103,10 @@
 */
 /obj/structure/destructible/clockwork/massive/celestial_gateway/proc/explode_reebe()
 	for(var/i in 1 to 30)
-		explosion(pick(get_area_turfs(/area/reebe/city_of_cogs)), 0, 2, 4, 4, FALSE)
+		explosion(pick(get_area_turfs(/area/reebe/city_of_cogs)), 0, 2, 4, flash_range = 4, adminlog = FALSE)
 		sleep(5)
 
-	explosion(pick(GLOB.servant_spawns), 50, 40, 30, 30, FALSE, TRUE)
+	explosion(pick(GLOB.servant_spawns), 50, 40, 30, flash_range = 30, adminlog = FALSE, ignorecap = TRUE)
 
 /*
 * 10% chance to send a message to the server every second
@@ -149,7 +149,7 @@
 	addtimer(CALLBACK(src, PROC_REF(last_call)), 27)
 
 /obj/structure/destructible/clockwork/massive/celestial_gateway/proc/last_call()
-	explosion(src, 5, 10, 20, 30)
+	explosion(src, 5, 10, 20, flash_range = 30)
 
 	// Remove portals to Reebe
 	for(var/obj/effect/portal/wormhole/clockcult/portal in GLOB.all_wormholes)

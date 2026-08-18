@@ -487,7 +487,7 @@
 			user.visible_message(span_warning("[user]'s skin starts pulsing and glowing ominously..."), span_userdanger("You feel unstable..."))
 			if(do_after(user, 6 SECONDS, target = user))
 				to_chat(user, span_userdanger("You explode!"))
-				explosion(get_turf(user), 1 ,3, 6)
+				explosion(user, devastation_range = 1, heavy_impact_range = 3, light_impact_range = 6, explosion_cause = src)
 				user.investigate_log("has been gibbed by an oil slime extract explosion.", INVESTIGATE_DEATHS)
 				user.gib()
 				return 60 SECONDS

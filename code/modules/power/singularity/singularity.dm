@@ -411,10 +411,15 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/anomaly/singularity)
 /obj/anomaly/singularity/singularity_act()
 	var/gain = (energy/2)
 	var/dist = max((current_size - 2),1)
-	explosion(src.loc,(dist),(dist*2),(dist*4))
+	investigate_log("has been destroyed by another singularity.", INVESTIGATE_ENGINES)
+	explosion(
+		src,
+		devastation_range = dist,
+		heavy_impact_range = dist * 2,
+		light_impact_range = dist * 4
+	)
 	qdel(src)
-	log_game("Singularity [src] consumed by another singularity at [AREACOORD(src)]")
-	return(gain)
+	return (gain)
 
 /obj/anomaly/singularity/deadchat_controlled
 	move_self = FALSE

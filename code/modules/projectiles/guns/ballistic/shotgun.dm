@@ -41,7 +41,7 @@
 			playsound(user, fire_sound, fire_sound_volume, vary_fire_sound)
 			to_chat(user, span_userdanger("[src] catastrophically explodes in your hands!"))
 			user.take_bodypart_damage(0, 40)
-			explosion(src, 0, 0, 2, 2)
+			explosion(src, 0, 0, 2, flash_range = 2)
 			qdel(chambered)
 			chambered = null
 			user.dropItemToGround(src)

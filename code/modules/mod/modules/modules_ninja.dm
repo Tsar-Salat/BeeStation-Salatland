@@ -177,7 +177,7 @@
 		return
 	linked_weapon.visible_message("\The [linked_weapon] violently explodes!")
 	qdel(linked_weapon)
-	explosion(get_turf(linked_weapon), 0, 1, 2, 3, flame_range = 3)
+	explosion(get_turf(linked_weapon), 0, 1, 2, flash_range = 3, flame_range = 3)
 
 /obj/item/mod/module/weapon_recall/on_part_activation()
 	ADD_TRAIT(mod.wearer, TRAIT_NOGUNS, REF(src))

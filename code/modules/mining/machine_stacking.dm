@@ -128,7 +128,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/mineral/stacking_unit_console)
 			visible_message(span_warning("[src] attempts to stack the portal!"))
 			message_admins("Stacking machine exploded via [P.creator ? key_name(P.creator) : "UNKNOWN"]'s portal at [AREACOORD(src)]")
 			log_game("Stacking machine exploded via [P.creator ? key_name(P.creator) : "UNKNOWN"]'s portal at [AREACOORD(src)]")
-			explosion(src.loc, 0, 1, 2, 3)
+			explosion(src.loc, 0, 1, 2, flash_range = 3)
 			if(!QDELETED(src))
 				qdel(src)
 		else

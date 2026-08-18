@@ -7,7 +7,7 @@
 	charges_left = 15
 
 /obj/item/flashbulb/bomb/use_flashbulb()
-	explosion(src, -1, 1, 3, 4)
+	explosion(src, -1, 1, 3, flash_range = 4)
 	charges_left = 0
 	icon_state = "flashbulbburnt"
 	return 1

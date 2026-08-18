@@ -107,7 +107,6 @@
 #include "code\__DEFINES\ghost.dm"
 #include "code\__DEFINES\gradient.dm"
 #include "code\__DEFINES\gravity.dm"
-#include "code\__DEFINES\helpers.dm"
 #include "code\__DEFINES\holoparasite.dm"
 #include "code\__DEFINES\html_assistant.dm"
 #include "code\__DEFINES\hud.dm"

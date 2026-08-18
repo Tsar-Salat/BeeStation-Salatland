@@ -1,8 +1,14 @@
 ///Component specifically for explosion sensetive things, currently only applies to heat based explosions but can later perhaps be used for things that are dangerous to handle carelessly like nitroglycerin.
 /datum/component/explodable
+	/// The devastation range of the resulting explosion.
 	var/devastation_range = 0
+	/// The heavy impact range of the resulting explosion.
 	var/heavy_impact_range = 0
+	/// The light impact range of the resulting explosion.
 	var/light_impact_range = 2
+	/// The flame range of the resulting explosion.
+	var/flame_range = 0
+	/// The flash range of the resulting explosion.
 	var/flash_range = 3
 	/// Whether this explosion ignores the bombcap.
 	var/uncapped
@@ -11,7 +17,7 @@
 	/// For items, lets us determine where things should be hit.
 	var/equipped_slot
 
-/datum/component/explodable/Initialize(devastation_range, heavy_impact_range, light_impact_range, flash_range, uncapped = FALSE, delete_after = EXPLODABLE_DELETE_PARENT)
+/datum/component/explodable/Initialize(devastation_range_override, heavy_impact_range_override, light_impact_range_override, flame_range_override, flash_range_override, uncapped = FALSE, delete_after = EXPLODABLE_DELETE_PARENT)
 	if(!isatom(parent))
 		return COMPONENT_INCOMPATIBLE
 
@@ -34,10 +40,12 @@
 		src.devastation_range = devastation_range
 	if (heavy_impact_range)
 		src.heavy_impact_range = heavy_impact_range
-	if (light_impact_range)
-		src.light_impact_range = light_impact_range
-	if (flash_range)
-		src.flash_range = flash_range
+	if(light_impact_range_override)
+		light_impact_range = light_impact_range_override
+	if(flame_range_override)
+		flame_range = flame_range_override
+	if(flash_range_override)
+		flash_range = flash_range_override
 	src.uncapped = uncapped
 	src.delete_after = delete_after
 
@@ -134,7 +142,7 @@
 	SIGNAL_HANDLER
 
 	var/atom/bomb = parent
-	explosion(bomb, devastation_range, heavy_impact_range, light_impact_range, flash_range, uncapped) //epic explosion time
+	explosion(origin = bomb, devastation_range = devastation_range, heavy_impact_range = heavy_impact_range, light_impact_range = light_impact_range, flame_range = flame_range, flash_range = flash_range, uncapped = uncapped) //epic explosion time
 
 	switch(delete_after)
 		if(EXPLODABLE_DELETE_SELF)

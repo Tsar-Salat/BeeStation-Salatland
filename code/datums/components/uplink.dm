@@ -442,7 +442,7 @@ GLOBAL_LIST_EMPTY(uplinks)
 	var/turf/T = get_turf(parent)
 	if(!T)
 		return
-	explosion(T,1,2,3)
+	explosion(parent, devastation_range = 1, heavy_impact_range = 2, light_impact_range = 3)
 	qdel(parent) //Alternatively could brick the uplink.
 
 /datum/component/uplink/proc/unlock()

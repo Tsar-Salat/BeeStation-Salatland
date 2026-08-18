@@ -256,6 +256,9 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 
 #define HIS_GRACE_FORCE_BONUS 4 //! How much force is gained per kill.
 
+/// ex_act() with EXPLODE_DEVASTATE severity will gib mobs with less than this much bomb armor
+#define EXPLODE_GIB_THRESHOLD 50
+
 #define EMP_HEAVY 1
 #define EMP_LIGHT 2
 

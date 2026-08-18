@@ -179,7 +179,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/checkoutmachine)
 		for(var/datum/bank_account/B in flatten_list(SSeconomy.bank_accounts_by_id))
 			B.withdrawDelay = 0
 	priority_announce("The credit deposit machine at [get_area(src)] has been destroyed. Station funds have stopped draining!", sound = SSstation.announcer.get_rand_alert_sound(), sender_override = "CRAB-17 Protocol", )
-	explosion(src, 0,0,1, flame_range = 2)
+	explosion(src, light_impact_range = 1, flame_range = 2)
 	return ..()
 
 /obj/structure/checkoutmachine/proc/start_dumping()

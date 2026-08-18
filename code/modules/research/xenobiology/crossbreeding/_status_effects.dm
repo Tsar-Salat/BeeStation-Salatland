@@ -924,7 +924,7 @@
 
 /datum/status_effect/stabilized/oil/tick(seconds_between_ticks)
 	if(owner.stat == DEAD)
-		explosion(get_turf(owner),1,2,4,flame_range = 5)
+		explosion(owner, devastation_range = 1, heavy_impact_range = 2, light_impact_range = 4, flame_range = 5, explosion_cause = src)
 		qdel(src) // Deletes it, so it cannot explode multiple times
 		return
 	return ..()

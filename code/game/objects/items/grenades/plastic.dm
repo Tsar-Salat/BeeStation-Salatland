@@ -75,9 +75,9 @@
 	if(location)
 		if(directional && target && density_check)
 			var/turf/T = get_step(location, aim_dir)
-			explosion(get_step(T, aim_dir), boom_sizes[1], boom_sizes[2], boom_sizes[3])
+			explosion(get_step(T, aim_dir), devastation_range = boom_sizes[1], heavy_impact_range = boom_sizes[2], light_impact_range = boom_sizes[3], explosion_cause = src)
 		else
-			explosion(location, boom_sizes[1], boom_sizes[2], boom_sizes[3])
+			explosion(location, devastation_range = boom_sizes[1], heavy_impact_range = boom_sizes[2], light_impact_range = boom_sizes[3], explosion_cause = src)
 	if(isliving(target))
 		var/mob/living/M = target
 		M.gib()
@@ -170,7 +170,7 @@
 	log_game("[key_name(user)] suicided with [src] at [AREACOORD(user)]")
 	user.visible_message(span_suicide("[user] activates [src] and holds it above [user.p_their()] head! It looks like [user.p_theyre()] going out with a bang!"))
 	shout_syndicate_crap(user)
-	explosion(user,0,2,0) //Cheap explosion imitation because putting prime() here causes runtimes
+	explosion(user, heavy_impact_range = 2, explosion_cause = src) //Cheap explosion imitation because putting detonate() here causes runtimes
 	user.gib(1, 1)
 	qdel(src)
 

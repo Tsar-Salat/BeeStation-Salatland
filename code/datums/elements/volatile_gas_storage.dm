@@ -35,7 +35,7 @@
 	var/explosive_force = ceil((expelled_pressure / max_explosive_pressure) * max_explosive_force)
 	// This is supposed to represent only shrapnel and no fire
 	// Maybe one day we'll get something a bit better
-	explosion(get_turf(origin), light_impact_range=explosive_force, adminlog = origin)
+	explosion(get_turf(origin), light_impact_range = explosive_force, explosion_cause = origin)
 
 /datum/element/volatile_gas_storage/proc/AtmosComponentBreak(obj/machinery/atmospherics/components/owner)
 	SIGNAL_HANDLER

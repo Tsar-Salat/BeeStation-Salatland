@@ -73,7 +73,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/anomaly)
 		qdel(src)
 
 /obj/effect/anomaly/ex_act(severity, target)
-	if(severity == EXPLODE_DEVASTATE)
+	if(severity >= EXPLODE_DEVASTATE)
 		qdel(src)
 
 /// Called every process() tick. Do anomaly stuff here

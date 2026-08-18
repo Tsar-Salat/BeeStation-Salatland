@@ -189,7 +189,7 @@
 
 /obj/machinery/gear_requisition/ex_act(severity, target)
 	do_sparks(5, TRUE, src)
-	if(prob(50 / severity) && severity < 3)
+	if(severity > EXPLODE_LIGHT && prob(17 * severity))
 		qdel(src)
 
 /obj/machinery/gear_requisition/mining

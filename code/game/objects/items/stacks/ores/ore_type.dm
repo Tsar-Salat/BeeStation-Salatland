@@ -67,9 +67,11 @@ STACKSIZE_MACRO(/obj/item/stack/ore/iron)
 	qdel(src)
 
 /obj/item/stack/ore/glass/ex_act(severity, target)
-	if (severity == EXPLODE_NONE)
-		return
-	qdel(src)
+	if(severity)
+		qdel(src)
+		return TRUE
+
+	return FALSE
 
 GLOBAL_LIST_INIT(sand_recipes, list(\
 		new /datum/stack_recipe("pile of dirt", /obj/machinery/hydroponics/soil, 3, time = 1 SECONDS, crafting_flags = CRAFT_CHECK_DENSITY | CRAFT_ONE_PER_TURF | CRAFT_ON_SOLID_GROUND, category = CAT_TOOLS), \

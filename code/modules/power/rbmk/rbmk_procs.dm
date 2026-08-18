@@ -517,7 +517,7 @@ Arguments:
 	reactor_turf.assume_air(coolant_input)
 	reactor_turf.assume_air(moderator_input)
 	reactor_turf.assume_air(coolant_output)
-	explosion(get_turf(src), 0, 5, 10, 20, TRUE, TRUE)
+	explosion(get_turf(src), 0, 5, 10, flash_range = 20, adminlog = TRUE, ignorecap = TRUE)
 	empulse(get_turf(src), 20, 30)
 	SSblackbox.record_feedback("tally", "engine_stats", 1, "failed")
 	SSblackbox.record_feedback("tally", "engine_stats", 1, "agcnr")
@@ -529,7 +529,7 @@ Arguments:
 	qdel(src)
 
 /obj/machinery/atmospherics/components/unary/rbmk/core/proc/blowout()
-	explosion(get_turf(src), GLOB.MAX_EX_DEVESTATION_RANGE, GLOB.MAX_EX_HEAVY_RANGE, GLOB.MAX_EX_LIGHT_RANGE, GLOB.MAX_EX_FLASH_RANGE)
+	explosion(get_turf(src), GLOB.MAX_EX_DEVESTATION_RANGE, GLOB.MAX_EX_HEAVY_RANGE, GLOB.MAX_EX_LIGHT_RANGE, flash_range = GLOB.MAX_EX_FLASH_RANGE)
 	var/turf/reactor_turf = get_turf(src)
 	var/rbmkzlevel = reactor_turf.get_virtual_z_level()
 	for(var/mob/player_mob in GLOB.player_list)

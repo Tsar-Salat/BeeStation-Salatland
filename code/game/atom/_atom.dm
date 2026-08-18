@@ -1029,7 +1029,7 @@
 					//Nobody directly touched the source of ignition or what ignited. Probably caused by burning atmos.
 					message_admins("[src] ignited by unidentified causes in [ADMIN_VERBOSEJMP(T)]")
 					log_game("[src] ignited by unidentified causes in [AREACOORD(T)]")
-			explosion(T, 0, 0, light_impact_range = strength/4, flash_range = strength/2, flame_range = strength, silent = TRUE)
+			explosion(T, light_impact_range = strength/4, flash_range = strength/2, flame_range = strength, silent = TRUE)
 		else
 			new /obj/effect/hotspot(T)
 		//Regardless of power, whatever is burning will go up in a brilliant flash with at least a fizzle

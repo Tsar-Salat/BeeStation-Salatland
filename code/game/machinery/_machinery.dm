@@ -819,7 +819,16 @@
 		return TRUE
 
 /obj/machinery/contents_explosion(severity, target)
-	occupant?.ex_act(severity, target)
+	if(!occupant)
+		return
+
+	switch(severity)
+		if(EXPLODE_DEVASTATE)
+			SSexplosions.high_mov_atom += occupant
+		if(EXPLODE_HEAVY)
+			SSexplosions.med_mov_atom += occupant
+		if(EXPLODE_LIGHT)
+			SSexplosions.low_mov_atom += occupant
 
 /obj/machinery/handle_atom_del(atom/A)
 	if(A == occupant)
@@ -1056,11 +1065,12 @@
 /obj/machinery/zap_act(power, zap_flags)
 	if(prob(85) && (zap_flags & ZAP_MACHINE_EXPLOSIVE) && !(resistance_flags & INDESTRUCTIBLE))
 		explosion(
-			epicenter = src,
+			origin = src,
 			devastation_range = 1,
 			heavy_impact_range = 2,
 			light_impact_range = 4,
 			flame_range = 2,
+			adminlog = FALSE
 		)
 	else if(zap_flags & ZAP_OBJ_DAMAGE)
 		take_damage(power * 2.5e-4, BURN, ENERGY)

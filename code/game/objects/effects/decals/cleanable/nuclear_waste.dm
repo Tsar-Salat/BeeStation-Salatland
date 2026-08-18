@@ -17,7 +17,7 @@
 	AddElement(/datum/element/connect_loc, loc_connections)
 
 /obj/effect/decal/cleanable/nuclear_waste/ex_act(severity, target)
-	if(severity != EXPLODE_DEVASTATE)
+	if(severity < EXPLODE_DEVASTATE)
 		return
 	qdel(src)
 

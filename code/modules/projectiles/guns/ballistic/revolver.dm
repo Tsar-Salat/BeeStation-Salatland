@@ -141,7 +141,7 @@
 			playsound(user, fire_sound, fire_sound_volume, vary_fire_sound)
 			to_chat(user, span_userdanger("[src] blows up in your face!"))
 			user.take_bodypart_damage(0,20)
-			explosion(src, 0, 0, 1, 1)
+			explosion(src, 0, 0, 1, flash_range = 1)
 			user.dropItemToGround(src)
 			return 0
 	return ..()

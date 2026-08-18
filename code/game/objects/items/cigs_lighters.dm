@@ -360,7 +360,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 		return
 	if(reagents.get_reagent_amount(/datum/reagent/fuel)) // the fuel explodes too, but much less violently
 		T.visible_message("<b>[span_userdanger("[src] violently explodes!")]</b>")
-		explosion(src, 0, 0, 1, 0, flame_range = 1)
+		explosion(src, 0, 0, 1, flash_range = 0, flame_range = 1)
 		qdel(src)
 		return
 	// allowing reagents to react after being lit
@@ -1255,7 +1255,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/vape)
 	set_greyscale(new_config = /datum/greyscale_config/vape/open_high)
 	var/datum/effect_system/spark_spread/sp = new /datum/effect_system/spark_spread //for effect
 	sp.set_up(5, 1, src)
-	sp.start()
+	sp.start(src)
 
 /obj/item/vape/attack_self(mob/user)
 	if(!screw)
@@ -1328,21 +1328,21 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/vape)
 	if(obj_flags & EMAGGED)
 		var/datum/effect_system/smoke_spread/chem/smoke_machine/puff = new
 		puff.set_up(reagents, 4, 24, loc)
-		puff.start()
+		puff.start(src)
 		if(prob(5)) //small chance for the vape to break and deal damage if it's emagged
 			playsound(get_turf(src), 'sound/effects/pop_expl.ogg', 50, FALSE)
 			M.apply_damage(20, BURN, BODY_ZONE_HEAD)
 			M.Paralyze(300)
 			var/datum/effect_system/spark_spread/sp = new /datum/effect_system/spark_spread
 			sp.set_up(5, 1, src)
-			sp.start()
+			sp.start(src)
 			to_chat(M, span_userdanger("[src] suddenly explodes in your mouth!"))
 			qdel(src)
 			return
 	else if(super)
 		var/datum/effect_system/smoke_spread/chem/smoke_machine/s = new
 		s.set_up(reagents, 1, 24, loc)
-		s.start()
+		s.start(src)
 
 	handle_reagents()
 

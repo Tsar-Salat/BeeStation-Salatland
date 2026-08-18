@@ -260,7 +260,7 @@
 		STOP_PROCESSING(SSmachines, src)
 
 /obj/machinery/power/port_gen/pacman/proc/overheat()
-	explosion(src.loc, 2, 5, 2, -1)
+	explosion(src, devastation_range = 2, heavy_impact_range = 5, light_impact_range = 2, flash_range = -1)
 
 /obj/machinery/power/port_gen/pacman/proc/set_smoke_state(new_state)
 	if(new_state == smoke_state)
@@ -426,7 +426,7 @@
 	// A nice burst of radiation
 	var/rads = rad_power * 25 + (sheets + sheet_left) * 1.5
 	radiation_pulse(src, max(40, rads))
-	explosion(src.loc, 3, 3, 3, -1)
+	explosion(src, devastation_range = 3, heavy_impact_range = 3, light_impact_range = 3, flash_range = -1)
 
 /obj/machinery/power/port_gen/pacman/mrs
 	name = "\improper M.R.S.P.A.C.M.A.N.-type portable generator"
@@ -441,4 +441,4 @@
 	temperature_gain = 90
 
 /obj/machinery/power/port_gen/pacman/mrs/overheat()
-	explosion(src.loc, 4, 4, 4, -1)
+	explosion(src, devastation_range = 3, heavy_impact_range = 3, light_impact_range = 3, flash_range = -1)

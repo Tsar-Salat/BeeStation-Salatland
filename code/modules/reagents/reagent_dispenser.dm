@@ -185,13 +185,15 @@
 
 /obj/structure/reagent_dispensers/fueltank/ex_act()
 	boom()
+	return TRUE
 
 /obj/structure/reagent_dispensers/fueltank/fire_act(exposed_temperature, exposed_volume)
 	boom()
 
 /obj/structure/reagent_dispensers/fueltank/zap_act(power, zap_flags)
-	. = ..()
-	boom()
+	. = ..() //extend the zap
+	if(ZAP_OBJ_DAMAGE & zap_flags)
+		boom()
 
 /obj/structure/reagent_dispensers/fueltank/bullet_act(obj/projectile/P)
 	. = ..()
@@ -279,7 +281,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/reagent_dispensers/peppertank, 30)
 	reagent_id = /datum/reagent/consumable/ethanol/beer
 
 /obj/structure/reagent_dispensers/beerkeg/blob_act(obj/structure/blob/B)
-	explosion(src.loc,0,3,5,7,10)
+	explosion(src, heavy_impact_range = 3, light_impact_range = 5, flame_range = 10, flash_range = 7)
 	if(!QDELETED(src))
 		qdel(src)
 

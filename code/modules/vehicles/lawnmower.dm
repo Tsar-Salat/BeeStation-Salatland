@@ -29,10 +29,10 @@
 
 /obj/vehicle/ridden/lawnmower/atom_destruction()
 	if(normal_variant)
-		explosion(src, -1, 1, 2, 4, flame_range = 3)
+		explosion(src, -1, 1, 2, flash_range = 4, flame_range = 3)
 		. = ..()
 	else
-		explosion(src, -1, 3, 5, 7, flame_range = 5)
+		explosion(src, -1, 3, 5, flash_range = 7, flame_range = 5)
 		. = ..()
 
 /obj/vehicle/ridden/lawnmower/on_emag(mob/user)

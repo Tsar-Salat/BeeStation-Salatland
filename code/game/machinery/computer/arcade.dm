@@ -149,7 +149,7 @@ GLOBAL_LIST_INIT(arcade_prize_pool, list(
 		else
 			empprize = pick_weight(GLOB.arcade_prize_pool)
 		new empprize(loc)
-	explosion(loc, -1, 0, 1+num_of_prizes, flame_range = 1+num_of_prizes)
+	explosion(src, devastation_range = -1, light_impact_range = 1+num_of_prizes, flame_range = 1+num_of_prizes)
 
 
 // ** BATTLE ** //
@@ -1231,7 +1231,7 @@ GLOBAL_LIST_INIT(arcade_prize_pool, list(
 	playsound(loc, 'sound/machines/buzz-sigh.ogg', 25, 1)
 	sleep(3.6)
 	visible_message(span_userdanger("[src] explodes!"))
-	explosion(loc, 2,4,8, flame_range = 16)
+	explosion(src, devastation_range = 2, heavy_impact_range = 4, light_impact_range = 8, flame_range = 16)
 	qdel(src)
 
 // ** AMPUTATION ** //

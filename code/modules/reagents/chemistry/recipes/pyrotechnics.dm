@@ -33,7 +33,7 @@
 		if(istype(holder.my_atom, /obj/item/grenade/chem_grenade))
 			e.explosion_sizes = list(0, 1, 1, 1)
 		e.set_up(power , T, 0, 0)
-		e.start()
+		e.start(holder.my_atom)
 		holder.clear_reagents()
 
 /datum/chemical_reaction/proc/reaction_alert_admins(datum/reagents/holder)

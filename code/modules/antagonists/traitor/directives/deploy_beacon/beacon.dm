@@ -191,7 +191,7 @@
 	sleep(0.2 SECONDS)
 	playsound(src, 'sound/items/timer.ogg', 100)
 	sleep(0.2 SECONDS)
-	explosion(src, 0, 0, 4, 6)
+	explosion(src, 0, 0, 4, flash_range = 6)
 	qdel(src)
 
 /proc/uplink_beacon_channel_to_color(channel)

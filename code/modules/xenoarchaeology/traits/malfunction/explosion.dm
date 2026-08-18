@@ -58,7 +58,7 @@
 	atom_parent.remove_filter("wave_effect")
 	if(component_parent.calcified) //Just in-case this somehow happens
 		return
-	explosion(get_turf(component_parent.parent), max_explosion/3*(component_parent.trait_strength/100), max_explosion/2*(component_parent.trait_strength/100), max_explosion*(component_parent.trait_strength/100), max_explosion*(component_parent.trait_strength/100))
+	explosion(get_turf(component_parent.parent), max_explosion/3*(component_parent.trait_strength/100), max_explosion/2*(component_parent.trait_strength/100), max_explosion*(component_parent.trait_strength/100), flash_range = max_explosion*(component_parent.trait_strength/100))
 	component_parent.calcify()
 
 //Tidy stuff up when we're calcified

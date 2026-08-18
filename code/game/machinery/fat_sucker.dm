@@ -188,7 +188,7 @@
 			if(nutrient_to_meat <= 0) // Megaddd, please don't crash the server again
 				occupant.forceMove(drop_location())
 				set_occupant(null)
-				explosion(loc, 0, 1, 2, 3, TRUE)
+				explosion(loc, 0, 1, 2, flash_range = 3, adminlog = TRUE)
 				qdel(src)
 				return
 			if(nutrients >= nutrient_to_meat * 2)

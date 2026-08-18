@@ -1,8 +1,12 @@
-#define EXPLODE_NONE 0 //Don't even ask me why we need this.
-#define EXPLODE_DEVASTATE 1
+// The severity of explosions. Why are these inverted? I have no idea, but git blame doesn't go back far enough for me to find out.
+/// The (current) highest possible explosion severity.
+#define EXPLODE_DEVASTATE 3
+/// The (current) middling explosion severity.
 #define EXPLODE_HEAVY 2
-#define EXPLODE_LIGHT 3
-#define EXPLODE_GIB_THRESHOLD 50	//ex_act() with EXPLODE_DEVASTATE severity will gib mobs with less than this much bomb armor
+/// The (current) lowest possible explosion severity.
+#define EXPLODE_LIGHT 1
+/// The default explosion severity used to mark that an object is beyond the impact range of the explosion.
+#define EXPLODE_NONE 0
 
 //gibtonite state defines
 /// Gibtonite has not been mined
@@ -25,8 +29,43 @@
 	SEND_SIGNAL(target, COMSIG_ATOM_EX_ACT, ##args);\
 	target.ex_act(##args);
 
+// Internal explosion argument list keys.
+// Must match the arguments to [/datum/controller/subsystem/explosions/proc/propagate_blastwave]
+/// The origin atom of the explosion.
+#define EXARG_KEY_ORIGIN "origin"
+/// The potential cause of the explosion, if different to origin.
+#define EXARG_KEY_EXPLOSION_CAUSE STRINGIFY(explosion_cause)
+/// The devastation range of the explosion.
+#define EXARG_KEY_DEV_RANGE STRINGIFY(devastation_range)
+/// The heavy impact range of the explosion.
+#define EXARG_KEY_HEAVY_RANGE STRINGIFY(heavy_impact_range)
+/// The light impact range of the explosion.
+#define EXARG_KEY_LIGHT_RANGE STRINGIFY(light_impact_range)
+/// The flame range of the explosion.
+#define EXARG_KEY_FLAME_RANGE STRINGIFY(flame_range)
+/// The flash range of the explosion.
+#define EXARG_KEY_FLASH_RANGE STRINGIFY(flash_range)
+/// Whether or not the explosion should be logged.
+#define EXARG_KEY_ADMIN_LOG STRINGIFY(adminlog)
+/// Whether or not the explosion should ignore the bombcap.
+#define EXARG_KEY_IGNORE_CAP STRINGIFY(ignorecap)
+/// Whether or not the explosion should produce sound effects and screenshake if it is large enough to warrant it.
+#define EXARG_KEY_SILENT STRINGIFY(silent)
+/// The effect system type used for the explosion's visual effect (smoke, etc).
+#define EXARG_KEY_EXPLOSION_TYPE STRINGIFY(explosion_type)
+/// Whether or not the explosion is magical, and can therefore be blocked by anti-magic.
+#define EXARG_KEY_MAGIC STRINGIFY(magic)
+/// Whether or not the explosion is holy, and can therefore be blocked by holy protection.
+#define EXARG_KEY_HOLY STRINGIFY(holy)
+/// Multiplier applied to the z-level bombcap for this explosion.
+#define EXARG_KEY_CAP_MODIFIER STRINGIFY(cap_modifier)
+/// Whether or not the explosion should propagate to adjacent z-levels.
+#define EXARG_KEY_EXPLODE_Z STRINGIFY(explode_z)
+
 // Explodable component deletion values
+/// Makes the explodable component queue to reset its exploding status when it detonates.
+#define EXPLODABLE_NO_DELETE 0
 /// Makes the explodable component delete itself when it detonates.
-#define EXPLODABLE_DELETE_SELF 0
+#define EXPLODABLE_DELETE_SELF 1
 /// Makes the explodable component delete its parent when it detonates.
-#define EXPLODABLE_DELETE_PARENT 1
+#define EXPLODABLE_DELETE_PARENT 2

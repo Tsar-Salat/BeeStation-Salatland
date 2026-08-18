@@ -233,7 +233,7 @@
 	owner.balloon_alert(owner, "bomb detonated", show_in_chat = FALSE)
 	bomb.visible_message(span_danger("[bomb] suddenly and violently explodes!"))
 	disable(bomb, silent = TRUE, result = "manual detonation")
-	explosion(bomb, 0, 1, 0, 5, flame_range = 3)
+	explosion(bomb, 0, 1, 0, flash_range = 5, flame_range = 3)
 	COOLDOWN_START(src, detonate_cooldown, detonate_cooldown_length)
 	detonate_hud.begin_timer(detonate_cooldown_length)
 

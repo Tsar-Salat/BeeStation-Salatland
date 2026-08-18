@@ -378,9 +378,9 @@ Difficulty: Medium
 		arena_escape_enrage()
 
 /mob/living/simple_animal/hostile/megafauna/dragon/ex_act(severity, target)
-	if(severity == EXPLODE_LIGHT)
-		return
-	..()
+	if(severity <= EXPLODE_LIGHT)
+		return FALSE
+	return ..()
 
 /mob/living/simple_animal/hostile/megafauna/dragon/adjustHealth(amount, updating_health = TRUE, forced = FALSE, required_bodytype)
 	if(!forced && (swooping & SWOOP_INVULNERABLE))

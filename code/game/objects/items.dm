@@ -1155,7 +1155,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 			if(battery.charge > 3600) //At this charge level, the default charge-based battery explosion is more severe
 				battery.explode()
 			else
-				explosion(src, 0, 0, 3, 4)
+				explosion(src, 0, 0, 3, flash_range = 4)
 
 /obj/item/proc/on_mob_death(mob/living/L, gibbed)
 
