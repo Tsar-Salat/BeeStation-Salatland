@@ -4,14 +4,14 @@
 
 /obj/ex_act(severity, target)
 	if(resistance_flags & INDESTRUCTIBLE)
-		return
+		return FALSE
 
-	..() //contents explosion
+	. = ..() //contents explosion
 	if(QDELETED(src))
-		return
+		return TRUE
 	if(target == src)
 		take_damage(INFINITY, BRUTE, BOMB, 0)
-		return
+		return TRUE
 	switch(severity)
 		if(EXPLODE_DEVASTATE)
 			take_damage(INFINITY, BRUTE, BOMB, 0)
@@ -20,14 +20,25 @@
 		if(EXPLODE_LIGHT)
 			take_damage(rand(10, 90), BRUTE, BOMB, 0)
 
+	return TRUE
+
 /obj/bullet_act(obj/projectile/P)
 	. = ..()
 	playsound(src, P.hitsound, 50, TRUE)
 	var/damage
 	if(!QDELETED(src)) //Bullet on_hit effect might have already destroyed this object
-		damage = take_damage(P.damage, P.damage_type, P.armor_flag, 0, turn(P.dir, 180), P.armour_penetration)
+		damage = take_damage(
+			P.damage,
+			P.damage_type,
+			P.armor_flag, FALSE,
+			REVERSE_DIR(P.dir),
+			P.armour_penetration
+		)
 	if(P.suppressed != SUPPRESSED_VERY)
-		visible_message(span_danger("[src] is hit by \a [P][damage ? "" : ", without leaving a mark"]!"), null, null, COMBAT_MESSAGE_RANGE)
+		visible_message(
+			span_danger("[src] is hit by \a [P][damage ? "" : ", without leaving a mark"]!"),
+			vision_distance = COMBAT_MESSAGE_RANGE,
+		)
 
 /obj/attack_hulk(mob/living/carbon/human/user, does_attack_animation = 0)
 	if(user.combat_mode)
@@ -56,6 +67,7 @@
 		playsound(src.loc, 'sound/weapons/slash.ogg', 100, 1)
 
 /obj/attack_animal(mob/living/simple_animal/M)
+	. = ..()
 	if(!M.melee_damage && !M.obj_damage)
 		M.emote("custom", message = "[M.friendly_verb_continuous] [src].")
 		return FALSE

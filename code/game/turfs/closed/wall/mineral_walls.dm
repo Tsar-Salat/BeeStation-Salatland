@@ -375,7 +375,7 @@
 
 /turf/closed/wall/mineral/plastitanium/explosive/ex_act(severity)
 	try_detonate()
-	..()
+	return ..()
 
 /turf/closed/wall/mineral/plastitanium/explosive/dismantle_wall()
 	try_detonate()

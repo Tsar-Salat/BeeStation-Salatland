@@ -219,8 +219,8 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/camera)
 
 /obj/machinery/camera/ex_act(severity, target)
 	if(invuln)
-		return
-	..()
+		return FALSE
+	return ..()
 
 /obj/machinery/camera/proc/setViewRange(num = 7)
 	src.view_range = num

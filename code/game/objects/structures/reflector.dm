@@ -247,9 +247,8 @@
 
 /obj/structure/reflector/ex_act()
 	if(admin)
-		return
-	else
-		return ..()
+		return FALSE
+	return ..()
 
 /obj/structure/reflector/dir_map_to_angle(dir)
 	return dir2angle(dir)

@@ -105,8 +105,6 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 	var/turf/old_below = below
 	var/old_zdepth = z_depth
 
-	var/old_exl = explosion_level
-	var/old_exi = explosion_id
 	var/old_bp = blueprint_data
 	blueprint_data = null
 
@@ -156,9 +154,6 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 		new_turf.baseturfs = baseturfs_string_list(new_baseturfs, new_turf)
 	else
 		new_turf.baseturfs = baseturfs_string_list(old_baseturfs, new_turf) //Just to be safe
-
-	new_turf.explosion_id = old_exi
-	new_turf.explosion_level = old_exl
 
 	if(!(flags & CHANGETURF_DEFER_CHANGE))
 		new_turf.AfterChange(flags, old_type)

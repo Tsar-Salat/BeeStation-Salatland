@@ -150,7 +150,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/decal/cleanable/blood/gibs)
 	return FALSE //Never fail to place us
 
 /obj/effect/decal/cleanable/blood/gibs/ex_act(severity, target)
-	return
+	return FALSE
 
 /obj/effect/decal/cleanable/blood/gibs/on_entered(datum/source, atom/movable/L)
 	if(isliving(L) && has_gravity(loc))

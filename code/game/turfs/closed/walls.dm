@@ -81,7 +81,7 @@
 	if (additional_damage > 0)
 		take_damage(additional_damage, BRUTE, damage_flag, FALSE)
 
-/turf/closed/wall/proc/dismantle_wall(devastated=0, explode=0)
+/turf/closed/wall/proc/dismantle_wall(devastated = FALSE, explode = FALSE)
 	if(devastated)
 		devastate_wall()
 	else

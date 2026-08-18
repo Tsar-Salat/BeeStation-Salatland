@@ -1,5 +1,6 @@
 /obj/structure/closet/secure_closet/freezer
 	icon_state = "freezer"
+	flags_1 = PREVENT_CONTENTS_EXPLOSION_1
 	var/jones = FALSE
 	door_anim_squish = 0.22
 	door_anim_angle = 123
@@ -27,10 +28,11 @@
 		recursive_organ_check(src)
 
 /obj/structure/closet/secure_closet/freezer/ex_act()
-	if(!jones)
-		jones = TRUE
-	else
-		..()
+	if(jones)
+		return ..()
+	jones = TRUE
+	flags_1 &= ~PREVENT_CONTENTS_EXPLOSION_1
+	return FALSE
 
 /obj/structure/closet/secure_closet/freezer/kitchen
 	name = "kitchen cabinet"

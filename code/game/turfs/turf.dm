@@ -60,9 +60,7 @@ CREATION_TEST_IGNORE_SELF(/turf)
 
 	/// For the station blueprints, images of objects eg: pipes
 	var/list/image/blueprint_data
-
-	var/explosion_level = 0	//for preventing explosion dodging
-	var/explosion_id = 0
+	
 	var/list/explosion_throw_details
 
 	var/requires_activation	//add to air processing after initialize?

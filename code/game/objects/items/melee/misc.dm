@@ -226,18 +226,24 @@
 	balanced = 0
 
 /obj/item/melee/supermatter_sword/ex_act(severity, target)
-	visible_message(span_danger("The blast wave smacks into [src] and rapidly flashes to ash."),\
-	span_italics("You hear a loud crack as you are washed with a wave of heat."))
+	visible_message(
+		span_danger("The blast wave smacks into [src] and rapidly flashes to ash."),
+		span_hear("You hear a loud crack as you are washed with a wave of heat.")
+	)
 	consume_everything()
 
 /obj/item/melee/supermatter_sword/acid_act()
-	visible_message(span_danger("The acid smacks into [src] and rapidly flashes to ash."),\
-	span_italics("You hear a loud crack as you are washed with a wave of heat."))
+	visible_message(
+		span_danger("The acid smacks into [src] and rapidly flashes to ash."),
+		span_hear("You hear a loud crack as you are washed with a wave of heat.")
+	)
 	consume_everything()
 
 /obj/item/melee/supermatter_sword/bullet_act(obj/projectile/P)
-	visible_message(span_danger("[P] smacks into [src] and rapidly flashes to ash."),\
-	span_italics("You hear a loud crack as you are washed with a wave of heat."))
+	visible_message(
+		span_danger("[P] smacks into [src] and rapidly flashes to ash."),
+		span_hear("You hear a loud crack as you are washed with a wave of heat.")
+	)
 	consume_everything(P)
 	return BULLET_ACT_HIT
 

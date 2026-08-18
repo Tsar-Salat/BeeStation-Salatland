@@ -768,7 +768,6 @@ SUBSYSTEM_DEF(explosions)
 		lowturf = list()
 		for(var/thing in low_turf)
 			var/turf/turf_thing = thing
-			turf_thing.explosion_level = max(turf_thing.explosion_level, EXPLODE_LIGHT)
 			EX_ACT(turf_thing, EXPLODE_LIGHT)
 			lowturf -= turf_thing
 		cost_lowturf = MC_AVERAGE(cost_lowturf, TICK_DELTA_TO_MS(TICK_USAGE_REAL - timer))
@@ -778,7 +777,6 @@ SUBSYSTEM_DEF(explosions)
 		medturf = list()
 		for(var/thing in med_turf)
 			var/turf/turf_thing = thing
-			turf_thing.explosion_level = max(turf_thing.explosion_level, EXPLODE_HEAVY)
 			EX_ACT(turf_thing, EXPLODE_HEAVY)
 			medturf -= turf_thing
 		cost_medturf = MC_AVERAGE(cost_medturf, TICK_DELTA_TO_MS(TICK_USAGE_REAL - timer))
@@ -788,7 +786,6 @@ SUBSYSTEM_DEF(explosions)
 		highturf = list()
 		for(var/thing in high_turf)
 			var/turf/turf_thing = thing
-			turf_thing.explosion_level = max(turf_thing.explosion_level, EXPLODE_DEVASTATE)
 			EX_ACT(turf_thing, EXPLODE_DEVASTATE)
 			highturf -= turf_thing
 		cost_highturf = MC_AVERAGE(cost_highturf, TICK_DELTA_TO_MS(TICK_USAGE_REAL - timer))
