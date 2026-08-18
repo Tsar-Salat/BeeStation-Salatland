@@ -34,6 +34,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/blob/special/core)
 		overmind.blobstrain.on_gain()
 		update_icon()
 	AddComponent(/datum/component/stationloving, FALSE, TRUE)
+	AddElement(/datum/element/blocks_explosives)
 	. = ..()
 
 /obj/structure/blob/special/core/scannerreport()

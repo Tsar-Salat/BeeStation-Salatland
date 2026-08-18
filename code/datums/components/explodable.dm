@@ -142,7 +142,7 @@
 	SIGNAL_HANDLER
 
 	var/atom/bomb = parent
-	explosion(origin = bomb, devastation_range = devastation_range, heavy_impact_range = heavy_impact_range, light_impact_range = light_impact_range, flame_range = flame_range, flash_range = flash_range, uncapped = uncapped) //epic explosion time
+	explosion(origin = bomb, devastation_range = devastation_range, heavy_impact_range = heavy_impact_range, light_impact_range = light_impact_range, flame_range = flame_range, flash_range = flash_range, ignorecap = uncapped) //epic explosion time
 
 	switch(delete_after)
 		if(EXPLODABLE_DELETE_SELF)

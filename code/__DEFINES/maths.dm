@@ -228,6 +228,10 @@
 
 #define GET_TRUE_DIST(a, b) ((a == null || b == null) ? -1 : max(abs(a.x -b.x), abs(a.y-b.y), abs(a.z-b.z)))
 
+//We used to use linear regression to approximate the answer, but Mloc realized this was actually faster.
+//And lo and behold, it is, and it's more accurate to boot.
+#define CHEAP_HYPOTENUSE(Ax, Ay, Bx, By) (sqrt(abs(Ax - Bx) ** 2 + abs(Ay - By) ** 2)) //A squared + B squared = C squared
+
 /// Returns the distance between a and b fully ignoring multiz (normal get_dist counts a z move as 1 extra distance)
 #define GET_CARDINAL_DIST(a, b) ((a == null || b == null) ? -1 : max(abs(a.x -b.x), abs(a.y-b.y)))
 

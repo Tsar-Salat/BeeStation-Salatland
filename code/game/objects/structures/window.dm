@@ -70,6 +70,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/window/corner/unanchored/spawner, 0)
 CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 
 /obj/structure/window/Initialize(mapload, direct)
+	AddElement(/datum/element/blocks_explosives)
 	. = ..()
 	if(direct)
 		setDir(direct)
@@ -85,9 +86,9 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 	else
 		AddElement(/datum/element/simple_rotation, ROTATION_NEEDS_ROOM, post_rotation_proccall = PROC_REF(post_rotation))
 
-	//windows only block while reinforced and fulltile, so we'll use the proc
-	real_explosion_block = explosion_block
-	explosion_block = EXPLOSION_BLOCK_PROC
+	//windows only block while reinforced and fulltile
+	if(!reinf || !fulltile)
+		set_explosion_block(0)
 
 	AddElement(/datum/element/atmos_sensitive)
 
@@ -401,9 +402,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/window)
 		return 0
 
 	return 1
-
-/obj/structure/window/GetExplosionBlock()
-	return reinf && fulltile ? real_explosion_block : 0
 
 MAPPING_DIRECTIONAL_HELPERS(/obj/structure/window/spawner, 0)
 

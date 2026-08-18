@@ -6,11 +6,6 @@
 		return null
 	return format_text ? format_text(A.name) : A.name
 
-//We used to use linear regression to approximate the answer, but Mloc realized this was actually faster.
-//And lo and behold, it is, and it's more accurate to boot.
-/proc/cheap_hypotenuse(Ax,Ay,Bx,By)
-	return sqrt(abs(Ax - Bx)**2 + abs(Ay - By)**2) //A squared + B squared = C squared
-
 /proc/circlerange(center=usr,radius=3)
 
 	var/turf/centerturf = get_turf(center)

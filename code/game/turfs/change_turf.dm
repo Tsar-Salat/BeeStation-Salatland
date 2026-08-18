@@ -96,6 +96,9 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 	var/old_dynamic_lumcount = dynamic_lumcount
 	var/old_rcd_memory = rcd_memory
 	var/old_opacity = opacity
+	var/old_explosion_throw_details = explosion_throw_details
+	// We get just the bits of explosive_resistance that aren't the turf
+	var/old_explosive_resistance = explosive_resistance - get_explosive_block()
 
 	// Dynamic Z-Linking
 	var/turf/old_above = above
@@ -162,6 +165,8 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 
 	new_turf.blueprint_data = old_bp
 	new_turf.rcd_memory = old_rcd_memory
+	new_turf.explosion_throw_details = old_explosion_throw_details
+	new_turf.explosive_resistance += old_explosive_resistance
 
 	lighting_corner_NE = old_lighting_corner_NE
 	lighting_corner_SE = old_lighting_corner_SE

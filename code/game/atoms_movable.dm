@@ -83,6 +83,11 @@
 	/// Whether this atom should have its dir automatically changed when it moves. Setting this to FALSE allows for things such as directional windows to retain dir on moving without snowflake code all of the place.
 	var/set_dir_on_move = TRUE
 
+	/// Value used to increment ex_act() if reactionary_explosions is on
+	/// How much we as a source block explosions by
+	/// Will not automatically apply to the turf below you, you need to apply /datum/element/block_explosives in conjunction with this
+	var/explosion_block = 0
+
 /mutable_appearance/emissive_blocker
 
 /mutable_appearance/emissive_blocker/New()
@@ -93,6 +98,11 @@
 
 /atom/movable/Initialize(mapload, ...)
 	. = ..()
+
+#ifdef UNIT_TESTS
+	if(explosion_block && !HAS_TRAIT(src, TRAIT_BLOCKING_EXPLOSIVES))
+		stack_trace("[type] blocks explosives, but does not have the managing element applied")
+#endif
 
 #if EMISSIVE_BLOCK_GENERIC != 0
 	#error EMISSIVE_BLOCK_GENERIC is expected to be 0 to facilitate a weird optimization hack where we rely on it being the most common.
@@ -857,6 +867,13 @@
 	AddComponent(/datum/component/drift, direction, instant)
 
 	return TRUE
+
+/atom/movable/set_explosion_block(explosion_block)
+	var/old_block = src.explosion_block
+	explosive_resistance -= old_block
+	src.explosion_block = explosion_block
+	explosive_resistance += explosion_block
+	SEND_SIGNAL(src, COMSIG_MOVABLE_EXPLOSION_BLOCK_CHANGED, old_block, explosion_block)
 
 /atom/movable/proc/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
 	set waitfor = FALSE

@@ -11,7 +11,7 @@
 	canSmoothWith = list(SMOOTH_GROUP_WALLS)
 		//note consider "canSmoothWith = list(SMOOTH_GROUP_WALLS, SMOOTH_GROUP_WINDOW_FULLTILE, SMOOTH_GROUP_AIRLOCK)" if the artstyle permits it!
 	rcd_memory = RCD_MEMORY_WALL
-	explosion_block = 1
+	explosive_resistance = 1
 
 	thermal_conductivity = WALL_HEAT_TRANSFER_COEFFICIENT
 	heat_capacity = 62500 //a little over 5 cm thick , 62500 for 1 m by 2.5 m by 0.25 m iron wall. also indicates the temperature at wich the wall will melt (currently only able to melt with H/E pipes)
@@ -206,7 +206,7 @@
 	return null
 
 /turf/closed/wall/acid_act(acidpwr, acid_volume)
-	if(explosion_block >= 2)
+	if(get_explosive_block() >= 2)
 		acidpwr = min(acidpwr, 50) //we reduce the power so strong walls never get melted.
 	. = ..()
 

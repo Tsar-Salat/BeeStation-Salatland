@@ -3,7 +3,7 @@
 /turf/closed/indestructible
 	name = "wall"
 	icon = 'icons/turf/walls.dmi'
-	explosion_block = 50
+	explosive_resistance = 50
 	resistance_flags = INDESTRUCTIBLE
 
 /turf/closed/indestructible/TerraformTurf(path, new_baseturf, flags, defer_change = FALSE, ignore_air = FALSE)
@@ -135,7 +135,7 @@ INITIALIZE_IMMEDIATE(/turf/closed/indestructible/splashscreen)
 	name = "necropolis wall"
 	desc = "A seemingly impenetrable wall."
 	icon_state = "necro"
-	explosion_block = 50
+	explosive_resistance = 50
 	baseturfs = /turf/closed/indestructible/necropolis
 
 /turf/closed/indestructible/necropolis/get_smooth_underlay_icon(mutable_appearance/underlay_appearance, turf/asking_turf, adjacency_dir)
@@ -219,7 +219,7 @@ INITIALIZE_IMMEDIATE(/turf/closed/indestructible/splashscreen)
 	smoothing_flags = SMOOTH_BITMASK
 	smoothing_groups = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_BOSS_WALLS)
 	canSmoothWith = list(SMOOTH_GROUP_BOSS_WALLS)
-	explosion_block = 50
+	explosive_resistance = 50
 	baseturfs = /turf/closed/indestructible/riveted/boss
 
 /turf/closed/indestructible/riveted/boss/see_through

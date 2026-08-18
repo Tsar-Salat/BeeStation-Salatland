@@ -202,7 +202,7 @@ GLOBAL_VAR_INIT(hhmysteryRoomNumber, 1337)
 	name = "hotel wall"
 	desc = "A wall designed to protect the security of the hotel's guests."
 	icon_state = "hotelwall"
-	explosion_block = INFINITY
+	explosive_resistance = INFINITY
 	smoothing_groups = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_HOTEL_WALLS)
 	canSmoothWith = list(SMOOTH_GROUP_HOTEL_WALLS)
 
@@ -223,7 +223,7 @@ GLOBAL_VAR_INIT(hhmysteryRoomNumber, 1337)
 	icon_state = "bluespace"
 	baseturfs = /turf/open/space/bluespace
 	turf_flags = NOJAUNT
-	explosion_block = INFINITY
+	explosive_resistance = INFINITY
 	var/obj/item/hilbertshotel/parentSphere
 
 /turf/open/space/bluespace/Entered(atom/movable/arrived, atom/old_loc, list/atom/old_locs)
@@ -234,7 +234,7 @@ GLOBAL_VAR_INIT(hhmysteryRoomNumber, 1337)
 /turf/closed/indestructible/hoteldoor
 	name = "Hotel Door"
 	icon_state = "hoteldoor"
-	explosion_block = INFINITY
+	explosive_resistance = INFINITY
 	var/obj/item/hilbertshotel/parentSphere
 	var/tugged_on = 0
 
