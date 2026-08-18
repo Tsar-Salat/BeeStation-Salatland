@@ -64,6 +64,8 @@
 	cartridge_wording = "rocket"
 	empty_indicator = TRUE
 	tac_reloads = FALSE
+	/// Do we shit flames behind us when we fire?
+	var/backblast = TRUE
 
 /obj/item/gun/ballistic/rocketlauncher/Initialize(mapload)
 	. = ..()

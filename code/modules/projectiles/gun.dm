@@ -479,6 +479,9 @@
 		shoot_with_empty_chamber(user)
 		firing_burst = FALSE
 		return FALSE
+
+	SEND_SIGNAL(src, COMSIG_GUN_FIRED, user, target, params, zone_override)
+
 	var/taken_damage = chambered.gun_damage
 	var/result = before_firing(target, user, aimed)
 	if (result & GUN_HIT_SELF)

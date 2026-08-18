@@ -5,7 +5,7 @@
  */
 /datum/element/backblast
 	element_flags = ELEMENT_BESPOKE
-	argument_hash_start_idx = 2
+	id_arg_index = 2
 
 	/// Devasatation range of the explosion
 	var/dev_range
@@ -38,6 +38,8 @@
 
 /// For firing an actual backblast pellet
 /datum/element/backblast/proc/pew(obj/item/gun/weapon, mob/living/user, atom/target)
+	SIGNAL_HANDLER
+
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
 		return
 

@@ -689,3 +689,5 @@ CREATION_TEST_IGNORE_SELF(/turf)
 	explosive_resistance -= get_explosive_block()
 	inherent_explosive_resistance = explosion_block
 	explosive_resistance += get_explosive_block()
+
+

@@ -175,7 +175,7 @@
 
 
 	//attempt to dismember bodyparts
-	if(severity <= 2)
+	if(severity >= 2)
 		var/max_limb_loss = round(4/severity) //so you don't lose four limbs at severity 3.
 		for(var/obj/item/bodypart/BP as anything in bodyparts)
 			if(prob(50/severity) && BP.body_zone != BODY_ZONE_CHEST)

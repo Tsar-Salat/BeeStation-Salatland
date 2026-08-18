@@ -34,11 +34,13 @@
 /obj/item/latexballon/ex_act(severity, target)
 	burst()
 	switch(severity)
-		if (1)
+		if (EXPLODE_DEVASTATE)
 			qdel(src)
-		if (2)
+		if (EXPLODE_HEAVY)
 			if (prob(50))
 				qdel(src)
+
+	return TRUE
 
 /obj/item/latexballon/bullet_act(obj/projectile/P)
 	if(!P.nodamage)

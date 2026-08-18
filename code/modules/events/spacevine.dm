@@ -108,11 +108,12 @@
 	severity = 2
 
 /datum/spacevine_mutation/explosive/on_explosion(explosion_severity, target, obj/structure/spacevine/holder)
-	if(explosion_severity < 3)
+	if(explosion_severity > EXPLODE_HEAVY)
 		qdel(holder)
 	else
-		. = 1
-		QDEL_IN(holder, 5)
+		QDEL_IN(holder, 0.5 SECONDS)
+		return TRUE
+	return FALSE
 
 /datum/spacevine_mutation/explosive/on_death(obj/structure/spacevine/holder, mob/hitter, obj/item/I)
 	explosion(holder, light_impact_range = severity, adminlog = FALSE)
@@ -577,6 +578,8 @@
 		i += SM.on_explosion(severity, target, src)
 	if(!i && prob(34 * severity))
 		qdel(src)
+
+	return TRUE
 
 /obj/structure/spacevine/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
 	return exposed_temperature > FIRE_MINIMUM_TEMPERATURE_TO_SPREAD //if you're cold you're safe

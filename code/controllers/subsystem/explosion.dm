@@ -2,7 +2,7 @@
 #define EXPLOSION_BLOCK_LIGHT 2.5
 #define EXPLOSION_BLOCK_HEAVY 1.5
 #define EXPLOSION_BLOCK_DEV 1
-/// Max amount of explosions that we accept in a row from the same turf
+/// Max amount of explosions we will run in a single tick before queueing the rest
 #define SMALL_EXPLOSION_TICK_LIMIT 20
 
 GLOBAL_LIST_EMPTY(explosions)
@@ -741,18 +741,21 @@ SUBSYSTEM_DEF(explosions)
 	return outlist
 
 /datum/controller/subsystem/explosions/fire(resumed = 0)
-	if (!is_exploding())
-		return
-
+	//queue before is_exploding
 	explosion_count = 0
 	if (queued_index > length(queued))
 		queued.Cut()
 		queued_index = 1
 
 	// Run the next explosions, until the tick limit
-	while (queued_index <= length(queued) && explosion_count < SMALL_EXPLOSION_TICK_LIMIT && MC_TICK_CHECK)
+	while (queued_index <= length(queued) && explosion_count < SMALL_EXPLOSION_TICK_LIMIT)
 		var/list/current = queued[queued_index++]
 		explosion(arglist(current))
+		if (TICK_CHECK)
+			break
+
+	if (!is_exploding())
+		return
 
 	var/timer
 	Master.current_ticklimit = TICK_LIMIT_RUNNING //force using the entire tick if we need it.

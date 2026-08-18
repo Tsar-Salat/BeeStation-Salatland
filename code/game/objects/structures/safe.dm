@@ -4,6 +4,9 @@ SAFES
 FLOOR SAFES
 */
 
+/// How many explosions a safe absorbs before its lock is broken open.
+#define BROKEN_THRESHOLD 3
+
 //SAFES
 /obj/structure/safe
 	name = "safe"
@@ -176,7 +179,7 @@ FLOOR SAFES
 	return
 
 /obj/structure/safe/ex_act(severity, target)
-	if(((severity == 2 && target == src) || severity == 1) && explosion_count < 3)
+	if(((severity == EXPLODE_HEAVY && target == src) || severity == EXPLODE_DEVASTATE) && explosion_count < BROKEN_THRESHOLD)
 		explosion_count++
 		switch(explosion_count)
 			if(1)
@@ -185,6 +188,10 @@ FLOOR SAFES
 				desc = initial(desc) + "\nIt's pretty heavily damaged."
 			if(3)
 				desc = initial(desc) + "\nThe lock seems to be broken."
+
+		return TRUE
+
+	return FALSE
 
 
 //FLOOR SAFES
@@ -197,3 +204,5 @@ FLOOR SAFES
 
 /obj/structure/safe/floor/Initialize(mapload)
 	. = ..()
+
+#undef BROKEN_THRESHOLD

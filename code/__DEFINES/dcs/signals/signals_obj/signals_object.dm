@@ -33,3 +33,6 @@
 
 /// Called in /obj/structure/closet/PopulateContents()
 #define COMSIG_CLOSET_CONTENTS_INITIALIZED "closet_initialize_contents"
+
+///called in /obj/item/gun/process_fire (user, target, params, zone_override)
+#define COMSIG_GUN_FIRED "gun_fired"
