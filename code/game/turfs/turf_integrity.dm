@@ -109,18 +109,17 @@
 /turf/contents_explosion(severity, target)
 	for(var/thing in contents)
 		var/atom/atom_thing = thing
-		if(!QDELETED(atom_thing))
-			if(ismovable(atom_thing))
-				var/atom/movable/movable_thing = atom_thing
-				if(!movable_thing.ex_check(explosion_id))
-					continue
-				switch(severity)
-					if(EXPLODE_DEVASTATE)
-						SSexplosions.high_mov_atom += movable_thing
-					if(EXPLODE_HEAVY)
-						SSexplosions.med_mov_atom += movable_thing
-					if(EXPLODE_LIGHT)
-						SSexplosions.low_mov_atom += movable_thing
+		if(QDELETED(atom_thing))
+			continue
+		if(ismovable(atom_thing))
+			var/atom/movable/movable_thing = atom_thing
+			switch(severity)
+				if(EXPLODE_DEVASTATE)
+					SSexplosions.high_mov_atom += movable_thing
+				if(EXPLODE_HEAVY)
+					SSexplosions.med_mov_atom += movable_thing
+				if(EXPLODE_LIGHT)
+					SSexplosions.low_mov_atom += movable_thing
 
 //====================================
 // Bullets
