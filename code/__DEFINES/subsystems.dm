@@ -241,8 +241,8 @@
 #define SSAIR_REBUILD_QUEUE 2
 
 // Explosion Subsystem subtasks
-#define SSEXPLOSIONS_MOVABLES 1
-#define SSEXPLOSIONS_TURFS 2
+#define SSEXPLOSIONS_TURFS 1
+#define SSEXPLOSIONS_MOVABLES 2
 #define SSEXPLOSIONS_THROWS 3
 
 // Subsystem delta times or tickrates, in seconds. I.e, how many seconds in between each process() call for objects being processed by that subsystem.
