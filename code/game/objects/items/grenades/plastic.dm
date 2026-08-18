@@ -11,14 +11,23 @@
 	display_timer = 0
 	w_class = WEIGHT_CLASS_SMALL
 	item_flags = ISWEAPON
+	gender = PLURAL
+	/// What the charge is stuck to
 	var/atom/target = null
+	/// C4 overlay to put on target
 	var/mutable_appearance/plastic_overlay
 	var/obj/item/assembly_holder/nadeassembly = null
 	var/assemblyattacher
+	/// Do we do a directional explosion when target is a a dense atom?
 	var/directional = FALSE
+	/// When doing a directional explosion, what arc does the explosion cover
+	var/directional_arc = 120
+	/// For directional charges, which cardinal direction is the charge facing?
 	var/aim_dir = NORTH
+	/// List of explosion radii (DEV, HEAVY, LIGHT)
 	var/boom_sizes = list(0, 0, 3)
 	var/can_attach_mob = FALSE
+	/// Do we apply the full force of a heavy ex_act() to mob targets
 	var/full_damage_on_mobs = FALSE
 
 /obj/item/grenade/plastic/Initialize(mapload)
@@ -62,20 +71,20 @@
 	if(!.)
 		return
 	var/turf/location
-	var/density_check = FALSE
+	var/target_density
 	if(target)
 		if(!QDELETED(target))
 			location = get_turf(target)
-			density_check = target.density //since turfs getting exploded makes this a bit fucky wucky we need to assert whether we should go directional before that part
+			target_density = target.density // We're about to blow target up, so need to save this value for later
 			target.cut_overlay(plastic_overlay)
 			if(!ismob(target) || full_damage_on_mobs)
 				EX_ACT(target, EXPLODE_HEAVY, target)
 	else
 		location = get_turf(src)
 	if(location)
-		if(directional && target && density_check)
-			var/turf/T = get_step(location, aim_dir)
-			explosion(get_step(T, aim_dir), devastation_range = boom_sizes[1], heavy_impact_range = boom_sizes[2], light_impact_range = boom_sizes[3], explosion_cause = src)
+		if(directional && target_density)
+			var/angle = dir2angle(aim_dir)
+			explosion(location, devastation_range = boom_sizes[1], heavy_impact_range = boom_sizes[2], light_impact_range = boom_sizes[3], explosion_cause = src, explosion_direction = angle, explosion_arc = directional_arc)
 		else
 			explosion(location, devastation_range = boom_sizes[1], heavy_impact_range = boom_sizes[2], light_impact_range = boom_sizes[3], explosion_cause = src)
 	if(isliving(target))

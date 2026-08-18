@@ -58,6 +58,12 @@
 #define EXARG_KEY_CAP_MODIFIER STRINGIFY(cap_modifier)
 /// Whether or not the explosion should propagate to adjacent z-levels.
 #define EXARG_KEY_EXPLODE_Z STRINGIFY(explode_z)
+/// Whether or not to leave the epicenter turf unaffected
+#define EXARG_KEY_PROTECT_EPICENTER STRINGIFY(protect_epicenter)
+/// For directional explosions, the angle the explosion is pointing at.
+#define EXARG_KEY_EXPLOSION_DIRECTION STRINGIFY(explosion_direction)
+/// For directional explosions, the angle covered by the explosion, centred on EXPLOSION_DIRECTION.
+#define EXARG_KEY_EXPLOSION_ARC STRINGIFY(explosion_arc)
 
 // Explodable component deletion values
 /// Makes the explodable component queue to reset its exploding status when it detonates.
