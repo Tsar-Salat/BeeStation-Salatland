@@ -228,7 +228,7 @@
 		if(SLIME_ACTIVATE_MAJOR)
 			var/turf/open/T = get_turf(user)
 			if(istype(T))
-				T.atmos_spawn_air("plasma=20")
+				T.atmos_spawn_air("[GAS_PLASMA]=20")
 			to_chat(user, span_warning("You activate [src], and a cloud of plasma bursts out of your skin!"))
 			return 90 SECONDS
 
@@ -278,7 +278,7 @@
 				return 60 SECONDS
 			else
 				var/obj/effect/dummy/lighting_obj/moblight/glow = new(user) //copied from glowy mutation, copied from luminescents
-				glow.set_light(2.5, 2.5, user.dna.features["mcolor"]) //Weaker than regular luminescents
+				glow.set_light(2.5, 2.5, user.dna.features[FEATURE_MUTANT_COLOR]) //Weaker than regular luminescents
 				QDEL_IN(glow, 600)
 				return 60 SECONDS
 
@@ -361,7 +361,7 @@
 		if(SLIME_ACTIVATE_MAJOR)
 			var/turf/open/T = get_turf(user)
 			if(istype(T))
-				T.atmos_spawn_air("nitrogen=40;TEMP=2.7")
+				T.atmos_spawn_air("[GAS_N2]=40;TEMP=2.7")
 			to_chat(user, span_warning("You activate [src], and icy air bursts out of your skin!"))
 			return 90 SECONDS
 
@@ -678,7 +678,7 @@
 /obj/item/slime_extract/rainbow/activate(mob/living/carbon/human/user, datum/species/species, activation_type)
 	switch(activation_type)
 		if(SLIME_ACTIVATE_MINOR)
-			user.dna.features["mcolor"] = pick(COLOR_WHITE, "#7F7F7F", "#7FFF7F", "#7F7FFF", "#FF7F7F", "#7FFFFF", "#FF7FFF", "#FFFF7F")
+			user.dna.features[FEATURE_MUTANT_COLOR] = "#[pick("7F", "FF")][pick("7F", "FF")][pick("7F", "FF")]"
 			user.updateappearance(mutcolor_update = TRUE)
 			if(istype(species,/datum/species/oozeling/luminescent))
 				var/datum/species/oozeling/luminescent/lum_species = species
@@ -1283,4 +1283,5 @@
 		T.remove_atom_colour(WASHABLE_COLOUR_PRIORITY)
 		T.add_atom_colour("#2956B2", FIXED_COLOUR_PRIORITY)
 	A.area_flags |= XENOBIOLOGY_COMPATIBLE
+	A.area_flags &= ~XENOBIOLOGY_CONSOLE_DISALLOWED
 	qdel(src)

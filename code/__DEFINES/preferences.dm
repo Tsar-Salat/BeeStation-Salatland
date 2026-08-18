@@ -22,7 +22,6 @@
 #define PARALLAX_DELAY_LOW     2
 
 #define SEC_DEPT_NONE "None"
-#define SEC_DEPT_RANDOM "Random"
 #define SEC_DEPT_ENGINEERING "Engineering"
 #define SEC_DEPT_MEDICAL "Medical"
 #define SEC_DEPT_SCIENCE "Science"
@@ -138,10 +137,6 @@ GLOBAL_LIST_INIT(helmet_styles, list(
 #define PREFERENCE_CATEGORY_SUPPLEMENTAL_FEATURES "supplemental_features"
 
 
-/// The key used for sprite accessories that should never actually be applied to the player.
-#define SPRITE_ACCESSORY_NONE "None"
-
-
 //randomized elements
 #define RANDOM_ANTAG_ONLY 1
 #define RANDOM_DISABLED 2
@@ -216,55 +211,40 @@ GLOBAL_PROTECT(undatumized_preference_tags_character)
 /// The default priority level
 #define PREFERENCE_PRIORITY_DEFAULT 1
 
-/// The priority at which the hotkey preference is set, required for TGUI say special macros
-#define PREFERENCE_PRIORITY_HOTKEYS 2
-
 /// The priority at which species runs, needed for external organs to apply properly.
 #define PREFERENCE_PRIORITY_SPECIES 2
 
+/**
+ * Some preferences get applied directly to bodyparts (anything head_flags related right now).
+ * These must apply after species, as species gaining might replace the bodyparts of the human.
+ */
+#define PREFERENCE_PRIORITY_BODYPARTS 3
+
 /// The priority at which gender is determined, needed for proper randomization.
-#define PREFERENCE_PRIORITY_GENDER 3
+#define PREFERENCE_PRIORITY_GENDER 4
 
-/// The priority at which body model is decided, applied after gender so we can
-/// make sure they're non-binary.
-#define PREFERENCE_PRIORITY_BODY_MODEL 4
+/// The priority at which body type is decided, applied after gender so we can
+/// support the "use gender" option.
+#define PREFERENCE_PRIORITY_BODY_TYPE 5
 
-/// The priority at which eye color is applied, needed so IPCs get the right screen color.
-#define PREFERENCE_PRIORITY_EYE_COLOR 4
-
-/// The priority at which names are decided, needed for proper randomization.
-#define PREFERENCE_PRIORITY_NAMES 4
+/// Used for preferences that rely on body setup being finalized.
+#define PREFERENCE_PRIORITY_LATE_BODY_TYPE 6
 
 /// The priority at which hair color is applied, needed so IPCs get the right antenna color.
 /// Dependant on gender to create an informed value
-#define PREFERENCE_PRIORITY_HAIR_COLOR 4
-
-/// Dependant on gender to create an informed value
-#define PREFERENCE_PRIORITY_HAIR_STYLE 4
-
-/// Dependant on gender to create an informed value
-#define PREFERENCE_PRIORITY_FACIAL_HAIR 4
-
-/// Dependant on gender to create an informed value
-#define PREFERENCE_PRIORITY_SOCKS 4
-
-/// Dependant on gender to create an informed value
-#define PREFERENCE_PRIORITY_UNDERSHIRT 4
-
-/// Dependant on gender to create an informed value
-#define PREFERENCE_PRIORITY_UNDERWEAR 4
-
-/// Dependant on gender to create an informed value
-#define PREFERENCE_PRIORITY_JUMPSUIT 4
+#define PREFERENCE_PRIORITY_HAIR_COLOR 7
 
 /// Dependant on hair colour to create an informed value
-#define PREFERENCE_PRIORITY_FACIAL_COLOR 5
+#define PREFERENCE_PRIORITY_FACIAL_COLOR 8
 
 /// Dependant on hair colour and gender to create an informed value
-#define PREFERENCE_PRIORITY_GRADIENT_COLOR 5
+#define PREFERENCE_PRIORITY_GRADIENT_COLOR 9
+
+/// The priority at which names are decided, needed for proper randomization.
+#define PREFERENCE_PRIORITY_NAMES 10
 
 /// The maximum preference priority, keep this updated, but don't use it for `priority`.
-#define MAX_PREFERENCE_PRIORITY PREFERENCE_PRIORITY_GRADIENT_COLOR
+#define MAX_PREFERENCE_PRIORITY PREFERENCE_PRIORITY_NAMES
 
 /// For choiced preferences, this key will be used to set display names in constant data.
 #define CHOICED_PREFERENCE_DISPLAY_NAMES "display_names"
@@ -272,3 +252,6 @@ GLOBAL_PROTECT(undatumized_preference_tags_character)
 /// For main feature preferences, this key refers to a feature considered supplemental.
 /// For instance, hair color being supplemental to hair.
 #define SUPPLEMENTAL_FEATURE_KEY "supplemental_feature"
+
+/// The key used for sprite accessories that should never actually be applied to the player.
+#define SPRITE_ACCESSORY_NONE "None"

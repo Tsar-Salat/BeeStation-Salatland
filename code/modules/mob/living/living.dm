@@ -484,7 +484,7 @@
 		incap_status |= INCAPABLE_RESTRAINTS
 	if(pulledby && pulledby.grab_state >= GRAB_AGGRESSIVE)
 		incap_status |= INCAPABLE_GRAB
-	if(IS_IN_STASIS(src))
+	if(HAS_TRAIT(src, TRAIT_STASIS))
 		incap_status |= INCAPABLE_STASIS
 
 	return incap_status
@@ -776,7 +776,7 @@
 		if(full_heal_flags & HEAL_ADMIN)
 			get_up(TRUE)
 		update_sight()
-		clear_alert("not_enough_oxy")
+		clear_alert(ALERT_NOT_ENOUGH_OXYGEN)
 		reload_fullscreen()
 		. = TRUE
 		if(excess_healing)
@@ -866,10 +866,7 @@
 
 	// These should be tracked by status effects
 	losebreath = 0
-	set_blindness(0)
 	set_disgust(0)
-	cure_nearsighted()
-	cure_blind()
 	cure_husk()
 
 	qdel(GetComponent(/datum/component/irradiated))
@@ -1263,8 +1260,11 @@
 	return TRUE
 
 /mob/living/proc/can_use_guns(obj/item/G)//actually used for more than guns!
+	if(G.trigger_guard == TRIGGER_GUARD_NONE)
+		to_chat(src, span_warning("You are unable to fire this!"))
+		return FALSE
 	if(G.trigger_guard != TRIGGER_GUARD_ALLOW_ALL && !ISADVANCEDTOOLUSER(src))
-		to_chat(src, "<span class='warning'>You don't have the dexterity to do this!</span>")
+		to_chat(src, span_warning("You try to fire [G], but can't use the trigger!"))
 		return FALSE
 	return TRUE
 
@@ -1312,7 +1312,7 @@
 		Robot.notify_ai(AI_NOTIFICATION_NEW_BORG)
 	else
 		for(var/obj/item/item in src)
-			if(!dropItemToGround(item))
+			if(!dropItemToGround(item) && !(item.item_flags & ABSTRACT))
 				qdel(item)
 				continue
 			item_contents += item
@@ -1420,8 +1420,7 @@
 
 			// Randomize everything but the species, which was already handled above.
 			new_human.randomize_human_appearance(~RANDOMIZE_SPECIES)
-			new_human.update_hair()
-			new_human.update_body() // is_creating = TRUE
+			new_human.update_body(is_creating = TRUE)
 			new_human.dna.update_dna_identity()
 			new_mob = new_human
 
@@ -1470,11 +1469,6 @@
 	// Well, no mmind, guess we should try to move a key over
 	else if(key)
 		new_mob.key = key
-
-/mob/living/can_block_magic(casted_magic_flags)
-	. = ..()
-	if(.)
-		return
 
 /mob/living/proc/unfry_mob() //Callback proc to tone down spam from multiple sizzling frying oil dipping.
 	REMOVE_TRAIT(src, TRAIT_OIL_FRIED, "cooking_oil_react")
@@ -2220,8 +2214,8 @@ GLOBAL_LIST_EMPTY(fire_appearances)
 	if(mind && mind.special_role && !(mind.datum_flags & DF_VAR_EDITED))
 		exp_list[mind.special_role] = minutes
 
-	if(mind.assigned_role in GLOB.exp_specialmap[EXP_TYPE_SPECIAL])
-		exp_list[mind.assigned_role] = minutes
+	if(mind.assigned_role.title in GLOB.exp_specialmap[EXP_TYPE_SPECIAL])
+		exp_list[mind.assigned_role.title] = minutes
 
 	return exp_list
 

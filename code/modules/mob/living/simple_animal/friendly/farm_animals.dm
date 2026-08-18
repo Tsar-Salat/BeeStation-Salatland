@@ -21,11 +21,12 @@
 	response_harm_continuous = "kicks"
 	response_harm_simple = "kick"
 	faction = list(FACTION_NEUTRAL)
-	mob_biotypes = MOB_ORGANIC | MOB_BEAST
+	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	attack_same = 1
 	attack_verb_continuous = "kicks"
 	attack_verb_simple = "kick"
 	attack_sound = 'sound/weapons/punch1.ogg'
+	attack_vis_effect = ATTACK_EFFECT_KICK
 	health = 40
 	maxHealth = 40
 	minbodytemp = 180
@@ -114,7 +115,7 @@
 	worn_slot_flags = ITEM_SLOT_HEAD
 	held_state = "chick"
 	gender = FEMALE
-	mob_biotypes = MOB_ORGANIC | MOB_BEAST
+	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	speak = list("Cherp.","Cherp?","Chirrup.","Cheep!")
 	speak_emote = list("cheeps")
 	speak_language = /datum/language/metalanguage
@@ -132,6 +133,7 @@
 	response_harm_simple = "kick"
 	attack_verb_continuous = "kicks"
 	attack_verb_simple = "kick"
+	attack_vis_effect = ATTACK_EFFECT_KICK
 	health = 3
 	maxHealth = 3
 	var/can_grow = TRUE
@@ -183,7 +185,7 @@
 	name = "\improper chicken"
 	desc = "Hopefully the eggs are good this season."
 	gender = FEMALE
-	mob_biotypes = MOB_ORGANIC | MOB_BEAST
+	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	icon_state = "chicken_brown"
 	icon_living = "chicken_brown"
 	icon_dead = "chicken_brown_dead"
@@ -204,6 +206,7 @@
 	response_harm_simple = "kick"
 	attack_verb_continuous = "kicks"
 	attack_verb_simple = "kick"
+	attack_vis_effect = ATTACK_EFFECT_KICK
 	health = 15
 	maxHealth = 15
 	can_be_held = TRUE

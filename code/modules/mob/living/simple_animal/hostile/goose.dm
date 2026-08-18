@@ -6,7 +6,7 @@
 	icon_state = "goose" // sprites by cogwerks from goonstation, used with permission
 	icon_living = "goose"
 	icon_dead = "goose_dead"
-	mob_biotypes = MOB_ORGANIC | MOB_BEAST
+	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	speak_chance = 0
 	turns_per_move = 5
 	butcher_results = list(/obj/item/food/meat/slab = 2)
@@ -25,6 +25,7 @@
 	attack_verb_continuous = "pecks"
 	attack_verb_simple = "peck"
 	attack_sound = "goose"
+	attack_vis_effect = ATTACK_EFFECT_BITE
 	speak_emote = list("honks")
 	faction = list(FACTION_NEUTRAL)
 	attack_same = TRUE

@@ -9,6 +9,7 @@
 	inhand_icon_state = null
 	armor_type = /datum/armor/utility_hardhat
 	flags_inv = NONE
+	hair_mask = HAIR_MASK_HIDE_ABOVE_45_DEG_MEDIUM
 	actions_types = list(/datum/action/item_action/toggle_helmet_light)
 	resistance_flags = FIRE_PROOF
 	clothing_flags = SNUG_FIT | STACKABLE_HELMET_EXEMPT
@@ -109,7 +110,7 @@
 	icon_state = "hardhat0_atmos"
 	inhand_icon_state = "hardhat0_atmos"
 	hat_type = "atmos"
-	clothing_flags = STOPSPRESSUREDAMAGE | THICKMATERIAL | BLOCK_GAS_SMOKE_EFFECT | SNUG_FIT | HEADINTERNALS | STACKABLE_HELMET_EXEMPT
+	clothing_flags = STOPSPRESSUREDAMAGE | THICKMATERIAL | BLOCK_GAS_SMOKE_EFFECT | SNUG_FIT  | HEADINTERNALS | STACKABLE_HELMET_EXEMPT
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR|HIDESNOUT
 	min_cold_protection_temperature = FIRE_HELM_MIN_TEMP_PROTECT
 	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
@@ -133,25 +134,20 @@
 	///Icon state of the welding visor.
 	var/visor_state = "weldvisor"
 
-/obj/item/clothing/head/utility/hardhat/welding/Initialize(mapload)
-	. = ..()
-	update_appearance()
-
-/obj/item/clothing/head/utility/hardhat/welding/AltClick(mob/user)
-	if(user.canUseTopic(src, BE_CLOSE))
-		toggle_welding_screen(user)
+/obj/item/clothing/head/utility/hardhat/welding/attack_self_secondary(mob/user, modifiers)
+	adjust_visor(user)
+	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
 /obj/item/clothing/head/utility/hardhat/welding/ui_action_click(mob/user, actiontype)
 	if(istype(actiontype, /datum/action/item_action/toggle_welding_screen))
-		toggle_welding_screen(user)
+		adjust_visor(user)
 		return
-
 	return ..()
 
-/obj/item/clothing/head/utility/hardhat/welding/proc/toggle_welding_screen(mob/living/user)
-	if(weldingvisortoggle(user))
-		playsound(src, 'sound/mecha/mechmove03.ogg', 50, TRUE) //Visors don't just come from nothing
-	update_appearance()
+/obj/item/clothing/head/utility/hardhat/welding/adjust_visor(mob/living/user)
+	. = ..()
+	if(.)
+		playsound(src, 'sound/mecha/mechmove03.ogg', 50, TRUE)
 
 /obj/item/clothing/head/utility/hardhat/welding/worn_overlays(mutable_appearance/standing, isinhands = FALSE, icon_file, item_layer, atom/origin)
 	. = ..()
@@ -192,6 +188,7 @@
 	inhand_icon_state = null
 	hat_type = "pumpkin"
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR|HIDESNOUT
+	hair_mask = ""
 	clothing_flags = SNUG_FIT
 	armor_type = /datum/armor/hardhat_pumpkinhead
 	light_range = 2 //luminosity when on
@@ -211,8 +208,8 @@
 	inhand_icon_state = null
 	hat_type = "reindeer"
 	flags_inv = 0
+	hair_mask = ""
 	armor_type = /datum/armor/none
 	light_range = 1 //luminosity when on
-	dynamic_hair_suffix = ""
 
 	dog_fashion = /datum/dog_fashion/head/reindeer

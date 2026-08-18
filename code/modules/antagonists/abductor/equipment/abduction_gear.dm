@@ -624,7 +624,7 @@ Congratulations! You are now trained for invasive xenobiology research!"}
 		species = span_notice("[H.dna.species.name]")
 		if(IS_CHANGELING(L))
 			species = span_warning("Changeling lifeform")
-		var/obj/item/organ/heart/gland/temp = locate() in H.internal_organs
+		var/obj/item/organ/heart/gland/temp = locate() in H.organs
 		if(temp)
 			helptext = span_warning("Experimental gland detected!")
 		else
@@ -697,7 +697,7 @@ Congratulations! You are now trained for invasive xenobiology research!"}
 	icon = 'icons/obj/abductor.dmi'
 	icon_state = "abductor_headset"
 	inhand_icon_state = "abductor_headset"
-	keyslot2 = new /obj/item/encryptionkey/heads/captain
+	keyslot2 = /obj/item/encryptionkey/heads/captain
 	bang_protect = 1
 
 /obj/item/radio/headset/abductor/Initialize(mapload)

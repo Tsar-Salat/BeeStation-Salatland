@@ -10,6 +10,7 @@
 	faction = list(FACTION_NEUTRAL)
 	attack_verb_continuous = "bites"
 	attack_verb_simple = "bite"
+	attack_vis_effect = ATTACK_EFFECT_BITE
 	melee_damage = 1
 	response_help_continuous = "pets"
 	response_help_simple = "pet"
@@ -20,7 +21,7 @@
 	density = FALSE
 	pass_flags = PASSTABLE | PASSMOB
 	mob_size = MOB_SIZE_SMALL
-	mob_biotypes = MOB_ORGANIC | MOB_BEAST |  MOB_REPTILE
+	mob_biotypes = MOB_ORGANIC|MOB_BEAST|MOB_REPTILE
 	gold_core_spawnable = FRIENDLY_SPAWN
 	obj_damage = 0
 	environment_smash = ENVIRONMENT_SMASH_NONE

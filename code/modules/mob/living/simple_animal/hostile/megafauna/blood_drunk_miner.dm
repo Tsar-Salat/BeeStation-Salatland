@@ -27,14 +27,14 @@ Difficulty: Medium
 	icon_state = "miner"
 	icon_living = "miner"
 	icon = 'icons/mob/broadMobs.dmi'
-	mob_biotypes = MOB_ORGANIC | MOB_HUMANOID
+	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	light_color = "#E4C7C5"
 	movement_type = GROUND
 	speak_emote = list("roars")
 	speed = 3
 	move_to_delay = 3
 	projectiletype = /obj/projectile/kinetic/miner
-	projectilesound = 'sound/weapons/kenetic_accel.ogg'
+	projectilesound = 'sound/weapons/kinetic_accel.ogg'
 	ranged = TRUE
 	ranged_cooldown_time = 16
 	pixel_x = -16

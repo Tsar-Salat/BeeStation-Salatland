@@ -24,7 +24,6 @@
 	held_lh = 'icons/mob/pai_item_lh.dmi'
 	held_rh = 'icons/mob/pai_item_rh.dmi'
 	head_icon = 'icons/mob/pai_item_head.dmi'
-	var/network = "ss13"
 	var/obj/machinery/camera/current = null
 	light_system = MOVABLE_LIGHT
 	light_power = 1
@@ -204,6 +203,9 @@
 		ADD_TRAIT(src, TRAIT_IMMOBILIZED, PAI_FOLDED)
 		ADD_TRAIT(src, TRAIT_HANDS_BLOCKED, PAI_FOLDED)
 
+	RegisterSignals(src, list(COMSIG_LIVING_ADJUST_BRUTE_DAMAGE, COMSIG_LIVING_ADJUST_BURN_DAMAGE), PROC_REF(on_shell_damaged))
+	RegisterSignal(src, COMSIG_LIVING_ADJUST_STAMINA_DAMAGE, PROC_REF(on_shell_weakened))
+
 	return INITIALIZE_HINT_LATELOAD
 
 
@@ -247,7 +249,7 @@
 	if(!. || !client)
 		return FALSE
 	var/datum/asset/notes_assets = get_asset_datum(/datum/asset/simple/pAI)
-	mind.set_assigned_role(JOB_NAME_PAI)
+	mind.set_assigned_role(SSjob.get_job_type(/datum/job/personal_ai))
 	notes_assets.send(client)
 	set_mob_eye_to(holoform ? MOB_EYE_SELF : card)
 

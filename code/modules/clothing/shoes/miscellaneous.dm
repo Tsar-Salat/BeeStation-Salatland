@@ -4,6 +4,7 @@
 	desc = "High speed, low drag combat boots."
 	icon_state = "jackboots"
 	inhand_icon_state = "jackboots"
+	supports_variations_flags = CLOTHING_DIGITIGRADE_MASK
 	lefthand_file = 'icons/mob/inhands/equipment/security_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/security_righthand.dmi'
 	armor_type = /datum/armor/shoes_combat
@@ -125,7 +126,7 @@
 	if(slot == ITEM_SLOT_FEET)
 		if(enabled_waddle)
 			waddle = user.AddComponent(/datum/component/waddling)
-		if(user.mind && user.mind.assigned_role == JOB_NAME_CLOWN)
+		if(is_clown_job(user.mind?.assigned_role))
 			SEND_SIGNAL(user, COMSIG_ADD_MOOD_EVENT, "clownshoes", /datum/mood_event/clownshoes)
 
 /obj/item/clothing/shoes/clown_shoes/dropped(mob/living/carbon/user)
@@ -133,7 +134,7 @@
 	QDEL_NULL(waddle)
 	if(user.shoes != src)
 		return
-	if(user.mind && user.mind.assigned_role == JOB_NAME_CLOWN)
+	if(is_clown_job(user.mind?.assigned_role))
 		SEND_SIGNAL(user, COMSIG_CLEAR_MOOD_EVENT, "clownshoes")
 
 /obj/item/clothing/shoes/clown_shoes/CtrlClick(mob/living/user)
@@ -159,6 +160,7 @@
 	desc = "Nanotrasen-issue Security combat boots for combat scenarios or combat situations. All combat, all the time."
 	icon_state = "sec_jackboots"
 	inhand_icon_state = "sec_jackboots"
+	supports_variations_flags = CLOTHING_DIGITIGRADE_MASK
 	lefthand_file = 'icons/mob/inhands/equipment/security_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/security_righthand.dmi'
 	strip_delay = 30
@@ -200,6 +202,7 @@
 	desc = "Boots lined with 'synthetic' animal fur."
 	icon_state = "winterboots"
 	inhand_icon_state = "winterboots"
+	supports_variations_flags = CLOTHING_DIGITIGRADE_MASK
 	armor_type = /datum/armor/shoes_winterboots
 	cold_protection = FEET|LEGS
 	min_cold_protection_temperature = SHOES_MIN_TEMP_PROTECT
@@ -221,17 +224,18 @@
 /obj/item/clothing/shoes/winterboots/noslip/equipped(mob/user, slot)
 	. = ..()
 	if(slot == ITEM_SLOT_FEET)
-		ADD_TRAIT(user, TRAIT_NOSLIPALL, CLOTHING_FEET_TRAIT)
+		ADD_TRAIT(user, TRAIT_NO_SLIP_ALL, CLOTHING_FEET_TRAIT)
 
 /obj/item/clothing/shoes/winterboots/noslip/dropped(mob/user)
 	. = ..()
-	REMOVE_TRAIT(user, TRAIT_NOSLIPALL, CLOTHING_FEET_TRAIT)
+	REMOVE_TRAIT(user, TRAIT_NO_SLIP_ALL, CLOTHING_FEET_TRAIT)
 
 /obj/item/clothing/shoes/workboots
 	name = "work boots"
 	desc = "Nanotrasen-issue Engineering lace-up work boots for the especially blue-collar."
 	icon_state = "workboots"
 	inhand_icon_state = "jackboots"
+	supports_variations_flags = CLOTHING_DIGITIGRADE_MASK
 	lefthand_file = 'icons/mob/inhands/equipment/security_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/security_righthand.dmi'
 	armor_type = /datum/armor/shoes_workboots

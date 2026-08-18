@@ -21,8 +21,6 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	/// The icon for holding in hand icon states for the right hand.
 	var/righthand_file = 'icons/mob/inhands/items_righthand.dmi'
 
-	var/supports_variations_flags = null //This is a bitfield that defines what variations exist for bodyparts like Digi legs.
-
 	//Dimensions of the icon file used when this item is worn, eg: hats.dmi
 	//eg: 32x32 sprite, 64x64 sprite, etc.
 	//allows inhands/worn sprites to be of any size, but still centered on a mob properly
@@ -108,6 +106,9 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	var/flags_inv
 	/// This flag is used to determine when items in someone's inventory cover others, however you can still see through that item and know what it covers. ex: You can see someone's mask through their transparent visor, but you can't reach it.
 	var/transparent_protection = NONE
+	///Name of a mask in icons\mob\human\hair_masks.dmi to apply to hair when this item is worn
+	///Used by certain hats to give the appearance of squishing down tall hairstyles without hiding the hair completely
+	var/hair_mask = ""
 
 	/// Flags for clicking the item with your hand. See _DEFINES/interaction_flags.dm
 	var/interaction_flags_item = INTERACT_ITEM_ATTACK_HAND_PICKUP
@@ -146,10 +147,9 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	var/list/attack_verb_simple
 	/// list() of species types, if a species cannot put items in a certain slot, but species type is in list, it will be able to wear that item
 	var/list/species_exception = null
-	///A bitfield of a species to use as an alternative sprite for any given item. DMIs are stored in the species datum and called via proc in update_icons.
-	var/sprite_sheets = null
-	///A bitfield of species that the item cannot be worn by.
-	var/species_restricted = null
+	///This is a bitfield that defines what variations exist for bodyparts like Digi legs. See: code\_DEFINES\inventory.dm
+	var/supports_variations_flags = NONE
+
 	///A weakref to the mob who threw the item
 	var/datum/weakref/thrownby = null
 
@@ -776,6 +776,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 /obj/item/proc/pickup(mob/user)
 	SHOULD_CALL_PARENT(TRUE)
 	SEND_SIGNAL(src, COMSIG_ITEM_PICKUP, user)
+	SEND_SIGNAL(user, COMSIG_LIVING_PICKED_UP_ITEM, src)
 	item_flags |= PICKED_UP
 	if(item_flags & WAS_THROWN)
 		item_flags &= ~WAS_THROWN
@@ -964,7 +965,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		M.adjust_eye_blur(30 SECONDS)
 		if(M.stat != DEAD)
 			to_chat(M, span_danger("Your eyes start to bleed profusely!"))
-		if(!M.is_blind() || HAS_TRAIT(M, TRAIT_NEARSIGHT))
+		if(!M.is_blind() || M.is_nearsighted_from(EYE_DAMAGE))
 			to_chat(M, span_danger("You become nearsighted!"))
 		M.become_nearsighted(EYE_DAMAGE)
 		if (eyes.damage >= 60)
@@ -1421,7 +1422,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 ///For when you want to add/update the embedding on an item. Uses the vars in [/obj/item/embedding], and defaults to config values for values that aren't set. Will automatically detach previous embed elements on this item.
 /obj/item/proc/updateEmbedding()
 	SHOULD_CALL_PARENT(TRUE)
-
+	
 	if(!islist(embedding) || !LAZYLEN(embedding))
 		return
 

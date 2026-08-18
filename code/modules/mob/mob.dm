@@ -172,26 +172,6 @@
 		set_hud_image_active(hud, update_huds = FALSE) //by default everything is active. but dont add it to huds to keep control.
 
 /**
-  * Some kind of debug verb that gives atmosphere environment details
-  */
-/mob/proc/Cell()
-	set category = "Admin"
-	set hidden = 1
-
-	if(!loc)
-		return 0
-
-	var/datum/gas_mixture/environment = loc.return_air()
-
-	var/t =	span_notice("Coordinates: [x],[y] \n")
-	t +=	span_danger("Temperature: [environment.return_temperature()] \n")
-	for(var/id in environment.gases)
-		if(environment.gases[id][MOLES])
-			t+=span_notice("[GLOB.meta_gas_info[id][META_GAS_NAME]]: [environment.gases[id][MOLES]] \n")
-
-	to_chat(usr, t)
-
-/**
   * Return the desc of this mob for a photo
   */
 /mob/proc/get_photo_description(obj/item/camera/camera)
@@ -490,7 +470,7 @@
   * unset redraw_mob to prevent the mob icons from being redrawn at the end.
   */
 /mob/proc/equip_to_slot_if_possible(obj/item/W, slot, qdel_on_fail = FALSE, disable_warning = FALSE, redraw_mob = TRUE, bypass_equip_delay_self = FALSE, initial = FALSE)
-	if(!istype(W))
+	if(!istype(W) || QDELETED(W)) //This qdeleted is to prevent stupid behavior with things that qdel during init, like say stacks
 		return FALSE
 	if(!W.mob_can_equip(src, slot, disable_warning, bypass_equip_delay_self))
 		if(qdel_on_fail)
@@ -509,7 +489,7 @@
   *
   *In most cases you will want to use equip_to_slot_if_possible()
   */
-/mob/proc/equip_to_slot(obj/item/W, slot)
+/mob/proc/equip_to_slot(obj/item/equipping, slot, initial = FALSE)
 	return
 
 /**
@@ -1135,11 +1115,23 @@
 	if(.)
 		client.last_turn = world.time + MOB_FACE_DIRECTION_DELAY
 
-/mob/proc/swap_hand()
+/mob/proc/swap_hand(held_index)
+	SHOULD_NOT_OVERRIDE(TRUE) // Override perform_hand_swap instead
+
 	var/obj/item/held_item = get_active_held_item()
-	if(SEND_SIGNAL(src, COMSIG_MOB_SWAP_HANDS, held_item) & COMPONENT_BLOCK_SWAP)
+	if(SEND_SIGNAL(src, COMSIG_MOB_SWAPPING_HANDS, held_item) & COMPONENT_BLOCK_SWAP)
 		to_chat(src, span_warning("Your other hand is too busy holding [held_item]."))
 		return FALSE
+
+	var/result = perform_hand_swap(held_index)
+	if (result)
+		SEND_SIGNAL(src, COMSIG_MOB_SWAP_HANDS)
+
+	return result
+
+/// Performs the actual ritual of swapping hands, such as setting the held index variables
+/mob/proc/perform_hand_swap(held_index)
+	PROTECTED_PROC(TRUE)
 	return TRUE
 
 /mob/proc/activate_hand(selhand)
@@ -1335,12 +1327,17 @@
   *
   * Calling this proc without an oldname will only update the mob and skip updating the pda, id and records ~Carn
   */
-/mob/proc/fully_replace_character_name(oldname,newname)
-	log_message("[src] name changed from [oldname] to [newname]", LOG_OWNERSHIP)
+/mob/proc/fully_replace_character_name(oldname, newname)
 	if(!newname)
-		return 0
+		log_message("[src] failed name change from [oldname] as no new name was specified", LOG_OWNERSHIP)
+		return FALSE
+	if(oldname == newname)
+		log_message("[src] failed name change as the new name was the same as the old one: [oldname]", LOG_OWNERSHIP)
+		return FALSE
 
-	log_played_names(ckey,newname)
+	log_message("[src] name changed from [oldname] to [newname]", LOG_OWNERSHIP)
+
+	log_played_names(ckey, newname)
 
 	real_name = newname
 	name = newname
@@ -1388,7 +1385,7 @@
 		else if(search_pda && istype(A, /obj/item/modular_computer/tablet))
 			var/obj/item/modular_computer/tablet/PDA = A
 			if(PDA.saved_identification == oldname)
-				PDA.saved_identification = newname
+				PDA.imprint_id(name = newname)
 				PDA.update_id_display()
 				if(!search_id)
 					break
@@ -1491,9 +1488,24 @@ GLOBAL_LIST_INIT(mouse_cooldowns, list(
 	cooldown_cursor_time = 0
 
 
-/// This mob can read
+/// This mob is able to read books
 /mob/proc/is_literate()
-	return FALSE
+	return HAS_TRAIT(src, TRAIT_LITERATE)
+
+
+/mob/proc/can_write()
+	if(!is_literate())
+		to_chat(src, span_warning("You try to write, but don't know how to spell anything!"))
+		return FALSE
+
+	if(!has_light_nearby() && !has_nightvision())
+		to_chat(src, span_warning("It's too dark in here to write anything!"))
+		return FALSE
+
+	if(has_gravity())
+		return TRUE
+
+	return TRUE
 
 /**
  * Checks if there is enough light where the mob is located
@@ -1515,16 +1527,12 @@ GLOBAL_LIST_INIT(mouse_cooldowns, list(
 	return see_in_dark >= NIGHTVISION_FOV_RANGE
 
 ///Can this mob read (is literate and not blind)
-/mob/proc/can_read(obj/O)
-	if(is_blind())
-		to_chat(src, span_warning("You are blind and can't read anything!"))
-		return FALSE
-		//to_chat(src, span_warning("As you are trying to read [O], you suddenly feel very stupid!"))
+/mob/proc/can_read(obj/O, check_for_light = TRUE)
 	if(!is_literate())
 		to_chat(src, span_warning("You try to read [O], but can't comprehend any of it."))
 		return FALSE
 
-	if(!has_light_nearby() && !has_nightvision())
+	if(check_for_light && !has_light_nearby() && !has_nightvision())
 		to_chat(src, span_warning("It's too dark in here to read!"))
 		return FALSE
 
@@ -1550,6 +1558,7 @@ GLOBAL_LIST_INIT(mouse_cooldowns, list(
 	VV_DROPDOWN_OPTION(VV_HK_GODMODE, "Toggle Godmode")
 	VV_DROPDOWN_OPTION(VV_HK_DROP_ALL, "Drop Everything")
 	VV_DROPDOWN_OPTION(VV_HK_REGEN_ICONS, "Regenerate Icons")
+	VV_DROPDOWN_OPTION(VV_HK_REGEN_ICONS_FULL, "Regenerate Icons & Clear Stuck Overlays")
 	VV_DROPDOWN_OPTION(VV_HK_PLAYER_PANEL, "Show player panel")
 	VV_DROPDOWN_OPTION(VV_HK_BUILDMODE, "Toggle Buildmode")
 	VV_DROPDOWN_OPTION(VV_HK_DIRECT_CONTROL, "Assume Direct Control")
@@ -1559,6 +1568,12 @@ GLOBAL_LIST_INIT(mouse_cooldowns, list(
 /mob/vv_do_topic(list/href_list)
 	. = ..()
 	if(href_list[VV_HK_REGEN_ICONS] && check_rights(R_ADMIN))
+		regenerate_icons()
+
+	if(href_list[VV_HK_REGEN_ICONS_FULL])
+		if(!check_rights(NONE))
+			return
+		cut_overlays()
 		regenerate_icons()
 
 	if(href_list[VV_HK_PLAYER_PANEL] && check_rights(R_ADMIN))
@@ -1623,19 +1638,24 @@ GLOBAL_LIST_INIT(mouse_cooldowns, list(
 /mob/proc/set_nutrition(change) //Seriously fuck you oldcoders.
 	nutrition = max(0, change)
 
+///Apply a proper movespeed modifier based on items we have equipped
 /mob/proc/update_equipment_speed_mods()
-	var/speedies = equipped_speed_mods()
+	var/speedies = 0
+	for(var/obj/item/thing in get_equipped_speed_mod_items())
+		if(thing?.item_flags & NO_WORN_SLOWDOWN)
+			continue
+		speedies += thing.slowdown
 	if(!speedies)
 		remove_movespeed_modifier(/datum/movespeed_modifier/equipment_speedmod)
 	else
 		add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/equipment_speedmod, multiplicative_slowdown = speedies)
 
-/// Gets the combined speed modification of all worn items
-/// Except base mob type doesnt really wear items
-/mob/proc/equipped_speed_mods()
-	for(var/obj/item/I in held_items)
-		if(I.item_flags & SLOWS_WHILE_IN_HAND)
-			. += I.slowdown
+///Get all items in our possession that should affect our movespeed
+/mob/proc/get_equipped_speed_mod_items()
+	. = list()
+	for(var/obj/item/thing in held_items)
+		if(thing.item_flags & SLOWS_WHILE_IN_HAND)
+			. += thing
 
 // Returns TRUE if the hearer should hear radio noises
 /mob/proc/hears_radio()

@@ -38,7 +38,7 @@
 	. = ..()
 	if(!.)
 		return
-	if(!isliving(target))
+	if(!isliving(target) || !mod.wearer.can_read(src))
 		return
 	switch(mode)
 		if(HEALTH_SCAN)
@@ -201,23 +201,24 @@
 		for(var/datum/surgery/procedure as anything in organ_receiver.surgeries)
 			if(procedure.location != organ.zone)
 				continue
-			if(!istype(procedure, /datum/surgery/organ_manipulation))
-				continue
-			var/datum/surgery_step/surgery_step = procedure.get_surgery_step()
-			if(!istype(surgery_step, /datum/surgery_step/manipulate_organs))
+			if(!ispath(procedure.steps[procedure.status], /datum/surgery_step/manipulate_organs))
 				continue
 			succeed = TRUE
 			break
-	if(succeed)
-		var/list/organs_to_boot_out = organ_receiver.get_organ_slot(organ.slot)
-		for(var/obj/item/organ/organ_evacced as anything in organs_to_boot_out)
-			if(organ_evacced.organ_flags & ORGAN_UNREMOVABLE)
-				continue
-			organ_evacced.Remove(target)
-			organ_evacced.forceMove(get_turf(target))
-		organ.Insert(target)
-	else
+
+	if(!succeed)
 		organ.forceMove(drop_location())
+		organ = null
+		return
+
+	var/list/organs_to_boot_out = organ_receiver.get_organ_slot(organ.slot)
+	for(var/obj/item/organ/organ_evacced as anything in organs_to_boot_out)
+		if(organ_evacced.organ_flags & ORGAN_UNREMOVABLE)
+			continue
+		organ_evacced.Remove(target, special = TRUE)
+		organ_evacced.forceMove(get_turf(target))
+
+	organ.Insert(target)
 	organ = null
 
 /*
@@ -269,6 +270,26 @@
 	desc = "A pair of flat metal plates integrated in the MODsuit's gauntlets that are used to deliver powerful electric shocks."
 	req_defib = FALSE
 
+/obj/item/mod/module/defibrillator/combat
+	name = "\improper MOD combat defibrillator module"
+	desc = "A module built into the gauntlets of the suit; commonly known as the 'Healing Hands' by medical professionals. \
+		The user places their palms above the patient. Onboard computers in the suit calculate the necessary voltage, \
+		and a modded targeting computer determines the best position for the user to push. \
+		Twenty five pounds of force are applied to the patient's skin. Shocks travel from the suit's gloves \
+		and counter-shock the heart, and the wearer returns to Medical a hero. \
+		Interdyne Pharmaceutics marketed the domestic version of the Healing Hands as foolproof and unusable as a weapon. \
+		But when it came time to provide their operatives with usable medical equipment, they didn't hesitate to remove \
+		those in-built safeties. Operatives in the field can benefit from what they dub as 'Stun Gloves', able to apply shocks \
+		straight to a victims heart to disable them, or maybe even outright stop their heart with enough power."
+	complexity = 1
+	module_type = MODULE_ACTIVE
+	device = /obj/item/shockpaddles/mod/syndicate
+	defib_cooldown = 2.5 SECONDS
+
+/obj/item/shockpaddles/mod/syndicate
+	name = "\improper MOD combat defibrillator paddles"
+	combat = TRUE
+
 ///Thread Ripper - Temporarily rips apart clothing to make it not cover the body.
 /obj/item/mod/module/thread_ripper
 	name = "\improper MOD thread ripper module"
@@ -308,7 +329,7 @@
 		balloon_alert(mod.wearer, "interrupted!")
 		return
 	var/target_zones = body_zone2cover_flags(mod.wearer.get_combat_bodyzone(target))
-	for(var/obj/item/clothing as anything in carbon_target.get_all_worn_items())
+	for(var/obj/item/clothing as anything in carbon_target.get_equipped_items())
 		if(!clothing)
 			continue
 		var/shared_flags = target_zones & clothing.body_parts_covered
@@ -364,3 +385,34 @@
 
 /obj/item/surgical_processor/mod
 	name = "\improper MOD surgical processor"
+
+/obj/item/mod/module/surgical_processor/preloaded
+	desc = "A module using an onboard surgical computer which can be connected to other computers to download and \
+		perform advanced surgeries on the go. This one came pre-loaded with some advanced surgeries."
+	device = /obj/item/surgical_processor/mod/preloaded
+
+/obj/item/surgical_processor/mod/preloaded
+	loaded_surgeries = list(
+		/datum/surgery/advanced/pacify,
+		/datum/surgery/healing/combo/upgraded,
+		/datum/surgery/blood_filter/upgraded,
+		/datum/surgery/advanced/bioware/nerve_splicing,
+		/datum/surgery/advanced/bioware/nerve_grounding,
+		/datum/surgery/advanced/bioware/vein_threading,
+		/datum/surgery/advanced/bioware/muscled_veins,
+		/datum/surgery/advanced/bioware/ligament_hook,
+		/datum/surgery/advanced/bioware/ligament_reinforcement,
+		/datum/surgery/advanced/bioware/cortex_imprint,
+		/datum/surgery/advanced/bioware/cortex_folding,
+	)
+/// Pre-Loaded Surgical Processor, mainly for ERT
+/obj/item/mod/module/surgical_processor/emergency
+	desc = "A module using an onboard surgical computer which can be connected to other computers to download and \
+		perform advanced surgeries on the go. This one came pre-loaded with some emergency surgeries."
+	device = /obj/item/surgical_processor/mod/emergency
+
+/obj/item/surgical_processor/mod/emergency
+	loaded_surgeries = list(
+		/datum/surgery/healing/combo/upgraded,
+		/datum/surgery/blood_filter/upgraded,
+	)

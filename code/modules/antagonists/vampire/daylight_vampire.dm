@@ -59,7 +59,7 @@
 	if(istype(current.loc, /obj/structure/closet) || istype(current.loc, /obj/machinery))
 		shielded = TRUE
 
-	if(IS_IN_STASIS(current))
+	if(HAS_TRAIT(current, TRAIT_STASIS))
 		shielded = TRUE
 
 	if(is_type_in_list(get_area(current), VAMPIRE_SOL_SHIELDED))
@@ -104,13 +104,13 @@
 
 	switch(danger_level)
 		if(DANGER_LEVEL_FIRST_WARNING)
-			owner.current.playsound_local(null, 'sound/vampires/griffin_3.ogg', 50, TRUE)
+			owner.current.playsound_local(null, 'sound/effects/antag/vampire/griffin_3.ogg', 50, TRUE)
 		if(DANGER_LEVEL_SECOND_WARNING)
-			owner.current.playsound_local(null, 'sound/vampires/griffin_5.ogg', 50, TRUE)
+			owner.current.playsound_local(null, 'sound/effects/antag/vampire/griffin_5.ogg', 50, TRUE)
 		if(DANGER_LEVEL_THIRD_WARNING)
 			owner.current.playsound_local(null, 'sound/effects/alert.ogg', 75, TRUE)
 		if(DANGER_LEVEL_SOL_ROSE)
-			owner.current.playsound_local(null, 'sound/ambience/ambimystery.ogg', 75, TRUE)
+			owner.current.playsound_local(null, 'sound/ambience/misc/ambimystery.ogg', 75, TRUE)
 		if(DANGER_LEVEL_SOL_ENDED)
 			owner.current.playsound_local(null, 'sound/misc/ghosty_wind.ogg', 90, TRUE)
 

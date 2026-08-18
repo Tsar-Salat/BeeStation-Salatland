@@ -9,7 +9,7 @@
 
 /datum/action/changeling/regenerate/sting_action(mob/living/user)
 	if(!iscarbon(user))
-		to_chat(user, span_notice("You have nothing to regenerate in this state!"))
+		user.balloon_alert(user, "nothing missing!")
 		return FALSE
 
 	..()
@@ -86,6 +86,7 @@
 	melee_damage = 3
 	attack_verb_continuous = "bites"
 	attack_verb_simple = "bite"
+	attack_vis_effect = ATTACK_EFFECT_BITE
 	response_disarm_continuous = "shoos"
 	response_disarm_simple = "shoo"
 	response_harm_continuous = "steps on"
@@ -93,7 +94,7 @@
 	density = FALSE
 	pass_flags = PASSTABLE | PASSMOB
 	mob_size = MOB_SIZE_SMALL
-	mob_biotypes = MOB_ORGANIC | MOB_BEAST
+	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	obj_damage = 0
 	environment_smash = ENVIRONMENT_SMASH_NONE
 	chat_color = "#26F55A"

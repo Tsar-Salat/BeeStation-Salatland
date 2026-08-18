@@ -4,7 +4,7 @@
 	icon_state = "frog"
 	icon_living = "frog"
 	icon_dead = "frog_dead"
-	mob_biotypes = MOB_ORGANIC | MOB_BEAST
+	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	speak = list("ribbit","croak")
 	speak_language = /datum/language/metalanguage
 	emote_see = list("hops in a circle.", "shakes.")
@@ -15,6 +15,7 @@
 	melee_damage = 5
 	attack_verb_continuous = "bites"
 	attack_verb_simple = "bite"
+	attack_vis_effect = ATTACK_EFFECT_BITE
 	response_help_continuous = "pets"
 	response_help_simple = "pet"
 	response_disarm_continuous = "pokes"

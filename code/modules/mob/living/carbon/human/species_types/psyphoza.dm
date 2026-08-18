@@ -3,14 +3,12 @@
 	plural_form = "Psyphoza"
 	id = SPECIES_PSYPHOZA
 	meat = /obj/item/food/meat/slab/human/mutant/psyphoza
-	species_traits = list(
-		NOEYESPRITES,
-		AGENDER,
-		MUTCOLORS,
-		NOEYEHOLES,
-	)
 	inherent_traits = list(
+		TRAIT_AGENDER,
+		TRAIT_MUTANT_COLORS,
 		TRAIT_PSYCHIC_SENSE,
+		TRAIT_MUTANT_COLORS,
+		TRAIT_AGENDER,
 	)
 	sexes = FALSE
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | ERT_SPAWN | RACE_SWAP
@@ -23,8 +21,12 @@
 	mutanteyes = /obj/item/organ/eyes/psyphoza
 	mutanttongue = /obj/item/organ/tongue/psyphoza
 
-	mutant_bodyparts = list("psyphoza_cap" = "Portobello", "body_size" = "Normal", "mcolor" = COLOR_WHITE)
-	hair_color = "fixedmutcolor"
+	mutant_bodyparts = list(
+		"psyphoza_cap" = "Portobello",
+		"body_size" = "Normal",
+		"mcolor" = COLOR_WHITE
+	)
+	hair_color_mode = USE_FIXED_MUTANT_COLOR
 
 	bodypart_overrides = list(
 		BODY_ZONE_HEAD = /obj/item/bodypart/head/psyphoza,
@@ -40,7 +42,7 @@
 	/// Weakref to the psychic highlight action given by our eyes
 	var/datum/weakref/ability_weakref
 
-/datum/species/psyphoza/on_species_gain(mob/living/carbon/C, datum/species/old_species, pref_load)
+/datum/species/psyphoza/on_species_gain(mob/living/carbon/C, datum/species/old_species, pref_load, regenerate_icons)
 	. = ..()
 	ability_weakref = WEAKREF(locate(/datum/action/item_action/organ_action/psychic_highlight) in C.actions)
 

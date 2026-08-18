@@ -7,7 +7,7 @@
 	icon_state = "arachnid"
 	icon_living = "arachnid"
 	icon_dead = "arachnid_dead"
-	mob_biotypes = MOB_ORGANIC | MOB_BUG
+	mob_biotypes = MOB_ORGANIC|MOB_BUG
 	melee_damage = 30
 	maxHealth = 300
 	health = 300
@@ -19,6 +19,7 @@
 	aggro_vision_range = 9
 	speak_emote = list("chitters")
 	attack_sound = 'sound/weapons/bladeslice.ogg'
+	attack_vis_effect = ATTACK_EFFECT_SLASH
 	ranged_cooldown_time = 60
 	projectiletype = /obj/projectile/mega_arachnid
 	projectilesound = 'sound/weapons/pierce.ogg'

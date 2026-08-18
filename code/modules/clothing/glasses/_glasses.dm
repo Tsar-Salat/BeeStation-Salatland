@@ -16,13 +16,15 @@
 	var/invis_override = 0 //Override to allow glasses to set higher than normal see_invis
 	var/lighting_alpha
 	var/list/icon/current = list() //the current hud icons
-	var/vision_correction = 0 //does wearing these glasses correct some of our vision defects?
 	var/glass_colour_type //colors your vision when worn
 	var/force_glass_colour = FALSE	//Should the user be forced to see the colour?
 	var/emissive_state = null
 
 /obj/item/clothing/glasses/Initialize(mapload)
 	. = ..()
+	// Glasses with emissive states should not block emissives themselves
+	if(emissive_state)
+		blocks_emissive = EMISSIVE_BLOCK_NONE
 	update_appearance(UPDATE_OVERLAYS)
 
 /obj/item/clothing/glasses/suicide_act(mob/living/carbon/user)
@@ -40,15 +42,8 @@
 		. += emissive_appearance(icon, emissive_state, layer, 100)
 		ADD_LUM_SOURCE(src, LUM_SOURCE_MANAGED_OVERLAY)
 
-/obj/item/clothing/glasses/worn_overlays(mutable_appearance/standing, isinhands = FALSE, icon_file, item_layer, atom/origin)
-	. = ..()
-	// If we have an emissive state, add it to the worn icon too
-	if (!isinhands && emissive_state)
-		. += emissive_appearance(icon_file, emissive_state, item_layer, 100, filters = origin.filters)
-		ADD_LUM_SOURCE(origin, LUM_SOURCE_GLASSES)
-
 /obj/item/clothing/glasses/visor_toggling()
-	..()
+	. = ..()
 	alternate_worn_layer = up ? ABOVE_BODY_FRONT_HEAD_LAYER : null
 	if(visor_vars_to_toggle & VISOR_VISIONFLAGS)
 		vision_flags ^= initial(vision_flags)
@@ -57,9 +52,9 @@
 	if(visor_vars_to_toggle & VISOR_INVISVIEW)
 		invis_view ^= initial(invis_view)
 
-/obj/item/clothing/glasses/weldingvisortoggle(mob/user)
+/obj/item/clothing/glasses/adjust_visor(mob/living/user)
 	. = ..()
-	if(. && user)
+	if(. && !user.is_holding(src) && (visor_vars_to_toggle & (VISOR_VISIONFLAGS|VISOR_INVISVIEW)))
 		user.update_sight()
 
 //called when thermal glasses are emped.
@@ -71,7 +66,7 @@
 			if(H.glasses == src)
 				to_chat(H, span_danger("[src] overloads and blinds you!"))
 				H.flash_act(visual = 1)
-				H.adjust_blindness(3)
+				H.adjust_temp_blindness(6 SECONDS)
 				H.set_eye_blur_if_lower(10 SECONDS)
 				eyes.apply_organ_damage(5)
 
@@ -122,7 +117,7 @@
 	icon_state = "prescmeson"
 	inhand_icon_state = "glasses"
 	emissive_state = "prehud_emissive"
-	vision_correction = 1
+	clothing_traits = list(TRAIT_NEARSIGHTED_CORRECTED)
 
 /obj/item/clothing/glasses/science
 	name = "science goggles"
@@ -152,7 +147,7 @@
 	emissive_state = "prehud_emissive"
 	resistance_flags = NONE
 	armor_type = /datum/armor/science_prescription
-	vision_correction = 1
+	clothing_traits = list(TRAIT_NEARSIGHTED_CORRECTED)
 
 
 /datum/armor/science_prescription
@@ -207,7 +202,7 @@
 	desc = "Such a dapper eyepiece!"
 	icon_state = "monocle"
 	inhand_icon_state = "headset" // lol
-	vision_correction = 1
+	clothing_traits = list(TRAIT_NEARSIGHTED_CORRECTED)
 
 /obj/item/clothing/glasses/material
 	name = "optical material scanner"
@@ -245,28 +240,46 @@
 	desc = "Made by Nerd. Co."
 	icon_state = "glasses"
 	inhand_icon_state = "glasses"
-	vision_correction = 1 //corrects nearsightedness
+	flags_cover = GLASSESCOVERSEYES
+	clothing_traits = list(TRAIT_NEARSIGHTED_CORRECTED)
+
+/obj/item/clothing/glasses/regular/atom_destruction(damage_flag)
+	. = ..()
+	detach_clothing_traits(TRAIT_NEARSIGHTED_CORRECTED)
+
+/obj/item/clothing/glasses/regular/welder_act(mob/living/user, obj/item/I)
+	. = ..()
+	if(damaged_clothes == CLOTHING_PRISTINE)
+		return
+	if(!I.tool_start_check(user, amount=1))
+		return
+	if(I.use_tool(src, user, 10, volume=30))
+		user.visible_message(span_notice("[user] welds [src] back together."),\
+					span_notice("You weld [src] back together."))
+		repair()
+		return TRUE
+
+/obj/item/clothing/glasses/regular/repair()
+	. = ..()
+	attach_clothing_traits(TRAIT_NEARSIGHTED_CORRECTED)
 
 /obj/item/clothing/glasses/regular/jamjar
 	name = "jamjar glasses"
 	desc = "Also known as Virginity Protectors."
 	icon_state = "jamjar_glasses"
 	inhand_icon_state = "jamjar_glasses"
-	vision_correction = 1
 
 /obj/item/clothing/glasses/regular/hipster
 	name = "hipster glasses"
 	desc = "Made by Uncool. Co."
 	icon_state = "hipster_glasses"
-	inhand_icon_state = "hipster_glasses"
-	vision_correction = 1
+	inhand_icon_state = null
 
 /obj/item/clothing/glasses/regular/circle
 	name = "circle glasses"
 	desc = "Why would you wear something so controversial yet so brave?"
 	icon_state = "circle_glasses"
-	inhand_icon_state = "circle_glasses"
-	vision_correction = 1
+	inhand_icon_state = null
 
 /obj/item/clothing/glasses/sunglasses/circle_sunglasses
 	name = "circle sunglasses"
@@ -358,7 +371,15 @@
 	glass_colour_type = /datum/client_colour/glass_colour/gray
 
 /obj/item/clothing/glasses/welding/attack_self(mob/user)
-	weldingvisortoggle(user)
+	adjust_visor(user)
+
+/obj/item/clothing/glasses/welding/update_icon_state()
+	. = ..()
+	icon_state = "[initial(icon_state)][up ? "up" : ""]"
+
+/obj/item/clothing/glasses/welding/up/Initialize(mapload)
+	. = ..()
+	visor_toggling()
 
 /obj/item/clothing/glasses/welding/ghostbuster
 	name = "optical ecto-scanner"
@@ -377,7 +398,7 @@
 	var/datum/component/team_monitor/worn/ghost_vision = AddComponent(/datum/component/team_monitor/worn, "ghost", 1)
 	ghost_vision.toggle_hud(TRUE, null)
 
-/obj/item/clothing/glasses/welding/ghostbuster/weldingvisortoggle()
+/obj/item/clothing/glasses/welding/ghostbuster/adjust_visor(mob/living/user)
 	if(next_use_time > world.time)
 		return
 	. = ..()
@@ -408,36 +429,22 @@
 	icon_state = "blindfold"
 	inhand_icon_state = "blindfold"
 	flash_protect = FLASH_PROTECTION_WELDER
-	tint = 3
-	darkness_view = 1
+	flags_cover = GLASSESCOVERSEYES
+	tint = INFINITY // You WILL Be blind, no matter what
 	dog_fashion = /datum/dog_fashion/head
 
 /obj/item/clothing/glasses/blindfold/white
 	name = "blind personnel blindfold"
 	desc = "Indicates that the wearer suffers from blindness."
 	icon_state = "blindfoldwhite"
-	inhand_icon_state = "blindfoldwhite"
+	inhand_icon_state = null
 	var/colored_before = FALSE
 
 /obj/item/clothing/glasses/blindfold/white/visual_equipped(mob/living/carbon/human/user, slot)
-	if(ishuman(user) && slot == ITEM_SLOT_EYES)
-		update_icon(user=user)
+	if(ishuman(user) && (slot & ITEM_SLOT_EYES) && !colored_before)
+		add_atom_colour(BlendRGB(user.eye_color_left, user.eye_color_right, 0.5), FIXED_COLOUR_PRIORITY)
 		user.update_worn_glasses() //Color might have been changed by update_icon.
-	..()
-
-/obj/item/clothing/glasses/blindfold/white/update_icon(updates=ALL, mob/living/carbon/human/user)
-	if(ishuman(user) && !colored_before)
-		add_atom_colour(user.eye_color_left, FIXED_COLOUR_PRIORITY)
-		colored_before = TRUE
-
-/obj/item/clothing/glasses/blindfold/white/worn_overlays(mutable_appearance/standing, isinhands = FALSE, icon_file, item_layer, atom/origin)
-	. = ..()
-	if(!isinhands && ishuman(loc) && !colored_before)
-		var/mob/living/carbon/human/H = loc
-		var/mutable_appearance/M = mutable_appearance('icons/mob/clothing/eyes.dmi', "blindfoldwhite", item_layer)
-		M.appearance_flags |= RESET_COLOR
-		M.color = H.eye_color_left
-		. += M
+	return ..()
 
 /obj/item/clothing/glasses/sunglasses/advanced/big
 	icon_state = "bigsunglasses"
@@ -535,7 +542,7 @@
 	resistance_flags = LAVA_PROOF | FIRE_PROOF
 	custom_price = 10000
 	max_demand = 10
-	vision_correction = 1  // why should the eye of a god have bad vision?
+	clothing_traits = list(TRAIT_NEARSIGHTED_CORRECTED) // why should the eye of a god have bad vision?
 	//var/datum/action/scan/scan_ability
 
 /obj/item/clothing/glasses/godeye/Initialize(mapload)

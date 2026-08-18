@@ -4,7 +4,7 @@
 	icon_state = "faithless"
 	icon_living = "faithless"
 	icon_dead = "faithless_dead"
-	mob_biotypes = MOB_ORGANIC | MOB_HUMANOID
+	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	gender = MALE
 	speak_chance = 0
 	turns_per_move = 5
@@ -29,7 +29,7 @@
 	attack_sound = 'sound/hallucinations/growl1.ogg'
 	speak_emote = list("growls")
 
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
+	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_plas" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	minbodytemp = 0
 
 	faction = list(FACTION_FAITHLESS)

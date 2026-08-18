@@ -8,7 +8,7 @@
 	icon_aggro = "Basilisk_alert"
 	icon_dead = "Basilisk_dead"
 	icon_gib = "syndicate_gib"
-	mob_biotypes = MOB_ORGANIC | MOB_BEAST
+	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	move_to_delay = 20
 	projectiletype = /obj/projectile/temp/basilisk
 	projectilesound = 'sound/weapons/pierce.ogg'
@@ -78,6 +78,7 @@
 	combat_mode = TRUE
 	speak_emote = list("telepathically cries")
 	attack_sound = 'sound/weapons/bladeslice.ogg'
+	attack_vis_effect = null // doesn't bite unlike the parent type.
 	stat_attack = HARD_CRIT
 	is_flying_animal = TRUE
 	robust_searching = 1

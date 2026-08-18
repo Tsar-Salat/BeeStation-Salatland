@@ -13,7 +13,7 @@
 	icon_state = "mook"
 	icon_living = "mook"
 	icon_dead = "mook_dead"
-	mob_biotypes = MOB_ORGANIC | MOB_HUMANOID
+	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	SET_BASE_PIXEL(-16, -8)
 	maxHealth = 45
 	health = 45
@@ -24,6 +24,7 @@
 	robust_searching = TRUE
 	stat_attack = HARD_CRIT
 	attack_sound = 'sound/weapons/rapierhit.ogg'
+	attack_vis_effect = ATTACK_EFFECT_SLASH
 	death_sound = 'sound/voice/mook_death.ogg'
 	aggro_vision_range = 15 //A little more aggressive once in combat to balance out their really low HP
 	var/attack_state = MOOK_ATTACK_NEUTRAL

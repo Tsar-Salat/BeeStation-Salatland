@@ -75,6 +75,7 @@
 #define STASIS_MUTE "stasis"
 #define GENETICS_SPELL "genetics_spell"
 #define EYES_COVERED "eyes_covered"
+#define NO_EYES "no_eyes"
 #define TRAIT_SANTA "santa"
 #define SCRYING_ORB "scrying-orb"
 #define ABDUCTOR_ANTAGONIST "abductor-antagonist"
@@ -120,8 +121,11 @@
 #define BUSY_FLOORBOT_TRAIT "busy-floorbot"
 #define PULLED_WHILE_SOFTCRIT_TRAIT "pulled-while-softcrit"
 #define LOCKED_BORG_TRAIT "locked-borg"
-#define LACKING_LOCOMOTION_APPENDAGES_TRAIT "lacking-locomotion-appengades" //trait associated to not having locomotion appendages nor the ability to fly or float
-#define LACKING_MANIPULATION_APPENDAGES_TRAIT "lacking-manipulation-appengades" //trait associated to not having fine manipulation appendages such as hands
+/// trait associated to not having locomotion appendages nor the ability to fly or float
+#define LACKING_LOCOMOTION_APPENDAGES_TRAIT "lacking-locomotion-appengades"
+#define CRYO_TRAIT "cryo"
+/// trait associated to not having fine manipulation appendages such as hands
+#define LACKING_MANIPULATION_APPENDAGES_TRAIT "lacking-manipulation-appengades"
 #define HANDCUFFED_TRAIT "handcuffed"
 /// Trait granted by [/obj/item/warpwhistle]
 #define WARPWHISTLE_TRAIT "warpwhistle"
@@ -129,6 +133,8 @@
 #define WAS_SHOCKED "was_shocked"
 /// Trait source for turfs
 #define TURF_TRAIT "turf"
+/// Trait granted by lipstick
+#define LIPSTICK_TRAIT "lipstick_trait"
 /// Trait applied by by [/datum/component/soulstoned]
 #define SOULSTONE_TRAIT "soulstone"
 /// Trait applied to slimes by low temperature
@@ -161,6 +167,10 @@
 #define TRAIT_SUBTREE_REQUIRED_OPERATIONAL_DATUM "element-required"
 /// Trait given by mech equipment
 #define TRAIT_MECH_EQUIPMENT(equipment_type) "mech_equipment_[equipment_type]"
+/// Don't draw external organs/species features like wings, horns, frills and stuff
+#define TRAIT_HIDE_EXTERNAL_ORGANS "hide_external_organs"
+///When people are floating from zero-grav or something, we can move around freely!
+#define TRAIT_FREE_FLOAT_MOVEMENT "free_float_movement"
 
 /// This trait comes from when a mob is currently typing.
 #define CURRENTLY_TYPING_TRAIT "currently_typing"
@@ -193,7 +203,7 @@
 
 /**
 * Trait granted by [/mob/living/carbon/Initialize] and
-* granted/removed by [/obj/item/organ/internal/tongue]
+* granted/removed by [/obj/item/organ/tongue]
 * Used for ensuring that carbons without tongues cannot taste anything
 * so it is added in Initialize, and then removed when a tongue is inserted
 * and readded when a tongue is removed.
@@ -210,6 +220,8 @@
 /// Trait granted by [/mob/living/silicon/robot]
 /// Traits applied to a silicon mob by their module.
 #define MODULE_TRAIT "module_trait"
+/// Trait from an organ being inside a bodypart
+#define ORGAN_INSIDE_BODY_TRAIT "organ_inside_body"
 /// trait that prevents AI controllers from planning detached from ai_status to prevent weird state stuff.
 #define TRAIT_AI_PAUSED "TRAIT_AI_PAUSED"
 /// Source for chameleon ietms

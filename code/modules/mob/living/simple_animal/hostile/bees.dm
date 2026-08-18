@@ -40,14 +40,14 @@
 	pass_flags = PASSTABLE | PASSMOB
 	density = FALSE
 	mob_size = MOB_SIZE_TINY
-	mob_biotypes = MOB_ORGANIC | MOB_BUG
+	mob_biotypes = MOB_ORGANIC|MOB_BUG
 	is_flying_animal = TRUE
 	no_flying_animation = TRUE
 	gold_core_spawnable = HOSTILE_SPAWN
 	search_objects = 1 //have to find those plant trays!
 
 	//Spaceborn beings don't get hurt by space
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
+	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_plas" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	minbodytemp = 0
 	del_on_death = TRUE
 
@@ -325,7 +325,7 @@
 /mob/living/simple_animal/hostile/poison/bees/space
 	name = "killer space bee"
 	desc = "I mean, killer is 'IN' the name..."
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
+	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_plas" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	minbodytemp = 0
 	maxbodytemp = 1500
 

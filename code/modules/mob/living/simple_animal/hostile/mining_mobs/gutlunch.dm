@@ -6,7 +6,7 @@
 	icon_state = "gutlunch"
 	icon_living = "gutlunch"
 	icon_dead = "gutlunch"
-	mob_biotypes = MOB_ORGANIC | MOB_BEAST
+	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	speak_emote = list("warbles", "quavers")
 	emote_hear = list("trills.")
 	emote_see = list("sniffs.", "burps.")
@@ -126,4 +126,4 @@
 	L.setDir(dir)
 	L.Stun(20, ignore_canstun = TRUE)
 	visible_message(span_notice("[src] grows up into [L]."))
-	Destroy()
+	qdel(src)

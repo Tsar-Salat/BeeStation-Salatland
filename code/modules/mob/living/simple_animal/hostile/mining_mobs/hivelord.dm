@@ -20,6 +20,7 @@
 	attack_verb_simple = "lash out at"
 	speak_emote = list("telepathically cries")
 	attack_sound = 'sound/weapons/pierce.ogg'
+	attack_vis_effect = ATTACK_EFFECT_SLASH
 	throw_message = "falls right through the strange body of the"
 	ranged_cooldown = 0
 	ranged_cooldown_time = 20
@@ -105,7 +106,7 @@
 	icon_aggro = "legion"
 	icon_dead = "legion"
 	icon_gib = "syndicate_gib"
-	mob_biotypes = MOB_ORGANIC | MOB_HUMANOID
+	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	obj_damage = 60
 	melee_damage = 15
 	attack_verb_continuous = "lashes out at"
@@ -178,6 +179,7 @@
 	melee_damage = 12
 	attack_verb_continuous = "bites"
 	attack_verb_simple = "bite"
+	attack_vis_effect = ATTACK_EFFECT_BITE
 	speak_emote = list("echoes")
 	attack_sound = 'sound/weapons/pierce.ogg'
 	throw_message = "is shrugged off by"

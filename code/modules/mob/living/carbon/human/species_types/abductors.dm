@@ -2,16 +2,12 @@
 	name = "\improper Abductor"
 	id = SPECIES_ABDUCTOR
 	sexes = FALSE
-	species_traits = list(
-		NOEYESPRITES,
-		NOMOUTH
-	)
 	inherent_traits = list(
 		TRAIT_ABDUCTOR_HUD,
-		TRAIT_VIRUSIMMUNE,
-		TRAIT_CHUNKYFINGERS,
-		TRAIT_NOHUNGER,
+		TRAIT_NO_UNDERWEAR,
 		TRAIT_NOBREATH,
+		TRAIT_NOHUNGER,
+		TRAIT_VIRUSIMMUNE,
 		TRAIT_NOBLOOD,
 	)
 	mutanttongue = /obj/item/organ/tongue/abductor

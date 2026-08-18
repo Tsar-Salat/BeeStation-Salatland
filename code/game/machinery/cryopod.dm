@@ -213,7 +213,7 @@ GLOBAL_LIST_EMPTY(cryopod_computers)
 
 	return control_computer_weakref != null
 
-/obj/machinery/cryopod/close_machine(mob/user)
+/obj/machinery/cryopod/close_machine(mob/user, density_to_set = TRUE)
 	if(!control_computer_weakref)
 		find_control_computer(TRUE)
 	if((isnull(user) || istype(user)) && state_open && !panel_open)
@@ -227,7 +227,7 @@ GLOBAL_LIST_EMPTY(cryopod_computers)
 			despawn_world_time = world.time + time_till_despawn
 	icon_state = "cryopod"
 
-/obj/machinery/cryopod/open_machine()
+/obj/machinery/cryopod/open_machine(drop = TRUE, density_to_set = FALSE)
 	..()
 	ghost_offering = FALSE
 	icon_state = "cryopod-open"
@@ -309,7 +309,7 @@ GLOBAL_LIST_EMPTY(cryopod_computers)
 
 	var/mob/living/mob_occupant = occupant
 
-	if(mob_occupant.mind && mob_occupant.mind.assigned_role)
+	if(mob_occupant.mind && !is_unassigned_job(mob_occupant.mind.assigned_role))
 		//Handle job slot/tater cleanup.
 		var/job = mob_occupant.mind.assigned_role
 		SSjob.FreeRole(job)
@@ -356,8 +356,11 @@ GLOBAL_LIST_EMPTY(cryopod_computers)
 					mob_occupant.transferItemToLoc(W, loc, TRUE)
 
 	for(var/obj/item/W in mob_occupant.GetAllContents())
+		if(istype(W, /obj/item/organ) || istype(W, /obj/item/bodypart))
+			continue
 		qdel(W)//because we moved all items to preserve away
 		//and yes, this totally deletes their bodyparts one by one, I just couldn't bother
+		//This method is shit, thanks jlsnow, but atleast mobs shouldnt fucking explode anymore
 
 	// Suspend their bank payment
 	if(mob_occupant.mind?.account_id)

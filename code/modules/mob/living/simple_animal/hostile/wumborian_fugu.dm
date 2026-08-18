@@ -8,7 +8,7 @@
 	icon_aggro = "Fugu0"
 	icon_dead = "Fugu_dead"
 	icon_gib = "syndicate_gib"
-	mob_biotypes = MOB_ORGANIC | MOB_BEAST
+	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	mouse_opacity = MOUSE_OPACITY_ICON
 	move_to_delay = 5
 	friendly_verb_continuous = "floats near"
@@ -25,6 +25,7 @@
 	attack_verb_continuous = "chomps"
 	attack_verb_simple = "chomp"
 	attack_sound = 'sound/weapons/punch1.ogg'
+	attack_vis_effect = ATTACK_EFFECT_BITE
 	throw_message = "is avoided by the"
 	vision_range = 5
 	aggro_vision_range = 9
