@@ -4,7 +4,7 @@ SAFES
 FLOOR SAFES
 */
 
-/// How many explosions a safe absorbs before its lock is broken open.
+/// Explosion number threshold for opening safe
 #define BROKEN_THRESHOLD 3
 
 //SAFES

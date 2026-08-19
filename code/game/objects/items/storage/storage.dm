@@ -32,11 +32,11 @@
 /obj/item/storage/contents_explosion(severity, target)
 	switch(severity)
 		if(EXPLODE_DEVASTATE)
-			SSexplosions.high_mov_atom += thing
+			SSexplosions.high_mov_atom += target
 		if(EXPLODE_HEAVY)
-			SSexplosions.med_mov_atom += thing
+			SSexplosions.med_mov_atom += target
 		if(EXPLODE_LIGHT)
-			SSexplosions.low_mov_atom += thing
+			SSexplosions.low_mov_atom += target
 
 /obj/item/storage/canStrip(mob/who)
 	. = ..()
