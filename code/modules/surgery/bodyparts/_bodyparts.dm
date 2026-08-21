@@ -152,6 +152,10 @@
 	if(can_be_disabled)
 		RegisterSignal(src, SIGNAL_ADDTRAIT(TRAIT_PARALYSIS), PROC_REF(on_paralysis_trait_gain))
 		RegisterSignal(src, SIGNAL_REMOVETRAIT(TRAIT_PARALYSIS), PROC_REF(on_paralysis_trait_loss))
+
+	if(!IS_ORGANIC_LIMB(src))
+		grind_results = null
+
 	name = "[limb_id] [parse_zone(body_zone)]"
 	if(is_dimorphic)
 		limb_gender = pick("m", "f")
@@ -704,6 +708,7 @@
 	draw_color = variable_color
 	if(should_draw_greyscale) //Should the limb be colored?
 		draw_color ||= species_color || (skin_tone ? skintone2hex(skin_tone) : null)
+	return TRUE
 
 //to update the bodypart's icon when not attached to a mob
 /obj/item/bodypart/proc/update_icon_dropped()
@@ -728,7 +733,7 @@
 	. = list()
 
 	//Handles dropped icons
-	var/image_dir = 0
+	var/image_dir = NONE
 	if(dropped)
 		image_dir = SOUTH
 		if(dmg_overlay_type)
@@ -746,17 +751,15 @@
 	if(is_husked)
 		limb.icon = icon_husk
 		limb.icon_state = "[husk_type]_husk_[body_zone]"
-		. += emissive_blocker(limb.icon, limb.icon_state, limb.layer, limb.alpha)
 		if(!icon_exists(limb.icon, limb.icon_state))
 			stack_trace("No such icon: '[limb.icon]' state '[limb.icon_state]'") //Prints a stack trace on the first failure of a given iconstate.
 		. += limb
 		if(aux_zone) //Hand shit
 			aux = image(limb.icon, "[husk_type]_husk_[aux_zone]", CALCULATE_MOB_OVERLAY_LAYER(aux_layer), image_dir)
 			. += aux
-			. += emissive_blocker(limb.icon, "[husk_type]_husk_[aux_zone]", CALCULATE_MOB_OVERLAY_LAYER(aux_layer), image_dir)
-		return .
 
-	////This is the MEAT of limb icon code
+	// Normal non-husk handling
+		// This is the MEAT of limb icon code
 	limb.icon = icon_greyscale
 	if(!should_draw_greyscale || !icon_greyscale)
 		limb.icon = icon_static
@@ -765,7 +768,6 @@
 		limb.icon_state = "[limb_id]_[body_zone]_[limb_gender]"
 	else
 		limb.icon_state = "[limb_id]_[body_zone]"
-	. += emissive_blocker(limb.icon, limb.icon_state, limb.layer, limb.alpha)
 
 	icon_exists_or_scream(limb.icon, limb.icon_state) //Prints a stack trace on the first failure of a given iconstate.
 
@@ -774,7 +776,6 @@
 	if(aux_zone) //Hand shit
 		aux = image(limb.icon, "[limb_id]_[aux_zone]", CALCULATE_MOB_OVERLAY_LAYER(aux_layer), image_dir)
 		. += aux
-		. += emissive_blocker(limb.icon, "[limb_id]_[aux_zone]", CALCULATE_MOB_OVERLAY_LAYER(aux_layer), image_dir)
 
 	draw_color = variable_color
 	if(should_draw_greyscale) //Should the limb be colored?
@@ -784,6 +785,23 @@
 		limb.color = draw_color
 		if(aux_zone)
 			aux.color = draw_color
+
+		//EMISSIVE CODE START
+		// For some reason this was applied as an overlay on the aux image and limb image before.
+		// I am very sure that this is unnecessary, and i need to treat it as part of the return list
+	if(!is_husked)
+		if(blocks_emissive != EMISSIVE_BLOCK_NONE)
+			var/mutable_appearance/limb_em_block = emissive_blocker(limb.icon, limb.icon_state, layer = limb.layer, alpha = limb.alpha)
+			limb_em_block.dir = image_dir
+			. += limb_em_block
+
+			if(aux_zone)
+				var/mutable_appearance/aux_em_block = emissive_blocker(aux.icon, aux.icon_state, layer = aux.layer, alpha = aux.alpha)
+				aux_em_block.dir = image_dir
+				. += aux_em_block
+		//EMISSIVE CODE END
+
+	return .
 
 /obj/item/bodypart/deconstruct(disassembled = TRUE)
 	SHOULD_CALL_PARENT(TRUE)

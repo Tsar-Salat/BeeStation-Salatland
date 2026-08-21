@@ -20,9 +20,11 @@
 /mob/living/carbon/regenerate_icons()
 	if(HAS_TRAIT(src, TRAIT_NO_TRANSFORM))
 		return
+	icon_render_keys = list() //Clear this bad larry out
 	update_held_items()
 	update_worn_handcuffs()
 	update_worn_legcuffs()
+	update_body()
 	update_appearance(UPDATE_OVERLAYS)
 
 /mob/living/carbon/update_held_items()
@@ -220,7 +222,7 @@
 	for(var/obj/item/bodypart/limb as anything in bodyparts)
 		limb.update_limb(is_creating = update_limb_data) //Update limb actually doesn't do much, get_limb_icon is the cpu eater.
 
-		var/old_key = icon_render_keys?[limb.body_zone]
+		var/old_key = icon_render_keys?[limb.body_zone] //Checks the mob's icon render key list for the bodypart
 		icon_render_keys[limb.body_zone] = (limb.is_husked) ? limb.generate_husk_key().Join() : limb.generate_icon_key().Join() //Generates a key for the current bodypart
 
 		if(icon_render_keys[limb.body_zone] != old_key) //If the keys match, that means the limb doesn't need to be redrawn
@@ -231,7 +233,7 @@
 	if(((dna ? dna.species.max_bodypart_count : BODYPARTS_DEFAULT_MAXIMUM) - icon_render_keys.len) != missing_bodyparts.len) //Checks to see if the target gained or lost any limbs.
 		limb_count_update += 1
 		for(var/missing_limb in missing_bodyparts)
-			icon_render_keys -= missing_limb
+			icon_render_keys -= missing_limb //Removes dismembered limbs from the key list
 
 	. = limb_count_update
 	if(!.)
