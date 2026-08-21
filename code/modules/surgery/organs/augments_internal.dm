@@ -5,19 +5,74 @@
 	desc = "A state-of-the-art implant that improves a baseline's functionality."
 	visual = FALSE
 	organ_flags = ORGAN_ROBOTIC
-	var/implant_color = COLOR_WHITE
-	var/implant_overlay
+	/// icon of the bodypart overlay we're going to be applying to our owner
+	var/aug_icon = 'icons/mob/human/species/misc/bodypart_overlay_augmentations.dmi'
+	/// icon_state of the bodypart overlay we're going to be applying to our owner
+	var/aug_overlay = null
+	/// Does the implant have an emissive overlay too?
+	var/emissive_overlay = FALSE
+/*
+	/// Bodypart overlay we're going to apply to whoever we're implanted into
+	var/datum/bodypart_overlay/augment/bodypart_aug = null
 
-/obj/item/organ/cyberimp/New(mob/M = null)
-	if(iscarbon(M))
-		src.Insert(M)
-	if(implant_overlay)
-		var/mutable_appearance/overlay = mutable_appearance(icon, implant_overlay)
-		overlay.color = implant_color
-		add_overlay(overlay)
+/obj/item/organ/cyberimp/Initialize(mapload)
+	. = ..()
+	if (aug_overlay)
+		bodypart_aug = new(src)
+
+/obj/item/organ/cyberimp/Destroy()
+	QDEL_NULL(bodypart_aug)
 	return ..()
 
+/obj/item/organ/cyberimp/proc/get_overlay_state()
+	return aug_overlay
 
+/obj/item/organ/cyberimp/proc/get_overlay(image_layer, obj/item/bodypart/limb)
+	. = list()
+	. += image(icon = aug_icon, icon_state = get_overlay_state(), layer = image_layer)
+	if (emissive_overlay)
+		. += emissive_appearance(aug_icon, "[get_overlay_state()]_e", layer = image_layer)
+
+/obj/item/organ/cyberimp/on_bodypart_insert(obj/item/bodypart/limb)
+	. = ..()
+	if (bodypart_aug)
+		limb.add_bodypart_overlay(bodypart_aug)
+
+/obj/item/organ/cyberimp/on_bodypart_remove(obj/item/bodypart/limb)
+	. = ..()
+	if (bodypart_aug)
+		limb.remove_bodypart_overlay(bodypart_aug)
+
+/datum/bodypart_overlay/augment
+	layers = EXTERNAL_ADJACENT
+	/// Implant that owns this overlay
+	var/obj/item/organ/cyberimp/implant
+
+/datum/bodypart_overlay/augment/New(obj/item/organ/cyberimp/implant)
+	. = ..()
+	src.implant = implant
+
+/datum/bodypart_overlay/augment/Destroy(force)
+	implant = null
+	return ..()
+
+/datum/bodypart_overlay/augment/generate_icon_cache()
+	. = ..()
+	. += implant.get_overlay_state()
+
+/datum/bodypart_overlay/augment/get_overlay(layer, obj/item/bodypart/limb)
+	layer = bitflag_to_layer(layer)
+	var/list/imageset = implant.get_overlay(layer, limb)
+	if(blocks_emissive == EMISSIVE_BLOCK_NONE || !limb)
+		return imageset
+
+	var/list/all_images = list()
+	for(var/image/overlay as anything in imageset)
+		all_images += overlay
+		all_images += emissive_blocker(overlay.icon, overlay.icon_state, layer = overlay.layer, alpha = overlay.alpha)
+
+	return all_images
+*/
 
 //[[[[BRAIN]]]]
 
@@ -25,7 +80,6 @@
 	name = "cybernetic brain implant"
 	desc = "Injectors of extra sub-routines for the brain."
 	icon_state = "brain_implant"
-	implant_overlay = "brain_implant_overlay"
 	zone = BODY_ZONE_HEAD
 	w_class = WEIGHT_CLASS_TINY
 
@@ -45,7 +99,6 @@
 	desc = "This cybernetic brain implant will allow you to force your hand muscles to contract, preventing item dropping. Twitch ear to toggle."
 	var/active = FALSE
 	var/list/stored_items = list()
-	implant_color = "#DE7E00"
 	slot = ORGAN_SLOT_BRAIN_ANTIDROP
 	actions_types = list(/datum/action/item_action/organ_action/toggle)
 
@@ -88,7 +141,6 @@
 /obj/item/organ/cyberimp/brain/anti_stun
 	name = "CNS Rebooter implant"
 	desc = "This implant will automatically give you back control over your central nervous system, reducing downtime when stunned."
-	implant_color = COLOR_YELLOW
 	slot = ORGAN_SLOT_BRAIN_ANTISTUN
 
 	var/static/list/signalCache = list(
@@ -207,6 +259,7 @@
 	name = "breathing tube implant"
 	desc = "This simple implant adds an internals connector to your back, allowing you to use internals without a mask and protecting you from being choked."
 	icon_state = "implant_mask"
+	aug_overlay = "breathing_tube"
 	slot = ORGAN_SLOT_BREATHING_TUBE
 	w_class = WEIGHT_CLASS_TINY
 

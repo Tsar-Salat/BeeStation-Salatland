@@ -6,14 +6,20 @@
 	icon = 'icons/obj/implants.dmi'
 	icon_state = "generic" //Shows up as the action button icon
 	item_flags = ABSTRACT | DROPDEL
-	actions_types = list(/datum/action/item_action/hands_free/activate)
+	resistance_flags = INDESTRUCTIBLE | UNACIDABLE
 	// This gives the user an action button that allows them to activate the implant.
 	// If the implant needs no action button, then null this out.
 	// Or, if you want to add a unique action button, then replace this.
+	actions_types = list(/datum/action/item_action/hands_free/activate)
+	///the mob that's implanted with this
 	var/mob/living/imp_in = null
+	///implant color, used for selecting either the "b" version or the "r" version of the implant case sprite when the implant is in a case.
 	var/implant_color = "b"
+	///if false, upon implantation of a duplicate implant, an attempt to combine the new implant's uses with the old one's uses will be made, deleting the new implant if successful or stopping the implantation if not
 	var/allow_multiple = FALSE
+	///how many times this can do something, only relevant for implants with limited uses
 	var/uses = -1
+	///our implant flags
 	var/implant_flags = NONE
 
 /obj/item/implant/proc/on_death(emote, mob/living/carbon/source)
@@ -51,6 +57,7 @@
 	LAZYINITLIST(target.implants)
 	if(!force && (!target.can_be_implanted() || !can_be_implanted_in(target)))
 		return FALSE
+
 	for(var/X in target.implants)
 		var/obj/item/implant/imp_e = X
 		var/flags = SEND_SIGNAL(imp_e, COMSIG_IMPLANT_OTHER, args, src)

@@ -3,14 +3,13 @@
 	name = "cybernetic torso implant"
 	desc = "Implants for the organs in your torso."
 	icon_state = "chest_implant"
-	implant_overlay = "chest_implant_overlay"
 	zone = BODY_ZONE_CHEST
 
 /obj/item/organ/cyberimp/chest/nutriment
 	name = "Nutriment pump implant"
 	desc = "This implant will synthesize and pump into your bloodstream a small amount of nutriment when you are starving."
 	icon_state = "chest_implant"
-	implant_color = "#00AA00"
+	aug_overlay = "nutripump"
 	var/hunger_threshold = NUTRITION_LEVEL_STARVING
 	var/synthesizing = FALSE
 	var/malfunctioning = FALSE
@@ -47,14 +46,15 @@
 	name = "Nutriment pump implant PLUS"
 	desc = "This implant will synthesize and pump into your bloodstream a small amount of nutriment when you are hungry."
 	icon_state = "chest_implant"
-	implant_color = "#006607"
+	aug_overlay = "nutripump_adv"
 	hunger_threshold = NUTRITION_LEVEL_HUNGRY
 
 /obj/item/organ/cyberimp/chest/reviver
 	name = "Reviver implant"
 	desc = "This implant will attempt to revive and heal you if you lose consciousness. For the faint of heart!"
 	icon_state = "chest_implant"
-	implant_color = "#AD0000"
+	aug_overlay = "reviver"
+	emissive_overlay = TRUE
 	slot = ORGAN_SLOT_HEART_AID
 	var/revive_cost = 0
 	var/reviving = FALSE
@@ -117,8 +117,8 @@
 	slot = ORGAN_SLOT_THRUSTERS
 	icon_state = "imp_jetpack"
 	base_icon_state = "imp_jetpack"
-	implant_overlay = null
-	implant_color = null
+	aug_overlay = "imp_jetpack"
+	emissive_overlay = TRUE
 	actions_types = list(/datum/action/item_action/organ_action/toggle)
 	w_class = WEIGHT_CLASS_NORMAL
 	var/on = FALSE
@@ -161,6 +161,7 @@
 			to_chat(owner, span_notice("You turn your thrusters set off."))
 		on = FALSE
 	update_icon()
+	owner.update_body_parts()
 
 /obj/item/organ/cyberimp/chest/thrusters/update_icon_state()
 	icon_state = "[base_icon_state][on ? "-on" : null]"
@@ -208,3 +209,13 @@
 
 	toggle(silent = TRUE)
 	return 0
+
+/*
+/obj/item/organ/cyberimp/chest/thrusters/get_overlay_state(image_layer, obj/item/bodypart/limb)
+	return "[aug_overlay][on ? "_on" : ""]"
+
+/obj/item/organ/cyberimp/chest/thrusters/get_overlay(image_layer, obj/item/bodypart/limb)
+	. = ..()
+	for (var/image/overlay as anything in .)
+		overlay.layer = CALCULATE_MOB_OVERLAY_LAYER(BODYPARTS_HIGH_LAYER) // makes absolutely zero sense why it would layer ontop of jumpsuits but it looks cool
+*/

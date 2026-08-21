@@ -14,6 +14,8 @@
 	var/list/items_list = list()// I would use contents, but they shuffle on every activation/deactivation leading to interface inconsistencies.
 	/// You can use this var for item path, it would be converted into an item on New().
 	var/obj/item/active_item
+	/// Do we have a separate icon_state for the hand overlay?
+	var/hand_state = TRUE
 
 /obj/item/organ/cyberimp/arm/Initialize(mapload)
 	. = ..()
@@ -146,6 +148,27 @@
 /obj/item/organ/cyberimp/arm/proc/on_item_attack_self()
 	SIGNAL_HANDLER
 	INVOKE_ASYNC(src, PROC_REF(ui_action_click))
+
+/*
+/obj/item/organ/cyberimp/arm/get_overlay_state(image_layer, obj/item/bodypart/limb)
+	return "[aug_overlay][zone == BODY_ZONE_L_ARM ? "_left" : "_right"]"
+
+/obj/item/organ/cyberimp/arm/get_overlay(image_layer, obj/item/bodypart/limb)
+	if (!hand_state)
+		return ..()
+
+	var/mutable_appearance/arm_overlay = mutable_appearance(
+		icon = aug_icon,
+		icon_state = get_overlay_state(),
+		layer = image_layer,
+	)
+	var/mutable_appearance/hand_overlay = mutable_appearance(
+		icon = aug_icon,
+		icon_state = "[get_overlay_state()]_hand",
+		layer = -BODYPARTS_HIGH_LAYER,
+	)
+	return list(arm_overlay, hand_overlay)
+*/
 
 /**
   * Called when the mob uses the "drop item" hotkey
@@ -281,6 +304,7 @@
 /obj/item/organ/cyberimp/arm/toolset
 	name = "integrated toolset implant"
 	desc = "A stripped-down version of the engineering cyborg toolset, designed to be installed on subject's arm. Contains advanced versions of every tool."
+	aug_overlay = "toolkit_engi"
 	items_to_create = list(
 		/obj/item/screwdriver/cyborg,
 		/obj/item/wrench/cyborg,
@@ -316,12 +340,15 @@
 /obj/item/organ/cyberimp/arm/medibeam
 	name = "integrated medical beamgun"
 	desc = "A cybernetic implant that allows the user to project a healing beam from their hand."
+	icon_state = "toolkit_surgical"
+	aug_overlay = "toolkit_med"
 	items_to_create = list(/obj/item/gun/medbeam)
 
 
 /obj/item/organ/cyberimp/arm/flash
 	name = "integrated high-intensity photon projector" //Why not
 	desc = "An integrated projector mounted onto a user's arm that is able to be used as a powerful flash."
+	aug_overlay = "toolkit"
 	items_to_create = list(/obj/item/assembly/flash/armimplant)
 
 /obj/item/organ/cyberimp/arm/flash/Initialize(mapload)
@@ -344,12 +371,14 @@
 /obj/item/organ/cyberimp/arm/baton
 	name = "arm electrification implant"
 	desc = "An illegal combat implant that allows the user to administer disabling shocks from their arm."
+	aug_overlay = "toolkit"
 	organ_flags = ORGAN_ROBOTIC | ORGAN_HIDDEN
 	items_to_create = list(/obj/item/borg/stun)
 
 /obj/item/organ/cyberimp/arm/combat
 	name = "combat cybernetics implant"
 	desc = "A powerful cybernetic implant that contains combat modules built into the user's arm."
+	aug_overlay = "toolkit"
 	organ_flags = ORGAN_ROBOTIC | ORGAN_HIDDEN
 	items_to_create = list(/obj/item/melee/energy/blade/hardlight, /obj/item/gun/medbeam, /obj/item/borg/stun, /obj/item/assembly/flash/armimplant)
 
@@ -365,6 +394,7 @@
 /obj/item/organ/cyberimp/arm/surgery
 	name = "surgical toolset implant"
 	desc = "A set of surgical tools hidden behind a concealed panel on the user's arm."
+	aug_overlay = "toolkit_med"
 	items_to_create = list(
 		/obj/item/surgical_drapes,
 		/obj/item/retractor/augment,
