@@ -553,7 +553,9 @@ GLOBAL_LIST_INIT(available_random_trauma_list, list(
 /// certain mutantrace features (snout, body markings) that must appear above the body parts
 #define BODY_ADJ_LAYER 31
 /// underwear, undershirts, socks, eyes, lips(makeup)
-#define BODY_LAYER 29
+#define BODY_LAYER 30
+// Eyes and eyelids
+#define EYES_LAYER 29
 /// mutations that should appear above body, body_adj and bodyparts layer (e.g. laser eyes)
 #define FRONT_MUTATIONS_LAYER 28
 /// damage indicators (cuts and burns)

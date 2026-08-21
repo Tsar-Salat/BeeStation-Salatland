@@ -570,6 +570,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
  */
 /datum/species/proc/handle_body(mob/living/carbon/human/species_human)
 	species_human.remove_overlay(BODY_LAYER)
+	species_human.remove_overlay(EYES_LAYER)
 
 	var/list/standing = list()
 
@@ -580,8 +581,8 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			var/obj/item/organ/eyes/eye_organ = species_human.get_organ_slot(ORGAN_SLOT_EYES)
 			if(eye_organ)
 				eye_organ.refresh(call_update = FALSE)
-				for(var/eye_overlay in eye_organ.generate_body_overlay(species_human))
-					standing += eye_overlay
+				species_human.overlays_standing[EYES_LAYER] = eye_organ.generate_body_overlay(species_human)
+				species_human.apply_overlay(EYES_LAYER)
 
 		// organic body markings (oh my god this is terrible please rework this to be done on the limbs themselves i beg you)
 		if(HAS_TRAIT(species_human, TRAIT_HAS_MARKINGS))
@@ -620,38 +621,59 @@ GLOBAL_LIST_EMPTY(features_by_species)
 				standing += markings_l_leg_overlay
 
 
-	//Underwear, Undershirts & Socks
-	if(!(HAS_TRAIT(species_human, TRAIT_NO_UNDERWEAR)))
-		if(species_human.underwear && !(species_human.bodytype & BODYTYPE_DIGITIGRADE))
-			var/datum/sprite_accessory/underwear/underwear = GLOB.underwear_list[species_human.underwear]
-			var/mutable_appearance/underwear_overlay
-			if(underwear)
-				if(species_human.dna.species.sexes && species_human.dna.features["body_model"] == FEMALE && (underwear.use_default_gender == MALE))
-					underwear_overlay = wear_female_version(underwear.icon_state, underwear.icon, CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER), FEMALE_UNIFORM_FULL)
-				else
-					underwear_overlay = mutable_appearance(underwear.icon, underwear.icon_state, CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
-				if(!underwear.use_static)
-					underwear_overlay.color = species_human.underwear_color
-				standing += underwear_overlay
+	if(HAS_TRAIT(species_human, TRAIT_NO_UNDERWEAR))
+		return
 
-		if(species_human.undershirt)
-			var/datum/sprite_accessory/undershirt/undershirt = GLOB.undershirt_list[species_human.undershirt]
-			if(undershirt)
-				if(species_human.dna.species.sexes && species_human.dna.features["body_model"] == FEMALE)
-					standing += wear_female_version(undershirt.icon_state, undershirt.icon, CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
-				else
-					standing += mutable_appearance(undershirt.icon, undershirt.icon_state, CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
+	// Underwear, Undershirts & Socks
+	if(species_human.underwear)
+		var/datum/sprite_accessory/underwear/underwear = GLOB.underwear_list[species_human.underwear]
+		var/mutable_appearance/underwear_overlay
+		if(underwear)
+			if(species_human.dna.species.sexes && species_human.dna.features["body_model"] == FEMALE && (underwear.use_default_gender == MALE))
+				underwear_overlay = wear_female_version(underwear.icon_state, underwear.icon, CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER), FEMALE_UNIFORM_FULL)
+			else
+				underwear_overlay = mutable_appearance(underwear.icon, underwear.icon_state, layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
+			if(!underwear.use_static)
+				underwear_overlay.color = species_human.underwear_color
+			standing += underwear_overlay
 
-		if(species_human.socks && species_human.num_legs >= 2 && !(species_human.bodytype & BODYTYPE_DIGITIGRADE) && !(HAS_TRAIT(species_human, TRAIT_NO_SOCKS)))
-			var/datum/sprite_accessory/socks/socks = GLOB.socks_list[species_human.socks]
-			if(socks)
-				standing += mutable_appearance(socks.icon, socks.icon_state, CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
+	if(species_human.undershirt)
+		var/datum/sprite_accessory/undershirt/undershirt = GLOB.undershirt_list[species_human.undershirt]
+		if(undershirt)
+			var/mutable_appearance/working_shirt
+			if(species_human.dna.species.sexes && species_human.dna.features["body_model"] == FEMALE)
+				working_shirt = wear_female_version(undershirt.icon_state, undershirt.icon, layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
+			else
+				working_shirt = mutable_appearance(undershirt.icon, undershirt.icon_state, layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
+			standing += working_shirt
+
+	if(species_human.socks && species_human.num_legs >= 2 && !(species_human.bodytype & BODYTYPE_DIGITIGRADE) && !(HAS_TRAIT(species_human, TRAIT_NO_SOCKS)))
+		var/datum/sprite_accessory/socks/socks = GLOB.socks_list[species_human.socks]
+		if(socks)
+			standing += mutable_appearance(socks.icon, socks.icon_state, layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
 
 	if(standing.len)
 		species_human.overlays_standing[BODY_LAYER] = standing
 
 	species_human.apply_overlay(BODY_LAYER)
 	handle_mutant_bodyparts(species_human)
+
+/// Updates face (as of now, only eye) offsets
+/datum/species/proc/update_face_offset(mob/living/carbon/human/species_human)
+	var/list/eye_overlays = species_human.overlays_standing[EYES_LAYER]
+	species_human.remove_overlay(EYES_LAYER)
+
+	if(HAS_TRAIT(species_human, TRAIT_HUSK) || !length(eye_overlays))
+		return
+
+	var/obj/item/bodypart/head/noggin = species_human.get_bodypart(BODY_ZONE_HEAD)
+	for (var/mutable_appearance/overlay as anything in eye_overlays)
+		overlay.pixel_w = 0
+		overlay.pixel_z = 0
+		noggin.worn_face_offset.apply_offset(overlay)
+
+	species_human.overlays_standing[EYES_LAYER] = eye_overlays
+	species_human.apply_overlay(EYES_LAYER)
 
 /datum/species/proc/handle_mutant_bodyparts(mob/living/carbon/human/H, forced_colour)
 	var/list/bodyparts_to_add = mutant_bodyparts.Copy()

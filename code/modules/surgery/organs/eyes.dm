@@ -124,14 +124,14 @@
 	if(isnull(eye_icon_state))
 		return list()
 
-	var/mutable_appearance/eye_left = mutable_appearance(eye_icon, "[eye_icon_state]_l", CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER), parent)
-	var/mutable_appearance/eye_right = mutable_appearance(eye_icon, "[eye_icon_state]_r", CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER), parent)
+	var/mutable_appearance/eye_left = mutable_appearance(eye_icon, "[eye_icon_state]_l", CALCULATE_MOB_OVERLAY_LAYER(EYES_LAYER), parent)
+	var/mutable_appearance/eye_right = mutable_appearance(eye_icon, "[eye_icon_state]_r", CALCULATE_MOB_OVERLAY_LAYER(EYES_LAYER), parent)
 	var/list/overlays = list(eye_left, eye_right)
 
 	var/obscured = parent.check_obscured_slots(TRUE)
 	if(overlay_ignore_lighting && !(obscured & ITEM_SLOT_EYES))
-		overlays += emissive_appearance(eye_left.icon, eye_left.icon_state, layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER), alpha = eye_left.alpha)
-		overlays += emissive_appearance(eye_right.icon, eye_right.icon_state, layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER), alpha = eye_right.alpha)
+		overlays += emissive_appearance(eye_left.icon, eye_left.icon_state, layer = CALCULATE_MOB_OVERLAY_LAYER(EYES_LAYER), alpha = eye_left.alpha)
+		overlays += emissive_appearance(eye_right.icon, eye_right.icon_state, layer = CALCULATE_MOB_OVERLAY_LAYER(EYES_LAYER), alpha = eye_right.alpha)
 
 	// Cry emote overlay
 	if (HAS_TRAIT(parent, TRAIT_CRYING)) // Caused by either using *cry or being pepper sprayed
@@ -255,8 +255,8 @@
 		var/list/anim_times = animate_eyelid(eyelid_right, parent, sync_blinking)
 		animate_eyelid(eyelid_left, parent, sync_blinking, anim_times)
 
-	var/mutable_appearance/left_eyelid_overlay = mutable_appearance(layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
-	var/mutable_appearance/right_eyelid_overlay = mutable_appearance(layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
+	var/mutable_appearance/left_eyelid_overlay = mutable_appearance(layer = CALCULATE_MOB_OVERLAY_LAYER(EYES_LAYER))
+	var/mutable_appearance/right_eyelid_overlay = mutable_appearance(layer = CALCULATE_MOB_OVERLAY_LAYER(EYES_LAYER))
 	left_eyelid_overlay.render_source = "*[REF(parent)]_eyelid_left"
 	right_eyelid_overlay.render_source = "*[REF(parent)]_eyelid_right"
 	return list(left_eyelid_overlay, right_eyelid_overlay)
@@ -287,7 +287,7 @@
 /obj/effect/abstract/eyelid_effect
 	name = "eyelid"
 	icon = 'icons/mob/human/human_face.dmi'
-	layer = -BODY_LAYER
+	layer = -EYES_LAYER
 	vis_flags = VIS_INHERIT_DIR | VIS_INHERIT_PLANE | VIS_INHERIT_ID
 
 /obj/effect/abstract/eyelid_effect/Initialize(mapload, new_state)
