@@ -9,6 +9,7 @@
 	selection_color = "#dddddd"
 	exp_granted_type = EXP_TYPE_CREW
 
+	certification = /datum/certification/law
 	outfit = /datum/outfit/job/lawyer
 
 	base_access = list(ACCESS_LAWYER, ACCESS_COURT, ACCESS_SEC_DOORS)

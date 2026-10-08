@@ -17,6 +17,9 @@
 	exp_granted_type = EXP_TYPE_CREW
 	min_pop = COMMAND_POPULATION_MINIMUM
 
+	certification = /datum/certification/science
+	// Years leading research before running a department
+	minimum_character_age = 35
 	outfit = /datum/outfit/job/research_director
 
 	base_access = list(ACCESS_RD, ACCESS_HEADS, ACCESS_TOX, ACCESS_MORGUE, ACCESS_EXPLORATION,

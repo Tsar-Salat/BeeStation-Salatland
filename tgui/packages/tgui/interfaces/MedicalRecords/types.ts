@@ -14,6 +14,7 @@ export type MedicalRecordData = {
 export type MedicalRecord = {
   age: number;
   blood_type: string;
+  certifications: string[];
   record_ref: string;
   dna: string;
   gender: string;

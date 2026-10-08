@@ -96,6 +96,8 @@
 
 	///Photo used for records, which we store here so we don't have to constantly make more of.
 	var/list/obj/item/photo/record_photos
+	/// Names of the certifications this person holds, so medical and security can check them
+	var/list/certifications = list()
 
 /datum/record/crew/New(
 	RECORD_GENERAL_STRICT_ARGS(
@@ -178,7 +180,8 @@
 		quirk_notes = src.quirk_notes,
 		rank = src.rank,
 		species = src.species,
-		medical_notes = list_of_medical_notes
+		medical_notes = list_of_medical_notes,
+		certifications = src.certifications,
 		)
 
 

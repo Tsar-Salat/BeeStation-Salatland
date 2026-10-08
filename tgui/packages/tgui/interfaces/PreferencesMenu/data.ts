@@ -78,6 +78,16 @@ export type Job = {
   description: string;
   department: string;
   lock_reason: string;
+  certification: string | null;
+  certification_name: string | null;
+  minimum_age: number;
+};
+
+export type Certification = {
+  id: string;
+  name: string;
+  description: string;
+  minimum_age: number;
 };
 
 export type Quirk = {
@@ -202,6 +212,10 @@ export type PreferencesMenuData = {
   overflow_role: string;
   selected_quirks: string[];
 
+  certifications: string[];
+  valid_certifications: string[];
+  certification_slots: number;
+
   purchased_gear: string[];
   equipped_gear: string[];
   metacurrency_balance: number;
@@ -236,6 +250,11 @@ export type ServerData = {
     types: Record<string, Name>;
   };
   quirks: QuirkInfo;
+  certifications: {
+    certifications: Certification[];
+    second_slot_age: number;
+    third_slot_age: number;
+  };
   loadout: LoadoutInfo;
   random: {
     randomizable: string[];

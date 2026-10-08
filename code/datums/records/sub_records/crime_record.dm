@@ -222,6 +222,11 @@ Do not modify this unless you know what you're doing. */
 	icon = "dna"
 	tooltip = "To purposefully modify an individual's genetic code without consent, or with intent to harm."
 
+/datum/crime/misdemeanour/unlicensed_practice
+	name = "Unlicensed Practice"
+	icon = "user-md"
+	tooltip = "To perform surgery without a medical license or a waiver signed by the patient."
+
 /datum/crime/major
 	category = CRIME_MAJOR
 	sentence = PRESET_LONG

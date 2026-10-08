@@ -53,6 +53,7 @@ const RecordInfo = (props) => {
 
   const {
     age,
+    certifications = [],
     record_ref,
     crimes,
     fingerprint,
@@ -194,6 +195,9 @@ const RecordInfo = (props) => {
                   text={species}
                 />
               )}
+            </LabeledList.Item>
+            <LabeledList.Item label="Licenses">
+              {certifications.length ? certifications.join(', ') : 'None'}
             </LabeledList.Item>
             <LabeledList.Item label="Gender">
               {is_silicon ? (

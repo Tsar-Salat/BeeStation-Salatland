@@ -13,6 +13,7 @@
 	exp_requirements = 100
 	exp_required_type = EXP_TYPE_MEDICAL
 	exp_granted_type = EXP_TYPE_CREW
+	certification = /datum/certification/genetics
 	outfit = /datum/outfit/job/geneticist
 
 	base_access = list(ACCESS_MEDICAL, ACCESS_MORGUE, ACCESS_GENETICS, ACCESS_CLONING, ACCESS_MECH_MEDICAL)

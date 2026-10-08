@@ -5,6 +5,7 @@ import { useBackend, useLocalState } from '../../backend';
 import { Button, Divider, Flex, Stack } from '../../components';
 import { Window } from '../../layouts';
 import { AntagsPage } from './AntagsPage';
+import { CertificationsPage } from './CertificationsPage';
 import { PreferencesMenuData } from './data';
 import { JobsPage } from './JobsPage';
 import { LoadoutPage } from './LoadoutPage';
@@ -20,6 +21,7 @@ enum Page {
   Jobs,
   Species,
   Quirks,
+  Certifications,
   Loadout,
 }
 
@@ -87,6 +89,9 @@ export const CharacterPreferenceWindow = (props) => {
       break;
     case Page.Quirks:
       pageContents = <QuirksPage />;
+      break;
+    case Page.Certifications:
+      pageContents = <CertificationsPage />;
       break;
     case Page.Loadout:
       pageContents = <LoadoutPage />;
@@ -188,6 +193,16 @@ export const CharacterPreferenceWindow = (props) => {
                   setPage={setCurrentPage}
                 >
                   Quirks
+                </PageButton>
+              </Stack.Item>
+
+              <Stack.Item grow>
+                <PageButton
+                  currentPage={currentPage}
+                  page={Page.Certifications}
+                  setPage={setCurrentPage}
+                >
+                  Certifications
                 </PageButton>
               </Stack.Item>
             </Stack>

@@ -10,6 +10,7 @@
 	exp_requirements = 120
 	exp_required_type = EXP_TYPE_CREW
 	exp_granted_type = EXP_TYPE_MEDICAL
+	certification = /datum/certification/paramedic
 	outfit = /datum/outfit/job/paramedic
 
 	base_access = list(

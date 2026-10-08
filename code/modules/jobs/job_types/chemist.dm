@@ -12,6 +12,7 @@
 	exp_requirements = 60
 	exp_required_type = EXP_TYPE_MEDICAL
 	exp_granted_type = EXP_TYPE_MEDICAL
+	certification = /datum/certification/pharmacy
 	outfit = /datum/outfit/job/chemist
 
 	base_access = list(ACCESS_MEDICAL, ACCESS_MORGUE, ACCESS_CHEMISTRY, ACCESS_MECH_MEDICAL, ACCESS_MINERAL_STOREROOM)

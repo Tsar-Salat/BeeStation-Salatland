@@ -29,6 +29,15 @@
 #define JOB_UNAVAILABLE_LOCKED 6
 /// Job unavailable due to incompatibility with an antag role.
 #define JOB_UNAVAILABLE_ANTAG_INCOMPAT 7
+/// Job unavailable because the character is younger than the job allows.
+#define JOB_UNAVAILABLE_CHARACTER_AGE 8
+/// Job unavailable because the character doesn't hold the certification it needs.
+#define JOB_UNAVAILABLE_CERTIFICATION 9
+
+/// Characters can hold one certification, a second from this age...
+#define CERTIFICATION_SECOND_SLOT_AGE 26
+/// ...and a third from this age
+#define CERTIFICATION_THIRD_SLOT_AGE 35
 
 // Job spawn groups
 // Spawn group representing the primary roles of a department

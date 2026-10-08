@@ -176,6 +176,13 @@
 		"colour": "orange",
 		"icon": "dna",
 		"sentence": 6000
+	  },
+	  {
+		"name": "Unlicensed Practice",
+		"tooltip": "To perform surgery without a medical license or a waiver signed by the patient.",
+		"colour": "orange",
+		"icon": "user-md",
+		"sentence": 6000
 	  }
 	],
 	"Major": [

@@ -17,6 +17,9 @@
 	exp_granted_type = EXP_TYPE_COMMAND
 	min_pop = COMMAND_POPULATION_MINIMUM
 
+	certification = /datum/certification/engineering
+	// Years of experience before running a department
+	minimum_character_age = 35
 	outfit = /datum/outfit/job/chief_engineer
 
 	base_access = list(ACCESS_ENGINE, ACCESS_ENGINE_EQUIP, ACCESS_TECH_STORAGE, ACCESS_MAINT_TUNNELS,

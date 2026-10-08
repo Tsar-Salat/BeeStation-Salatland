@@ -13,6 +13,9 @@
 	exp_required_type = EXP_TYPE_SECURITY
 	exp_granted_type = EXP_TYPE_SECURITY
 
+	certification = /datum/certification/security
+	// Usually several years as an officer first
+	minimum_character_age = 25
 	outfit = /datum/outfit/job/detective
 
 	base_access = list(ACCESS_SEC_DOORS, ACCESS_SEC_RECORDS, ACCESS_FORENSICS_LOCKERS, ACCESS_MORGUE, ACCESS_MAINT_TUNNELS,

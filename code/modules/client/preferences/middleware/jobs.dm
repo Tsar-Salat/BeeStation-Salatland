@@ -74,6 +74,9 @@
 			"lock_reason" = job.get_lock_reason(),
 			"description" = job.description,
 			"department" = department_name,
+			"certification" = job.certification ? initial(job.certification.id) : null,
+			"certification_name" = job.certification ? initial(job.certification.name) : null,
+			"minimum_age" = job.get_minimum_character_age(),
 		)
 
 	data["departments"] = departments

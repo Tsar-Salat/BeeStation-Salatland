@@ -277,6 +277,7 @@
 		CHARACTER_PREFERENCE_ALL_QUIRKS,
 		CHARACTER_PREFERENCE_EQUIPPED_GEAR,
 		CHARACTER_PREFERENCE_ROLE_PREFERENCES,
+		CHARACTER_PREFERENCE_CERTIFICATIONS,
 	)
 
 	var/datum/db_query/Q = SSdbcore.NewQuery(
@@ -311,6 +312,7 @@
 	JSONREAD_PREF(all_quirks, CHARACTER_PREFERENCE_ALL_QUIRKS)
 	JSONREAD_PREF(equipped_gear, CHARACTER_PREFERENCE_EQUIPPED_GEAR)
 	JSONREAD_PREF(role_preferences, CHARACTER_PREFERENCE_ROLE_PREFERENCES)
+	JSONREAD_PREF(certifications, CHARACTER_PREFERENCE_CERTIFICATIONS)
 
 	//Sanitize
 	randomize = SANITIZE_LIST(randomize)
@@ -318,6 +320,13 @@
 	all_quirks = SANITIZE_LIST(all_quirks)
 	equipped_gear = SANITIZE_LIST(equipped_gear)
 	role_preferences = SANITIZE_LIST(role_preferences)
+	certifications = SANITIZE_LIST(certifications)
+
+	// Drop certifications that no longer exist
+	for(var/id in certifications)
+		if(!GLOB.certifications[id])
+			certifications -= id
+			mark_undatumized_dirty_character()
 
 	var/antag_prefs_altered = FALSE
 
@@ -403,6 +412,7 @@
 	WRITEPREF_JSONENC(all_quirks, CHARACTER_PREFERENCE_ALL_QUIRKS)
 	WRITEPREF_JSONENC(equipped_gear, CHARACTER_PREFERENCE_EQUIPPED_GEAR)
 	WRITEPREF_JSONENC(role_preferences, CHARACTER_PREFERENCE_ROLE_PREFERENCES)
+	WRITEPREF_JSONENC(certifications, CHARACTER_PREFERENCE_CERTIFICATIONS)
 
 	new_data["ckey"] = parent_ckey
 	new_data["slot"] = character_data.slot_number

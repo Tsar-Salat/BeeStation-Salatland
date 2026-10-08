@@ -13,6 +13,9 @@
 	exp_required_type = EXP_TYPE_SECURITY
 	exp_granted_type = EXP_TYPE_SECURITY
 
+	certification = /datum/certification/security
+	// A sergeant level rank
+	minimum_character_age = 25
 	outfit = /datum/outfit/job/warden
 
 	base_access = list(ACCESS_SECURITY, ACCESS_SEC_DOORS, ACCESS_SEC_RECORDS, ACCESS_BRIG, ACCESS_BRIGPHYS, ACCESS_ARMORY, ACCESS_MECH_SECURITY,

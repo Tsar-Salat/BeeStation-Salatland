@@ -16,6 +16,9 @@
 	exp_required_type_department = EXP_TYPE_COMMAND
 	exp_granted_type = EXP_TYPE_CREW
 
+	certification = /datum/certification/command
+	// A long career before commanding a station
+	minimum_character_age = 40
 	outfit = /datum/outfit/job/captain
 
 	base_access = list()  //See get_access()

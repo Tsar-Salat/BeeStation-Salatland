@@ -96,6 +96,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/machinery/computer/records/security)
 
 		records += list(list(
 			age = target.age,
+			certifications = target.certifications,
 			citations = citations,
 			record_ref = REF(target),
 			crimes = crimes,

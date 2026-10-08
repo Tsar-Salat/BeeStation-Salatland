@@ -50,6 +50,21 @@
 			return
 
 	new_player_panel()
+	notify_unqualified_jobs()
 	if(SSticker.current_state < GAME_STATE_SETTING_UP)
 		var/tl = SSticker.GetTimeLeft()
 		to_chat(src, "Please set up your character and select \"Ready\". The game will start [tl > 0 ? "in about [DisplayTimeText(tl)]" : "soon"].")
+
+/// Tells the player once per round if jobs in their preferences need a certification or age their character doesn't have
+/mob/dead/new_player/authenticated/proc/notify_unqualified_jobs()
+	var/static/list/notified_ckeys = list()
+	if(client.ckey in notified_ckeys)
+		return
+	notified_ckeys += client.ckey
+	var/list/locked = list()
+	for(var/title in client.prefs.job_preferences)
+		var/datum/job/job = SSjob.get_job(title)
+		if(job && job.check_character_requirements(client.prefs) != JOB_AVAILABLE)
+			locked += title
+	if(length(locked))
+		to_chat(src, span_warning("[client.prefs.read_character_preference(/datum/preference/name/real_name)] can't take [english_list(locked)] yet. Jobs now need certifications and a minimum character age, see the Certifications and Occupations tabs in Character Setup."))

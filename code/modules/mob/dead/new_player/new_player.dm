@@ -283,6 +283,13 @@
 			return "[jobtitle] is not compatible with some antagonist role assigned to you."
 		if(JOB_UNAVAILABLE_LOCKED)
 			return "[jobtitle] is locked by the system."
+		if(JOB_UNAVAILABLE_CHARACTER_AGE)
+			var/datum/job/job = SSjob.get_job(jobtitle)
+			return "Your character must be at least [job?.get_minimum_character_age()] to work as [jobtitle]."
+		if(JOB_UNAVAILABLE_CERTIFICATION)
+			var/datum/job/job = SSjob.get_job(jobtitle)
+			var/datum/certification/certification = job?.certification
+			return "[jobtitle] requires [certification ? initial(certification.name) : "a certification"]. Pick it under Certifications."
 	return "Error: Unknown job availability."
 
 /mob/dead/new_player/authenticated/proc/IsJobUnavailable(rank, latejoin = FALSE)
@@ -509,6 +516,7 @@
 		preserved_mind.original_character_slot_index = client.prefs.default_slot
 		preserved_mind.transfer_to(spawning_mob) //won't transfer key since the mind is not active
 		preserved_mind.set_original_character(spawning_mob)
+		preserved_mind.certifications = client.prefs.get_valid_certifications()
 
 	LAZYADD(client.player_details.joined_as_slots, "[client.prefs.default_slot]")
 	. = spawning_mob

@@ -59,6 +59,11 @@
 	///If you have the use_age_restriction_for_jobs config option enabled and the database set up, this option will add a requirement for players to be at least minimal_player_age days old. (meaning they first signed in at least that many days before.)
 	var/minimal_player_age = 0
 
+	/// The certification a character needs to take this job
+	var/datum/certification/certification
+	/// The youngest a character can be for this job, if older than its certification already requires
+	var/minimum_character_age = 0
+
 	var/outfit = null
 
 	/// Minutes of experience-time required to play in this job. The type is determined by [exp_required_type] and [exp_required_type_department] depending on configs.
@@ -441,6 +446,23 @@
 		return TRUE	//Available in 0 days = available right now = player is old enough to play.
 	return FALSE
 
+/// The youngest a character can be for this job: its own floor or its certification's, whichever is higher
+/datum/job/proc/get_minimum_character_age()
+	. = minimum_character_age
+	if(certification)
+		. = max(., initial(certification.minimum_age))
+
+/// Returns JOB_AVAILABLE, or why the character in these preferences can't take this job
+/datum/job/proc/check_character_requirements(datum/preferences/prefs)
+	if(!prefs)
+		return JOB_AVAILABLE
+	// Age first, so a character who picked the certification but is too young for it hears about their age
+	if(prefs.read_character_preference(/datum/preference/numeric/age) < get_minimum_character_age())
+		return JOB_UNAVAILABLE_CHARACTER_AGE
+	if(certification && !prefs.has_certification(certification))
+		return JOB_UNAVAILABLE_CERTIFICATION
+	return JOB_AVAILABLE
+
 /datum/job/proc/areas_to_light_up(minimal_access = TRUE)
 	. = minimal_lightup_areas.Copy()
 	if(!minimal_access)
@@ -698,6 +720,7 @@
 	if(!player_client)
 		return // Disconnected while checking for the appearance ban.
 
+	var/age_before = player_client.prefs.read_character_preference(/datum/preference/numeric/age)
 	var/require_human = CONFIG_GET(flag/enforce_human_authority) && (job.job_flags & JOB_HEAD_OF_STAFF)
 
 	if(fully_randomize)
@@ -724,6 +747,15 @@
 				TRUE,
 				player_client.prefs.read_character_preference(/datum/preference/choiced/species),
 			)
+
+	// A random body can roll an age too young for the job it was given, so roll again within the job's range
+	var/rolled_age = player_client.prefs.read_character_preference(/datum/preference/numeric/age)
+	var/job_age = job.get_minimum_character_age()
+	if(rolled_age != age_before && rolled_age < job_age)
+		rolled_age = rand(job_age, AGE_MAX)
+		player_client.prefs.write_preference(GLOB.preference_entries[/datum/preference/numeric/age], rolled_age)
+		age = rolled_age
+		dna.age = rolled_age
 	dna.update_dna_identity()
 
 /mob/living/silicon/ai/apply_prefs_job(client/player_client, datum/job/job)

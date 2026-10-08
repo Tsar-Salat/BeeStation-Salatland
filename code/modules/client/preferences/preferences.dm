@@ -55,6 +55,9 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	//Quirk list
 	var/list/all_quirks = list()
 
+	/// Certification ids this character picked, in pick order. Use get_valid_certifications() for the ones they actually hold.
+	var/list/certifications = list()
+
 	//Job preferences 2.0 - indexed by job title , no key or value implies never
 	var/list/job_preferences = list()
 

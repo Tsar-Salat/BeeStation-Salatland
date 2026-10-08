@@ -80,6 +80,8 @@
 	var/datum/weakref/original_character
 	/// The index for what character slot, if any, we were loaded from
 	var/original_character_slot_index
+	/// Ids of the certifications the character we joined as holds
+	var/list/certifications = list()
 	var/list/crew_objectives = list()
 
 	/// A lazy list of statuses to add next to this mind in the traitor panel

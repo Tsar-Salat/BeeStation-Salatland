@@ -11,6 +11,7 @@
 	exp_required_type = EXP_TYPE_CREW
 	exp_granted_type = EXP_TYPE_CREW
 
+	certification = /datum/certification/robotics
 	outfit = /datum/outfit/job/roboticist
 	mind_traits = list(TRAIT_KNOW_ROBO_WIRES)
 

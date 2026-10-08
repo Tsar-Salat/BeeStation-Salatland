@@ -11,6 +11,7 @@
 	exp_required_type = EXP_TYPE_CREW
 	exp_granted_type = EXP_TYPE_CREW
 
+	certification = /datum/certification/science
 	outfit = /datum/outfit/job/scientist
 
 

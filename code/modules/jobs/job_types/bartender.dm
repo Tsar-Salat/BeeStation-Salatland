@@ -9,6 +9,7 @@
 	selection_color = "#bbe291"
 	exp_granted_type = EXP_TYPE_CREW
 
+	certification = /datum/certification/bartending
 	outfit = /datum/outfit/job/bartender
 
 	base_access = list(

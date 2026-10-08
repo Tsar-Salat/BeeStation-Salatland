@@ -17,6 +17,9 @@
 	exp_granted_type = EXP_TYPE_COMMAND
 	min_pop = COMMAND_POPULATION_MINIMUM
 
+	certification = /datum/certification/security
+	// Years in security before running a department
+	minimum_character_age = 35
 	outfit = /datum/outfit/job/head_of_security
 	mind_traits = list(TRAIT_LAW_ENFORCEMENT_METABOLISM,TRAIT_SECURITY)
 

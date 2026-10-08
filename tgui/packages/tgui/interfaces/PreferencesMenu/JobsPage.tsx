@@ -142,6 +142,7 @@ const JobRow = (props: { className?: string; job: Job; name: string }) => {
     data.job_required_experience && data.job_required_experience[name];
   const daysLeft = data.job_days_left ? data.job_days_left[name] : 0;
   const lockReason = job.lock_reason;
+  const age = data.character_preferences.non_contextual.age as number;
 
   let rightSide: ReactNode;
 
@@ -177,6 +178,25 @@ const JobRow = (props: { className?: string; job: Job; name: string }) => {
       <Stack align="center" height="100%" pr={1}>
         <Stack.Item grow textAlign="right">
           <b>Banned</b>
+        </Stack.Item>
+      </Stack>
+    );
+  } else if (job.minimum_age && age < job.minimum_age) {
+    rightSide = (
+      <Stack align="center" height="100%" pr={1}>
+        <Stack.Item grow textAlign="right">
+          Age <b>{job.minimum_age}</b>+
+        </Stack.Item>
+      </Stack>
+    );
+  } else if (
+    job.certification &&
+    !data.valid_certifications.includes(job.certification)
+  ) {
+    rightSide = (
+      <Stack align="center" height="100%" pr={1}>
+        <Stack.Item grow textAlign="right">
+          Needs <b>{job.certification_name}</b>
         </Stack.Item>
       </Stack>
     );

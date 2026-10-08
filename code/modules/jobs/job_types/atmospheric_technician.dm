@@ -13,6 +13,7 @@
 	exp_required_type = EXP_TYPE_ENGINEERING
 	exp_granted_type = EXP_TYPE_ENGINEERING
 
+	certification = /datum/certification/atmospherics
 	outfit = /datum/outfit/job/atmospheric_technician
 
 	base_access = list(ACCESS_ATMOSPHERICS, ACCESS_MAINT_TUNNELS, ACCESS_CONSTRUCTION, ACCESS_MECH_ENGINE, ACCESS_MINERAL_STOREROOM, ACCESS_AUX_BASE)
