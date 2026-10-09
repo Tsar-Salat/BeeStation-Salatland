@@ -3,6 +3,9 @@
 	/// Player preferences datum for the client
 	var/datum/preferences/prefs
 
+	var/ckey
+	var/mob/mob
+
 	/// The view of the client, similar to /client/var/view
 	var/view = "17x15"
 

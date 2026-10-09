@@ -50,6 +50,21 @@
 			return
 
 	new_player_panel()
+	notify_unqualified_jobs()
 	if(SSticker.current_state < GAME_STATE_SETTING_UP)
 		var/tl = SSticker.GetTimeLeft()
 		to_chat(src, "Please set up your character and select \"Ready\". The game will start [tl > 0 ? "in about [DisplayTimeText(tl)]" : "soon"].")
+
+/// Warns once per round about preferred jobs the character can't take
+/mob/dead/new_player/authenticated/proc/notify_unqualified_jobs()
+	var/static/list/notified_ckeys = list()
+	if(client.ckey in notified_ckeys)
+		return
+	notified_ckeys += client.ckey
+	var/list/locked = list()
+	for(var/title in client.prefs.job_preferences)
+		var/datum/job/job = SSjob.get_job(title)
+		if(job && job.check_character_requirements(client.prefs) != JOB_AVAILABLE)
+			locked += title
+	if(length(locked))
+		to_chat(src, span_warning("Your character is not qualified for [english_list(locked)]. Check the Occupations tab in Character Setup."))

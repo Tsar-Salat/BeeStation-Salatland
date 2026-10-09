@@ -13,6 +13,7 @@
 	exp_required_type = EXP_TYPE_SECURITY
 	exp_granted_type = EXP_TYPE_SECURITY
 
+	qualifications = list(/datum/qualification/security = 4)
 	outfit = /datum/outfit/job/warden
 
 	base_access = list(ACCESS_SECURITY, ACCESS_SEC_DOORS, ACCESS_SEC_RECORDS, ACCESS_BRIG, ACCESS_BRIGPHYS, ACCESS_ARMORY, ACCESS_MECH_SECURITY,

@@ -187,15 +187,6 @@
 	return "[examine_icon ? "[examine_icon] " : ""][thats ? "[examine_thats] ":""]<em>[get_examine_name(user)]</em>"
 
 /**
- * Returns an extended list of examine strings for any contained ID cards.
- *
- * Arguments:
- * * user - The user who is doing the examining.
- */
-/atom/proc/get_id_examine_strings(mob/user)
-	. = list()
-
-/**
  * Used by mobs to determine the name for someone wearing a mask, or with a disfigured or missing face.
  * By default just returns the atom's name.
  *

@@ -25,11 +25,17 @@ const createByondUiElement = (elementId) => {
   logger.log(`allocated '${id}'`);
   // Return a control structure
   return {
-    render: (params) => {
+    render: (params, visible) => {
       logger.log(`rendering '${id}'`);
       byondUiStack[index] = id;
-      params['is-visible'] = 'true';
+      params['is-visible'] = visible ? 'true' : 'false';
       Byond.winset(id, params);
+    },
+    move: (pos, visible) => {
+      Byond.winset(id, {
+        pos,
+        'is-visible': visible ? 'true' : 'false',
+      });
     },
     unmount: () => {
       logger.log(`hiding '${id}'`);
@@ -74,6 +80,46 @@ const getBoundingBox = (element) => {
   };
 };
 
+const findScrollParent = (element) => {
+  for (
+    let parent = element.parentElement;
+    parent;
+    parent = parent.parentElement
+  ) {
+    const { overflowY } = getComputedStyle(parent);
+    if (overflowY === 'auto' || overflowY === 'scroll') {
+      return parent;
+    }
+  }
+  return null;
+};
+
+/**
+ * A BYOND control can't be partly clipped, so one partly scrolled out of view
+ * is hidden rather than drawn over the rest of the window.
+ */
+const isScrolledIntoView = (element, scrollParent) => {
+  if (!scrollParent) {
+    return true;
+  }
+  const rect = element.getBoundingClientRect();
+  const view = scrollParent.getBoundingClientRect();
+  if (rect.height > view.height + 1 || rect.width > view.width + 1) {
+    return true;
+  }
+  // A pixel of slack for sub-pixel rounding
+  return (
+    rect.top >= view.top - 1 &&
+    rect.bottom <= view.bottom + 1 &&
+    rect.left >= view.left - 1 &&
+    rect.right <= view.right + 1
+  );
+};
+
+/**
+ * With followScroll, the control moves with its scrolling container,
+ * and hides while partly scrolled out of view.
+ */
 export class ByondUi extends Component {
   constructor(props) {
     super(props);
@@ -82,6 +128,20 @@ export class ByondUi extends Component {
     this.handleResize = debounce(() => {
       this.forceUpdate();
     }, 100);
+    this.handleScroll = () => {
+      if (this.scrollFrame) {
+        return;
+      }
+      this.scrollFrame = requestAnimationFrame(() => {
+        this.scrollFrame = null;
+        const element = this.containerRef.current;
+        const box = getBoundingBox(element);
+        this.byondUiElement.move(
+          box.pos[0] + ',' + box.pos[1],
+          isScrolledIntoView(element, this.scrollParent),
+        );
+      });
+    };
   }
 
   shouldComponentUpdate(nextProps) {
@@ -94,6 +154,10 @@ export class ByondUi extends Component {
   }
 
   componentDidMount() {
+    if (this.props.followScroll) {
+      this.scrollParent = findScrollParent(this.containerRef.current);
+      this.scrollParent?.addEventListener('scroll', this.handleScroll);
+    }
     window.addEventListener('resize', this.handleResize);
     this.componentDidUpdate();
     this.handleResize();
@@ -101,23 +165,29 @@ export class ByondUi extends Component {
 
   componentDidUpdate() {
     const { params = {} } = this.props;
-    const box = getBoundingBox(this.containerRef.current);
+    const element = this.containerRef.current;
+    const box = getBoundingBox(element);
     logger.debug('bounding box', box);
-    this.byondUiElement.render({
-      parent: Byond.windowId,
-      ...params,
-      pos: box.pos[0] + ',' + box.pos[1],
-      size: box.size[0] + 'x' + box.size[1],
-    });
+    this.byondUiElement.render(
+      {
+        parent: Byond.windowId,
+        ...params,
+        pos: box.pos[0] + ',' + box.pos[1],
+        size: box.size[0] + 'x' + box.size[1],
+      },
+      isScrolledIntoView(element, this.scrollParent),
+    );
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
+    this.scrollParent?.removeEventListener('scroll', this.handleScroll);
+    cancelAnimationFrame(this.scrollFrame);
     this.byondUiElement.unmount();
   }
 
   render() {
-    const { params, ...rest } = this.props;
+    const { params, followScroll, ...rest } = this.props;
     return (
       <div ref={this.containerRef} {...computeBoxProps(rest)}>
         {/* Filler */}

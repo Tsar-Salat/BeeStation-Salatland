@@ -18,6 +18,7 @@
 	exp_granted_type = EXP_TYPE_COMMAND
 	min_pop = COMMAND_POPULATION_MINIMUM
 
+	qualifications = list(/datum/qualification/command)
 	outfit = /datum/outfit/job/head_of_personnel
 
 	base_access = list(

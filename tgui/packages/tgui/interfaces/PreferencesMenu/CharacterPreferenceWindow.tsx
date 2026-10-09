@@ -5,6 +5,7 @@ import { useBackend, useLocalState } from '../../backend';
 import { Button, Divider, Flex, Stack } from '../../components';
 import { Window } from '../../layouts';
 import { AntagsPage } from './AntagsPage';
+import { LockedJobsWarning } from './CareerPanel';
 import { PreferencesMenuData } from './data';
 import { JobsPage } from './JobsPage';
 import { LoadoutPage } from './LoadoutPage';
@@ -158,6 +159,7 @@ export const CharacterPreferenceWindow = (props) => {
                     catches your eyes, because it's really important!
                   */}
                   Occupations
+                  <LockedJobsWarning />
                 </PageButton>
               </Stack.Item>
 

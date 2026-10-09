@@ -1,9 +1,14 @@
 import { ByondUi } from '../../components';
 
-export const CharacterPreview = (props: { height: string; id: string }) => {
+export const CharacterPreview = (props: {
+  height: string;
+  id: string;
+  width?: string;
+}) => {
   return (
     <ByondUi
-      width="220px"
+      followScroll
+      width={props.width || '220px'}
       height={props.height}
       params={{
         id: props.id,

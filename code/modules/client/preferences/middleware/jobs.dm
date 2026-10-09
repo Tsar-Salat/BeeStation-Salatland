@@ -70,10 +70,20 @@
 			else
 				departments[department_id] = list()
 
+		var/list/qualifications = list()
+		for(var/datum/qualification/qualification_type as anything in job.qualifications)
+			qualifications += list(list(
+				"id" = initial(qualification_type.id),
+				"name" = initial(qualification_type.name),
+				"years" = job.qualifications[qualification_type] || 0,
+			))
+
 		jobs[job.title] = list(
 			"lock_reason" = job.get_lock_reason(),
 			"description" = job.description,
 			"department" = department_name,
+			"qualifications" = qualifications,
+			"requirements" = job.describe_qualifications(),
 		)
 
 	data["departments"] = departments
@@ -85,6 +95,12 @@
 	var/list/data = list()
 
 	data["job_preferences"] = preferences.job_preferences
+
+	var/list/locked_by_career = list()
+	for(var/datum/job/job as anything in SSjob.joinable_occupations)
+		if(job.check_character_requirements(preferences) != JOB_AVAILABLE)
+			locked_by_career += job.title
+	data["jobs_locked_by_career"] = locked_by_career
 
 	return data
 

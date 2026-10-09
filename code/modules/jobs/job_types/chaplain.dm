@@ -10,6 +10,7 @@
 	exp_requirements = 60
 	exp_required_type = EXP_TYPE_CREW
 	exp_granted_type = EXP_TYPE_CREW
+	qualifications = list(/datum/qualification/ordination)
 	outfit = /datum/outfit/job/chaplain
 
 	base_access = list(ACCESS_CHAPEL_OFFICE, ACCESS_CREMATORIUM, ACCESS_MORGUE, ACCESS_THEATRE)

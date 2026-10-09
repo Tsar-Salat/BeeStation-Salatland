@@ -17,6 +17,7 @@
 	exp_granted_type = EXP_TYPE_COMMAND
 	min_pop = COMMAND_POPULATION_MINIMUM
 
+	qualifications = list(/datum/qualification/engineering = 14, /datum/qualification/atmospherics)
 	outfit = /datum/outfit/job/chief_engineer
 
 	base_access = list(ACCESS_ENGINE, ACCESS_ENGINE_EQUIP, ACCESS_TECH_STORAGE, ACCESS_MAINT_TUNNELS,

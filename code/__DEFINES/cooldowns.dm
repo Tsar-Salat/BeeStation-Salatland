@@ -51,6 +51,8 @@
 
 #define COOLDOWN_EMOTE_WINDOW "emote_window"
 
+#define COOLDOWN_ID_CARD_VIEW "id_card_view"
+
 //TIMER COOLDOWN MACROS
 
 #define COMSIG_CD_STOP(cd_index) "cooldown_[cd_index]"

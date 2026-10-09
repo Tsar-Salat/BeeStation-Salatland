@@ -6,8 +6,15 @@ import { Dropdown } from 'tgui-core/components';
 import { useBackend } from '../../backend';
 import { Box, Button, Flex, Stack, Tooltip } from '../../components';
 import {
+  CareerPanel,
+  CareerStatus,
+  getCareerStatus,
+  useUndoableCareerChanges,
+} from './CareerPanel';
+import {
   createSetPreference,
   Job,
+  JOB_PRIORITY_NAMES,
   JoblessRole,
   JobPriority,
   PreferencesMenuData,
@@ -106,21 +113,21 @@ const PriorityButtons = (props: {
         />
 
         <PriorityButton
-          name="Low"
+          name={JOB_PRIORITY_NAMES[JobPriority.Low]}
           modifier="low"
           enabled={priority === JobPriority.Low}
           onClick={createSetPriority(JobPriority.Low)}
         />
 
         <PriorityButton
-          name="Med"
+          name={JOB_PRIORITY_NAMES[JobPriority.Medium]}
           modifier="medium"
           enabled={priority === JobPriority.Medium}
           onClick={createSetPriority(JobPriority.Medium)}
         />
 
         <PriorityButton
-          name="High"
+          name={JOB_PRIORITY_NAMES[JobPriority.High]}
           modifier="high"
           enabled={priority === JobPriority.High}
           onClick={createSetPriority(JobPriority.High)}
@@ -130,9 +137,15 @@ const PriorityButtons = (props: {
   );
 };
 
-const JobRow = (props: { className?: string; job: Job; name: string }) => {
-  const { data } = useBackend<PreferencesMenuData>();
-  const { className, job, name } = props;
+const JobRow = (props: {
+  className?: string;
+  job: Job;
+  name: string;
+  status: CareerStatus;
+}) => {
+  const { act, data } = useBackend<PreferencesMenuData>();
+  const careerChanges = useUndoableCareerChanges();
+  const { className, job, name, status } = props;
 
   const priority = data.job_preferences[name];
 
@@ -144,55 +157,141 @@ const JobRow = (props: { className?: string; job: Job; name: string }) => {
   const lockReason = job.lock_reason;
 
   let rightSide: ReactNode;
+  let note: ReactNode;
 
   if (lockReason) {
-    rightSide = (
-      <Stack align="center" height="100%" pr={1}>
-        <Stack.Item grow textAlign="right">
-          {lockReason}
-        </Stack.Item>
-      </Stack>
-    );
+    note = lockReason;
   } else if (experienceNeeded) {
     const { experience_type, required_playtime } = experienceNeeded;
     const hoursNeeded = Math.ceil(required_playtime / 60);
 
-    rightSide = (
-      <Stack align="center" height="100%" pr={1}>
-        <Stack.Item grow textAlign="right">
-          <b>{hoursNeeded}h</b> as {experience_type}
-        </Stack.Item>
-      </Stack>
+    note = (
+      <>
+        <b>{hoursNeeded}h</b> as {experience_type}
+      </>
     );
   } else if (daysLeft > 0) {
-    rightSide = (
-      <Stack align="center" height="100%" pr={1}>
-        <Stack.Item grow textAlign="right">
-          <b>{daysLeft}</b> day{daysLeft === 1 ? '' : 's'} left
-        </Stack.Item>
-      </Stack>
+    note = (
+      <>
+        <b>{daysLeft}</b> day{daysLeft === 1 ? '' : 's'} left
+      </>
     );
   } else if (data.job_bans && data.job_bans.indexOf(name) !== -1) {
-    rightSide = (
-      <Stack align="center" height="100%" pr={1}>
-        <Stack.Item grow textAlign="right">
-          <b>Banned</b>
-        </Stack.Item>
-      </Stack>
-    );
-  } else {
+    note = <b>Banned</b>;
+  } else if (status.kind === 'available') {
     rightSide = (
       <PriorityButtons
         createSetPriority={createSetPriority}
         priority={priority}
       />
     );
+  } else if (status.kind === 'add') {
+    rightSide = (
+      <Stack align="center" height="100%" px="3px">
+        <Stack.Item grow style={{ minWidth: '0' }}>
+          <Button
+            fluid
+            className="PreferencesMenu__Jobs__add"
+            tooltip={status.qualification.description}
+            onClick={() =>
+              act('give_qualification', {
+                qualification: status.qualification.id,
+              })
+            }
+          >
+            <Stack>
+              <Stack.Item grow className="PreferencesMenu__ellipsis">
+                + {status.qualification.name}
+              </Stack.Item>
+              <Stack.Item opacity={0.75}>
+                {status.qualification.training_years} yrs
+              </Stack.Item>
+            </Stack>
+          </Button>
+        </Stack.Item>
+      </Stack>
+    );
+  } else if (status.kind === 'full') {
+    note = `Needs ${status.missing.map((missing) => missing.name).join(' and ')}`;
+  } else if (status.kind === 'too_late') {
+    note = 'Too late to train';
+  } else if (status.kind === 'locked') {
+    note = 'Not qualified';
+  } else {
+    let fix: { text: string; tooltip: string; handleClick: () => void };
+    switch (status.kind) {
+      case 'move_first':
+        fix = {
+          text: 'Move qualification first',
+          tooltip: `Train for the ${status.qualification.name} before your other qualifications`,
+          handleClick: () => careerChanges.moveFirst(status.qualification.id),
+        };
+        break;
+      case 'unlocks_at':
+        fix = {
+          text: `Set age to ${status.age}`,
+          tooltip: `${name} unlocks at age ${status.age}`,
+          handleClick: () => careerChanges.setAge(status.age),
+        };
+        break;
+      case 'fits_at':
+        fix = {
+          text: `Set age to ${status.age}`,
+          tooltip: `By age ${status.age} there's time to train for the ${status.qualification.name}`,
+          handleClick: () => careerChanges.setAge(status.age),
+        };
+        break;
+    }
+
+    rightSide = (
+      <Stack align="center" height="100%" px="3px">
+        <Stack.Item grow style={{ minWidth: '0' }}>
+          <Button
+            fluid
+            ellipsis
+            className="PreferencesMenu__Jobs__fix"
+            icon="chevron-right"
+            iconPosition="right"
+            tooltip={fix.tooltip}
+            onClick={fix.handleClick}
+          >
+            {fix.text}
+          </Button>
+        </Stack.Item>
+      </Stack>
+    );
+  }
+
+  if (note) {
+    rightSide = (
+      <Stack align="center" height="100%" pr={1}>
+        <Stack.Item
+          grow
+          textAlign="right"
+          className="PreferencesMenu__ellipsis"
+        >
+          {note}
+        </Stack.Item>
+      </Stack>
+    );
   }
 
   return (
     <Stack.Item className={className} height="100%" mt={0}>
       <Stack fill align="center">
-        <Tooltip content={job.description} position="bottom-start">
+        <Tooltip
+          content={
+            <>
+              {job.description}
+              {job.requirements && (
+                <Box mt={0.5} bold>
+                  Requires {job.requirements}
+                </Box>
+              )}
+            </>
+          }
+          position="bottom-start"
+        >
           <Stack.Item
             className="job-name"
             width="50%"
@@ -204,7 +303,7 @@ const JobRow = (props: { className?: string; job: Job; name: string }) => {
           </Stack.Item>
         </Tooltip>
 
-        <Stack.Item grow className="options">
+        <Stack.Item grow className="options" style={{ minWidth: '0' }}>
           {rightSide}
         </Stack.Item>
       </Stack>
@@ -213,6 +312,7 @@ const JobRow = (props: { className?: string; job: Job; name: string }) => {
 };
 
 const Department = (props: { department: string } & PropsWithChildren) => {
+  const { data: uiData } = useBackend<PreferencesMenuData>();
   const { children, department: name } = props;
   const className = `PreferencesMenu__Jobs__departments--${name}`;
 
@@ -251,6 +351,7 @@ const Department = (props: { department: string } & PropsWithChildren) => {
                   key={name}
                   job={job}
                   name={name}
+                  status={getCareerStatus(name, job, uiData, data)}
                 />
               ))}
             </Stack>
@@ -278,15 +379,15 @@ const JoblessRoleDropdown = (props) => {
 
   const options = [
     {
-      displayText: `Join as ${data.overflow_role} if unavailable`,
+      displayText: `Join as ${data.overflow_role}`,
       value: JoblessRole.BeOverflow,
     },
     {
-      displayText: `Join as a random job if unavailable`,
+      displayText: 'Join as a random job',
       value: JoblessRole.BeRandomJob,
     },
     {
-      displayText: `Return to lobby if unavailable`,
+      displayText: 'Return to lobby',
       value: JoblessRole.ReturnToLobby,
     },
   ];
@@ -296,23 +397,20 @@ const JoblessRoleDropdown = (props) => {
   )!.displayText;
 
   return (
-    <Box width="30%" style={{ margin: '5px auto' }}>
-      <Dropdown
-        width="100%"
-        selected={selection}
-        onSelected={createSetPreference(act, 'joblessrole')}
-        options={options}
-      />
-    </Box>
+    <Dropdown
+      width="100%"
+      selected={selection}
+      onSelected={createSetPreference(act, 'joblessrole')}
+      options={options}
+    />
   );
 };
 
 const ClearJobsButton = (_) => {
   const { act } = useBackend<PreferencesMenuData>();
   return (
-    <Button
-      content="Clear All"
-      confirm
+    <Button.Confirm
+      content="Clear job priorities"
       onClick={() => act('clear_job_preferences')}
     />
   );
@@ -321,16 +419,17 @@ const ClearJobsButton = (_) => {
 export const JobsPage = () => {
   return (
     <>
-      <Box
-        textAlign="center"
-        className="section-background"
-        p={0.5}
-        pb={1}
-        mb={1}
-      >
-        <JoblessRoleDropdown />
-        <ClearJobsButton />
-      </Box>
+      <CareerPanel />
+      <Stack align="center" className="section-background" p={0.5} mb={1}>
+        <Stack.Item color="label">If no job is free</Stack.Item>
+        <Stack.Item width="16em">
+          <JoblessRoleDropdown />
+        </Stack.Item>
+        <Stack.Item grow />
+        <Stack.Item>
+          <ClearJobsButton />
+        </Stack.Item>
+      </Stack>
 
       <Stack vertical fill className="section-background" p={1}>
         <Stack.Item>

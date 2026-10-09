@@ -14,6 +14,7 @@
 	exp_required_type = EXP_TYPE_SCIENCE
 	exp_granted_type = EXP_TYPE_SCIENCE
 
+	qualifications = list(/datum/qualification/spaceflight)
 	outfit = /datum/outfit/job/exploration_crew
 
 	base_access = list(ACCESS_RESEARCH, ACCESS_EXPLORATION, ACCESS_TOX, ACCESS_MECH_SCIENCE)

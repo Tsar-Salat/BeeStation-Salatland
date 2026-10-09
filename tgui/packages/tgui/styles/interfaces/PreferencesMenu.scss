@@ -305,6 +305,204 @@
       font-size: 1.25em;
       padding: 3px;
     }
+
+    &__add,
+    &__fix {
+      background-color: rgba(0, 0, 0, 0.5) !important;
+      border: 1px solid rgba(255, 255, 255, 0.7) !important;
+      color: white !important;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.65) !important;
+      }
+    }
+
+    &__add {
+      border-style: dashed !important;
+    }
+  }
+
+  &__ellipsis {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__Career {
+    $tint: rgba(255, 255, 255, 0.06);
+    $tint-strong: rgba(255, 255, 255, 0.14);
+    $shade: rgba(0, 0, 0, 0.5);
+    $soft-text: rgba(255, 255, 255, 0.75);
+
+    &__title,
+    &__caption {
+      color: colors.$label;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    &__title {
+      font-size: 1.083em;
+      font-weight: bold;
+    }
+
+    &__status {
+      color: $soft-text;
+    }
+
+    // Half the age slider's knob, to line up with it
+    &__timeline,
+    &__ticks {
+      margin: 0 8px;
+    }
+
+    &__timeline {
+      position: relative;
+      height: 30px;
+      background: $tint;
+    }
+
+    &__age-slider {
+      display: block;
+      width: 100%;
+      margin: 0;
+      accent-color: #7fb0e0;
+      color-scheme: dark;
+      cursor: pointer;
+    }
+
+    &__future {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      background: $shade;
+    }
+
+    &__practice {
+      position: absolute;
+      top: 5px;
+      bottom: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      white-space: nowrap;
+      background: $tint-strong;
+      color: $soft-text;
+    }
+
+    &__segment {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      white-space: nowrap;
+      font-weight: bold;
+      color: black;
+      background: colors.$grey;
+      // Divides neighboring segments of one department
+      border: 1px solid $shade;
+
+      @each $department-name, $color-value in colors.$departments {
+        &--#{$department-name} {
+          background: colors.fg($color-value);
+
+          &.PreferencesMenu__Career__segment--training {
+            border-color: colors.fg($color-value);
+          }
+        }
+      }
+
+      &--training {
+        background: transparent;
+        border: 2px dashed colors.$grey;
+        color: $soft-text;
+      }
+    }
+
+    &__now {
+      position: absolute;
+      top: -5px;
+      bottom: -5px;
+      width: 2px;
+      margin-left: -1px;
+      background: white;
+    }
+
+    &__ticks {
+      position: relative;
+      height: 1.2em;
+      font-size: 0.9em;
+      color: colors.$label;
+
+      > * {
+        position: absolute;
+        transform: translateX(-50%);
+      }
+    }
+
+    // .Button outranks the theme's button colors, which load after this
+    &__icon-button.Button {
+      &.Button--disabled {
+        opacity: 0.35;
+      }
+
+      &.Button--color--transparent {
+        background-color: $tint;
+      }
+
+      &.Button--color--transparent.Button--disabled {
+        background-color: $tint !important;
+      }
+    }
+
+    &__badge {
+      width: 18px;
+      height: 18px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9em;
+      font-weight: bold;
+      color: black;
+      border: 2px dashed color.scale(colors.$label, $lightness: -30%);
+
+      @each $department-name, $color-value in colors.$departments {
+        &--#{$department-name} {
+          background: colors.fg($color-value);
+          border: 2px solid colors.fg($color-value);
+        }
+      }
+
+      &--training {
+        background: transparent;
+        border-style: dashed;
+        color: white;
+      }
+    }
+
+    &__card {
+      background: $tint;
+      border: 1px solid $tint-strong;
+    }
+
+    &__card-title {
+      padding: 6px 8px;
+      background: $tint;
+      color: $soft-text;
+    }
+
+    &__photo {
+      background: $tint;
+      border: 1px solid $tint-strong;
+    }
   }
 
   &__Quirks {

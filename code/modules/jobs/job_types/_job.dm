@@ -59,6 +59,9 @@
 	///If you have the use_age_restriction_for_jobs config option enabled and the database set up, this option will add a requirement for players to be at least minimal_player_age days old. (meaning they first signed in at least that many days before.)
 	var/minimal_player_age = 0
 
+	/// Qualification types a character needs to take this job, each associated with how many years they must have held it, if any
+	var/list/qualifications
+
 	var/outfit = null
 
 	/// Minutes of experience-time required to play in this job. The type is determined by [exp_required_type] and [exp_required_type_department] depending on configs.
@@ -441,6 +444,32 @@
 		return TRUE	//Available in 0 days = available right now = player is old enough to play.
 	return FALSE
 
+/datum/job/proc/get_minimum_character_age(datum/preferences/prefs)
+	. = AGE_MIN
+	for(var/list/stage as anything in prefs.get_career())
+		var/datum/qualification/qualification = GLOB.qualifications[stage["id"]]
+		if(qualification.type in qualifications)
+			. = max(., stage["earned"] + qualifications[qualification.type])
+
+/// Returns JOB_AVAILABLE, or why the character in these preferences can't take this job
+/datum/job/proc/check_character_requirements(datum/preferences/prefs)
+	if(!prefs || !length(qualifications))
+		return JOB_AVAILABLE
+	for(var/datum/qualification/qualification_type as anything in qualifications)
+		if(!(initial(qualification_type.id) in prefs.qualifications))
+			return JOB_UNAVAILABLE_QUALIFICATION
+	if(prefs.read_character_preference(/datum/preference/numeric/age) < get_minimum_character_age(prefs))
+		return JOB_UNAVAILABLE_QUALIFICATION_YEARS
+	return JOB_AVAILABLE
+
+/// What this job needs, like "Security License held for 14 years and Law License", or "" if nothing
+/datum/job/proc/describe_qualifications()
+	var/list/parts = list()
+	for(var/datum/qualification/qualification_type as anything in qualifications)
+		var/years = qualifications[qualification_type]
+		parts += years ? "[initial(qualification_type.name)] held for [years] years" : initial(qualification_type.name)
+	return english_list(parts, "")
+
 /datum/job/proc/areas_to_light_up(minimal_access = TRUE)
 	. = minimal_lightup_areas.Copy()
 	if(!minimal_access)
@@ -698,6 +727,7 @@
 	if(!player_client)
 		return // Disconnected while checking for the appearance ban.
 
+	var/age_before = player_client.prefs.read_character_preference(/datum/preference/numeric/age)
 	var/require_human = CONFIG_GET(flag/enforce_human_authority) && (job.job_flags & JOB_HEAD_OF_STAFF)
 
 	if(fully_randomize)
@@ -724,6 +754,15 @@
 				TRUE,
 				player_client.prefs.read_character_preference(/datum/preference/choiced/species),
 			)
+
+	// A random body can roll an age too young for the job it was given, so roll again within the job's range
+	var/rolled_age = player_client.prefs.read_character_preference(/datum/preference/numeric/age)
+	var/job_age = job.get_minimum_character_age(player_client.prefs)
+	if(rolled_age != age_before && rolled_age < job_age)
+		rolled_age = rand(job_age, AGE_MAX)
+		player_client.prefs.write_preference(GLOB.preference_entries[/datum/preference/numeric/age], rolled_age)
+		age = rolled_age
+		dna.age = rolled_age
 	dna.update_dna_identity()
 
 /mob/living/silicon/ai/apply_prefs_job(client/player_client, datum/job/job)

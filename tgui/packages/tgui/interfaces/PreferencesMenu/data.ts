@@ -33,6 +33,12 @@ export enum JobPriority {
   High = 3,
 }
 
+export const JOB_PRIORITY_NAMES: Record<JobPriority, string> = {
+  [JobPriority.Low]: 'Low',
+  [JobPriority.Medium]: 'Med',
+  [JobPriority.High]: 'High',
+};
+
 export type Name = {
   can_randomize: BooleanLike;
   explanation: string;
@@ -74,10 +80,36 @@ export type Department = {
   head?: string;
 };
 
+export type JobQualification = {
+  id: string;
+  name: string;
+  /** How long it must have been held */
+  years: number;
+};
+
 export type Job = {
   description: string;
   department: string;
   lock_reason: string;
+  qualifications: JobQualification[];
+  requirements: string;
+};
+
+export type Qualification = {
+  id: string;
+  name: string;
+  description: string;
+  training: string;
+  practitioner: string;
+  training_years: number;
+  department: string;
+};
+
+export type CareerStage = {
+  id: string;
+  started: number;
+  earned: number;
+  held: BooleanLike;
 };
 
 export type Quirk = {
@@ -202,6 +234,9 @@ export type PreferencesMenuData = {
   overflow_role: string;
   selected_quirks: string[];
 
+  career: CareerStage[];
+  jobs_locked_by_career: string[];
+
   purchased_gear: string[];
   equipped_gear: string[];
   metacurrency_balance: number;
@@ -236,6 +271,12 @@ export type ServerData = {
     types: Record<string, Name>;
   };
   quirks: QuirkInfo;
+  qualifications: {
+    qualifications: Qualification[];
+    max_qualifications: number;
+    career_start_age: number;
+    max_age: number;
+  };
   loadout: LoadoutInfo;
   random: {
     randomizable: string[];

@@ -29,6 +29,12 @@
 #define JOB_UNAVAILABLE_LOCKED 6
 /// Job unavailable due to incompatibility with an antag role.
 #define JOB_UNAVAILABLE_ANTAG_INCOMPAT 7
+/// Job unavailable because the character is still training for a qualification it needs, or hasn't held it for long enough.
+#define JOB_UNAVAILABLE_QUALIFICATION_YEARS 8
+/// Job unavailable because the character hasn't picked a qualification it needs.
+#define JOB_UNAVAILABLE_QUALIFICATION 9
+
+#define MAX_QUALIFICATIONS 3
 
 // Job spawn groups
 // Spawn group representing the primary roles of a department

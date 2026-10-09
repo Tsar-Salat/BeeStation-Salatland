@@ -10,6 +10,7 @@
 	exp_requirements = 60
 	exp_required_type = EXP_TYPE_CREW
 	exp_granted_type = EXP_TYPE_CREW
+	qualifications = list(/datum/qualification/library_science)
 	outfit = /datum/outfit/job/curator
 
 	base_access = list(ACCESS_LIBRARY, ACCESS_AUX_BASE, ACCESS_MINING_STATION)

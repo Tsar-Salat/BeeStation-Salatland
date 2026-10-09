@@ -283,6 +283,10 @@
 			return "[jobtitle] is not compatible with some antagonist role assigned to you."
 		if(JOB_UNAVAILABLE_LOCKED)
 			return "[jobtitle] is locked by the system."
+		if(JOB_UNAVAILABLE_QUALIFICATION_YEARS)
+			return "Your character is not old enough for [jobtitle]."
+		if(JOB_UNAVAILABLE_QUALIFICATION)
+			return "Your character does not have the qualifications for [jobtitle]."
 	return "Error: Unknown job availability."
 
 /mob/dead/new_player/authenticated/proc/IsJobUnavailable(rank, latejoin = FALSE)
@@ -509,6 +513,7 @@
 		preserved_mind.original_character_slot_index = client.prefs.default_slot
 		preserved_mind.transfer_to(spawning_mob) //won't transfer key since the mind is not active
 		preserved_mind.set_original_character(spawning_mob)
+		preserved_mind.qualifications = client.prefs.get_valid_qualifications()
 
 	LAZYADD(client.player_details.joined_as_slots, "[client.prefs.default_slot]")
 	. = spawning_mob

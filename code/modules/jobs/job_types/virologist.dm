@@ -10,6 +10,7 @@
 	exp_requirements = 180
 	exp_required_type = EXP_TYPE_MEDICAL
 	exp_granted_type = EXP_TYPE_MEDICAL
+	qualifications = list(/datum/qualification/biosafety)
 	outfit = /datum/outfit/job/virologist
 
 	base_access = list(ACCESS_MEDICAL, ACCESS_VIROLOGY, ACCESS_MECH_MEDICAL, ACCESS_MINERAL_STOREROOM, ACCESS_MAINT_TUNNELS)

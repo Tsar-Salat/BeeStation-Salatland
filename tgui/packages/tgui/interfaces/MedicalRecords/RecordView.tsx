@@ -41,6 +41,7 @@ export const MedicalRecordView = (props) => {
   const {
     age,
     blood_type,
+    qualifications = [],
     record_ref,
     dna,
     gender,
@@ -119,6 +120,9 @@ export const MedicalRecordView = (props) => {
                   text={species}
                 />
               )}
+            </LabeledList.Item>
+            <LabeledList.Item label="Qualifications">
+              {qualifications.length ? qualifications.join(', ') : 'None'}
             </LabeledList.Item>
             <LabeledList.Item label="Gender">
               {is_silicon ? (

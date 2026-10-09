@@ -16,6 +16,7 @@
 	exp_required_type_department = EXP_TYPE_COMMAND
 	exp_granted_type = EXP_TYPE_CREW
 
+	qualifications = list(/datum/qualification/command = 10)
 	outfit = /datum/outfit/job/captain
 
 	base_access = list()  //See get_access()

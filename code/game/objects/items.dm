@@ -1691,15 +1691,11 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 /// This may be overriden to provice custom inspection commands, or may be called with a custom item name
 /// that differs from the returned examine name of the item.
 /obj/item/proc/examine_inspection_link(mob/user, examine_name)
-	var/whole_word = user.client.prefs?.read_player_preference(/datum/preference/toggle/whole_word_examine_links)
 	var/obj/item/card/id/ID = GetID()
 	if(ID)
 		return "[examine_name] <a href='byond://?src=\ref[ID];look_at_id=1'>\[Examine ID\]</a>"
 	else
-		if(whole_word)
-			return "<a href='byond://?src=\ref[src];examine=1'>[examine_name]</a>"
-		else
-			return "[examine_name] <a href='byond://?src=\ref[src];examine=1'>\[?\]</a>"
+		return "[examine_name] <a href='byond://?src=\ref[src];examine=1'>\[?\]</a>"
 
 /**
  * Returns the atom(either itself or an internal module) that will interact/attack the target on behalf of us

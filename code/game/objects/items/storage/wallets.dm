@@ -70,11 +70,6 @@
 	if(front_id)
 		. += span_notice("Alt-click to remove the id.")
 
-/obj/item/storage/wallet/get_id_examine_strings(mob/user)
-	. = ..()
-	if(front_id)
-		. += front_id.get_id_examine_strings(user)
-
 /obj/item/storage/wallet/GetID()
 	return front_id
 

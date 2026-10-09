@@ -11,6 +11,7 @@
 	exp_required_type = EXP_TYPE_CREW
 	exp_granted_type = EXP_TYPE_CREW
 
+	qualifications = list(/datum/qualification/science)
 	outfit = /datum/outfit/job/scientist
 
 

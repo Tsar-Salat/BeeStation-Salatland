@@ -17,6 +17,7 @@
 	exp_granted_type = EXP_TYPE_CREW
 	min_pop = COMMAND_POPULATION_MINIMUM
 
+	qualifications = list(/datum/qualification/science = 13, /datum/qualification/robotics)
 	outfit = /datum/outfit/job/research_director
 
 	base_access = list(ACCESS_RD, ACCESS_HEADS, ACCESS_TOX, ACCESS_MORGUE, ACCESS_EXPLORATION,

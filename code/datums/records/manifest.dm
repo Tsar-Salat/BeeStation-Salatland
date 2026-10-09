@@ -138,7 +138,7 @@
 			datum_dna = record_dna)
 	)
 
-	new /datum/record/crew(
+	var/datum/record/crew/crew_record = new /datum/record/crew(
 		RECORD_GENERAL_STRICT_ARGS(
 			age = person.age,
 			blood_type = record_dna.blood_type,
@@ -167,6 +167,7 @@
 			security_note = null,
 			wanted_status = null)
 	)
+	crew_record.qualifications = get_qualification_names(person.mind?.qualifications)
 	if(!nosignal)
 		SEND_GLOBAL_SIGNAL(COMSIG_GLOB_CREW_MANIFEST_UPDATE)
 

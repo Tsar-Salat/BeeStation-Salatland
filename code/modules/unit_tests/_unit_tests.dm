@@ -81,6 +81,7 @@
 #include "preference_species.dm"
 #include "preferences.dm"
 #include "projectiles.dm"
+#include "qualifications.dm"
 #include "quirks.dm"
 #include "random_ruin_mapsize.dm"
 #include "rcd.dm"

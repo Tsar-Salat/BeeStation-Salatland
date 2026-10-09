@@ -17,6 +17,7 @@
 	exp_granted_type = EXP_TYPE_COMMAND
 	min_pop = COMMAND_POPULATION_MINIMUM
 
+	qualifications = list(/datum/qualification/security = 14, /datum/qualification/law)
 	outfit = /datum/outfit/job/head_of_security
 	mind_traits = list(TRAIT_LAW_ENFORCEMENT_METABOLISM,TRAIT_SECURITY)
 

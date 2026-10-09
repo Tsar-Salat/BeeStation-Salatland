@@ -274,10 +274,6 @@
 	else
 		return ..()
 
-/obj/item/card/id/get_id_examine_strings(mob/user)
-	. = ..()
-	. += list("[icon2html(get_cached_flat_icon(), user, extra_classes = "hugeicon idicon")]")
-
 /obj/item/card/id/get_examine_icon(mob/user)
 	return icon2html(get_cached_flat_icon(), user)
 
