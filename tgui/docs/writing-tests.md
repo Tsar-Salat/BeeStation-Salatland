@@ -1,11 +1,13 @@
-## Jest
+## Vitest
 
 You can now write and run unit tests in tgui.
 
 It's quite simple: create a file ending in `.test.ts` or `.spec.ts` (usually with the same filename as the file you're testing), and create a test case:
 
-```js
-test('something', () => {
+```ts
+import { it } from 'vitest';
+
+it('something', ({ expect }) => {
   expect('a').toBe('a');
 });
 ```
@@ -14,6 +16,6 @@ Refer to [README](../README.md) to learn how to run tests.
 
 There is an example test in `packages/common/react.spec.ts`.
 
-You can read more about Jest here: https://jestjs.io/docs/en/getting-started
+You can read more about Vitest here: https://vitest.dev/guide/
 
-Note, that there is still no real solution to test UIs for now, even though a lot of the support is here (jest + jsdom). That will come later.
+Note, that there is still no real solution to test UIs for now, even though a lot of the support is here (vitest + jsdom). That will come later.

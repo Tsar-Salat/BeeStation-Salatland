@@ -84,7 +84,7 @@ If you are using the tooling provided in this repo, everything is included! Feel
 Run `yarn install` once to install tgui dependencies.
 
 - `yarn tgui:build` - Build tgui in production mode.
-  - `yarn tgui:build [options]` - Build tgui with custom webpack options.
+  - `yarn tgui:build [options]` - Build tgui with custom rspack options.
 - `yarn tgui:dev` - Launch a development server.
   - `yarn tgui:dev --reload` - Reload byond cache once.
   - `yarn tgui:dev --debug` - Run server with debug logging enabled.
@@ -123,11 +123,9 @@ This happens if your Documents folder in Windows has a custom location, for exam
 BYOND_CACHE="E:/Libraries/Documents/BYOND/cache"
 ```
 
-**Webpack errors out with some cryptic messages!**
+**Rspack errors out with some cryptic messages!**
 
-> Example: `No template for dependency: PureExpressionDependency`
-
-Webpack stores its cache on disk since tgui 4.3, and it is very sensitive to build configuration. So if you update webpack, or share the same cache directory between development and production build, it will start hallucinating.
+Rspack stores its cache on disk, and it is very sensitive to build configuration. So if you update rspack, or share the same cache directory between development and production build, it will start hallucinating.
 
 To fix this kind of problem, run `bin/tgui --clean` and try again.
 

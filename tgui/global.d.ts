@@ -4,8 +4,8 @@
  * @license MIT
  */
 
-// Webpack asset modules.
-// Should match extensions used in webpack config.
+// Rspack asset modules.
+// Should match extensions used in rspack config.
 declare module '*.png' {
   const content: string;
   export default content;

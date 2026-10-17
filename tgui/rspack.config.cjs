@@ -4,9 +4,8 @@
  * @license MIT
  */
 
-const webpack = require('webpack');
 const path = require('path');
-const ExtractCssPlugin = require('mini-css-extract-plugin');
+const { rspack } = require('@rspack/core');
 
 const createStats = (verbose) => ({
   assets: verbose,
@@ -54,9 +53,10 @@ module.exports = (env = {}, argv) => {
         {
           test: /\.([tj]s(x)?|cjs)$/,
           exclude: /node_modules/,
+          type: 'javascript/auto',
           use: [
             {
-              loader: require.resolve('swc-loader'),
+              loader: 'builtin:swc-loader',
               options: {
                 jsc: {
                   parser: {
@@ -76,9 +76,10 @@ module.exports = (env = {}, argv) => {
         },
         {
           test: /\.(s)?css$/,
+          type: 'javascript/auto',
           use: [
             {
-              loader: ExtractCssPlugin.loader,
+              loader: rspack.CssExtractRspackPlugin.loader,
               options: {
                 esModule: false,
               },
@@ -120,21 +121,24 @@ module.exports = (env = {}, argv) => {
       hints: false,
     },
     devtool: false,
-    cache: {
-      type: 'filesystem',
-      cacheLocation: path.resolve(__dirname, `.yarn/webpack/${mode}`),
-      buildDependencies: {
-        config: [__filename],
+    cache: true,
+    experiments: {
+      cache: {
+        type: 'persistent',
+        storage: {
+          type: 'filesystem',
+          directory: path.resolve(__dirname, `.yarn/rspack/${mode}`),
+        },
       },
     },
     stats: createStats(true),
     plugins: [
-      new webpack.EnvironmentPlugin({
+      new rspack.EnvironmentPlugin({
         NODE_ENV: env.NODE_ENV || mode,
         WEBPACK_HMR_ENABLED: env.WEBPACK_HMR_ENABLED || argv.hot || false,
         DEV_SERVER_IP: env.DEV_SERVER_IP || null,
       }),
-      new ExtractCssPlugin({
+      new rspack.CssExtractRspackPlugin({
         filename: '[name].bundle.css',
         chunkFilename: '[name].bundle.css',
       }),
@@ -145,16 +149,6 @@ module.exports = (env = {}, argv) => {
     config.entry = {
       'tgui-bench': './packages/tgui-bench/entrypoint',
     };
-  }
-
-  // Production build specific options
-  if (mode === 'production') {
-    const { EsbuildPlugin } = require('esbuild-loader');
-    config.optimization.minimizer = [
-      new EsbuildPlugin({
-        css: true,
-      }),
-    ];
   }
 
   // Development build specific options
