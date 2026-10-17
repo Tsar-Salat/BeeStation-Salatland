@@ -1,10 +1,10 @@
+import { BlockQuote, Dimmer } from 'tgui-core/components';
+
 import { useBackend, useLocalState } from '../backend';
 import {
-  BlockQuote,
   Box,
   Button,
   Collapsible,
-  Dimmer,
   Icon,
   Section,
   Stack,

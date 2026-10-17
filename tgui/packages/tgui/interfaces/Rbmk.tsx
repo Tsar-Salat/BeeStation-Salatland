@@ -1,8 +1,9 @@
 import { toFixed } from 'common/math';
 import { ReactNode } from 'react';
+import { Chart } from 'tgui-core/components';
 
 import { useBackend } from '../backend';
-import { Chart, ProgressBar, Section, Stack } from '../components';
+import { ProgressBar, Section, Stack } from '../components';
 import { Window } from '../layouts';
 
 type RbmkProps = {

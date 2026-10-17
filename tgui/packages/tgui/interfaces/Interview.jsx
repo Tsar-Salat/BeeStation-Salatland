@@ -1,11 +1,7 @@
+import { BlockQuote } from 'tgui-core/components';
+
 import { useBackend } from '../backend';
-import {
-  BlockQuote,
-  Button,
-  NoticeBox,
-  Section,
-  TextArea,
-} from '../components';
+import { Button, NoticeBox, Section, TextArea } from '../components';
 import { Window } from '../layouts';
 
 export const Interview = (props) => {

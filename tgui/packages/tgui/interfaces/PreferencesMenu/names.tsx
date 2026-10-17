@@ -1,17 +1,15 @@
 import { binaryInsertWith } from 'common/collections';
 import { sortBy } from 'es-toolkit';
+import { FitText, Modal, TrackOutsideClicks } from 'tgui-core/components';
 
 import { useLocalState } from '../../backend';
 import {
   Button,
-  FitText,
   Icon,
   Input,
   LabeledList,
-  Modal,
   Section,
   Stack,
-  TrackOutsideClicks,
 } from '../../components';
 import { Name } from './data';
 import { ServerPreferencesFetcher } from './ServerPreferencesFetcher';
@@ -63,10 +61,7 @@ export const MultiNameInput = (props: {
               width: '40%',
             }}
           >
-            <TrackOutsideClicks
-              onOutsideClick={props.handleClose}
-              removeOnOutsideClick
-            >
+            <TrackOutsideClicks onOutsideClick={props.handleClose}>
               <Section
                 buttons={
                   <Button color="red" onClick={props.handleClose}>

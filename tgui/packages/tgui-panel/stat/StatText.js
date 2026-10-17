@@ -1,8 +1,8 @@
 import { capitalize } from 'common/string';
 import { useSelector } from 'tgui/backend';
 import { Box, Button, Flex } from 'tgui/components';
+import { Divider } from 'tgui-core/components';
 
-import { Divider } from '../../tgui/components';
 import {
   STAT_ATOM,
   STAT_BLANK,

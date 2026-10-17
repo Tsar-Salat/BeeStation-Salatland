@@ -2,7 +2,7 @@ import { classes } from 'common/react';
 import { capitalize } from 'common/string';
 import { uniqBy } from 'es-toolkit';
 import { filter } from 'es-toolkit/compat';
-import { Dropdown } from 'tgui-core/components';
+import { Dimmer, Divider, Dropdown } from 'tgui-core/components';
 
 import { resolveAsset } from '../assets';
 import { useBackend } from '../backend';
@@ -10,8 +10,6 @@ import {
   Box,
   Button,
   Collapsible,
-  Dimmer,
-  Divider,
   Flex,
   Icon,
   LabeledList,

@@ -1,11 +1,11 @@
 /* eslint-disable react/prefer-stateless-function */
 import { Component } from 'react';
+import { ColorBox } from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../backend';
 import {
   Box,
   Button,
-  ColorBox,
   Flex,
   Icon,
   Input,

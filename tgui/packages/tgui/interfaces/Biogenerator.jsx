@@ -1,11 +1,11 @@
 import { classes } from 'common/react';
 import { createSearch } from 'common/string';
+import { Dimmer } from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../backend';
 import {
   Box,
   Button,
-  Dimmer,
   Flex,
   Icon,
   Input,

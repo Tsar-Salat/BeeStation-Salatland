@@ -1,16 +1,8 @@
-import { classes } from 'common/react';
+import { BlockQuote, Divider } from 'tgui-core/components';
+import { classes } from 'tgui-core/react';
 
 import { useBackend } from '../../backend';
-import {
-  BlockQuote,
-  Box,
-  Button,
-  Divider,
-  Icon,
-  Section,
-  Stack,
-  Tooltip,
-} from '../../components';
+import { Box, Button, Icon, Section, Stack, Tooltip } from '../../components';
 import { CharacterPreview } from '../common/CharacterPreview';
 import {
   createSetPreference,

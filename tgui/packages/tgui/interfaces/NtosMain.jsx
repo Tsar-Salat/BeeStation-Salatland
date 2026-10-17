@@ -1,5 +1,7 @@
+import { ColorBox } from 'tgui-core/components';
+
 import { useBackend } from '../backend';
-import { Button, ColorBox, Section, Table } from '../components';
+import { Button, Section, Table } from '../components';
 import { ButtonCheckbox } from '../components/Button';
 import { NtosWindow } from '../layouts';
 

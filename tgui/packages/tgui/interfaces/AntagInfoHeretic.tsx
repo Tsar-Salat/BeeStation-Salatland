@@ -1,7 +1,8 @@
 import { BooleanLike } from 'common/react';
+import { BlockQuote } from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../backend';
-import { BlockQuote, Box, Button, Section, Stack, Tabs } from '../components';
+import { Box, Button, Section, Stack, Tabs } from '../components';
 import { Window } from '../layouts';
 
 const hereticRed = {

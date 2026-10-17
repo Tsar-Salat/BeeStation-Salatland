@@ -35,7 +35,9 @@
   // Uses color-fg/color-bg
   @include meta.load-css('~tgui/styles/components/ColorSelectBox.scss');
   @include meta.load-css('~tgui/styles/components/Input.scss');
-  @include meta.load-css('~tgui/styles/components/Modal.scss');
+  .Modal {
+    background-color: base.$color-bg;
+  }
   @include meta.load-css(
     '~tgui/styles/components/Section.scss',
     $with: ('title-text-color': base.$color-bg)

@@ -2,9 +2,10 @@ import { KEY_DOWN, KEY_ENTER, KEY_UP } from 'common/keycodes';
 import { BooleanLike } from 'common/react';
 import { sortBy } from 'es-toolkit';
 import { Component } from 'react';
+import { KeyListener } from 'tgui-core/components';
 
 import { useBackend } from '../backend';
-import { Button, KeyListener, Stack } from '../components';
+import { Button, Stack } from '../components';
 import { Window } from '../layouts';
 import { BodyZone, BodyZoneSelector } from './common/BodyZoneSelector';
 

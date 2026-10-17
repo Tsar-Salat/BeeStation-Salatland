@@ -1,17 +1,15 @@
 import { toFixed } from 'common/math';
 import { filter, map } from 'es-toolkit/compat';
 import { useState } from 'react';
-import { Dropdown } from 'tgui-core/components';
+import { Divider, Dropdown, Modal } from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../backend';
 import {
   Box,
   Button,
-  Divider,
   Flex,
   Icon,
   Input,
-  Modal,
   ProgressBar,
   Section,
   Tabs,

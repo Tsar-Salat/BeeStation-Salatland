@@ -18,10 +18,10 @@ import { classes } from 'common/react';
 import { Component, FocusEvent, FormEvent } from 'react';
 import { Interaction, Interactive } from 'tgui/components/Interactive';
 import { logger } from 'tgui/logging';
+import { Autofocus } from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../backend';
 import {
-  Autofocus,
   Box,
   Flex,
   NumberInput,

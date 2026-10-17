@@ -26,19 +26,19 @@
 @include meta.load-css('~tgui/styles/atomic/text.scss');
 
 // Components
-@include meta.load-css('~tgui/styles/components/BlockQuote.scss');
+@include meta.load-css('~tgui-core/styles/components/BlockQuote');
 @include meta.load-css(
   '~tgui/styles/components/Button.scss',
   $with: ('color-transparent-text': rgba(255, 255, 255, 0.6))
 );
-@include meta.load-css('~tgui/styles/components/ColorBox.scss');
+@include meta.load-css('~tgui-core/styles/components/ColorBox');
 @include meta.load-css('~tgui/styles/components/Dimmer.scss');
-@include meta.load-css('~tgui/styles/components/Divider.scss');
+@include meta.load-css('~tgui-core/styles/components/Divider');
 @include meta.load-css('~tgui/styles/components/Flex.scss');
 @include meta.load-css('~tgui/styles/components/Input.scss');
 @include meta.load-css('~tgui/styles/components/Knob.scss');
 @include meta.load-css('~tgui/styles/components/LabeledList.scss');
-@include meta.load-css('~tgui/styles/components/Modal.scss');
+@include meta.load-css('~tgui-core/styles/components/Modal');
 @include meta.load-css('~tgui/styles/components/NoticeBox.scss');
 @include meta.load-css('~tgui/styles/components/NumberInput.scss');
 @include meta.load-css('~tgui/styles/components/ProgressBar.scss');

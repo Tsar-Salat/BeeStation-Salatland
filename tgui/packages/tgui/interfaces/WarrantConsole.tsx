@@ -1,9 +1,9 @@
 import { BooleanLike } from 'common/react';
 import { sortBy } from 'es-toolkit';
+import { BlockQuote } from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../backend';
 import {
-  BlockQuote,
   Button,
   Collapsible,
   LabeledList,

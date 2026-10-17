@@ -1,4 +1,6 @@
-import { BlockQuote, Stack } from '../components';
+import { BlockQuote } from 'tgui-core/components';
+
+import { Stack } from '../components';
 import { Window } from '../layouts';
 
 const goodstyle = {

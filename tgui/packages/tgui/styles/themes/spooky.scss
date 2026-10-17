@@ -43,7 +43,10 @@ $updated-bg-map: map.set($updated-bg-map, 'bad', colors.$bad);
     '../components/Input.scss',
     $with: ('border-color': #473a37)
   );
-  @include meta.load-css('../components/Modal.scss');
+  @include meta.load-css(
+    '~tgui-core/styles/components/Modal',
+    $with: ('background-color': base.$color-bg)
+  );
   @include meta.load-css(
     '../components/NoticeBox.scss',
     $with: ('background-color': #740707)

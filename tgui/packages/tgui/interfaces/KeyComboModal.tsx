@@ -1,9 +1,10 @@
 import { isEscape, KEY } from 'common/keys';
 import type { BooleanLike } from 'common/react';
 import { useState } from 'react';
+import { Autofocus } from 'tgui-core/components';
 
 import { useBackend } from '../backend';
-import { Autofocus, Box, Button, Section, Stack } from '../components';
+import { Box, Button, Section, Stack } from '../components';
 import { Window } from '../layouts';
 import { InputButtons } from './common/InputButtons';
 import { Loader } from './common/Loader';

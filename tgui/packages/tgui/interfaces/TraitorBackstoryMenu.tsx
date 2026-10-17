@@ -1,8 +1,9 @@
+import { Dimmer } from 'tgui-core/components';
+
 import { useBackend, useLocalState } from '../backend';
 import {
   Box,
   Button,
-  Dimmer,
   Flex,
   Icon,
   Section,

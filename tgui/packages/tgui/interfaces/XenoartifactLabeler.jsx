@@ -1,14 +1,7 @@
+import { BlockQuote, Divider } from 'tgui-core/components';
+
 import { useBackend } from '../backend';
-import {
-  BlockQuote,
-  Box,
-  Button,
-  Collapsible,
-  Divider,
-  Flex,
-  Icon,
-  Section,
-} from '../components';
+import { Box, Button, Collapsible, Flex, Icon, Section } from '../components';
 import { Window } from '../layouts';
 
 export const XenoartifactLabeler = (props) => {

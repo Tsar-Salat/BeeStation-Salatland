@@ -8,6 +8,7 @@
  */
 
 import { toFixed } from 'common/math';
+import { ColorBox } from 'tgui-core/components';
 
 import { numberOfDecimalDigits } from '../../common/math';
 import { useBackend, useLocalState } from '../backend';
@@ -15,7 +16,6 @@ import {
   Box,
   Button,
   Collapsible,
-  ColorBox,
   Flex,
   Input,
   LabeledList,

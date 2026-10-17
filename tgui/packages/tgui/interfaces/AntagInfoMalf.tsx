@@ -1,8 +1,8 @@
-import { BooleanLike } from 'common/react';
 import { multiline } from 'common/string';
+import { BlockQuote, Button, Section, Stack } from 'tgui-core/components';
+import { BooleanLike } from 'tgui-core/react';
 
 import { useBackend } from '../backend';
-import { BlockQuote, Button, Section, Stack } from '../components';
 import { Window } from '../layouts';
 
 const allystyle = {

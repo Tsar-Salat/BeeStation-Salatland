@@ -1,8 +1,9 @@
 import { BooleanLike } from 'common/react';
+import { BlockQuote } from 'tgui-core/components';
 
 import { resolveAsset } from '../assets';
 import { useBackend } from '../backend';
-import { BlockQuote, Box, Section, Stack } from '../components';
+import { Box, Section, Stack } from '../components';
 import { Window } from '../layouts';
 import { AntagInfoHeader } from './common/AntagInfoHeader';
 

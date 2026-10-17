@@ -33,7 +33,10 @@
     '../components/Input.scss',
     $with: ('border-color': colors.$primary)
   );
-  @include meta.load-css('../components/Modal.scss');
+  @include meta.load-css(
+    '~tgui-core/styles/components/Modal',
+    $with: ('background-color': base.$color-bg)
+  );
   @include meta.load-css('../components/Section.scss');
 
   // Layouts

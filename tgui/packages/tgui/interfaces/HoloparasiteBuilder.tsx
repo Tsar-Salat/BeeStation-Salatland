@@ -7,16 +7,14 @@ import {
   RgbColor,
 } from 'common/color';
 import { BooleanLike } from 'common/react';
+import { Autofocus, ColorBox, Dimmer } from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../backend';
 import {
-  Autofocus,
   Box,
   BufferedTextArea,
   Button,
   Collapsible,
-  ColorBox,
-  Dimmer,
   Flex,
   Icon,
   Input,

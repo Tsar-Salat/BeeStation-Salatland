@@ -1,7 +1,8 @@
 import { Component, ReactNode } from 'react';
+import { Dimmer } from 'tgui-core/components';
 
 import { loadedMappings, resolveAsset } from '../../assets';
-import { Box, Dimmer } from '../../components';
+import { Box } from '../../components';
 import { fetchRetry } from '../../http';
 import { ServerData } from './data';
 

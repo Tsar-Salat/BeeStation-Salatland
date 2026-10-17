@@ -1,6 +1,7 @@
+import { BlockQuote } from 'tgui-core/components';
+
 import { useBackend } from '../backend';
 import {
-  BlockQuote,
   Box,
   Button,
   Collapsible,

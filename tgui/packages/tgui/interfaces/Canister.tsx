@@ -1,5 +1,6 @@
 import { toFixed } from 'common/math';
 import { BooleanLike } from 'common/react';
+import { LabeledControls } from 'tgui-core/components';
 
 import { useBackend } from '../backend';
 import {
@@ -9,7 +10,6 @@ import {
   Flex,
   Icon,
   Knob,
-  LabeledControls,
   LabeledList,
   Section,
   Tooltip,

@@ -40,7 +40,7 @@
     $with: ('separator-color': hsl(51.1, 49.7%, 68%))
   );
   @include meta.load-css(
-    '../components/Divider.scss',
+    '~tgui-core/styles/components/Divider',
     $with: ('color': hsl(51.1, 49.7%, 68%))
   );
   @include meta.load-css(

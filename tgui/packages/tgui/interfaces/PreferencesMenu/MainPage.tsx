@@ -3,12 +3,12 @@ import { createSearch } from 'common/string';
 import { sortBy } from 'es-toolkit';
 import { filter, map } from 'es-toolkit/compat';
 import { useState } from 'react';
+import { FitText } from 'tgui-core/components';
 
 import { sendAct, useBackend, useLocalState } from '../../backend';
 import {
   Box,
   Button,
-  FitText,
   Flex,
   Icon,
   Input,

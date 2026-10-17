@@ -1,15 +1,8 @@
 import { createSearch } from 'common/string';
+import { Dimmer } from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../backend';
-import {
-  Box,
-  Button,
-  Dimmer,
-  Icon,
-  Input,
-  Section,
-  Stack,
-} from '../components';
+import { Box, Button, Icon, Input, Section, Stack } from '../components';
 import { NtosWindow } from '../layouts';
 
 export const NtosMessenger = (_) => {

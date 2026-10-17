@@ -8,17 +8,15 @@
 
 import { decodeHtmlEntities } from 'common/string';
 import { marked } from 'marked';
+import { BlockQuote, Divider, Modal } from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../backend';
 import {
-  BlockQuote,
   Box,
   Button,
-  Divider,
   Icon,
   Input,
   LabeledList,
-  Modal,
   NoticeBox,
   Section,
   Stack,

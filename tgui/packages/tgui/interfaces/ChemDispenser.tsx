@@ -1,13 +1,13 @@
 import { classes } from 'common/react';
 import { storage } from 'common/storage';
 import { createLogger } from 'tgui/logging';
+import { Divider } from 'tgui-core/components';
 
 import { useBackend, useLocalState, useSharedState } from '../backend';
 import {
   AnimatedNumber,
   Box,
   Button,
-  Divider,
   Icon,
   Input,
   LabeledList,

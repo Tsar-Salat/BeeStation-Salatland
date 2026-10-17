@@ -1,14 +1,7 @@
+import { BlockQuote, Divider } from 'tgui-core/components';
+
 import { useBackend, useSharedState } from '../backend';
-import {
-  BlockQuote,
-  Button,
-  Divider,
-  Flex,
-  Icon,
-  Section,
-  Table,
-  Tabs,
-} from '../components';
+import { Button, Flex, Icon, Section, Table, Tabs } from '../components';
 import { formatMoney } from '../format';
 import { Window } from '../layouts';
 

@@ -1,15 +1,13 @@
 import { capitalize } from 'common/string';
 import { sortBy } from 'es-toolkit';
+import { Blink, Dimmer, Modal } from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../backend';
 import {
-  Blink,
   Box,
   Button,
-  Dimmer,
   Flex,
   Icon,
-  Modal,
   NoticeBox,
   Section,
   Stack,

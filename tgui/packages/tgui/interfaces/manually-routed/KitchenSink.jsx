@@ -1,6 +1,7 @@
+import { BlockQuote } from 'tgui-core/components';
+
 import { useBackend, useLocalState } from '../../backend';
 import {
-  BlockQuote,
   Box,
   Button,
   ByondUi,

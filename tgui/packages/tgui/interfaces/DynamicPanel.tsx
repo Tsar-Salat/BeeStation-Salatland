@@ -1,13 +1,11 @@
 import { exhaustiveCheck } from 'common/exhaustive';
 import { BooleanLike } from 'common/react';
-import { Dropdown } from 'tgui-core/components';
+import { Chart, Divider, Dropdown } from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../backend';
 import {
   Box,
   Button,
-  Chart,
-  Divider,
   Flex,
   LabeledList,
   NumberInput,

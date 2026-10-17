@@ -1,12 +1,11 @@
 import { BooleanLike } from 'common/react';
 import { sanitizeText } from 'tgui/sanitize';
+import { BlockQuote, ColorBox } from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../backend';
 import {
-  BlockQuote,
   Box,
   Collapsible,
-  ColorBox,
   Flex,
   Icon,
   LabeledList,

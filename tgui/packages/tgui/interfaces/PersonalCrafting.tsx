@@ -3,12 +3,12 @@ import { createSearch } from 'common/string';
 import { sortBy } from 'es-toolkit';
 import { filter } from 'es-toolkit/compat';
 import { useState } from 'react';
+import { Divider } from 'tgui-core/components';
 
 import { useBackend } from '../backend';
 import {
   Box,
   Button,
-  Divider,
   Icon,
   Input,
   NoticeBox,

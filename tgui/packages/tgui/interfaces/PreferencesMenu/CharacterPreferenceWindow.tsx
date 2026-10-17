@@ -1,8 +1,9 @@
 import { exhaustiveCheck } from 'common/exhaustive';
 import { BooleanLike } from 'common/react';
+import { Divider } from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../../backend';
-import { Button, Divider, Flex, Stack } from '../../components';
+import { Button, Flex, Stack } from '../../components';
 import { Window } from '../../layouts';
 import { AntagsPage } from './AntagsPage';
 import { PreferencesMenuData } from './data';

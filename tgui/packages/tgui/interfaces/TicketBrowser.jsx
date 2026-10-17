@@ -1,15 +1,8 @@
 import { capitalize } from 'common/string';
+import { BlockQuote } from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../backend';
-import {
-  BlockQuote,
-  Box,
-  Button,
-  Collapsible,
-  Section,
-  Table,
-  Tabs,
-} from '../components';
+import { Box, Button, Collapsible, Section, Table, Tabs } from '../components';
 import { ButtonConfirm } from '../components/Button';
 import { Window } from '../layouts';
 

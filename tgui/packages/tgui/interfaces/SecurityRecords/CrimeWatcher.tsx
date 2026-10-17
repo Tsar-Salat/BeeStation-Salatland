@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useBackend, useLocalState } from 'tgui/backend';
 import {
   BlockQuote,
@@ -14,7 +15,7 @@ import {
   Tabs,
   TextArea,
   Tooltip,
-} from 'tgui/components';
+} from 'tgui-core/components';
 
 import { getSecurityRecord } from './helpers';
 import { Crime, SECURETAB, SecurityRecordsData } from './types';
@@ -245,9 +246,9 @@ const CrimeAuthor = (props) => {
   const { record_ref } = foundRecord;
   const { act } = useBackend<SecurityRecordsData>();
 
-  const [crimeName, setCrimeName] = useLocalState('crimeName', '');
-  const [crimeDetails, setCrimeDetails] = useLocalState('crimeDetails', '');
-  const [crimeFine, setCrimeFine] = useLocalState('crimeFine', 0);
+  const [crimeName, setCrimeName] = useState('');
+  const [crimeDetails, setCrimeDetails] = useState('');
+  const [crimeFine, setCrimeFine] = useState(0);
   const [selectedTab, setSelectedTab] = useLocalState<SECURETAB>(
     'selectedTab',
     SECURETAB.Crimes,
@@ -291,7 +292,6 @@ const CrimeAuthor = (props) => {
         <TextArea
           height={4}
           maxLength={1025}
-          multiline
           onChange={(_, value) => setCrimeDetails(value)}
           fluid
           placeholder="Type some details..."

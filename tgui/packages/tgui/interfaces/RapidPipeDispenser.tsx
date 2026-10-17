@@ -1,12 +1,12 @@
 import { BooleanLike, classes } from 'common/react';
 import { toTitleCase } from 'common/string';
 import { useState } from 'react';
+import { ColorBox } from 'tgui-core/components';
 
 import { useBackend } from '../backend';
 import {
   Box,
   Button,
-  ColorBox,
   LabeledList,
   Section,
   Stack,

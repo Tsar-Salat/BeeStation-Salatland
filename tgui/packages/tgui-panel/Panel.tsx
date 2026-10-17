@@ -6,9 +6,10 @@
 
 import { useDispatch, useLocalState } from 'tgui/backend';
 import { Button, Section, Stack } from 'tgui/components';
-import { Box, Divider, DraggableControl } from 'tgui/components';
+import { Box, DraggableControl } from 'tgui/components';
 import { Pane } from 'tgui/layouts';
 import { logger } from 'tgui/logging';
+import { Divider } from 'tgui-core/components';
 
 import { NowPlayingWidget, useAudio } from './audio';
 import { ChatPanel, ChatTabs } from './chat';

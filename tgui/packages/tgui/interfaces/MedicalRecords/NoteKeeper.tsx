@@ -10,10 +10,10 @@ import {
   Tabs,
   TextArea,
   Tooltip,
-} from 'tgui/components';
+} from 'tgui-core/components';
 
 import { getMedicalRecord } from './helpers';
-import { MedicalNote, MedicalRecordData } from './types';
+import type { MedicalNote, MedicalRecordData } from './types';
 
 /** Small section for adding notes. Passes a ref and note to Byond. */
 export const NoteKeeper = (props) => {
@@ -51,6 +51,7 @@ export const NoteKeeper = (props) => {
     <Section buttons={<NoteTabs />} fill scrollable title="Notes">
       {writing && (
         <TextArea
+          fluid
           height="100%"
           maxLength={1024}
           onEnter={addNote}
@@ -78,7 +79,7 @@ export const NoteKeeper = (props) => {
           <Box color="label" mb={1} mt={1}>
             Content:
           </Box>
-          <BlockQuote wrap>{selectedNote.content}</BlockQuote>
+          <BlockQuote>{selectedNote.content}</BlockQuote>
         </>
       )}
     </Section>
@@ -120,7 +121,6 @@ const NoteTabs = (props) => {
         ? medical_notes.map((note, index) => (
             <Tabs.Tab
               key={index}
-              label={index + 1}
               onClick={() => setNote(note)}
               selected={selectedNote?.note_ref === note.note_ref}
             >

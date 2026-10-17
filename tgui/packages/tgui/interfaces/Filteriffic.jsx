@@ -1,20 +1,21 @@
-import { toFixed } from 'common/math';
 import { map } from 'es-toolkit/compat';
-import { Dropdown } from 'tgui-core/components';
-
-import { numberOfDecimalDigits } from '../../common/math';
-import { useBackend, useLocalState } from '../backend';
+import { useState } from 'react';
 import {
   Box,
   Button,
   Collapsible,
   ColorBox,
+  Dropdown,
   Input,
   LabeledList,
   NoticeBox,
   NumberInput,
   Section,
-} from '../components';
+} from 'tgui-core/components';
+import { toFixed } from 'tgui-core/math';
+
+import { numberOfDecimalDigits } from '../../common/math';
+import { useBackend } from '../backend';
 import { Window } from '../layouts';
 
 const FilterIntegerEntry = (props) => {
@@ -43,7 +44,8 @@ const FilterIntegerEntry = (props) => {
 const FilterFloatEntry = (props) => {
   const { value, name, filterName } = props;
   const { act } = useBackend();
-  const [step, setStep] = useLocalState(`${filterName}-${name}`, 0.01);
+  const [step, setStep] = useState(0.01);
+
   return (
     <>
       <NumberInput
@@ -291,8 +293,9 @@ export const Filteriffic = (props) => {
   const filters = data.target_filter_data || {};
   const hasFilters = filters !== {};
   const filterDefaults = data['filter_info'];
-  const [massApplyPath, setMassApplyPath] = useLocalState('massApplyPath', '');
-  const [hiddenSecret, setHiddenSecret] = useLocalState('hidden', false);
+  const [massApplyPath, setMassApplyPath] = useState('');
+  const [hiddenSecret, setHiddenSecret] = useState(false);
+
   return (
     <Window width={500} height={500} title="Filteriffic" resizable>
       <Window.Content scrollable>

@@ -1,5 +1,7 @@
+import { LabeledControls } from 'tgui-core/components';
+
 import { useBackend } from '../backend';
-import { Button, Flex, Knob, LabeledControls, Section } from '../components';
+import { Button, Flex, Knob, Section } from '../components';
 import { Window } from '../layouts';
 
 export const Aquarium = (props) => {

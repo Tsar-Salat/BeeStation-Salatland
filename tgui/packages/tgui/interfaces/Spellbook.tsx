@@ -1,13 +1,12 @@
 import { BooleanLike } from 'common/react';
 import { multiline } from 'common/string';
 import { ReactNode } from 'react';
+import { Dimmer, Divider } from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../backend';
 import {
   Box,
   Button,
-  Dimmer,
-  Divider,
   Icon,
   Input,
   NoticeBox,

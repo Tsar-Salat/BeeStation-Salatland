@@ -1,6 +1,8 @@
+import { BlockQuote } from 'tgui-core/components';
+
 import { resolveAsset } from '../assets';
 import { useBackend, useLocalState } from '../backend';
-import { BlockQuote, Box, Section, Stack, Tabs } from '../components';
+import { Box, Section, Stack, Tabs } from '../components';
 import { Window } from '../layouts';
 import { AntagInfoHeader } from './common/AntagInfoHeader';
 

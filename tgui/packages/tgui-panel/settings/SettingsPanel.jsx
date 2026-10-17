@@ -11,8 +11,6 @@ import {
   Box,
   Button,
   Collapsible,
-  ColorBox,
-  Divider,
   Input,
   LabeledList,
   NumberInput,
@@ -21,6 +19,7 @@ import {
   Tabs,
   TextArea,
 } from 'tgui/components';
+import { ColorBox, Divider } from 'tgui-core/components';
 
 import { ChatPageSettings } from '../chat';
 import { clearChat, rebuildChat, saveChatToDisk } from '../chat/actions';

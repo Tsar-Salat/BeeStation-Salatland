@@ -1,12 +1,12 @@
 import { round } from 'common/math';
 import { classes } from 'common/react';
 import { createSearch } from 'common/string';
+import { Divider } from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../../backend';
 import {
   Box,
   Button,
-  Divider,
   Flex,
   Icon,
   Input,

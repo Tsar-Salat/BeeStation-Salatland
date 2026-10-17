@@ -4,13 +4,12 @@
 
 import { useState } from 'react';
 import { useRef } from 'react';
-import { Dropdown } from 'tgui-core/components';
+import { Divider, Dropdown } from 'tgui-core/components';
 
 import { useBackend } from '../backend';
 import {
   Box,
   Button,
-  Divider,
   DraggableClickableControl,
   Flex,
   NoticeBox,

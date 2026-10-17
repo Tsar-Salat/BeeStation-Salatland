@@ -1,11 +1,11 @@
 import { classes } from 'common/react';
+import { ColorBox } from 'tgui-core/components';
 
 import { useBackend, useSharedState } from '../backend';
 import {
   AnimatedNumber,
   Box,
   Button,
-  ColorBox,
   Input,
   LabeledList,
   NumberInput,

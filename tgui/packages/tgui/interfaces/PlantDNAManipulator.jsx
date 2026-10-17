@@ -1,9 +1,10 @@
+import { Modal } from 'tgui-core/components';
+
 import { useBackend } from '../backend';
 import {
   Box,
   Button,
   LabeledList,
-  Modal,
   NoticeBox,
   Section,
   Stack,

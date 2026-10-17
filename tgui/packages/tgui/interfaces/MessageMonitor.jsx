@@ -1,17 +1,8 @@
 import { Component, createRef } from 'react';
+import { BlockQuote, Dimmer } from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../backend';
-import {
-  BlockQuote,
-  Box,
-  Button,
-  Dimmer,
-  Flex,
-  Icon,
-  Section,
-  Table,
-  Tabs,
-} from '../components';
+import { Box, Button, Flex, Icon, Section, Table, Tabs } from '../components';
 import { ButtonConfirm } from '../components/Button';
 import { Window } from '../layouts';
 import { sanitizeText } from '../sanitize';

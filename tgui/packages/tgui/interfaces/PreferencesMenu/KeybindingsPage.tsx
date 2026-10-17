@@ -1,18 +1,11 @@
 import { isEscape, KEY } from 'common/keys';
 import { range, sortBy } from 'es-toolkit';
 import { Component } from 'react';
+import { Dimmer, KeyListener, TrackOutsideClicks } from 'tgui-core/components';
 
 import { resolveAsset } from '../../assets';
 import { useBackend } from '../../backend';
-import {
-  Box,
-  Button,
-  Dimmer,
-  KeyListener,
-  Stack,
-  Tooltip,
-  TrackOutsideClicks,
-} from '../../components';
+import { Box, Button, Stack, Tooltip } from '../../components';
 import { KeyEvent } from '../../events';
 import { fetchRetry } from '../../http';
 import { PreferencesMenuData } from './data';
@@ -167,7 +160,7 @@ class KeybindingButton extends Component<{
     if (typingHotkey && onClick) {
       return (
         // onClick will cancel it
-        <TrackOutsideClicks onOutsideClick={onClick} removeOnOutsideClick>
+        <TrackOutsideClicks onOutsideClick={onClick}>
           {child}
         </TrackOutsideClicks>
       );

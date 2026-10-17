@@ -1,9 +1,10 @@
+import { LabeledControls } from 'tgui-core/components';
+
 import { useBackend } from '../backend';
 import {
   Box,
   Button,
   Icon,
-  LabeledControls,
   NumberInput,
   Section,
   Stack,

@@ -2,13 +2,12 @@ import { flow } from 'common/fp';
 import { toFixed } from 'common/math';
 import { sortBy } from 'es-toolkit';
 import { map } from 'es-toolkit/compat';
+import { Chart, ColorBox } from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../backend';
 import {
   Box,
   Button,
-  Chart,
-  ColorBox,
   Flex,
   Icon,
   LabeledList,

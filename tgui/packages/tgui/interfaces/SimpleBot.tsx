@@ -4,7 +4,6 @@ import {
   Button,
   Flex,
   Icon,
-  LabeledControls,
   NoticeBox,
   Section,
   Slider,
@@ -13,6 +12,7 @@ import {
 } from 'tgui/components';
 import { getGasLabel } from 'tgui/constants';
 import { Window } from 'tgui/layouts';
+import { LabeledControls } from 'tgui-core/components';
 
 type SimpleBotContext = {
   can_hack: number;
