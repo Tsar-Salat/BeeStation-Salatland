@@ -1,6 +1,6 @@
 /obj/item/organ/eyes
 	name = BODY_ZONE_PRECISE_EYES
-	icon_state = "eyeballs"
+	icon_state = "eyes"
 	desc = "I see you!"
 	visual = TRUE
 	zone = BODY_ZONE_PRECISE_EYES
@@ -47,14 +47,12 @@
 	/// indication that the eyes are undergoing some negative effect
 	var/damaged = FALSE
 
-/obj/item/organ/eyes/Insert(mob/living/carbon/eye_recipient, special = FALSE, drop_if_replaced = FALSE, pref_load = FALSE)
+/obj/item/organ/eyes/on_mob_insert(mob/living/carbon/receiver, special, movement_flags)
 	. = ..()
-	if(!.)
-		return
 
-	eye_recipient.cure_blind(NO_EYES)
+	receiver.cure_blind(NO_EYES)
 	apply_damaged_eye_effects()
-	refresh(eye_recipient, call_update = TRUE)
+	refresh(receiver, call_update = TRUE)
 
 /// Refreshes the visuals of the eyes
 /// If call_update is TRUE, we also will call udpate_body
@@ -76,25 +74,27 @@
 	if(call_update)
 		affected_human.update_body()
 
-/obj/item/organ/eyes/Remove(mob/living/carbon/eye_owner, special = FALSE, pref_load = FALSE)
-	..()
-	if(ishuman(eye_owner))
-		var/mob/living/carbon/human/human_owner = eye_owner
+/obj/item/organ/eyes/on_mob_remove(mob/living/carbon/organ_owner, special, movement_flags)
+	. = ..()
+
+	if(ishuman(organ_owner))
+		var/mob/living/carbon/human/human_owner = organ_owner
 		human_owner.remove_eye_color(EYE_COLOR_ORGAN_PRIORITY, update_body = FALSE)
-		human_owner.update_body()
+		if(!special)
+			human_owner.update_body()
 
 	// Cure blindness from eye damage
-	eye_owner.cure_blind(EYE_DAMAGE)
-	eye_owner.cure_nearsighted(EYE_DAMAGE)
+	organ_owner.cure_blind(EYE_DAMAGE)
+	organ_owner.cure_nearsighted(EYE_DAMAGE)
 	// Eye blind and temp blind go to, even if this is a bit of cheesy way to clear blindness
-	eye_owner.remove_status_effect(/datum/status_effect/eye_blur)
-	eye_owner.remove_status_effect(/datum/status_effect/temporary_blindness)
+	organ_owner.remove_status_effect(/datum/status_effect/eye_blur)
+	organ_owner.remove_status_effect(/datum/status_effect/temporary_blindness)
 	// Then become blind anyways (if not special)
 	if(!special)
-		eye_owner.become_blind(NO_EYES)
+		organ_owner.become_blind(NO_EYES)
 
-	eye_owner.update_tint()
-	eye_owner.update_sight()
+	organ_owner.update_tint()
+	organ_owner.update_sight()
 
 #define OFFSET_X 1
 #define OFFSET_Y 2
@@ -107,8 +107,8 @@
 	if(isnull(eye_icon_state))
 		return list()
 
-	var/mutable_appearance/eye_left = mutable_appearance(eye_icon, "[eye_icon_state]_l", CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
-	var/mutable_appearance/eye_right = mutable_appearance(eye_icon, "[eye_icon_state]_r", CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
+	var/mutable_appearance/eye_left = mutable_appearance(eye_icon, "[eye_icon_state]_l", layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
+	var/mutable_appearance/eye_right = mutable_appearance(eye_icon, "[eye_icon_state]_r", layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER))
 	var/list/overlays = list(eye_left, eye_right)
 
 	var/obscured = parent.check_obscured_slots(TRUE)
@@ -116,31 +116,27 @@
 		overlays += emissive_appearance(eye_left.icon, eye_left.icon_state, layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER), alpha = eye_left.alpha)
 		overlays += emissive_appearance(eye_right.icon, eye_right.icon_state, layer = CALCULATE_MOB_OVERLAY_LAYER(BODY_LAYER), alpha = eye_right.alpha)
 
-	// Cry emote overlay
-	if (HAS_TRAIT(parent, TRAIT_CRYING)) // Caused by either using *cry or being pepper sprayed
-		var/mutable_appearance/tears_overlay = mutable_appearance('icons/mob/human/human_face.dmi', "tears", CALCULATE_MOB_OVERLAY_LAYER(BODY_ADJ_LAYER))
-		tears_overlay.color = COLOR_DARK_CYAN
-		overlays += tears_overlay
-
 	var/obj/item/bodypart/head/my_head = parent.get_bodypart(BODY_ZONE_HEAD)
-	if(my_head)
-		if(my_head.head_flags & HEAD_EYECOLOR)
-			if(IS_ROBOTIC_ORGAN(src) || !my_head.draw_color || (parent.appears_alive() && !HAS_TRAIT(parent, TRAIT_KNOCKEDOUT)))
-				// show the eyes as open
-				eye_right.color = parent.get_right_eye_color()
-				eye_left.color = parent.get_left_eye_color()
-			else
-				// show the eyes as closed, and as such color them like eyelids wound be colored
-				var/list/base_color = rgb2num(my_head.draw_color, COLORSPACE_HSL)
-				base_color[2] *= 0.85
-				base_color[3] *= 0.85
-				var/eyelid_color = rgb(base_color[1], base_color[2], base_color[3], (length(base_color) >= 4 ? base_color[4] : null), COLORSPACE_HSL)
-				eye_right.color = eyelid_color
-				eye_left.color = eyelid_color
+	if(!my_head)
+		return overlays
 
-		if(my_head.worn_face_offset)
-			my_head.worn_face_offset.apply_offset(eye_left)
-			my_head.worn_face_offset.apply_offset(eye_right)
+	if(my_head.head_flags & HEAD_EYECOLOR)
+		if(IS_ROBOTIC_ORGAN(src) || !my_head.draw_color || (parent.appears_alive() && !HAS_TRAIT(parent, TRAIT_KNOCKEDOUT)))
+			// show the eyes as open
+			eye_right.color = parent.get_right_eye_color()
+			eye_left.color = parent.get_left_eye_color()
+		else
+			// show the eyes as closed, and as such color them like eyelids wound be colored
+			var/list/base_color = rgb2num(my_head.draw_color, COLORSPACE_HSL)
+			base_color[2] *= 0.85
+			base_color[3] *= 0.85
+			var/eyelid_color = rgb(base_color[1], base_color[2], base_color[3], (length(base_color) >= 4 ? base_color[4] : null), COLORSPACE_HSL)
+			eye_right.color = eyelid_color
+			eye_left.color = eyelid_color
+
+	if(my_head.worn_face_offset)
+		my_head.worn_face_offset.apply_offset(eye_left)
+		my_head.worn_face_offset.apply_offset(eye_right)
 
 	return overlays
 
@@ -192,6 +188,9 @@
 
 	damaged = TRUE
 
+/obj/item/organ/eyes/feel_for_damage(self_aware)
+	// Eye damage has visual effects, so we don't really need to "feel" it when self-examining
+	return ""
 
 /obj/item/organ/eyes/night_vision
 	name = "shadow eyes"
@@ -223,11 +222,6 @@
 /obj/item/organ/eyes/night_vision/zombie
 	name = "undead eyes"
 	desc = "Somewhat counterintuitively, these half-rotten eyes actually have superior vision to those of a living human."
-
-/obj/item/organ/eyes/night_vision/nightmare
-	name = "burning red eyes"
-	desc = "Even without their shadowy owner, looking at these eyes gives you a sense of dread."
-	icon_state = "burning_eyes"
 
 /obj/item/organ/eyes/night_vision/mushroom
 	name = "fung-eye"
@@ -288,7 +282,7 @@
 	. = ..()
 	AddElement(/datum/element/empprotection, EMP_PROTECT_ALL)
 
-/obj/item/organ/eyes/robotic/flashlight/on_insert(mob/living/carbon/victim)
+/obj/item/organ/eyes/robotic/flashlight/on_mob_insert(mob/living/carbon/victim)
 	. = ..()
 	if(!eye)
 		eye = new /obj/item/flashlight/eyelight()
@@ -298,7 +292,7 @@
 	victim.become_blind("flashlight_eyes")
 
 
-/obj/item/organ/eyes/robotic/flashlight/on_remove(mob/living/carbon/victim)
+/obj/item/organ/eyes/robotic/flashlight/on_mob_remove(mob/living/carbon/victim)
 	. = ..()
 	eye.set_light_on(FALSE)
 	eye.update_brightness(victim)
@@ -355,19 +349,15 @@
 		return
 	deactivate(close_ui = TRUE)
 
-/// Set the initial color of the eyes on insert to be the mob's previous eye color.
-/obj/item/organ/eyes/robotic/glow/Insert(mob/living/carbon/eye_recipient, special = FALSE, drop_if_replaced = FALSE)
+/obj/item/organ/eyes/robotic/glow/on_mob_insert(mob/living/carbon/eye_recipient, special = FALSE, movement_flags)
 	. = ..()
 	left_eye_color_string = eye_color_left
 	right_eye_color_string = eye_color_right
 	update_mob_eye_color(eye_recipient)
-
-/obj/item/organ/eyes/robotic/glow/on_insert(mob/living/carbon/eye_recipient)
-	. = ..()
 	deactivate(close_ui = TRUE)
 	eye.forceMove(eye_recipient)
 
-/obj/item/organ/eyes/robotic/glow/on_remove(mob/living/carbon/eye_owner)
+/obj/item/organ/eyes/robotic/glow/on_mob_remove(mob/living/carbon/eye_owner)
 	deactivate(eye_owner, close_ui = TRUE)
 	if(!QDELETED(eye))
 		eye.forceMove(src)
@@ -623,17 +613,17 @@
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	sight_flags = SEE_MOBS | SEE_OBJS | SEE_TURFS
 
-/obj/item/organ/eyes/psyphoza/Insert(mob/living/carbon/eye_owner, special = FALSE, drop_if_replaced = FALSE, initialising, pref_load = FALSE)
+/obj/item/organ/eyes/psyphoza/on_mob_insert(mob/living/carbon/eye_recipient, special = FALSE, movement_flags = DELETE_IF_REPLACED)
 	. = ..()
-	eye_owner.become_blind_with_overlay(PSYPHOZA_BLINDNESS_SOURCE, /atom/movable/screen/fullscreen/blind/psychic)
+	eye_recipient.become_blind_with_overlay(PSYPHOZA_BLINDNESS_SOURCE, /atom/movable/screen/fullscreen/blind/psychic)
 
 	var/datum/action/item_action/organ_action/psychic_highlight/highlight_ability = new(src)
-	highlight_ability.Grant(eye_owner)
+	highlight_ability.Grant(eye_recipient)
 
-/obj/item/organ/eyes/psyphoza/Remove(mob/living/carbon/eye_owner, special = FALSE, pref_load = FALSE)
-	eye_owner.cure_blind(PSYPHOZA_BLINDNESS_SOURCE)
-	var/datum/action/item_action/organ_action/psychic_highlight/highlight_ability = locate() in eye_owner.actions
-	highlight_ability?.Remove(eye_owner)
+/obj/item/organ/eyes/psyphoza/on_mob_remove(mob/living/carbon/organ_owner, special, movement_flags)
+	organ_owner.cure_blind(PSYPHOZA_BLINDNESS_SOURCE)
+	var/datum/action/item_action/organ_action/psychic_highlight/highlight_ability = locate() in organ_owner.actions
+	highlight_ability?.Remove(organ_owner)
 	return ..()
 
 #undef PSYPHOZA_BLINDNESS_SOURCE

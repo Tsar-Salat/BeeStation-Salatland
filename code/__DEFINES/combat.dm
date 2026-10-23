@@ -259,6 +259,18 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 #define EMP_HEAVY 1
 #define EMP_LIGHT 2
 
+/// Base brute damage dealt to augmented limbs by EMPs
+#define AUGGED_LIMB_EMP_BRUTE_DAMAGE 2
+/// Base burn damage dealt to augmented limbs by EMPs
+#define AUGGED_LIMB_EMP_BURN_DAMAGE 1.5
+/// Base time augmented limbs are disabled by EMPs (stamina damage lasts this long)
+#define AUGGED_LIMB_EMP_PARALYZE_TIME (10 SECONDS)
+/// Augmented limbs only get stamina-disabled if they're above this damage threshold (0-1 scale)
+#define ROBOTIC_EMP_PARALYZE_DAMAGE_THRESHOLD 0.3
+
+/// When hit by an EMP, the time an augged head will make vision fucky for.
+#define AUGGED_HEAD_EMP_GLITCH_DURATION 6 SECONDS
+
 #define GRENADE_CLUMSY_FUMBLE 1
 #define GRENADE_NONCLUMSY_FUMBLE 2
 #define GRENADE_NO_FUMBLE 3
@@ -274,13 +286,20 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 #define BODY_ZONE_L_LEG "l_leg"
 #define BODY_ZONE_R_LEG "r_leg"
 
-#define BODY_ZONE_PRECISE_EYES		"eyes"
-#define BODY_ZONE_PRECISE_MOUTH		"mouth"
-#define BODY_ZONE_PRECISE_GROIN		"groin"
-#define BODY_ZONE_PRECISE_L_HAND	"l_hand"
-#define BODY_ZONE_PRECISE_R_HAND	"r_hand"
-#define BODY_ZONE_PRECISE_L_FOOT	"l_foot"
-#define BODY_ZONE_PRECISE_R_FOOT	"r_foot"
+#define BODY_ZONE_PRECISE_EYES "eyes"
+#define BODY_ZONE_PRECISE_MOUTH "mouth"
+#define BODY_ZONE_PRECISE_GROIN "groin"
+#define BODY_ZONE_PRECISE_L_HAND "l_hand"
+#define BODY_ZONE_PRECISE_R_HAND "r_hand"
+#define BODY_ZONE_PRECISE_L_FOOT "l_foot"
+#define BODY_ZONE_PRECISE_R_FOOT "r_foot"
+
+// These lists are ordered as bodyparts would be ordered
+GLOBAL_LIST_INIT(all_body_zones, list(BODY_ZONE_CHEST, BODY_ZONE_HEAD, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM))
+GLOBAL_LIST_INIT(limb_zones, list(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM))
+GLOBAL_LIST_INIT(arm_zones, list(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM))
+GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG))
+GLOBAL_LIST_INIT(all_precise_body_zones, list(BODY_ZONE_PRECISE_EYES, BODY_ZONE_PRECISE_MOUTH, BODY_ZONE_PRECISE_GROIN, BODY_ZONE_PRECISE_L_HAND, BODY_ZONE_PRECISE_R_HAND, BODY_ZONE_PRECISE_L_FOOT, BODY_ZONE_PRECISE_R_FOOT))
 
 //We will round to this value in damage calculations.
 #define DAMAGE_PRECISION 0.1

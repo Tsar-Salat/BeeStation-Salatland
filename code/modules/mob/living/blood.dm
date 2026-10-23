@@ -112,7 +112,7 @@ bleedsuppress has been replaced for is_bandaged(). Note that is_bleeding() retur
 			linked_alert.desc = "Your wounds are bleeding heavily and are unlikely to heal themselves. Seek medical attention immediately![ishuman(owner) ? " Click to apply pressure to the wounds." : ""]"
 			linked_alert.icon_state = "bleed_heavy"
 
-	if (HAS_TRAIT(owner, TRAIT_NO_BLEEDING) || IS_IN_STASIS(owner))
+	if (HAS_TRAIT(owner, TRAIT_NO_BLEEDING) || HAS_TRAIT(owner, TRAIT_STASIS))
 		linked_alert.maptext = MAPTEXT("<s>[owner.get_bleed_rate_string()]</s>")
 	else
 		linked_alert.maptext = MAPTEXT(owner.get_bleed_rate_string())
@@ -131,13 +131,16 @@ bleedsuppress has been replaced for is_bandaged(). Note that is_bleeding() retur
 	clickable_glow = TRUE
 
 /atom/movable/screen/alert/status_effect/bleeding/Click(location, control, params)
-	var/mob/living/carbon/human/human = usr
-	if (!istype(human))
+	. = ..()
+	if(!.)
 		return
-	if (locate(/obj/item/offhand/bleeding_suppress) in human.held_items)
-		human.stop_holding_wounds()
+
+	var/mob/living/carbon/human/human_owner = owner
+
+	if (locate(/obj/item/offhand/bleeding_suppress) in human_owner.held_items)
+		human_owner.stop_holding_wounds()
 	else
-		human.hold_wounds()
+		human_owner.hold_wounds()
 
 /mob/living/carbon/proc/is_bandaged()
 	if (HAS_TRAIT(src, TRAIT_NO_BLOOD))
@@ -347,7 +350,7 @@ bleedsuppress has been replaced for is_bandaged(). Note that is_bleeding() retur
 
 //Makes a blood drop, leaking amt units of blood from the mob
 /mob/living/carbon/bleed(amt)
-	if(blood_volume && !HAS_TRAIT(src, TRAIT_NO_BLOOD) && !HAS_TRAIT(src, TRAIT_NO_BLEEDING) && !IS_IN_STASIS(src))
+	if(blood_volume && !HAS_TRAIT(src, TRAIT_NO_BLOOD) && !HAS_TRAIT(src, TRAIT_NO_BLEEDING) && !HAS_TRAIT(src, TRAIT_STASIS))
 		// As you get less bloodloss, you bleed slower
 		// See the top of this file for desmos lines
 		var/decrease_multiplier = BLEED_RATE_MULTIPLIER
@@ -470,7 +473,7 @@ bleedsuppress has been replaced for is_bandaged(). Note that is_bleeding() retur
 		return /datum/reagent/blood
 
 /mob/living/carbon/human/get_blood_id()
-	if(HAS_TRAIT(src, TRAIT_HUSK))
+	if(HAS_TRAIT(src, TRAIT_HUSK) || !dna)
 		return
 	if(dna.species.exotic_blood)
 		return dna.species.exotic_blood
@@ -487,18 +490,23 @@ bleedsuppress has been replaced for is_bandaged(). Note that is_bleeding() retur
 
 /proc/get_blood_dna_color(list/blood_dna)
 	if(!length(blood_dna))
-		return COLOR_BLOOD
+		return BLOOD_COLOR_RED
 	var/blood_print = blood_dna[length(blood_dna)]
 	var/datum/blood_type/blood_type = blood_dna[blood_print]
+
+	// string?
+	if(istext(blood_type))
+		blood_type = get_blood_type(blood_type)
+
 	if(!blood_type)
-		return COLOR_BLOOD
+		return BLOOD_COLOR_RED
 	if(!blood_type.blood_color)
-		return COLOR_BLOOD
+		return BLOOD_COLOR_RED
 	return blood_type.blood_color
 
 //to add a splatter of blood or other mob liquid.
 /mob/living/proc/add_splatter_floor(turf/T, small_drip)
-	if (HAS_TRAIT(src, TRAIT_NO_BLOOD) || HAS_TRAIT(src, TRAIT_NO_BLEEDING) || IS_IN_STASIS(src))
+	if (HAS_TRAIT(src, TRAIT_NO_BLOOD) || HAS_TRAIT(src, TRAIT_NO_BLEEDING) || HAS_TRAIT(src, TRAIT_STASIS))
 		return
 	if(get_blood_id() != /datum/reagent/blood)
 		return
@@ -523,8 +531,8 @@ bleedsuppress has been replaced for is_bandaged(). Note that is_bleeding() retur
 		else
 			drop = new(T, get_static_viruses())
 			drop.transfer_mob_blood_dna(src)
-			if(get_blood_dna_color(GET_ATOM_BLOOD_DNA(drop)) == COLOR_ETHEREAL_BLOOD)
-				drop.set_light(1, 0.5, COLOR_ETHEREAL_BLOOD)
+			if(get_blood_dna_color(GET_ATOM_BLOOD_DNA(drop)) == BLOOD_COLOR_ETHEREAL)
+				drop.set_light(1, 0.5, BLOOD_COLOR_ETHEREAL)
 			return
 
 	// Find a blood decal or create a new one.
@@ -540,8 +548,8 @@ bleedsuppress has been replaced for is_bandaged(). Note that is_bleeding() retur
 		return
 	B.bloodiness = min((B.bloodiness + BLOOD_AMOUNT_PER_DECAL), BLOOD_POOL_MAX)
 	B.transfer_mob_blood_dna(src) //give blood info to the blood decal.
-	if(get_blood_dna_color(GET_ATOM_BLOOD_DNA(B)) == COLOR_ETHEREAL_BLOOD)
-		B.set_light(1, 0.5, COLOR_ETHEREAL_BLOOD)
+	if(get_blood_dna_color(GET_ATOM_BLOOD_DNA(B)) == BLOOD_COLOR_ETHEREAL)
+		B.set_light(1, 0.5, BLOOD_COLOR_ETHEREAL)
 	if(temp_blood_DNA)
 		B.add_blood_DNA(temp_blood_DNA)
 

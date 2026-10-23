@@ -16,6 +16,8 @@
 	var/breakout_time = 450
 
 /obj/machinery/abductor/experiment/MouseDrop_T(mob/target, mob/user)
+	if(..())
+		return
 	if(user.stat != CONSCIOUS || HAS_TRAIT(user, TRAIT_UI_BLOCKED) || !Adjacent(user) || !target.Adjacent(user) || !ishuman(target))
 		return
 	if(isabductor(target))
@@ -127,7 +129,7 @@
 	if(H.stat == DEAD)
 		say("Specimen deceased - please provide fresh sample.")
 		return "Specimen deceased."
-	var/obj/item/organ/heart/gland/GlandTest = locate() in H.internal_organs
+	var/obj/item/organ/heart/gland/GlandTest = locate() in H.organs
 	if(!GlandTest)
 		say("No glands detected!")
 		return "No glands detected!"
@@ -148,7 +150,7 @@
 
 		user_abductor.team.abductees += H.mind
 
-		for(var/obj/item/organ/heart/gland/G in H.internal_organs)
+		for(var/obj/item/organ/heart/gland/G in H.organs)
 			G.Start()
 			point_reward++
 		if(point_reward > 0)

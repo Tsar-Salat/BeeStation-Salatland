@@ -48,8 +48,6 @@
 #define COLOR_SECURITY_RED "#CB0000"
 #define COLOR_VIVID_RED "#FF3232"
 #define COLOR_SOFT_RED "#FA8282"
-/// Color used for default blood
-#define COLOR_BLOOD "#CC0000"
 
 #define COLOR_YELLOW "#FFFF00"
 #define COLOR_VIVID_YELLOW "#FBFF23"
@@ -57,23 +55,31 @@
 
 #define COLOR_OLIVE "#808000"
 #define COLOR_VIBRANT_LIME "#00FF00"
+#define COLOR_SERVICE_LIME "#58C800"
 #define COLOR_JADE "#5EFB6E"
+#define COLOR_EMERALD "#00CC66"
+#define COLOR_PALE_GREEN "#20e28e"
 #define COLOR_LIME "#32CD32"
 #define COLOR_DARK_LIME "#00aa00"
+#define COLOR_VERY_PALE_LIME_GREEN "#DDFFD3"
+#define COLOR_VERY_DARK_LIME_GREEN "#003300"
 #define COLOR_GREEN "#008000"
 #define COLOR_DARK_MODERATE_LIME_GREEN "#44964A"
-#define COLOR_VERY_DARK_LIME_GREEN "#003300"
-#define COLOR_PALE_GREEN "#20e28e"
 
 #define COLOR_CYAN "#00FFFF"
 #define COLOR_DARK_CYAN "#00A2FF"
 #define COLOR_TEAL "#008080"
-#define COLOR_BLUSH_TEAL "#009696"
 #define COLOR_BLUE "#0000FF"
 #define COLOR_MODERATE_BLUE "#555CC2"
 #define COLOR_BLUE_LIGHT "#33CCFF"
 #define COLOR_NAVY "#000080"
 #define COLOR_BLUE_GRAY "#75A2BB"
+
+///Colors for blood greyscale sprites
+#define BLOOD_COLOR_RED "#CC0000"
+#define BLOOD_COLOR_LIZARD "#009696"
+#define BLOOD_COLOR_ETHEREAL "#7fff7f"
+#define BLOOD_COLOR_SYNTHETIC "#dddeff"
 
 /// Starlight!
 #define COLOR_STARLIGHT "#8589fa"
@@ -208,8 +214,6 @@
 #define COLOR_DISPLAY_YELLOW "#FFF743"
 #define COLOR_DISPLAY_GREEN "#3CF046"
 
-#define DEFAULT_HEX_COLOR_LEN 6
-
 // check "chat-light-theme.scss" and "chat-dark-theme.scss"
 GLOBAL_LIST_INIT(color_list_blood_brothers, shuffle(list(
 	"cfc_red",
@@ -244,6 +248,8 @@ GLOBAL_LIST_INIT(color_list_rainbow, list(
 #define DEFAULT_ASAY_COLOR COLOR_MOSTLY_PURE_RED
 /// The default color for Byond Member / ADMIN OOC, used as a fallback when the preference is not enabled
 #define DEFAULT_BONUS_OOC_COLOR "#c43b23"
+
+#define DEFAULT_HEX_COLOR_LEN 6
 
 // Some defines for accessing specific entries in color matrices.
 
@@ -285,6 +291,8 @@ GLOBAL_LIST_INIT(color_list_rainbow, list(
 #define COLOR_GNOME_GREY "#a9a9a9"
 #define COLOR_GNOME_BLACK "#303030"
 
+#define HUSK_COLOR_TONE rgb(96, 88, 80)
+
 #define CM_COLOR_SAT_MIN 0.6
 #define CM_COLOR_SAT_MAX 0.7
 #define CM_COLOR_LUM_MIN 0.65
@@ -295,3 +303,5 @@ GLOBAL_LIST_INIT(color_list_rainbow, list(
 #define EYE_COLOR_SPECIES_PRIORITY 10
 #define EYE_COLOR_WEED_PRIORITY 20
 #define EYE_COLOR_CULT_PRIORITY 30
+
+#define HUSK_COLOR_TONE rgb(96, 88, 80)

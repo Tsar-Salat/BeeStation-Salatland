@@ -16,7 +16,7 @@
 	// Otherwise if def zone is null, we'll get a random bodypart / zone to hit.
 	// ALso we'll automatically covnert string def zones into bodyparts to pass into parent call.
 	else if(!isbodypart(def_zone))
-		var/random_zone = check_zone(def_zone || ran_zone(def_zone))
+		var/random_zone = check_zone(def_zone || get_random_valid_zone(def_zone))
 		def_zone = get_bodypart(random_zone) || bodyparts[1]
 
 	. = ..()
@@ -41,7 +41,6 @@
 	// depending on the species, it will run the corresponding apply_damage code there
 	if(stat != DEAD && (damagetype==BRUTE || damagetype==BURN) && damage>10 && prob(10+damage/2))
 		INVOKE_ASYNC(src, PROC_REF(emote), "scream")
-
 	// Add relevant DR modifiers into blocked value to pass to parent
 	blocked += physiology?.damage_resistance
 	blocked += dna?.species?.damage_modifier
@@ -78,14 +77,14 @@
 //These procs fetch a cumulative total damage from all bodyparts
 /mob/living/carbon/getBruteLoss()
 	var/amount = 0
-	for(var/obj/item/bodypart/BP as anything in bodyparts)
-		amount += BP.brute_dam
+	for(var/obj/item/bodypart/bodypart as anything in get_bodyparts())
+		amount += bodypart.brute_dam
 	return round(amount, DAMAGE_PRECISION)
 
 /mob/living/carbon/getFireLoss()
 	var/amount = 0
-	for(var/obj/item/bodypart/BP as anything in bodyparts)
-		amount += BP.burn_dam
+	for(var/obj/item/bodypart/bodypart as anything in get_bodyparts())
+		amount += bodypart.burn_dam
 	return round(amount, DAMAGE_PRECISION)
 
 /mob/living/carbon/adjustBruteLoss(amount, updating_health = TRUE, forced = FALSE, required_bodytype)
@@ -213,7 +212,7 @@
 //Returns a list of damaged bodyparts
 /mob/living/carbon/proc/get_damaged_bodyparts(brute = FALSE, burn = FALSE, stamina = FALSE, required_bodytype = NONE, target_zone = null)
 	var/list/obj/item/bodypart/parts = list()
-	for(var/obj/item/bodypart/BP as anything in bodyparts)
+	for(var/obj/item/bodypart/BP as anything in get_bodyparts())
 		if(required_bodytype && !(BP.bodytype & required_bodytype))
 			continue
 		if(!isnull(target_zone) && BP.body_zone != target_zone)
@@ -225,7 +224,7 @@
 ///Returns a list of damageable bodyparts
 /mob/living/carbon/proc/get_damageable_bodyparts(required_bodytype)
 	var/list/obj/item/bodypart/parts = list()
-	for(var/obj/item/bodypart/BP as anything in bodyparts)
+	for(var/obj/item/bodypart/BP as anything in get_bodyparts())
 		if(required_bodytype && !(BP.bodytype & required_bodytype))
 			continue
 		if(BP.brute_dam + BP.burn_dam < BP.max_damage)
@@ -330,9 +329,9 @@
 		var/brute_was = picked.brute_dam
 		var/burn_was = picked.burn_dam
 		var/stamina_was = picked.stamina_dam
+
 		var/damage_before = picked.get_damage(TRUE)
 
-		// disabling wounds from these for now cuz your entire body snapping cause your heart stopped would suck
 		update |= picked.receive_damage(brute = brute_per_part, burn = burn_per_part, stamina = stamina_per_part, blocked = FALSE, updating_health = FALSE, forced = forced, required_bodytype = required_bodytype)
 
 		. -= picked.get_damage(TRUE) - damage_before

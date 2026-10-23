@@ -418,6 +418,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	for (var/datum/preference/preference as anything in get_preferences_in_priority_order())
 		if (preference.preference_type != PREFERENCE_PLAYER)
 			continue
+
 		preference.apply_to_client(parent, read_player_preference(preference.type))
 
 /// Updates cached character list with new real_name
@@ -450,5 +451,3 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	if(icon_updates)
 		character.icon_render_keys = list()
 		character.update_body(is_creating = TRUE)
-		character.update_body_parts(TRUE) // Must pass true here or limbs won't catch changes like body_model
-		character.dna.update_body_size(TRUE)

@@ -1,11 +1,12 @@
 /datum/species/skeleton
 	// 2spooky
-	name = "\improper Spooky Scary Skeleton"
+	name = "Spooky Scary Skeleton"
 	plural_form = "Skeletons"
 	id = SPECIES_SKELETON
-	sexes = 0
+	sexes = FALSE
 	meat = /obj/item/food/meat/slab/human/mutant/skeleton
 	inherent_traits = list(
+		TRAIT_NO_UNDERWEAR,
 		TRAIT_TOXIMMUNE,
 		TRAIT_RESISTHEAT,
 		TRAIT_NOBREATH,
@@ -24,7 +25,7 @@
 		TRAIT_NOBLOOD,
 		TRAIT_UNHUSKABLE,
 	)
-	inherent_biotypes = MOB_UNDEAD | MOB_HUMANOID
+	inherent_biotypes = MOB_UNDEAD|MOB_HUMANOID
 	mutanttongue = /obj/item/organ/tongue/bone
 	mutantstomach = /obj/item/organ/stomach/bone
 	mutantappendix = null
@@ -44,7 +45,7 @@
 		BODY_ZONE_CHEST = /obj/item/bodypart/chest/skeleton,
 	)
 
-/datum/species/plasmaman/on_species_gain(mob/living/carbon/C, datum/species/old_species, pref_load)
+/datum/species/plasmaman/on_species_gain(mob/living/carbon/C, datum/species/old_species)
 	. = ..()
 	C.set_safe_hunger_level()
 

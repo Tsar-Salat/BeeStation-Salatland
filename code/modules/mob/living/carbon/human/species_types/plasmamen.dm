@@ -47,7 +47,7 @@
 
 	var/internal_fire = FALSE //If the bones themselves are burning clothes won't help you much
 
-/datum/species/on_species_gain(mob/living/carbon/C, datum/species/old_species, pref_load)
+/datum/species/on_species_gain(mob/living/carbon/C, datum/species/old_species)
 	. = ..()
 	C.set_safe_hunger_level()
 
@@ -110,12 +110,7 @@
 	. = ..()
 	human_to_equip.open_internals(human_to_equip.get_item_for_held_index(2))
 
-/datum/species/plasmaman/qualifies_for_rank(datum/job/rank, list/features)
-	if(rank in SSdepartment.get_jobs_by_dept_id(DEPARTMENT_NAME_SECURITY))
-		return 0
-	if(is_clown_job(rank) || is_mime_job(rank))//No funny bussiness
-		return 0
-	return ..()
+
 
 /datum/species/plasmaman/get_scream_sound(mob/living/carbon/user)
 	return pick('sound/voice/plasmaman/plasmeme_scream_1.ogg', 'sound/voice/plasmaman/plasmeme_scream_2.ogg', 'sound/voice/plasmaman/plasmeme_scream_3.ogg')

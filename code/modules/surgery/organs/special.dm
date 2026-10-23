@@ -4,12 +4,12 @@
 	visual = FALSE
 	icon_state = "beestinger"
 	zone = BODY_ZONE_PRECISE_GROIN
-	slot = ORGAN_SLOT_TAIL
+	slot = ORGAN_SLOT_EXTERNAL_TAIL
 	actions_types = list(/datum/action/item_action/organ_action/use/bee_sting)
 
 /datum/action/item_action/organ_action/use/bee_sting
 	requires_target = TRUE
-	check_flags = AB_CHECK_IMMOBILE | AB_CHECK_CONSCIOUS
+	check_flags = AB_CHECK_IMMOBILE | AB_CHECK_CONSCIOUS | AB_CHECK_HANDS_BLOCKED
 	cooldown_time = 2 MINUTES
 
 /datum/action/item_action/organ_action/use/bee_sting/set_click_ability(mob/on_who)

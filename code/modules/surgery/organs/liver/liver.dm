@@ -5,7 +5,7 @@
 /obj/item/organ/liver
 	name = "liver"
 	icon_state = "liver"
-	visual = FALSE
+
 	w_class = WEIGHT_CLASS_SMALL
 	zone = BODY_ZONE_CHEST
 	slot = ORGAN_SLOT_LIVER
@@ -26,12 +26,12 @@
 	var/filterToxins = TRUE //whether to filter toxins
 	var/operated = FALSE
 
-/obj/item/organ/liver/on_insert(mob/living/carbon/organ_owner, special)
+/obj/item/organ/liver/on_mob_insert(mob/living/carbon/organ_owner, special, movement_flags)
 	. = ..()
 	RegisterSignal(organ_owner, COMSIG_SPECIES_HANDLE_CHEMICAL, PROC_REF(handle_chemical))
 	RegisterSignal(organ_owner, COMSIG_ATOM_EXAMINE, PROC_REF(on_owner_examine))
 
-/obj/item/organ/liver/on_remove(mob/living/carbon/organ_owner, special)
+/obj/item/organ/liver/on_mob_remove(mob/living/carbon/organ_owner, special, movement_flags)
 	. = ..()
 	UnregisterSignal(organ_owner, list(COMSIG_SPECIES_HANDLE_CHEMICAL, COMSIG_ATOM_EXAMINE))
 
@@ -46,7 +46,7 @@
 	SIGNAL_HANDLER
 
 /obj/item/organ/liver/on_life(delta_time, times_fired)
-	. = ..() //perform general on_life()
+	. = ..()
 	//If your liver is failing or you lack a metabolism then we use the liverless version of metabolize
 	if((organ_flags & ORGAN_FAILING) || HAS_TRAIT(owner, TRAIT_LIVERLESS_METABOLISM))
 		owner.reagents.end_metabolization(keep_liverless = TRUE)
@@ -119,14 +119,21 @@
 		return
 	switch(failure_time)
 		if(0 to 3 * LIVER_FAILURE_STAGE_SECONDS - 1)
-			examine_list += span_warning("[owner]'s eyes are slightly yellow.")
+			examine_list += span_notice("[owner]'s eyes are slightly yellow.")
 		if(3 * LIVER_FAILURE_STAGE_SECONDS to 4 * LIVER_FAILURE_STAGE_SECONDS - 1)
-			examine_list += span_warning("[owner]'s eyes are completely yellow, and [owner.p_they()] [owner.p_are()] visibly suffering.")
+			examine_list += span_notice("[owner]'s eyes are completely yellow, and [owner.p_they()] [owner.p_are()] visibly suffering.")
 		if(4 * LIVER_FAILURE_STAGE_SECONDS to INFINITY)
-			examine_list += span_boldwarning("[owner]'s eyes are completely yellow and swelling with pus. [owner.p_they(TRUE)] [owner.p_do()]n't look like [owner.p_they()] will be alive for much longer.")
+			examine_list += span_danger("[owner]'s eyes are completely yellow and swelling with pus. [owner.p_They()] [owner.p_do()]n't look like [owner.p_they()] will be alive for much longer.")
 
 /obj/item/organ/liver/get_availability(datum/species/owner_species, mob/living/owner_mob)
 	return owner_species.mutantliver
+
+/obj/item/organ/liver/feel_for_damage(self_aware)
+	if(damage < low_threshold)
+		return
+	if(damage < high_threshold)
+		return span_warning("Your [self_aware ? "liver" : "lower abdomen"] feels sore.")
+	return span_boldwarning("Your [self_aware ? "liver" : "lower abdomen"] feels like it's on fire!")
 
 /obj/item/organ/liver/fly
 	name = "insectoid liver"

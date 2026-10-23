@@ -361,7 +361,10 @@
 
 		var/obj/item/temp = typepath
 		var/datum/vending_product/new_record = new /datum/vending_product()
-		new_record.name = initial(temp.name)
+		var/new_name = initial(temp.name)
+		if(isnull(new_name))
+			message_admins("[temp] item had a null name when built in vending inventory in [src]. Fix your product categories!")
+		new_record.name = new_name
 		new_record.product_path = typepath
 		if(!start_empty)
 			new_record.amount = amount
@@ -1096,7 +1099,7 @@
 	if(greyscale_colors)
 		vended_item.set_greyscale(colors=greyscale_colors)
 	R.amount--
-	if(usr.CanReach(src) && usr.put_in_hands(vended_item))
+	if(IsReachableBy(usr) && usr.put_in_hands(vended_item))
 		to_chat(usr, span_notice("You take [R.name] out of the slot."))
 	else
 		to_chat(usr, span_warning("[capitalize(R.name)] falls onto the floor!"))
@@ -1329,7 +1332,7 @@
 					if(compartmentLoadAccessCheck(usr))
 						vending_machine_input[N] = max(vending_machine_input[N] - 1, 0)
 						S.forceMove(drop_location())
-						if (usr.CanReach(src) && usr.put_in_hands(S))
+						if (IsReachableBy(usr) && usr.put_in_hands(S))
 							to_chat(usr, span_notice("You take [S.name] out of the slot."))
 						else
 							to_chat(usr, span_warning("[capitalize(S.name)] falls onto the floor!"))
@@ -1367,7 +1370,7 @@
 	SSblackbox.record_feedback("amount", "vending_spent", bought_item.custom_price)
 	vending_machine_input[N] = max(vending_machine_input[N] - 1, 0)
 	bought_item.forceMove(drop_location())
-	if (usr.CanReach(src) && usr.put_in_hands(bought_item))
+	if (IsReachableBy(usr) && usr.put_in_hands(bought_item))
 		to_chat(usr, span_notice("You take [bought_item.name] out of the slot."))
 	else
 		to_chat(usr, span_warning("[capitalize(bought_item.name)] falls onto the floor!"))

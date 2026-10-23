@@ -10,26 +10,30 @@
 	plural_form = "Mothmen"
 	id = SPECIES_MOTH
 	inherent_traits = list(
+		TRAIT_TACKLING_WINGED_ATTACKER,
 		TRAIT_MUTANT_COLORS,
 		TRAIT_HAS_MARKINGS,
 	)
-	inherent_biotypes = MOB_ORGANIC | MOB_HUMANOID |  MOB_BUG
+	inherent_biotypes = MOB_ORGANIC|MOB_HUMANOID|MOB_BUG
 	mutant_bodyparts = list(
-		"moth_wings" = "Plain",
-		"moth_antennae" = "Plain",
-		"moth_markings" = SPRITE_ACCESSORY_NONE,
+		"body_size" = "Normal",
 		"moth_eyes" = "Default",
-		"body_size" = "Normal"
+	)
+	body_markings = list(
+		/datum/bodypart_overlay/simple/body_marking/moth = SPRITE_ACCESSORY_NONE,
+	)
+	mutant_organs = list(
+		/obj/item/organ/wings/moth = "Plain",
+		/obj/item/organ/antennae = "Plain"
 	)
 	var/datum/action/innate/cocoon/cocoon_action
 	meat = /obj/item/food/meat/slab/human/mutant/moth
 	mutanteyes = /obj/item/organ/eyes/moth
-	mutantwings = /obj/item/organ/wings/moth
 	mutanttongue = /obj/item/organ/tongue/moth
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | ERT_SPAWN | RACE_SWAP | SLIME_EXTRACT
 	species_language_holder = /datum/language_holder/moth
-	inert_mutation = /datum/mutation/strongwings
-	deathsound = 'sound/voice/moth/moth_deathgasp.ogg'
+	//inert_mutation = /datum/mutation/strongwings
+	death_sound = 'sound/voice/moth/moth_deathgasp.ogg'
 
 	bodypart_overrides = list(
 		BODY_ZONE_HEAD = /obj/item/bodypart/head/moth,
@@ -49,17 +53,17 @@
 	if(chem.type == /datum/reagent/toxin/pestkiller)
 		affected.adjustToxLoss(3 * REM * delta_time)
 
-/datum/species/moth/on_species_gain(mob/living/carbon/human/human_who_gained_species, datum/species/old_species, pref_load)
+/datum/species/moth/on_species_gain(mob/living/carbon/human/human_who_gained_species, datum/species/old_species)
 	if(human_who_gained_species.dna?.features["moth_eyes"] == "Domestic")
 		mutanteyes = /obj/item/organ/eyes/moth/domestic
 	else
 		mutanteyes = /obj/item/organ/eyes/moth
-	if(!pref_load)
-		human_who_gained_species.dna?.features["mcolor"] = "#f4d697"
+		
+	human_who_gained_species.dna?.features[FEATURE_MUTANT_COLOR] = "#f4d697"
 	. = ..()
 	RegisterSignal(human_who_gained_species, COMSIG_MOB_APPLY_DAMAGE_MODIFIERS, PROC_REF(damage_weakness))
 
-/datum/species/moth/on_species_loss(mob/living/carbon/human/C, datum/species/new_species, pref_load)
+/datum/species/moth/on_species_loss(mob/living/carbon/human/C, datum/species/new_species)
 	. = ..()
 	UnregisterSignal(C, COMSIG_MOB_APPLY_DAMAGE_MODIFIERS)
 
@@ -69,13 +73,19 @@
 	if(istype(attacking_item, /obj/item/melee/flyswatter))
 		damage_mods += 10 // Yes, a 10x damage modifier
 
+/datum/species/moth/randomize_features()
+	var/list/features = ..()
+	features[FEATURE_MOTH_MARKINGS] = pick(SSaccessories.moth_markings_list)
+	return features
+
 /datum/species/moth/get_laugh_sound(mob/living/carbon/user)
 	return 'sound/emotes/moth/mothlaugh.ogg'
 
 /datum/species/moth/get_scream_sound(mob/living/carbon/user)
 	return 'sound/voice/moth/scream_moth.ogg'
 
-/datum/species/moth/on_species_gain(mob/living/carbon/human/H)
+/*
+/datum/species/moth/on_species_gain(mob/living/carbon/human/human_who_gained_species, datum/species/old_species, regenerate_icons)
 	..()
 	cocoon_action = new()
 	cocoon_action.Grant(H)
@@ -86,14 +96,13 @@
 	QDEL_NULL(cocoon_action)
 
 /datum/species/moth/spec_life(mob/living/carbon/human/H)
-	. = ..()
 	if(cocoon_action)
 		cocoon_action.update_buttons()
 
 /datum/action/innate/cocoon
 	name = "Cocoon"
 	desc = "Restore your wings and antennae, and heal some damage. If your cocoon is broken externally you will take heavy damage!"
-	check_flags = AB_CHECK_HANDS_BLOCKED|AB_CHECK_INCAPACITATED|AB_CHECK_CONSCIOUS
+	check_flags = AB_CHECK_INCAPACITATED|AB_CHECK_HANDS_BLOCKED|AB_CHECK_IMMOBILE|AB_CHECK_CONSCIOUS
 	button_icon_state = "wrap_0"
 	button_icon = 'icons/hud/actions/actions_animal.dmi'
 
@@ -209,6 +218,7 @@
 #undef COCOON_HARM_AMOUNT
 #undef COCOON_HEAL_AMOUNT
 #undef COCOON_NUTRITION_AMOUNT
+*/
 
 /datum/species/moth/get_species_description()
 	return "Mothpeople are an intelligent species, known for their affinity to all things moth - lights, cloth, wings, and friendship."
@@ -243,5 +253,5 @@
 	return to_add
 
 /datum/species/moth/prepare_human_for_preview(mob/living/carbon/human/human)
-	human.dna.features["mcolor"] = "#f4d697"
+	human.dna.features[FEATURE_MUTANT_COLOR] = "#f4d697"
 	human.update_body(TRUE)

@@ -61,7 +61,7 @@ CREATION_TEST_IGNORE_SELF(/obj/effect/mob_spawn)
 	if(instant || (roundstart && (mapload || (SSticker && SSticker.current_state > GAME_STATE_SETTING_UP))))
 		create()
 	else if(ghost_usable)
-		AddElement(/datum/element/point_of_interest)
+		SSpoints_of_interest.make_point_of_interest(src)
 		LAZYADD(GLOB.mob_spawners[name], src)
 		SSmobs.update_spawners()
 
@@ -187,9 +187,9 @@ CREATION_TEST_IGNORE_SELF(/obj/effect/mob_spawn)
 	H.undershirt = "Nude"
 	H.socks = "Nude"
 	if(hair_style)
-		H.hair_style = hair_style
+		H.hairstyle = hair_style
 	else
-		H.hair_style = random_hair_style(H.gender)
+		H.hairstyle = random_hairstyle(H.gender)
 	if(facial_hairstyle)
 		H.facial_hairstyle = facial_hairstyle
 	else
@@ -198,7 +198,7 @@ CREATION_TEST_IGNORE_SELF(/obj/effect/mob_spawn)
 		H.skin_tone = skin_tone
 	else
 		H.skin_tone = pick(GLOB.skin_tones)
-	H.update_hair()
+	H.update_body_parts()
 	H.update_body()
 	if(outfit)
 		var/static/list/slots = list("uniform", "r_hand", "l_hand", "suit", "shoes", "gloves", "ears", "glasses", "mask", "head", "belt", "r_pocket", "l_pocket", "back", "id", "neck", "backpack_contents", "suit_store")

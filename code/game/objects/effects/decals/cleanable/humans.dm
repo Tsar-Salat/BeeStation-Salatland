@@ -3,7 +3,7 @@
 	desc = "It's weird and gooey. Perhaps it's the chef's cooking?"
 	icon = 'icons/effects/blood.dmi'
 	icon_state = "floor1"
-	color = COLOR_BLOOD
+	color = BLOOD_COLOR_RED
 	random_icon_states = list("floor1", "floor2", "floor3", "floor4", "floor5", "floor6", "floor7")
 	blood_state = BLOOD_STATE_HUMAN
 	bloodiness = BLOOD_AMOUNT_PER_DECAL
@@ -31,10 +31,10 @@
 	STOP_PROCESSING(SSobj, src)
 	return ..()
 
-/obj/effect/decal/cleanable/blood/add_blood_DNA(list/blood_dna, list/datum/disease/diseases)
+/obj/effect/decal/cleanable/blood/add_blood_DNA(list/blood_DNA_to_add, list/datum/disease/diseases)
 	. = ..()
-	if(blood_dna)
-		color = get_blood_dna_color(blood_dna)
+	if(blood_DNA_to_add)
+		color = get_blood_dna_color(blood_DNA_to_add)
 
 /obj/effect/decal/cleanable/blood/proc/get_timer()
 	drytime = world.time + 3 MINUTES
@@ -109,7 +109,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/decal/cleanable/blood/old)
 /obj/effect/decal/cleanable/blood/trail_holder/glowy
 	light_power = 0.5
 	light_range = 0.25
-	light_color = COLOR_ETHEREAL_BLOOD
+	light_color = BLOOD_COLOR_ETHEREAL
 
 /obj/effect/decal/cleanable/blood/gibs
 	name = "gibs"

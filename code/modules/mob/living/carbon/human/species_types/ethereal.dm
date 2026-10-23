@@ -39,7 +39,7 @@
 		BODY_ZONE_CHEST = /obj/item/bodypart/chest/ethereal,
 	)
 
-/datum/species/ethereal/on_species_gain(mob/living/carbon/human/new_ethereal, datum/species/old_species, pref_load)
+/datum/species/ethereal/on_species_gain(mob/living/carbon/human/new_ethereal, datum/species/old_species)
 	. = ..()
 	if(!ishuman(new_ethereal))
 		return
@@ -54,11 +54,15 @@
 		if(limb.limb_id == SPECIES_ETHEREAL)
 			limb.update_limb(is_creating = TRUE)
 
-/datum/species/ethereal/on_species_loss(mob/living/carbon/human/former_ethereal, datum/species/new_species, pref_load)
+/datum/species/ethereal/on_species_loss(mob/living/carbon/human/former_ethereal, datum/species/new_species)
 	UnregisterSignal(former_ethereal, list(
 		COMSIG_ATOM_SHOULD_EMAG,
 		COMSIG_ATOM_ON_EMAG,
 	))
+	//Is this physiology setter bad and hacky?
+	//Yes. But ethereals suck ass and its better than the alternative of someone
+	//getting stuck with double fucking burn damage when swapping to another species.
+	former_ethereal.physiology.brute_mod = 1
 	return ..()
 
 /datum/species/ethereal/proc/should_emag(mob/living/carbon/human/H, mob/user)

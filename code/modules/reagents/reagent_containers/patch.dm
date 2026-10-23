@@ -6,6 +6,7 @@
 	inhand_icon_state = "bandaid_small_cross"
 	volume = 40
 	apply_method = "apply"
+	self_delay = 3 SECONDS
 
 /obj/item/reagent_containers/applicator/patch/canconsume(mob/eater, mob/user)
 	return TRUE // Masks were stopping people from "eating" patches. Thanks, inheritance.
@@ -32,7 +33,7 @@
 		balloon_alert(user, "The limb is missing.")
 		return
 	if(!IS_ORGANIC_LIMB(affecting))
-		balloon_alert(user, "[src] doesn't work on robotic limbs.")
+		balloon_alert(user, "[src] won't work on an inorganic limb!")
 		return
 	attempt_application(target, user, affecting)
 
