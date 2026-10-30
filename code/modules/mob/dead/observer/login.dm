@@ -16,3 +16,5 @@
 
 	update_icon(new_form = preferred_form)
 	updateghostimages()
+	lighting_alpha = default_lighting_alpha()
+	update_sight()
