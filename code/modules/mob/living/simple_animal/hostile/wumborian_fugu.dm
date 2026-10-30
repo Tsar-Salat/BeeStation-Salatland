@@ -14,6 +14,10 @@
 	friendly_verb_continuous = "floats near"
 	friendly_verb_simple = "float near"
 	speak_emote = list("puffs")
+	// Nice and dark purple, to match le vibes
+	lighting_cutoff_red = 20
+	lighting_cutoff_green = 10
+	lighting_cutoff_blue = 40
 	vision_range = 5
 	speed = 0
 	maxHealth = 50

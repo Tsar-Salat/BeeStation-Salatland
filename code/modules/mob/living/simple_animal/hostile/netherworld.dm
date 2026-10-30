@@ -52,6 +52,10 @@
 	var/static/list/migo_sounds
 	death_message = "wails as its form turns into a pulpy mush."
 	death_sound = 'sound/voice/hiss6.ogg'
+	// Real blue, trying to go for the migo's look
+	lighting_cutoff_red = 15
+	lighting_cutoff_green = 15
+	lighting_cutoff_blue = 50
 
 /mob/living/simple_animal/hostile/netherworld/migo/Initialize(mapload)
 	. = ..()
@@ -235,6 +239,10 @@
 	attack_verb_continuous = "punches"
 	attack_verb_simple = "punch"
 	death_message = "falls apart into a fine dust."
+	// Pink, like their skin
+	lighting_cutoff_red = 30
+	lighting_cutoff_green = 15
+	lighting_cutoff_blue = 40
 
 /obj/structure/spawner/nether
 	name = "netherworld link"

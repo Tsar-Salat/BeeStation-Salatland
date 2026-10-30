@@ -28,16 +28,15 @@
 	SSlighting.objects_queue += src
 
 /datum/lighting_object/Destroy(force)
-	if (!force)
+	if (!force && !isnull(affected_turf))
 		return QDEL_HINT_LETMELIVE
 	SSlighting.objects_queue -= src
 	if (loc != affected_turf)
 		var/turf/oldturf = get_turf(affected_turf)
 		var/turf/newturf = get_turf(loc)
 		stack_trace("A lighting object was qdeleted with a different loc then it is suppose to have ([COORD(oldturf)] -> [COORD(newturf)])")
-	if (isturf(affected_turf))
-		affected_turf.lighting_object = null
-		affected_turf.underlays -= additive_underlay
+	affected_turf?.lighting_object = null
+	affected_turf?.underlays -= additive_underlay
 	affected_turf = null
 	return ..()
 

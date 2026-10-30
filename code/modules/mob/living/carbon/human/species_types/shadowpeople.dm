@@ -19,7 +19,7 @@
 	)
 	inherent_factions = list(FACTION_FAITHLESS)
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | MIRROR_MAGIC
-	mutanteyes = /obj/item/organ/eyes/night_vision
+	mutanteyes = /obj/item/organ/eyes/shadow
 	mutantheart = null
 	mutantlungs = null
 
@@ -608,3 +608,9 @@
 
 
 #undef SHADOW_CONVERSION_TRESHOLD
+
+/obj/item/organ/eyes/shadow
+	name = "burning red eyes"
+	desc = "Even without their shadowy owner, looking at these eyes gives you a sense of dread."
+	color_cutoffs = list(20, 10, 40)
+	flash_protect = FLASH_PROTECTION_SENSITIVE

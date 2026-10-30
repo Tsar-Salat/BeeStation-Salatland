@@ -182,8 +182,8 @@ INITIALIZE_IMMEDIATE(/atom/movable/screen/plane_master)
 	// Fullscreens only exist on the main map
 	if(home.map)
 		return
-	mymob.overlay_fullscreen("lighting_backdrop_lit", /atom/movable/screen/fullscreen/lighting_backdrop/lit)
-	mymob.overlay_fullscreen("lighting_backdrop_unlit", /atom/movable/screen/fullscreen/lighting_backdrop/unlit)
+	mymob.overlay_fullscreen("lighting_backdrop_lit_[home.key]", /atom/movable/screen/fullscreen/lighting_backdrop/lit)
+	mymob.overlay_fullscreen("lighting_backdrop_unlit_[home.key]", /atom/movable/screen/fullscreen/lighting_backdrop/unlit)
 	if (isliving(mymob))
 		mymob.overlay_fullscreen("lighting_backdrop_seenear", /atom/movable/screen/fullscreen/see_through_darkness)
 

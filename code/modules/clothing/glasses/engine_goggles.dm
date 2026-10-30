@@ -11,11 +11,10 @@
 	icon_state = "trayson-meson"
 	inhand_icon_state = "trayson-meson"
 	actions_types = list(/datum/action/item_action/toggle_mode)
+	glass_colour_type = /datum/client_colour/glass_colour/gray
 
 	vision_flags = NONE
-	darkness_view = 2
-	lighting_alpha = null
-	invis_view = SEE_INVISIBLE_LIVING
+	color_cutoffs = null
 
 	var/list/modes = list(MODE_NONE = MODE_MESON, MODE_MESON = MODE_TRAY, MODE_TRAY = MODE_NONE)
 	var/mode = MODE_NONE
@@ -40,13 +39,19 @@
 	switch(mode)
 		if(MODE_MESON)
 			vision_flags = SEE_TURFS
-			darkness_view = 1
-			lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_VISIBLE
+			color_cutoffs = list(15, 12, 0)
+			change_glass_color(user, /datum/client_colour/glass_colour/yellow)
 
 		if(MODE_TRAY) //undoes the last mode, meson
 			vision_flags = NONE
-			darkness_view = 2
-			lighting_alpha = null
+			color_cutoffs = null
+			change_glass_color(user, /datum/client_colour/glass_colour/lightblue)
+
+		if(MODE_SHUTTLE)
+			change_glass_color(user, /datum/client_colour/glass_colour/red)
+
+		if(MODE_NONE)
+			change_glass_color(user, initial(glass_colour_type))
 
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
