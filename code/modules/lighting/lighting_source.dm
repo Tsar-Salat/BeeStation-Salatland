@@ -30,13 +30,16 @@
 	var/tmp/applied_lum_g
 	var/tmp/applied_lum_b
 
-	var/list/datum/lighting_corner/effect_str     // List used to store how much we're affecting corners.
+	/// List used to store how much we're affecting corners.
+	var/list/datum/lighting_corner/effect_str
 	var/list/datum/lighting_corner/multiz_match
 	var/list/multiz_level
 
-	var/applied = FALSE // Whether we have applied our light yet or not.
+	/// Whether we have applied our light yet or not.
+	var/applied = FALSE
 
-	var/needs_update = LIGHTING_NO_UPDATE    // Whether we are queued for an update.
+	/// whether we are to be added to SSlighting's sources_queue list for an update
+	var/needs_update = LIGHTING_NO_UPDATE
 
 // Thanks to Lohikar for flinging this tiny bit of code at me, increasing my brain cell count from 1 to 2 in the process.
 // This macro will only offset up to 1 tile, but anything with a greater offset is an outlier and probably should handle its own lighting offsets.

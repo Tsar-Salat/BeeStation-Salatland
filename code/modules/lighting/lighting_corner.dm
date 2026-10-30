@@ -2,7 +2,6 @@
 // And corners get shared between multiple turfs (unless you're on the corners of the map, then 1 corner doesn't).
 // For the record: these should never ever ever be deleted, even if the turf doesn't have dynamic lighting.
 
-
 /datum/lighting_corner
 	var/list/datum/light_source/affecting // Light sources affecting us.
 
@@ -18,8 +17,6 @@
 	var/sum_g = 0
 	var/sum_b = 0
 
-	var/needs_update = FALSE
-
 	var/cache_r = LIGHTING_SOFT_THRESHOLD
 	var/cache_g = LIGHTING_SOFT_THRESHOLD
 	var/cache_b = LIGHTING_SOFT_THRESHOLD
@@ -32,6 +29,9 @@
 
 	///the maximum of sum_r, sum_g, and sum_b. if this is > 1 then the three cached color values are divided by this
 	var/largest_color_luminosity = 0
+
+	///whether we are to be added to SSlighting's corners_queue list for an update
+	var/needs_update = FALSE
 
 // Takes as an argument the coords to use as the bottom left (south west) of our corner
 /datum/lighting_corner/New(x, y, z)
@@ -154,7 +154,7 @@
 		return
 #endif
 
-	var/atom/movable/lighting_object/lighting_object = master_NE?.lighting_object
+	var/datum/lighting_object/lighting_object = master_NE?.lighting_object
 	if (lighting_object && !lighting_object.needs_update)
 		lighting_object.needs_update = TRUE
 		SSlighting.objects_queue += lighting_object

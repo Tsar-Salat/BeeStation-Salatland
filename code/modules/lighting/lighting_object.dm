@@ -1,15 +1,4 @@
-/atom/movable/lighting_object
-	name = ""
-
-	anchored = TRUE
-
-	icon = LIGHTING_ICON
-	icon_state = "transparent"
-	color = LIGHTING_BASE_MATRIX
-	plane = LIGHTING_PLANE
-	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	invisibility = INVISIBILITY_LIGHTING
-
+/datum/lighting_object
 	///the underlay we are currently applying to our turf to apply light
 	var/mutable_appearance/additive_underlay
 	///whether additive_underlay is currently on our turf
@@ -21,7 +10,7 @@
 	///the turf that our light is applied to
 	var/turf/affected_turf
 
-/atom/movable/lighting_object/Initialize(mapload)
+/datum/lighting_object/Initialize(mapload)
 	. = ..()
 	verbs.Cut()
 	atom_colours.Cut()
@@ -38,7 +27,7 @@
 	needs_update = TRUE
 	SSlighting.objects_queue += src
 
-/atom/movable/lighting_object/Destroy(force)
+/datum/lighting_object/Destroy(force)
 	if (!force)
 		return QDEL_HINT_LETMELIVE
 	SSlighting.objects_queue -= src
@@ -52,7 +41,7 @@
 	affected_turf = null
 	return ..()
 
-/atom/movable/lighting_object/proc/update()
+/datum/lighting_object/proc/update()
 #ifdef VISUALIZE_LIGHT_UPDATES
 	affected_turf.add_atom_colour(COLOR_BLUE_LIGHT, ADMIN_COLOUR_PRIORITY)
 	animate(affected_turf, 10, color = null)
@@ -67,7 +56,6 @@
 	// Oh it's also shorter line wise.
 	// Including with these comments.
 
-	// See LIGHTING_CORNER_DIAGONAL in lighting_corner.dm for why these values are what they are.
 	var/static/datum/lighting_corner/dummy/dummy_lighting_corner = new
 
 	var/datum/lighting_corner/red_corner = affected_turf.lighting_corner_SW || dummy_lighting_corner
@@ -89,14 +77,19 @@
 		(red_corner.cache_g + green_corner.cache_g + blue_corner.cache_g + alpha_corner.cache_g + \
 		red_corner.cache_b + green_corner.cache_b + blue_corner.cache_b + alpha_corner.cache_b == 8))
 		//anything that passes the first case is very likely to pass the second, and addition is a little faster in this case
-		icon_state = "transparent"
-		color = null
+		affected_turf.underlays -= current_underlay
+		current_underlay.icon_state = "transparent"
+		current_underlay.color = null
+		affected_turf.underlays += current_underlay
 	else if(!set_luminosity)
-		icon_state = "dark"
-		color = null
+		affected_turf.underlays -= current_underlay
+		current_underlay.icon_state = "dark"
+		current_underlay.color = null
+		affected_turf.underlays += current_underlay
 	else
-		icon_state = null
-		color = list(
+		affected_turf.underlays -= current_underlay
+		current_underlay.icon_state = null
+		current_underlay.color = list(
 			red_corner.cache_r, red_corner.cache_g, red_corner.cache_b, 00,
 			green_corner.cache_r, green_corner.cache_g, green_corner.cache_b, 00,
 			blue_corner.cache_r, blue_corner.cache_g, blue_corner.cache_b, 00,
@@ -122,41 +115,10 @@
 		affected_turf.underlays -= additive_underlay
 		applying_additive = FALSE
 
-	// Use luminosity directly because we are the lighting object
-	// and not the turf
-	luminosity = set_luminosity
+	affected_turf.underlays += current_underlay
 
 	if (affected_turf.above)
 		if(affected_turf.above.shadower)
 			affected_turf.above.shadower.copy_lighting(src, affected_turf.loc, affected_turf)
 		else
 			affected_turf.above.update_mimic()
-
-// Variety of overrides so the overlays don't get affected by weird things.
-
-/atom/movable/lighting_object/update_luminosity()
-	return
-
-/atom/movable/lighting_object/ex_act(severity)
-	return 0
-
-/atom/movable/lighting_object/singularity_act()
-	return
-
-/atom/movable/lighting_object/singularity_pull(obj/anomaly/singularity/singularity, current_size)
-	return
-
-/atom/movable/lighting_object/blob_act()
-	return
-
-/atom/movable/lighting_object/onTransitZ()
-	return
-
-/atom/movable/lighting_object/wash(clean_types)
-	SHOULD_CALL_PARENT(FALSE)
-	return
-
-// Override here to prevent things accidentally moving around overlays.
-/atom/movable/lighting_object/forceMove(atom/destination, no_tp=FALSE, harderforce = FALSE)
-	if(harderforce)
-		. = ..()

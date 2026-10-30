@@ -20,7 +20,7 @@ GLOBAL_ALIST_EMPTY(reftracker_skip_typecache_b)
 		/matrix,
 		/regex,
 		/atom/movable/mirage_holder,
-		/atom/movable/lighting_object, // only contains turf and MA refs
+		/datum/lighting_object, // only contains turf and MA refs
 		/datum/armor,
 		/datum/asset_cache_item,
 		/datum/chat_payload,

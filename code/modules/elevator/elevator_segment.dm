@@ -24,7 +24,6 @@
 /obj/structure/elevator_segment/Initialize(mapload)
 	music_files = list('sound/effects/turbolift/elevatormusic.ogg' = 45, 'sound/effects/turbolift/elevator_loop.ogg' = 25)
 	move_blacklist = typecacheof(list(
-		/atom/movable/lighting_object,
 		/obj/structure/cable,
 		/obj/structure/disposalpipe,
 		/obj/machinery/atmospherics/pipe,

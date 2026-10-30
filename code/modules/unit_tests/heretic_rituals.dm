@@ -111,8 +111,6 @@
 				var/obj/item/item = thing
 				if(item.item_flags & ABSTRACT) //bodyparts and stuff will get registered otherwise
 					continue
-			if(istype(thing, /atom/movable/lighting_object)) // Ignore lighting objects
-				continue
 
 			// There are atoms around the rune still, and there shouldn't be.
 			// All component atoms were consumed, and all resulting atoms were cleaned up.

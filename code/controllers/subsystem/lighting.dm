@@ -44,7 +44,7 @@ SUBSYSTEM_DEF(lighting)
 			for(var/turf/area_turf as anything in zlevel_turfs)
 				if(area_turf.fullbright_type != FULLBRIGHT_NONE)
 					continue
-				new /atom/movable/lighting_object(area_turf)
+				new/datum/lighting_object(area_turf)
 			CHECK_TICK
 		CHECK_TICK
 
@@ -116,7 +116,7 @@ SUBSYSTEM_DEF(lighting)
 	while(i < length(queue)) //we don't use for loop here because i cannot be changed during an iteration
 		i += 1
 
-		var/atom/movable/lighting_object/O = queue[i]
+		var/datum/lighting_object/O = queue[i]
 		if(QDELETED(O))
 			continue
 		O.update()

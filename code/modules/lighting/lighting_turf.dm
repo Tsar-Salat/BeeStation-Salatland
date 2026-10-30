@@ -7,7 +7,7 @@
 	var/tmp/lighting_corners_initialised = FALSE
 
 	///Our lighting object.
-	var/tmp/atom/movable/lighting_object/lighting_object
+	var/tmp/datum/lighting_object/lighting_object
 	var/tmp/list/datum/lighting_corner/corners
 	///Lighting Corner datums.
 	var/tmp/datum/lighting_corner/lighting_corner_NE
@@ -36,7 +36,7 @@
 	if (lighting_object)
 		qdel(lighting_object, force = TRUE) //Shitty fix for lighting objects persisting after death
 
-	new /atom/movable/lighting_object(src)
+	new/datum/lighting_object(src)
 
 // Used to get a scaled lumcount.
 /turf/proc/get_lumcount(minlum = 0, maxlum = 1)
@@ -75,7 +75,7 @@
 	if (!lighting_object)
 		return FALSE
 
-	return !lighting_object.luminosity
+	return !(luminosity || dynamic_lumcount)
 
 ///Proc to add movable sources of opacity on the turf and let it handle lighting code.
 /turf/proc/add_opacity_source(atom/movable/new_source)
