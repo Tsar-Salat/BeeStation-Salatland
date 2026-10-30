@@ -1,6 +1,14 @@
-/datum/lighting_object
-	///the underlay we are currently applying to our turf to apply light
-	var/mutable_appearance/additive_underlay
+/atom/movable/lighting_object
+	name = ""
+	anchored = TRUE
+	plane = LIGHTING_PLANE
+	icon = LIGHTING_ICONExpand commentComment on line R5Resolved
+	icon_state = null
+	color = null //we manually set color in init instead
+	appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	invisibility = INVISIBILITY_LIGHTING
+	move_resist = INFINITY
 	///whether additive_underlay is currently on our turf
 	var/applying_additive = FALSE
 
@@ -10,7 +18,7 @@
 	///the turf that our light is applied to
 	var/turf/affected_turf
 
-/datum/lighting_object/Initialize(mapload)
+/atom/movable/lighting_object/Initialize(mapload)
 	. = ..()
 	verbs.Cut()
 	atom_colours.Cut()
@@ -27,7 +35,7 @@
 	needs_update = TRUE
 	SSlighting.objects_queue += src
 
-/datum/lighting_object/Destroy(force)
+/atom/movable/lighting_object/Destroy(force)
 	if (!force && !isnull(affected_turf))
 		return QDEL_HINT_LETMELIVE
 	SSlighting.objects_queue -= src
@@ -36,11 +44,11 @@
 		var/turf/newturf = get_turf(loc)
 		stack_trace("A lighting object was qdeleted with a different loc then it is suppose to have ([COORD(oldturf)] -> [COORD(newturf)])")
 	affected_turf?.lighting_object = null
-	affected_turf?.underlays -= additive_underlay
 	affected_turf = null
 	return ..()
 
-/datum/lighting_object/proc/update()
+/atom/movable/lighting_object/proc/update()
+	var/turf/affected_turf = src.affected_turf
 #ifdef VISUALIZE_LIGHT_UPDATES
 	affected_turf.add_atom_colour(COLOR_BLUE_LIGHT, ADMIN_COLOUR_PRIORITY)
 	animate(affected_turf, 10, color = null)
@@ -121,3 +129,35 @@
 			affected_turf.above.shadower.copy_lighting(src, affected_turf.loc, affected_turf)
 		else
 			affected_turf.above.update_mimic()
+
+	luminosity = set_luminosity
+
+// Variety of overrides so the overlays don't get affected by weird things.
+
+/atom/movable/lighting_object/ex_act(severity)
+	return FALSE
+
+/atom/movable/lighting_object/singularity_act()
+	return
+
+/atom/movable/lighting_object/singularity_pull()
+	return
+
+/atom/movable/lighting_object/blob_act()
+	return
+
+/atom/movable/lighting_object/on_changed_z_level(turf/old_turf, turf/new_turf, same_z_layer, notify_contents = TRUE)
+	SHOULD_CALL_PARENT(FALSE)
+	return
+
+/atom/movable/lighting_object/wash(clean_types)
+	SHOULD_CALL_PARENT(FALSE) // lighting objects are dirty, confirmed
+	return
+
+// Override here to prevent things accidentally moving around overlays.
+/atom/movable/lighting_object/forceMove(atom/destination, no_tp = FALSE, harderforce = FALSE)
+	if(harderforce)
+		return ..()
+
+/atom/movable/lighting_object/ref_search_details()
+	return "[text_ref(src)] (turf: [affected_turf ? "[affected_turf.type] @ [AREACOORD(affected_turf)]" : "null"] needs_update: [needs_update ? "true" : "false"])"

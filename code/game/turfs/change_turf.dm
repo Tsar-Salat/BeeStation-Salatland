@@ -173,11 +173,12 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 	if(SSlighting.initialized)
 		// Fullbright tiles should never have lighting objects
 		if(fullbright_type == FULLBRIGHT_NONE)
-			// Should have a lighting object if we never had one
 			if(old_lighting_object)
 				lighting_object = old_lighting_object
-			else
-				new /datum/lighting_object(src)
+			// Should have a lighting object if we never had one
+			// New turf init could have ALSO created a lighting object so we have to double check
+			else if(!lighting_object)
+				new /atom/movable/lighting_object(src)
 		else if (old_lighting_object)
 			qdel(old_lighting_object, force = TRUE)
 
