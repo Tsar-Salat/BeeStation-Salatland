@@ -509,18 +509,19 @@
 	if(user.sight & SEE_TURFS)
 		user.clear_sight(SEE_TURFS)
 		user.add_sight(SEE_BLACKNESS)
-		user.lighting_cutoff_red += 5
-		user.lighting_cutoff_green += 15
-		user.lighting_cutoff_blue += 5
+		user.lighting_cutoff_red -= 5
+		user.lighting_cutoff_green -= 15
+		user.lighting_cutoff_blue -= 5
 		button_icon_state = "trayson-"
 	else
 		user.add_sight(SEE_TURFS)
 		user.clear_sight(SEE_BLACKNESS)
-		user.lighting_cutoff_red -= 5
-		user.lighting_cutoff_green -= 15
-		user.lighting_cutoff_blue -= 5
+		user.lighting_cutoff_red += 5
+		user.lighting_cutoff_green += 15
+		user.lighting_cutoff_blue += 5
 		button_icon_state = "trayson-meson"
 
+	user.lighting_color_cutoffs = list(user.lighting_cutoff_red, user.lighting_cutoff_green, user.lighting_cutoff_blue)
 	user.sync_lighting_plane_cutoff()
 	to_chat(user, span_notice("You toggle your meson vision [(user.sight & SEE_TURFS) ? "on" : "off"]."))
 	update_buttons()

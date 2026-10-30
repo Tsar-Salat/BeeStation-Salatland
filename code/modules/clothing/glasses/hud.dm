@@ -119,6 +119,7 @@
 	icon_state = "sunhudmed"
 	emissive_state = "sun_emissive"
 	flash_protect = FLASH_PROTECTION_FLASH
+	flags_cover = GLASSESCOVERSEYES
 	tint = 1
 	glass_colour_type = /datum/client_colour/glass_colour/blue
 
@@ -162,6 +163,7 @@
 	emissive_state = "sun_emissive"
 	inhand_icon_state = "glasses"
 	flash_protect = FLASH_PROTECTION_FLASH
+	flags_cover = GLASSESCOVERSEYES
 	tint = 1
 
 /obj/item/clothing/glasses/hud/diagnostic/sunglasses/degraded
@@ -233,7 +235,7 @@
 	flags_cover = GLASSESCOVERSEYES
 	// Red with a tint of green
 	color_cutoffs = list(40, 15, 10)
-	glass_colour_type = /datum/client_colour/glass_colour/red
+	glass_colour_type = /datum/client_colour/glass_colour/green
 
 /obj/item/clothing/glasses/hud/security/prescription
 	name = "prescription security HUDglasses"
@@ -341,9 +343,10 @@
 	icon_state = "doublegodeye"
 	inhand_icon_state = "doublegodeye"
 	vision_flags = SEE_TURFS|SEE_MOBS|SEE_OBJS
+	// Blue, light blue
+	color_cutoffs = list(15, 30, 40)
 	flash_protect = FLASH_PROTECTION_WELDER
 	clothing_traits = list(TRAIT_MEDICAL_HUD, TRAIT_SECURITY_HUD, TRAIT_DIAGNOSTIC_HUD, TRAIT_BOT_PATH_HUD, TRAIT_BOOZE_SLIDER, TRAIT_REAGENT_SCANNER, TRAIT_NEARSIGHTED_CORRECTED)
-	color_cutoffs = list(25, 8, 5)
 	resistance_flags = INDESTRUCTIBLE
 	actions_types = list(/datum/action/item_action/toggle,/datum/action/item_action/toggle_research_scanner)
 	var/xray = TRUE

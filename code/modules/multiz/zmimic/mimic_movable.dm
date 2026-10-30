@@ -105,7 +105,7 @@
 
 	return ..()
 
-/atom/movable/openspace/multiplier/proc/copy_lighting(obj/lighting_object/lighting_object, area/A, turf/below)
+/atom/movable/openspace/multiplier/proc/copy_lighting(atom/movable/lighting_object/lighting_object, area/A, turf/below)
 	if (!lighting_object)
 		icon_state = "transparent"
 		luminosity = 1

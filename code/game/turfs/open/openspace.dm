@@ -3,9 +3,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/turf/open/openspace)
 /turf/open/openspace
 	name = "open space"
 	desc = "Watch your step!"
-	// We don't actually draw openspace, but it needs to have color
-	// In its icon state so we can count it as a "non black" tile
-	icon_state = MAP_SWITCH("pure_white", "invisible")
+	icon_state = "invisible"
 	baseturfs = /turf/open/openspace
 	overfloor_placed = FALSE
 	underfloor_accessibility = UNDERFLOOR_INTERACTABLE
@@ -13,7 +11,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/turf/open/openspace)
 	resistance_flags = INDESTRUCTIBLE
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	pathing_pass_method = TURF_PATHING_PASS_PROC
-	plane = TRANSPARENT_FLOOR_PLANE
 
 	z_flags = Z_MIMIC_BELOW|Z_MIMIC_OVERWRITE
 

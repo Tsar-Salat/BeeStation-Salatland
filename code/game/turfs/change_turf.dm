@@ -10,6 +10,7 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 		/mob/dead,
 		/obj/effect/landmark,
 		/obj/docking_port,
+		/atom/movable/lighting_object,
 	))
 	var/list/allowed_contents = typecache_filter_list_reverse(GetAllContentsIgnoring(ignore_typecache), ignored_atoms)
 	allowed_contents -= src

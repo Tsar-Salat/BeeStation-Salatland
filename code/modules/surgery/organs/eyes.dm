@@ -213,9 +213,10 @@
 
 /obj/item/organ/eyes/night_vision/Initialize(mapload)
 	. = ..()
-	if (PERFORM_ALL_TESTS(focus_only/nightvision_color_cutoffs) && type != /obj/item/organ/eyes/night_vision)
-		if(length(low_light_cutoff) != 3 || length(medium_light_cutoff) != 3 || length(high_light_cutoff) != 3)
-			stack_trace("[type] did not have fully filled out color cutoff lists")
+#ifdef UNIT_TESTS
+	if(length(low_light_cutoff) != 3 || length(medium_light_cutoff) != 3 || length(high_light_cutoff) != 3)
+		stack_trace("[type] did not have fully filled out color cutoff lists")
+#endif
 	if(low_light_cutoff)
 		color_cutoffs = low_light_cutoff.Copy()
 	light_level = NIGHTVISION_LIGHT_LOW
@@ -602,7 +603,7 @@
 	eye_icon = 'icons/mob/human/species/moth/eyes.dmi'
 	eye_icon_state = "eyes"
 	icon_state = "eyeballs-moth"
-	see_in_dark = NIGHTVISION_FOV_RANGE/2 //4 tiles compared to 8 of the apids
+	lighting_cutoff = LIGHTING_CUTOFF_REAL_LOW
 	flash_protect = FLASH_PROTECTION_SENSITIVE
 
 /obj/item/organ/eyes/moth/domestic
@@ -625,7 +626,8 @@
 /obj/item/organ/eyes/apid
 	name = "apid eyes"
 	desc = "Designed for navigating dark hives, these eyes have improvement to low light vision."
-	see_in_dark = NIGHTVISION_FOV_RANGE
+	// Amber, and just bright enough to count as nightvision
+	color_cutoffs = list(15, 12, 3)
 
 #define PSYPHOZA_BLINDNESS_SOURCE "uncurable"
 
@@ -633,8 +635,7 @@
 	name = "psyphoza eyes"
 	desc = "Conduits for psychic energy, hardly even eyes."
 	icon_state = "psyphoza_eyeballs"
-	see_in_dark = NIGHTVISION_FOV_RANGE
-	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
+	lighting_cutoff = LIGHTING_CUTOFF_HIGH
 	sight_flags = SEE_MOBS | SEE_OBJS | SEE_TURFS
 
 /obj/item/organ/eyes/psyphoza/Insert(mob/living/carbon/eye_owner, special = FALSE, movement_flags, initialising)

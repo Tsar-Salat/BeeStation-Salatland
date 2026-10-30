@@ -678,7 +678,7 @@
 	if(is_blind()) //blind people see things differently (through touch)
 		if(!blind_examine_check(examinify))
 			return
-	else if(!examine_turf.luminosity && \
+	else if(examine_turf?.is_softly_lit() && \
 		get_dist(src, examine_turf) > 1 && \
 		!has_nightvision()) // If you aren't blind, it's in darkness (that you can't see) and farther then next to you
 		return
@@ -712,7 +712,7 @@
 	if(is_blind()) //blind people see things differently (through touch)
 		if(!blind_examine_check(examinify))
 			return
-	else if(!examine_turf.luminosity && \
+	else if(examine_turf?.is_softly_lit() && \
 		get_dist(src, examine_turf) > 1 && \
 		!has_nightvision()) // If you aren't blind, it's in darkness (that you can't see) and farther then next to you
 		return
@@ -1433,22 +1433,21 @@
 
 ///Set the lighting plane hud filters to the mobs lighting_cutoff var
 /mob/proc/sync_lighting_plane_cutoff()
-	if(hud_used)
-		var/atom/movable/screen/plane_master/lighting/L = hud_used.get_plane_master(LIGHTING_PLANE)
-		if (L)
-			L.alpha = lighting_alpha
-		var/atom/movable/screen/plane_master/additive_lighting/LA = hud_used.get_plane_master(LIGHTING_PLANE_ADDITIVE)
-		if(LA)
-			var/bloom = ADDITIVE_LIGHTING_PLANE_ALPHA_NORMAL
-			if(client?.prefs) //If this ever doesn't work for some reason add update_sight() to /mob/living/Login()
-				bloom = client.prefs.read_preference(/datum/preference/numeric/bloom) * (ADDITIVE_LIGHTING_PLANE_ALPHA_MAX / 100)
-			LA.alpha = lighting_alpha * (bloom / 255)
-		// Lower levels are lit through the z-mimic shadow planes
-		var/datum/plane_master_group/main_group = hud_used.get_plane_group(PLANE_GROUP_MAIN)
-		for(var/atom/movable/screen/plane_master/zmimic_shadow/shadow as anything in main_group?.zmimic_shadow_planes)
-			shadow.set_lighting_alpha(lighting_alpha)
-
-
+	if(!hud_used)
+		return
+	var/atom/movable/screen/plane_master/lighting/light_plane = hud_used.get_plane_master(LIGHTING_PLANE)
+	light_plane?.set_light_cutoff(lighting_cutoff, lighting_color_cutoffs)
+	var/atom/movable/screen/plane_master/additive_lighting/bloom_plane = hud_used.get_plane_master(LIGHTING_PLANE_ADDITIVE)
+	if(bloom_plane)
+		var/bloom = ADDITIVE_LIGHTING_PLANE_ALPHA_NORMAL
+		if(client?.prefs) //If this ever doesn't work for some reason add update_sight() to /mob/living/Login()
+			bloom = client.prefs.read_preference(/datum/preference/numeric/bloom) * (ADDITIVE_LIGHTING_PLANE_ALPHA_MAX / 100)
+		// Bloom fades out as darkness is cut away, so fullbright has none
+		bloom_plane.alpha = bloom * (1 - clamp(lighting_cutoff, 0, 100) / 100)
+	// Lower levels are lit through the z-mimic shadow planes
+	var/datum/plane_master_group/main_group = hud_used.get_plane_group(PLANE_GROUP_MAIN)
+	for(var/atom/movable/screen/plane_master/zmimic_shadow/shadow as anything in main_group?.zmimic_shadow_planes)
+		shadow.set_light_cutoff(lighting_cutoff, lighting_color_cutoffs)
 
 ///Update the mouse pointer of the attached client in this mob
 /mob/proc/update_mouse_pointer()
@@ -1553,7 +1552,9 @@ GLOBAL_LIST_INIT(mouse_cooldowns, list(
 **/
 /mob/proc/has_nightvision()
 	// Somewhat conservative, basically is your lighting plane bright enough that you the user can see stuff
-	var/light_offset = (lighting_color_cutoffs[1] + lighting_color_cutoffs[2] + lighting_color_cutoffs[3]) / 3 + lighting_cutoff
+	var/light_offset = lighting_cutoff
+	if(length(lighting_color_cutoffs) == 3)
+		light_offset += (lighting_color_cutoffs[1] + lighting_color_cutoffs[2] + lighting_color_cutoffs[3]) / 3
 	return light_offset >= LIGHTING_NIGHTVISION_THRESHOLD
 
 ///Can this mob read (is literate and not blind)

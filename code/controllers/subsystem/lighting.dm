@@ -64,7 +64,7 @@ SUBSYSTEM_DEF(lighting)
 	while(i < length(queue)) //we don't use for loop here because i cannot be changed during an iteration
 		i += 1
 
-		var/atom/movable/lighting_object/L = queue[i]
+		var/datum/light_source/L = queue[i]
 		L.update_corners()
 		if(!QDELETED(L))
 			L.needs_update = LIGHTING_NO_UPDATE
@@ -138,13 +138,3 @@ SUBSYSTEM_DEF(lighting)
 /datum/controller/subsystem/lighting/Recover()
 	initialized = SSlighting.initialized
 	..()
-
-/// Takes a list of turfs in, and sets up static lighting for them as needed.
-/// Exactly what it says on the tin.
-/datum/controller/subsystem/lighting/proc/setup_static_lighting_if_needed(list/turfs)
-	for(var/turf/unlit as anything in turfs)
-		if(unlit.space_lit)
-			continue
-		var/area/loc_area = unlit.loc
-		if(loc_area.static_lighting)
-			unlit.lighting_build_overlay()

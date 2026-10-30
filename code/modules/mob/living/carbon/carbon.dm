@@ -616,7 +616,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 		if(glasses.invis_override)
 			set_invis_see(glasses.invis_override)
 		else
-			set_invis_see(min(glasses.invis_view, see_invisible))
+			set_invis_see(max(glasses.invis_view, see_invisible))
 		if(!isnull(glasses.lighting_cutoff))
 			lighting_cutoff = max(lighting_cutoff, glasses.lighting_cutoff)
 		if(length(glasses.color_cutoffs))

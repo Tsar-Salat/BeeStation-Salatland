@@ -20,10 +20,7 @@
 	SHOULD_CALL_PARENT(TRUE)
 	if(sight == new_value)
 		return
-	var/old_sight = sight
 	sight = new_value
-
-	//SEND_SIGNAL(src, COMSIG_MOB_SIGHT_CHANGE, new_value, old_sight)
 
 /mob/proc/add_sight(new_value)
 	set_sight(sight | new_value)
@@ -38,6 +35,4 @@
 	SHOULD_CALL_PARENT(TRUE)
 	if(new_sight == see_invisible)
 		return
-	var/old_invis = see_invisible
 	see_invisible = new_sight
-	//SEND_SIGNAL(src, COMSIG_MOB_SEE_INVIS_CHANGE, see_invisible, old_invis)

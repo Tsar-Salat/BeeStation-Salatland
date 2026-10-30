@@ -174,6 +174,9 @@
 		lighting_object.needs_update = TRUE
 		SSlighting.objects_queue += lighting_object
 
+/datum/lighting_corner/dummy/New()
+	return
+
 /datum/lighting_corner/Destroy(force)
 	SHOULD_CALL_PARENT(FALSE)
 	stack_trace("QDEL CALLED ON LIGHTING CORNER. DO NOT DO THAT. PLEASE. \

@@ -122,7 +122,6 @@
 		TRAIT_NO_UNDERWEAR,
 		TRAIT_NOFLASH,
 	)
-	mutanteyes = /obj/item/organ/eyes/night_vision/nightmare
 	mutantheart = /obj/item/organ/heart/nightmare
 	mutantbrain = /obj/item/organ/brain/nightmare
 

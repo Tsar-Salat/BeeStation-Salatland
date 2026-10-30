@@ -39,6 +39,7 @@ SUBSYSTEM_DEF(zclear)
 		/mob/dead,
 		/mob/camera,
 		/mob/dview,
+		/atom/movable/lighting_object,
 		/atom/movable/mirage_holder
 	))
 
