@@ -42594,7 +42594,7 @@
 	},
 /obj/structure/cable/yellow,
 /obj/machinery/power/apc/auto_name/directional/east,
-/obj/machinery/light/very_dim/directional/east,
+/obj/machinery/light/cold/directional/east,
 /turf/open/floor/iron/chapel{
 	dir = 10
 	},
@@ -45746,8 +45746,8 @@
 /obj/structure/railing/corner{
 	dir = 1
 	},
-/obj/machinery/light/very_dim/directional/west,
 /obj/machinery/light_switch/directional/west,
+/obj/machinery/light/cold/directional/west,
 /turf/open/floor/iron/chapel{
 	dir = 4
 	},
@@ -70781,7 +70781,7 @@
 	dir = 8
 	},
 /obj/machinery/airalarm/directional/west,
-/obj/machinery/light/very_dim/directional/west,
+/obj/machinery/light/cold/directional/west,
 /turf/open/floor/iron/chapel{
 	dir = 10
 	},
@@ -71600,7 +71600,7 @@
 	dir = 4
 	},
 /obj/machinery/status_display/evac/directional/east,
-/obj/machinery/light/very_dim/directional/east,
+/obj/machinery/light/cold/directional/east,
 /turf/open/floor/iron/chapel{
 	dir = 4
 	},
