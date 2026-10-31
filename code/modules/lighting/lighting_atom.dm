@@ -49,7 +49,7 @@
 	if (QDELETED(src))
 		return
 
-	if(light_system != STATIC_LIGHT)
+	if(light_system != COMPLEX_LIGHT)
 		CRASH("update_light() for [src] with following light_system value: [light_system]")
 
 	if (!light_power || !light_range || !light_on) // We won't emit light anyways, destroy the light source.
@@ -103,33 +103,33 @@
 	light_flags &= ~LIGHT_FROZEN
 	switch (var_name)
 		if (NAMEOF(src, light_range))
-			if(light_system == STATIC_LIGHT)
+			if(light_system == COMPLEX_LIGHT)
 				set_light(l_range = var_value)
 			else
 				set_light_range(var_value)
 			. = TRUE
 
 		if (NAMEOF(src, light_power))
-			if(light_system == STATIC_LIGHT)
+			if(light_system == COMPLEX_LIGHT)
 				set_light(l_power = var_value)
 			else
 				set_light_power(var_value)
 			. = TRUE
 
 		if (NAMEOF(src, light_color))
-			if(light_system == STATIC_LIGHT)
+			if(light_system == COMPLEX_LIGHT)
 				set_light(l_color = var_value)
 			else
 				set_light_color(var_value)
 			. = TRUE
 
 		if(NAMEOF(src, light_angle))
-			if(light_system == STATIC_LIGHT)
+			if(light_system == COMPLEX_LIGHT)
 				set_light(l_angle = var_value)
 				. = TRUE
 
 		if(NAMEOF(src, light_dir))
-			if(light_system == STATIC_LIGHT)
+			if(light_system == COMPLEX_LIGHT)
 				set_light(l_dir = var_value)
 				. = TRUE
 

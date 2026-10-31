@@ -62,7 +62,7 @@
 
 /obj/item/candle/proc/update_brightness()
 	set_light_on(lit)
-	if(light_system == STATIC_LIGHT)
+	if(light_system == COMPLEX_LIGHT)
 		update_light()
 
 /obj/item/candle/extinguish()

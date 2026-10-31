@@ -218,13 +218,14 @@
 /obj/item/organ/heart/nightmare/on_death(delta_time, times_fired)
 	if(!owner)
 		return
-	var/turf/T = get_turf(owner)
-	if(istype(T))
-		var/light_amount = T.get_lumcount()
-		if(light_amount < SHADOW_SPECIES_LIGHT_THRESHOLD)
+
+	var/turf/owner_turf = get_turf(owner)
+	if(istype(owner_turf))
+		if(owner_turf.check_lumcount_below(SHADOW_SPECIES_LIGHT_THRESHOLD))
 			respawn_progress += delta_time SECONDS
-			playsound(owner,'sound/effects/singlebeat.ogg',40,1)
-	if(respawn_progress >= HEART_RESPAWN_THRESHOLD)
+			playsound(owner, 'sound/effects/singlebeat.ogg', 40, TRUE)
+
+	if(respawn_progress < HEART_RESPAWN_THRESHOLD)
 		owner.revive(HEAL_ALL)
 
 		if(!(owner.dna.species.id == "shadow" || owner.dna.species.id == "nightmare"))
