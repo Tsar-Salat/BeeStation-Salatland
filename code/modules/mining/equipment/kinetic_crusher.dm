@@ -24,6 +24,8 @@
 	actions_types = list(/datum/action/item_action/toggle_light)
 	light_system = OVERLAY_LIGHT
 	light_range = 5
+	light_power = 1.2
+	light_color = "#ffff66"
 	light_on = FALSE
 	item_flags = ISWEAPON
 	var/list/trophies = list()

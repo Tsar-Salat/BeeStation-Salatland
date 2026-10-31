@@ -18,6 +18,9 @@
 	custom_materials = list(/datum/material/iron=500)
 	resistance_flags = FIRE_PROOF
 	light_system = OVERLAY_LIGHT
+	light_color = LIGHT_COLOR_FLARE
+	light_range = 2
+	light_power = 2
 	light_on = FALSE
 	var/status = FALSE
 	var/lit = FALSE	//on or off

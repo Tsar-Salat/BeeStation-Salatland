@@ -167,7 +167,7 @@ own integrity back to max. Shield is automatically dropped if we run out of powe
 	anchored = TRUE
 	light_system = OVERLAY_LIGHT
 	light_range = MINIMUM_USEFUL_LIGHT_RANGE
-	light_power = 5
+	light_power = 2
 	light_color = LIGHT_COLOR_CYAN
 	light_on = FALSE
 	///Our link back to the durand

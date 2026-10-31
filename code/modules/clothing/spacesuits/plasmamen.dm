@@ -62,6 +62,8 @@
 	resistance_flags = FIRE_PROOF
 	light_system = OVERLAY_LIGHT_DIRECTIONAL
 	light_range = 4
+	light_power = 0.8
+	light_color = "#ffcc99"
 	light_on = FALSE
 	actions_types = list(/datum/action/item_action/toggle_helmet_light, /datum/action/item_action/toggle_welding_screen)
 	visor_vars_to_toggle = VISOR_FLASHPROTECT | VISOR_TINT

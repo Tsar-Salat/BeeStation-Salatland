@@ -25,7 +25,7 @@
 	hardattacks = TRUE
 	light_system = OVERLAY_LIGHT
 	light_range = 3
-	light_power = 0.9
+	light_power = 0.6
 
 	mobchatspan = "mime"
 	discovery_points = 0

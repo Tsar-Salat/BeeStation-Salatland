@@ -13,6 +13,7 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 	light_power = 0.6
 	light_color = COLOR_WHITE
 	light_on = FALSE
+	light_power = 1.2
 
 	// Whether the computer is turned on.
 	var/enabled = FALSE
@@ -59,7 +60,7 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 
 	integrity_failure = 0.5
 	max_integrity = 100
-	armor_type = /datum/armor/item_modular_computer
+	armor_type = /datum/armor/item_modular_computerarmor_type = /datum/armor/item_modular_computer
 
 	/// List of "connection ports" in this computer and the components with which they are plugged
 	var/list/all_components = list()

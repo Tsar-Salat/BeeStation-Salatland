@@ -295,8 +295,9 @@ Difficulty: Very Hard
 	icon_state = "at_shield2"
 	layer = FLY_LAYER
 	light_system = OVERLAY_LIGHT
-	light_range = 2
-	duration = 8
+	light_range = 2.5
+	light_power = 1.2
+	light_color = "#ffff66"
 	var/target
 
 CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/temp_visual/at_shield)

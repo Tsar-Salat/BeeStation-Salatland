@@ -11,7 +11,7 @@
 	impact_effect_type = /obj/effect/temp_visual/impact_effect/red_laser
 	light_system = OVERLAY_LIGHT
 	light_range = 2
-	light_power = 1
+	light_power = 1.4
 	light_color = LIGHT_COLOR_RED
 	light_flags = LIGHT_NO_LUMCOUNT
 	ricochets_max = 50	//Honk!

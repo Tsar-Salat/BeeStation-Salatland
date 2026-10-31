@@ -89,7 +89,7 @@
 #define LIGHTING_FORCE_UPDATE 3
 
 #define FLASH_LIGHT_DURATION 2
-#define FLASH_LIGHT_POWER 3
+#define FLASH_LIGHT_POWER 2
 #define FLASH_LIGHT_RANGE 3.8
 
 /// Uses vis_overlays to leverage caching so that very few new items need to be made for the overlay. For anything that doesn't change outline or opaque area much or at all.

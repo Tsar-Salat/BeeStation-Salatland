@@ -261,6 +261,9 @@
 	icon = 'icons/obj/lighting.dmi'
 	icon_state = "orb"
 	light_system = OVERLAY_LIGHT
+	light_range = 6
+	light_power = 1.2
+	light_color = "#79f1ff"
 	light_range = 7
 	light_flags = LIGHT_ATTACHED
 	layer = ABOVE_ALL_MOB_LAYER
