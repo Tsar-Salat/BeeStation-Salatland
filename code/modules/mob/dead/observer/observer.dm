@@ -17,7 +17,7 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_SPIRIT)
 	//appearance_flags = LONG_GLIDE
 	hud_type = /datum/hud/ghost
 	movement_type = FLYING | FLOATING
-	light_system = MOVABLE_LIGHT
+	light_system = OVERLAY_LIGHT
 	light_range = 1
 	light_power = 2
 	light_on = FALSE

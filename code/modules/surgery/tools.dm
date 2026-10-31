@@ -94,7 +94,7 @@
 	hitsound = 'sound/items/welder.ogg'
 	w_class = WEIGHT_CLASS_NORMAL
 	toolspeed = 0.7
-	light_system = MOVABLE_LIGHT
+	light_system = OVERLAY_LIGHT
 	light_range = 1
 	light_color = COLOR_SOFT_RED
 
@@ -432,7 +432,7 @@
 	force = 10 //11 when it's on
 	armour_penetration = 80 //it'll cut right through almost anything, but it's still just a tiny scalpel.
 	toolspeed = 0.7
-	light_system = MOVABLE_LIGHT
+	light_system = OVERLAY_LIGHT
 	light_range = 1
 	light_color = LIGHT_COLOR_GREEN
 	sharpness = SHARP

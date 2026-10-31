@@ -12,7 +12,7 @@
 	slot_flags = ITEM_SLOT_BELT
 	custom_materials = list(/datum/material/iron=50, /datum/material/glass=20)
 	actions_types = list(/datum/action/item_action/toggle_light)
-	light_system = MOVABLE_LIGHT_DIRECTIONAL
+	light_system = OVERLAY_LIGHT_DIRECTIONAL
 	light_color = COLOR_LIGHT_ORANGE
 	light_range = 4
 	light_power = 1
@@ -291,7 +291,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/temp_visual/medical_holosign)
 	actions_types = list()
 	heat = 1000
 	light_color = LIGHT_COLOR_FLARE
-	light_system = MOVABLE_LIGHT
+	light_system = OVERLAY_LIGHT
 	grind_results = list(/datum/reagent/sulfur = 15)
 	sound_on = 'sound/items/matchstick_lit.ogg'
 	sound_off = null
@@ -382,7 +382,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/temp_visual/medical_holosign)
 	righthand_file = 'icons/mob/inhands/equipment/mining_righthand.dmi'
 	desc = "A mining lantern."
 	light_range = 6			// luminosity when on
-	light_system = MOVABLE_LIGHT
+	light_system = OVERLAY_LIGHT
 
 /obj/item/flashlight/lantern/heirloom_moth
 	name = "old lantern"
@@ -469,7 +469,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/temp_visual/medical_holosign)
 	custom_price = 10
 	w_class = WEIGHT_CLASS_SMALL
 	light_range = 4
-	light_system = MOVABLE_LIGHT
+	light_system = OVERLAY_LIGHT
 	color = LIGHT_COLOR_GREEN
 	icon_state = "glowstick"
 	base_icon_state = "glowstick"
@@ -584,7 +584,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/temp_visual/medical_holosign)
 	name = "disco light"
 	desc = "Groovy..."
 	icon_state = null
-	light_system = MOVABLE_LIGHT
+	light_system = OVERLAY_LIGHT
 	light_range = 4
 	light_power = 10
 	alpha = 0
@@ -633,7 +633,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/flashlight/spotlight)
 /obj/item/flashlight/eyelight
 	name = "eyelight"
 	desc = "This shouldn't exist outside of someone's head, how are you seeing this?"
-	light_system = MOVABLE_LIGHT
+	light_system = OVERLAY_LIGHT
 	light_range = 15
 	light_power = 1
 	obj_flags = CONDUCTS_ELECTRICITY
@@ -641,6 +641,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/item/flashlight/spotlight)
 	actions_types = list()
 
 /obj/item/flashlight/eyelight/glow
-	light_system = MOVABLE_LIGHT_BEAM
+	light_system = OVERLAY_LIGHT_BEAM
 	light_range = 4
 	light_power = 2

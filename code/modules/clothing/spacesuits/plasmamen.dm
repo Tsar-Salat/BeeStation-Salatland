@@ -60,7 +60,7 @@
 	tint = 2
 	armor_type = /datum/armor/space_plasmaman
 	resistance_flags = FIRE_PROOF
-	light_system = MOVABLE_LIGHT_DIRECTIONAL
+	light_system = OVERLAY_LIGHT_DIRECTIONAL
 	light_range = 4
 	light_on = FALSE
 	actions_types = list(/datum/action/item_action/toggle_helmet_light, /datum/action/item_action/toggle_welding_screen)

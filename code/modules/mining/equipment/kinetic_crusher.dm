@@ -22,7 +22,7 @@
 	sharpness = SHARP
 	bleed_force = BLEED_CUT
 	actions_types = list(/datum/action/item_action/toggle_light)
-	light_system = MOVABLE_LIGHT
+	light_system = OVERLAY_LIGHT
 	light_range = 5
 	light_on = FALSE
 	item_flags = ISWEAPON

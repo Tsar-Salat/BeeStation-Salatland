@@ -9,7 +9,7 @@
 	w_class = WEIGHT_CLASS_TINY
 	light_color = LIGHT_COLOR_FIRE
 	heat = 1000
-	light_system = MOVABLE_LIGHT
+	light_system = OVERLAY_LIGHT
 	light_range = CANDLE_LUMINOSITY
 	light_power = 2
 	light_on = FALSE

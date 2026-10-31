@@ -46,7 +46,7 @@
 	attack_sound = 'sound/weapons/circsawhit.ogg'
 	speak_emote = list("states")
 	// Light handling
-	light_system = MOVABLE_LIGHT
+	light_system = OVERLAY_LIGHT
 	light_range = 6
 	light_on = FALSE
 	// Minebot-specific vars

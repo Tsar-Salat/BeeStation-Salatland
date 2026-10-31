@@ -19,7 +19,7 @@ GLOBAL_LIST_EMPTY_TYPED(holoparasites, /mob/living/simple_animal/hostile/holopar
 	icon_living = "magicOrange"
 	icon_dead = "magicOrange"
 	speed = 0
-	light_system = MOVABLE_LIGHT
+	light_system = OVERLAY_LIGHT
 	light_range = 4
 	light_power = 1
 	light_on = FALSE
