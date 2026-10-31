@@ -6,7 +6,7 @@
 	for(var/datum/light_source/source)
 		if(!source.source_atom)
 			continue
-		source.source_atom.debug()
+		source.source_atom.debug_lights()
 		sum[source.source_atom.type] += 1
 		total += 1
 

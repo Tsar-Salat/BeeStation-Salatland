@@ -396,7 +396,6 @@
 	flash_protect = FLASH_PROTECTION_WELDER
 	tint = 2
 	glass_colour_type = /datum/client_colour/glass_colour/green
-	force_glass_colour = TRUE
 	var/next_use_time = 0
 
 /obj/item/clothing/glasses/welding/ghostbuster/Initialize(mapload)
@@ -638,7 +637,7 @@
 /obj/item/clothing/glasses/AltClick(mob/user)
 	if(!user.canUseTopic(src, BE_CLOSE))
 		return
-	if(glass_colour_type && !force_glass_colour && ishuman(user))
+	if(glass_colour_type && ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if(H.client)
 			if(H.client.prefs)
@@ -665,7 +664,7 @@
 /mob/living/carbon/human/proc/update_glasses_color(obj/item/clothing/glasses/G, glasses_equipped)
 	if(!client)
 		return
-	if((client.prefs?.read_player_preference(/datum/preference/toggle/glasses_color) || G.force_glass_colour) && glasses_equipped)
+	if((client.prefs?.read_player_preference(/datum/preference/toggle/glasses_color)) && glasses_equipped)
 		add_client_colour(G.glass_colour_type)
 	else
 		remove_client_colour(G.glass_colour_type)

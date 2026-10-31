@@ -66,6 +66,14 @@ GLOBAL_LIST_INIT_TYPED(light_types, /datum/light_template, generate_light_types(
 	icon ||= initial(path_to_read.icon)
 	icon_state ||= initial(path_to_read.icon_state)
 	range = initial(path_to_read.brightness)
+	// see /obj/machinery/light/proc/reset_brightness()
+	switch(initial(path_to_read.fitting))
+		if("tube")
+			if(range == /obj/machinery/light::brightness)
+				range = /area::lighting_brightness_tube
+		if("bulb")
+			if(range == /obj/machinery/light/small::brightness)
+				range = /area::lighting_brightness_bulb
 	power = initial(path_to_read.bulb_power)
 	color = initial(path_to_read.bulb_colour)
 	angle = initial(path_to_read.light_angle)

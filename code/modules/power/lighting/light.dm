@@ -270,7 +270,7 @@
 		CO = bulb_vacuum_colour
 		BR = bulb_vacuum_brightness
 	else if (nightshift_enabled)
-		BR = nightshift_brightness
+		BR = min(nightshift_brightness, brightness)
 		PO = nightshift_light_power
 		if(!color)
 			CO = nightshift_light_color
