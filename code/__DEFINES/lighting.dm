@@ -9,13 +9,23 @@
 ///Light made by masking the lighting darkness plane, and is a directionally focused beam.
 #define MOVABLE_LIGHT_BEAM 4
 
-///Is a movable light source attached to another movable (its loc), meaning that the lighting component should go one level deeper.
+/// Is a movable light source attached to another movable (its loc), meaning that the lighting component should go one level deeper.
 #define LIGHT_ATTACHED (1<<0)
+/// Freezes a light in its current state, blocking any attempts at modification
+#define LIGHT_FROZEN (1<<1)
+/// Does this light ignore inherent offsets? (Pixels, transforms, etc)
+#define LIGHT_IGNORE_OFFSET (1<<2)
 
 ///This light doesn't affect turf's lumcount calculations. Set to 1<<15 to ignore conflicts
 #define LIGHT_NO_LUMCOUNT (1<<15)
 
 #define MINIMUM_USEFUL_LIGHT_RANGE 1.4
+
+// Status values shared between lighting fixtures and items
+#define LIGHT_OK 0
+#define LIGHT_EMPTY 1
+#define LIGHT_BROKEN 2
+#define LIGHT_BURNED 3
 
 /// light UNDER the floor. primarily used for starlight, shouldn't fuck with this
 #define LIGHTING_HEIGHT_SPACE -0.5

@@ -8,6 +8,7 @@ CREATION_TEST_IGNORE_SELF(/turf)
 	icon = 'icons/turf/floors.dmi'
 	vis_flags = VIS_INHERIT_ID|VIS_INHERIT_PLANE // Important for interaction with and visualization of openspace.
 	uses_integrity = TRUE
+	light_height = LIGHTING_HEIGHT_FLOOR
 
 	///what /mob/oranges_ear instance is already assigned to us as there should only ever be one.
 	///used for guaranteeing there is only one oranges_ear per turf when assigned, speeds up view() iteration
