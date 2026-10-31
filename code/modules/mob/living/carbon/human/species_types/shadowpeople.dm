@@ -225,7 +225,7 @@
 			respawn_progress += delta_time SECONDS
 			playsound(owner, 'sound/effects/singlebeat.ogg', 40, TRUE)
 
-	if(respawn_progress < HEART_RESPAWN_THRESHOLD)
+	if(respawn_progress >= HEART_RESPAWN_THRESHOLD)
 		owner.revive(HEAL_ALL)
 
 		if(!(owner.dna.species.id == "shadow" || owner.dna.species.id == "nightmare"))

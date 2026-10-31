@@ -28,9 +28,9 @@
 	var/range = 1
 	///Ceiling of range, integer without decimal entries.
 	var/lumcount_range = 0
-	///How much this light affects the dynamic_lumcount of turfs.
+	///Lumcount this light gives turfs it reaches, from the sign of its light_power.
 	var/real_lum_power = 0.5
-	///The lum power being used
+	///Lumcount actually counted for turfs. 0 if the parent has LIGHT_NO_LUMCOUNT.
 	var/used_lum_power = 0.5
 	///Transparency value.
 	var/set_alpha = 0
@@ -171,13 +171,13 @@
 
 /// Populates the affected_turfs lazylist, adding to its contents the effects of being near the light.
 /datum/component/overlay_lighting/proc/register_new_cells()
-	if(!current_holder)
+	if(!current_holder || !used_lum_power)
 		return
 	var/turf/holder_turf = get_turf(current_holder)
 	if (isnull(holder_turf))
 		return
 	for (var/datum/spatial_grid_cell/grid_cell as anything in SSspatial_grid.get_cells_in_range(holder_turf, lumcount_range))
-		GRID_CELL_ASSOC_SET(grid_cell.dynamic_light_sources, src, real_lum_power)
+		GRID_CELL_ASSOC_SET(grid_cell.dynamic_light_sources, src, used_lum_power)
 
 /// Clears the old affected cells and populates the new ones.
 /datum/component/overlay_lighting/proc/make_luminosity_update(atom/old_loc)
@@ -358,7 +358,12 @@
 		turn_off()
 	range = clamp(CEILING(new_range, 0.5), 1, 6)
 	var/pixel_bounds = ((range - 1) * 64) + 32
+	// Clean with the old range, or a shrinking light stays in cells it no longer reaches
+	if(overlay_lighting_flags & LIGHTING_ON)
+		clean_old_cells(current_holder)
 	lumcount_range = ceil(range)
+	if(overlay_lighting_flags & LIGHTING_ON && isturf(current_holder?.loc))
+		register_new_cells()
 	if(current_holder && overlay_lighting_flags & LIGHTING_ON)
 		current_holder.underlays -= visible_mask
 	visible_mask.icon = light_overlays["[pixel_bounds]"]
@@ -388,6 +393,7 @@
 	SIGNAL_HANDLER
 	var/new_power = source.light_power
 	real_lum_power = new_power >= 0 ? 0.5 : -0.5
+	update_used_lum_power()
 	set_alpha = min(230, (abs(new_power) * 120) + 30)
 	if(current_holder && overlay_lighting_flags & LIGHTING_ON)
 		current_holder.underlays -= visible_mask
@@ -404,6 +410,11 @@
 		current_holder.underlays += cone
 		current_holder.update_above()
 
+
+/// Syncs used_lum_power with real_lum_power and the parent's LIGHT_NO_LUMCOUNT flag.
+/datum/component/overlay_lighting/proc/update_used_lum_power()
+	var/atom/movable/movable_parent = parent
+	used_lum_power = (movable_parent.light_flags & LIGHT_NO_LUMCOUNT) ? 0 : real_lum_power
 
 /// Changes the light's color, pretty straightforward.
 /datum/component/overlay_lighting/proc/set_color(atom/source, old_color)
@@ -440,6 +451,13 @@
 	SIGNAL_HANDLER
 	var/new_flags = source.light_flags
 	var/atom/movable/movable_parent = parent
+	if((new_flags ^ old_flags) & LIGHT_NO_LUMCOUNT)
+		if(overlay_lighting_flags & LIGHTING_ON)
+			clean_old_cells(current_holder)
+		update_used_lum_power()
+		if(overlay_lighting_flags & LIGHTING_ON && isturf(current_holder?.loc))
+			register_new_cells()
+
 	if(!((new_flags ^ old_flags) & LIGHT_ATTACHED))
 		return
 

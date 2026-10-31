@@ -59,7 +59,7 @@
 		return FALSE
 
 	for (var/datum/component/overlay_lighting/light as anything in collect_dynamic_lightsources())
-		lums += light.real_lum_power
+		lums += light.used_lum_power
 		if (lums >= value)
 			return FALSE
 	return TRUE
@@ -74,7 +74,7 @@
 		return TRUE
 
 	for (var/datum/component/overlay_lighting/light as anything in collect_dynamic_lightsources())
-		lums += light.real_lum_power
+		lums += light.used_lum_power
 		if (lums > value)
 			return TRUE
 	return FALSE
@@ -104,7 +104,7 @@
 /turf/proc/get_dynamic_lumcount()
 	. = 0
 	for (var/datum/component/overlay_lighting/light as anything in collect_dynamic_lightsources())
-		. += light.real_lum_power
+		. += light.used_lum_power
 
 // You've heard of oranges_ear, prepare for oranges_eye
 /// Uses the same optimization via viewers() that get_hearers_in_view does by allocating oranges ears to overlay lights
@@ -140,7 +140,7 @@
 	if (!lighting_object)
 		return FALSE
 
-	return !(luminosity || get_dynamic_lumcount())
+	return !(lighting_object.luminosity || get_dynamic_lumcount())
 
 ///Proc to add movable sources of opacity on the turf and let it handle lighting code.
 /turf/proc/add_opacity_source(atom/movable/new_source)

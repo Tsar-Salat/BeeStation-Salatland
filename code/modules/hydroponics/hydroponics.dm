@@ -130,8 +130,8 @@
 
 	if(world.time > (lastcycle + cycledelay))
 		lastcycle = world.time
-		var/is_fungus = myseed.get_gene(/datum/plant_gene/trait/plant_type/fungal_metabolism)
 		if(myseed && !dead)
+			var/is_fungus = myseed.get_gene(/datum/plant_gene/trait/plant_type/fungal_metabolism)
 			// Advance age
 			age++
 			if(age < myseed.maturation)
