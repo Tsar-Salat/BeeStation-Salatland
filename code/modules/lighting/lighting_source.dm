@@ -234,9 +234,8 @@
 /// Returns a list of lists that encodes the light falloff of our source
 /// Takes anything that impacts our generation as input
 /// This function should be "pure", no side effects or reads from the source object
-/datum/light_source/proc/generate_sheet(range, height, visual_offset, x_offset, y_offset, center_dir, angle, z_level = 0)
+/datum/light_source/proc/generate_sheet(range, visual_offset, x_offset, y_offset, center_dir, angle, height, z_level = 0)
 	var/list/encode = list()
-
 	// How far away the turfs we get are, and how many there are are often not the same calculation
 	// So we need to include the visual offset, so we can ensure our sheet is large enough to accept all the distance differences
 	var/bound_range = CEILING(range, 1) + visual_offset
@@ -253,11 +252,11 @@
 /// Returns a THREE dimensional list of lists that encodes the lighting falloff of our source
 /// Takes anything that impacts our generation as input
 /// This function should be "pure", no side effects or reads from the passed object
-/datum/light_source/proc/generate_sheet_multiz(range, height, visual_offset, x_offset, y_offset, center_dir, angle)
+/datum/light_source/proc/generate_sheet_multiz(range, visual_offset, x_offset, y_offset, center_dir, angle, height)
 	var/list/encode = list()
 	var/z_range = ZMIMIC_MAX_DEPTH
 	for(var/z in -z_range to z_range)
-		var/list/sheet = generate_sheet(range, height, visual_offset, x_offset, y_offset, center_dir, angle, z)
+		var/list/sheet = generate_sheet(range, visual_offset, x_offset, y_offset, center_dir, angle, height, z)
 		encode += list(sheet)
 	return encode
 
