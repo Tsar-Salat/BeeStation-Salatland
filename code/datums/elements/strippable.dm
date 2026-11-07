@@ -46,6 +46,12 @@
 	if(over != user)
 		return
 
+	// We're dragging a pet, dont open the menu to strip them
+	if(ishuman(user) && isliving(source))
+		var/mob/living/pet = source
+		if(pet.can_be_held && user.pulling == pet)
+			return
+
 	// Cyborgs buckle people by dragging them onto them, unless in combat mode.
 	if(iscyborg(user))
 		var/mob/living/silicon/robot/cyborg_user = user
@@ -114,9 +120,6 @@
 	if (equipping.item_flags & ABSTRACT)
 		return FALSE
 
-	//This is important due to the fact otherwise it will be equipped without a proper existing icon, because it's forced on through the strip menu
-	if(ismonkey(source))
-		equipping.compile_monkey_icon()
 	return TRUE
 
 /// Start the equipping process. This is the proc you should yield in.

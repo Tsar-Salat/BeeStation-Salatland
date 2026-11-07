@@ -25,10 +25,8 @@
 	light_power = 0.85
 
 	FASTDMM_PROP(\
-		set_instance_vars(\
-			pixel_x = dir == EAST ? 24 : (dir == WEST ? -24 : INSTANCE_VAR_DEFAULT),\
-			pixel_y = dir == NORTH ? 24 : (dir == SOUTH ? -24 : INSTANCE_VAR_DEFAULT)\
-		),\
+		pixel_x = (dir == EAST ? 24 : (dir == WEST ? -24 : INSTANCE_VAR_DEFAULT)),\
+		pixel_y = (dir == NORTH ? 24 : (dir == SOUTH ? -24 : INSTANCE_VAR_DEFAULT)),\
 		dir_amount = 4\
 	)
 
@@ -333,6 +331,9 @@
 		. += span_notice("Ctrl-Click the APC to switch the breaker [ operating ? "off" : "on"].")
 
 /obj/machinery/power/apc/AltClick(mob/user)
+	. = ..()
+	if(!can_interact(user))
+		return
 	if(!user.canUseTopic(src, !issilicon(user)) || !isturf(loc))
 		return
 	else
