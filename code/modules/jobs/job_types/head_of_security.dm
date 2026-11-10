@@ -43,7 +43,6 @@
 		ACCESS_KEYCARD_AUTH,
 		ACCESS_GATEWAY,
 	)
-	extra_access = list()
 
 	departments_list = list(
 		/datum/department_group/security,

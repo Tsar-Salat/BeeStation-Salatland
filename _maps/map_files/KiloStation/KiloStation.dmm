@@ -4029,7 +4029,6 @@
 /obj/machinery/light{
 	dir = 4
 	},
-/obj/item/shovel/spade,
 /obj/item/wrench,
 /obj/item/crowbar/red,
 /obj/item/cultivator,
@@ -26004,6 +26003,7 @@
 /area/station/science/shuttledock)
 "jii" = (
 /obj/effect/turf_decal/tile/neutral/opposingcorners,
+/obj/structure/closet/crate/mod,
 /turf/open/floor/iron/dark,
 /area/station/science/robotics/lab)
 "jix" = (

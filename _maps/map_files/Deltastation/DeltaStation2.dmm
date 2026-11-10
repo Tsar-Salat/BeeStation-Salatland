@@ -2396,7 +2396,6 @@
 /obj/item/cultivator,
 /obj/item/hatchet,
 /obj/item/wirecutters,
-/obj/item/shovel/spade,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/iron,
 /area/station/service/hydroponics)
@@ -76756,6 +76755,7 @@
 	pixel_x = -32
 	},
 /obj/effect/turf_decal/bot,
+/obj/structure/closet/crate/mod,
 /turf/open/floor/iron,
 /area/station/science/robotics/mechbay)
 "xMP" = (

@@ -49,7 +49,7 @@
 		to_chat(user, span_notice("You carefully remove the mouse from the wheel."))
 
 /obj/machinery/power/port_gen/hamster_wheel/wrench_act(mob/living/user, obj/item/tool)
-	if(!active)
+	if(active)
 		return ITEM_INTERACT_BLOCKING
 
 	if(!anchored && !isinspace())
@@ -137,7 +137,7 @@
 		disconnect_from_network()
 
 /obj/machinery/power/port_gen/hamsterperson_wheel/wrench_act(mob/living/user, obj/item/tool)
-	if(!active)
+	if(active)
 		return ITEM_INTERACT_BLOCKING
 
 	if(!anchored && !isinspace())
@@ -179,7 +179,7 @@
 			return FALSE
 		handleInactive()
 	var/mob/living/user = buckled_mobs[1]
-	flick("[base_icon_state]-u", src)
+	z_flick("[base_icon_state]-u", src)
 	animate(user, pixel_y = pixel_shift_y, time = 0.4 SECONDS, SINE_EASING)
 	playsound(user, 'sound/machines/creak.ogg', 60, TRUE)
 	animate(pixel_y = user.base_pixel_y, time = 0.4 SECONDS, SINE_EASING)

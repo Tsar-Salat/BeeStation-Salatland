@@ -19710,6 +19710,12 @@
 /obj/structure/flora/ash/tall_shroom,
 /turf/open/floor/plating/asteroid/planetary,
 /area/station/engineering/atmos)
+"mgB" = (
+/obj/effect/turf_decal/stripes/line,
+/obj/structure/closet/crate/mod,
+/obj/item/mod/module/longfall,
+/turf/open/floor/iron/white,
+/area/station/science/robotics)
 "mgH" = (
 /obj/effect/turf_decal/siding/yellow{
 	dir = 4
@@ -188275,7 +188281,7 @@ mth
 cWo
 hSU
 cEn
-xKR
+mgB
 tUa
 isg
 vLs

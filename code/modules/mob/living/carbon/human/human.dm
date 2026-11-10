@@ -1,11 +1,3 @@
-/mob/living/carbon/human
-	name = "Unknown"
-	real_name = "Unknown"
-	icon = 'icons/mob/human.dmi'
-	appearance_flags = KEEP_TOGETHER|TILE_BOUND|PIXEL_SCALE|LONG_GLIDE
-	COOLDOWN_DECLARE(special_emote_cooldown)
-	COOLDOWN_DECLARE(block_cooldown)
-
 /mob/living/carbon/human/Initialize(mapload)
 	add_verb(/mob/living/proc/mob_sleep)
 	add_verb(/mob/living/proc/toggle_resting)
@@ -22,12 +14,11 @@
 	setup_human_dna()
 
 	create_carbon_reagents()
-	set_species(dna.species.type)
+	set_species(dna.species.type, icon_update = FALSE) //carbon/Initialize will call update_body()
+	//set species enables and disables the flag. Just to be sure, we re-enable it now until it's removed by the parent call.
+	living_flags |= STOP_OVERLAY_UPDATE_BODY_PARTS
 
 	prepare_huds() //Prevents a nasty runtime on human init
-
-	//initialise organs
-	create_internal_organs() //most of it is done in set_species now, this is only for parent call
 
 	. = ..()
 
@@ -140,7 +131,7 @@
 
 		var/id_name = id.registered_name
 		var/id_age = id.registered_age
-		var/id_job = id.assignment
+		var/id_job = id.get_assignment()
 		// Should probably be recorded on the ID, but this is easier (albiet more restrictive) on chameleon ID users
 		var/datum/record/crew/record = find_record(id_name, GLOB.manifest.general)
 		var/id_blood_type = record?.blood_type
@@ -439,7 +430,7 @@
 
 	//Check for weapons
 	if( (judgment_criteria & JUDGE_WEAPONCHECK) && weaponcheck)
-		if(!idcard || !(ACCESS_WEAPONS in idcard.access))
+		if(!idcard || !(ACCESS_WEAPONS in idcard.GetAccess()))
 			for(var/obj/item/I in held_items) //if they're holding a gun
 				if(weaponcheck.Invoke(I))
 					threatcount += 4

@@ -19,7 +19,6 @@
 		ACCESS_THEATRE,
 		ACCESS_WEAPONS,
 	)
-	extra_access = list(ACCESS_HYDROPONICS, ACCESS_KITCHEN, ACCESS_MORGUE)
 
 	departments_list = list(
 		/datum/department_group/service,

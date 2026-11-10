@@ -22,7 +22,6 @@
 	outfit = /datum/outfit/job/captain
 
 	base_access = list()  //See get_access()
-	extra_access = list() //See get_access()
 
 	departments_list = list(
 		/datum/department_group/command,
