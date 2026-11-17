@@ -1,11 +1,13 @@
 /datum/surgery_operation/limb/add_dental_implant
 	name = "add dental implant"
 	desc = "Implant a pill into a patient's teeth."
+	operation_flags = OPERATION_NO_PATIENT_REQUIRED
 	implements = list(
 		/obj/item/reagent_containers/applicator/pill = 1,
 	)
 	time = 1.6 SECONDS
-	all_surgery_states_required = SURGERY_SKIN_OPEN|SURGERY_VESSELS_CLAMPED|SURGERY_BONE_DRILLED
+	all_surgery_states_required = SURGERY_SKIN_OPEN|SURGERY_BONE_DRILLED
+	any_surgery_states_blocked = SURGERY_VESSELS_UNCLAMPED
 
 /datum/surgery_operation/limb/add_dental_implant/all_required_strings()
 	. = list()
@@ -25,9 +27,9 @@
 	display_results(
 		surgeon,
 		limb.owner,
-		span_notice("You begin to wedge [tool] in [limb.owner]'s [limb.plaintext_zone]..."),
-		span_notice("[surgeon] begins to wedge \the [tool] in [limb.owner]'s [limb.plaintext_zone]."),
-		span_notice("[surgeon] begins to wedge something in [limb.owner]'s [limb.plaintext_zone]."),
+		span_notice("You begin to wedge [tool] in [FORMAT_LIMB_OWNER(limb)]..."),
+		span_notice("[surgeon] begins to wedge \the [tool] in [FORMAT_LIMB_OWNER(limb)]."),
+		span_notice("[surgeon] begins to wedge something in [FORMAT_LIMB_OWNER(limb)]."),
 	)
 	display_pain(limb.owner, "Something's being jammed into your [limb.plaintext_zone]!")
 
@@ -42,20 +44,22 @@
 	display_results(
 		surgeon,
 		limb.owner,
-		span_notice("You wedge [tool] into [limb.owner]'s [limb.plaintext_zone]."),
-		span_notice("[surgeon] wedges [tool] into [limb.owner]'s [limb.plaintext_zone]!"),
-		span_notice("[surgeon] wedges something into [limb.owner]'s [limb.plaintext_zone]!"),
+		span_notice("You wedge [tool] into [FORMAT_LIMB_OWNER(limb)]."),
+		span_notice("[surgeon] wedges [tool] into [FORMAT_LIMB_OWNER(limb)]!"),
+		span_notice("[surgeon] wedges something into [FORMAT_LIMB_OWNER(limb)]!"),
 	)
 
 /datum/surgery_operation/limb/remove_dental_implant
 	name = "remove dental implant"
 	desc = "Remove a dental implant from a patient's teeth."
+	operation_flags = OPERATION_NO_PATIENT_REQUIRED
 	implements = list(
 		TOOL_HEMOSTAT = 1,
 		IMPLEMENT_HAND = 1,
 	)
 	time = 3.2 SECONDS
-	all_surgery_states_required = SURGERY_BONE_DRILLED|SURGERY_SKIN_OPEN|SURGERY_VESSELS_CLAMPED
+	all_surgery_states_required = SURGERY_BONE_DRILLED|SURGERY_SKIN_OPEN
+	any_surgery_states_blocked = SURGERY_VESSELS_UNCLAMPED
 
 /datum/surgery_operation/limb/remove_dental_implant/get_default_radial_image()
 	return image(/obj/item/reagent_containers/applicator/pill)
@@ -73,9 +77,9 @@
 	display_results(
 		surgeon,
 		limb.owner,
-		span_notice("You begin looking in [limb.owner]'s mouth for dental implants..."),
-		span_notice("[surgeon] begins to look in [limb.owner]'s mouth."),
-		span_notice("[surgeon] begins to examine [limb.owner]'s teeth."),
+		span_notice("You begin looking in [limb.owner || limb]'s mouth for dental implants..."),
+		span_notice("[surgeon] begins to look in [limb.owner || limb]'s mouth."),
+		span_notice("[surgeon] begins to examine [limb.owner || limb]'s teeth."),
 	)
 	display_pain(limb.owner, "You feel fingers poke around at your teeth.")
 
@@ -87,14 +91,14 @@
 		display_results(
 			surgeon,
 			limb.owner,
-			span_notice("You don't find any dental implants in [limb.owner]'s [limb.plaintext_zone]."),
-			span_notice("[surgeon] doesn't find any dental implants in [limb.owner]'s [limb.plaintext_zone]."),
-			span_notice("[surgeon] finishes examining [limb.owner]'s [limb.plaintext_zone]."),
+			span_notice("You don't find any dental implants in [FORMAT_LIMB_OWNER(limb)]."),
+			span_notice("[surgeon] doesn't find any dental implants in [FORMAT_LIMB_OWNER(limb)]."),
+			span_notice("[surgeon] finishes examining [FORMAT_LIMB_OWNER(limb)]."),
 		)
 		return
 
 	var/obj/item/reagent_containers/applicator/pill/yoinked = pick(pills)
-	for(var/datum/action/item_action/hands_free/activate_pill/associated_action in limb.owner.actions)
+	for(var/datum/action/item_action/hands_free/activate_pill/associated_action in limb.owner?.actions)
 		if(associated_action.master == yoinked)
 			qdel(associated_action)
 
@@ -102,9 +106,9 @@
 	display_results(
 		surgeon,
 		limb.owner,
-		span_notice("You carefully remove [yoinked] from [limb.owner]'s [limb.plaintext_zone]."),
-		span_notice("[surgeon] carefully removes [yoinked] from [limb.owner]'s [limb.plaintext_zone]."),
-		span_notice("[surgeon] carefully removes something from [limb.owner]'s [limb.plaintext_zone]."),
+		span_notice("You carefully remove [yoinked] from [FORMAT_LIMB_OWNER(limb)]."),
+		span_notice("[surgeon] carefully removes [yoinked] from [FORMAT_LIMB_OWNER(limb)]."),
+		span_notice("[surgeon] carefully removes something from [FORMAT_LIMB_OWNER(limb)]."),
 	)
 
 /datum/action/item_action/hands_free/activate_pill

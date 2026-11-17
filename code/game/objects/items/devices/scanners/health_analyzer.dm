@@ -127,6 +127,8 @@
 				render_list += "<span class='alert ml-1'>Subject has been husked by severe burns.</span>\n"
 			else if (HAS_TRAIT_FROM(target, TRAIT_HUSK, CHANGELING_DRAIN))
 				render_list += "<span class='alert ml-1'>Subject has been husked by dessication.</span>\n"
+			else if(HAS_TRAIT_FROM(target, TRAIT_HUSK, SKELETON_TRAIT))
+				render_list += "<span class='alert ml-1'>Subject has been husked due to severe flesh loss.</span>\n"
 			else
 				render_list += "<span class='alert ml-1'>Subject has been husked by mysterious causes.</span>\n"
 

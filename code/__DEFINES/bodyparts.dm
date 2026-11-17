@@ -16,6 +16,9 @@
 #define BODYPART_OVERLAY_MESH 5
 #define BODYPART_OVERLAY_HARDLIGHT 6
 
+/// This limb cannot be disabled via damage thresholds
+#define LIMB_NO_DISABLE -1
+
 // Bodypart surgery state
 /// An incision has been made into the skin
 #define SURGERY_SKIN_CUT (1<<0)
@@ -180,3 +183,8 @@ DEFINE_BITFIELD(surgery_state, list(
 #define LIMB_OVERLAY_CORE (1<<4)
 /// MODsuit hardlight projectors show and tint this
 #define LIMB_OVERLAY_HARDLIGHT (1<<5)
+
+/// How much blood is lost from unclamped vessels?
+#define UNCLAMPED_VESSELS_BLEEDING 1.5
+/// How much blood is lost from clamped vessels or cut organs?
+#define CLAMPED_VESSELS_BLEEDING 0.2

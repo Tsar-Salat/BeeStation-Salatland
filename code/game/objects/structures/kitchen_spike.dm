@@ -84,6 +84,8 @@
 			L.add_splatter_floor()
 			L.adjustBruteLoss(30)
 			buckle_mob(L, force = TRUE)
+			// So you can butcher people too
+			L.AddComponent(/datum/component/free_operation)
 			var/matrix/m180 = matrix(L.transform)
 			m180.Turn(180)
 			animate(L, transform = m180, time = 3)
@@ -133,6 +135,7 @@
 	m180.Turn(180)
 	animate(M, transform = m180, time = 3)
 	M.remove_offsets(type, animate = FALSE)
+	qdel(M.GetComponent(/datum/component/free_operation))
 	M.adjustBruteLoss(30)
 	src.visible_message(span_danger("[M] falls free of [src]!"))
 	unbuckle_mob(M,force=1)

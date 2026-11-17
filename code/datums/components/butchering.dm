@@ -27,8 +27,9 @@
 		can_be_blunt = _can_be_blunt
 	if(isitem(parent))
 		RegisterSignal(parent, COMSIG_ITEM_ATTACK, PROC_REF(onItemAttack))
+		RegisterSignal(parent, COMSIG_ITEM_INTERACTING_WITH_ATOM, PROC_REF(on_item_interaction))
 
-/datum/component/butchering/proc/onItemAttack(obj/item/source, mob/living/M, mob/living/user)
+/datum/component/butchering/proc/onItemAttack(obj/item/source, mob/living/M, mob/living/user, list/modifiers)
 	SIGNAL_HANDLER
 
 	if(!user.combat_mode)
@@ -37,6 +38,10 @@
 		if(butchering_enabled && (can_be_blunt || source.get_sharpness()))
 			INVOKE_ASYNC(src, PROC_REF(startButcher), source, M, user)
 			return COMPONENT_CANCEL_ATTACK_CHAIN
+
+	if(ishuman(M) && source.force && LAZYACCESS(modifiers, RIGHT_CLICK) && butchering_enabled && (can_be_blunt || source.get_sharpness()))
+		INVOKE_ASYNC(src, PROC_REF(butcher_human), source, M, user)
+		return COMPONENT_CANCEL_ATTACK_CHAIN
 
 	if(ishuman(M) && source.force && source.get_sharpness())
 		var/mob/living/carbon/human/H = M
@@ -52,6 +57,209 @@
 
 			INVOKE_ASYNC(src, PROC_REF(startNeckSlice), source, H, user)
 			return COMPONENT_CANCEL_ATTACK_CHAIN
+
+/datum/component/butchering/proc/on_item_interaction(obj/item/source, mob/living/user, atom/target, list/modifiers)
+	SIGNAL_HANDLER
+
+	if(!source.get_sharpness() && !can_be_blunt)
+		return NONE
+	if(!user.combat_mode || !butchering_enabled || !isbodypart(target))
+		return NONE
+
+	INVOKE_ASYNC(src, PROC_REF(butcher_limb), source, target, user)
+	return ITEM_INTERACT_BLOCKING
+
+/datum/component/butchering/proc/butcher_human(obj/item/source, mob/living/carbon/human/victim, mob/living/user)
+	if(DOING_INTERACTION_WITH_TARGET(user, victim))
+		to_chat(user, span_warning("You're already interacting with [victim]!"))
+		return
+
+	var/static/list/butcher_spots = typecacheof(list(
+		/obj/structure/table,
+		/obj/structure/bed,
+		/obj/machinery/stasis,
+		/obj/structure/kitchenspike,
+	))
+
+	var/found_spot = FALSE
+	for(var/obj/thing in victim.loc)
+		if(is_type_in_typecache(thing, butcher_spots))
+			found_spot = TRUE
+			break
+
+	if(!found_spot)
+		to_chat(user, span_warning("You need a better spot to butcher [victim]!"))
+		return
+
+	var/obj/item/bodypart/limb = victim.get_bodypart(deprecise_zone(user.zone_selected))
+	if(!limb)
+		to_chat(user, span_warning("[victim] doesn't have a [parse_zone(deprecise_zone(user.zone_selected))]!"))
+		return
+
+	butcher_limb(source, limb, user)
+
+/datum/component/butchering/proc/butcher_limb(obj/item/source, obj/item/bodypart/target, mob/living/user)
+	target.add_fingerprint(user)
+	if(LIMB_HAS_SKIN(target) && !HAS_ANY_SURGERY_STATE(target.surgery_state, SURGERY_SKIN_CUT | SURGERY_SKIN_OPEN))
+		to_chat(user, span_warning("[target]'s skin is still intact!"))
+		return
+
+	// We need to gut the limb before turning it into meat, otherwise just cut around the bone
+	if(LIMB_HAS_BONES(target) && !HAS_ANY_SURGERY_STATE(target.surgery_state, SURGERY_BONE_DRILLED | SURGERY_BONE_SAWED) && length(target.contents))
+		to_chat(user, span_warning("[target]'s bones are still intact!"))
+		return
+
+	var/speed_modifier = 1
+	if(!target.owner)
+		speed_modifier = 0.5
+	else if(target.owner.stat < UNCONSCIOUS)
+		speed_modifier = 1.5
+
+	var/limb_descriptor = (target.owner ? "[target.owner]'s [target.plaintext_zone]" : target)
+	if(target.body_zone == BODY_ZONE_CHEST && target.owner)
+		limb_descriptor = target.owner
+
+	if(target.owner)
+		log_combat(user, target.owner, "attempted to butcher", source)
+
+	if(length(target.contents))
+		user.visible_message(span_warning("[user] begins to gut [limb_descriptor]!"), span_notice("You begin to gut [limb_descriptor]..."), ignored_mobs = target.owner)
+		if(target.owner)
+			to_chat(target.owner, span_warning("[user] begins to gut your [target.plaintext_zone]!"))
+
+		playsound(target.loc, butcher_sound, 50, TRUE, -1)
+		if(!do_after(user, speed * speed_modifier, target.owner || target))
+			return
+		target.drop_organs(user, TRUE)
+		return
+
+	if(!length(target.butcher_drops))
+		to_chat(user, span_warning("There is nothing left inside [limb_descriptor]!"))
+		return
+
+	if(target.body_zone == BODY_ZONE_CHEST && target.owner)
+		// Cannot butcher the chest until we hack off all the other limbs
+		for(var/obj/item/bodypart/limb as anything in target.owner.bodyparts)
+			if(limb != target && limb.butcher_drops && limb.butcher_replacement)
+				to_chat(user, span_warning("You need to butcher all other limbs first!"))
+				return
+
+	user.visible_message(span_warning("[user] begins to cut [limb_descriptor] apart!"), span_notice("You begin to cut [limb_descriptor] apart..."), ignored_mobs = target.owner)
+	if(target.owner)
+		to_chat(target.owner, span_warning("[user] begins to cut your [target.plaintext_zone] apart!"))
+
+	playsound(target.loc, butcher_sound, 50, TRUE, -1)
+	if(!do_after(user, speed * speed_modifier, target.owner || target))
+		return
+
+	var/list/results = list()
+	var/turf/drop_loc = target.owner?.drop_location() || target.drop_location()
+	var/bonus_chance = max(0, (effectiveness - 100) + bonus_modifier) //so 125 total effectiveness = 25% extra chance
+	var/list/failures = list()
+	var/list/bonuses = list()
+
+	for(var/obj/item/drop_type as anything in target.butcher_drops)
+		var/amount = target.butcher_drops[drop_type] || 1
+		var/is_stack = ispath(drop_type, /obj/item/stack)
+
+		for(var/i in 1 to amount)
+			if(!prob(effectiveness))
+				failures |= drop_type::name
+				amount -= 1
+				continue
+
+			if(prob(bonus_chance))
+				if(!is_stack)
+					results += new drop_type(drop_loc)
+				amount += 1
+				bonuses |= drop_type::name
+
+			if(!is_stack)
+				results += new drop_type(drop_loc)
+
+		if(is_stack && amount)
+			results += new drop_type(drop_loc, amount)
+
+	if(length(failures))
+		to_chat(user, span_warning("You fail to harvest some of the [english_list(failures)] from [limb_descriptor]."))
+	if(length(bonuses))
+		to_chat(user, span_info("You harvest some extra [english_list(bonuses)] from [limb_descriptor]!"))
+
+	if(target.blood_dna_info)
+		for(var/obj/item/result as anything in results)
+			result.add_blood_DNA(target.blood_dna_info)
+
+	if(target.reagents)
+		var/meat_produced = 0
+		for(var/obj/item/food/target_meat in results)
+			meat_produced += 1
+
+		for(var/obj/item/food/target_meat in results)
+			target.reagents.trans_to(target_meat, target.reagents.total_volume / meat_produced, remove_blacklisted = TRUE)
+
+	if(target.owner)
+		var/reagents_in_produced = 0
+		for(var/obj/item/result as anything in results)
+			if(result.reagents)
+				reagents_in_produced += 1
+
+		var/list/diseases = target.owner.get_static_viruses()
+
+		for(var/obj/item/result as anything in results)
+			if(reagents_in_produced)
+				if(target.owner.reagents)
+					target.owner.reagents.trans_to(result, target.owner.reagents.total_volume / reagents_in_produced / length(target.owner.bodyparts), remove_blacklisted = TRUE)
+				result.reagents?.add_reagent(/datum/reagent/consumable/nutriment, target.owner.nutrition / 15 / reagents_in_produced)
+
+			if(LAZYLEN(diseases))
+				var/list/datum/disease/diseases_to_add = list()
+				for(var/datum/disease/disease as anything in diseases)
+					// Admin or special viruses that should not be reproduced
+					if(disease.spread_flags & (DISEASE_SPREAD_SPECIAL | DISEASE_SPREAD_NON_CONTAGIOUS))
+						continue
+					diseases_to_add += disease
+
+				if(LAZYLEN(diseases_to_add))
+					result.AddComponent(/datum/component/infective, diseases_to_add)
+
+		for(var/obj/item/food/meat/meat in results)
+			meat.name = "[target.owner.real_name] [meat.name]"
+			meat.subjectname = target.owner.real_name
+			meat.subjectjob = target.owner.job
+
+	user.visible_message(span_warning("[user] butchers [limb_descriptor]!"), span_notice("You butcher [limb_descriptor]."), ignored_mobs = target.owner)
+	if(!target.owner)
+		target.drop_organs()
+		if(target.butcher_replacement)
+			create_replacement_limb(target, drop_loc)
+		qdel(target)
+		return
+
+	to_chat(target.owner, span_userdanger("[user] hacks the meat off your [target.plaintext_zone]!"))
+	var/mob/living/carbon/victim = target.owner
+
+	if(!target.butcher_replacement)
+		target.dismember(source.damtype)
+		target.drop_organs()
+		qdel(target)
+		return
+
+	var/obj/item/bodypart/replacement = create_replacement_limb(target, drop_loc)
+	target.dismember(source.damtype)
+	target.drop_organs()
+	replacement.replace_limb(victim)
+	replacement.update_limb(is_creating = TRUE)
+	qdel(target)
+
+/// Creates a replacement (usually skeleton) limb for the butchered one
+/datum/component/butchering/proc/create_replacement_limb(obj/item/bodypart/target, drop_loc)
+	var/drop_type = target.butcher_replacement
+	var/obj/item/bodypart/replacement = new drop_type(drop_loc)
+	replacement.bodyshape = target.bodyshape
+	if(IS_ORGANIC_LIMB(replacement) && target.owner)
+		replacement.blood_dna_info = target.owner.get_blood_dna_list()
+	SEND_SIGNAL(target, COMSIG_BODYPART_BUTCHERED, replacement)
+	return replacement
 
 /datum/component/butchering/proc/startButcher(obj/item/source, mob/living/M, mob/living/user)
 	to_chat(user, span_notice("You begin to butcher [M]..."))

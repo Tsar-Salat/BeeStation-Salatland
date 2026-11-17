@@ -228,3 +228,9 @@
 #define FROM_CHAMELEON "from_chameleon"
 /// Source for innate toggleable silicon HUDs
 #define SILICON_HUD_TRAIT "silicon_hud"
+
+/// Trait gained from bioware surgeries
+#define BIOWARE_TRAIT "bioware"
+
+/// Trait gained from skeleton "limbs", such as husking from a butchered chest
+#define SKELETON_TRAIT "skeleton"

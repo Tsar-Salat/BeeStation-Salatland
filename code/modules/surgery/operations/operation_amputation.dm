@@ -18,7 +18,8 @@
 		/obj/item = 'sound/surgery/scalpel1.ogg',
 	)
 	success_sound = 'sound/surgery/organ2.ogg'
-	all_surgery_states_required = SURGERY_SKIN_OPEN|SURGERY_BONE_SAWED|SURGERY_VESSELS_CLAMPED
+	all_surgery_states_required = SURGERY_SKIN_OPEN|SURGERY_BONE_SAWED
+	any_surgery_states_blocked = SURGERY_VESSELS_UNCLAMPED
 
 /datum/surgery_operation/limb/amputate/get_recommended_tool()
 	return TOOL_SAW

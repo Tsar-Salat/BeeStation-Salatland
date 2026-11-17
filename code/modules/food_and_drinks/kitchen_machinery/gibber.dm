@@ -13,6 +13,8 @@
 	var/dirty = FALSE // Does it need cleaning?
 	var/gibtime = 40 // Time from starting until meat appears
 	var/meat_produced = 0
+	/// Fraction of each limb's butcher drops we produce when gibbing humans
+	var/efficiency = 0.25
 	var/ignore_clothing = FALSE
 
 
@@ -24,8 +26,10 @@
 	. = ..()
 	gibtime = 40
 	meat_produced = 0
+	efficiency = initial(efficiency)
 	for(var/datum/stock_part/matter_bin/B in component_parts)
 		meat_produced += B.tier
+		efficiency += B.tier * 0.25
 	for(var/datum/stock_part/manipulator/M in component_parts)
 		gibtime -= 5 * M.tier
 		if(M.tier >= 2)
@@ -34,7 +38,7 @@
 /obj/machinery/gibber/examine(mob/user)
 	. = ..()
 	if(in_range(user, src) || isobserver(user))
-		. += span_notice("The status display reads: Outputting <b>[meat_produced]</b> meat slab(s) after <b>[gibtime*0.1]</b> seconds of processing.")
+		. += span_notice("The status display reads: Outputting <b>[meat_produced]</b> meat slab(s), or <b>[efficiency * 100]%</b> of a human's meat, after <b>[gibtime*0.1]</b> seconds of processing.")
 		for(var/datum/stock_part/manipulator/M in component_parts)
 			if(M.tier >= 2)
 				. += span_notice("Gibber has been upgraded to process inorganic materials.")
@@ -163,41 +167,39 @@
 	var/typeofmeat = /obj/item/food/meat/slab/human
 	var/typeofskin
 
-	var/obj/item/food/meat/slab/allmeat[meat_produced]
-	var/obj/item/stack/sheet/animalhide/skin
+	var/list/obj/item/results = list()
 	var/list/datum/disease/diseases = mob_occupant.get_static_viruses()
 
 	if(ishuman(occupant))
-		var/mob/living/carbon/human/gibee = occupant
-		if(gibee.dna?.species)
-			typeofmeat = gibee.dna.species.meat
-			typeofskin = gibee.dna.species.skinned_type
+		results = get_limb_drops(occupant)
+	else
+		if(iscarbon(occupant))
+			var/mob/living/carbon/C = occupant
+			typeofmeat = C.type_of_meat
+			gibtype = C.gib_type
+			if(ismonkey(C))
+				typeofskin = /obj/item/stack/sheet/animalhide/monkey
+			else if(isalien(C))
+				typeofskin = /obj/item/stack/sheet/animalhide/xeno
+		for(var/i in 1 to meat_produced)
+			results += new typeofmeat(src)
+		if(typeofskin)
+			results += new typeofskin(src)
 
-	else if(iscarbon(occupant))
-		var/mob/living/carbon/C = occupant
-		typeofmeat = C.type_of_meat
-		gibtype = C.gib_type
-		if(ismonkey(C))
-			typeofskin = /obj/item/stack/sheet/animalhide/monkey
-		else if(isalien(C))
-			typeofskin = /obj/item/stack/sheet/animalhide/xeno
+	var/list/obj/item/food/meat/slab/allmeat = list()
+	for(var/obj/item/food/meat/slab/newmeat in results)
+		allmeat += newmeat
 	var/occupant_volume
 	if(occupant?.reagents)
 		occupant_volume = occupant.reagents.total_volume
-	for (var/i=1 to meat_produced)
-		var/obj/item/food/meat/slab/newmeat = new typeofmeat
+	for(var/obj/item/food/meat/slab/newmeat as anything in allmeat)
 		newmeat.name = "[sourcename] [newmeat.name]"
-		if(istype(newmeat))
-			newmeat.subjectname = sourcename
-			newmeat.reagents.add_reagent (/datum/reagent/consumable/nutriment, sourcenutriment / meat_produced) // Thehehe. Fat guys go first
-			if(occupant_volume)
-				occupant.reagents.trans_to(newmeat, occupant_volume / meat_produced, remove_blacklisted = TRUE)
-			if(sourcejob)
-				newmeat.subjectjob = sourcejob
-		allmeat[i] = newmeat
-
-	if(typeofskin)
-		skin = new typeofskin
+		newmeat.subjectname = sourcename
+		newmeat.reagents.add_reagent(/datum/reagent/consumable/nutriment, sourcenutriment / length(allmeat)) // Thehehe. Fat guys go first
+		if(occupant_volume)
+			occupant.reagents.trans_to(newmeat, occupant_volume / length(allmeat), remove_blacklisted = TRUE)
+		if(sourcejob)
+			newmeat.subjectjob = sourcejob
 
 	log_combat(user, occupant, "gibbed")
 	mob_occupant.investigate_log("has been gibbed by [src].", INVESTIGATE_DEATHS)
@@ -205,25 +207,48 @@
 	mob_occupant.ghostize()
 	set_occupant(null)
 	qdel(mob_occupant)
-	addtimer(CALLBACK(src, PROC_REF(make_meat), skin, allmeat, meat_produced, gibtype, diseases), gibtime)
+	addtimer(CALLBACK(src, PROC_REF(make_meat), results, gibtype, diseases), gibtime)
 
-/obj/machinery/gibber/proc/make_meat(obj/item/stack/sheet/animalhide/skin, list/obj/item/food/meat/slab/allmeat, meat_produced, gibtype, list/datum/disease/diseases)
+/// Rolls each limb's butcher drops against our efficiency
+/obj/machinery/gibber/proc/get_limb_drops(mob/living/carbon/human/victim)
+	var/list/obj/item/results = list()
+	var/drop_chance = 0
+	for(var/obj/item/bodypart/limb as anything in victim.bodyparts)
+		for(var/obj/item/drop_type as anything in limb.butcher_drops)
+			var/amount = limb.butcher_drops[drop_type] || 1
+			drop_chance += amount * efficiency
+			if(drop_chance > 1)
+				amount = floor(drop_chance)
+				if(prob(drop_chance * 100))
+					amount += 1
+			else
+				amount = 1
+				if(!prob(drop_chance * 100))
+					continue
+			drop_chance = 0
+
+			for(var/i in 1 to amount)
+				var/obj/item/result = new drop_type(src)
+				if(limb.blood_dna_info)
+					result.add_blood_DNA(limb.blood_dna_info)
+				results += result
+	return results
+
+/obj/machinery/gibber/proc/make_meat(list/obj/item/results, gibtype, list/datum/disease/diseases)
 	playsound(src.loc, 'sound/effects/splat.ogg', 50, 1)
 	operating = FALSE
 	update_use_power(IDLE_POWER_USE)
 	var/turf/T = get_turf(src)
 	var/list/turf/nearby_turfs = RANGE_TURFS(3,T) - T
-	if(skin)
-		skin.forceMove(loc)
-		skin.throw_at(pick(nearby_turfs),meat_produced,3)
-	for (var/i=1 to meat_produced)
-		var/obj/item/meatslab = allmeat[i]
-		meatslab.forceMove(loc)
-		meatslab.throw_at(pick(nearby_turfs),i,3)
-		for (var/turfs=1 to meat_produced)
+	var/result_count = length(results)
+	for(var/i in 1 to result_count)
+		var/obj/item/result = results[i]
+		result.forceMove(loc)
+		result.throw_at(pick(nearby_turfs), i, 3)
+		for(var/turfs in 1 to result_count)
 			var/turf/gibturf = pick(nearby_turfs)
-			if (!gibturf.density && (src in view(gibturf)))
-				new gibtype(gibturf,i,diseases)
+			if(!gibturf.density && (src in view(gibturf)))
+				new gibtype(gibturf, i, diseases)
 
 	pixel_x = base_pixel_x //return to its spot after shaking
 	operating = FALSE

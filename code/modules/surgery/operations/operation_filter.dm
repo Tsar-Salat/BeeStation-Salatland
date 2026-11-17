@@ -7,7 +7,8 @@
 	operation_flags = OPERATION_LOOPING
 	required_bodytype = ~BODYTYPE_ROBOTIC
 	success_sound = 'sound/machines/ping.ogg'
-	all_surgery_states_required = SURGERY_SKIN_OPEN|SURGERY_VESSELS_CLAMPED
+	all_surgery_states_required = SURGERY_SKIN_OPEN
+	any_surgery_states_blocked = SURGERY_VESSELS_UNCLAMPED
 	replaced_by = /datum/surgery_operation/limb/filter_blood/upgraded
 	/// Fraction of each chemical removed per cycle
 	var/chem_purge_factor = 0.2

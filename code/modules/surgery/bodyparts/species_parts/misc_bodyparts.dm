@@ -81,32 +81,38 @@
 	is_dimorphic = FALSE
 	dmg_overlay_type = null
 	head_flags = HEAD_ALL_FEATURES
+	butcher_replacement = null
 
 /obj/item/bodypart/chest/slime
 	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_SLIMEPERSON
 	is_dimorphic = TRUE
 	dmg_overlay_type = null
+	butcher_replacement = null
 
 /obj/item/bodypart/arm/left/slime
 	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_SLIMEPERSON
 	dmg_overlay_type = null
+	butcher_replacement = null
 
 /obj/item/bodypart/arm/right/slime
 	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_SLIMEPERSON
 	dmg_overlay_type = null
+	butcher_replacement = null
 
 /obj/item/bodypart/leg/left/slime
 	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_SLIMEPERSON
 	dmg_overlay_type = null
+	butcher_replacement = null
 
 /obj/item/bodypart/leg/right/slime
 	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_SLIMEPERSON
 	dmg_overlay_type = null
+	butcher_replacement = null
 
 ///LUMINESCENT
 /obj/item/bodypart/head/luminescent
@@ -115,32 +121,38 @@
 	is_dimorphic = TRUE
 	dmg_overlay_type = null
 	head_flags = HEAD_ALL_FEATURES
+	butcher_replacement = null
 
 /obj/item/bodypart/chest/luminescent
 	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_LUMINESCENT
 	is_dimorphic = TRUE
 	dmg_overlay_type = null
+	butcher_replacement = null
 
 /obj/item/bodypart/arm/left/luminescent
 	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_LUMINESCENT
 	dmg_overlay_type = null
+	butcher_replacement = null
 
 /obj/item/bodypart/arm/right/luminescent
 	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_LUMINESCENT
 	dmg_overlay_type = null
+	butcher_replacement = null
 
 /obj/item/bodypart/leg/left/luminescent
 	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_LUMINESCENT
 	dmg_overlay_type = null
+	butcher_replacement = null
 
 /obj/item/bodypart/leg/right/luminescent
 	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_LUMINESCENT
 	dmg_overlay_type = null
+	butcher_replacement = null
 
 ///ZAMBONI
 /obj/item/bodypart/head/zombie
@@ -276,6 +288,7 @@
 	dmg_overlay_type = null
 	head_flags = NONE
 	bodypart_flags = BODYPART_UNHUSKABLE
+	butcher_replacement = null
 
 /obj/item/bodypart/chest/skeleton
 	biological_state = BIO_BONE
@@ -284,6 +297,7 @@
 	should_draw_greyscale = FALSE
 	dmg_overlay_type = null
 	bodypart_flags = BODYPART_UNHUSKABLE
+	butcher_replacement = null
 
 /obj/item/bodypart/arm/left/skeleton
 	biological_state = (BIO_BONE|BIO_JOINTED)
@@ -291,6 +305,7 @@
 	should_draw_greyscale = FALSE
 	dmg_overlay_type = null
 	bodypart_flags = BODYPART_UNHUSKABLE
+	butcher_replacement = null
 
 /obj/item/bodypart/arm/right/skeleton
 	biological_state = (BIO_BONE|BIO_JOINTED)
@@ -298,6 +313,7 @@
 	should_draw_greyscale = FALSE
 	dmg_overlay_type = null
 	bodypart_flags = BODYPART_UNHUSKABLE
+	butcher_replacement = null
 
 /obj/item/bodypart/leg/left/skeleton
 	biological_state = (BIO_BONE|BIO_JOINTED)
@@ -305,6 +321,7 @@
 	should_draw_greyscale = FALSE
 	dmg_overlay_type = null
 	bodypart_flags = BODYPART_UNHUSKABLE
+	butcher_replacement = null
 
 /obj/item/bodypart/leg/right/skeleton
 	biological_state = (BIO_BONE|BIO_JOINTED)
@@ -312,6 +329,58 @@
 	should_draw_greyscale = FALSE
 	dmg_overlay_type = null
 	bodypart_flags = BODYPART_UNHUSKABLE
+	butcher_replacement = null
+
+/// Degloved bone "limbs", always disabled
+/obj/item/bodypart/head/skeleton/nonfunctional
+	limb_id = BODYPART_ID_BONE
+	bodypart_disabled = TRUE
+
+/obj/item/bodypart/chest/skeleton/nonfunctional
+	limb_id = BODYPART_ID_BONE
+	bodypart_disabled = TRUE
+
+/obj/item/bodypart/chest/skeleton/nonfunctional/on_adding(mob/living/carbon/new_owner)
+	. = ..()
+	// Treat people with bone chests as husks for all purposes for now
+	// Ideally husking should be per-bodypart but this simplifies a lot of behaviors
+	new_owner.become_husk(SKELETON_TRAIT)
+
+/obj/item/bodypart/chest/skeleton/nonfunctional/on_removal(mob/living/carbon/old_owner)
+	. = ..()
+	old_owner.cure_husk(SKELETON_TRAIT)
+
+/obj/item/bodypart/arm/left/skeleton/nonfunctional
+	limb_id = BODYPART_ID_BONE
+	bodypart_disabled = TRUE
+
+/obj/item/bodypart/arm/left/skeleton/nonfunctional/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_PARALYSIS, SKELETON_TRAIT)
+
+/obj/item/bodypart/arm/right/skeleton/nonfunctional
+	limb_id = BODYPART_ID_BONE
+	bodypart_disabled = TRUE
+
+/obj/item/bodypart/arm/right/skeleton/nonfunctional/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_PARALYSIS, SKELETON_TRAIT)
+
+/obj/item/bodypart/leg/left/skeleton/nonfunctional
+	limb_id = BODYPART_ID_BONE
+	bodypart_disabled = TRUE
+
+/obj/item/bodypart/leg/left/skeleton/nonfunctional/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_PARALYSIS, SKELETON_TRAIT)
+
+/obj/item/bodypart/leg/right/skeleton/nonfunctional
+	limb_id = BODYPART_ID_BONE
+	bodypart_disabled = TRUE
+
+/obj/item/bodypart/leg/right/skeleton/nonfunctional/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_PARALYSIS, SKELETON_TRAIT)
 
 ///GOLEMS (i hate xenobio)
 /obj/item/bodypart/head/golem
@@ -321,6 +390,7 @@
 	is_dimorphic = FALSE
 	dmg_overlay_type = null
 	head_flags = NONE
+	butcher_replacement = null
 
 /obj/item/bodypart/chest/golem
 	biological_state = BIO_BONE
@@ -330,6 +400,7 @@
 	is_dimorphic = FALSE
 	dmg_overlay_type = null
 	bodypart_traits = list(TRAIT_NO_JUMPSUIT)
+	butcher_replacement = null
 
 /obj/item/bodypart/arm/left/golem
 	biological_state = (BIO_BONE|BIO_JOINTED)
@@ -338,6 +409,7 @@
 	dmg_overlay_type = null
 	bodypart_traits = list(TRAIT_CHUNKYFINGERS)
 	unarmed_damage = 11 // I'd like to take the moment that maintaining all of these random ass golem species is hell and oranges was right
+	butcher_replacement = null
 
 /obj/item/bodypart/arm/right/golem
 	biological_state = (BIO_BONE|BIO_JOINTED)
@@ -347,6 +419,7 @@
 	bodypart_traits = list(TRAIT_CHUNKYFINGERS)
 	unarmed_damage = 11
 	movespeed_contribution = 1
+	butcher_replacement = null
 
 /obj/item/bodypart/leg/left/golem
 	biological_state = (BIO_BONE|BIO_JOINTED)
@@ -355,6 +428,7 @@
 	dmg_overlay_type = null
 	unarmed_damage = 11
 	movespeed_contribution = 1
+	butcher_replacement = null
 
 /obj/item/bodypart/leg/right/golem
 	biological_state = (BIO_BONE|BIO_JOINTED)
@@ -363,6 +437,7 @@
 	dmg_overlay_type = null
 	unarmed_damage = 11
 	movespeed_contribution = 1
+	butcher_replacement = null
 
 /obj/item/bodypart/leg/left/golem/gold
 	movespeed_contribution = 0.5

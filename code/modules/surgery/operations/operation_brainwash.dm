@@ -72,7 +72,7 @@
 		span_notice("[surgeon] completes the surgery on [organ.owner]'s brain."),
 	)
 	display_pain(organ.owner, "Your head throbs with horrible pain!")
-	organ.owner.adjustOrganLoss(ORGAN_SLOT_BRAIN, 40)
+	organ.apply_organ_damage(40)
 
 /datum/surgery_operation/organ/brainwash/mechanic
 	name = "reprogram"

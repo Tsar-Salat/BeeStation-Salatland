@@ -41,6 +41,7 @@
 	heavy_burn_msg = ROBOTIC_HEAVY_BURN_MSG
 
 	bodypart_flags = BODYPART_UNHUSKABLE
+	butcher_replacement = null
 
 /obj/item/bodypart/arm/right/robot
 	biological_state = (BIO_ROBOTIC|BIO_JOINTED)
@@ -73,6 +74,7 @@
 	heavy_burn_msg = ROBOTIC_HEAVY_BURN_MSG
 
 	bodypart_flags = BODYPART_UNHUSKABLE
+	butcher_replacement = null
 
 /obj/item/bodypart/leg/left/robot
 	biological_state = (BIO_ROBOTIC|BIO_JOINTED)
@@ -105,6 +107,7 @@
 	heavy_burn_msg = ROBOTIC_HEAVY_BURN_MSG
 
 	bodypart_flags = BODYPART_UNHUSKABLE
+	butcher_replacement = null
 
 /obj/item/bodypart/leg/right/robot
 	biological_state = (BIO_ROBOTIC|BIO_JOINTED)
@@ -137,6 +140,7 @@
 	heavy_burn_msg = ROBOTIC_HEAVY_BURN_MSG
 
 	bodypart_flags = BODYPART_UNHUSKABLE
+	butcher_replacement = null
 
 /obj/item/bodypart/chest/robot
 	biological_state = BIO_ROBOTIC
@@ -167,6 +171,7 @@
 	heavy_burn_msg = ROBOTIC_HEAVY_BURN_MSG
 
 	bodypart_flags = BODYPART_UNHUSKABLE
+	butcher_replacement = null
 
 	var/wired = FALSE
 	var/obj/item/stock_parts/cell/cell = null
@@ -277,6 +282,7 @@
 
 	head_flags = HEAD_EYESPRITES
 	bodypart_flags = BODYPART_UNHUSKABLE
+	butcher_replacement = null
 
 	var/obj/item/assembly/flash/handheld/flash1 = null
 	var/obj/item/assembly/flash/handheld/flash2 = null

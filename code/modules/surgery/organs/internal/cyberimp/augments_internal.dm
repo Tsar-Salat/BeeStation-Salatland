@@ -152,7 +152,7 @@
 	. = ..()
 	UnregisterSignal(organ_owner, COMSIG_LIVING_OPERATING_ON)
 
-/obj/item/organ/cyberimp/brain/linkedsurgery/proc/add_surgeries(datum/source, mob/living/patient, list/operations)
+/obj/item/organ/cyberimp/brain/linkedsurgery/proc/add_surgeries(datum/source, atom/movable/operating_on, list/operations)
 	SIGNAL_HANDLER
 	operations |= advanced_surgeries
 

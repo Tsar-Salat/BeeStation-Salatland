@@ -146,13 +146,13 @@
 	if(!can_be_occupant(L))
 		return
 	set_occupant(L)
-	RegisterSignal(L, COMSIG_LIVING_BEING_OPERATED_ON, PROC_REF(get_surgeries))
+	RegisterSignal(L, COMSIG_ATOM_BEING_OPERATED_ON, PROC_REF(get_surgeries))
 	if(stasis_running() && check_nap_violations())
 		chill_out(L)
 	update_icon()
 
 /obj/machinery/stasis/post_unbuckle_mob(mob/living/L)
-	UnregisterSignal(L, COMSIG_LIVING_BEING_OPERATED_ON)
+	UnregisterSignal(L, COMSIG_ATOM_BEING_OPERATED_ON)
 	thaw_them(L)
 	if(L == occupant)
 		set_occupant(null)

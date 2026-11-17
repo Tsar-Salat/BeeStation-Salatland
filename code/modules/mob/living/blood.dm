@@ -487,6 +487,9 @@ bleedsuppress has been replaced for is_bandaged(). Note that is_bleeding() retur
 	var/list/blood_dna_info = get_blood_dna_list()
 	for(var/obj/item/organ/organ as anything in internal_organs)
 		organ.blood_dna_info = blood_dna_info
+	for(var/obj/item/bodypart/bodypart as anything in bodyparts)
+		if(IS_ORGANIC_LIMB(bodypart))
+			bodypart.blood_dna_info = blood_dna_info
 
 /// Setter for changing a mob's blood type
 /mob/living/carbon/proc/set_blood_type(datum/blood_type/new_blood_type, update_cached_blood_dna_info = TRUE)

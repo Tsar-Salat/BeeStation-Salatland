@@ -34,6 +34,7 @@
 #define BODYPART_ID_ROBOTIC "robotic"
 #define BODYPART_ID_DIGITIGRADE "digitigrade"
 #define BODYPART_ID_LARVA "larva"
+#define BODYPART_ID_BONE "bone"
 
 //Defines for Golem Species IDs
 #define SPECIES_GOLEM "golem"

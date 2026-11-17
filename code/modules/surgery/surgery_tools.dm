@@ -439,7 +439,7 @@
 		playsound(src, 'sound/machines/terminal_success.ogg', 25, TRUE)
 	return TRUE
 
-/obj/item/surgical_processor/proc/check_surgery(datum/source, mob/living/patient, list/operations)
+/obj/item/surgical_processor/proc/check_surgery(datum/source, atom/movable/operating_on, list/operations)
 	SIGNAL_HANDLER
 
 	operations |= loaded_surgeries
