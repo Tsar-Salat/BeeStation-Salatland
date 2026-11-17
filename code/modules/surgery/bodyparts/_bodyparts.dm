@@ -44,6 +44,8 @@
 	var/bodypart_flags = BODYPART_VIRGIN
 	/// What state is the bodypart in for determining surgery availability
 	VAR_FINAL/surgery_state = NONE
+	/// Typepath of this limb as a stump
+	var/stump_typepath
 	/// The cached info about the blood this limb belongs to, set when attached
 	var/list/blood_dna_info
 	/// What items we drop whenever we're butchered
@@ -1000,6 +1002,9 @@
 	icon_state = "" //to erase the default sprite, we're building the visual aspects of the bodypart through overlays alone.
 
 	. = list()
+	// Stumps are FAKE limbs that hold the spot for REAL limbs. thusly no sprite of their own, so early return!
+	if(IS_STUMP(src))
+		return .
 
 	var/image/limb = image(layer = CALCULATE_MOB_OVERLAY_LAYER(BODYPARTS_LAYER))
 	var/image/aux = null
@@ -1390,3 +1395,21 @@
 	var/old_state = surgery_state
 	. = ..()
 	update_surgical_state(old_state, surgery_state ^ old_state)
+
+/// Adds biostate to the limb and ensures surgical states are updated accordingly
+/obj/item/bodypart/proc/add_biostate(new_biostate)
+	if(biological_state & new_biostate)
+		return
+
+	var/had_skin = LIMB_HAS_SKIN(src)
+	var/had_bones = LIMB_HAS_BONES(src)
+	var/had_vessels = LIMB_HAS_VESSELS(src)
+
+	biological_state |= new_biostate
+
+	if(!had_skin && LIMB_HAS_SKIN(src))
+		remove_surgical_state(SKINLESS_SURGERY_STATES)
+	if(!had_bones && LIMB_HAS_BONES(src))
+		remove_surgical_state(BONELESS_SURGERY_STATES)
+	if(!had_vessels && LIMB_HAS_VESSELS(src))
+		remove_surgical_state(VESSELLESS_SURGERY_STATES)

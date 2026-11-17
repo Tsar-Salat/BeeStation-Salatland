@@ -43,7 +43,7 @@
 	if(!istype(type_selection))
 		return
 
-	for(var/obj/item/bodypart/BP as anything in C.bodyparts) //Override bodypart data as necessary
+	for(var/obj/item/bodypart/BP as anything in C.get_bodyparts()) //Override bodypart data as necessary
 		BP.species_color = C.dna?.features[FEATURE_MUTANT_COLOR]
 		BP.name = "\improper[type_selection.name] [parse_zone(BP.body_zone)]"
 		// Bee insect_type has dimorphic parts while flies do not.

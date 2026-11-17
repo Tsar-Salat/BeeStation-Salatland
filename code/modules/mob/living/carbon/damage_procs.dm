@@ -17,7 +17,7 @@
 	// ALso we'll automatically covnert string def zones into bodyparts to pass into parent call.
 	else if(!isbodypart(def_zone))
 		var/random_zone = check_zone(def_zone || ran_zone(def_zone))
-		def_zone = get_bodypart(random_zone) || bodyparts[1]
+		def_zone = get_bodypart(random_zone) || get_bodypart()
 
 	. = ..()
 	// Taking brute or burn to bodyparts gives a damage flash
@@ -139,7 +139,7 @@
 
 /mob/living/carbon/getStaminaLoss()
 	. = 0
-	for(var/obj/item/bodypart/BP as anything in bodyparts)
+	for(var/obj/item/bodypart/BP as anything in get_bodyparts())
 		. += round(BP.stamina_dam * BP.stam_damage_coeff, DAMAGE_PRECISION)
 
 /mob/living/carbon/adjustStaminaLoss(amount, updating_stamina, forced, required_biotype = ALL)

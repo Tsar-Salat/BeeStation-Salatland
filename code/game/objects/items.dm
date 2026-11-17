@@ -612,14 +612,14 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		return FALSE
 	if(owner.get_active_held_item() == src) //copypaste of this code for an edgecase-nodrops
 		if(owner.active_hand_index == 1)
-			blockhand = (locate(/obj/item/bodypart/arm/left) in owner.bodyparts)
+			blockhand = (locate(/obj/item/bodypart/arm/left) in owner.get_bodyparts())
 		else
-			blockhand = (locate(/obj/item/bodypart/arm/right) in owner.bodyparts)
+			blockhand = (locate(/obj/item/bodypart/arm/right) in owner.get_bodyparts())
 	else
 		if(owner.active_hand_index == 1)
-			blockhand = (locate(/obj/item/bodypart/arm/right) in owner.bodyparts)
+			blockhand = (locate(/obj/item/bodypart/arm/right) in owner.get_bodyparts())
 		else
-			blockhand = (locate(/obj/item/bodypart/arm/left) in owner.bodyparts)
+			blockhand = (locate(/obj/item/bodypart/arm/left) in owner.get_bodyparts())
 	if(!blockhand)
 		return FALSE
 	if(blockhand?.bodypart_disabled)

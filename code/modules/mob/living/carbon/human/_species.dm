@@ -1075,7 +1075,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 						span_userdanger("You block [weapon]!"))
 		return FALSE
 
-	affecting ||= human.bodyparts[1] //Something went wrong. Maybe the limb is missing?
+	affecting ||= human.get_bodypart() //Something went wrong. Maybe the limb is missing?
 	var/hit_area = affecting.plaintext_zone
 	var/armor_block = human.run_armor_check(
 		def_zone = affecting,

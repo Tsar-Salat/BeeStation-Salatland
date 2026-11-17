@@ -17,7 +17,7 @@
 		TEST_ASSERT(!(organ.owner), "Organ '[organ.name] kept reference to human after forceMove into nullspace.")
 		TEST_ASSERT(!(organ.bodypart_owner), "Organ '[organ.name] kept reference to bodypart after forceMove into nullspace.")
 
-	for(var/obj/item/bodypart/bodypart as anything in hollow_boy.bodyparts)
+	for(var/obj/item/bodypart/bodypart as anything in hollow_boy.get_bodyparts())
 		bodypart = new bodypart.type() //fresh, duplice bodypart with no insides
 		for(var/obj/item/organ/organ as anything in removed_organs)
 			if(bodypart.body_zone != deprecise_zone(organ.zone))

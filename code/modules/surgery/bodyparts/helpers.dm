@@ -1,21 +1,37 @@
-/mob/living/proc/get_bodypart(zone = BODY_ZONE_CHEST)
+/**
+ * Returns a bodypart of the specified zone that this mob has
+ *
+ * * zone: the zone to get.
+ * Defaults to chest, allowing for skilling zone nullchecks if you don't care what bodypart you get.
+ * * include_stumps: whether or not to consider stumps as valid bodyparts to return.
+ * Defaults to FALSE, meaning that if a limb is missing (is a stump), nothing will be returned.
+ *
+ * Returns a bodypart, or null.
+ */
+/mob/living/proc/get_bodypart(zone = BODY_ZONE_CHEST, include_stumps = FALSE)
 	return
 
-/mob/living/carbon/get_bodypart(zone = BODY_ZONE_CHEST)
+/mob/living/carbon/get_bodypart(zone = BODY_ZONE_CHEST, include_stumps = FALSE)
 	RETURN_TYPE(/obj/item/bodypart)
 	for(var/obj/item/bodypart/bodypart as anything in bodyparts)
-		if(bodypart.body_zone == zone)
-			return bodypart
+		if(!include_stumps && IS_STUMP(bodypart))
+			continue
+		if(bodypart.body_zone != zone)
+			continue
+		return bodypart
 
 /**
  * Returns all bodyparts this mob has, optionally including stumps.
  *
+ * include_stumps: whether or not to consider stumps as valid bodyparts to return.
+ * Defaults to FALSE, meaning that if a limb is missing (is a stump), it won't be included in the returned list.
+ *
  * Returns a list of bodyparts, which may be empty.
  */
-/mob/living/proc/get_bodyparts()
+/mob/living/proc/get_bodyparts(include_stumps = FALSE)
 	var/list/parts = list()
 	for(var/zone in get_all_limbs())
-		var/obj/item/bodypart/bodypart = get_bodypart(zone)
+		var/obj/item/bodypart/bodypart = get_bodypart(zone, include_stumps)
 		if(bodypart)
 			parts += bodypart
 	return parts
@@ -145,12 +161,12 @@
 
 ///Remove all embedded objects from all limbs on the carbon mob
 /mob/living/carbon/proc/remove_all_embedded_objects()
-	for(var/obj/item/bodypart/bodypart as anything in get_bodyparts())
+	for(var/obj/item/bodypart/bodypart as anything in get_bodyparts(include_stumps = TRUE))
 		for(var/obj/item/embedded as anything in bodypart.embedded_objects)
 			remove_embedded_object(embedded)
 
 /mob/living/carbon/proc/has_embedded_objects(include_harmless=FALSE)
-	for(var/obj/item/bodypart/bodypart as anything in get_bodyparts())
+	for(var/obj/item/bodypart/bodypart as anything in get_bodyparts(include_stumps = TRUE))
 		for(var/obj/item/embedded as anything in bodypart.embedded_objects)
 			if(!include_harmless && embedded.isEmbedHarmless())
 				continue
@@ -196,7 +212,7 @@
 /// Makes sure that the owner's bodytype flags match the flags of all of its parts and organs
 /mob/living/carbon/proc/synchronize_bodytypes()
 	var/all_overlay_flags = NONE
-	for(var/obj/item/bodypart/limb as anything in get_bodyparts())
+	for(var/obj/item/bodypart/limb as anything in get_bodyparts(include_stumps = TRUE))
 		for(var/obj/item/organ/organ in limb)
 			all_overlay_flags |= organ.external_bodytypes
 		all_overlay_flags |= limb.bodytype
@@ -206,7 +222,7 @@
 /// Makes sure that the owner's bodyshape flags match the flags of all of its parts and organs
 /mob/living/carbon/proc/synchronize_bodyshapes()
 	var/all_overlay_flags = NONE
-	for(var/obj/item/bodypart/limb as anything in get_bodyparts())
+	for(var/obj/item/bodypart/limb as anything in get_bodyparts(include_stumps = TRUE))
 		for(var/obj/item/organ/organ in limb)
 			all_overlay_flags |= organ.external_bodyshapes
 		all_overlay_flags |= limb.bodyshape

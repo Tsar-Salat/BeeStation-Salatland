@@ -51,7 +51,7 @@
 /mob/living/carbon/proc/on_no_mouth_trait_gain(datum/source)
 	SIGNAL_HANDLER
 
-	for(var/obj/item/bodypart/head/head in bodyparts)
+	for(var/obj/item/bodypart/head/head in get_bodyparts())
 		head.mouth = FALSE
 
 /**
@@ -62,7 +62,7 @@
 /mob/living/carbon/proc/on_no_mouth_trait_loss(datum/source)
 	SIGNAL_HANDLER
 
-	for(var/obj/item/bodypart/head/head in bodyparts)
+	for(var/obj/item/bodypart/head/head in get_bodyparts())
 		head.mouth = TRUE
 
 

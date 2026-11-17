@@ -47,7 +47,7 @@
 
 	var/list/parts = list()
 	var/strong_limbs = 0
-	for(var/obj/item/bodypart/limb as anything in victim.bodyparts)
+	for(var/obj/item/bodypart/limb as anything in victim.get_bodyparts())
 		if(limb.body_part == HEAD || limb.body_part == CHEST)
 			continue
 		if(limb.bodypart_flags & BODYPART_UNREMOVABLE)

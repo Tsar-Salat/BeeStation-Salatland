@@ -1147,7 +1147,7 @@
 		for(var/mob/living/carbon/human/H in view(1, door_turf))
 			H.Unconscious(80)
 			H.apply_damage(18, BRUTE, BODY_ZONE_CHEST)
-			var/obj/item/bodypart/target_part = pick(H.bodyparts)
+			var/obj/item/bodypart/target_part = pick(H.get_bodyparts())
 			if(target_part && !(target_part.body_part & HEAD))
 				var/limb_removed = FALSE
 				if(target_part.dismember())

@@ -40,7 +40,7 @@ Slimecrossing Items
 		saved_part.old_part.receive_damage(saved_part.brute_dam, saved_part.burn_dam, saved_part.stamina_dam)
 		dont_chop[zone] = TRUE
 		
-	for(var/obj/item/bodypart/BP as anything in bodyparts)
+	for(var/obj/item/bodypart/BP as anything in get_bodyparts(include_stumps = TRUE))
 		if(dont_chop[BP.body_zone])
 			continue
 		BP.drop_limb(TRUE)

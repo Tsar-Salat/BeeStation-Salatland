@@ -1255,7 +1255,7 @@ SCREENTIP_ATTACK_HAND(/obj/machinery/computer/arcade/amputation, "Use")
 		if(do_after(c_user, 50, target = src))
 			to_chat(c_user, span_userdanger("Robotic arms shoot out of the machine, remove all your limbs, and suck them in!"))
 			playsound(loc, 'sound/weapons/slice.ogg', 25, 1, -1)
-			for(var/X in c_user.bodyparts)
+			for(var/X in c_user.get_bodyparts())
 				var/obj/item/bodypart/BP = X
 				if(BP.body_part != HEAD && BP.body_part != CHEST)
 					if(!(BP.bodypart_flags & BODYPART_UNREMOVABLE))

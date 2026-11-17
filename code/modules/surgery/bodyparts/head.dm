@@ -22,6 +22,7 @@
 	unarmed_damage = 3
 	bodypart_trait_source = HEAD_TRAIT
 	butcher_replacement = /obj/item/bodypart/head/skeleton/nonfunctional
+	stump_typepath = /obj/item/bodypart/head/stump
 	base_meat_amount = 0
 
 	/// Do we show the information about missing organs upon being examined? Defaults to TRUE

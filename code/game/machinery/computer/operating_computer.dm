@@ -226,25 +226,8 @@
 		))
 
 	if(!any_recommended && patient)
-		var/obj/item/part = patient.get_bodypart(deprecise_zone(target_zone))
-		var/just_drapes = FALSE
-		if(patient.has_limbs)
-			if(isnull(part))
-				data["surgeries"] += list(list(
-					"name" = "Prepare for [/datum/surgery_operation/prosthetic_replacement::name]",
-					"desc" = "Prepare the patient's chest for prosthetic limb attachment.",
-					"tool_rec" = "operate on chest",
-					"show_as_next" = TRUE,
-					"show_in_list" = FALSE,
-				))
-
-			else if(!HAS_TRAIT(part, TRAIT_READY_TO_OPERATE))
-				just_drapes = TRUE
-
-		else if(!HAS_TRAIT(patient, TRAIT_READY_TO_OPERATE))
-			just_drapes = TRUE
-
-		if(just_drapes)
+		var/atom/movable/prep_target = patient.has_limbs ? patient.get_bodypart(deprecise_zone(target_zone), include_stumps = TRUE) : patient
+		if(prep_target && !HAS_TRAIT(prep_target, TRAIT_READY_TO_OPERATE))
 			data["surgeries"] += list(list(
 				"name" = "Prepare for surgery",
 				"desc" = "Begin surgery by applying surgical drapes to the patient.",

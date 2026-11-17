@@ -213,7 +213,7 @@
 /obj/machinery/gibber/proc/get_limb_drops(mob/living/carbon/human/victim)
 	var/list/obj/item/results = list()
 	var/drop_chance = 0
-	for(var/obj/item/bodypart/limb as anything in victim.bodyparts)
+	for(var/obj/item/bodypart/limb as anything in victim.get_bodyparts())
 		for(var/obj/item/drop_type as anything in limb.butcher_drops)
 			var/amount = limb.butcher_drops[drop_type] || 1
 			drop_chance += amount * efficiency

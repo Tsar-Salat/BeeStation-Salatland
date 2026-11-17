@@ -50,7 +50,7 @@
 	if(iscarbon(the_target))
 		var/mob/living/carbon/C = the_target
 		if(C.stat >= UNCONSCIOUS)
-			for(var/X in C.bodyparts)
+			for(var/X in C.get_bodyparts())
 				var/obj/item/bodypart/BP = X
 				if(BP.body_part != HEAD && BP.body_part != CHEST)
 					if(!(BP.bodypart_flags & BODYPART_UNREMOVABLE))

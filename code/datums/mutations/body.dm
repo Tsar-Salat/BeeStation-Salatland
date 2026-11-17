@@ -430,7 +430,7 @@
 		return
 
 	// Modify both arm limbs to have claws
-	for(var/obj/item/bodypart/arm in owner.bodyparts)
+	for(var/obj/item/bodypart/arm in owner.get_bodyparts())
 		if(arm.body_zone == BODY_ZONE_L_ARM || arm.body_zone == BODY_ZONE_R_ARM)
 
 			// Apply claw damage and effects
@@ -447,7 +447,7 @@
 		return
 
 	// Restore original arm attack values
-	for(var/obj/item/bodypart/arm in owner.bodyparts)
+	for(var/obj/item/bodypart/arm in owner.get_bodyparts())
 		if((arm.body_zone == BODY_ZONE_L_ARM || arm.body_zone == BODY_ZONE_R_ARM))
 			// Only restore if the original values exist
 			if(isnum(arm.unarmed_damage))
@@ -468,7 +468,7 @@
 	..()
 
 	// Update damage values when mutation power changes
-	for(var/obj/item/bodypart/arm in owner.bodyparts)
+	for(var/obj/item/bodypart/arm in owner.get_bodyparts())
 		if((arm.body_zone == BODY_ZONE_L_ARM || arm.body_zone == BODY_ZONE_R_ARM) && isnum(arm.unarmed_damage))
 			// Reset to original values first
 			arm.unarmed_damage = initial(arm.unarmed_damage)

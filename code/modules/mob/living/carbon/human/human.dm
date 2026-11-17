@@ -160,7 +160,7 @@
 		to_chat(viewer, examine_block(span_info(id_examine)))
 
 	if(href_list["embedded_object"] && usr.canUseTopic(src, BE_CLOSE, NO_DEXTERITY))
-		var/obj/item/bodypart/L = locate(href_list["embedded_limb"]) in bodyparts
+		var/obj/item/bodypart/L = locate(href_list["embedded_limb"]) in get_bodyparts()
 		if(!L)
 			return
 		var/obj/item/I = locate(href_list["embedded_object"]) in L.embedded_objects
@@ -212,7 +212,7 @@
 				var/status = ""
 				if(getBruteLoss())
 					to_chat(human_user, "<b>Physical trauma analysis:</b>")
-					for(var/obj/item/bodypart/BP as anything in bodyparts)
+					for(var/obj/item/bodypart/BP as anything in get_bodyparts())
 						var/brutedamage = BP.brute_dam
 						if(brutedamage > 0)
 							status = "received minor physical injuries."
@@ -227,7 +227,7 @@
 							to_chat(human_user, "<span class='[span]'>[BP] appears to have [status]</span>")
 				if(getFireLoss())
 					to_chat(human_user, "<b>Analysis of skin burns:</b>")
-					for(var/obj/item/bodypart/BP as anything in bodyparts)
+					for(var/obj/item/bodypart/BP as anything in get_bodyparts())
 						var/burndamage = BP.burn_dam
 						if(burndamage > 0)
 							status = "signs of minor burns."
@@ -691,7 +691,7 @@
 		return
 
 	hud_used.healthdoll.icon_state = "healthdoll_OVERLAY"
-	for(var/obj/item/bodypart/body_part as anything in bodyparts)
+	for(var/obj/item/bodypart/body_part as anything in get_bodyparts())
 		var/icon_num = 0
 
 		if(SEND_SIGNAL(body_part, COMSIG_BODYPART_UPDATING_HEALTH_HUD, src) & COMPONENT_OVERRIDE_BODYPART_HEALTH_HUD)

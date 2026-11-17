@@ -877,7 +877,7 @@ GLOBAL_LIST_EMPTY(baton_hit_counts)
 		var/target_zone = user ? user.get_combat_bodyzone(H) : target.get_random_valid_zone()
 		var/obj/item/bodypart/affecting = H.get_bodypart(target_zone)
 		if(!affecting)
-			affecting = H.bodyparts[1]
+			affecting = H.get_bodypart()
 
 		// Check if the limb is stamina-immune
 		if(affecting && affecting.stamina_modifier == 0)

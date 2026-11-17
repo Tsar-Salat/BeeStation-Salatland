@@ -82,7 +82,7 @@
 	var/obj/item/bodypart/affecting
 	affecting = get_bodypart(check_zone(user.get_combat_bodyzone(src)))
 	if(!affecting) //missing limb? we select the first bodypart (you can never have zero, because of chest)
-		affecting = bodyparts[1]
+		affecting = get_bodypart()
 	SEND_SIGNAL(I, COMSIG_ITEM_ATTACK_ZONE, src, user, affecting)
 	send_item_attack_message(I, user, parse_zone(affecting.body_zone))
 	if (I.bleed_force)
@@ -249,7 +249,7 @@
 	if(dam_zone && attacker.client)
 		affecting = get_bodypart(ran_zone(dam_zone))
 	else
-		var/list/things_to_ruin = shuffle(bodyparts.Copy())
+		var/list/things_to_ruin = shuffle(get_bodyparts())
 		for(var/B in things_to_ruin)
 			var/obj/item/bodypart/bodypart = B
 			if(bodypart.body_zone == BODY_ZONE_HEAD || bodypart.body_zone == BODY_ZONE_CHEST)
@@ -564,7 +564,7 @@
 /mob/living/carbon/bullet_act(obj/projectile/P, def_zone, piercing_hit)
 	var/obj/item/bodypart/affecting = get_bodypart(check_zone(def_zone))
 	if(!affecting) //missing limb? we select the first bodypart (you can never have zero, because of chest)
-		affecting = bodyparts[1]
+		affecting = get_bodypart()
 	if (P.bleed_force)
 		var/armour_block = run_armor_check(affecting, BLEED, armour_penetration = P.armour_penetration, silent = TRUE)
 		var/hit_amount = (100 - armour_block) / 100

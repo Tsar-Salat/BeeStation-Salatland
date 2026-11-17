@@ -129,7 +129,7 @@
 
 		// Strength of the attack
 		var/base_arm_damage = 0
-		for(var/obj/item/bodypart/arm in carbon_owner.bodyparts)
+		for(var/obj/item/bodypart/arm in carbon_owner.get_bodyparts())
 			if(arm.body_zone == BODY_ZONE_L_ARM || arm.body_zone == BODY_ZONE_R_ARM)
 				base_arm_damage += initial(arm.unarmed_damage)
 		var/hit_strength = base_arm_damage * damage_coefficient + 2

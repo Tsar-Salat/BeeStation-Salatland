@@ -44,7 +44,7 @@
 
 				if(iscarbon(M)) //Edge case housekeeping
 					var/mob/living/carbon/C = M
-					for(var/X in C.bodyparts)
+					for(var/X in C.get_bodyparts())
 						var/obj/item/bodypart/part = X
 						if(item_to_retrieve in part.embedded_objects)
 							part.embedded_objects -= item_to_retrieve

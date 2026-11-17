@@ -2,6 +2,7 @@
 /// Mechanical equivalent of cutting skin
 /datum/surgery_operation/limb/mechanical_incision
 	name = "unscrew shell"
+	allow_stumps = TRUE
 	desc = "Unscrew the shell of a mechanical patient to access its internals. \
 		Causes \"cut skin\" surgical state."
 	implements = list(
@@ -44,6 +45,7 @@
 /// Mechanical equivalent of opening skin and clamping vessels
 /datum/surgery_operation/limb/mechanical_open
 	name = "open hatch"
+	allow_stumps = TRUE
 	desc = "Open the hatch of a mechanical patient to access its internals. \
 		Causes \"skin open\" and \"vessels clamped\" surgical states."
 	required_bodytype = BODYTYPE_ROBOTIC
@@ -79,6 +81,7 @@
 /// Mechanical equivalent of cauterizing / closing skin
 /datum/surgery_operation/limb/mechanical_close
 	name = "screw shell"
+	allow_stumps = TRUE
 	desc = "Screw the shell of a mechanical patient back into place. \
 		Clears most surgical states."
 	required_bodytype = BODYTYPE_ROBOTIC
@@ -124,6 +127,7 @@
 // Mechanical equivalent of cutting vessels and organs
 /datum/surgery_operation/limb/prepare_electronics
 	name = "prepare electronics"
+	allow_stumps = TRUE
 	desc = "Prepare the internal electronics of a mechanical patient for surgery. \
 		Causes \"organs cut\" surgical state."
 	required_bodytype = BODYTYPE_ROBOTIC
@@ -158,6 +162,7 @@
 // Mechanical equivalent of sawing bone
 /datum/surgery_operation/limb/mechanic_unwrench
 	name = "unwrench endoskeleton"
+	allow_stumps = TRUE
 	desc = "Unwrench a mechanical patient's endoskeleton to access its internals. \
 		Clears \"bone sawed\" surgical state."
 	required_bodytype = BODYTYPE_ROBOTIC
@@ -191,6 +196,7 @@
 // Mechanical equivalent of unsawing bone
 /datum/surgery_operation/limb/mechanic_wrench
 	name = "wrench endoskeleton"
+	allow_stumps = TRUE
 	desc = "Wrench a mechanical patient's endoskeleton back into place. \
 		Clears \"bone sawed\" surgical state."
 	required_bodytype = BODYTYPE_ROBOTIC

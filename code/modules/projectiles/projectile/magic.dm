@@ -122,7 +122,7 @@
 	var/list/parts = list()
 	var/obj/item/bodypart/chosen_limb
 
-	for(var/obj/item/bodypart/limb in victim.bodyparts)
+	for(var/obj/item/bodypart/limb in victim.get_bodyparts())
 		if(istype(limb, /obj/item/bodypart/leg) || istype(limb, /obj/item/bodypart/arm))
 			parts += limb
 

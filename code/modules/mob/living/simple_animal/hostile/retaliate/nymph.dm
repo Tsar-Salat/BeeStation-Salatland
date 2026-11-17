@@ -187,7 +187,7 @@
 		playsound(arrived_diona, 'sound/creatures/venus_trap_hit.ogg', 25, 1)
 		var/obj/item/bodypart/healed_limb = pick(limbs_to_heal)
 		arrived_diona.regenerate_limb(healed_limb)
-		for(var/obj/item/bodypart/body_part in arrived_diona.bodyparts)
+		for(var/obj/item/bodypart/body_part in arrived_diona.get_bodyparts())
 			if(body_part.body_zone == healed_limb)
 				body_part.brute_dam = brute_damage
 				body_part.burn_dam = fire_damage
@@ -212,7 +212,7 @@
 	var/mob/living/carbon/human/species/diona/adult = new /mob/living/carbon/human/species/diona(src.loc)
 	adult.set_species(SPECIES_DIONA)
 
-	for(var/obj/item/bodypart/body_part in adult.bodyparts) //No limbs for you, small diona.
+	for(var/obj/item/bodypart/body_part in adult.get_bodyparts()) //No limbs for you, small diona.
 		if(istype(body_part, /obj/item/bodypart/chest))
 			body_part.brute_dam = helpers.brute_damage
 			body_part.burn_dam = helpers.fire_damage

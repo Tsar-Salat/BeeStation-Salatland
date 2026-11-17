@@ -289,7 +289,7 @@
 		var/mob/living/carbon/carbon_wearer = wearer
 		if(carbon_wearer.handcuffed == bomb || carbon_wearer.legcuffed == bomb)
 			return TRUE
-		for(var/obj/item/bodypart/bodypart as anything in carbon_wearer.bodyparts)
+		for(var/obj/item/bodypart/bodypart as anything in carbon_wearer.get_bodyparts())
 			if(bomb in bodypart.embedded_objects)
 				return TRUE
 	return wearer.get_item_by_slot(ITEM_SLOT_HEAD) == bomb

@@ -24,7 +24,7 @@
 		return NONE
 
 	var/mob/living/target_mob = target
-	var/obj/item/bodypart/precise_part = target_mob.get_bodypart(user.get_combat_bodyzone(target_mob)) || target_mob.get_bodypart(BODY_ZONE_CHEST)
+	var/obj/item/bodypart/precise_part = target_mob.get_bodypart(user.get_combat_bodyzone(target_mob), include_stumps = TRUE) || target_mob.get_bodypart(BODY_ZONE_CHEST)
 	surgery_prep(target_mob, user, precise_part?.body_zone || BODY_ZONE_CHEST, aid_name)
 	return ITEM_INTERACT_SUCCESS
 
@@ -116,7 +116,7 @@
 /datum/status_effect/surgery_prepped/proc/track_surgery(body_zone)
 	LAZYADD(zones, body_zone)
 	if(iscarbon(owner))
-		var/obj/item/bodypart/precise_part = owner.get_bodypart(body_zone)
+		var/obj/item/bodypart/precise_part = owner.get_bodypart(body_zone, include_stumps = TRUE)
 		if(precise_part)
 			ADD_TRAIT(precise_part, TRAIT_READY_TO_OPERATE, TRAIT_STATUS_EFFECT(id))
 	else if(body_zone != BODY_ZONE_CHEST)
@@ -125,7 +125,7 @@
 /datum/status_effect/surgery_prepped/proc/untrack_surgery(body_zone)
 	LAZYREMOVE(zones, body_zone)
 	if(iscarbon(owner))
-		var/obj/item/bodypart/precise_part = owner.get_bodypart(body_zone)
+		var/obj/item/bodypart/precise_part = owner.get_bodypart(body_zone, include_stumps = TRUE)
 		if(precise_part)
 			REMOVE_TRAIT(precise_part, TRAIT_READY_TO_OPERATE, TRAIT_STATUS_EFFECT(id))
 	if(!LAZYLEN(zones) && !QDELETED(src))

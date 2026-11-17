@@ -12,7 +12,7 @@
 	dummy.maxHealth = 200 // tank mode
 	// Force normalized stam_damage_coeff for testing - Bee uses limb coefficients (0.7 on limbs)
 	// which causes getStaminaLoss() to report less than was applied. Set to 1 for consistency
-	for(var/obj/item/bodypart/BP as anything in dummy.bodyparts)
+	for(var/obj/item/bodypart/BP as anything in dummy.get_bodyparts())
 		BP.stam_damage_coeff = 1
 
 	/* The sanity tests: here we make sure that:
@@ -349,7 +349,7 @@
 	// Transform back to human
 	dummy.set_species(/datum/species/human)
 	// normalize stam_damage_coeff after bodypart regeneration
-	for(var/obj/item/bodypart/BP as anything in dummy.bodyparts)
+	for(var/obj/item/bodypart/BP as anything in dummy.get_bodyparts())
 		BP.stam_damage_coeff = 1
 
 	// We have 2 damage presently.

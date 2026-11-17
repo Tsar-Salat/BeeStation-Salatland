@@ -307,7 +307,7 @@
 	if(do_after(user, torture_time, target))
 		held_item?.play_tool_sound(target)
 
-		var/obj/item/bodypart/selected_bodypart = pick(target.bodyparts)
+		var/obj/item/bodypart/selected_bodypart = pick(target.get_bodyparts())
 		target.visible_message(
 			span_danger("[user] performs a ritual, spilling some of [target]'s blood from [target.p_their()] [selected_bodypart.name]!"),
 			span_userdanger("[user] performs a ritual, spilling some blood from your [selected_bodypart.name]!"))

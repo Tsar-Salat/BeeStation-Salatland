@@ -2,6 +2,7 @@
 /// First step of every surgery, makes an incision in the skin
 /datum/surgery_operation/limb/incise_skin
 	name = "make skin incision"
+	allow_stumps = TRUE
 	// rnd_name = "Laparotomy / Craniotomy / Myotomy (Make Incision)" // Maybe we keep this one simple
 	desc = "Make an incision in the patient's skin to access internal organs. \
 		Causes \"cut skin\" surgical state."
@@ -99,6 +100,7 @@
 /// Pulls the skin back to access internals
 /datum/surgery_operation/limb/retract_skin
 	name = "retract skin"
+	allow_stumps = TRUE
 	desc = "Retract the patient's skin to access their internal organs. \
 		Causes \"skin open\" surgical state."
 	operation_flags = OPERATION_NO_PATIENT_REQUIRED
@@ -147,6 +149,7 @@
 /// Closes the skin
 /datum/surgery_operation/limb/close_skin
 	name = "mend skin incision"
+	allow_stumps = TRUE
 	desc = "Mend the incision in the patient's skin, closing it up. \
 		Clears most surgical states."
 	required_bodytype = ~BODYTYPE_ROBOTIC
@@ -210,6 +213,7 @@
 /// Clamps bleeding blood vessels to prevent blood loss
 /datum/surgery_operation/limb/clamp_bleeders
 	name = "clamp bleeders"
+	allow_stumps = TRUE
 	desc = "Clamp bleeding blood vessels in the patient's body to prevent blood loss. \
 		Causes \"vessels clamped\" surgical state."
 	required_bodytype = ~BODYTYPE_ROBOTIC
@@ -257,6 +261,7 @@
 /// Unclamps blood vessels to allow blood flow again
 /datum/surgery_operation/limb/unclamp_bleeders
 	name = "unclamp bleeders"
+	allow_stumps = TRUE
 	desc = "Unclamp blood vessels in the patient's body to allow blood flow again. \
 		Clears \"vessels clamped\" surgical state."
 	required_bodytype = ~BODYTYPE_ROBOTIC
@@ -303,6 +308,7 @@
 /// Saws through bones to access organs
 /datum/surgery_operation/limb/saw_bones
 	name = "saw limb bone"
+	allow_stumps = TRUE
 	desc = "Saw through the patient's bones to access their internal organs. \
 		Causes \"bone sawed\" surgical state."
 	required_bodytype = ~BODYTYPE_ROBOTIC
@@ -368,6 +374,7 @@
 /// Fixes sawed bones back together
 /datum/surgery_operation/limb/fix_bones
 	name = "fix limb bone"
+	allow_stumps = TRUE
 	desc = "Repair a patient's cut or broken bones. \
 		Clears \"bone sawed\" and \"bone drilled\" surgical states."
 	required_bodytype = ~BODYTYPE_ROBOTIC
@@ -423,6 +430,7 @@
 
 /datum/surgery_operation/limb/drill_bones
 	name = "drill limb bone"
+	allow_stumps = TRUE
 	desc = "Drill through a patient's bones. \
 		Causes \"bone drilled\" surgical state."
 	required_bodytype = ~BODYTYPE_ROBOTIC
@@ -477,6 +485,7 @@
 
 /datum/surgery_operation/limb/incise_organs
 	name = "incise organs"
+	allow_stumps = TRUE
 	desc = "Make an incision in patient's internal organ tissue to allow for manipulation or repair. \
 		Causes \"organs cut\" surgical state."
 	required_bodytype = ~BODYTYPE_ROBOTIC

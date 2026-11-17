@@ -101,7 +101,7 @@
 	if(!prob(actual_chance * percentage_unblocked))
 		return
 
-	var/obj/item/bodypart/limb = victim.get_bodypart(hit_zone) || pick(victim.bodyparts)
+	var/obj/item/bodypart/limb = victim.get_bodypart(hit_zone) || pick(victim.get_bodyparts())
 	victim.AddComponent(/datum/component/embedded,\
 		weapon,\
 		throwingdatum,\
@@ -188,7 +188,7 @@
 	if(iscarbon(target))
 		C = target
 		if(!hit_zone)
-			limb = pick(C.bodyparts)
+			limb = pick(C.get_bodyparts())
 			hit_zone = limb.body_zone
 	else if(isbodypart(target))
 		limb = target

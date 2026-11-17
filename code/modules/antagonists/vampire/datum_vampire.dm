@@ -337,13 +337,13 @@
 
 	if(ishuman(human_new_body))
 		human_new_body.dna.species.inherent_traits += TRAIT_DRINKSBLOOD
-		for(var/obj/item/bodypart/arm in human_new_body.bodyparts)
+		for(var/obj/item/bodypart/arm in human_new_body.get_bodyparts())
 			if(arm.body_zone == BODY_ZONE_L_ARM || arm.body_zone == BODY_ZONE_R_ARM)
 				arm.unarmed_damage = initial(arm.unarmed_damage) + 2
 
 	if(ishuman(human_old_body))
 		human_old_body.dna.species.inherent_traits -= TRAIT_DRINKSBLOOD
-		for(var/obj/item/bodypart/arm in human_old_body.bodyparts)
+		for(var/obj/item/bodypart/arm in human_old_body.get_bodyparts())
 			if(arm.body_zone == BODY_ZONE_L_ARM || arm.body_zone == BODY_ZONE_R_ARM)
 				arm.unarmed_damage = initial(arm.unarmed_damage)
 		human_new_body.physiology.stamina_mod *= VAMPIRE_INHERENT_STAMINA_RESIST
@@ -467,7 +467,7 @@
 	if(ishuman(user) && user.dna)
 		var/datum/species/user_species = user.dna.species
 		user_species.inherent_traits += TRAIT_DRINKSBLOOD
-		for(var/obj/item/bodypart/arm in user.bodyparts)
+		for(var/obj/item/bodypart/arm in user.get_bodyparts())
 			if(arm.body_zone == BODY_ZONE_L_ARM || arm.body_zone == BODY_ZONE_R_ARM)
 				arm.unarmed_damage += 2
 		user.physiology.stamina_mod *= VAMPIRE_INHERENT_STAMINA_RESIST // Vampires have inherent stamina resistance

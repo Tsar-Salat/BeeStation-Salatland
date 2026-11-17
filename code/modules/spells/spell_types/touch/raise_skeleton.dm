@@ -28,7 +28,7 @@
 	human_victim.spew_organ(amt = length(human_victim.internal_organs))
 
 	//we also don't want any limbs left behind, we took the bones after all
-	for(var/obj/item/bodypart/parts in human_victim.bodyparts)
+	for(var/obj/item/bodypart/parts in human_victim.get_bodyparts())
 		qdel(parts)
 
 	var/turf/skeleton_turf = get_turf(human_victim)

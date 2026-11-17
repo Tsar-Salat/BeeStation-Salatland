@@ -896,7 +896,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 
 	if(heal_flags & HEAL_LIMBS)
 		regenerate_limbs()
-		for(var/obj/item/bodypart/limb as anything in bodyparts)
+		for(var/obj/item/bodypart/limb as anything in get_bodyparts(include_stumps = TRUE))
 			limb.remove_surgical_state(ALL)
 
 	if(heal_flags & (HEAL_REFRESH_ORGANS|HEAL_ORGANS))
@@ -914,7 +914,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 
 	// clear bodypart stamina since stam_damage_coeff causes setStaminaLoss(0) to insufficient heal (coefficient-adjusted total < raw total)
 	if(heal_flags & HEAL_STAM)
-		for(var/obj/item/bodypart/BP as anything in bodyparts)
+		for(var/obj/item/bodypart/BP as anything in get_bodyparts())
 			if(BP.stamina_dam)
 				BP.heal_damage(0, 0, BP.stamina_dam, forced = TRUE)
 		update_stamina()
@@ -978,13 +978,15 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 
 	switch(new_bodypart.body_part)
 		if(LEG_LEFT, LEG_RIGHT)
-			set_num_legs(num_legs + 1)
-			if(!new_bodypart.bodypart_disabled)
-				set_usable_legs(usable_legs + 1)
+			if(!IS_STUMP(new_bodypart))
+				set_num_legs(num_legs + 1)
+				if(!new_bodypart.bodypart_disabled)
+					set_usable_legs(usable_legs + 1)
 		if(ARM_LEFT, ARM_RIGHT)
-			set_num_hands(num_hands + 1)
-			if(!new_bodypart.bodypart_disabled)
-				set_usable_hands(usable_hands + 1)
+			if(!IS_STUMP(new_bodypart))
+				set_num_hands(num_hands + 1)
+				if(!new_bodypart.bodypart_disabled)
+					set_usable_hands(usable_hands + 1)
 
 	synchronize_bodytypes()
 	synchronize_bodyshapes()
@@ -1005,13 +1007,24 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 
 	switch(old_bodypart.body_part)
 		if(LEG_LEFT, LEG_RIGHT)
-			set_num_legs(num_legs - 1)
-			if(!old_bodypart.bodypart_disabled)
-				set_usable_legs(usable_legs - 1)
+			if(!IS_STUMP(old_bodypart))
+				set_num_legs(num_legs - 1)
+				if(!old_bodypart.bodypart_disabled)
+					set_usable_legs(usable_legs - 1)
 		if(ARM_LEFT, ARM_RIGHT)
-			set_num_hands(num_hands - 1)
-			if(!old_bodypart.bodypart_disabled)
-				set_usable_hands(usable_hands - 1)
+			if(!IS_STUMP(old_bodypart))
+				set_num_hands(num_hands - 1)
+				if(!old_bodypart.bodypart_disabled)
+					set_usable_hands(usable_hands - 1)
+
+	if(!special && old_bodypart.stump_typepath)
+		var/obj/item/bodypart/stump = new old_bodypart.stump_typepath()
+		stump.bodyshape = old_bodypart.bodyshape
+		stump.bodytype = old_bodypart.bodytype
+		stump.add_biostate(old_bodypart.biological_state & ~BIO_JOINTED)
+		if(!stump.try_attach_limb(src, special = TRUE))
+			// the only way this can happen is if the stump is rejected via signal
+			qdel(stump)
 
 	synchronize_bodytypes()
 	synchronize_bodyshapes()
@@ -1212,7 +1225,7 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 		return TRUE
 
 /mob/living/carbon/can_resist()
-	return bodyparts.len > 2 && ..()
+	return length(get_bodyparts()) > 2 && ..()
 
 /mob/living/carbon/proc/hypnosis_vulnerable()
 	if(HAS_TRAIT(src, TRAIT_MINDSHIELD))
@@ -1321,14 +1334,14 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 	return gloves?.siemens_coefficient == 0
 
 /mob/living/carbon/proc/add_unarmed_damage_to_arms(amount)
-	for(var/obj/item/bodypart/arm in bodyparts)
+	for(var/obj/item/bodypart/arm in get_bodyparts())
 		if(arm.body_zone == BODY_ZONE_L_ARM || arm.body_zone == BODY_ZONE_R_ARM)
 			if(isnum(arm.unarmed_damage))
 				arm.unarmed_damage += amount
 
 /mob/living/carbon/proc/get_unarmed_damage()
 	var/total_damage = 0
-	for(var/obj/item/bodypart/arm in bodyparts)
+	for(var/obj/item/bodypart/arm in get_bodyparts())
 		if(arm.body_zone == BODY_ZONE_L_ARM || arm.body_zone == BODY_ZONE_R_ARM)
 			if(isnum(arm.unarmed_damage))
 				total_damage += arm.unarmed_damage

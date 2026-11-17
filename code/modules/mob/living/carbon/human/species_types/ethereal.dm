@@ -55,7 +55,7 @@
 	var/obj/item/organ/heart/ethereal/core = new_ethereal.get_organ_slot(ORGAN_SLOT_HEART)
 	core?.sync_color(new_ethereal)
 
-	for(var/obj/item/bodypart/limb as anything in new_ethereal.bodyparts)
+	for(var/obj/item/bodypart/limb as anything in new_ethereal.get_bodyparts())
 		if(limb.limb_id == SPECIES_ETHEREAL)
 			limb.update_limb(is_creating = TRUE)
 

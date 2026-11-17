@@ -291,7 +291,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/hostile/heretic_summon/a
 		if(HAS_TRAIT(carbon_target, TRAIT_NODISMEMBER))
 			return
 		var/list/parts_to_remove = list()
-		for(var/obj/item/bodypart/bodypart in carbon_target.bodyparts)
+		for(var/obj/item/bodypart/bodypart in carbon_target.get_bodyparts())
 			if(bodypart.body_part != HEAD && bodypart.body_part != CHEST && bodypart.body_part != LEG_LEFT && bodypart.body_part != LEG_RIGHT)
 				if(!(bodypart.bodypart_flags & BODYPART_UNREMOVABLE))
 					parts_to_remove += bodypart

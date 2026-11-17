@@ -290,7 +290,7 @@
 /datum/species/ipc/proc/apply_chassis(mob/living/carbon/C)
 	var/datum/sprite_accessory/ipc_chassis/chassis_of_choice = GLOB.ipc_chassis_list[C.dna.features["ipc_chassis"]] || GLOB.ipc_chassis_list[/datum/sprite_accessory/ipc_chassis/mcgreyscale::name]
 
-	for(var/obj/item/bodypart/BP as anything in C.bodyparts)
+	for(var/obj/item/bodypart/BP as anything in C.get_bodyparts())
 		if((BP.change_exempt_flags & BP_BLOCK_CHANGE_SPECIES) || (BP.bodypart_flags & BODYPART_IMPLANTED))
 			continue
 		BP.name = "\improper[chassis_of_choice.name] [parse_zone(BP.body_zone)]"

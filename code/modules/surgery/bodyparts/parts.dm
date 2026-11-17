@@ -217,6 +217,7 @@
 	px_y = 0
 	bodypart_trait_source = LEFT_ARM_TRAIT
 	butcher_replacement = /obj/item/bodypart/arm/left/skeleton/nonfunctional
+	stump_typepath = /obj/item/bodypart/arm/left/stump
 
 /obj/item/bodypart/arm/left/apply_ownership(mob/living/carbon/new_owner)
 	if(HAS_TRAIT(new_owner, TRAIT_PARALYSIS_L_ARM))
@@ -296,6 +297,7 @@
 	px_y = 0
 	bodypart_trait_source = RIGHT_ARM_TRAIT
 	butcher_replacement = /obj/item/bodypart/arm/right/skeleton/nonfunctional
+	stump_typepath = /obj/item/bodypart/arm/right/stump
 
 /obj/item/bodypart/arm/right/apply_ownership(mob/living/carbon/new_owner)
 	if(HAS_TRAIT(new_owner, TRAIT_PARALYSIS_R_ARM))
@@ -407,6 +409,7 @@
 	px_y = 12
 	bodypart_trait_source = LEFT_LEG_TRAIT
 	butcher_replacement = /obj/item/bodypart/leg/left/skeleton/nonfunctional
+	stump_typepath = /obj/item/bodypart/leg/left/stump
 
 /obj/item/bodypart/leg/left/apply_ownership(mob/living/carbon/new_owner)
 	if(HAS_TRAIT(new_owner, TRAIT_PARALYSIS_L_LEG))
@@ -483,6 +486,7 @@
 	px_y = 12
 	bodypart_trait_source = RIGHT_LEG_TRAIT
 	butcher_replacement = /obj/item/bodypart/leg/right/skeleton/nonfunctional
+	stump_typepath = /obj/item/bodypart/leg/right/stump
 
 /obj/item/bodypart/leg/right/apply_ownership(mob/living/carbon/new_owner)
 	if(HAS_TRAIT(new_owner, TRAIT_PARALYSIS_R_LEG))

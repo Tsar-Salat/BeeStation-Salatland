@@ -95,7 +95,7 @@
 	if(. && ishuman(target))
 		var/mob/living/carbon/human/H = target
 		if(isdiona(H))
-			var/obj/item/bodypart/NB = pick(H.bodyparts)
+			var/obj/item/bodypart/NB = pick(H.get_bodyparts())
 			H.visible_message(span_warning("[src] takes a big chomp out of [H]!"), \
 									span_userdanger("[src] takes a big chomp out of your [NB]!"))
 			NB.dismember()

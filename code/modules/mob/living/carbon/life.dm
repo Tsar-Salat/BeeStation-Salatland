@@ -287,7 +287,7 @@
 	var/force_heal = 0
 	//Find how many bodyparts we have with stamina damage
 	if(stam_regen)
-		for(var/obj/item/bodypart/BP as anything in bodyparts)
+		for(var/obj/item/bodypart/BP as anything in get_bodyparts())
 			if(BP.stamina_dam >= DAMAGE_PRECISION)
 				bodyparts_with_stam++
 				total_stamina_loss += BP.stamina_dam * BP.stam_damage_coeff
@@ -299,7 +299,7 @@
 	//How well fed we are scales natural recovery. Never touch forced stamcrit however
 	var/nutrition_coeff = bodyparts_with_stam ? get_stamina_nutrition_coeff() : 1
 	//Heal bodypart stamina damage
-	for(var/obj/item/bodypart/BP as anything in bodyparts)
+	for(var/obj/item/bodypart/BP as anything in get_bodyparts(include_stumps = TRUE))
 		if(BP.needs_processing)
 			. |= BP.on_life(delta_time, times_fired, stam_regen = (force_heal + ((stam_regen * stam_heal * stam_heal_multiplier * nutrition_coeff) / max(bodyparts_with_stam, 1))))
 

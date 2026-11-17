@@ -456,7 +456,7 @@
 	if(. & EMP_PROTECT_CONTENTS)
 		return
 	var/informed = FALSE
-	for(var/obj/item/bodypart/bodypart in src.bodyparts)
+	for(var/obj/item/bodypart/bodypart in get_bodyparts())
 		if(!IS_ORGANIC_LIMB(bodypart))
 			if(!informed)
 				to_chat(src, span_userdanger("You feel a sharp pain as [bodypart] overloads!"))

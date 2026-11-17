@@ -561,7 +561,7 @@ DEFINE_BUFFER_HANDLER(/mob/living/simple_animal/bot/medbot)
 		return FALSE	//welp too late for them!
 
 	var/can_inject = FALSE
-	for(var/X in C.bodyparts)
+	for(var/X in C.get_bodyparts())
 		var/obj/item/bodypart/part = X
 		if(IS_ORGANIC_LIMB(part))
 			can_inject = TRUE

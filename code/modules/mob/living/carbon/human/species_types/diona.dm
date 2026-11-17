@@ -225,7 +225,7 @@
 
 	var/list/mob/living/simple_animal/hostile/retaliate/nymph/alive_nymphs = list()
 	var/mob/living/simple_animal/hostile/retaliate/nymph/nymph = new(H.loc) //Spawn the player nymph, including this one, should be six total nymphs
-	for(var/obj/item/bodypart/limb as anything in H.bodyparts)
+	for(var/obj/item/bodypart/limb as anything in H.get_bodyparts())
 		if(limb.limb_id != SPECIES_DIONA) //Robot limb? Ignore it.
 			limb.drop_limb()
 			continue
