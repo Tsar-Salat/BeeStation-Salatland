@@ -196,6 +196,23 @@
 	data["patient"]["blood_level"] = patient.blood_volume
 	data["patient"]["standard_blood_level"] = BLOOD_VOLUME_NORMAL
 	data["patient"]["surgery_state"] = patient.get_surgery_state_as_list(deprecise_zone(target_zone))
+
+	var/list/next_operations = list()
+	if(is_operational)
+		for(var/datum/surgery_operation/operation as anything in GLOB.operations.get_instances_from(GLOB.operations.unlocked | advanced_surgeries))
+			if(operation.show_as_next_step(patient, target_zone))
+				next_operations += operation.rnd_name || operation.name
+
+		if(!length(next_operations))
+			var/atom/movable/prep_target = patient.has_limbs ? patient.get_bodypart(deprecise_zone(target_zone), include_stumps = TRUE) : patient
+			if(prep_target && !HAS_TRAIT(prep_target, TRAIT_READY_TO_OPERATE))
+				data["patient"]["prep_operation"] = list(
+					"name" = "Prepare for surgery",
+					"desc" = "Begin surgery by applying surgical drapes to the patient.",
+					"tool_rec" = /obj/item/surgical_drapes::name,
+					"show_in_list" = FALSE,
+				)
+	data["patient"]["next_operations"] = next_operations
 	return data
 
 /obj/machinery/computer/operating/ui_static_data(mob/user)
@@ -205,36 +222,16 @@
 	if(!is_operational)
 		return data
 
-	var/mob/living/patient = get_patient()
-	var/list/operations = GLOB.operations.get_instances_from(GLOB.operations.unlocked | advanced_surgeries)
-	var/any_recommended = FALSE
-	for(var/datum/surgery_operation/operation as anything in operations)
-		var/recommend = FALSE
-		if(patient && operation.show_as_next_step(patient, target_zone))
-			recommend = TRUE
-			any_recommended = TRUE
-
+	for(var/datum/surgery_operation/operation as anything in GLOB.operations.get_instances_from(GLOB.operations.unlocked | advanced_surgeries))
 		data["surgeries"] += list(list(
 			"name" = operation.rnd_name || operation.name,
 			"desc" = operation.rnd_desc || operation.desc,
 			"tool_rec" = operation.get_recommended_tool() || "error",
 			"requirements" = operation.get_requirements(),
-			"show_as_next" = recommend,
 			"show_in_list" = TRUE,
 			"priority" = operation.operation_flags & OPERATION_PRIORITY_NEXT_STEP,
 			"mechanic" = operation.operation_flags & OPERATION_MECHANIC,
 		))
-
-	if(!any_recommended && patient)
-		var/atom/movable/prep_target = patient.has_limbs ? patient.get_bodypart(deprecise_zone(target_zone), include_stumps = TRUE) : patient
-		if(prep_target && !HAS_TRAIT(prep_target, TRAIT_READY_TO_OPERATE))
-			data["surgeries"] += list(list(
-				"name" = "Prepare for surgery",
-				"desc" = "Begin surgery by applying surgical drapes to the patient.",
-				"tool_rec" = /obj/item/surgical_drapes::name,
-				"show_as_next" = TRUE,
-				"show_in_list" = FALSE,
-			))
 
 	return data
 
@@ -248,7 +245,6 @@
 				target_zone = params["new_zone"]
 				var/atom/movable/screen/zone_sel/selector = ui.user.hud_used?.zone_select
 				selector?.set_selected_zone(params["new_zone"], ui.user)
-			update_static_data_for_all_viewers()
 			return TRUE
 
 /obj/machinery/computer/operating/proc/on_techweb_research(datum/source, datum/design/surgery/design)

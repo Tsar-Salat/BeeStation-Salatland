@@ -660,7 +660,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 		))
 		REMOVE_TRAIT(patient, TRAIT_NO_BLEEDING, TABLE_TRAIT)
 	patient = new_patient
-	computer?.update_static_data_for_all_viewers()
+	computer?.ui_update()
 	if(patient)
 		RegisterSignal(patient, COMSIG_QDELETING, PROC_REF(patient_deleted))
 		RegisterSignal(patient, COMSIG_LIVING_RESTING_UPDATED, PROC_REF(check_bleed_trait))
@@ -675,7 +675,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 
 /obj/structure/table/optable/proc/on_surgery_change(datum/source)
 	SIGNAL_HANDLER
-	computer?.update_static_data_batched()
+	computer?.ui_update()
 
 /obj/structure/table/optable/proc/get_surgeries(datum/source, mob/living/surgeon, list/operations)
 	SIGNAL_HANDLER

@@ -65,6 +65,7 @@ export const PatientStateView = (props: PatientStateViewProps) => {
         </Stack.Item>
         <Stack.Item grow>
           <PatientStateNextOperationsView
+            patient={patient}
             pinnedOperations={pinnedOperations}
             setPinnedOperations={setPinnedOperations}
             setTab={setTab}
@@ -170,6 +171,7 @@ const PatientStateSurgeryStateView = (
 };
 
 type PatientStateNextOperationsViewProps = {
+  patient: PatientData;
   pinnedOperations: string[];
   setPinnedOperations: (text: string[]) => void;
   setTab: (tab: number) => void;
@@ -181,12 +183,20 @@ const PatientStateNextOperationsView = (
 ) => {
   const { data } = useBackend<OperatingComputerData>();
   const { surgeries } = data;
-  const { pinnedOperations, setPinnedOperations, setTab, setSearchText } =
-    props;
+  const {
+    patient,
+    pinnedOperations,
+    setPinnedOperations,
+    setTab,
+    setSearchText,
+  } = props;
 
-  const possible_next_operations = surgeries.filter(
-    (operation) => operation.show_as_next,
+  const possible_next_operations = surgeries.filter((operation) =>
+    patient.next_operations.includes(operation.name),
   );
+  if (patient.prep_operation) {
+    possible_next_operations.push(patient.prep_operation);
+  }
 
   const allTools = ['all tools'].concat(
     possible_next_operations

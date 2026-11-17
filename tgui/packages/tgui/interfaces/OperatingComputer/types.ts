@@ -25,6 +25,8 @@ export type PatientData = {
   standard_blood_level: number;
   target_zone: BodyZone;
   surgery_state: string[];
+  next_operations: string[];
+  prep_operation?: OperationData;
 };
 
 export type OperationData = {
@@ -34,8 +36,6 @@ export type OperationData = {
   priority?: BooleanLike;
   mechanic?: BooleanLike;
   requirements?: string[][];
-  // show operation as a recommended next step
-  show_as_next: BooleanLike;
   // show operation in the full list
   show_in_list: BooleanLike;
 };
