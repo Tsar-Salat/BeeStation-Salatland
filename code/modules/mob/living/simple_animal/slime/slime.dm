@@ -360,11 +360,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/slime)
 
 			discipline_slime(M)
 	else
-		if(stat == DEAD && surgeries.len)
-			if(!M.combat_mode || LAZYACCESS(modifiers, RIGHT_CLICK))
-				for(var/datum/surgery/operations as anything in surgeries)
-					if(operations.next_step(M, modifiers))
-						return TRUE
 		if(..()) //successful attack
 			attacked += 10
 
@@ -375,11 +370,6 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/slime)
 
 
 /mob/living/simple_animal/slime/attackby(obj/item/W, mob/living/user, list/modifiers)
-	if(stat == DEAD && surgeries.len)
-		if(!user.combat_mode || (LAZYACCESS(modifiers, RIGHT_CLICK)))
-			for(var/datum/surgery/operations as anything in surgeries)
-				if(operations.next_step(user, modifiers))
-					return 1
 	if(istype(W, /obj/item/stack/sheet/mineral/plasma) && !stat) //Let's you feed slimes plasma.
 		add_friendship(user, 1)
 		to_chat(user, span_notice("You feed the slime the plasma. It chirps happily."))
@@ -540,10 +530,10 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/slime/random)
 /mob/living/simple_animal/slime/random/Initialize(mapload, new_colour, new_is_adult)
 	. = ..(mapload, pick(slime_colours), prob(50))
 
-/mob/living/simple_animal/slime/apply_damage(damage = 0,damagetype = BRUTE, def_zone = null, blocked = FALSE, forced = FALSE, spread_damage = FALSE)
+/mob/living/simple_animal/slime/apply_damage(damage = 0, damagetype = BRUTE, def_zone = null, blocked = FALSE, forced = FALSE, spread_damage = FALSE, sharpness = NONE, attack_direction = null, attacking_item)
 	if(damage && damagetype == BRUTE && !forced && (transformeffects & SLIME_EFFECT_ADAMANTINE))
 		blocked += 50
-	. = ..(damage, damagetype, def_zone, blocked, forced, spread_damage)
+	. = ..(damage, damagetype, def_zone, blocked, forced, spread_damage, sharpness, attack_direction, attacking_item)
 
 /mob/living/simple_animal/slime/get_discovery_id()
 	return "[colour] slime"

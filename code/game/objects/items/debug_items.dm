@@ -73,7 +73,7 @@
 
 /obj/item/debug/omnitool/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/surgery_initiator)
+	AddElement(/datum/element/surgery_aid, "omnitool")
 
 	if(!abstract_tools)
 		abstract_tools = list()
@@ -338,7 +338,6 @@
 		TRAIT_MEDICAL_HUD,
 		TRAIT_SECURITY_HUD,
 		TRAIT_BARMASTER,
-		TRAIT_SURGEON,
 		TRAIT_METALANGUAGE_KEY_ALLOWED,
 		TRAIT_SPACEWALK,
 		TRAIT_MEDICAL_HUD,

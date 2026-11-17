@@ -603,10 +603,8 @@
 
 /datum/reagent/consumable/honey/expose_mob(mob/living/exposed_mob, method = TOUCH, reac_volume)
 	. = ..()
-	if(iscarbon(exposed_mob) && (method in list(TOUCH, VAPOR, PATCH)))
-		var/mob/living/carbon/exposed_carbon = exposed_mob
-		for(var/datum/surgery/surgery as anything in exposed_carbon.surgeries)
-			surgery.speed_modifier = max(0.6, surgery.speed_modifier) // +60% surgery speed on each step, compared to bacchus' blessing's ~46%
+	if(method in list(TOUCH, VAPOR, PATCH))
+		exposed_mob.add_surgery_speed_mod(type, 0.6, min(reac_volume * 1 MINUTES, 5 MINUTES))
 
 /datum/reagent/consumable/mayonnaise
 	name = "Mayonnaise"

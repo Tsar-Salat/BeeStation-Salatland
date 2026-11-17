@@ -42,9 +42,6 @@
 	var/high_threshold_cleared
 	var/low_threshold_cleared
 
-	/// When set to false, this can't be used in surgeries and such
-	var/useable = TRUE
-
 	/// Food reagents if the organ is edible
 	var/list/food_reagents = list(/datum/reagent/consumable/nutriment = 5)
 	/// Foodtypes if the organ is edible
@@ -212,25 +209,20 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 	on_death(delta_time) //Kinda hate doing it like this, but I really don't want to call process directly.
 
 // Put any "can we eat this" checks for edible organs here
-/obj/item/organ/proc/pre_eat(eater, feeder)
-	if(iscarbon(eater))
-		var/mob/living/carbon/target = eater
-		for(var/S in target.surgeries)
-			var/datum/surgery/surgery = S
-			if(surgery.location == zone)
-				return FALSE
-	return TRUE
+/obj/item/organ/proc/pre_eat(mob/living/eater, mob/living/feeder)
+	if(!HAS_TRAIT(eater, TRAIT_READY_TO_OPERATE))
+		return TRUE
+	if(eater == feeder)
+		to_chat(feeder, span_warning("You feel it unwise to eat [src] while you're undergoing surgery."))
+	else
+		to_chat(feeder, span_warning("The only thing you could think of doing with [src] right now is feeding it to [eater], but that doesn't seem right."))
+	return FALSE
 
 /obj/item/organ/proc/pre_compost(user)
 	return TRUE
 
 /obj/item/organ/proc/on_eat_from(eater, feeder)
-	useable = FALSE //You bit it, no more using it
-
-/obj/item/organ/proc/check_for_surgery(mob/living/carbon/human/H)
-	for(var/datum/surgery/S in H.surgeries)
-		return TRUE			//no snacks mid surgery
-	return FALSE
+	organ_flags |= ORGAN_UNUSABLE
 
 /obj/item/organ/item_action_slot_check(slot,mob/user)
 	return //so we don't grant the organ's action to mobs who pick up the organ.

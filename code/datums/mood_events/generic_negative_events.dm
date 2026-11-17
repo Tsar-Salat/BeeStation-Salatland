@@ -241,3 +241,18 @@
 	description = "My tail is back, but that was traumatic..."
 	mood_change = -2
 	timeout = 5 MINUTES
+
+/datum/mood_event/surgery
+	description = span_boldwarning("THEY'RE CUTTING ME OPEN!!")
+	mood_change = -8
+	var/surgery_completed = FALSE
+
+/datum/mood_event/surgery/success
+	description = span_warning("That surgery really hurt... Glad it worked, I guess...")
+	timeout = 3 MINUTES
+	surgery_completed = TRUE
+
+/datum/mood_event/surgery/failure
+	description = span_boldwarning("AHHHHHGH! THEY FILLETED ME ALIVE!")
+	timeout = 10 MINUTES
+	surgery_completed = TRUE

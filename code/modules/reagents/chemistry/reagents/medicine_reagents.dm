@@ -401,13 +401,9 @@
 			if(show_message)
 				to_chat(exposed_mob, span_warning("Your stomach feels empty and cramps!"))
 		else
-			var/mob/living/carbon/exposed_carbon = exposed_mob
-			for(var/datum/surgery/surgery as anything in exposed_carbon.surgeries)
-				surgery.speed_modifier = max(0.1, surgery.speed_modifier)
-				// +10% surgery speed on each step, useful while operating in less-than-perfect conditions
-
+			exposed_mob.add_surgery_speed_mod(type, 0.9, min(reac_volume * 1 MINUTES, 5 MINUTES))
 			if(show_message)
-				to_chat(exposed_carbon, span_danger("You feel your wounds fade away to nothing!") )
+				to_chat(exposed_mob, span_danger("You feel your wounds fade away to nothing!") )
 
 /datum/reagent/medicine/mine_salve/on_mob_metabolize(mob/living/affected_mob)
 	. = ..()

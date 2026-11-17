@@ -1,4 +1,5 @@
 /obj/item/bodypart/head/ipc
+	biological_state = BIO_ROBOTIC
 	icon_static = 'icons/mob/human/species/ipc/bodyparts.dmi'
 	icon_greyscale = 'icons/mob/human/species/ipc/bodyparts.dmi'
 	icon = 'icons/mob/human/species/ipc/bodyparts.dmi'
@@ -24,6 +25,7 @@
 	bodypart_traits = list(TRAIT_NO_MOUTH)
 
 /obj/item/bodypart/chest/ipc
+	biological_state = BIO_ROBOTIC
 	icon_static = 'icons/mob/human/species/ipc/bodyparts.dmi'
 	icon_greyscale = 'icons/mob/human/species/ipc/bodyparts.dmi'
 	icon = 'icons/mob/human/species/ipc/bodyparts.dmi'
@@ -48,6 +50,7 @@
 	bodypart_flags = BODYPART_UNHUSKABLE
 
 /obj/item/bodypart/arm/left/ipc
+	biological_state = (BIO_ROBOTIC|BIO_JOINTED)
 	icon_static = 'icons/mob/human/species/ipc/bodyparts.dmi'
 	icon_greyscale = 'icons/mob/human/species/ipc/bodyparts.dmi'
 	icon = 'icons/mob/human/species/ipc/bodyparts.dmi'
@@ -71,6 +74,7 @@
 	bodypart_flags = BODYPART_UNHUSKABLE
 
 /obj/item/bodypart/arm/right/ipc
+	biological_state = (BIO_ROBOTIC|BIO_JOINTED)
 	icon_static = 'icons/mob/human/species/ipc/bodyparts.dmi'
 	icon_greyscale = 'icons/mob/human/species/ipc/bodyparts.dmi'
 	icon = 'icons/mob/human/species/ipc/bodyparts.dmi'
@@ -94,6 +98,7 @@
 	bodypart_flags = BODYPART_UNHUSKABLE
 
 /obj/item/bodypart/leg/left/ipc
+	biological_state = (BIO_ROBOTIC|BIO_JOINTED)
 	icon_static = 'icons/mob/human/species/ipc/bodyparts.dmi'
 	icon_greyscale = 'icons/mob/human/species/ipc/bodyparts.dmi'
 	icon = 'icons/mob/human/species/ipc/bodyparts.dmi'
@@ -117,6 +122,7 @@
 	bodypart_flags = BODYPART_UNHUSKABLE
 
 /obj/item/bodypart/leg/right/ipc
+	biological_state = (BIO_ROBOTIC|BIO_JOINTED)
 	icon_static = 'icons/mob/human/species/ipc/bodyparts.dmi'
 	icon_greyscale = 'icons/mob/human/species/ipc/bodyparts.dmi'
 	icon = 'icons/mob/human/species/ipc/bodyparts.dmi'

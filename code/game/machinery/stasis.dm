@@ -146,15 +146,21 @@
 	if(!can_be_occupant(L))
 		return
 	set_occupant(L)
+	RegisterSignal(L, COMSIG_LIVING_BEING_OPERATED_ON, PROC_REF(get_surgeries))
 	if(stasis_running() && check_nap_violations())
 		chill_out(L)
 	update_icon()
 
 /obj/machinery/stasis/post_unbuckle_mob(mob/living/L)
+	UnregisterSignal(L, COMSIG_LIVING_BEING_OPERATED_ON)
 	thaw_them(L)
 	if(L == occupant)
 		set_occupant(null)
 	update_icon()
+
+/obj/machinery/stasis/proc/get_surgeries(datum/source, mob/living/surgeon, list/operations)
+	SIGNAL_HANDLER
+	op_computer?.get_surgeries(source, surgeon, operations)
 
 /obj/machinery/stasis/process()
 	if(!(occupant && isliving(occupant) && check_nap_violations()))

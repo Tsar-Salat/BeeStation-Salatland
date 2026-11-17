@@ -191,20 +191,22 @@
 	return attacking_item.attack_atom(src, user, modifiers)
 
 /mob/living/item_interaction(mob/living/user, obj/item/tool, list/modifiers)
-	for(var/datum/surgery/operation as anything in surgeries)
-		if(IS_IN_INVALID_SURGICAL_POSITION(src, operation))
-			continue
-		if(!(operation.surgery_flags & SURGERY_SELF_OPERABLE) && (user == src))
-			continue
-		if(operation.next_step(user, modifiers))
-			return ITEM_INTERACT_SUCCESS
+	if(user.combat_mode)
+		return NONE
 
-	return ..()
+	if(HAS_TRAIT(src, TRAIT_READY_TO_OPERATE))
+		var/surgery_ret = user.perform_surgery(src, tool, LAZYACCESS(modifiers, RIGHT_CLICK))
+		if(surgery_ret)
+			return surgery_ret
+
+	if(src == user)
+		var/manual_cauterization = try_manual_cauterize(tool)
+		if(manual_cauterization & ITEM_INTERACT_ANY_BLOCKER)
+			return manual_cauterization
+
+	return NONE
 
 /mob/living/attackby(obj/item/attacking_item, mob/living/user, list/modifiers)
-	if(can_perform_surgery(user, modifiers))
-		return TRUE
-
 	if(..())
 		return TRUE
 	user.changeNext_move(attacking_item.attack_speed)

@@ -159,6 +159,41 @@ CREATION_TEST_IGNORE_SUBTYPES(/mob/living/simple_animal/bot/medbot)
 	. = ..()
 	if(!linked_techweb)
 		CONNECT_TO_RND_SERVER_ROUNDSTART(linked_techweb, src)
+	if(linked_techweb)
+		link_techweb(linked_techweb)
+
+/// Switches to a techweb, taking efficiency from its researched upgrades instead of the old one's
+/mob/living/simple_animal/bot/medbot/proc/link_techweb(datum/techweb/new_techweb)
+	if(linked_techweb)
+		UnregisterSignal(linked_techweb, list(COMSIG_TECHWEB_ADD_DESIGN, COMSIG_TECHWEB_REMOVE_DESIGN))
+	linked_techweb = new_techweb
+	RegisterSignal(linked_techweb, COMSIG_TECHWEB_ADD_DESIGN, PROC_REF(on_techweb_research))
+	RegisterSignal(linked_techweb, COMSIG_TECHWEB_REMOVE_DESIGN, PROC_REF(on_techweb_unresearch))
+
+	efficiency = initial(efficiency)
+	for(var/datum/design/medibot_upgrade/design in linked_techweb.get_researched_design_datums())
+		efficiency += design.additive_multiplier
+	window_name = "Automatic Medical Unit v[efficiency]"
+
+/mob/living/simple_animal/bot/medbot/proc/on_techweb_research(datum/source, datum/design/medibot_upgrade/design)
+	SIGNAL_HANDLER
+
+	if(!istype(design))
+		return
+
+	efficiency += design.additive_multiplier
+	window_name = "Automatic Medical Unit v[efficiency]"
+	INVOKE_ASYNC(src, PROC_REF(speak), "Surgical research data found! Efficiency increased to [round(efficiency * 100)]%!")
+
+/mob/living/simple_animal/bot/medbot/proc/on_techweb_unresearch(datum/source, datum/design/medibot_upgrade/design)
+	SIGNAL_HANDLER
+
+	if(!istype(design))
+		return
+
+	efficiency -= design.additive_multiplier
+	window_name = "Automatic Medical Unit v[efficiency]"
+	INVOKE_ASYNC(src, PROC_REF(speak), "Error! Efficiency decreased to [round(efficiency * 100)]%!")
 
 /mob/living/simple_animal/bot/medbot/bot_reset()
 	..()
@@ -189,7 +224,7 @@ REGISTER_BUFFER_HANDLER(/mob/living/simple_animal/bot/medbot)
 DEFINE_BUFFER_HANDLER(/mob/living/simple_animal/bot/medbot)
 	if(istype(buffer, /datum/techweb))
 		balloon_alert(user, "techweb connected")
-		linked_techweb = buffer
+		link_techweb(buffer)
 		return COMPONENT_BUFFER_RECEIVED
 	return NONE
 
@@ -207,7 +242,6 @@ DEFINE_BUFFER_HANDLER(/mob/living/simple_animal/bot/medbot)
 		data["custom_controls"]["crit_alerts"] = declare_crit
 		data["custom_controls"]["stationary_mode"] = stationary_mode
 		data["custom_controls"]["synth_epi"] = synth_epi
-		data["custom_controls"]["sync_tech"] = efficiency
 	return data
 
 // Actions received from TGUI
@@ -243,22 +277,6 @@ DEFINE_BUFFER_HANDLER(/mob/living/simple_animal/bot/medbot)
 			path = list()
 		if("synth_epi")
 			synth_epi = !synth_epi
-		if("sync_tech")
-			if(!linked_techweb)
-				to_chat(usr, span_notice("No research techweb connected."))
-				return
-			var/old_eff = efficiency
-			var/tech_boosters
-			for(var/i in linked_techweb.researched_designs)
-				var/datum/design/surgery/healing/D = SSresearch.techweb_design_by_id(i)
-				if(!istype(D))
-					continue
-				tech_boosters++
-			if(tech_boosters)
-				efficiency = 1+(0.075*tech_boosters) //increase efficiency by 7.5% for every surgery researched
-				if(old_eff < efficiency)
-					speak("Surgical research data found! Efficiency increased by [round(efficiency/old_eff*100)]%!")
-					window_name = "Automatic Medical Unit v[efficiency]"
 
 /mob/living/simple_animal/bot/medbot/item_interaction(mob/living/user, obj/item/tool, list/modifiers)
 	if(!istype(tool, /obj/item/reagent_containers))

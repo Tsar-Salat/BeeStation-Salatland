@@ -1,0 +1,50 @@
+@use 'sass:color';
+@use 'sass:meta';
+
+$deforest: hsl(150, 100%, 18%);
+
+@use '../colors' with (
+  $primary: color.scale($deforest, $lightness: 5%),
+  $fg-map-keys: (),
+  $bg-map-keys: ()
+);
+@use '../base' with (
+  $color-bg: color.scale($deforest, $lightness: -45%),
+  $color-bg-grad-spread: 0%,
+  $border-radius: 0
+);
+
+.theme-operating_computer {
+  // Atomic classes
+  @include meta.load-css('../atomic/color.scss');
+
+  // Components
+  @include meta.load-css(
+    '../components/Button.scss',
+    $with: (
+      'color-default': colors.$primary,
+      'color-selected': hsl(0, 90.3%, 32.35%),
+      'color-caution': hsl(29.5, 90.95%, 39.02%),
+      'color-danger': hsl(61.15, 100%, 30.78%)
+    )
+  );
+  @include meta.load-css(
+    '../components/ProgressBar.scss',
+    $with: ('background-color': rgba(0, 0, 0, 0.5))
+  );
+  @include meta.load-css('../components/Section.scss');
+  @include meta.load-css('../components/Tabs.scss');
+
+  // Layouts
+  @include meta.load-css('../layouts/Layout.scss');
+  @include meta.load-css('../layouts/Window.scss');
+  @include meta.load-css(
+    '../layouts/TitleBar.scss',
+    $with: ('background-color': color.scale($deforest, $lightness: -25%))
+  );
+
+  .Layout__content {
+    background-image: url('../../assets/bg-deforest.svg');
+    background-size: 90%;
+  }
+}

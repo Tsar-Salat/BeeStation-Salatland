@@ -245,7 +245,7 @@
 			if(!(noggin.head_flags & HEAD_FACIAL_HAIR))
 				to_chat(user, span_warning("There is no facial hair to shave!"))
 				return
-			if(!get_location_accessible(H, location))
+			if(!H.is_location_accessible(location))
 				to_chat(user, span_warning("The mask is in the way!"))
 				return
 			if(H.facial_hairstyle == "Shaved")
@@ -275,7 +275,7 @@
 			if(!(noggin.head_flags & HEAD_HAIR))
 				to_chat(user, span_warning("There is no hair to shave!"))
 				return
-			if(!get_location_accessible(H, location))
+			if(!H.is_location_accessible(location))
 				to_chat(user, span_warning("The headgear is in the way!"))
 				return
 			if(H.hair_style == "Bald" || H.hair_style == "Balding Hair" || H.hair_style == "Skinhead")
@@ -306,7 +306,7 @@
 	if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
 		return
 	var/new_style = input(user, "Select a hair style", "Grooming")  as null|anything in GLOB.hairstyles_list
-	if(!get_location_accessible(H, BODY_ZONE_HEAD))
+	if(!H.is_location_accessible(BODY_ZONE_HEAD))
 		to_chat(user, span_warning("The headgear is in the way!"))
 		return
 	user.visible_message(span_notice("[user] tries to change [H]'s hairstyle using [src]."), span_notice("You try to change [H]'s hairstyle using [src]."))
@@ -321,7 +321,7 @@
 	if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
 		return
 	var/new_style = input(user, "Select a facial hair style", "Grooming")  as null|anything in GLOB.facial_hairstyles_list
-	if(!get_location_accessible(H, BODY_ZONE_PRECISE_MOUTH))
+	if(!H.is_location_accessible(BODY_ZONE_PRECISE_MOUTH))
 		to_chat(user, span_warning("The mask is in the way!"))
 		return
 	user.visible_message(span_notice("[user] tries to change [H]'s facial hair style using [src]."), span_notice("You try to change [H]'s facial hair style using [src]."))

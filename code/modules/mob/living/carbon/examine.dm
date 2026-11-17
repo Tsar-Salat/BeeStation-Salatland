@@ -66,6 +66,10 @@
 			else
 				. += span_boldwarning(embed_text)
 
+		var/surgery_examine = body_part.get_surgery_examine()
+		if(surgery_examine)
+			. += surgery_examine
+
 	for(var/obj/item/bodypart/body_part as anything in disabled)
 		var/damage_text
 		if(body_part.get_damage() < body_part.max_damage) //we don't care if it's stamcritted

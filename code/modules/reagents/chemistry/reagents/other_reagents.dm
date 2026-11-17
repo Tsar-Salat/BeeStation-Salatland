@@ -1033,15 +1033,8 @@
 
 /datum/reagent/space_cleaner/sterilizine/expose_mob(mob/living/exposed_mob, method = TOUCH, reac_volume)
 	. = ..()
-	if(!iscarbon(exposed_mob))
-		return
-
-	var/mob/living/carbon/exposed_carbon = exposed_mob
-
 	if(method in list(TOUCH, VAPOR, PATCH))
-		for(var/datum/surgery/surgery as anything in exposed_carbon.surgeries)
-			surgery.speed_modifier = max(0.2, surgery.speed_modifier)
-			// +20% surgery speed on each step, useful while operating in less-than-perfect conditions
+		exposed_mob.add_surgery_speed_mod(type, 0.8, min(reac_volume * 1 MINUTES, 5 MINUTES))
 
 /datum/reagent/iron
 	name = "Iron"

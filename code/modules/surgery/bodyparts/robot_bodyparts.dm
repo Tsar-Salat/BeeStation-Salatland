@@ -11,6 +11,7 @@
 //Failure to follow this pattern will cause the hand's icons to be missing due to the way get_limb_icon() works to generate the mob's icons using the aux_zone var.
 
 /obj/item/bodypart/arm/left/robot
+	biological_state = (BIO_ROBOTIC|BIO_JOINTED)
 	name = "cyborg left arm"
 	desc = "A skeletal limb wrapped in pseudomuscles, with a low-conductivity case."
 	limb_id = BODYPART_ID_ROBOTIC
@@ -42,6 +43,7 @@
 	bodypart_flags = BODYPART_UNHUSKABLE
 
 /obj/item/bodypart/arm/right/robot
+	biological_state = (BIO_ROBOTIC|BIO_JOINTED)
 	name = "cyborg right arm"
 	desc = "A skeletal limb wrapped in pseudomuscles, with a low-conductivity case."
 	attack_verb_continuous = list("slaps", "punches")
@@ -73,6 +75,7 @@
 	bodypart_flags = BODYPART_UNHUSKABLE
 
 /obj/item/bodypart/leg/left/robot
+	biological_state = (BIO_ROBOTIC|BIO_JOINTED)
 	name = "cyborg left leg"
 	desc = "A skeletal limb wrapped in pseudomuscles, with a low-conductivity case."
 	attack_verb_continuous = list("kicks", "stomps")
@@ -104,6 +107,7 @@
 	bodypart_flags = BODYPART_UNHUSKABLE
 
 /obj/item/bodypart/leg/right/robot
+	biological_state = (BIO_ROBOTIC|BIO_JOINTED)
 	name = "cyborg right leg"
 	desc = "A skeletal limb wrapped in pseudomuscles, with a low-conductivity case."
 	attack_verb_continuous = list("kicks", "stomps")
@@ -135,6 +139,7 @@
 	bodypart_flags = BODYPART_UNHUSKABLE
 
 /obj/item/bodypart/chest/robot
+	biological_state = BIO_ROBOTIC
 	name = "cyborg torso"
 	desc = "A heavily reinforced case containing cyborg logic boards, with space for a standard power cell."
 	inhand_icon_state = "buildpipe"
@@ -242,6 +247,7 @@
 	return ..()
 
 /obj/item/bodypart/head/robot
+	biological_state = BIO_ROBOTIC
 	name = "cyborg head"
 	desc = "A standard reinforced braincase, with spine-plugged neural socket and sensor gimbals."
 	inhand_icon_state = "buildpipe"

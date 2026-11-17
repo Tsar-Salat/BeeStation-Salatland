@@ -1,5 +1,8 @@
 /obj/item/ipc_upgrade
+	abstract_type = /obj/item/ipc_upgrade
+	name = "IPC upgrade"
 	icon = 'icons/obj/ipc_upgrade.dmi'
+	icon_state = "repair_nexus"
 
 	var/datum/status_effect/ipc_upgrade/upgrade
 	var/slot

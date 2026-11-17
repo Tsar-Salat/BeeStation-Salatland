@@ -213,3 +213,6 @@
 #define COMSIG_LIVING_CULT_SACRIFICED "living_cult_sacrificed"
 	/// Return to stop the sac from occurring
 	#define STOP_SACRIFICE (1<<0)
+
+/// Sent to a mob when one of their bodypart's surgery state changes, OR sent from the basic_surgery_state holder when its surgery state changes (old_state, new_state, changed_states)
+#define COMSIG_LIVING_UPDATING_SURGERY_STATE "carbon_updating_surgery_state"

@@ -182,4 +182,9 @@ $bg-map: colors.$bg-map !default;
 .Button__content {
   display: block;
   align-self: stretch;
+
+  &--ellipsis {
+    display: flex; // Inline flex will broke ellipsis, don't change it.
+    align-items: center;
+  }
 }

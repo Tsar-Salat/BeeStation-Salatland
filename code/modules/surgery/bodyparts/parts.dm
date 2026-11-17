@@ -83,6 +83,7 @@
 	limb_id = "teratoma"
 
 /obj/item/bodypart/chest/alien
+	biological_state = BIO_STANDARD_ALIEN
 	icon = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_static = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_state = "alien_chest"
@@ -108,6 +109,7 @@
 	acceptable_bodytype = BODYTYPE_LARVA_PLACEHOLDER
 
 /obj/item/bodypart/arm
+	biological_state = BIO_STANDARD_JOINTED
 	abstract_type = /obj/item/bodypart/arm
 	name = "arm"
 	desc = "Hey buddy give me a HAND and report this to the github because you shouldn't be seeing this."
@@ -250,6 +252,7 @@
 	icon_state = "teratoma_l_arm"
 
 /obj/item/bodypart/arm/left/alien
+	biological_state = BIO_STANDARD_ALIEN
 	icon = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_static = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_state = "alien_l_arm"
@@ -347,6 +350,7 @@
 	limb_id = "teratoma"
 
 /obj/item/bodypart/arm/right/alien
+	biological_state = BIO_STANDARD_ALIEN
 	icon = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_static = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_state = "alien_r_arm"
@@ -362,6 +366,7 @@
 	appendage_noun = "scythe-like hand"
 
 /obj/item/bodypart/leg
+	biological_state = BIO_STANDARD_JOINTED
 	abstract_type = /obj/item/bodypart/leg
 	name = "leg"
 	desc = "This item shouldn't exist. Talk about breaking a leg. Badum-Tss!"
@@ -454,6 +459,7 @@
 	limb_id = "teratoma"
 
 /obj/item/bodypart/leg/left/alien
+	biological_state = BIO_STANDARD_ALIEN
 	icon = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_static = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_state = "alien_l_leg"
@@ -542,6 +548,7 @@
 	limb_id = "teratoma"
 
 /obj/item/bodypart/leg/right/alien
+	biological_state = BIO_STANDARD_ALIEN
 	icon = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_static = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_state = "alien_r_leg"

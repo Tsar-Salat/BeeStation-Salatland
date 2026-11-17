@@ -1,4 +1,5 @@
 /obj/item/bodypart/head/plasmaman
+	biological_state = BIO_BONE
 	icon = 'icons/mob/human/species/plasmaman/bodyparts.dmi'
 	icon_state = "plasmaman_head"
 	icon_static = 'icons/mob/human/species/plasmaman/bodyparts.dmi'
@@ -12,6 +13,7 @@
 	bodypart_flags = BODYPART_UNHUSKABLE
 
 /obj/item/bodypart/chest/plasmaman
+	biological_state = BIO_BONE
 	icon = 'icons/mob/human/species/plasmaman/bodyparts.dmi'
 	icon_state = "plasmaman_chest"
 	icon_static = 'icons/mob/human/species/plasmaman/bodyparts.dmi'
@@ -23,6 +25,7 @@
 	brute_modifier = 1.5
 
 /obj/item/bodypart/arm/left/plasmaman
+	biological_state = (BIO_BONE|BIO_JOINTED)
 	icon = 'icons/mob/human/species/plasmaman/bodyparts.dmi'
 	icon_state = "plasmaman_l_arm"
 	icon_static = 'icons/mob/human/species/plasmaman/bodyparts.dmi'
@@ -34,6 +37,7 @@
 	bodypart_flags = BODYPART_UNHUSKABLE
 
 /obj/item/bodypart/arm/right/plasmaman
+	biological_state = (BIO_BONE|BIO_JOINTED)
 	icon = 'icons/mob/human/species/plasmaman/bodyparts.dmi'
 	icon_state = "plasmaman_r_arm"
 	icon_static = 'icons/mob/human/species/plasmaman/bodyparts.dmi'
@@ -45,6 +49,7 @@
 	bodypart_flags = BODYPART_UNHUSKABLE
 
 /obj/item/bodypart/leg/left/plasmaman
+	biological_state = (BIO_BONE|BIO_JOINTED)
 	icon = 'icons/mob/human/species/plasmaman/bodyparts.dmi'
 	icon_state = "plasmaman_l_leg"
 	icon_static = 'icons/mob/human/species/plasmaman/bodyparts.dmi'
@@ -56,6 +61,7 @@
 	bodypart_flags = BODYPART_UNHUSKABLE
 
 /obj/item/bodypart/leg/right/plasmaman
+	biological_state = (BIO_BONE|BIO_JOINTED)
 	icon = 'icons/mob/human/species/plasmaman/bodyparts.dmi'
 	icon_state = "plasmaman_r_leg"
 	icon_static = 'icons/mob/human/species/plasmaman/bodyparts.dmi'

@@ -240,10 +240,7 @@ const ControlsDisplay = (_) => {
 const ControlHelper = (props) => {
   const { act } = useBackend<SimpleBotContext>();
   const { control } = props;
-  if (control[0] === 'sync_tech') {
-    /** Control is for sync - this is medbot specific */
-    return <MedbotSync control={control} />;
-  } else if (control[0] === 'heal_threshold') {
+  if (control[0] === 'heal_threshold') {
     /** Control is a threshold - this is medbot specific */
     return <MedbotThreshold control={control} />;
   } else if (control[0] === 'injection_amount') {
@@ -272,31 +269,6 @@ const ControlHelper = (props) => {
       />
     );
   }
-};
-
-/** Small button to sync medbots with research. */
-const MedbotSync = (props) => {
-  const { act } = useBackend<SimpleBotContext>();
-  const { control } = props;
-  const efficiency = Math.round(control[1] * 100);
-
-  return (
-    <Tooltip
-      content={
-        multiline`Synchronize surgical data with research network.
-       Currently at: ` +
-        efficiency +
-        `% efficiency.`
-      }
-    >
-      <Icon
-        color="purple"
-        name="cloud-download-alt"
-        size={2}
-        onClick={() => act('sync_tech')}
-      />
-    </Tooltip>
-  );
 };
 
 /** Slider button for medbot healing thresholds */

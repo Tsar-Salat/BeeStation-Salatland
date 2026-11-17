@@ -83,7 +83,8 @@
 	  */
 	var/incorporeal_move = FALSE
 
-	var/list/surgeries = list()	//a list of surgery datums. generally empty, they're added when the player wants them.
+	/// Lazylist of surgery speed modifiers - id to number - 2 = 2x faster, 0.5x = 0.5x slower
+	var/list/mob_surgery_speed_mods
 
 	/// Used by [living/Bump()][/mob/living/proc/Bump] and [living/PushAM()][/mob/living/proc/PushAM] to prevent potential infinite loop.
 	var/now_pushing = null

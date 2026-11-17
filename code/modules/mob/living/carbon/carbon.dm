@@ -63,14 +63,6 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 	else
 		mode() // Activate held item
 
-/mob/living/carbon/attackby(obj/item/item, mob/living/user, list/modifiers)
-	if(can_perform_surgery(user, modifiers))
-		return TRUE
-
-	//Wounds tending goes here
-
-	return ..()
-
 /mob/living/carbon/CtrlShiftClick(mob/user)
 	..()
 	if(iscarbon(user))
@@ -904,6 +896,8 @@ CREATION_TEST_IGNORE_SELF(/mob/living/carbon)
 
 	if(heal_flags & HEAL_LIMBS)
 		regenerate_limbs()
+		for(var/obj/item/bodypart/limb as anything in bodyparts)
+			limb.remove_surgical_state(ALL)
 
 	if(heal_flags & (HEAL_REFRESH_ORGANS|HEAL_ORGANS))
 		regenerate_organs()

@@ -399,12 +399,36 @@
 	RETURN_TYPE(/list)
 	SHOULD_NOT_OVERRIDE(TRUE)
 
+	return cover_flags2body_zones(get_all_covered_flags())
+
+///Returns a bitfield of all zones covered by clothing
+/mob/living/carbon/proc/get_all_covered_flags()
+	SHOULD_NOT_OVERRIDE(TRUE)
+
 	var/covered_flags = NONE
-	var/list/all_worn_items = get_equipped_items()
-	for(var/obj/item/worn_item in all_worn_items)
+	for(var/obj/item/worn_item in get_equipped_items(INCLUDE_ABSTRACT))
 		covered_flags |= worn_item.body_parts_covered
 
-	return cover_flags2body_zones(covered_flags)
+	return covered_flags
+
+/mob/living/carbon/is_location_accessible(location, exluded_equipment_slots = NONE)
+	switch(location)
+		if(BODY_ZONE_PRECISE_EYES)
+			if(is_eyes_covered(~exluded_equipment_slots) || (obscured_slots & (HIDEEYES|HIDEFACE)))
+				return FALSE
+		if(BODY_ZONE_PRECISE_MOUTH)
+			if(is_mouth_covered(~exluded_equipment_slots) || (obscured_slots & HIDEFACE))
+				return FALSE
+
+	var/covered_flags = NONE
+	for(var/obj/item/worn_item in get_equipped_items(INCLUDE_ABSTRACT))
+		if(worn_item.slot_flags & exluded_equipment_slots)
+			continue
+		covered_flags |= worn_item.body_parts_covered
+
+	// Convert the coverage to zones rather than the location to flags:
+	// CHEST converts to CHEST|GROIN, which a GROIN|LEGS covering would wrongly block
+	return !(location in cover_flags2body_zones(covered_flags))
 
 /**
  * Proc called when offering an item to another player

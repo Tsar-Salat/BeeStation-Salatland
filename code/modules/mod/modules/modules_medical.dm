@@ -189,33 +189,25 @@
 	organ = null
 	return ..()
 
+/obj/projectile/organ/Exited(atom/movable/gone, direction)
+	. = ..()
+	if(gone == organ)
+		organ = null
+
 /obj/projectile/organ/on_hit(atom/target)
 	. = ..()
-	if(!ishuman(target))
+	if(!isliving(target) || (organ.organ_flags & ORGAN_UNUSABLE))
 		organ.forceMove(drop_location())
-		organ = null
 		return
-	var/mob/living/carbon/human/organ_receiver = target
-	var/succeed = FALSE
-	if(organ_receiver.surgeries.len)
-		for(var/datum/surgery/organ_manipulation/procedure in organ_receiver.surgeries)
-			if(procedure.location != organ.zone)
-				continue
-			if(!ispath(procedure.steps[procedure.status], /datum/surgery_step/manipulate_organs))
-				continue
-			succeed = TRUE
-			break
-	if(succeed)
-		var/list/organs_to_boot_out = organ_receiver.get_organ_slot(organ.slot)
-		for(var/obj/item/organ/organ_evacced as anything in organs_to_boot_out)
-			if(organ_evacced.organ_flags & ORGAN_UNREMOVABLE)
-				continue
-			organ_evacced.Remove(target)
-			organ_evacced.forceMove(get_turf(target))
-		organ.Insert(target)
-	else
+	var/mob/living/organ_receiver = target
+	// the projectile hits a random bodypart, which would make it unusable, so assume it hits the organ's zone
+	var/obj/item/bodypart/fake_hit_part = organ_receiver.get_bodypart(deprecise_zone(organ.zone))
+	if(!LIMB_HAS_SURGERY_STATE(fake_hit_part, SURGERY_SKIN_OPEN|SURGERY_ORGANS_CUT|SURGERY_BONE_SAWED))
 		organ.forceMove(drop_location())
-	organ = null
+		return
+
+	// handles swapping any existing organ out for us
+	organ.Insert(target)
 
 /*
 ///Patrient Transport - Generates hardlight bags you can put people in.
@@ -389,17 +381,26 @@
 
 /obj/item/surgical_processor/mod/preloaded
 	loaded_surgeries = list(
-		/datum/surgery/advanced/pacify,
-		/datum/surgery/healing/combo/upgraded,
-		/datum/surgery/blood_filter/upgraded,
-		/datum/surgery/advanced/bioware/nerve_splicing,
-		/datum/surgery/advanced/bioware/nerve_grounding,
-		/datum/surgery/advanced/bioware/vein_threading,
-		/datum/surgery/advanced/bioware/muscled_veins,
-		/datum/surgery/advanced/bioware/ligament_hook,
-		/datum/surgery/advanced/bioware/ligament_reinforcement,
-		/datum/surgery/advanced/bioware/cortex_imprint,
-		/datum/surgery/advanced/bioware/cortex_folding,
+		/datum/surgery_operation/basic/tend_wounds/combo/upgraded,
+		/datum/surgery_operation/limb/filter_blood/upgraded,
+		/datum/surgery_operation/limb/bioware/cortex_folding,
+		/datum/surgery_operation/limb/bioware/cortex_folding/mechanic,
+		/datum/surgery_operation/limb/bioware/cortex_imprint,
+		/datum/surgery_operation/limb/bioware/cortex_imprint/mechanic,
+		/datum/surgery_operation/limb/bioware/ligament_hook,
+		/datum/surgery_operation/limb/bioware/ligament_hook/mechanic,
+		/datum/surgery_operation/limb/bioware/ligament_reinforcement,
+		/datum/surgery_operation/limb/bioware/ligament_reinforcement/mechanic,
+		/datum/surgery_operation/limb/bioware/muscled_veins,
+		/datum/surgery_operation/limb/bioware/muscled_veins/mechanic,
+		/datum/surgery_operation/limb/bioware/nerve_grounding,
+		/datum/surgery_operation/limb/bioware/nerve_grounding/mechanic,
+		/datum/surgery_operation/limb/bioware/nerve_splicing,
+		/datum/surgery_operation/limb/bioware/nerve_splicing/mechanic,
+		/datum/surgery_operation/limb/bioware/vein_threading,
+		/datum/surgery_operation/limb/bioware/vein_threading/mechanic,
+		/datum/surgery_operation/organ/pacify,
+		/datum/surgery_operation/organ/pacify/mechanic,
 	)
 /// Pre-Loaded Surgical Processor, mainly for ERT
 /obj/item/mod/module/surgical_processor/emergency
@@ -409,6 +410,6 @@
 
 /obj/item/surgical_processor/mod/emergency
 	loaded_surgeries = list(
-		/datum/surgery/healing/combo/upgraded,
-		/datum/surgery/blood_filter/upgraded,
+		/datum/surgery_operation/basic/tend_wounds/combo/upgraded,
+		/datum/surgery_operation/limb/filter_blood/upgraded,
 	)

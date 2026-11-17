@@ -35,12 +35,6 @@ GLOBAL_LIST(chemical_reactions_list_reactant_index)
 /// list of all /datum/reagent datums indexed by reagent id. Used by chemistry stuff
 GLOBAL_LIST(chemical_reagents_list)
 
-/// list of all surgeries by name, associated with their path.
-GLOBAL_LIST_EMPTY(surgeries_list)
-
-/// list of all surgery steps, associated by their path.
-GLOBAL_LIST_INIT(surgery_steps, init_subtypes_w_path_keys(/datum/surgery_step, list()))
-
 /// Global list of all non-cooking related crafting recipes.
 GLOBAL_LIST_EMPTY(crafting_recipes)
 /// This is a global list of typepaths, these typepaths are atoms or reagents that are associated with crafting recipes.

@@ -94,7 +94,7 @@
 	if(prob(5)) //itching
 		var/obj/item/bodypart/bodypart = host_mob.get_bodypart(host_mob.get_random_valid_zone())
 		if(!isnull(bodypart))
-			var/can_scratch = !host_mob.incapacitated && get_location_accessible(host_mob, bodypart.body_zone)
+			var/can_scratch = !host_mob.incapacitated && host_mob.is_location_accessible(bodypart.body_zone)
 
 			host_mob.visible_message("[can_scratch ? span_warning("[host_mob] scratches [host_mob.p_their()] [bodypart.name].") : ""]",\
 			span_warning("Your [bodypart.name] itches. [can_scratch ? " You scratch it." : ""]"))

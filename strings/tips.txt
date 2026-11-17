@@ -43,12 +43,15 @@ As the Chief Medical Officer, your hypospray is like a refillable instant inject
 As the Chief Medical Officer, coordinate and communicate with your doctors, chemists, and geneticists during a nuclear emergency, blob infestation, or some other crisis to keep people alive and fighting.
 As a Medical Doctor, while both heal toxin damage, the difference between charcoal and antitoxin is that charcoal will actively remove all other reagents from one's body, while antitoxin is more effective under 50 toxin damage - but can overdose.
 As a Medical Doctor, you can surgically implant or extract things from people's chests. This can range from putting in a bomb to pulling out an alien larva.
-As a Medical Doctor, you must target the correct limb and be on help intent when trying to perform surgery on someone. Using disarm attempt will intentionally fail the surgery step.
+As a Medical Doctor, apply surgical drapes to the limb you want to operate on, then use your tools on it. Right clicking with a tool will intentionally fail the operation.
 As a Medical Doctor, corpses with the "...and their soul has departed" description no longer have a ghost attached to them and aren't revivable or clonable.
-As a Medical Doctor, treating plasmamen is not impossible! Salbutamol stops them from suffocating and showers stop them from burning alive. You can even perform surgery on them by doing the procedure on a roller bed under a shower or on a stasis bed.
+As a Medical Doctor, treating Plasmamen is not impossible! Stasis machines will keep them from burning and suffocating while you perform necessary surgeries. If you don't have the luxury of one, you can use Salbutamol to prevent suffocation and keep them under a running shower to prevent fire.
 As a Medical Doctor, you can point your penlight at people to create a medical hologram. This lets them know that you're coming to treat them.
 As a Medical Doctor, you can extract implants without breaking them by holding an empty implant case in your offhand while performing the extraction step.
 As a Medical Doctor, clone scanning people will implant them with a health tracker that displays their vitals in the clone records. Useful to check on crew members that didn't activate suit sensors!
+As a Medical Doctor, operating computers contain instructions on how to complete every surgery you could dream of. If you are ever confused, use one to guide you through the process.
+As a Medical Doctor, your patient will lose blood while their blood vessels are cut open. Clamp bleeders quickly, and don't forget to cauterize them after you're finished!
+As a Medical Doctor, note that some species - such as Plasmamen or Oozelings - lack flesh or bones. This will change how you perform surgery on them, allowing you to skip steps such as making incisions or sawing bones.
 As a Chemist, there are dozens of chemicals that can heal, and even more that can cause harm. Experiment!
 As a Chemist, some chemicals can only be synthesized by heating up the contents with a chemical heater or manually with lighters and similar tools.
 As a Chemist, you will be expected to supply crew with certain chemicals. For example, clonexadone and mannitol for the cryo tubes, plastic for crafting purposes, unstable mutagen and saltpetre for botany as well as healing pills and patches for the front desk.
@@ -266,7 +269,7 @@ Remote devices will work when used through cameras. For example: Bluespace RPEDs
 You can light a cigar on a supermatter crystal.
 Walking negates all wallstuns. Walk to avoid flashes, slipping on water, etc. Walking also does not trigger motion detector flashes!
 Cloners require 90 units of synthflesh per clone. When upgraded to tier 4 parts, these cloners can clone one person much cheaper!
-You can perform self-surgery for amputation, tend wounds, implanting and others. It only has 20% success rate though per step, bumping hot to 40% if there's a mirror in the same room.
+If you've come out of a surgery and your doctor forgot to cauterize you, you can do it yourself - even with a lighter.
 Fun fact: reading this (https://beestation13.com/rules) may lead to an increase in your chances on not being banned. Seriously. Read it.
 You can whisper by putting # before your message. You can also whisper in critical, however it may kill you depending on how hurt you are.
 Fore = north, aft = south, starboard = east and port = west.

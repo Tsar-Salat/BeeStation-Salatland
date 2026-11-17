@@ -17,7 +17,7 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/effect/abstract/info)
 
 /obj/effect/abstract/info/Click()
 	. = ..()
-	to_chat(usr, info_text)
+	to_chat(usr, examine_block("[span_boldnotice(name)]<br>[span_info(info_text)]"))
 
 /obj/effect/abstract/info/MouseEntered()
 	. = ..()

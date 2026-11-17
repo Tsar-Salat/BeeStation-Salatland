@@ -144,6 +144,18 @@
 	if(!linked_techweb)
 		CONNECT_TO_RND_SERVER_ROUNDSTART(linked_techweb, src)
 
+/obj/item/organ/cyberimp/brain/linkedsurgery/on_mob_insert(mob/living/carbon/organ_owner, special, movement_flags)
+	. = ..()
+	RegisterSignal(organ_owner, COMSIG_LIVING_OPERATING_ON, PROC_REF(add_surgeries))
+
+/obj/item/organ/cyberimp/brain/linkedsurgery/on_mob_remove(mob/living/carbon/organ_owner, special, movement_flags)
+	. = ..()
+	UnregisterSignal(organ_owner, COMSIG_LIVING_OPERATING_ON)
+
+/obj/item/organ/cyberimp/brain/linkedsurgery/proc/add_surgeries(datum/source, mob/living/patient, list/operations)
+	SIGNAL_HANDLER
+	operations |= advanced_surgeries
+
 /obj/item/organ/cyberimp/brain/linkedsurgery/proc/update_surgery()
 	for(var/i in linked_techweb.researched_designs)
 		var/datum/design/surgery/D = SSresearch.techweb_design_by_id(i)

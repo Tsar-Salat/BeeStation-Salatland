@@ -30,6 +30,8 @@
 /// Return to prevent the rest of the attack chain from being executed / preventing the item user from thwacking the target.
 /// Similar to [ITEM_INTERACT_SUCCESS], but does not necessarily indicate success.
 #define ITEM_INTERACT_BLOCKING (1<<1)
+	/// Use to denote that the interaction failed, but still blocks the attack chain
+	#define ITEM_INTERACT_FAILURE ITEM_INTERACT_BLOCKING
 /// Return to skip the rest of the interaction chain, going straight to attack.
 #define ITEM_INTERACT_SKIP_TO_ATTACK (1<<2)
 

@@ -169,8 +169,8 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	//this multiplies an attacks force for secondary effects like attacking blocking implements, dismemberment, and knocking a target silly
 	var/attack_weight = 1
 
-	/// What this thing does when used like a tool. NONE if it isn't a tool. If I give a piece of paper TOOL_WRENCH I can use it to unwrench tables. See _DEFINES/tools.dm
-	var/tool_behaviour = NONE
+	/// What this thing does when used like a tool. null if it isn't a tool. If I give a piece of paper TOOL_WRENCH I can use it to unwrench tables. See _DEFINES/tools.dm
+	var/tool_behaviour = null
 	/// The tool speed multiplier of how long it takes to do the tool action.
 	VAR_PROTECTED/toolspeed = 1
 

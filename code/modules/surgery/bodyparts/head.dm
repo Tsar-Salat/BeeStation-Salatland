@@ -213,6 +213,7 @@
 	head_flags = HEAD_LIPS|HEAD_EYESPRITES|HEAD_EYECOLOR|HEAD_EYEHOLES
 
 /obj/item/bodypart/head/alien
+	biological_state = BIO_STANDARD_ALIEN
 	icon = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_static = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_state = "alien_head"

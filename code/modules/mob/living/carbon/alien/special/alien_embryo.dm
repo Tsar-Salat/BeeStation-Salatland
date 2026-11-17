@@ -71,14 +71,8 @@
 		INVOKE_ASYNC(src, PROC_REF(RefreshInfectionImage))
 
 	if(stage == 5 && prob(50))
-		for(var/datum/surgery/operations as anything in owner.surgeries)
-			if(operations.location != BODY_ZONE_CHEST)
-				continue
-			if(!ispath(operations.steps[operations.status], /datum/surgery_step/manipulate_organs/internal))
-				continue
-			attempt_grow(kill_on_success = FALSE)
-			return
-		attempt_grow()
+		// If we are mid surgery we won't kill the mob
+		attempt_grow(kill_on_success = !LIMB_HAS_SURGERY_STATE(bodypart_owner, SURGERY_SKIN_OPEN|SURGERY_BONE_SAWED))
 
 /obj/item/organ/body_egg/alien_embryo/proc/attempt_grow(kill_on_success = TRUE)
 	if(!owner || bursting)

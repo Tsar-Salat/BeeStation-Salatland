@@ -16,9 +16,9 @@
 	description = "Who would have known being more gentle with a hemostat decreases patient pain?"
 	prereq_ids = list(TECHWEB_NODE_ADV_BIOTECH)
 	design_ids = list(
+		"medibot_upgrade",
 		"surgery_filter_upgrade",
-		"surgery_heal_brute_upgrade",
-		"surgery_heal_burn_upgrade",
+		"surgery_heal_upgrade",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_1_POINTS)
 	announce_channels = list(RADIO_CHANNEL_MEDICAL)
@@ -30,12 +30,14 @@
 	description = "When simple medicine doesn't cut it."
 	prereq_ids = list(TECHWEB_NODE_IMP_WT_SURGERY)
 	design_ids = list(
+		"medibot_upgrade_two",
 		"surgery_exp_dissection",
 		"surgery_filter_upgrade_femto",
-		"surgery_heal_brute_upgrade_femto",
-		"surgery_heal_burn_upgrade_femto",
 		"surgery_heal_combo",
+		"surgery_heal_upgrade_femto",
 		"surgery_lobotomy",
+		"surgery_lobotomy_mechanic",
+		"surgery_wing_reconstruction",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_1_POINTS)
 	announce_channels = list(RADIO_CHANNEL_MEDICAL)
@@ -47,16 +49,26 @@
 	description = "When evolution isn't fast enough."
 	prereq_ids = list(TECHWEB_NODE_ADV_SURGERY)
 	design_ids = list(
+		"medibot_upgrade_three",
 		"surgery_cortex_folding",
+		"surgery_cortex_folding_mechanic",
 		"surgery_cortex_imprint",
+		"surgery_cortex_imprint_mechanic",
 		"surgery_heal_combo_upgrade",
 		"surgery_ligament_hook",
+		"surgery_ligament_hook_mechanic",
 		"surgery_ligament_reinforcement",
+		"surgery_ligament_reinforcement_mechanic",
 		"surgery_muscled_veins",
+		"surgery_muscled_veins_mechanic",
 		"surgery_nerve_ground",
+		"surgery_nerve_ground_mechanic",
 		"surgery_nerve_splice",
+		"surgery_nerve_splice_mechanic",
 		"surgery_pacify",
+		"surgery_pacify_mechanic",
 		"surgery_vein_thread",
+		"surgery_vein_thread_mechanic",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS)
 	announce_channels = list(RADIO_CHANNEL_MEDICAL)

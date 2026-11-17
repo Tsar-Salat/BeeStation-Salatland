@@ -50,11 +50,6 @@
 		reagents.trans_to(consumer, reagents.total_volume, transfered_by = giver, method = INGEST)
 	qdel(src)
 
-/obj/item/reagent_containers/applicator/pill/canconsume(mob/eater, mob/user)
-	if(/datum/surgery/dental_implant in astype(eater, /mob/living/carbon)?.surgeries)
-		return FALSE
-	return ..()
-
 /*
  * On accidental consumption, consume the pill
  */

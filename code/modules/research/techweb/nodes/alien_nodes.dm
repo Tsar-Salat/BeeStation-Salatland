@@ -113,7 +113,9 @@ ABDUCTOR_SUBTYPE_UNLOCKS(/datum/techweb_node/alien_engi)
 	description = "Anything from brainwashing to reviving the dead. Alien technology."
 	prereq_ids = list(TECHWEB_NODE_ALIENTECH, TECHWEB_NODE_EXP_SURGERY)
 	design_ids = list(
+		"medibot_upgrade_four",
 		"surgery_brainwashing",
+		"surgery_brainwashing_mechanic",
 		"surgery_heal_combo_upgrade_femto",
 		"surgery_zombie",
 	)

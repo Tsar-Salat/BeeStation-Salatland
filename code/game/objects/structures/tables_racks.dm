@@ -646,15 +646,40 @@ CREATION_TEST_IGNORE_SUBTYPES(/obj/structure/table)
 	set_patient(M)
 
 /obj/structure/table/optable/proc/set_patient(new_patient)
+	if(new_patient == patient)
+		return
 	if(patient)
-		UnregisterSignal(patient, COMSIG_QDELETING)
-		UnregisterSignal(patient, COMSIG_LIVING_RESTING_UPDATED)
+		UnregisterSignal(patient, list(
+			COMSIG_QDELETING,
+			COMSIG_LIVING_RESTING_UPDATED,
+			COMSIG_LIVING_BEING_OPERATED_ON,
+			SIGNAL_ADDTRAIT(TRAIT_READY_TO_OPERATE),
+			SIGNAL_REMOVETRAIT(TRAIT_READY_TO_OPERATE),
+			COMSIG_LIVING_SURGERY_FINISHED,
+			COMSIG_LIVING_UPDATING_SURGERY_STATE,
+		))
 		REMOVE_TRAIT(patient, TRAIT_NO_BLEEDING, TABLE_TRAIT)
 	patient = new_patient
+	computer?.update_static_data_for_all_viewers()
 	if(patient)
 		RegisterSignal(patient, COMSIG_QDELETING, PROC_REF(patient_deleted))
 		RegisterSignal(patient, COMSIG_LIVING_RESTING_UPDATED, PROC_REF(check_bleed_trait))
+		RegisterSignal(patient, COMSIG_LIVING_BEING_OPERATED_ON, PROC_REF(get_surgeries))
+		RegisterSignals(patient, list(
+			SIGNAL_ADDTRAIT(TRAIT_READY_TO_OPERATE),
+			SIGNAL_REMOVETRAIT(TRAIT_READY_TO_OPERATE),
+			COMSIG_LIVING_SURGERY_FINISHED,
+			COMSIG_LIVING_UPDATING_SURGERY_STATE,
+		), PROC_REF(on_surgery_change))
 		check_bleed_trait()
+
+/obj/structure/table/optable/proc/on_surgery_change(datum/source)
+	SIGNAL_HANDLER
+	computer?.update_static_data_batched()
+
+/obj/structure/table/optable/proc/get_surgeries(datum/source, mob/living/surgeon, list/operations)
+	SIGNAL_HANDLER
+	computer?.get_surgeries(source, surgeon, operations)
 
 /obj/structure/table/optable/proc/check_bleed_trait()
 	SIGNAL_HANDLER

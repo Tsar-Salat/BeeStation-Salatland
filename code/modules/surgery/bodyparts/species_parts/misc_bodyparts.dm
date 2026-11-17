@@ -1,17 +1,20 @@
 ///SNAIL
 /obj/item/bodypart/head/snail
+	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_SNAIL
 	is_dimorphic = FALSE
 	head_flags = HEAD_EYESPRITES|HEAD_DEBRAIN
 	burn_modifier = 1.5
 
 /obj/item/bodypart/chest/snail
+	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_SNAIL
 	is_dimorphic = FALSE
 	burn_modifier = 1.5
 	bodypart_traits = list(TRAIT_NO_UNDERWEAR)
 
 /obj/item/bodypart/arm/left/snail
+	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_SNAIL
 	unarmed_attack_verb = "slap"
 	unarmed_attack_effect = ATTACK_EFFECT_DISARM
@@ -19,6 +22,7 @@
 	burn_modifier = 1.5
 
 /obj/item/bodypart/arm/right/snail
+	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_SNAIL
 	unarmed_attack_verb = "slap"
 	unarmed_attack_effect = ATTACK_EFFECT_DISARM
@@ -26,12 +30,14 @@
 	burn_modifier = 1.5
 
 /obj/item/bodypart/leg/left/snail
+	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_SNAIL
 	unarmed_damage = 2 //snails are soft and squishy
 	movespeed_contribution = 3 //disgustingly slow
 	burn_modifier = 1.5
 
 /obj/item/bodypart/leg/right/snail
+	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_SNAIL
 	unarmed_damage = 2 //snails are soft and squishy
 	movespeed_contribution = 3 //disgustingly slow
@@ -70,57 +76,69 @@
 
 ///SLIME
 /obj/item/bodypart/head/slime
+	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_SLIMEPERSON
 	is_dimorphic = FALSE
 	dmg_overlay_type = null
 	head_flags = HEAD_ALL_FEATURES
 
 /obj/item/bodypart/chest/slime
+	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_SLIMEPERSON
 	is_dimorphic = TRUE
 	dmg_overlay_type = null
 
 /obj/item/bodypart/arm/left/slime
+	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_SLIMEPERSON
 	dmg_overlay_type = null
 
 /obj/item/bodypart/arm/right/slime
+	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_SLIMEPERSON
 	dmg_overlay_type = null
 
 /obj/item/bodypart/leg/left/slime
+	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_SLIMEPERSON
 	dmg_overlay_type = null
 
 /obj/item/bodypart/leg/right/slime
+	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_SLIMEPERSON
 	dmg_overlay_type = null
 
 ///LUMINESCENT
 /obj/item/bodypart/head/luminescent
+	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_LUMINESCENT
 	is_dimorphic = TRUE
 	dmg_overlay_type = null
 	head_flags = HEAD_ALL_FEATURES
 
 /obj/item/bodypart/chest/luminescent
+	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_LUMINESCENT
 	is_dimorphic = TRUE
 	dmg_overlay_type = null
 
 /obj/item/bodypart/arm/left/luminescent
+	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_LUMINESCENT
 	dmg_overlay_type = null
 
 /obj/item/bodypart/arm/right/luminescent
+	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_LUMINESCENT
 	dmg_overlay_type = null
 
 /obj/item/bodypart/leg/left/luminescent
+	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_LUMINESCENT
 	dmg_overlay_type = null
 
 /obj/item/bodypart/leg/right/luminescent
+	biological_state = (BIO_FLESH|BIO_BLOODED)
 	limb_id = SPECIES_LUMINESCENT
 	dmg_overlay_type = null
 
@@ -251,6 +269,7 @@
 
 ///SKELETON
 /obj/item/bodypart/head/skeleton
+	biological_state = BIO_BONE
 	limb_id = SPECIES_SKELETON
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
@@ -259,6 +278,7 @@
 	bodypart_flags = BODYPART_UNHUSKABLE
 
 /obj/item/bodypart/chest/skeleton
+	biological_state = BIO_BONE
 	limb_id = SPECIES_SKELETON
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
@@ -266,24 +286,28 @@
 	bodypart_flags = BODYPART_UNHUSKABLE
 
 /obj/item/bodypart/arm/left/skeleton
+	biological_state = (BIO_BONE|BIO_JOINTED)
 	limb_id = SPECIES_SKELETON
 	should_draw_greyscale = FALSE
 	dmg_overlay_type = null
 	bodypart_flags = BODYPART_UNHUSKABLE
 
 /obj/item/bodypart/arm/right/skeleton
+	biological_state = (BIO_BONE|BIO_JOINTED)
 	limb_id = SPECIES_SKELETON
 	should_draw_greyscale = FALSE
 	dmg_overlay_type = null
 	bodypart_flags = BODYPART_UNHUSKABLE
 
 /obj/item/bodypart/leg/left/skeleton
+	biological_state = (BIO_BONE|BIO_JOINTED)
 	limb_id = SPECIES_SKELETON
 	should_draw_greyscale = FALSE
 	dmg_overlay_type = null
 	bodypart_flags = BODYPART_UNHUSKABLE
 
 /obj/item/bodypart/leg/right/skeleton
+	biological_state = (BIO_BONE|BIO_JOINTED)
 	limb_id = SPECIES_SKELETON
 	should_draw_greyscale = FALSE
 	dmg_overlay_type = null
@@ -291,6 +315,7 @@
 
 ///GOLEMS (i hate xenobio)
 /obj/item/bodypart/head/golem
+	biological_state = BIO_BONE
 	bodytype = BODYTYPE_GOLEM | BODYTYPE_ORGANIC
 	limb_id = SPECIES_GOLEM
 	is_dimorphic = FALSE
@@ -298,6 +323,7 @@
 	head_flags = NONE
 
 /obj/item/bodypart/chest/golem
+	biological_state = BIO_BONE
 	acceptable_bodytype = BODYTYPE_GOLEM
 	bodytype = BODYTYPE_GOLEM | BODYTYPE_ORGANIC
 	limb_id = SPECIES_GOLEM
@@ -306,6 +332,7 @@
 	bodypart_traits = list(TRAIT_NO_JUMPSUIT)
 
 /obj/item/bodypart/arm/left/golem
+	biological_state = (BIO_BONE|BIO_JOINTED)
 	bodytype = BODYTYPE_GOLEM | BODYTYPE_ORGANIC
 	limb_id = SPECIES_GOLEM
 	dmg_overlay_type = null
@@ -313,6 +340,7 @@
 	unarmed_damage = 11 // I'd like to take the moment that maintaining all of these random ass golem species is hell and oranges was right
 
 /obj/item/bodypart/arm/right/golem
+	biological_state = (BIO_BONE|BIO_JOINTED)
 	bodytype = BODYTYPE_GOLEM | BODYTYPE_ORGANIC
 	limb_id = SPECIES_GOLEM
 	dmg_overlay_type = null
@@ -321,6 +349,7 @@
 	movespeed_contribution = 1
 
 /obj/item/bodypart/leg/left/golem
+	biological_state = (BIO_BONE|BIO_JOINTED)
 	bodytype = BODYTYPE_GOLEM | BODYTYPE_ORGANIC
 	limb_id = SPECIES_GOLEM
 	dmg_overlay_type = null
@@ -328,6 +357,7 @@
 	movespeed_contribution = 1
 
 /obj/item/bodypart/leg/right/golem
+	biological_state = (BIO_BONE|BIO_JOINTED)
 	bodytype = BODYTYPE_GOLEM | BODYTYPE_ORGANIC
 	limb_id = SPECIES_GOLEM
 	dmg_overlay_type = null

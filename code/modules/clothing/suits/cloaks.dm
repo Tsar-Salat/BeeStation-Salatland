@@ -12,6 +12,7 @@
 
 /obj/item/clothing/neck/cloak/Initialize(mapload)
 	. = ..()
+	AddElement(/datum/element/surgery_aid, "cloak")
 	create_storage(storage_type = /datum/storage/pockets/exo/cloak)
 
 /obj/item/clothing/neck/cloak/suicide_act(mob/living/user)

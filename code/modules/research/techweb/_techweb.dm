@@ -397,3 +397,10 @@
 
 /datum/techweb/proc/isNodeAvailableID(id)
 	return available_nodes[id]? SSresearch.techweb_node_by_id(id) : FALSE
+
+/// Returns a flat list of all design datums this techweb has researched.
+/datum/techweb/proc/get_researched_design_datums()
+	var/list/designs = list()
+	for(var/id in researched_designs)
+		designs += SSresearch.techweb_design_by_id(id)
+	return designs
