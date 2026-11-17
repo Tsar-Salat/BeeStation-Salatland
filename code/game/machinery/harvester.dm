@@ -101,7 +101,7 @@ SCREENTIP_ATTACK_HAND(/obj/machinery/attack_hand, "Toggle Open")
 			header = "Gruesome!",
 		)
 
-	operation_order = reverseList(C.get_bodyparts())   //Chest and head are first in get_bodyparts(), so we invert it to make them suffer more
+	operation_order = reverse_range(C.get_bodyparts())   //Chest and head are first in get_bodyparts(), so we invert it to make them suffer more
 	warming_up = TRUE
 	harvesting = TRUE
 	visible_message(span_notice("The [name] begins warming up!"))
