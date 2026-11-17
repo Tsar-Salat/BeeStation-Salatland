@@ -113,11 +113,11 @@
 	RegisterSignal(parent, COMSIG_MOVABLE_MOVED, PROC_REF(jostleCheck))
 	RegisterSignal(parent, COMSIG_CARBON_EMBED_RIP, PROC_REF(ripOut))
 	RegisterSignal(parent, COMSIG_CARBON_EMBED_REMOVAL, PROC_REF(safeRemove))
-	RegisterSignal(parent, COMSIG_ATOM_ATTACKBY, PROC_REF(checkRemoval))
+	RegisterSignal(parent, COMSIG_ATOM_ITEM_INTERACTION, PROC_REF(on_item_interaction))
 	RegisterSignal(parent, COMSIG_ATOM_ATTACK_HAND, PROC_REF(tryPullOutOther))
 
 /datum/component/embedded/UnregisterFromParent()
-	UnregisterSignal(parent, list(COMSIG_MOVABLE_MOVED, COMSIG_CARBON_EMBED_RIP, COMSIG_CARBON_EMBED_REMOVAL, COMSIG_ATOM_ATTACKBY, COMSIG_ATOM_ATTACK_HAND))
+	UnregisterSignal(parent, list(COMSIG_MOVABLE_MOVED, COMSIG_CARBON_EMBED_RIP, COMSIG_CARBON_EMBED_REMOVAL, COMSIG_ATOM_ITEM_INTERACTION, COMSIG_ATOM_ATTACK_HAND))
 
 /datum/component/embedded/process(delta_time)
 	var/mob/living/carbon/victim = parent
@@ -253,10 +253,10 @@
 	INVOKE_ASYNC(src, PROC_REF(pluckOut), user, 1, 2, "pulling out")
 	return COMPONENT_CANCEL_ATTACK_CHAIN
 
-/datum/component/embedded/proc/checkRemoval(mob/living/carbon/victim, obj/item/I, mob/living/user)
+/datum/component/embedded/proc/on_item_interaction(mob/living/carbon/victim, mob/living/user, obj/item/I)
 	SIGNAL_HANDLER
 
-	if(!istype(victim) || user.is_zone_selected(limb.body_zone) || user.combat_mode)
+	if(!istype(victim) || !user.is_zone_selected(limb.body_zone) || user.combat_mode)
 		return
 
 	var/damage_multiplier = 1
@@ -283,10 +283,10 @@
 	if(ishuman(victim)) // check to see if the limb is actually exposed
 		var/mob/living/carbon/human/victim_human = victim
 		if(!victim_human.try_inject(user, limb.body_zone, INJECT_CHECK_IGNORE_SPECIES | INJECT_TRY_SHOW_ERROR_MESSAGE))
-			return TRUE
+			return ITEM_INTERACT_BLOCKING
 
 	INVOKE_ASYNC(src, PROC_REF(pluckOut), user, damage_multiplier, max(damage_multiplier, 0.2), remove_verb)
-	return COMPONENT_NO_AFTERATTACK
+	return ITEM_INTERACT_SUCCESS
 
 /// The actual action for pulling out an embedded object with any tools that work
 /datum/component/embedded/proc/pluckOut(mob/user, damage_multiplier, time_multiplier, remove_verb)

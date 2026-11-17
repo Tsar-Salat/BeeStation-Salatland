@@ -66,6 +66,13 @@
 		span_notice("Blood pools around the incision in [FORMAT_LIMB_OWNER(limb)]."),
 	)
 
+/datum/surgery_operation/limb/incise_skin/on_failure(obj/item/bodypart/limb, mob/living/surgeon, obj/item/tool, list/operation_args)
+	. = ..()
+	if(istype(tool, /obj/item/scalpel/advanced))
+		limb.receive_damage(15, 5, sharpness = tool.get_sharpness(), damage_source = tool)
+	else
+		limb.receive_damage(10, sharpness = tool.get_sharpness(), damage_source = tool)
+
 /// Subtype for thick skinned creatures (Xenomorphs)
 /datum/surgery_operation/limb/incise_skin/thick
 	name = "make thick skin incision"
@@ -124,8 +131,14 @@
 
 /datum/surgery_operation/limb/retract_skin/on_success(obj/item/bodypart/limb)
 	. = ..()
-	limb.add_surgical_state(SURGERY_SKIN_OPEN)
+	// the limb SHOULD either have unclamped or clamped vessels if we're retracting skin
+	// if it doesn't, some shenanigans happened (likely due to wounds), so we add unclamped if needed - just to be thorough
+	limb.add_surgical_state(SURGERY_SKIN_OPEN | (LIMB_HAS_SURGERY_STATE(limb, SURGERY_VESSELS_CLAMPED) ? NONE : SURGERY_VESSELS_UNCLAMPED))
 	limb.remove_surgical_state(SURGERY_SKIN_CUT)
+
+/datum/surgery_operation/limb/retract_skin/on_failure(obj/item/bodypart/limb, mob/living/surgeon, obj/item/tool, list/operation_args)
+	. = ..()
+	limb.receive_damage(12, sharpness = SHARP, damage_source = tool)
 
 /datum/surgery_operation/limb/retract_skin/abductor
 	operation_flags = parent_type::operation_flags | OPERATION_IGNORE_CLOTHES | OPERATION_LOCKED  | OPERATION_NO_WIKI
@@ -186,6 +199,10 @@
 	limb.remove_surgical_state(ALL_SURGERY_STATES_UNSET_ON_CLOSE)
 	limb.owner?.cauterise_wounds()
 
+/datum/surgery_operation/limb/close_skin/on_failure(obj/item/bodypart/limb, mob/living/surgeon, obj/item/tool, list/operation_args)
+	. = ..()
+	limb.receive_damage(burn = 3, damage_source = tool)
+
 /datum/surgery_operation/limb/close_skin/abductor
 	operation_flags = parent_type::operation_flags | OPERATION_IGNORE_CLOTHES | OPERATION_LOCKED  | OPERATION_NO_WIKI
 	required_bodytype = NONE
@@ -228,6 +245,10 @@
 		limb.heal_damage(20)
 	limb.add_surgical_state(SURGERY_VESSELS_CLAMPED)
 	limb.remove_surgical_state(SURGERY_VESSELS_UNCLAMPED)
+
+/datum/surgery_operation/limb/clamp_bleeders/on_failure(obj/item/bodypart/limb, mob/living/surgeon, obj/item/tool, list/operation_args)
+	. = ..()
+	limb.receive_damage(10, sharpness = SHARP, damage_source = tool)
 
 /datum/surgery_operation/limb/clamp_bleeders/abductor
 	operation_flags = parent_type::operation_flags | OPERATION_IGNORE_CLOTHES | OPERATION_LOCKED  | OPERATION_NO_WIKI
@@ -340,6 +361,10 @@
 	)
 	display_pain(limb.owner, "It feels like something just broke in your [limb.plaintext_zone]!")
 
+/datum/surgery_operation/limb/saw_bones/on_failure(obj/item/bodypart/limb, mob/living/surgeon, obj/item/tool, list/operation_args)
+	. = ..()
+	limb.receive_damage(15, sharpness = tool.get_sharpness(), damage_source = tool)
+
 /// Fixes sawed bones back together
 /datum/surgery_operation/limb/fix_bones
 	name = "fix limb bone"
@@ -446,6 +471,10 @@
 		span_notice("[surgeon] drills into [FORMAT_LIMB_OWNER(limb)]!"),
 	)
 
+/datum/surgery_operation/limb/drill_bones/on_failure(obj/item/bodypart/limb, mob/living/surgeon, obj/item/tool, list/operation_args)
+	. = ..()
+	limb.receive_damage(10, sharpness = SHARP, damage_source = tool)
+
 /datum/surgery_operation/limb/incise_organs
 	name = "incise organs"
 	desc = "Make an incision in patient's internal organ tissue to allow for manipulation or repair. \
@@ -499,6 +528,10 @@
 		span_notice("[surgeon] makes an incision in the organs within [FORMAT_LIMB_OWNER(limb)]!"),
 	)
 	display_pain(limb.owner, "You feel a sharp pain from inside your [limb.plaintext_zone]!")
+
+/datum/surgery_operation/limb/incise_organs/on_failure(obj/item/bodypart/limb, mob/living/surgeon, obj/item/tool, list/operation_args)
+	. = ..()
+	limb.receive_damage(10, sharpness = tool.get_sharpness(), damage_source = tool)
 
 /datum/surgery_operation/limb/incise_organs/abductor
 	operation_flags = parent_type::operation_flags | OPERATION_IGNORE_CLOTHES | OPERATION_LOCKED  | OPERATION_NO_WIKI

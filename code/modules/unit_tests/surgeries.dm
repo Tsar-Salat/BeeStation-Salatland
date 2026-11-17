@@ -211,3 +211,30 @@
 	// fails tool_check
 	var/obj/item/bikehorn/horn = allocate(/obj/item/bikehorn)
 	TEST_ASSERT_EQUAL(UNLINT(surgery.get_tool_quality(horn)), 0, "Bike horn should not work")
+
+/// Failed basic steps damage the operated limb
+/datum/unit_test/surgery_failure_damage
+
+/datum/unit_test/surgery_failure_damage/Run()
+	var/mob/living/carbon/human/surgeon = allocate(/mob/living/carbon/human/consistent)
+	// list(operation, tool, expected brute, expected burn)
+	var/list/cases = list(
+		list(/datum/surgery_operation/limb/incise_skin, /obj/item/scalpel, 10, 0),
+		list(/datum/surgery_operation/limb/incise_skin, /obj/item/scalpel/advanced, 15, 5),
+		list(/datum/surgery_operation/limb/retract_skin, /obj/item/retractor, 12, 0),
+		list(/datum/surgery_operation/limb/clamp_bleeders, /obj/item/hemostat, 10, 0),
+		list(/datum/surgery_operation/limb/saw_bones, /obj/item/circular_saw, 15, 0),
+		list(/datum/surgery_operation/limb/drill_bones, /obj/item/surgicaldrill, 10, 0),
+		list(/datum/surgery_operation/limb/incise_organs, /obj/item/scalpel, 10, 0),
+		list(/datum/surgery_operation/limb/close_skin, /obj/item/cautery, 0, 3),
+	)
+	for(var/list/test_case as anything in cases)
+		var/datum/surgery_operation/operation = GLOB.operations.operations_by_typepath[test_case[1]]
+		var/obj/item/tool = allocate(test_case[2])
+		var/mob/living/carbon/human/patient = allocate(/mob/living/carbon/human/consistent)
+		var/obj/item/bodypart/chest/chest = patient.get_bodypart(BODY_ZONE_CHEST)
+
+		UNLINT(operation.failure(chest, surgeon, tool, list(OPERATION_FORCE_FAIL = TRUE, OPERATION_SPEED = 3)))
+
+		TEST_ASSERT_EQUAL(chest.brute_dam, test_case[3], "Wrong brute from failed [operation.name] with [tool]")
+		TEST_ASSERT_EQUAL(chest.burn_dam, test_case[4], "Wrong burn from failed [operation.name] with [tool]")
