@@ -24,7 +24,7 @@
 		return NONE
 
 	var/mob/living/target_mob = target
-	var/obj/item/bodypart/precise_part = target_mob.get_bodypart(deprecise_zone(user.zone_selected)) || target_mob.get_bodypart(BODY_ZONE_CHEST)
+	var/obj/item/bodypart/precise_part = target_mob.get_bodypart(user.get_combat_bodyzone(target_mob)) || target_mob.get_bodypart(BODY_ZONE_CHEST)
 	surgery_prep(target_mob, user, precise_part?.body_zone || BODY_ZONE_CHEST, aid_name)
 	return ITEM_INTERACT_SUCCESS
 

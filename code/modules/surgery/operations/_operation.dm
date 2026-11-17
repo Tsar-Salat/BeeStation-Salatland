@@ -8,7 +8,8 @@
  *
  * Returns an ITEM_INTERACT_* flag
  */
-/mob/living/proc/perform_surgery(atom/movable/operating_on, potential_tool = IMPLEMENT_HAND, intentionally_fail = FALSE, operating_zone = zone_selected)
+/mob/living/proc/perform_surgery(atom/movable/operating_on, potential_tool = IMPLEMENT_HAND, intentionally_fail = FALSE, operating_zone)
+	operating_zone ||= get_combat_bodyzone(operating_on, precise = TRUE)
 	if(DOING_INTERACTION(src, DOAFTER_SOURCE_SURGERY))
 		operating_on.balloon_alert(src, "already performing surgery!")
 		return ITEM_INTERACT_BLOCKING
@@ -94,7 +95,8 @@
  * * [1] - the atom being operated on
  * * [2] - a list of option-specific info
  */
-/mob/living/proc/get_available_operations(atom/movable/operating_on, potential_tool = IMPLEMENT_HAND, operating_zone = zone_selected)
+/mob/living/proc/get_available_operations(atom/movable/operating_on, potential_tool = IMPLEMENT_HAND, operating_zone)
+	operating_zone ||= get_combat_bodyzone(operating_on, precise = TRUE)
 	// List of typepaths of operations we *can* do
 	var/list/possible_operations = GLOB.operations.unlocked.Copy()
 	// Signals can add operation types to the list to unlock special ones
@@ -132,7 +134,7 @@
 
 /// src attempts to cauterize themselves to reset their surgery state. Basically a manual form of the real "close skin" operation
 /mob/living/proc/try_manual_cauterize(obj/item/tool)
-	var/cauterize_zone = deprecise_zone(zone_selected)
+	var/cauterize_zone = get_combat_bodyzone(src)
 	var/obj/item/bodypart/limb = get_bodypart(cauterize_zone)
 	if(!manual_cauterize_check(tool, limb))
 		return NONE
@@ -743,7 +745,7 @@ GLOBAL_DATUM_INIT(operations, /datum/operation_holder, new)
 	return round(total_mod, 0.01)
 
 /// Returns a time modifier based on the mob's status
-/datum/surgery_operation/proc/get_mob_surgery_speed_mod(mob/living/patient)
+/datum/surgery_operation/proc/get_mob_surgery_speed_mod(mob/living/patient, mob/living/surgeon, tool)
 	PROTECTED_PROC(TRUE)
 	var/basemod = 1.0
 	for(var/mod_id in patient.mob_surgery_speed_mods)
@@ -751,7 +753,7 @@ GLOBAL_DATUM_INIT(operations, /datum/operation_holder, new)
 	return basemod
 
 /// Gets the surgery speed modifier for a given mob, based off what sort of table/bed/whatever is on their turf.
-/datum/surgery_operation/proc/get_location_modifier(turf/operation_turf)
+/datum/surgery_operation/proc/get_location_modifier(turf/operation_turf, mob/living/patient, mob/living/surgeon, tool)
 	PROTECTED_PROC(TRUE)
 	// Technically this IS a typecache, just not the usual kind :3
 	// The order of the modifiers matter, latter entries override earlier ones

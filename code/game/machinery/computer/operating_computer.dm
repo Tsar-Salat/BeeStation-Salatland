@@ -137,9 +137,9 @@
 	if(ishuman(user))
 		// the first human to open the ui changes it to their active zone
 		if(!LAZYLEN(zone_on_open))
-			target_zone = user.zone_selected
+			target_zone = user.get_combat_bodyzone(precise = TRUE)
 		// recorded so it can be restored when they close it
-		LAZYSET(zone_on_open, WEAKREF(user), user.zone_selected)
+		LAZYSET(zone_on_open, WEAKREF(user), user.get_combat_bodyzone(precise = TRUE))
 
 	ui = new(user, src, "OperatingComputer", name)
 	ui.open()

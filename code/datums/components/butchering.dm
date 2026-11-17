@@ -91,9 +91,9 @@
 		to_chat(user, span_warning("You need a better spot to butcher [victim]!"))
 		return
 
-	var/obj/item/bodypart/limb = victim.get_bodypart(deprecise_zone(user.zone_selected))
+	var/obj/item/bodypart/limb = victim.get_bodypart(user.get_combat_bodyzone(victim))
 	if(!limb)
-		to_chat(user, span_warning("[victim] doesn't have a [parse_zone(deprecise_zone(user.zone_selected))]!"))
+		to_chat(user, span_warning("[victim] doesn't have a [parse_zone(user.get_combat_bodyzone(victim))]!"))
 		return
 
 	butcher_limb(source, limb, user)

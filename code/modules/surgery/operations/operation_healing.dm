@@ -138,7 +138,7 @@
 
 	var/progress_text
 
-	if(surgeon.is_holding_item_of_type(/obj/item/healthanalyzer))
+	if(show_stats(surgeon, patient))
 		if(brute_healed > 0 && patient.getBruteLoss() > 0)
 			progress_text += ". Remaining brute: <font color='#ff3333'>[patient.getBruteLoss()]</font>"
 		if(burn_healed > 0 && patient.getFireLoss() > 0)
@@ -164,6 +164,23 @@
 	return progress_text
 
 #undef CONDITIONAL_DAMAGE_MESSAGE
+
+/// Checks whether we show precise damage stats during the surgery
+/datum/surgery_operation/basic/tend_wounds/proc/show_stats(mob/living/surgeon, mob/living/patient)
+	if(surgeon.is_holding_item_of_type(/obj/item/healthanalyzer))
+		return TRUE
+	/*
+	for(var/obj/machinery/vitals_reader/vitals in view(4, patient))
+		if(vitals.patient == patient)
+			return TRUE
+	*/
+	for(var/obj/machinery/computer/operating/op_pc in range(1, patient))
+		if(op_pc.table?.patient == patient)
+			return TRUE
+	for(var/obj/item/mod/control/modsuit in surgeon.get_equipped_items())
+		if(modsuit.active && istype(modsuit.selected_module, /obj/item/mod/module/health_analyzer))
+			return TRUE
+	return FALSE
 
 /datum/surgery_operation/basic/tend_wounds/on_success(mob/living/patient, mob/living/surgeon, tool, list/operation_args)
 	var/user_msg = "You succeed in fixing some of [patient]'s wounds" //no period, add initial space to "addons"
