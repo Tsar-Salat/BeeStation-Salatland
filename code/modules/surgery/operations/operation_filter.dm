@@ -13,7 +13,7 @@
 	/// Fraction of each chemical removed per cycle
 	var/chem_purge_factor = 0.2
 	/// Fraction of toxin damage healed per cycle
-	var/tox_heal_factor = 0
+	var/tox_heal_factor = 0.025
 	/// Toxin damage is only healed above this amount
 	var/limited_healing = 100
 

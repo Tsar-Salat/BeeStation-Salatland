@@ -219,7 +219,7 @@
 			drop_chance += amount * efficiency
 			if(drop_chance > 1)
 				amount = floor(drop_chance)
-				if(prob(drop_chance * 100))
+				if(prob((drop_chance - amount) * 100))
 					amount += 1
 			else
 				amount = 1

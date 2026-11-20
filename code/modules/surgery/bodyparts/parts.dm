@@ -182,9 +182,9 @@
 	var/atom/movable/screen/inventory/hand/hand = new_owner.hud_used.hand_slots["[held_index]"]
 	hand.update_appearance()
 
-/obj/item/bodypart/arm/set_disabled(new_disabled)
+/obj/item/bodypart/arm/set_disabled(new_disabled, update_limbs = TRUE)
 	. = ..()
-	if(isnull(.) || !owner)
+	if(isnull(.) || !owner || !update_limbs)
 		return
 
 	if(!.)

@@ -4775,7 +4775,6 @@
 #include "code\modules\surgery\operations\operation_core.dm"
 #include "code\modules\surgery\operations\operation_dental.dm"
 #include "code\modules\surgery\operations\operation_dissection.dm"
-#include "code\modules\surgery\operations\operation_embedded_removal.dm"
 #include "code\modules\surgery\operations\operation_filter.dm"
 #include "code\modules\surgery\operations\operation_generic.dm"
 #include "code\modules\surgery\operations\operation_generic_basic.dm"

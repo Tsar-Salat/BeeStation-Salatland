@@ -740,7 +740,7 @@ GLOBAL_DATUM_INIT(operations, /datum/operation_holder, new)
 			total_mod *= get_location_modifier(get_turf(patient))
 			total_mod *= get_mob_surgery_speed_mod(patient)
 		// Using TRAIT_SELF_SURGERY on a surgery which doesn't normally allow self surgery imparts a penalty
-		if(operating_on == surgeon && HAS_TRAIT(surgeon, TRAIT_SELF_SURGERY) && !(operation_flags & OPERATION_SELF_OPERABLE))
+		if(patient == surgeon && HAS_TRAIT(surgeon, TRAIT_SELF_SURGERY) && !(operation_flags & OPERATION_SELF_OPERABLE))
 			total_mod *= 1.5
 	return round(total_mod, 0.01)
 
@@ -1278,6 +1278,9 @@ GLOBAL_DATUM_INIT(operations, /datum/operation_holder, new)
 
 	// targeting groin will redirect you to the chest
 	if(limb.body_zone != deprecise_zone(operated_zone))
+		return FALSE
+
+	if(limb.owner && !HAS_TRAIT(limb, TRAIT_READY_TO_OPERATE))
 		return FALSE
 
 	if(required_bodytype && !(limb.bodytype & required_bodytype))

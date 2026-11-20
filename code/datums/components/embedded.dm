@@ -258,27 +258,21 @@
 
 	if(!istype(victim) || !user.is_zone_selected(limb.body_zone) || user.combat_mode)
 		return
+	if(I.tool_behaviour != TOOL_HEMOSTAT && I.tool_behaviour != TOOL_WIRECUTTER)
+		return
+	// one object per use
+	if(weapon != LAZYACCESS(limb.embedded_objects, 1))
+		return
 
-	var/damage_multiplier = 1
-	var/remove_verb = "removing"
+	var/damage_multiplier = 0
+	var/remove_verb = "carefully removing"
 
-	switch(I.tool_behaviour)
-		if(TOOL_HEMOSTAT)
-			damage_multiplier = 0
-			remove_verb = "carefully removing"
-		if(TOOL_WIRECUTTER)
-			if(weapon.w_class >= WEIGHT_CLASS_NORMAL)
-				to_chat(user, span_warning("[weapon] is too large to extract with wirecutters!"))
-				return
-			damage_multiplier = 0.5
-		if(TOOL_SCREWDRIVER)
-			if(weapon.w_class >= WEIGHT_CLASS_SMALL)
-				to_chat(user, span_warning("[weapon] is too large to dislodge with a screwdriver!"))
-				return
-			damage_multiplier = 0.8
-			remove_verb = "dislodging"
-		else
+	if(I.tool_behaviour == TOOL_WIRECUTTER)
+		if(weapon.w_class >= WEIGHT_CLASS_NORMAL)
+			to_chat(user, span_warning("[weapon] is too large to extract with wirecutters!"))
 			return
+		damage_multiplier = 0.5
+		remove_verb = "removing"
 
 	if(ishuman(victim)) // check to see if the limb is actually exposed
 		var/mob/living/carbon/human/victim_human = victim

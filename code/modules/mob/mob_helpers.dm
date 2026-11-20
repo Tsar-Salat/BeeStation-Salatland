@@ -495,25 +495,24 @@
  * Head/Chest target: Damage/kill target
  */
 /mob/proc/get_combat_bodyzone(atom/target = null, precise = FALSE, zone_context = BODYZONE_CONTEXT_COMBAT)
-	// Just grab whatever bodyzone they were targeting
-	if (client?.prefs.read_player_preference(/datum/preference/choiced/zone_select) != PREFERENCE_BODYZONE_SIMPLIFIED)
-		if (!precise)
-			return check_zone(zone_selected)
-		return zone_selected || BODY_ZONE_CHEST
 	// Implicitly determine the bodypart we were trying to target
-	switch (zone_selected)
-		if (BODY_GROUP_CHEST_HEAD)
-			var/head_priority = is_priority_zone(target, BODY_ZONE_HEAD, zone_context)
-			var/chest_priority = is_priority_zone(target, BODY_ZONE_CHEST, zone_context)
-			return head_priority == chest_priority ? (prob(70) ? BODY_ZONE_CHEST : BODY_ZONE_HEAD) : (head_priority ? BODY_ZONE_HEAD : BODY_ZONE_CHEST)
-		if (BODY_GROUP_LEGS)
-			var/left_priority = is_priority_zone(target, BODY_ZONE_L_LEG, zone_context)
-			var/right_priority = is_priority_zone(target, BODY_ZONE_R_LEG, zone_context)
-			return left_priority == right_priority ? pick(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG) : (left_priority ? BODY_ZONE_L_LEG : BODY_ZONE_R_LEG)
-		if (BODY_GROUP_ARMS)
-			var/left_priority = is_priority_zone(target, BODY_ZONE_L_ARM, zone_context)
-			var/right_priority = is_priority_zone(target, BODY_ZONE_R_ARM, zone_context)
-			return left_priority == right_priority ? pick(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM) : (left_priority ? BODY_ZONE_L_ARM : BODY_ZONE_R_ARM)
+	if (client?.prefs.read_player_preference(/datum/preference/choiced/zone_select) == PREFERENCE_BODYZONE_SIMPLIFIED)
+		switch (zone_selected)
+			if (BODY_GROUP_CHEST_HEAD)
+				var/head_priority = is_priority_zone(target, BODY_ZONE_HEAD, zone_context)
+				var/chest_priority = is_priority_zone(target, BODY_ZONE_CHEST, zone_context)
+				return head_priority == chest_priority ? (prob(70) ? BODY_ZONE_CHEST : BODY_ZONE_HEAD) : (head_priority ? BODY_ZONE_HEAD : BODY_ZONE_CHEST)
+			if (BODY_GROUP_LEGS)
+				var/left_priority = is_priority_zone(target, BODY_ZONE_L_LEG, zone_context)
+				var/right_priority = is_priority_zone(target, BODY_ZONE_R_LEG, zone_context)
+				return left_priority == right_priority ? pick(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG) : (left_priority ? BODY_ZONE_L_LEG : BODY_ZONE_R_LEG)
+			if (BODY_GROUP_ARMS)
+				var/left_priority = is_priority_zone(target, BODY_ZONE_L_ARM, zone_context)
+				var/right_priority = is_priority_zone(target, BODY_ZONE_R_ARM, zone_context)
+				return left_priority == right_priority ? pick(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM) : (left_priority ? BODY_ZONE_L_ARM : BODY_ZONE_R_ARM)
+	if (!precise)
+		return check_zone(zone_selected)
+	return zone_selected || BODY_ZONE_CHEST
 
 /mob/proc/is_priority_zone(atom/target, target_zone, context)
 	switch (context)

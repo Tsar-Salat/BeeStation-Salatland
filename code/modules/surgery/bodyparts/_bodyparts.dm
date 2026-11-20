@@ -213,7 +213,7 @@
 	// There's a lot of bodyparts in the world, and we don't need to have separate drops on each and every one of them
 	var/list/drop_results = get_butcher_drops()
 	if (length(drop_results))
-		butcher_drops = string_list(drop_results)
+		butcher_drops = drop_results
 		butcher_drop_cache[type] = butcher_drops
 	update_icon_dropped()
 
@@ -1380,7 +1380,7 @@
 	if(isnull(owner))
 		return
 	// Bleeding is per mob here: cut vessels add a bleed, clamping or closing removes it
-	if(LIMB_HAS_VESSELS(src) && (changed_states & SURGERY_VESSELS_UNCLAMPED))
+	if(LIMB_HAS_VESSELS(src) && ((old_state ^ surgery_state) & SURGERY_VESSELS_UNCLAMPED))
 		if(surgery_state & SURGERY_VESSELS_UNCLAMPED)
 			owner.add_bleeding(BLEED_CUT)
 		else
