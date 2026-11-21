@@ -163,7 +163,7 @@
 			real_name = "Unknown"
 		else
 			real_name = owner.real_name
-	if(ishuman(owner)) //No MONKEYS!!!
+	if(!owner || ishuman(owner)) //No MONKEYS!!!
 		update_hair_and_lips(dropping_limb, is_creating)
 
 // Ensures putting organs in and removing organs from our head always updates the limb
