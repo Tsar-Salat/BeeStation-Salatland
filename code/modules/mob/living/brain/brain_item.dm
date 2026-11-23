@@ -8,7 +8,7 @@
 	layer = ABOVE_MOB_LAYER
 	zone = BODY_ZONE_HEAD
 	slot = ORGAN_SLOT_BRAIN
-	organ_flags = ORGAN_VITAL|ORGAN_EDIBLE|ORGAN_VIRGIN
+	organ_flags = ORGAN_ORGANIC | ORGAN_VITAL
 	attack_verb_continuous = list("attacks", "slaps", "whacks")
 	attack_verb_simple = list("attack", "slap", "whack")
 
@@ -61,6 +61,15 @@
 	organ_traits.Remove(variant_traits_removed)
 	if(variant_traits_added)
 		organ_traits |= variant_traits_added
+
+/*
+/obj/item/organ/brain/examine()
+	. = ..()
+	if(brain_size < 1)
+		. += span_notice("It is a bit on the smaller side...")
+	if(brain_size > 1)
+		. += span_notice("It is bigger than average...")
+*/
 
 /obj/item/organ/brain/on_mob_insert(mob/living/carbon/brain_owner, special = FALSE, movement_flags)
 	. = ..()
@@ -134,8 +143,6 @@
 		transfer_identity(organ_owner)
 
 	if(!special)
-		if(!(organ_owner.living_flags & STOP_OVERLAY_UPDATE_BODY_PARTS))
-			organ_owner.update_body_parts()
 		SEND_SIGNAL(src, COMSIG_CLEAR_MOOD_EVENT, "brain_damage")
 
 /obj/item/organ/brain/set_organ_damage(d)
@@ -254,16 +261,6 @@
 		owner.mind.set_current(null)
 	return ..()
 
-// We really don't want people eating brains unless they're zombies.
-/obj/item/organ/brain/pre_eat(eater, feeder)
-	if(!iszombie(eater))
-		return FALSE
-	return TRUE
-
-// Ditto for composting
-/obj/item/organ/brain/pre_compost(user)
-	return FALSE
-
 /obj/item/organ/brain/on_life(delta_time, times_fired)
 	SHOULD_CALL_PARENT(FALSE)
 	if(damage >= BRAIN_DAMAGE_DEATH) //rip
@@ -272,11 +269,34 @@
 		owner.death()
 		brain_death = TRUE
 
+/obj/item/organ/brain/on_bodypart_insert(obj/item/bodypart/limb)
+	. = ..()
+	if(ishuman(limb.owner))
+		limb.owner.update_hair()
+	else
+		limb.update_icon_dropped()
+
+/obj/item/organ/brain/on_bodypart_remove(obj/item/bodypart/limb, movement_flags)
+	. = ..()
+	if(ishuman(limb.owner))
+		limb.owner.update_hair()
+	else
+		limb.update_icon_dropped()
+
 /obj/item/organ/brain/check_damage_thresholds()
 	. = ..()
-	//if we're not more injured than before, return without gambling for a trauma
+	if(!owner)
+		return
+	// If we crossed blinking brain damage thresholds either way, update our blinking
+	if((prev_damage >= BRAIN_DAMAGE_ASYNC_BLINKING && damage < BRAIN_DAMAGE_ASYNC_BLINKING) || (prev_damage < BRAIN_DAMAGE_ASYNC_BLINKING && damage >= BRAIN_DAMAGE_ASYNC_BLINKING))
+		var/obj/item/organ/eyes/eyes = owner.get_organ_slot(ORGAN_SLOT_EYES)
+		if(eyes?.blink_animation)
+			eyes.animate_eyelids(owner)
+
+	// If we're not more injured than before, return without gambling for a trauma
 	if(damage <= prev_damage)
 		return
+
 	damage_delta = damage - prev_damage
 	if(damage > BRAIN_DAMAGE_MILD)
 		if(prob(damage_delta * (1 + max(0, (damage - BRAIN_DAMAGE_MILD)/100)))) //Base chance is the hit damage; for every point of damage past the threshold the chance is increased by 1% //learn how to do your bloody math properly goddamnit
@@ -290,20 +310,22 @@
 			else
 				gain_trauma_type(BRAIN_TRAUMA_SEVERE)
 
-	if (owner)
-		if(owner.stat < UNCONSCIOUS) //conscious or soft-crit
-			var/brain_message
-			if(prev_damage < BRAIN_DAMAGE_MILD && damage >= BRAIN_DAMAGE_MILD)
-				brain_message = span_warning("You feel lightheaded.")
-			else if(prev_damage < BRAIN_DAMAGE_SEVERE && damage >= BRAIN_DAMAGE_SEVERE)
-				brain_message = span_warning("You feel less in control of your thoughts.")
-			else if(prev_damage < (BRAIN_DAMAGE_DEATH - 20) && damage >= (BRAIN_DAMAGE_DEATH - 20))
-				brain_message = span_warning("You can feel your mind flickering on and off.")
+	if (!owner || owner.stat > UNCONSCIOUS)
+		return
 
-			if(.)
-				. += "\n[brain_message]"
-			else
-				return brain_message
+	// Conscious or soft-crit
+	var/brain_message
+	if(prev_damage < BRAIN_DAMAGE_MILD && damage >= BRAIN_DAMAGE_MILD)
+		brain_message = span_warning("You feel lightheaded.")
+	else if(prev_damage < BRAIN_DAMAGE_SEVERE && damage >= BRAIN_DAMAGE_SEVERE)
+		brain_message = span_warning("You feel less in control of your thoughts.")
+	else if(prev_damage < (BRAIN_DAMAGE_DEATH - 20) && damage >= (BRAIN_DAMAGE_DEATH - 20))
+		brain_message = span_warning("You can feel your mind flickering on and off...")
+
+	if(.)
+		. += "\n[brain_message]"
+	else
+		return brain_message
 
 /obj/item/organ/brain/before_organ_replacement(obj/item/organ/replacement)
 	. = ..()
@@ -367,10 +389,10 @@
 	name = "positronic brain"
 	slot = ORGAN_SLOT_BRAIN
 	zone = BODY_ZONE_CHEST
+	organ_flags = ORGAN_ROBOTIC
 	desc = "A cube of shining metal, four inches to a side and covered in shallow grooves. It has an IPC serial number engraved on the top. In order for this Posibrain to be used as a newly built Positronic Brain, it must be coupled with an MMI."
 	icon = 'icons/obj/assemblies.dmi'
 	icon_state = "posibrain-ipc"
-	organ_flags = ORGAN_ROBOTIC
 	base_icon_state = "posibrain"
 	brain_dna = FALSE // we do not store dna
 	text_soul_but_damaged = "The S.O.U.L. light is green, but it is blinking unsteadily... You may be able to repair it with a <b>multitool</b>."

@@ -23,6 +23,7 @@
 #include "blindness.dm"
 #include "bloody_footprints.dm"
 #include "breath.dm"
+#include "changeling.dm"
 #include "check_adjustable_clothing.dm"
 #include "closets.dm"
 #include "combat.dm"
@@ -32,6 +33,7 @@
 #include "create_and_destroy.dm"
 */
 #include "dcs_get_id_from_elements.dm"
+#include "dismemberment.dm"
 #include "drink_icons.dm"
 #include "dynamic_ruleset_sanity.dm"
 #include "emissive_worn_overlays.dm"
@@ -96,6 +98,7 @@
 #include "reagent_recipe_collisions.dm"
 #include "say.dm"
 #include "screenshot_basic.dm"
+#include "screenshot_debrain.dm"
 #include "screenshot_husk.dm"
 #include "security_levels.dm"
 #include "security_officer_distribution.dm"

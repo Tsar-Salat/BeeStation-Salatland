@@ -6,7 +6,10 @@
 	inherent_traits = list(
 		TRAIT_MUTANT_COLORS,
 	)
-	inherent_biotypes = MOB_ORGANIC | MOB_HUMANOID |  MOB_REPTILE
+	inherent_biotypes = MOB_ORGANIC|MOB_HUMANOID|MOB_REPTILE
+	mutant_bodyparts = list(
+		"body_size" = "Normal"
+	)
 	body_markings = list(
 		/datum/bodypart_overlay/simple/body_marking/lizard = SPRITE_ACCESSORY_NONE,
 	)
@@ -18,6 +21,7 @@
 		/obj/item/organ/tail/lizard = "Smooth",
 	)
 	mutanttongue = /obj/item/organ/tongue/lizard
+	mutanteyes = /obj/item/organ/eyes/lizard
 	mutantbrain = /obj/item/organ/brain/lizard
 	coldmod = 1.5
 	heatmod = 0.67
@@ -26,7 +30,7 @@
 	skinned_type = /obj/item/stack/sheet/animalhide/lizard
 	exotic_bloodtype = "L"
 	inert_mutation = /datum/mutation/firebreath
-	deathsound = 'sound/voice/lizard/deathsound.ogg'
+	death_sound = 'sound/voice/lizard/deathsound.ogg'
 	species_language_holder = /datum/language_holder/lizard
 	digitigrade_customization = DIGITIGRADE_FORCED
 	blush_color = BLOOD_COLOR_LIZARD
@@ -46,7 +50,7 @@
 
 /datum/species/lizard/randomize_features()
 	var/list/features = ..()
-	features[FEATURE_LIZARD_MARKINGS] = pick(GLOB.lizard_markings_list)
+	features[FEATURE_LIZARD_MARKINGS] = pick(SSaccessories.lizard_markings_list)
 	return features
 
 /// Lizards are cold blooded and do not stabilize body temperature naturally
@@ -101,6 +105,8 @@
 	species_language_holder = /datum/language_holder/lizard/ash
 	mutantlungs = /obj/item/organ/lungs/ashwalker
 	mutantbrain = /obj/item/organ/brain/primitive
+	inherent_factions = list(FACTION_ASHWALKER)
+	species_language_holder = /datum/language_holder/lizard/ash
 	digitigrade_customization = DIGITIGRADE_FORCED
 	bodypart_overrides = list(
 		BODY_ZONE_HEAD = /obj/item/bodypart/head/lizard,

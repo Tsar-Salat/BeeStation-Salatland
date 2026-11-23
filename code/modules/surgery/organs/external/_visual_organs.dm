@@ -126,7 +126,7 @@ Unlike normal organs, we're actually inside a persons limbs at all times
 	return ..() && !is_obscured(bodypart_owner, HIDEHAIR)
 
 /datum/bodypart_overlay/mutant/horns/get_global_feature_list()
-	return GLOB.horns_list
+	return SSaccessories.horns_list
 
 ///The frills of a lizard (like weird fin ears)
 /obj/item/organ/frills
@@ -156,16 +156,14 @@ Unlike normal organs, we're actually inside a persons limbs at all times
 
 /datum/bodypart_overlay/mutant/frills/icon_render_key(obj/item/bodypart/limb)
 	. = ..()
-	var/obj/item/bodypart/head/head = limb
-	if(istype(head) && LAZYLEN(head.hair_masks))
-		. += jointext(head.hair_masks, ",")
+	if(LAZYLEN(limb?.owner?.hair_masks))
+		. += jointext(limb.owner.hair_masks, ",")
 
 /datum/bodypart_overlay/mutant/frills/get_image(obj/item/bodypart/limb, layer_index, layer_real)
-	var/obj/item/bodypart/head/head = limb
-	if(!istype(head) || !LAZYLEN(head.hair_masks))
+	if(!LAZYLEN(limb?.owner?.hair_masks))
 		return ..()
 
-	var/list/hair_masks_to_use = head.hair_masks
+	var/list/hair_masks_to_use = limb.owner.hair_masks
 	var/icon_state_to_use = build_icon_state(layer_index, limb)
 	var/frill_cache_key = "[sprite_datum.type]-[icon_state_to_use]-[jointext(hair_masks_to_use, ",")]"
 	var/static/list/cached_frill_icons
@@ -183,7 +181,7 @@ Unlike normal organs, we're actually inside a persons limbs at all times
 	return uncached_appearance
 
 /datum/bodypart_overlay/mutant/frills/get_global_feature_list()
-	return GLOB.frills_list
+	return SSaccessories.frills_list
 
 ///Guess what part of the lizard this is?
 /obj/item/organ/snout
@@ -230,7 +228,7 @@ Unlike normal organs, we're actually inside a persons limbs at all times
 	return ..() && !(bodypart_owner.owner?.obscured_slots & HIDESNOUT)
 
 /datum/bodypart_overlay/mutant/snout/get_global_feature_list()
-	return GLOB.snouts_list
+	return SSaccessories.snouts_list
 
 ///A moth's antennae
 /obj/item/organ/antennae
@@ -313,7 +311,7 @@ Unlike normal organs, we're actually inside a persons limbs at all times
 	burn_datum = fetch_sprite_datum(burn_datum) //turn the path into the singleton instance
 
 /datum/bodypart_overlay/mutant/antennae/get_global_feature_list()
-	return GLOB.moth_antennae_list
+	return SSaccessories.moth_antennae_list
 
 /datum/bodypart_overlay/mutant/antennae/get_base_icon_state()
 	return burnt ? burn_datum.icon_state : sprite_datum.icon_state
@@ -347,7 +345,7 @@ Unlike normal organs, we're actually inside a persons limbs at all times
 	return ..() && !is_obscured(bodypart_owner, HIDEHAIR)
 
 /datum/bodypart_overlay/mutant/apid_antenna/get_global_feature_list()
-	return GLOB.apid_antenna_list
+	return SSaccessories.apid_antenna_list
 
 ///The coloured chitin on an apid's head
 /obj/item/organ/apid_headstripes
@@ -375,7 +373,7 @@ Unlike normal organs, we're actually inside a persons limbs at all times
 	return ..() && !(bodypart_owner.owner?.obscured_slots & HIDEEYES)
 
 /datum/bodypart_overlay/mutant/apid_headstripes/get_global_feature_list()
-	return GLOB.apid_headstripes_list
+	return SSaccessories.apid_headstripes_list
 
 ///The coloured chitin on an apid's body
 /obj/item/organ/apid_stripes
@@ -400,7 +398,7 @@ Unlike normal organs, we're actually inside a persons limbs at all times
 	draw_on_husks = HUSK_OVERLAY_GRAYSCALE
 
 /datum/bodypart_overlay/mutant/apid_stripes/get_global_feature_list()
-	return GLOB.apid_stripes_list
+	return SSaccessories.apid_stripes_list
 
 ///A psyphoza's mushroom cap
 /obj/item/organ/psyphoza_cap
@@ -430,4 +428,4 @@ Unlike normal organs, we're actually inside a persons limbs at all times
 	return human_owner?.dna.features[FEATURE_MUTANT_COLOR]
 
 /datum/bodypart_overlay/mutant/psyphoza_cap/get_global_feature_list()
-	return GLOB.psyphoza_cap_list
+	return SSaccessories.psyphoza_cap_list

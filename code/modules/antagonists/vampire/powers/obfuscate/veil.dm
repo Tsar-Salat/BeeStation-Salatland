@@ -37,7 +37,7 @@
 	// Store Prev Appearance
 	prev_gender = user.gender
 	prev_skin_tone = user.skin_tone
-	prev_hair_style = user.hair_style
+	prev_hair_style = user.hairstyle
 	prev_facial_hairstyle = user.facial_hairstyle
 	prev_hair_color = user.hair_color
 	prev_facial_hair_color = user.facial_hair_color
@@ -57,7 +57,7 @@
 	// Change Appearance
 	user.gender = pick(MALE, FEMALE, PLURAL)
 	user.skin_tone = pick(GLOB.skin_tones)
-	user.set_hairstyle(random_hair_style(user.gender), update = FALSE)
+	user.set_hairstyle(random_hairstyle(user.gender), update = FALSE)
 	user.set_facial_hairstyle(pick(random_facial_hairstyle(user.gender), "Shaved"), update = FALSE)
 	user.set_haircolor("#[random_color()]", update = FALSE)
 	user.set_facial_haircolor(user.hair_color, update = FALSE)
@@ -65,18 +65,17 @@
 	user.undershirt = random_undershirt(user.gender)
 	user.socks = random_socks(user.gender)
 	var/new_eye_color = random_eye_color()
-	user.eye_color_left = new_eye_color
-	user.eye_color_right = new_eye_color
+	user.set_eye_color(new_eye_color)
 
 	if(prev_disfigured)
 		REMOVE_TRAIT(user, TRAIT_DISFIGURED, null)
-	user.dna.features = user.dna.species.randomize_features() | prev_features
-	user.dna.features[FEATURE_MUTANT_COLOR] = "#[random_color()]"
+	user.dna.features = user.dna.species.randomize_features()
 
 	// Apply Appearance
 	user.override_voice = user.name
 	user.update_body() // Outfit and underwear, also body.
-	user.update_body_parts()
+	user.update_hair()
+	user.update_eyes()
 
 	to_chat(owner, span_warning("You mystify the air around your person. Your identity is now altered."))
 
@@ -100,8 +99,7 @@
 	user.underwear = prev_underwear
 	user.undershirt = prev_undershirt
 	user.socks = prev_socks
-	user.eye_color_left = prev_eye_color
-	user.eye_color_right = prev_eye_color
+	user.set_eye_color(prev_eye_color)
 
 	if(prev_disfigured)
 		//We are ASSUMING husk. // user.status_flags |= DISFIGURED // Restore "Unknown" disfigurement
@@ -111,7 +109,8 @@
 	// Apply Appearance
 	user.override_voice = null
 	user.update_body() // Outfit and underwear, also body.
-	user.update_body_parts() // Body itself, maybe skin color?
+	user.update_hair()
+	user.update_eyes()
 
 	cast_effect() // POOF
 	owner.balloon_alert(owner, "veil turned off.")
