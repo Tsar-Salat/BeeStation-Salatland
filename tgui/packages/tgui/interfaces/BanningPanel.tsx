@@ -1,11 +1,9 @@
-/* eslint-disable react/prefer-stateless-function */
-import { Dropdown } from 'tgui-core/components';
-
-import { useBackend } from '../backend';
+import { ReactNode } from 'react';
 import {
   Box,
   Button,
   Collapsible,
+  Dropdown,
   Flex,
   Input,
   LabeledList,
@@ -14,14 +12,41 @@ import {
   Section,
   Stack,
   TextArea,
-} from '../components';
+} from 'tgui-core/components';
+import type { BooleanLike } from 'tgui-core/react';
+
+import { useBackend } from '../backend';
 import { Window } from '../layouts';
 
 const KEY_REGEX =
   /^(\[[\d:]+\]) ([\S\s]+?)\/\(([\S\s]+?)\) \(([\s\S]+?) \((\d+, \d+, \d+)\)\) \(Event #(\d+)\)$/;
 
-export const BanningPanel = (props) => {
-  const { act, data } = useBackend();
+type Data = {
+  key_enabled: BooleanLike;
+  key: string;
+  ip_enabled: BooleanLike;
+  ip: string;
+  cid_enabled: BooleanLike;
+  cid: string;
+  applies_to_admins: BooleanLike;
+  target_is_admin: BooleanLike;
+  can_supress: BooleanLike;
+  suppressed: BooleanLike;
+  duration_type: string;
+  ban_duration: number;
+  time_units: string;
+  playtime_source: string;
+  playtime_sources: string[];
+  ban_type: string;
+  force_cryo_after: BooleanLike;
+  use_last_connection: BooleanLike;
+  roles: Record<string, string[]>;
+  selected_roles: string[];
+  selected_groups: string[];
+};
+
+export function BanningPanel(props) {
+  const { act, data } = useBackend<Data>();
   const {
     key_enabled,
     key,
@@ -41,9 +66,6 @@ export const BanningPanel = (props) => {
     ban_type,
     force_cryo_after, // Rest in piss, forever miss
     use_last_connection,
-    roles,
-    selected_roles,
-    selected_groups,
   } = data;
 
   // The anti-moderator death grinder
@@ -56,13 +78,7 @@ export const BanningPanel = (props) => {
   const unitsMapping = isPlaytime ? playtimeUnitsMapping : timeUnitsMapping;
 
   return (
-    <Window
-      theme="admin"
-      title="Banning Panel"
-      width={750}
-      height={800}
-      resizable
-    >
+    <Window theme="admin" title="Banning Panel" width={750} height={800}>
       <Window.Content>
         {blockedAdminBan && (
           <NoticeBox danger style={{ whiteSpace: 'normal' }}>
@@ -88,9 +104,7 @@ export const BanningPanel = (props) => {
                       fluid
                       placeholder="CKEY"
                       value={key}
-                      onChange={(e) =>
-                        act('update_key', { key: e.target.value })
-                      }
+                      onChange={(e, value) => act('update_key', { key: value })}
                       style={
                         key_enabled ? { display: 'block' } : { display: 'none' }
                       }
@@ -113,7 +127,7 @@ export const BanningPanel = (props) => {
                       fluid
                       placeholder="IP"
                       value={ip}
-                      onChange={(e) => act('update_ip', { ip: e.target.value })}
+                      onChange={(e, value) => act('update_ip', { ip: value })}
                       style={
                         ip_enabled ? { display: 'block' } : { display: 'none' }
                       }
@@ -136,9 +150,7 @@ export const BanningPanel = (props) => {
                       fluid
                       placeholder="CID"
                       value={cid}
-                      onChange={(e) =>
-                        act('update_cid', { cid: e.target.value })
-                      }
+                      onChange={(e, value) => act('update_cid', { cid: value })}
                       style={
                         cid_enabled ? { display: 'block' } : { display: 'none' }
                       }
@@ -254,7 +266,7 @@ export const BanningPanel = (props) => {
         <Section title="Ban Reason">
           <TextArea
             height="100px"
-            onChange={(e) => act('update_reason', { reason: e.target.value })}
+            onChange={(e, value) => act('update_reason', { reason: value })}
           />
         </Section>
 
@@ -264,12 +276,7 @@ export const BanningPanel = (props) => {
             ban_type === 'Role' ? { display: 'block' } : { display: 'none' }
           }
         >
-          <Roles
-            selected_roles={selected_roles}
-            roles={roles}
-            selected_groups={selected_groups}
-            act={act}
-          />
+          <Roles />
         </Section>
         <Button.Confirm
           content="Submit"
@@ -292,9 +299,12 @@ export const BanningPanel = (props) => {
       </Window.Content>
     </Window>
   );
-};
+}
 
-const Roles = ({ roles, selected_roles, selected_groups, act }) => {
+function Roles(props) {
+  const { act, data } = useBackend<Data>();
+  const { roles, selected_roles, selected_groups } = data;
+
   return (
     <Stack direction="column">
       <CheckboxCollapsible
@@ -302,11 +312,7 @@ const Roles = ({ roles, selected_roles, selected_groups, act }) => {
         onClick={() => act('toggle_group', { group: 'abstract' })}
         checked={selected_groups.includes('abstract')}
       >
-        <RolesInCategory
-          selected_roles={selected_roles}
-          roles={roles['abstract']}
-          act={act}
-        />
+        <RolesInCategory roles={roles['abstract']} />
       </CheckboxCollapsible>
 
       <CheckboxCollapsible
@@ -315,11 +321,7 @@ const Roles = ({ roles, selected_roles, selected_groups, act }) => {
         color="blue"
         checked={selected_groups.includes('command')}
       >
-        <RolesInCategory
-          selected_roles={selected_roles}
-          roles={roles['command']}
-          act={act}
-        />
+        <RolesInCategory roles={roles['command']} />
       </CheckboxCollapsible>
       <CheckboxCollapsible
         title="Security Roles"
@@ -327,11 +329,7 @@ const Roles = ({ roles, selected_roles, selected_groups, act }) => {
         color="red"
         checked={selected_groups.includes('security')}
       >
-        <RolesInCategory
-          selected_roles={selected_roles}
-          roles={roles['security']}
-          act={act}
-        />
+        <RolesInCategory roles={roles['security']} />
       </CheckboxCollapsible>
       <CheckboxCollapsible
         title="Engineering Roles"
@@ -339,11 +337,7 @@ const Roles = ({ roles, selected_roles, selected_groups, act }) => {
         color="orange"
         checked={selected_groups.includes('engineering')}
       >
-        <RolesInCategory
-          selected_roles={selected_roles}
-          roles={roles['engineering']}
-          act={act}
-        />
+        <RolesInCategory roles={roles['engineering']} />
       </CheckboxCollapsible>
       <CheckboxCollapsible
         title="Medical Roles"
@@ -351,11 +345,7 @@ const Roles = ({ roles, selected_roles, selected_groups, act }) => {
         color="teal"
         checked={selected_groups.includes('medical')}
       >
-        <RolesInCategory
-          selected_roles={selected_roles}
-          roles={roles['medical']}
-          act={act}
-        />
+        <RolesInCategory roles={roles['medical']} />
       </CheckboxCollapsible>
       <CheckboxCollapsible
         title="Science Roles"
@@ -363,11 +353,7 @@ const Roles = ({ roles, selected_roles, selected_groups, act }) => {
         onClick={() => act('toggle_group', { group: 'science' })}
         checked={selected_groups.includes('science')}
       >
-        <RolesInCategory
-          selected_roles={selected_roles}
-          roles={roles['science']}
-          act={act}
-        />
+        <RolesInCategory roles={roles['science']} />
       </CheckboxCollapsible>
       <CheckboxCollapsible
         title="Supply Roles"
@@ -375,11 +361,7 @@ const Roles = ({ roles, selected_roles, selected_groups, act }) => {
         onClick={() => act('toggle_group', { group: 'supply' })}
         checked={selected_groups.includes('supply')}
       >
-        <RolesInCategory
-          selected_roles={selected_roles}
-          roles={roles['supply']}
-          act={act}
-        />
+        <RolesInCategory roles={roles['supply']} />
       </CheckboxCollapsible>
       <CheckboxCollapsible
         title="Silicon Roles"
@@ -387,11 +369,7 @@ const Roles = ({ roles, selected_roles, selected_groups, act }) => {
         onClick={() => act('toggle_group', { group: 'silicon' })}
         checked={selected_groups.includes('silicon')}
       >
-        <RolesInCategory
-          selected_roles={selected_roles}
-          roles={roles['silicon']}
-          act={act}
-        />
+        <RolesInCategory roles={roles['silicon']} />
       </CheckboxCollapsible>
       <CheckboxCollapsible
         title="Antagonist Positions"
@@ -399,11 +377,7 @@ const Roles = ({ roles, selected_roles, selected_groups, act }) => {
         color="black"
         checked={selected_roles.includes('All Antagonists')}
       >
-        <RolesInCategory
-          selected_roles={selected_roles}
-          roles={roles['antagonist_positions']}
-          act={act}
-        />
+        <RolesInCategory roles={roles['antagonist_positions']} />
       </CheckboxCollapsible>
       <CheckboxCollapsible
         title="Forced Antagonist Positions"
@@ -413,11 +387,7 @@ const Roles = ({ roles, selected_roles, selected_groups, act }) => {
         color="bad"
         checked={selected_roles.includes('Forced Antagonists')}
       >
-        <RolesInCategory
-          selected_roles={selected_roles}
-          roles={roles['forced_antagonist_positions']}
-          act={act}
-        />
+        <RolesInCategory roles={roles['forced_antagonist_positions']} />
       </CheckboxCollapsible>
       <CheckboxCollapsible
         title="Ghost Roles"
@@ -427,11 +397,7 @@ const Roles = ({ roles, selected_roles, selected_groups, act }) => {
         color="grey"
         checked={selected_roles.includes('Non-Antagonist Ghost Roles')}
       >
-        <RolesInCategory
-          selected_roles={selected_roles}
-          roles={roles['ghost_roles']}
-          act={act}
-        />
+        <RolesInCategory roles={roles['ghost_roles']} />
       </CheckboxCollapsible>
       <CheckboxCollapsible
         title="Civilian"
@@ -439,11 +405,7 @@ const Roles = ({ roles, selected_roles, selected_groups, act }) => {
         color="grey"
         checked={selected_groups.includes('civilian')}
       >
-        <RolesInCategory
-          selected_roles={selected_roles}
-          roles={roles['civilian']}
-          act={act}
-        />
+        <RolesInCategory roles={roles['civilian']} />
       </CheckboxCollapsible>
       <CheckboxCollapsible
         title="Gimmick"
@@ -451,28 +413,30 @@ const Roles = ({ roles, selected_roles, selected_groups, act }) => {
         color="pink"
         checked={selected_groups.includes('gimmick')}
       >
-        <RolesInCategory
-          selected_roles={selected_roles}
-          roles={roles['gimmick']}
-          act={act}
-        />
+        <RolesInCategory roles={roles['gimmick']} />
       </CheckboxCollapsible>
       <CheckboxCollapsible
         title="Other"
         onClick={() => act('toggle_group', { group: 'other' })}
         checked={selected_groups.includes('other')}
       >
-        <RolesInCategory
-          selected_roles={selected_roles}
-          roles={roles['other']}
-          act={act}
-        />
+        <RolesInCategory roles={roles['other']} />
       </CheckboxCollapsible>
     </Stack>
   );
+}
+
+type CheckboxCollapsibleProps = {
+  color?: string;
+  title: string;
+  onClick: () => void;
+  checked: boolean;
+  children: ReactNode;
 };
 
-const CheckboxCollapsible = ({ color, title, onClick, checked, children }) => {
+function CheckboxCollapsible(props: CheckboxCollapsibleProps) {
+  const { color, title, onClick, checked, children } = props;
+
   return (
     <Flex>
       <Button.Checkbox
@@ -483,13 +447,22 @@ const CheckboxCollapsible = ({ color, title, onClick, checked, children }) => {
         maxHeight="20px"
         verticalAlignContent="middle"
       />
-      <Collapsible title={title} color={color} inline iconPosition="right">
+      <Collapsible title={title} color={color} inline>
         {children}
       </Collapsible>
     </Flex>
   );
+}
+
+type RolesInCategoryProps = {
+  roles: string[];
 };
-const RolesInCategory = ({ roles, selected_roles, act }) => {
+
+function RolesInCategory(props: RolesInCategoryProps) {
+  const { roles } = props;
+  const { act, data } = useBackend<Data>();
+  const { selected_roles } = data;
+
   return (
     <Stack wrap width="600px">
       {roles.map((role) => {
@@ -504,7 +477,7 @@ const RolesInCategory = ({ roles, selected_roles, act }) => {
       })}
     </Stack>
   );
-};
+}
 
 const timeUnitsMapping = {
   Seconds: 'SECOND',
