@@ -36,6 +36,8 @@ export const BanningPanel = (props) => {
     duration_type,
     ban_duration,
     time_units,
+    playtime_source,
+    playtime_sources,
     ban_type,
     force_cryo_after, // Rest in piss, forever miss
     use_last_connection,
@@ -50,6 +52,8 @@ export const BanningPanel = (props) => {
   const hasValidCid = cid_enabled && cid && cid.trim() !== '';
   const canSubmit = hasValidKey || hasValidIp || hasValidCid;
   const blockedAdminBan = !!target_is_admin && !applies_to_admins;
+  const isPlaytime = duration_type === 'Playtime';
+  const unitsMapping = isPlaytime ? playtimeUnitsMapping : timeUnitsMapping;
 
   return (
     <Window
@@ -183,14 +187,14 @@ export const BanningPanel = (props) => {
                     <Flex>
                       <Dropdown
                         selected={duration_type}
-                        options={['Permanent', 'Temporary']}
+                        options={['Permanent', 'Temporary', 'Playtime']}
                         onSelected={(selected) =>
                           act('set_duration_type', { type: selected })
                         }
                       />
                       <Box
                         style={
-                          duration_type === 'Temporary'
+                          duration_type !== 'Permanent'
                             ? { display: 'flex' }
                             : { display: 'none' }
                         }
@@ -206,17 +210,33 @@ export const BanningPanel = (props) => {
                           }
                         />
                         <Dropdown
-                          selected={time_units}
-                          options={Object.keys(timeUnitsMapping)}
+                          selected={Object.keys(unitsMapping).find(
+                            (unit) => unitsMapping[unit] === time_units,
+                          )}
+                          options={Object.keys(unitsMapping)}
                           onSelected={(selected) =>
                             act('set_time_units', {
-                              units: timeUnitsMapping[selected],
+                              units: unitsMapping[selected],
                             })
                           }
                         />{' '}
                       </Box>
                     </Flex>
                   </LabeledList.Item>
+                  {isPlaytime && (
+                    <LabeledList.Item
+                      label="Playtime Source"
+                      verticalAlign="middle"
+                    >
+                      <Dropdown
+                        selected={playtime_source}
+                        options={playtime_sources}
+                        onSelected={(selected) =>
+                          act('set_playtime_source', { source: selected })
+                        }
+                      />
+                    </LabeledList.Item>
+                  )}
                   <LabeledList.Item label="Ban Type" verticalAlign="middle">
                     <Dropdown
                       selected={ban_type}
@@ -494,4 +514,9 @@ const timeUnitsMapping = {
   Weeks: 'WEEK',
   Months: 'MONTH',
   Years: 'YEAR',
+};
+
+const playtimeUnitsMapping = {
+  Minutes: 'MINUTE',
+  Hours: 'HOUR',
 };

@@ -52,6 +52,10 @@ CREATE TABLE IF NOT EXISTS `SS13_ban` (
   `server_port` smallint(5) unsigned NOT NULL,
   `round_id` int(11) unsigned NOT NULL,
   `role` varchar(32) DEFAULT NULL,
+  `required_playtime_type` varchar(32) DEFAULT NULL,
+  `start_playtime` int(11) unsigned DEFAULT NULL,
+  `playtime_duration` int(11) unsigned DEFAULT NULL,
+  `target_playtime` int(11) unsigned DEFAULT NULL,
   `expiration_time` datetime DEFAULT NULL,
   `applies_to_admins` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `reason` varchar(2048) NOT NULL,
@@ -510,7 +514,7 @@ CREATE TABLE IF NOT EXISTS `SS13_schema_revision` (
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`major`,`minor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-INSERT INTO `SS13_schema_revision` (`major`, `minor`) VALUES (7, 6);
+INSERT INTO `SS13_schema_revision` (`major`, `minor`) VALUES (7, 9);
 
 
 

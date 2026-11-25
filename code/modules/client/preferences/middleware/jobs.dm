@@ -122,6 +122,16 @@
 		if (!job.player_old_enough(user.client))
 			job_days_left[job.title] = job.available_in_days(user.client)
 
+	for (var/list/playtime_ban as anything in user.client.playtime_bans)
+		var/remaining = playtime_ban["target"] - get_playtime_for_source(user.ckey, playtime_ban["source"])
+		var/list/current_requirement = job_required_experience[playtime_ban["role"]]
+		if (remaining <= 0 || current_requirement?["required_playtime"] >= remaining)
+			continue
+		job_required_experience[playtime_ban["role"]] = list(
+			"experience_type" = playtime_ban["source"],
+			"required_playtime" = remaining,
+		)
+
 	if (job_days_left.len)
 		data["job_days_left"] = job_days_left
 

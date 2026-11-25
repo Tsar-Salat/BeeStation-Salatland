@@ -174,7 +174,7 @@
 		server_check = "server_name = '[ssqlname]'"
 
 	var/datum/db_query/query_build_ban_cache = SSdbcore.NewQuery(
-		"SELECT role, applies_to_admins FROM [format_table_name("ban")] WHERE ckey = :ckey AND unbanned_datetime IS NULL AND (expiration_time IS NULL OR expiration_time > NOW()) AND [server_check]",
+		"SELECT role, applies_to_admins, id, required_playtime_type, target_playtime FROM [format_table_name("ban")] WHERE ckey = :ckey AND unbanned_datetime IS NULL AND (expiration_time IS NULL OR expiration_time > NOW()) AND [server_check]",
 		list("ckey" = ckey))
 	var/query_successful = query_build_ban_cache.warn_execute()
 	// After we sleep, we check if this was the most recent cache build, and if so we clear our start time
@@ -184,14 +184,16 @@
 		qdel(query_build_ban_cache)
 		return
 
+	var/list/playtime_bans = list()
 	while(query_build_ban_cache.NextRow())
 		if(is_admin && !text2num(query_build_ban_cache.item[2])) // check if applies to admins
 			continue
-		ban_cache[query_build_ban_cache.item[1]] = TRUE
+		add_ban_to_cache(ban_cache, playtime_bans, query_build_ban_cache.item[3], query_build_ban_cache.item[1], query_build_ban_cache.item[4], query_build_ban_cache.item[5])
 	qdel(query_build_ban_cache)
 	if(QDELETED(player_client)) // Disconnected while working with the DB.
 		return
 	player_client.ban_cache = ban_cache
+	player_client.playtime_bans = playtime_bans
 	return ban_cache
 
 /datum/admins/proc/ban_panel(player_key, player_ip, player_cid, role, duration = 1440, applies_to_admins = FALSE, reason = "", edit_id, page, admin_key, global_ban = TRUE, force_cryo_after = FALSE)
@@ -230,9 +232,11 @@
 	var/force_cryo_after = FALSE
 	var/ban_type = "Server"
 	var/duration_type = "Temporary"
-	var/time_units = "Minutes"
+	var/time_units = "MINUTE"
+	var/playtime_source = EXP_TYPE_LIVING
 	var/use_last_connection = FALSE
 	var/static/list/static_roles
+	var/list/playtime_sources
 	var/static/list/group_list = list("command","security", "engineering", "medical", "science", "supply", "civilian", "gimmick", "antagonist_positions", "forced_antagonist_positions", "ghost_roles", "others")
 	var/list/selected_roles
 	var/list/selected_groups
@@ -255,6 +259,12 @@
 			"ghost_roles" = list(BAN_ROLE_ALL_GHOST) + GLOB.ghost_role_bannable_roles,
 			"abstract" = list("Appearance", "Emote", "OOC", "DSAY"),
 			"other" = GLOB.other_bannable_roles)
+	playtime_sources = list(EXP_TYPE_LIVING, EXP_TYPE_CREW)
+	for(var/datum/department_group/department as anything in SSjob.joinable_departments)
+		if(department.department_experience_type)
+			playtime_sources |= department.department_experience_type
+	for(var/datum/job/job as anything in SSjob.joinable_occupations)
+		playtime_sources |= job.title
 	selected_roles = list(0)
 	selected_groups = list(0)
 
@@ -286,6 +296,8 @@
 	data["duration_type"] = duration_type
 	data["ban_duration"] = duration
 	data["time_units"] = time_units
+	data["playtime_source"] = playtime_source
+	data["playtime_sources"] = playtime_sources
 	data["use_last_connection"] = use_last_connection
 	data["suppressed"] = suppressed
 	data["selected_roles"] = selected_roles
@@ -317,6 +329,9 @@
 			duration_type = params["type"]
 		if ("set_time_units")
 			time_units = params["units"]
+		if ("set_playtime_source")
+			if (params["source"] in playtime_sources)
+				playtime_source = params["source"]
 		if ("set_ban_type")
 			ban_type = params["type"]
 		if ("update_key")
@@ -349,7 +364,7 @@
 			else
 				selected_roles += role
 		if ("submit_ban")
-			parse_ban(key, key_enabled, ip_enabled, ip, cid_enabled, cid, use_last_connection, applies_to_admins, duration_type, duration, time_units, "high", reason, 1, ban_type, selected_roles, suppressed, force_cryo_after)
+			parse_ban(key, key_enabled, ip_enabled, ip, cid_enabled, cid, use_last_connection, applies_to_admins, duration_type, duration, time_units, "high", reason, 1, ban_type, selected_roles, suppressed, force_cryo_after, playtime_source)
 		else
 			if (action in group_list)
 				if (action in selected_groups)
@@ -364,7 +379,7 @@
 			else
 				. = FALSE
 
-/datum/banning_panel/proc/parse_ban(player_key, key_check, ip_check, player_ip, cid_check, player_cid, use_last_connection, applies_to_admins, duration_type, duration, interval, severity, reason, global_ban, ban_type, list/roles_to_ban, redact = FALSE, force_cryo_after = FALSE)
+/datum/banning_panel/proc/parse_ban(player_key, key_check, ip_check, player_ip, cid_check, player_cid, use_last_connection, applies_to_admins, duration_type, duration, interval, severity, reason, global_ban, ban_type, list/roles_to_ban, redact = FALSE, force_cryo_after = FALSE, playtime_source)
 	if(!check_rights(R_BAN))
 		return
 	if(!SSdbcore.Connect())
@@ -401,6 +416,22 @@
 		error_state += "Suppression may only be applied to server bans."
 	if(duration_type == "Temporary" && !duration)
 		error_state += "Temporary ban was selected but no duration was provided."
+	if(duration_type == "Playtime")
+		if(ban_type != "Role")
+			error_state += "Playtime bans can only be role bans."
+		if(!key_check || !player_key)
+			error_state += "Playtime bans need a key."
+		if(!(interval in list("MINUTE", "HOUR")))
+			error_state += "Playtime ban durations must be in minutes or hours."
+		if(!CONFIG_GET(flag/use_exp_tracking))
+			error_state += "Playtime bans need exp tracking enabled."
+		var/list/source_titles = list()
+		for(var/datum/job/job as anything in SSjob.experience_jobs_map[playtime_source])
+			source_titles += job.title
+		if(!length(source_titles))
+			source_titles += playtime_source
+		if(!length(source_titles - roles_to_ban))
+			error_state += "[playtime_source] playtime can't be earned while those roles are banned."
 	if(error_state.len)
 		to_chat(usr, span_danger("Ban not created because the following errors were present:\n[error_state.Join("\n")]"))
 		return
@@ -408,13 +439,15 @@
 		roles_to_ban = list("Server")
 	if(duration_type == "Permanent")
 		duration = null
+	if(duration_type != "Playtime")
+		playtime_source = null
 	if(!cid_check)
 		player_cid = null
 	var/mob/user = usr
 	if(!istype(user) || !user.client || !user.client.holder)
 		return
 	var/datum/admins/holder = user.client.holder
-	holder.create_ban(player_key, ip_check, player_ip, cid_check, player_cid, use_last_connection, applies_to_admins, duration, interval, severity, reason, global_ban, roles_to_ban, redact, force_cryo_after)
+	holder.create_ban(player_key, ip_check, player_ip, cid_check, player_cid, use_last_connection, applies_to_admins, duration, interval, severity, reason, global_ban, roles_to_ban, redact, force_cryo_after, playtime_source)
 
 /datum/admins/proc/ban_parse_href(list/href_list)
 	if(!check_rights(R_BAN))
@@ -565,7 +598,7 @@
 	else
 		create_ban(player_key, ip_check, player_ip, cid_check, player_cid, use_last_connection, applies_to_admins, duration, interval, severity, reason, global_ban, roles_to_ban, redact, force_cryo_after)
 
-/datum/admins/proc/create_ban(player_key, ip_check, player_ip, cid_check, player_cid, use_last_connection, applies_to_admins, duration, interval, severity, reason, global_ban, list/roles_to_ban, redact = FALSE, force_cryo_after = FALSE)
+/datum/admins/proc/create_ban(player_key, ip_check, player_ip, cid_check, player_cid, use_last_connection, applies_to_admins, duration, interval, severity, reason, global_ban, list/roles_to_ban, redact = FALSE, force_cryo_after = FALSE, playtime_source)
 	if(!check_rights(R_BAN))
 		return
 	if(!SSdbcore.Connect())
@@ -648,7 +681,32 @@
 	var/time_message = "[duration] [LOWER_TEXT(interval)]" //no DisplayTimeText because our duration is of variable interval type
 	if(duration > 1) //pluralize the interval if necessary
 		time_message += "s"
-	var/note_reason = "Banned from [roles_to_ban[1] == "Server" ? "the server" : " Roles: [roles_to_ban.Join(", ")]"] [isnull(duration) ? "permanently" : "for [time_message]"] - [reason]"
+	var/playtime_minutes
+	var/start_playtime
+	if(playtime_source)
+		playtime_minutes = interval == "HOUR" ? duration * 60 : duration
+		start_playtime = get_playtime_for_source(player_ckey, playtime_source)
+		if(isnull(start_playtime))
+			to_chat(usr, span_danger("Failed to read the playtime of [player_key]."))
+			return
+		time_message = "[DisplayTimeText(playtime_minutes MINUTES)] of [playtime_source] playtime"
+		duration = null
+	var/duration_text
+	var/ban_kind
+	var/expiry_text
+	if(playtime_source)
+		duration_text = "until [time_message] is played"
+		ban_kind = "playtime ([time_message])"
+		expiry_text = "lifted after [time_message]."
+	else if(isnull(duration))
+		duration_text = "permanently"
+		ban_kind = "permanent"
+		expiry_text = "permanent."
+	else
+		duration_text = "for [time_message]"
+		ban_kind = "temporary [time_message]"
+		expiry_text = "temporary, it will be removed in [time_message]."
+	var/note_reason = "Banned from [roles_to_ban[1] == "Server" ? "the server" : " Roles: [roles_to_ban.Join(", ")]"] [duration_text] - [reason]"
 	var/list/clients_online = GLOB.clients_unsafe.Copy()
 	var/list/admins_online = list()
 	for(var/client/C in clients_online)
@@ -700,12 +758,16 @@
 			"who" = who,
 			"adminwho" = adminwho,
 			"global_ban" = global_ban,
-			"hidden" = redact
+			"hidden" = redact,
+			"required_playtime_type" = playtime_source,
+			"start_playtime" = start_playtime,
+			"playtime_duration" = playtime_minutes,
+			"target_playtime" = playtime_source ? start_playtime + playtime_minutes : null,
 		))
 	if(!SSdbcore.MassInsert(format_table_name("ban"), sql_ban, warn = TRUE, special_columns = special_columns))
 		return
 	var/target = ban_target_string(player_key, player_ip, player_cid)
-	var/msg = "has created a [global_ban ? "global" : "local"] [isnull(duration) ? "permanent" : "temporary [time_message]"] [applies_to_admins ? "admin " : ""][roles_to_ban[1] == "Server" ? "server ban" : "role ban from [roles_to_ban.len] roles"] for [target]."
+	var/msg = "has created a [global_ban ? "global" : "local"] [ban_kind] [applies_to_admins ? "admin " : ""][roles_to_ban[1] == "Server" ? "server ban" : "role ban from [roles_to_ban.len] roles"] for [target]."
 	if(!redact)
 		log_admin_private("[kn] [msg][roles_to_ban[1] == "Server" ? "" : " Roles: [roles_to_ban.Join(", ")]"] Reason: [reason]")
 		message_admins("[kna] [msg][roles_to_ban[1] == "Server" ? "" : " Roles: [roles_to_ban.Join("\n")]"]\nReason: [reason]")
@@ -728,7 +790,7 @@
 		special_prefix = "admin "
 	if(C)
 		build_ban_cache(C)
-		to_chat(C, "[span_boldannounce("You have been [special_prefix]banned by [usr.client.key] from [roles_to_ban[1] == "Server" ? "the server" : " Roles: [roles_to_ban.Join(", ")]"].\nReason: [reason]")]<br>[span_danger("This ban is [isnull(duration) ? "permanent." : "temporary, it will be removed in [time_message]."] [global_ban ? "This ban applies to all of our servers." : "This is a single-server ban, and only applies to this server."] The round ID is [GLOB.round_id].")]<br>[span_danger(redact ? "This ban may not be appealed." : "To appeal this ban go to [appeal_url]")]")
+		to_chat(C, "[span_boldannounce("You have been [special_prefix]banned by [usr.client.key] from [roles_to_ban[1] == "Server" ? "the server" : " Roles: [roles_to_ban.Join(", ")]"].\nReason: [reason]")]<br>[span_danger("This ban is [expiry_text] [global_ban ? "This ban applies to all of our servers." : "This is a single-server ban, and only applies to this server."] The round ID is [GLOB.round_id].")]<br>[span_danger(redact ? "This ban may not be appealed." : "To appeal this ban go to [appeal_url]")]")
 		if(GLOB.admin_datums[C.ckey] || GLOB.deadmins[C.ckey])
 			is_admin = TRUE
 		if(roles_to_ban[1] == "Server" && (!is_admin || (is_admin && applies_to_admins)))
@@ -738,7 +800,7 @@
 	for(var/client/i in GLOB.clients_unsafe - C)
 		if(i.address == player_ip || i.computer_id == player_cid)
 			build_ban_cache(i)
-			to_chat(i, "[span_boldannounce("You have been [special_prefix]banned by [usr.client.key] from [roles_to_ban[1] == "Server" ? "the server" : " Roles: [roles_to_ban.Join(", ")]"].\nReason: [reason]")]<br>[span_danger("This ban is [isnull(duration) ? "permanent." : "temporary, it will be removed in [time_message]."] [global_ban ? "This ban applies to all of our servers." : "This is a single-server ban, and only applies to this server."] The round ID is [GLOB.round_id].")]<br>[span_danger("To appeal this ban go to [appeal_url]")]")
+			to_chat(i, "[span_boldannounce("You have been [special_prefix]banned by [usr.client.key] from [roles_to_ban[1] == "Server" ? "the server" : " Roles: [roles_to_ban.Join(", ")]"].\nReason: [reason]")]<br>[span_danger("This ban is [expiry_text] [global_ban ? "This ban applies to all of our servers." : "This is a single-server ban, and only applies to this server."] The round ID is [GLOB.round_id].")]<br>[span_danger("To appeal this ban go to [appeal_url]")]")
 			if(GLOB.admin_datums[i.ckey] || GLOB.deadmins[i.ckey])
 				is_admin = TRUE
 			if(roles_to_ban[1] == "Server" && (!is_admin || (is_admin && applies_to_admins)))
@@ -830,7 +892,11 @@
 					FROM [format_table_name("player")]
 					WHERE [format_table_name("player")].ckey = [format_table_name("ban")].unbanned_ckey
 				), unbanned_ckey),
-				unbanned_round_id
+				unbanned_round_id,
+				required_playtime_type,
+				playtime_duration,
+				target_playtime,
+				ckey
 			FROM [format_table_name("ban")]
 			WHERE
 				(:player_key IS NULL OR ckey = :player_key) AND
@@ -851,6 +917,7 @@
 		if(!query_unban_search_bans.warn_execute())
 			qdel(query_unban_search_bans)
 			return
+		var/list/playtime_cache = list()
 		while(query_unban_search_bans.NextRow())
 			var/ban_id = query_unban_search_bans.item[1]
 			var/ban_datetime = query_unban_search_bans.item[2]
@@ -872,13 +939,30 @@
 			var/unban_datetime = query_unban_search_bans.item[15]
 			var/unban_key = query_unban_search_bans.item[16]
 			var/unban_round_id = query_unban_search_bans.item[17]
+			var/playtime_source = query_unban_search_bans.item[18]
+			var/playtime_duration = text2num(query_unban_search_bans.item[19])
+			var/target_playtime = text2num(query_unban_search_bans.item[20])
+			var/player_ckey = query_unban_search_bans.item[21]
 			var/target = ban_target_string(player_key, player_ip, player_cid)
 			output += "<div class='banbox'><div class='header [unban_datetime ? "unbanned" : "banned"]'><b>[target]</b>[applies_to_admins ? " <b>ADMIN</b>" : ""] banned by <b>[admin_key]</b> from <b>[role]</b> on <b>[ban_datetime]</b> during round <b>#[ban_round_id]</b>.<br>"
-			if(!expiration_time)
+			if(target_playtime)
+				output += "<b>Playtime ban</b> for <b>[DisplayTimeText(playtime_duration MINUTES)]</b> of [playtime_source] playtime"
+				var/current_playtime
+				if(!unban_datetime)
+					var/cache_key = "[player_ckey]|[playtime_source]"
+					if(!(cache_key in playtime_cache))
+						playtime_cache[cache_key] = get_playtime_for_source(player_ckey, playtime_source)
+					current_playtime = playtime_cache[cache_key]
+				if(!isnull(current_playtime))
+					output += ", <b>[DisplayTimeText(max(target_playtime - current_playtime, 0) MINUTES)]</b> left"
+				output += "."
+			else if(!expiration_time)
 				output += "<b>Permanent ban</b>."
 			else
 				output += "Duration of <b>[DisplayTimeText(text2num(duration) MINUTES)]</b>, <b>[expired ? "expired" : "expires"]</b> on <b>[expiration_time]</b>."
-			if(unban_datetime)
+			if(unban_key == PLAYTIME_BAN_LIFTER)
+				output += "<br>Playtime requirement met on <b>[unban_datetime]</b> during round <b>#[unban_round_id]</b>."
+			else if(unban_datetime)
 				output += "<br>Unbanned by <b>[unban_key]</b> on <b>[unban_datetime]</b> during round <b>#[unban_round_id]</b>."
 			output += "</div><div class='container'><div class='reason'>[reason]</div><div class='edit'>"
 			output += "<a href='byond://?_src_=holder;[HrefToken()];editbanid=[ban_id];editbankey=[player_key];editbanip=[player_ip];editbancid=[player_cid];editbanrole=[role];editbanduration=[duration];editbanadmins=[applies_to_admins];editbanreason=[rustg_url_encode(reason)];editbanpage=[page];editbanadminkey=[admin_key]'>Edit</a><br>[unban_href]"
@@ -932,6 +1016,20 @@
 	if(!SSdbcore.Connect())
 		to_chat(usr, span_danger("Failed to establish database connection."))
 		return
+
+	if(changes["Key"] || changes["Duration"])
+		var/datum/db_query/query_edit_ban_playtime = SSdbcore.NewQuery(
+			"SELECT target_playtime FROM [format_table_name("ban")] WHERE id = :ban_id",
+			list("ban_id" = ban_id)
+		)
+		if(!query_edit_ban_playtime.warn_execute())
+			qdel(query_edit_ban_playtime)
+			return
+		var/is_playtime_ban = query_edit_ban_playtime.NextRow() && query_edit_ban_playtime.item[1]
+		qdel(query_edit_ban_playtime)
+		if(is_playtime_ban)
+			to_chat(usr, span_danger("Playtime bans can't change their key or duration. Unban and reban instead."))
+			return
 
 	if(cid_check && config.protected_cids.Find(player_cid))
 		if(alert(usr, "CID [player_cid] is listed as protected for the following reason: [config.protected_cids[player_cid]], Are you sure you want to restrict this CID? THIS WILL PROBABLY CATCH LEGITIMATE PLAYERS.", "Protected CID", "Yes", "No", "Cancel") != "Yes")

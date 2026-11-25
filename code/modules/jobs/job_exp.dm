@@ -190,6 +190,7 @@ GLOBAL_PROTECT(exp_to_update)
 			"minutes" = jvalue)))
 		prefs.exp[jtype] += jvalue
 	addtimer(CALLBACK(SSblackbox, TYPE_PROC_REF(/datum/controller/subsystem/blackbox, update_exp_db)),20,TIMER_OVERRIDE|TIMER_UNIQUE)
+	check_playtime_bans()
 
 //ALWAYS call this at beginning to any proc touching player flags, or your database admin will probably be mad
 /client/proc/set_db_player_flags()

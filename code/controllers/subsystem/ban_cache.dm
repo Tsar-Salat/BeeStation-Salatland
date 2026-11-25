@@ -43,9 +43,16 @@ SUBSYSTEM_DEF(ban_cache)
 	if(num_keys == 0)
 		return
 
+	var/ssqlname = CONFIG_GET(string/serversqlname)
+	var/server_check
+	if(CONFIG_GET(flag/respect_global_bans))
+		server_check = "(server_name = '[ssqlname]' OR global_ban = '1')"
+	else
+		server_check = "server_name = '[ssqlname]'"
+
 	// We're gonna try and make a query for clients
 	var/datum/db_query/query_batch_ban_cache = SSdbcore.NewQuery(
-		"SELECT ckey, role, applies_to_admins FROM [format_table_name("ban")] WHERE ckey IN ([query_arg_keys.Join(",")]) AND unbanned_datetime IS NULL AND (expiration_time IS NULL OR expiration_time > NOW())",
+		"SELECT ckey, role, applies_to_admins, id, required_playtime_type, target_playtime FROM [format_table_name("ban")] WHERE ckey IN ([query_arg_keys.Join(",")]) AND unbanned_datetime IS NULL AND (expiration_time IS NULL OR expiration_time > NOW()) AND [server_check]",
 		query_args
 	)
 
@@ -61,9 +68,11 @@ SUBSYSTEM_DEF(ban_cache)
 		return
 
 	var/list/ckey_to_bans = list()
+	var/list/ckey_to_playtime_bans = list()
 	// Runs after the check for safety, don't want to override anything
 	for(var/ckey in look_for)
 		ckey_to_bans[ckey] = list()
+		ckey_to_playtime_bans[ckey] = list()
 
 	while(query_batch_ban_cache.NextRow())
 		var/ckey = query_batch_ban_cache.item[1]
@@ -79,12 +88,13 @@ SUBSYSTEM_DEF(ban_cache)
 		if(is_admin && !text2num(hits_admins))
 			continue
 
-		bans[role] = TRUE
+		add_ban_to_cache(bans, ckey_to_playtime_bans[ckey], query_batch_ban_cache.item[4], role, query_batch_ban_cache.item[5], query_batch_ban_cache.item[6])
 
 	for(var/ckey in ckey_to_bans)
 		var/client/lad = GLOB.directory[ckey]
 		if(!lad)
 			continue
 		lad.ban_cache = ckey_to_bans[ckey]
+		lad.playtime_bans = ckey_to_playtime_bans[ckey]
 
 	qdel(query_batch_ban_cache)

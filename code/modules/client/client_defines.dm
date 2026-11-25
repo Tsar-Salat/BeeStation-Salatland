@@ -62,6 +62,8 @@
 	var/ban_cache = null
 	///If we are currently building this client's ban cache, this var stores the timeofday we started at
 	var/ban_cache_start = 0
+	/// Active playtime bans from ban cache
+	var/list/playtime_bans
 	/// Contains the last message sent by this client - used to protect against copy-paste spamming.
 	var/last_message = ""
 	/// How many messages sent in the last 10 seconds
