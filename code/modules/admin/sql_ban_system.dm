@@ -265,8 +265,8 @@
 			playtime_sources |= department.department_experience_type
 	for(var/datum/job/job as anything in SSjob.joinable_occupations)
 		playtime_sources |= job.title
-	selected_roles = list(0)
-	selected_groups = list(0)
+	selected_roles = list()
+	selected_groups = list()
 
 /datum/banning_panel/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
@@ -303,6 +303,10 @@
 	data["selected_roles"] = selected_roles
 	data["selected_groups"] = selected_groups
 	data["roles"] = static_roles
+	data["round_id"] = GLOB.round_id
+	data["admin_key"] = user.key
+	data["server_time"] = time2text(world.realtime, "YYYY-MM-DD hh:mm:ss")
+	data["ban_errors"] = get_ban_errors()
 
 	return data
 
@@ -379,6 +383,51 @@
 			else
 				. = FALSE
 
+/// Problems that would stop this ban being created, as message = preview field
+/datum/banning_panel/proc/get_ban_errors()
+	var/list/errors = list()
+	if(!key_enabled && !ip_enabled && !cid_enabled)
+		errors["Key, IP or CID must be ticked."] = "target"
+	if(key_enabled && !key)
+		errors["Key was ticked but none was provided."] = "target"
+	if(ip_enabled && !ip && !use_last_connection)
+		errors["IP was ticked but none was provided."] = "target"
+	if(cid_enabled && !cid && !use_last_connection)
+		errors["CID was ticked but none was provided."] = "target"
+	if(use_last_connection && !ip_enabled && !cid_enabled)
+		errors["Use last connection was ticked, but neither IP nor CID was."] = "target"
+	if(applies_to_admins && suppressed)
+		errors["Admin bans can not be suppressed."] = "target"
+	if(key && !applies_to_admins && is_admin(ckey(key)))
+		errors["[key] is an admin. You must tick \"Applies to admins\" to ban them."] = "target"
+	if(!duration)
+		errors["No duration was provided."] = "expiry"
+	if(!reason)
+		errors["No reason was provided."] = "reason"
+	if(ban_type == "Role" && !length(selected_roles))
+		errors["Role ban was selected but no roles to ban were selected."] = "role"
+	if(ban_type != "Server" && suppressed)
+		errors["Suppression may only be applied to server bans."] = "role"
+	if(duration_type == "Temporary" && !duration)
+		errors["Temporary ban was selected but no duration was provided."] = "expiry"
+	if(duration_type == "Playtime")
+		if(ban_type != "Role")
+			errors["Playtime bans can only be role bans."] = "role"
+		if(!key_enabled || !key)
+			errors["Playtime bans need a key."] = "target"
+		if(!(time_units in list("MINUTE", "HOUR")))
+			errors["Playtime ban durations must be in minutes or hours."] = "expiry"
+		if(!CONFIG_GET(flag/use_exp_tracking))
+			errors["Playtime bans need exp tracking enabled."] = "expiry"
+		var/list/source_titles = list()
+		for(var/datum/job/job as anything in SSjob.experience_jobs_map[playtime_source])
+			source_titles += job.title
+		if(!length(source_titles))
+			source_titles += playtime_source
+		if(!length(source_titles - selected_roles))
+			errors["[playtime_source] playtime can't be earned while those roles are banned."] = "role"
+	return errors
+
 /datum/banning_panel/proc/parse_ban(player_key, key_check, ip_check, player_ip, cid_check, player_cid, use_last_connection, applies_to_admins, duration_type, duration, interval, severity, reason, global_ban, ban_type, list/roles_to_ban, redact = FALSE, force_cryo_after = FALSE, playtime_source)
 	if(!check_rights(R_BAN))
 		return
@@ -386,52 +435,12 @@
 		to_chat(usr, span_danger("Failed to establish database connection."))
 		return
 
-	var/list/error_state = list()
-
-	roles_to_ban.Remove(0)
+	var/list/error_state = get_ban_errors()
 	if(redact && !check_rights(R_SUPPRESS))
 		error_state += "You have attempted to issue a suppressed ban without permission, This incident has been logged."
 		log_admin_private("SUPPRESS: [key_name(usr)] ATTEMPTED TO ISSUE A SUPPRESSED BAN WITHOUT THE REQUISITE RIGHT!")
-	if(key_check && !player_key)
-		error_state += "Key was ticked but none was provided."
-	if(ip_check && !player_ip && !use_last_connection)
-		error_state += "IP was ticked but none was provided."
-	if(cid_check && !player_cid && !use_last_connection)
-		error_state += "CID was ticked but none was provided."
-	if(use_last_connection && !ip_check && !cid_check)
-		error_state += "Use last connection was ticked, but neither IP nor CID was."
-	if(applies_to_admins && redact)
-		error_state += "Admin bans can not be suppressed."
-	if(player_key && !applies_to_admins && is_admin(ckey(player_key)))
-		error_state += "[player_key] is an admin. You must tick \"Applies to admins\" to ban them."
-	if(!duration)
-		error_state += "No duration was provided."
-	if(!reason)
-		error_state += "No reason was provided."
 	if(!severity)
 		error_state += "No severity was selected."
-	if(ban_type == "Role" && !roles_to_ban.len)
-		error_state += "Role ban was selected but no roles to ban were selected."
-	if(ban_type != "Server" && redact)
-		error_state += "Suppression may only be applied to server bans."
-	if(duration_type == "Temporary" && !duration)
-		error_state += "Temporary ban was selected but no duration was provided."
-	if(duration_type == "Playtime")
-		if(ban_type != "Role")
-			error_state += "Playtime bans can only be role bans."
-		if(!key_check || !player_key)
-			error_state += "Playtime bans need a key."
-		if(!(interval in list("MINUTE", "HOUR")))
-			error_state += "Playtime ban durations must be in minutes or hours."
-		if(!CONFIG_GET(flag/use_exp_tracking))
-			error_state += "Playtime bans need exp tracking enabled."
-		var/list/source_titles = list()
-		for(var/datum/job/job as anything in SSjob.experience_jobs_map[playtime_source])
-			source_titles += job.title
-		if(!length(source_titles))
-			source_titles += playtime_source
-		if(!length(source_titles - roles_to_ban))
-			error_state += "[playtime_source] playtime can't be earned while those roles are banned."
 	if(error_state.len)
 		to_chat(usr, span_danger("Ban not created because the following errors were present:\n[error_state.Join("\n")]"))
 		return

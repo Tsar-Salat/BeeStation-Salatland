@@ -43,6 +43,11 @@ type Data = {
   roles: Record<string, string[]>;
   selected_roles: string[];
   selected_groups: string[];
+  reason: string;
+  round_id: number;
+  admin_key: string;
+  server_time: string;
+  ban_errors: Record<string, string>;
 };
 
 export function BanningPanel(props) {
@@ -278,6 +283,7 @@ export function BanningPanel(props) {
         >
           <Roles />
         </Section>
+        <BanPreview />
         <Button.Confirm
           content="Submit"
           onClick={() => act('submit_ban')}
@@ -426,6 +432,113 @@ function Roles(props) {
   );
 }
 
+function BanPreview(props) {
+  const { data } = useBackend<Data>();
+  const {
+    key_enabled,
+    key,
+    ip_enabled,
+    ip,
+    cid_enabled,
+    cid,
+    reason,
+    duration_type,
+    ban_duration,
+    time_units,
+    playtime_source,
+    ban_type,
+    selected_roles,
+    round_id,
+    admin_key,
+    server_time,
+    ban_errors,
+  } = data;
+
+  const errorFields = Object.values(ban_errors);
+  const target = [key_enabled && key, ip_enabled && ip, cid_enabled && cid]
+    .filter(Boolean)
+    .join(' / ');
+
+  let expiry = 'Permanent';
+  if (duration_type === 'Temporary') {
+    expiry = addInterval(server_time, ban_duration, time_units);
+  } else if (duration_type === 'Playtime') {
+    expiry = `After ${ban_duration} ${time_units.toLowerCase()}${ban_duration > 1 ? 's' : ''} of ${playtime_source} playtime`;
+  }
+
+  return (
+    <Section title="Preview">
+      <Box pb={1} style={{ borderBottom: '3px solid #ffb400' }}>
+        <Box
+          bold
+          fontSize="24px"
+          color={errorFields.includes('target') ? 'bad' : undefined}
+        >
+          {target || 'No target'}
+        </Box>
+        <Box my={1} color={errorFields.includes('reason') ? 'bad' : undefined}>
+          {reason || 'No reason'}
+        </Box>
+        <Stack wrap>
+          <PreviewField label="Ban Date">{server_time}</PreviewField>
+          <PreviewField
+            label="Expire Date"
+            error={errorFields.includes('expiry')}
+          >
+            {expiry}
+          </PreviewField>
+          <PreviewField label="Round">{round_id}</PreviewField>
+          <PreviewField label="Server">All</PreviewField>
+          <PreviewField label="Admin">{admin_key}</PreviewField>
+        </Stack>
+        <PreviewField label="Role" error={errorFields.includes('role')}>
+          {ban_type === 'Server'
+            ? 'Server'
+            : selected_roles.join(', ') || 'None'}
+        </PreviewField>
+      </Box>
+      {Object.keys(ban_errors).map((error) => (
+        <Box key={error} mt={1} color="bad">
+          {error}
+        </Box>
+      ))}
+    </Section>
+  );
+}
+
+type PreviewFieldProps = {
+  label: string;
+  error?: boolean;
+  children: ReactNode;
+};
+
+function PreviewField(props: PreviewFieldProps) {
+  const { label, error, children } = props;
+
+  return (
+    <Stack.Item>
+      <Box inline bold color="#ffb400">
+        {label}:
+      </Box>{' '}
+      <Box inline color={error ? 'bad' : undefined}>
+        {children}
+      </Box>
+    </Stack.Item>
+  );
+}
+
+function addInterval(time: string, amount: number, unit: string) {
+  const date = new Date(`${time.replace(' ', 'T')}Z`);
+  if (unit === 'MONTH') {
+    date.setUTCMonth(date.getUTCMonth() + amount);
+  } else if (unit === 'YEAR') {
+    date.setUTCFullYear(date.getUTCFullYear() + amount);
+  } else {
+    date.setTime(date.getTime() + amount * unitSeconds[unit] * 1000);
+  }
+  return date.toISOString().slice(0, 19).replace('T', ' ');
+}
+
 type CheckboxCollapsibleProps = {
   color?: string;
   title: string;
@@ -492,4 +605,12 @@ const timeUnitsMapping = {
 const playtimeUnitsMapping = {
   Minutes: 'MINUTE',
   Hours: 'HOUR',
+};
+
+const unitSeconds = {
+  SECOND: 1,
+  MINUTE: 60,
+  HOUR: 3600,
+  DAY: 86400,
+  WEEK: 604800,
 };
