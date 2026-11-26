@@ -135,7 +135,6 @@ SCREENTIP_ATTACK_HAND(/obj/machinery/clonepod, "Examine")
 /obj/machinery/clonepod/proc/growclone(datum/record/cloning/record, experimental)
 	var/body_only = record.body_only
 	if(!reagents.has_reagent(/datum/reagent/medicine/synthflesh, fleshamnt))
-		connected_message("Cannot start cloning: Not enough synthflesh.")
 		return ERROR_NO_SYNTHFLESH
 	if(panel_open)
 		return ERROR_PANEL_OPENED

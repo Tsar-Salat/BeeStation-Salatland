@@ -148,45 +148,49 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 
 // --------------------------------------
 // Manages record and disk
+/obj/machinery/computer/cloning/proc/find_record(id)
+	for(var/datum/record/cloning/each_record as anything in records)
+		if(each_record.id == id)
+			return each_record
+
+/obj/machinery/computer/cloning/proc/scan_error(message, sound = 'sound/machines/terminal_prompt_deny.ogg')
+	scantemp = message
+	playsound(src, sound, 50, FALSE)
+
+/obj/machinery/computer/cloning/proc/clone_error(message)
+	temp = message
+	playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, FALSE)
+
 /obj/machinery/computer/cloning/proc/delete_record(mob/user, target_record)
 	var/obj/item/card/id/idcard_for_auth
 	if(isliving(user))
 		var/mob/living/living_user = user
 		idcard_for_auth = living_user.get_idcard(hand_first = TRUE)
 	if(!istype(idcard_for_auth) || !check_access(idcard_for_auth))
-		scantemp = "Cannot delete: Access Denied."
-		playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+		scan_error("Cannot delete: Access Denied.")
 		return
 
-	var/datum/record/cloning/found_record
-	for(var/datum/record/cloning/each_record in records)
-		if(each_record.id == target_record)
-			found_record = each_record
-			break
+	var/datum/record/cloning/found_record = find_record(target_record)
 	if(!found_record)
-		playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
-		scantemp = "Cannot delete: Data Corrupted."
+		scan_error("Cannot delete: Data Corrupted.")
 		return
 
 	scantemp = "[found_record.name] => Record deleted."
-	records.Remove(found_record)
+	records -= found_record
 	playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, 0)
 	qdel(found_record)
 
 /obj/machinery/computer/cloning/proc/save_to_disk(mob/user, target_record)
-	if(!diskette || diskette.read_only)
-		scantemp = !diskette ? "Failed saving to disk: No disk." : "Failed saving to disk: Disk refuses override attempt."
-		playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+	if(!diskette)
+		scan_error("Failed saving to disk: No disk.")
+		return
+	if(diskette.read_only)
+		scan_error("Failed saving to disk: Disk refuses override attempt.")
 		return
 
-	var/datum/record/cloning/found_record
-	for(var/datum/record/cloning/each_record in records)
-		if(each_record.id == target_record)
-			found_record = each_record
-			break
+	var/datum/record/cloning/found_record = find_record(target_record)
 	if(!found_record)
-		playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
-		scantemp = "Failed saving to disk: Data Corrupted"
+		scan_error("Failed saving to disk: Data Corrupted")
 		return
 
 	QDEL_NULL(diskette.data)
@@ -197,20 +201,16 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 	playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, 0)
 
 /obj/machinery/computer/cloning/proc/load_from_disk(mob/user)
-	if(!diskette || !diskette.data.name || !diskette.data)
-		scantemp = "Failed loading: Load error."
-		playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+	if(!diskette?.data?.name)
+		scan_error("Failed loading: Load error.")
 		return
-
-	for(var/datum/record/cloning/each_record in records)
-		if(each_record.id == diskette.data.id)
-			scantemp = "Failed loading: Data already exists!"
-			return
+	if(find_record(diskette.data.id))
+		scan_error("Failed loading: Data already exists!")
+		return
 
 	records += diskette.data.copy()
 	scantemp = "Loaded into internal storage successfully."
 	playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, 0)
-	return
 
 /obj/machinery/computer/cloning/proc/eject_disk(mob/user)
 	if(!diskette)
@@ -222,7 +222,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 	playsound(src, 'sound/machines/terminal_insert_disc.ogg', 50, FALSE)
 
 /obj/machinery/computer/cloning/proc/toggle_lock(mob/user)
-	if(!connected_scanner.is_operational)
+	if(!connected_scanner?.is_operational)
 		return
 	if(!connected_scanner.locked && !connected_scanner.occupant) //I figured out that if you're fast enough, you can lock an open pod
 		return
@@ -235,8 +235,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 	if(isnull(connected_scanner) || !connected_scanner.is_operational || !connected_scanner.occupant)
 		return
 	if(busy)
-		playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
-		scantemp = "Error: Too busy for scanning."
+		scan_error("Error: Too busy for scanning.")
 		return
 	scantemp = "[get_scanner_occupant()] => Scanning..."
 	busy = TRUE
@@ -246,15 +245,16 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 	connected_scanner.locked = TRUE
 	addtimer(CALLBACK(src, PROC_REF(finish_scan), connected_scanner.occupant, user, previous_lock_status, body_only), 2 SECONDS)
 
-/obj/machinery/computer/cloning/proc/finish_scan(mob/living/carbon_mob, mob/user, previous_lock_status, body_only)
-	if(!connected_scanner || !carbon_mob)
-		return
-	add_fingerprint(user)
-	scan_occupant(carbon_mob, user, body_only)
-
+/obj/machinery/computer/cloning/proc/finish_scan(atom/movable/scanned, mob/user, previous_lock_status, body_only)
 	busy = FALSE
+	if(QDELETED(connected_scanner))
+		return
 	connected_scanner.locked = previous_lock_status
-	playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, 0)
+	if(QDELETED(scanned) || connected_scanner.occupant != scanned)
+		scan_error("Error: Subject left the scanner.")
+	else
+		add_fingerprint(user)
+		scan_occupant(scanned, user, body_only)
 	SStgui.update_uis(src) // Immediate since it's not spammable
 
 /obj/machinery/computer/cloning/proc/scan_occupant(atom/atom_occupant, mob/user, body_only)
@@ -293,16 +293,16 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 	// I mean, this attempts to detect the thing from head/brain(object), but it is not actually an object (ARgh I hate this weird description)
 
 	// Scanning an object; gets a brain item - Try to find a brain that holds a DNA
-	else if(istype(occupant, /obj/item/bodypart/head)) // From head
-		brain_to_clone = locate(/obj/item/organ/brain) in occupant
+	else if(istype(atom_occupant, /obj/item/bodypart/head)) // From head
+		brain_to_clone = locate(/obj/item/organ/brain) in atom_occupant
 		dna = brain_to_clone?.brain_dna
 		// occupant_mind = null // Reminder: does not exist. This line exists for a hint.
-	else if(istype(occupant, /obj/item/organ/brain)) // From brain
-		brain_to_clone = occupant
+	else if(istype(atom_occupant, /obj/item/organ/brain)) // From brain
+		brain_to_clone = atom_occupant
 		dna = brain_to_clone.brain_dna
 		// occupant_mind = null // Reminder: does not exist. This line exists for a hint.
 
-	if(!can_scan(dna, human_mob, has_bank_account, body_only))
+	if(!can_scan(dna, human_mob, occupant_mind, has_bank_account, body_only))
 		return
 
 	if(!dna.species)
@@ -315,12 +315,13 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 	cloning_record.bank_account = has_bank_account
 
 	//even if you have the same identity, this will give you different id based on your mind. body_only gets β at their id.
+	var/name_hash = rustg_hash_string(RUSTG_HASH_MD5, cloning_record.name)
 	if(experimental)
-		cloning_record.id =  copytext_char(rustg_hash_string(RUSTG_HASH_MD5, cloning_record.name), 3, 10)+"β+" //beta plus
+		cloning_record.id = copytext_char(name_hash, 3, 10)+"β+" //beta plus
 	else if(body_only)
-		cloning_record.id = copytext_char(rustg_hash_string(RUSTG_HASH_MD5, cloning_record.name), 3, 10)+"β" //beta
+		cloning_record.id = copytext_char(name_hash, 3, 10)+"β" //beta
 	else
-		cloning_record.id = copytext_char(rustg_hash_string(RUSTG_HASH_MD5, cloning_record.name), 3, 7)+copytext_char(rustg_hash_string(RUSTG_HASH_MD5, FAST_REF(occupant_mind)), -4)
+		cloning_record.id = copytext_char(name_hash, 3, 7)+copytext_char(rustg_hash_string(RUSTG_HASH_MD5, FAST_REF(occupant_mind)), -4)
 
 	//We'll detect the brain first because trauma is from the brain, not from the body.
 	if(brainmob)
@@ -329,8 +330,6 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 		cloning_record.traumas = human_mob.get_traumas()
 	else if(brain_to_clone)
 		cloning_record.traumas = brain_to_clone.traumas.Copy()
-	else
-		cloning_record.traumas = list() // nothing to copy!
 	//Traumas will be overriden if the brain transplant is made because '/obj/item/organ/brain/Insert' does that thing. This should be done since we want a monkey yelling to people with 'God voice syndrome'
 
 	if(human_mob && (!body_only || experimental && human_mob.stat != DEAD))
@@ -341,133 +340,104 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 			implant.implant(human_mob)
 		cloning_record.weakref_health_implant = WEAKREF(implant)
 
-	var/found_old_record = null
-	for(var/datum/record/cloning/old_record as anything in records)
-		if(old_record.id == cloning_record.id)
-			found_old_record = old_record
-
-	if(found_old_record)
-		records -= found_old_record
+	var/datum/record/cloning/old_record = find_record(cloning_record.id)
+	if(old_record)
+		records -= old_record
+		qdel(old_record)
 		scantemp = "Record updated."
 	else
 		scantemp = "Subject successfully scanned."
 
 	records += cloning_record
 
-	if(!experimental)
-		log_cloning("[key_name(user)] added the record[body_only ? "(body-only)" : ""] of [key_name(human_mob)](DNA-name:[dna.real_name]) to [src] at [AREACOORD(src)].")
-	else
-		log_cloning("[key_name(user)] added the record(experimental) of [key_name(human_mob)](DNA-name:[dna.real_name]) to [src] at [AREACOORD(src)].")
+	var/record_kind = experimental ? "(experimental)" : body_only ? "(body-only)" : ""
+	log_cloning("[key_name(user)] added the record[record_kind] of [key_name(human_mob || brainmob || atom_occupant)](DNA-name:[dna.real_name]) to [src] at [AREACOORD(src)].")
 	playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50)
-	ui_update()
 
-/obj/machinery/computer/cloning/proc/can_scan(datum/dna/dna, mob/living/mob_occupant, datum/bank_account/account, body_only)
+/obj/machinery/computer/cloning/proc/can_scan(datum/dna/dna, mob/living/mob_occupant, datum/mind/mind, datum/bank_account/account, body_only)
 	if(!istype(dna))
-		scantemp = "Unable to locate valid genetic data."
-		playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+		scan_error("Unable to locate valid genetic data.")
+		return FALSE
+	if(!experimental && !body_only && !mind)
+		scan_error("Mental interface failure.")
 		return FALSE
 	if(isliving(mob_occupant))
 		if(HAS_TRAIT(mob_occupant, TRAIT_NO_DNA_COPY))
-			scantemp = "The DNA of this lifeform could not be read due to an unknown error!"
-			playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+			scan_error("The DNA of this lifeform could not be read due to an unknown error!")
 			return FALSE
 		if((HAS_TRAIT(mob_occupant, TRAIT_HUSK)) && (connected_scanner.scan_level < 2))
-			scantemp = "Subject's body is too damaged to scan properly."
-			playsound(src, 'sound/machines/terminal_alert.ogg', 50, 0)
+			scan_error("Subject's body is too damaged to scan properly.", 'sound/machines/terminal_alert.ogg')
 			return FALSE
 		if(HAS_TRAIT(mob_occupant, TRAIT_BADDNA))
-			scantemp = "Subject's DNA is damaged beyond any hope of recovery."
-			playsound(src, 'sound/machines/terminal_alert.ogg', 50, 0)
+			scan_error("Subject's DNA is damaged beyond any hope of recovery.", 'sound/machines/terminal_alert.ogg')
 			return FALSE
 		if(!experimental && !body_only)
 			if(mob_occupant.suiciding)
-				scantemp = "Subject's brain is not responding to scanning stimuli."
-				playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
-				return FALSE
-			if(isnull(mob_occupant.mind))
-				scantemp = "Mental interface failure."
-				playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+				scan_error("Subject's brain is not responding to scanning stimuli.")
 				return FALSE
 			if(SSeconomy.full_ancap && !account)
-				scantemp = "Subject is either missing an ID card with a bank account on it, or does not have an account to begin with. Please ensure the ID card is on the body before attempting to scan."
-				playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, FALSE)
+				scan_error("Subject is either missing an ID card with a bank account on it, or does not have an account to begin with. Please ensure the ID card is on the body before attempting to scan.")
 				return FALSE
 	return TRUE
 
 /obj/machinery/computer/cloning/proc/start_clone(mob/user, target_record)
-	var/datum/record/cloning/found_record
-	for(var/datum/record/cloning/each_record in records)
-		if(each_record.id == target_record)
-			found_record = each_record
-			break
+	var/datum/record/cloning/found_record = find_record(target_record)
 	if(!found_record)
-		temp = "Failed to clone: No Data corrupted."
-		playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+		clone_error("Failed to clone: No Data corrupted.")
 		return
 
 	var/obj/machinery/clonepod/pod = get_available_clonepod()
 	//Can't clone without someone to clone.  Or a pod.  Or if the pod is busy. Or full of gibs.
 	if(!LAZYLEN(connected_pods))
-		temp = "Error: No Clonepods detected."
-		playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+		clone_error("Error: No Clonepods detected.")
 		return
 	if(!pod)
-		temp = "Error: No Clonepods available."
-		playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+		clone_error("Error: No Clonepods available.")
 		return
 	if((!found_record.body_only || !experimental) && !CONFIG_GET(flag/revival_cloning))
-		temp = "Error: Unable to initiate cloning cycle."
-		playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+		clone_error("Error: Unable to initiate cloning cycle.")
 		return
 
-	switch(pod.growclone(found_record, experimental))
-		if(CLONING_SUCCESS)
-			temp = "Notice: [found_record.name] => Cloning cycle in progress..."
-			playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, 0)
-			if(!found_record.body_only)
-				records.Remove(found_record)
-		if(CLONING_SUCCESS_EXPERIMENTAL)
-			temp = "Notice: [found_record.name] => Experimental cloning cycle in progress..."
-			playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, 0)
+	var/result = pod.growclone(found_record, experimental)
+	if(result == CLONING_SUCCESS)
+		temp = "Notice: [found_record.name] => Cloning cycle in progress..."
+		playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, 0)
+		if(!found_record.body_only)
+			records -= found_record
+		return
+	if(result == CLONING_SUCCESS_EXPERIMENTAL)
+		temp = "Notice: [found_record.name] => Experimental cloning cycle in progress..."
+		playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, 0)
+		return
+
+	var/message
+	switch(result)
 		if(ERROR_NO_SYNTHFLESH)
-			temp = "Error [ERROR_NO_SYNTHFLESH]: Out of synthflesh."
-			playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+			message = "Out of synthflesh."
 		if(ERROR_PANEL_OPENED)
-			temp = "Error [ERROR_PANEL_OPENED]: Panel opened."
-			playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+			message = "Panel opened."
 		if(ERROR_MESS_OR_ATTEMPTING)
-			temp = "Error [ERROR_MESS_OR_ATTEMPTING]: Pod is already occupied."
-			playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+			message = "Pod is already occupied."
 		if(ERROR_MISSING_EXPERIMENTAL_POD)
-			temp = "Error [ERROR_MISSING_EXPERIMENTAL_POD]: Experimental pod is not detected."
-			playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+			message = "Experimental pod is not detected."
 		if(ERROR_NOT_MIND)
-			temp = "Error [ERROR_NOT_MIND]: [found_record.name]'s lack of their mind."
-			playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+			message = "[found_record.name]'s lack of their mind."
 		if(ERROR_PRESAVED_CLONE)
-			temp = "Error [ERROR_PRESAVED_CLONE]: [found_record.name]'s clone record is presaved."
-			playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+			message = "[found_record.name]'s clone record is presaved."
 		if(ERROR_OUTDATED_CLONE)
-			temp = "Error [ERROR_OUTDATED_CLONE]: [found_record.name]'s clone record is outdated."
-			playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+			message = "[found_record.name]'s clone record is outdated."
 		if(ERROR_ALREADY_ALIVE)
-			temp = "Error [ERROR_ALREADY_ALIVE]: [found_record.name] already alive."
-			playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+			message = "[found_record.name] already alive."
 		if(ERROR_COMMITED_SUICIDE)
-			temp = "Error [ERROR_COMMITED_SUICIDE]: [found_record.name] commited a suicide."
-			playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+			message = "[found_record.name] commited a suicide."
 		if(ERROR_SOUL_DEPARTED)
-			temp = "Error [ERROR_SOUL_DEPARTED]: [found_record.name]'s soul had departed."
-			playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+			message = "[found_record.name]'s soul had departed."
 		if(ERROR_SUICIDED_BODY)
-			temp = "Error [ERROR_SUICIDED_BODY]: Failed to capture [found_record.name]'s mind from a suicided body."
-			playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
-		if(ERROR_UNCLONABLE)
-			temp = "Error [ERROR_UNCLONABLE]: [found_record.name] is not clonable."
-			playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
-		else
-			temp = "Error unknown => Initialisation failure."
-			playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+			message = "Failed to capture [found_record.name]'s mind from a suicided body."
+	if(message)
+		clone_error("Error [result]: [message]")
+	else
+		clone_error("Error unknown => Initialisation failure.")
 
 // --------------------------------------
 // TGUI parts
