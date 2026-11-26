@@ -2208,3 +2208,41 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/scan_consolenew)
 #undef GENETIC_DAMAGE_PULSE_UNIQUE_FEATURES
 
 #undef CALCULATE_UPGRADED_TIMEOUT
+
+/obj/item/disk/data
+	name = "cloning data disk"
+	icon_state = "datadisk0" //Gosh I hope syndies don't mistake them for the nuke disk.
+	var/list/genetic_makeup_buffer = list()
+	var/datum/record/cloning/data
+	var/list/mutations = list()
+	var/max_mutations = 6
+	var/read_only = FALSE //Well,it's still a floppy disk
+
+//Disk stuff.
+/obj/item/disk/data/Initialize(mapload)
+	. = ..()
+	icon_state = "datadisk[rand(0,6)]"
+	add_overlay("datadisk_gene")
+
+/obj/item/disk/data/Destroy(force)
+	. = ..()
+	if(data)
+		QDEL_NULL(data)
+
+/obj/item/disk/data/attack_self(mob/user)
+	read_only = !read_only
+	to_chat(user, span_notice("You flip the write-protect tab to [read_only ? "protected" : "unprotected"]."))
+
+/obj/item/disk/data/examine(mob/user)
+	. = ..()
+	. += "The write-protect tab is set to [read_only ? "protected" : "unprotected"]."
+
+/obj/item/disk/data/debug
+	name = "Debug genetic data disk"
+	desc = "A disk that contains all existing genetic mutations."
+	max_mutations = 100
+
+/obj/item/disk/data/debug/Initialize(mapload)
+	. = ..()
+	for(var/datum/mutation/HM as anything in GLOB.all_mutations)
+		mutations += new HM

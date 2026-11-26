@@ -273,7 +273,6 @@
 	var/datum/species/oozeling/slime/SS = H.dna.species
 
 	if(QDELETED(dupe)) 					//Is there a body?
-		SS.bodies -= dupe
 		return FALSE
 
 	if(!isslimeperson(dupe)) 			//Is it a slimeperson?

@@ -14,11 +14,10 @@
 	var/list/records = list()
 	var/obj/item/disk/data/diskette //Incompatible format to genetics machine
 
+	/// console status for cloning
 	var/temp = "Inactive"
-	var/scantemp_ckey
-	var/scantemp_name
+	/// console status for scanning
 	var/scantemp = "Inactive"
-	// ^EvilDragon: I have no idea regarding what these variables exist for
 
 	/// The computer is doing something and cannot do something else. Currently used in scanning
 	var/busy = FALSE
@@ -84,14 +83,26 @@
 		UnregisterSignal(connected_scanner, COMSIG_MACHINE_OPEN)
 		UnregisterSignal(connected_scanner, COMSIG_MACHINE_CLOSE)
 
-	if(new_scanner)
-		RegisterSignal(new_scanner, COMSIG_MACHINE_OPEN, PROC_REF(scanner_ui_update))
-		RegisterSignal(new_scanner, COMSIG_MACHINE_CLOSE, PROC_REF(scanner_ui_update))
-
 	connected_scanner = new_scanner
+	if(new_scanner)
+		RegisterSignal(new_scanner, COMSIG_MACHINE_OPEN, PROC_REF(on_scanner_opened))
+		RegisterSignal(new_scanner, COMSIG_MACHINE_CLOSE, PROC_REF(on_scanner_closed))
+		on_scanner_closed()
 
-/obj/machinery/computer/cloning/proc/scanner_ui_update()
+/// Returns the scanner occupant, or its brainmob for heads and brains
+/obj/machinery/computer/cloning/proc/get_scanner_occupant()
+	var/atom/movable/scanned = connected_scanner?.occupant
+	return isliving(scanned) ? scanned : get_brainmob(scanned)
+
+/obj/machinery/computer/cloning/proc/on_scanner_opened()
 	SIGNAL_HANDLER
+	scantemp = "Ready to Scan"
+	ui_update()
+
+/obj/machinery/computer/cloning/proc/on_scanner_closed()
+	SIGNAL_HANDLER
+	var/mob/living/scanner_occupant = get_scanner_occupant()
+	scantemp = scanner_occupant ? "[scanner_occupant] => Ready to Scan" : "Ready to Scan"
 	ui_update()
 
 /obj/machinery/computer/cloning/proc/update_modules(find_clonepod_first)
@@ -231,7 +242,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 		playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
 		scantemp = "Error: Too busy for scanning."
 		return
-	scantemp = "[scantemp_name] => Scanning..."
+	scantemp = "[get_scanner_occupant()] => Scanning..."
 	busy = TRUE
 	playsound(src, 'sound/machines/terminal_prompt.ogg', 50, 0)
 	say("Initiating scan...")
@@ -433,10 +444,6 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 		temp = "Error: Unable to initiate cloning cycle."
 		playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
 		return
-	if(pod.occupant)
-		temp = "Warning: Cloning cycle already in progress."
-		playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
-		return
 
 	var/cloning_attempt_result = pod.growclone(CLONING_STRICT_ARGS(
 		/* 01 */ clonename = found_record.name,
@@ -508,7 +515,6 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 // TGUI parts
 /obj/machinery/computer/cloning/ui_data(mob/user)
 	var/list/data = list()
-	data["useRecords"] = TRUE // This exists because of the old function.
 	data["records"] = list()
 	for(var/datum/record/cloning/each_record in records)
 		var/list/record_entry = list()
@@ -545,19 +551,11 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 		lack_machine += "ERROR: No Pod Detected!"
 	data["lacksMachine"] = lack_machine
 	data["temp"] = temp
-	var/build_temp = null
-	var/mob/living/scanner_occupant = connected_scanner && (isliving(connected_scanner.occupant) ? connected_scanner.occupant : get_brainmob(connected_scanner.occupant))
-	if(scanner_occupant?.ckey != scantemp_ckey || scanner_occupant?.name != scantemp_name)
-		build_temp = "Ready to Scan"
-		scantemp_ckey = scanner_occupant?.ckey
-		scantemp_name = scanner_occupant?.name
-		scantemp = "[scanner_occupant] => [build_temp]"
 	data["scanTemp"] = scantemp
 	data["scannerLocked"] = connected_scanner?.locked
-	data["hasOccupant"] = connected_scanner?.occupant
-	data["recordsLength"] = "View Records ([length(records)])"
+	data["hasOccupant"] = !!connected_scanner?.occupant
 	data["experimental"] = experimental
-	data["diskette"] = diskette
+	data["diskette"] = !!diskette
 	return data
 
 /obj/machinery/computer/cloning/ui_act(action, params)

@@ -742,10 +742,7 @@
 	return
 
 /datum/record/cloning/proc/resolve_mind()
-	if(isnull(weakref_mind))
-		return null
-	var/datum/mind/mind = weakref_mind.resolve()
-	return mind
+	return weakref_mind?.resolve()
 
 /datum/record/cloning/proc/resolve_mind_account_id()
 	if(isnull(weakref_mind))

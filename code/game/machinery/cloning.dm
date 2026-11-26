@@ -1,8 +1,6 @@
 //Cloning revival method.
 //The pod handles the actual cloning while the computer manages the clone profiles
 
-//Potential replacement for genetics revives or something I dunno (?)
-
 #define CLONE_INITIAL_DAMAGE     150    //Clones in clonepods start with 150 cloneloss damage and 150 brainloss damage, thats just logical
 #define MINIMUM_HEAL_LEVEL 40
 
@@ -29,7 +27,6 @@
 	var/fleshamnt = 1 //Amount of synthflesh needed per cloning cycle, is divided by efficiency
 
 	var/datum/mind/clonemind
-	var/grab_ghost_when = CLONER_MATURE_CLONE
 
 	var/internal_radio = TRUE
 	var/obj/item/radio/radio
@@ -119,51 +116,6 @@ SCREENTIP_ATTACK_HAND(/obj/machinery/clonepod, "Examine")
 		. += span_notice("The reagent display reads: [round(reagents.total_volume, 1)] / [reagents.maximum_volume] cm<sup>3</sup>")
 		if(efficiency > 5)
 			. += span_notice("Pod has been upgraded to support autoprocessing and apply beneficial mutations.")
-
-//The return of data disks?? Just for transferring between genetics machine/cloning machine.
-//TO-DO: Make the genetics machine accept them.
-/obj/item/disk/data
-	name = "cloning data disk"
-	icon_state = "datadisk0" //Gosh I hope syndies don't mistake them for the nuke disk.
-	var/list/genetic_makeup_buffer = list()
-	var/datum/record/cloning/data
-	var/list/mutations = list()
-	var/max_mutations = 6
-	var/read_only = FALSE //Well,it's still a floppy disk
-
-//Disk stuff.
-/obj/item/disk/data/Initialize(mapload)
-	. = ..()
-	icon_state = "datadisk[rand(0,6)]"
-	add_overlay("datadisk_gene")
-
-/obj/item/disk/data/Destroy(force)
-	. = ..()
-	if(data)
-		QDEL_NULL(data)
-
-/obj/item/disk/data/attack_self(mob/user)
-	read_only = !read_only
-	to_chat(user, span_notice("You flip the write-protect tab to [read_only ? "protected" : "unprotected"]."))
-
-/obj/item/disk/data/examine(mob/user)
-	. = ..()
-	. += "The write-protect tab is set to [read_only ? "protected" : "unprotected"]."
-
-/obj/item/disk/data/debug
-	name = "Debug genetic data disk"
-	desc = "A disk that contains all existing genetic mutations."
-	max_mutations = 100
-
-/obj/item/disk/data/debug/Initialize(mapload)
-	. = ..()
-	for(var/datum/mutation/HM as anything in GLOB.all_mutations)
-		mutations += new HM
-
-//Clonepod
-
-/obj/machinery/clonepod/examine(mob/user)
-	. = ..()
 	var/mob/living/mob_occupant = occupant
 	if(mess)
 		. += "It's filled with blood and viscera. You swear you can see it moving..."
@@ -267,26 +219,17 @@ SCREENTIP_ATTACK_HAND(/obj/machinery/clonepod, "Examine")
 		result = CLONING_SUCCESS_EXPERIMENTAL
 
 	if(H.mind)
-		if(grab_ghost_when == CLONER_FRESH_CLONE)
-			H.grab_ghost()
-			to_chat(H, span_notice("<b>Consciousness slowly creeps over you as your body regenerates.</b><br><i>So this is what cloning feels like?</i>"))
+		H.ghostize(TRUE)	//Only does anything if they were still in their old body and not already a ghost
+		to_chat(H.get_ghost(TRUE), span_notice("Your body is beginning to regenerate in a cloning pod. You will become conscious when it is complete."))
 
-		if(grab_ghost_when == CLONER_MATURE_CLONE)
-			H.ghostize(TRUE)	//Only does anything if they were still in their old body and not already a ghost
-			to_chat(H.get_ghost(TRUE), span_notice("Your body is beginning to regenerate in a cloning pod. You will become conscious when it is complete."))
+	H.faction |= factions
+	for(var/datum/brain_trauma/BT as anything in traumas)
+		var/datum/brain_trauma/cloned_trauma = BT.on_clone()
+		if(cloned_trauma)
+			H.gain_trauma(cloned_trauma, BT.resilience)
 
-	if(H)
-		H.faction |= factions
-		for(var/t in traumas)
-			var/datum/brain_trauma/BT = t
-			var/datum/brain_trauma/cloned_trauma = BT.on_clone()
-			if(cloned_trauma)
-				H.gain_trauma(cloned_trauma, BT.resilience)
-
-		H.set_cloned_appearance()
-
-		H.set_suicide(FALSE)
-
+	H.set_cloned_appearance()
+	H.set_suicide(FALSE)
 
 	attempting = FALSE
 	return result
@@ -356,7 +299,7 @@ SCREENTIP_ATTACK_HAND(/obj/machinery/clonepod, "Examine")
 			go_out()
 			log_cloning("[key_name(mob_occupant)] ejected from [src] at [AREACOORD(src)] after suiciding.")
 
-		else if(mob_occupant && mob_occupant.cloneloss > (100 - heal_level))
+		else if(mob_occupant.cloneloss > (100 - heal_level))
 			mob_occupant.Unconscious(80)
 			var/dmg_mult = CONFIG_GET(number/damage_multiplier)
 			//Slowly get that clone healed and finished.
@@ -384,7 +327,7 @@ SCREENTIP_ATTACK_HAND(/obj/machinery/clonepod, "Examine")
 
 			use_power(5000 * speed_coeff) //This might need tweaking.
 
-		else if(mob_occupant && (mob_occupant.cloneloss <= (100 - heal_level)))
+		else
 			connected_message("Cloning Process Complete.")
 			if(internal_radio)
 				SPEAK("The cloning cycle of [mob_occupant.real_name] is complete.")
@@ -469,14 +412,10 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/clonepod)
 
 //Put messages in the connected computer's temp var for display.
 /obj/machinery/clonepod/proc/connected_message(message)
-	if ((isnull(connected)) || (!istype(connected, /obj/machinery/computer/cloning)))
-		return FALSE
-	if (!message)
-		return FALSE
-
+	if(!connected || !message)
+		return
 	connected.temp = message
-	connected.updateUsrDialog()
-	return TRUE
+	connected.ui_update()
 
 /obj/machinery/clonepod/proc/go_out(move = TRUE)
 	countdown.stop()
@@ -512,13 +451,12 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/clonepod)
 	REMOVE_TRAIT(mob_occupant, TRAIT_NOCRITDAMAGE, CLONING_POD_TRAIT)
 	REMOVE_TRAIT(mob_occupant, TRAIT_NOBREATH, CLONING_POD_TRAIT)
 
-	if(grab_ghost_when == CLONER_MATURE_CLONE)
-		mob_occupant.grab_ghost()
-		to_chat(occupant, span_notice("<b>There is a bright flash!</b><br><i>You feel like a new being.</i>"))
-		var/postclonemessage = CONFIG_GET(string/policy_postclonetext)
-		if(postclonemessage)
-			to_chat(occupant, postclonemessage)
-		mob_occupant.flash_act()
+	mob_occupant.grab_ghost()
+	to_chat(occupant, span_notice("<b>There is a bright flash!</b><br><i>You feel like a new being.</i>"))
+	var/postclonemessage = CONFIG_GET(string/policy_postclonetext)
+	if(postclonemessage)
+		to_chat(occupant, postclonemessage)
+	mob_occupant.flash_act()
 
 	if(move)
 		occupant.forceMove(T)
@@ -585,13 +523,6 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/clonepod)
 	if(A == occupant)
 		set_occupant(null)
 		countdown.stop()
-
-/obj/machinery/clonepod/proc/horrifyingsound()
-	for(var/i in 1 to 5)
-		playsound(src,pick('sound/hallucinations/growl1.ogg','sound/hallucinations/growl2.ogg','sound/hallucinations/growl3.ogg'), 100, rand(0.95,1.05))
-		sleep(1)
-	sleep(10)
-	playsound(src,'sound/hallucinations/wail.ogg', 100, TRUE)
 
 /obj/machinery/clonepod/deconstruct(disassembled = TRUE)
 	for(var/obj/item/reagent_containers/cup/G in component_parts)

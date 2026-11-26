@@ -129,9 +129,6 @@
 #define TR_KEEPORGANS (1<<8)
 #define TR_KEEPAI  (1<<9)
 
-#define CLONER_FRESH_CLONE "fresh"
-#define CLONER_MATURE_CLONE "mature"
-
 //organ slots
 #define ORGAN_SLOT_BRAIN "brain"
 #define ORGAN_SLOT_APPENDIX "appendix"
