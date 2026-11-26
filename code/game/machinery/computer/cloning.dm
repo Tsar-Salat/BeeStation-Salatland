@@ -190,8 +190,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 		return
 
 	QDEL_NULL(diskette.data)
-	diskette.data = new /datum/record/cloning(RECORD_STRICT_ARGS_NONE)
-	found_record.copy_to(diskette.data)
+	diskette.data = found_record.copy()
 
 	diskette.name = "data disk - '[diskette.data.name]'"
 	scantemp = "Saved to disk successfully."
@@ -208,10 +207,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 			scantemp = "Failed loading: Data already exists!"
 			return
 
-	var/datum/record/cloning/new_record = new /datum/record/cloning(RECORD_STRICT_ARGS_NONE)
-	diskette.data.copy_to(new_record)
-
-	records += new_record
+	records += diskette.data.copy()
 	scantemp = "Loaded into internal storage successfully."
 	playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, 0)
 	return
@@ -313,31 +309,10 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 		return //no dna info for species? you're not allowed to clone them. Don't harass xeno, don't try xeno farm.
 		//Note: if you want to clone unusual species, you need to check 'carbon/human' rather than 'dna.species'
 
-	var/datum/record/cloning/cloning_record = new(RECORD_CLONE_STRICT_ARGS(
-		age = human_mob?.age || dna.age,
-		blood_type = dna.blood_type.name,
-		unique_enzymes = dna.unique_enzymes,
-		unique_identity = dna.unique_identity,
-		fingerprint = md5(dna.unique_identity),
-		gender = human_mob?.gender || dna.gender,
-		initial_rank = occupant_mind?.assigned_role,
-		name = human_mob?.real_name || dna.real_name,
-		species = null,
-		datum_dna = dna /* the record will internally copy this dna datum */,
-		weakref_mind = occupant_mind ? WEAKREF(occupant_mind) : null,
-		last_death = experimental ? FALSE : (occupant_mind && occupant_mind.current.stat == DEAD) ? occupant_mind.last_death : -1,
-		factions = human_mob?.faction.Copy(),
-		traumas = null,
-		body_only = experimental ? FALSE : body_only,
-		weakref_health_implant = null,
-		bank_account = has_bank_account))
-
-	// We store the instance rather than the path,
-	// because some species (abductors, slimepeople) store
-	// state in their species datums
-	cloning_record.datum_dna.delete_species = FALSE
-	cloning_record.species = cloning_record.datum_dna.species
-		// ^EvilDraogn: I do not understand what they are trying to say and do here by assigning the value FALSE
+	var/datum/record/cloning/cloning_record = new(dna, human_mob, occupant_mind)
+	cloning_record.last_death = experimental ? FALSE : (occupant_mind && occupant_mind.current.stat == DEAD) ? occupant_mind.last_death : -1
+	cloning_record.body_only = experimental ? FALSE : body_only
+	cloning_record.bank_account = has_bank_account
 
 	//even if you have the same identity, this will give you different id based on your mind. body_only gets β at their id.
 	if(experimental)
@@ -445,24 +420,7 @@ DEFINE_BUFFER_HANDLER(/obj/machinery/computer/cloning)
 		playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
 		return
 
-	var/cloning_attempt_result = pod.growclone(CLONING_STRICT_ARGS(
-		/* 01 */ clonename = found_record.name,
-		/* 02 */ unique_identity = found_record.unique_identity,
-		/* 03 */ unique_enzymes = found_record.unique_enzymes,
-		/* 04 */ mutation_index = found_record.datum_dna.mutation_index.Copy(),
-		/* 05 */ given_mind = found_record.resolve_mind(),
-		/* 06 */ last_death = found_record.last_death,
-		/* 07 */ mrace = found_record.species,
-		/* 08 */ features = found_record.datum_dna.features.Copy(),
-		/* 09 */ factions = found_record.factions.Copy(),
-		/* 10 */ insurance = found_record.resolve_mind_account_id(),
-		/* 11 */ traumas = found_record.traumas.Copy(),
-		/* 12 */ body_only = found_record.body_only,
-		/* 13 */ experimental = experimental,
-		/* 14 */ gender = found_record.gender,
-		/* 15 */ age = found_record.age,
-		/* 16 */ blood_type = found_record.datum_dna.blood_type ))
-	switch(cloning_attempt_result)
+	switch(pod.growclone(found_record, experimental))
 		if(CLONING_SUCCESS)
 			temp = "Notice: [found_record.name] => Cloning cycle in progress..."
 			playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, 0)

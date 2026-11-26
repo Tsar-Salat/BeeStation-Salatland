@@ -663,91 +663,68 @@
 	/// id of this record. Used in clone record data management.
 	var/id
 
-/datum/record/cloning/New(
-	RECORD_CLONE_STRICT_ARGS(
-		age = 18,
-		blood_type = "?",
-		unique_enzymes = "Unknown",
-		unique_identity = "Unknown",
-		fingerprint = "?????",
-		gender = "Other",
-		initial_rank = "Unassigned",
-		name = "Unknown",
-		species = "Unknown",
-		datum/dna/datum_dna,
-		weakref_mind,
-		last_death,
-		list/factions = list(),
-		list/traumas = list(),
-		body_only,
-		weakref_health_implant,
-		bank_account))
-	src.age = age
-	src.blood_type = blood_type
-	src.unique_enzymes = unique_enzymes
-	src.unique_identity = unique_identity
-	src.fingerprint = fingerprint
-	src.gender = gender
-	src.initial_rank = initial_rank
-	src.name = name
-	src.species = species
-	src.datum_dna = new()
-	if(datum_dna)
-		datum_dna.copy_dna_to(src.datum_dna)
-	src.weakref_mind = weakref_mind
-	src.last_death = last_death
-	src.factions = factions.Copy()
-	src.traumas = traumas.Copy()
-	src.body_only = body_only
-	src.weakref_health_implant = weakref_health_implant
-	src.bank_account = bank_account
+	age = 18
+	blood_type = "?"
+	unique_enzymes = "Unknown"
+	unique_identity = "Unknown"
+	fingerprint = "?????"
+	gender = "Other"
+	initial_rank = "Unassigned"
+	species = "Unknown"
+
+/**
+ * Builds a record from scanned body/brain. body or mind may be null, preferably not both :]
+ */
+/datum/record/cloning/New(datum/dna/dna, mob/living/carbon/human/body, datum/mind/mind)
+	datum_dna = new
+	factions = body ? body.faction.Copy() : list()
+	traumas = list()
+	if(!dna)
+		return
+	dna.copy_dna_to(datum_dna)
+	// We store the instance rather than the path, because some species
+	// (abductors, slimepeople) store state in their species datums
+	datum_dna.delete_species = FALSE
+	species = datum_dna.species
+
+	age = body?.age || dna.age || age
+	blood_type = dna.blood_type.name
+	unique_enzymes = dna.unique_enzymes || unique_enzymes
+	unique_identity = dna.unique_identity || unique_identity
+	fingerprint = md5(dna.unique_identity)
+	gender = body?.gender || dna.gender || gender
+	initial_rank = mind?.assigned_role || initial_rank
+	name = body?.real_name || dna.real_name || name
+	weakref_mind = mind ? WEAKREF(mind) : null
 
 /datum/record/cloning/Destroy(force, ...)
 	. = ..()
 	if(datum_dna)
 		QDEL_NULL(datum_dna)
 
-// Copy the record's data to the target.
-/datum/record/cloning/proc/copy_to(datum/record/cloning/target)
-	if(!istype(target, /datum/record/cloning))
-		CRASH("Cannot copy to something that isn't /datum/record/cloning. The proc took '[target?.type]'.")
-
-	// from parent
-	target.age = age
-	target.blood_type = blood_type
-	target.unique_enzymes = unique_enzymes
-	target.unique_identity = unique_identity
-	target.fingerprint = fingerprint
-	target.gender = gender
-	target.initial_rank = initial_rank
-	target.name = name
-	target.species = species
-
-	// from cloning
-	target.id = id
-
-	if(target.datum_dna)
-		QDEL_NULL(target.datum_dna)
-	target.datum_dna = new()
-	datum_dna.copy_dna_to(target.datum_dna)
-
-	target.weakref_mind = weakref_mind
-	target.last_death = last_death
-	target.factions = factions
-	target.traumas = traumas
-	target.body_only = body_only
-	target.weakref_health_implant = weakref_health_implant
-	target.bank_account = bank_account
-
-	return
+/datum/record/cloning/proc/copy()
+	var/datum/record/cloning/copy = new
+	copy.age = age
+	copy.blood_type = blood_type
+	copy.unique_enzymes = unique_enzymes
+	copy.unique_identity = unique_identity
+	copy.fingerprint = fingerprint
+	copy.gender = gender
+	copy.initial_rank = initial_rank
+	copy.name = name
+	copy.species = species
+	copy.id = id
+	datum_dna.copy_dna_to(copy.datum_dna)
+	copy.weakref_mind = weakref_mind
+	copy.last_death = last_death
+	copy.factions = factions.Copy()
+	copy.traumas = traumas.Copy()
+	copy.body_only = body_only
+	copy.weakref_health_implant = weakref_health_implant
+	copy.bank_account = bank_account
+	return copy
 
 /datum/record/cloning/proc/resolve_mind()
 	return weakref_mind?.resolve()
-
-/datum/record/cloning/proc/resolve_mind_account_id()
-	if(isnull(weakref_mind))
-		return null
-	var/datum/mind/mind = weakref_mind.resolve()
-	return mind?.account_id
 
 #undef MAX_CRIME_NAME_LEN
